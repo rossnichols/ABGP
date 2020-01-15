@@ -185,33 +185,31 @@ local function HookLootButtons()
                 -- local itemLink = GetInventoryItemLink("player", self:GetID());
                 if not itemLink then return; end
                 local itemName = GetItemInfo(itemLink);
-                local data, channel;
                 if itemName and itemValues[itemName] then
-                    data = itemValues[itemName];
-                    channel = "RAID_WARNING";
+                    local data = itemValues[itemName];
+                    if data.gp == 0 then
+                        SendChatMessage(
+                            string.format(
+                                "Now distributing %s - please roll if you want this item! No GP cost, Priority: %s.",
+                                itemLink,
+                                table.concat(data.priority, ", ")),
+                            "RAID_WARNING");
+                    else
+                        SendChatMessage(
+                            string.format(
+                                "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s.",
+                                itemLink,
+                                UnitName("player"),
+                                data.gp,
+                                table.concat(data.priority, ", ")),
+                            "RAID_WARNING");
+                    end
                 else
-                    data = (math.random() < 0.5)
-                        and { gp = 0, priority = { "Garbage" } }
-                        or { gp = 100, priority = { "Groggy's alts" } };
-                    channel = "SAY";
-                end
-
-                if data.gp == 0 then
                     SendChatMessage(
                         string.format(
-                            "Now distributing %s - please roll if you want this item! No GP cost, Priority: %s",
-                            itemLink,
-                            table.concat(data.priority, ", ")),
-                        channel);
-                else
-                    SendChatMessage(
-                        string.format(
-                            "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s",
-                            itemLink,
-                            UnitName("player"),
-                            data.gp,
-                            table.concat(data.priority, ", ")),
-                        channel);
+                            "Now distributing %s - please roll if you want this item! No GP cost.",
+                            itemLink),
+                        "RAID_WARNING");
                 end
             end
         end);
