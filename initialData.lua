@@ -14051,7 +14051,7 @@ ABP_ItemValues = {
 			"Hunter", -- [1]
 			"Tank", -- [2]
 		},
-		["item"] = "Cloak of Shrouded Mists",
+		["item"] = "Cloak of the Shrouded Mists",
 		["gp"] = 100,
 	}, -- [40]
 	{
@@ -14118,14 +14118,14 @@ ABP_ItemValues = {
 			"Rogue", -- [2]
 			"Metal Rogue", -- [3]
 		},
-		["item"] = "Doomhide Gauntlet",
+		["item"] = "Doomhide Gauntlets",
 		["gp"] = 75,
 	}, -- [49]
 	{
 		["priority"] = {
 			"Tank", -- [1]
 		},
-		["item"] = "Dragons Blood Cape",
+		["item"] = "Dragon's Blood Cape",
 		["gp"] = 100,
 	}, -- [50]
 	{
@@ -14178,7 +14178,7 @@ ABP_ItemValues = {
 			"Druid (Tank)", -- [1]
 			"Tank", -- [2]
 		},
-		["item"] = "Eshkhandar's Collar",
+		["item"] = "Eskhandar's Collar",
 		["gp"] = 0,
 	}, -- [57]
 	{
@@ -14187,7 +14187,7 @@ ABP_ItemValues = {
 			"Tank", -- [2]
 			"Metal Rogue", -- [3]
 		},
-		["item"] = "Eshkhandar's Pelt",
+		["item"] = "Eskhandar's Pelt",
 		["gp"] = 30,
 	}, -- [58]
 	{
@@ -14488,14 +14488,14 @@ ABP_ItemValues = {
 		["priority"] = {
 			"Progression", -- [1]
 		},
-		["item"] = "Judgment Crown",
+		["item"] = "Judgement Crown",
 		["gp"] = 0,
 	}, -- [99]
 	{
 		["priority"] = {
 			"Progression", -- [1]
 		},
-		["item"] = "Judgment Legplates",
+		["item"] = "Judgement Legplates",
 		["gp"] = 0,
 	}, -- [100]
 	{
@@ -14794,7 +14794,7 @@ ABP_ItemValues = {
 			"Paladin (Holy)", -- [2]
 			"Warlock", -- [3]
 		},
-		["item"] = "Robe of Volitile Power",
+		["item"] = "Robe of Volatile Power",
 		["gp"] = 300,
 	}, -- [141]
 	{
@@ -14854,9 +14854,16 @@ ABP_ItemValues = {
 		["priority"] = {
 			"Garbage", -- [1]
 		},
-		["item"] = "Shadowstrike / Thunderstrike",
+		["item"] = "Shadowstrike",
 		["gp"] = 0,
 	}, -- [149]
+	{
+		["priority"] = {
+			"Garbage", -- [1]
+		},
+		["item"] = "Shard of the Flame",
+		["gp"] = 0,
+	}, -- [150]
 	{
 		["priority"] = {
 			"Druid (Heal)", -- [1]
@@ -14864,7 +14871,7 @@ ABP_ItemValues = {
 		},
 		["item"] = "Shard of the Scale",
 		["gp"] = 200,
-	}, -- [150]
+	}, -- [151]
 	{
 		["priority"] = {
 			"Mage", -- [1]
@@ -14873,7 +14880,7 @@ ABP_ItemValues = {
 		},
 		["item"] = "Snowblind Shoes",
 		["gp"] = 100,
-	}, -- [151]
+	}, -- [152]
 	{
 		["priority"] = {
 			"Mage", -- [1]
@@ -14881,7 +14888,7 @@ ABP_ItemValues = {
 		},
 		["item"] = "Sorcerous Dagger",
 		["gp"] = 30,
-	}, -- [152]
+	}, -- [153]
 	{
 		["priority"] = {
 			"Paladin (Ret)", -- [1]
@@ -14889,7 +14896,7 @@ ABP_ItemValues = {
 		},
 		["item"] = "Spinal Reaper",
 		["gp"] = 110,
-	}, -- [153]
+	}, -- [154]
 	{
 		["priority"] = {
 			"Druid (Heal)", -- [1]
@@ -14898,29 +14905,29 @@ ABP_ItemValues = {
 		},
 		["item"] = "Staff of Dominance",
 		["gp"] = 300,
-	}, -- [154]
+	}, -- [155]
 	{
 		["priority"] = {
 			"Druid (Heal)", -- [1]
 		},
 		["item"] = "Stormrage Cover",
 		["gp"] = 125,
-	}, -- [155]
+	}, -- [156]
 	{
 		["priority"] = {
 			"Druid (Heal)", -- [1]
 		},
 		["item"] = "Stormrage Legguards",
 		["gp"] = 75,
-	}, -- [156]
+	}, -- [157]
 	{
 		["priority"] = {
 			"Rogue", -- [1]
 			"Metal Rogue", -- [2]
 		},
-		["item"] = "Strikers Mark",
+		["item"] = "Striker's Mark",
 		["gp"] = 100,
-	}, -- [157]
+	}, -- [158]
 	{
 		["priority"] = {
 			"Mage", -- [1]
@@ -14929,7 +14936,7 @@ ABP_ItemValues = {
 		},
 		["item"] = "Talisman of Ephemeral Power",
 		["gp"] = 300,
-	}, -- [158]
+	}, -- [159]
 	{
 		["priority"] = {
 			"Priest (Heal)", -- [1]
@@ -14937,28 +14944,28 @@ ABP_ItemValues = {
 		},
 		["item"] = "The Eye of Divinity",
 		["gp"] = 300,
-	}, -- [159]
+	}, -- [160]
 	{
 		["priority"] = {
 			"Paladin (Holy)", -- [1]
 		},
 		["item"] = "Typhoon",
 		["gp"] = 0,
-	}, -- [160]
+	}, -- [161]
 	{
 		["priority"] = {
 			"Progression", -- [1]
 		},
 		["item"] = "Unmelting Ice Girdle",
 		["gp"] = 0,
-	}, -- [161]
+	}, -- [162]
 	{
 		["priority"] = {
 			"Priest (Heal)", -- [1]
 		},
 		["item"] = "Vambraces of Prophecy",
 		["gp"] = 100,
-	}, -- [162]
+	}, -- [163]
 	{
 		["priority"] = {
 			"Rogue", -- [1]
@@ -14966,7 +14973,7 @@ ABP_ItemValues = {
 		},
 		["item"] = "Vis'kag the Bloodletter",
 		["gp"] = 300,
-	}, -- [163]
+	}, -- [164]
 	{
 		["priority"] = {
 			"Druid (Heal)", -- [1]
@@ -14974,19 +14981,19 @@ ABP_ItemValues = {
 		},
 		["item"] = "Wild Growth Spaulders",
 		["gp"] = 300,
-	}, -- [164]
+	}, -- [165]
 	{
 		["priority"] = {
 			"Metal Rogue", -- [1]
 		},
 		["item"] = "Wristguards of Stability",
 		["gp"] = 150,
-	}, -- [165]
+	}, -- [166]
 	{
 		["priority"] = {
 			"Garbage", -- [1]
 		},
 		["item"] = "Wristguards of True Flight",
 		["gp"] = 0,
-	}, -- [166]
+	}, -- [167]
 }
