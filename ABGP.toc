@@ -1,0 +1,10 @@
+## Interface: 11303
+## Title: ABGP
+## Notes: EPGP AddOn for <Always Be Pulling>
+## Author: Xanido
+## Version: 1.0
+## SavedVariables: ABP_Priority, ABP_EP, ABP_GP, ABP_ItemValues
+
+embeds.xml
+core.lua
+initialData.lua
