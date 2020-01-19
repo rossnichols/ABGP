@@ -1,5 +1,4 @@
-
-ABP_Priority = {
+ABGP_Priority = {
 	{
 		["character"] = "Oya",
 		["ratio"] = 26.30221958,
@@ -343,7 +342,7 @@ ABP_Priority = {
 		["rank"] = "Raider",
 	}, -- [38]
 }
-ABP_EP = {
+ABGP_EP = {
 	{
 		["date"] = "9/21/19",
 		["character"] = "Bakedpancake",
@@ -9129,7 +9128,7 @@ ABP_EP = {
 		["ep"] = 10,
 	}, -- [1464]
 }
-ABP_GP = {
+ABGP_GP = {
 	{
 		["date"] = "9/21/19",
 		["gp"] = 0,
@@ -13751,7 +13750,7 @@ ABP_GP = {
 		["character"] = "Gyda",
 	}, -- [770]
 }
-ABP_ItemValues = {
+ABGP_ItemValues = {
 	{
 		["priority"] = {
 			"Rogue", -- [1]
@@ -14997,3 +14996,14 @@ ABP_ItemValues = {
 		["gp"] = 0,
 	}, -- [167]
 }
+
+--
+-- END copy from SavedVariables
+--
+ABGP.InitialData = {
+	timestamp = 1579470847, -- https://www.epochconverter.com/
+	ABGP_Priority = ABGP_Priority,
+	ABGP_EP = ABGP_EP,
+	ABGP_GP = ABGP_GP,
+	ABGP_ItemValues = ABGP_ItemValues,
+};

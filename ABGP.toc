@@ -3,8 +3,12 @@
 ## Notes: EPGP AddOn for <Always Be Pulling>
 ## Author: Xanido
 ## Version: 1.0
-## SavedVariables: ABP_Priority, ABP_EP, ABP_GP, ABP_ItemValues
+## SavedVariables: ABGP_DataTimestamp, ABGP_Priority, ABGP_EP, ABGP_GP, ABGP_ItemValues
 
 embeds.xml
 core.lua
 initialData.lua
+announce.lua
+spreadsheet.lua
+tooltips.lua
+debug.lua
