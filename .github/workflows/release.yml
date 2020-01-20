@@ -18,6 +18,7 @@ jobs:
       uses: TheDoctor0/zip-release@v0.2.1
       with:
         filename: ABGP-${{ steps.get_version.outputs.VERSION }}.zip
+        exclusions: '*.git*'
 
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
