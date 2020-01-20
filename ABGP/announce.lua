@@ -1,7 +1,5 @@
 local function ShouldAnnounceLoot()
-    return IsShiftKeyDown() and
-           CanUseRaidWarning() and
-           ABGP:IsPrivileged();
+    return IsShiftKeyDown() and ABGP:IsPrivileged();
 end
 
 local function CanUseRaidWarning()
@@ -35,8 +33,6 @@ local function SendAnnounceMessage(msg)
         SendChatMessage(msg, "RAID_WARNING");
     elseif ABGP.Debug then
         SendChatMessage(msg, "WHISPER", nil, UnitName("player"));
-    else
-        ABGP:Notify("You must be a raid assistant or leader to announce this item.");
     end
 end
 
@@ -64,12 +60,8 @@ local function AnnounceLoot(itemLink)
     end
 end
 
-
 local function ShouldAutoAnnounce()
-    return GetLootMethod() == "master" and
-           IsMasterLooter() and
-           CanUseRaidWarning() and
-           ABGP:IsPrivileged();
+    return IsMasterLooter() and ABGP:IsPrivileged();
 end
 
 local function ItemShouldTriggerAutoAnnounce(item)
