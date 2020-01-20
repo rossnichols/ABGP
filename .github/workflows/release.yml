@@ -19,6 +19,7 @@ jobs:
       with:
         filename: ABGP-${{ steps.get_version.outputs.VERSION }}.zip
         exclusions: '*.git*'
+        path: ..
 
     - name: Upload to release
       uses: fnkr/github-action-ghr@v1
