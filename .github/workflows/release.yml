@@ -14,12 +14,6 @@ jobs:
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       
-    - name: Create subfolder
-      uses: canastro/copy-action@0.0.2
-      with:
-        source: '*'
-        target: ABGP
-      
     - name: Create a zip for the release
       uses: TheDoctor0/zip-release@v0.2.1
       with:
