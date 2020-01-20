@@ -13,11 +13,11 @@ jobs:
     - name: Create a zip for the release
       uses: montudor/action-zip@v0.1.0
       with:
-        args: zip -qq -r ./${GITHUB_REPOSITORY##*/}${GITHUB_REF##*/}.zip .
+        args: zip -qq -r ./ABGP-${{github.ref}}.zip .
 
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-        args: ${GITHUB_REPOSITORY##*/}${GITHUB_REF##*/}.zip
+        args: ABGP-${{github.ref}}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
