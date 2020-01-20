@@ -12,13 +12,18 @@ jobs:
 
     - name: Get the version
       id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      run: |
+        echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        echo ::set-output name=ADDON_VERSION::${GITHUB_REF/refs\/tags\/v/}
       
-    - name: Create subfolder
-      uses: canastro/copy-action@0.0.2
+    - name: Update TOC
+      uses: cschleiden/replace-tokens@v1.0
       with:
-        source: '*'
-        target: ABGP
+        tokenPrefix: '${'
+        tokenSuffix: '}'
+        files: '["ABGP/ABGP.toc"]'
+      env:
+        ADDON_VERSION: ${{ steps.get_version.outputs.ADDON_VERSION }}
       
     - name: Create a zip for the release
       uses: TheDoctor0/zip-release@v0.2.1
