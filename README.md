@@ -5,8 +5,8 @@ Features (all users):
 * Displays GP values for items in their tooltips
 
 Features (guild officers):
-* Shift+clicking on items in your bags or loot window while in a raid will announce the item to /rw to begin distribution.
-* If you're the Master Looter, when the loot window appears, the loot will be automatically announced to /rw. This only occurs if at least one item has a GP value, but all BoP items at or above the ML threshold will be announced.
+* Shift+clicking on items while in a raid will announce the item to /rw to begin distribution.
+* If you're the Master Looter, when the loot window appears, the loot will be automatically announced to /rw. This only occurs if at least one item is BoP and has a GP value, but all BoP items at or above the ML threshold will be announced.
 
 Helpful links:
 * [EPGP Phase 1/2 Spreadsheet](https://docs.google.com/spreadsheets/d/1qV-G8YbNXIHV0aEw0eLVOuYGqYnWSHrabepIHC930l4/edit)
