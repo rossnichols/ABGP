@@ -1,5 +1,4 @@
 ABGP/internal.xml
-ABGP/_ui.lua
-ABGP/_debug.lua
+ABGP/_*.lua
 scratch.lua
 notes.txt
