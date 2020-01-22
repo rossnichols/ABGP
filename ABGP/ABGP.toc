@@ -9,6 +9,9 @@ embeds.xml
 core.lua
 data.lua
 announce.lua
-spreadsheet.lua
 tooltips.lua
+
+# BEGIN_IGNORE
 debug.lua
+spreadsheet.lua
+# END_IGNORE

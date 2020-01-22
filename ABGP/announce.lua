@@ -31,9 +31,12 @@ end
 local function SendAnnounceMessage(msg)
     if CanUseRaidWarning() then
         SendChatMessage(msg, "RAID_WARNING");
+        return true;
     elseif ABGP.Debug then
         SendChatMessage(msg, "WHISPER", nil, UnitName("player"));
+        return true;
     end
+    return false;
 end
 
 local function AnnounceLoot(itemLink)
@@ -41,12 +44,12 @@ local function AnnounceLoot(itemLink)
     local value = ABGP:GetItemValue(GetItemInfo(itemLink));
     if value then
         if value.gp == 0 then
-            SendAnnounceMessage(string.format(
+            return SendAnnounceMessage(string.format(
                 "Now distributing %s - please roll if you want this item! No GP cost, Priority: %s.",
                 itemLink,
                 table.concat(value.priority, ", ")));
         else
-            SendAnnounceMessage(string.format(
+            return SendAnnounceMessage(string.format(
                 "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s.",
                 itemLink,
                 UnitName("player"),
@@ -54,52 +57,37 @@ local function AnnounceLoot(itemLink)
                 table.concat(value.priority, ", ")));
         end
     else
-        SendAnnounceMessage(string.format(
+        return SendAnnounceMessage(string.format(
             "Now distributing %s - please roll if you want this item! No GP cost.",
             itemLink));
     end
+    return false;
 end
 
 local function ShouldAutoAnnounce()
     return IsMasterLooter() and ABGP:IsPrivileged();
 end
 
+local function ItemIsBoP(item)
+    local bindType = select(14, GetItemInfo(item.item));
+    return (bindType == 1) or ABGP.Debug;
+end
+
 local function ItemShouldTriggerAutoAnnounce(item)
     -- An item above the ML threshold that has a GP cost will trigger auto-announce.
     local hasGP = ABGP:GetItemValue(item.item) or ABGP.Debug;
-    return item.quality >= GetLootThreshold() and hasGP;
+    return item.quality >= GetLootThreshold() and hasGP and ItemIsBoP(item);
 end
 
 local function ItemShouldBeAutoAnnounced(item)
     if ItemShouldTriggerAutoAnnounce(item) then return true; end
 
     -- In addition to any item from above, BoP items above the loot threshold will also be announced.
-    local bindType = select(14, GetItemInfo(item.item));
-    local isBoP = (bindType == 1) or ABGP.Debug;
-    return item.quality >= GetLootThreshold() and isBoP;
+    return item.quality >= GetLootThreshold() and ItemIsBoP(item);
 end
 
 function ABGP:AddAnnounceHooks()
-    -- Hook loot buttons
-    for _, frame in pairs({ LootButton1, LootButton2, LootButton3, LootButton4 }) do
-        frame:HookScript("OnClick", function(self, event)
-            AnnounceLoot(GetLootSlotLink(self.slot));
-        end);
-    end
-
-    -- Hook bag buttons
-    local bag = 1;
-    while _G["ContainerFrame" .. bag .. "Item1"] do
-        local slot = 1;
-        while _G["ContainerFrame" .. bag .. "Item" .. slot] do
-            local frame = _G["ContainerFrame" .. bag .. "Item" .. slot];
-            frame:HookScript("OnClick", function(self, event)
-                AnnounceLoot(GetContainerItemLink(self:GetParent():GetID(), self:GetID()));
-            end);
-            slot = slot + 1;
-        end
-        bag = bag + 1;
-    end
+    self:RegisterModifiedItemClickFn(AnnounceLoot);
 
     -- Create auto-announce frame
     local lastAnnounced;

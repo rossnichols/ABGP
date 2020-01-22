@@ -77,3 +77,25 @@ function ABGP:CheckForDataUpdates()
         ABGP:Notify(string.format("Loaded new data! (updated %s)", d));
     end
 end
+
+
+local hmicFns = {};
+
+function ABGP:RegisterModifiedItemClickFn(fn)
+    table.insert(hmicFns, hmicFns);
+end
+
+local function OnHandleModifiedItemClick(itemLink)
+    for _, fn in ipairs(hmicFns) do
+        if fn(itemLink) then return true; end
+    end
+    return false;
+end
+
+if ABGP:IsPrivileged() then
+    local old_HandleModifiedItemClick = HandleModifiedItemClick;
+    HandleModifiedItemClick = function(itemLink)
+        local ret = old_HandleModifiedItemClick(itemLink);
+        return ret or OnHandleModifiedItemClick(itemLink);
+    end
+end
