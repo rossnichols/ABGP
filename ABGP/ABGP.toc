@@ -11,5 +11,4 @@ data.lua
 announce.lua
 tooltips.lua
 
-_debug.lua
-_ui.lua
+internal.xml
