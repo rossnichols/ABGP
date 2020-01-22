@@ -11,7 +11,5 @@ data.lua
 announce.lua
 tooltips.lua
 
-# BEGIN_IGNORE
-debug.lua
-spreadsheet.lua
-# END_IGNORE
+_debug.lua
+_ui.lua
