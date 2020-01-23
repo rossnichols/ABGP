@@ -5,19 +5,19 @@ function ABGP:OnInitialize()
     self:AddAnnounceHooks();
 
     if self.Debug then
-        local AceConfig = LibStub("AceConfig-3.0")
-        AceConfig:RegisterOptionsTable("ABGP", {
-            type = "group",
-            args = {
-                show = {
-                    name = "Show",
-                    desc = "shows the window",
-                    type = "execute",
-                    func = function() ABGP:ShowWindow() end
-                },
-            },
-        }, { "abp" });
-        ABGP:RegisterChatCommand("abgp", function() ABGP:ShowWindow() end);
+        -- local AceConfig = LibStub("AceConfig-3.0")
+        -- AceConfig:RegisterOptionsTable("ABGP", {
+        --     type = "group",
+        --     args = {
+        --         show = {
+        --             name = "Show",
+        --             desc = "shows the window",
+        --             type = "execute",
+        --             func = function() ABGP:ShowWindow() end
+        --         },
+        --     },
+        -- }, { "abp" });
+        ABGP:RegisterChatCommand("abgp", function() if ABGP.ShowWindow then ABGP:ShowWindow(); end end);
     end
 
     self:CheckForDataUpdates();
