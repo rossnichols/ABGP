@@ -112,14 +112,15 @@ function ABGP:AddAnnounceHooks()
         -- Check to see if the last announced target was this one.
         -- If nothing is targeted, we'll announce each time since we
         -- can't tell different non-target loot sources apart.
-        if UnitExists("target") then
+        local useTarget = UnitExists("target") and UnitIsEnemy("target");
+        if useTarget then
             local targetGUID = UnitGUID("target");
             if targetGUID == lastAnnounced then return; end
             lastAnnounced = targetGUID;
         end
 
         -- Send messages for each item that meets announcement criteria.
-        SendAnnounceMessage(UnitExists("target")
+        SendAnnounceMessage(useTarget
             and string.format("Items from %s:", UnitName("target"))
             or "Items from the void:");
         for i = 1, GetNumLootItems() do
