@@ -82,7 +82,7 @@ end
 local hmicFns = {};
 
 function ABGP:RegisterModifiedItemClickFn(fn)
-    table.insert(hmicFns, hmicFns);
+    table.insert(hmicFns, fn);
 end
 
 local function OnHandleModifiedItemClick(itemLink)
@@ -92,10 +92,8 @@ local function OnHandleModifiedItemClick(itemLink)
     return false;
 end
 
-if ABGP:IsPrivileged() then
-    local old_HandleModifiedItemClick = HandleModifiedItemClick;
-    HandleModifiedItemClick = function(itemLink)
-        local ret = old_HandleModifiedItemClick(itemLink);
-        return ret or OnHandleModifiedItemClick(itemLink);
-    end
+local old_HandleModifiedItemClick = HandleModifiedItemClick;
+HandleModifiedItemClick = function(itemLink)
+    local ret = old_HandleModifiedItemClick(itemLink);
+    return ret or OnHandleModifiedItemClick(itemLink);
 end
