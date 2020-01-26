@@ -313,10 +313,10 @@ local function DrawItems(container)
             for k, v in pairs(row) do
                 if itemClasses[k] then
                     table.insert(row.priority, itemClasses[k]);
-                    table.sort(row.priority);
                     row[k] = nil;
                 end
             end
+            table.sort(row.priority);
             return true;
         end);
         ABGP:RefreshItemValues();
