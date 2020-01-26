@@ -43,18 +43,24 @@ local function AnnounceLoot(itemLink)
     if not (itemLink and ShouldAnnounceLoot()) then return; end
     local value = ABGP:GetItemValue(GetItemInfo(itemLink));
     if value then
+        local notes = "";
+        if value.notes then
+            notes = ", Notes: " .. value.notes
+        end
         if value.gp == 0 then
             return SendAnnounceMessage(string.format(
-                "Now distributing %s - please roll if you want this item! No GP cost, Priority: %s.",
+                "Now distributing %s - please roll if you want this item! No GP cost, Priority: %s%s.",
                 itemLink,
-                table.concat(value.priority, ", ")));
+                table.concat(value.priority, ", "),
+                notes));
         else
             return SendAnnounceMessage(string.format(
-                "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s.",
+                "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s%s.",
                 itemLink,
                 UnitName("player"),
                 value.gp,
-                table.concat(value.priority, ", ")));
+                table.concat(value.priority, ", "),
+                notes));
         end
     else
         return SendAnnounceMessage(string.format(

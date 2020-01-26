@@ -25,23 +25,47 @@ function ABGP:OnInitialize()
     self:RefreshItemValues();
 end
 
+ABGP.Color = "|cFF94E4FF";
+ABGP.ColorTable = { 0.58, 0.89, 1 };
+function ABGP:Notify(str, ...)
+    DEFAULT_CHAT_FRAME:AddMessage(ABGP.Color .. "ABGP|r: " .. string.format(str, ...));
+end
+
+
+--
+-- Checks for privilege to access certain features locked to guild officers.
+--
+
 function ABGP:IsPrivileged()
     -- Check officer status by looking for the privilege to edit the officer note.
     local isOfficer = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
     return isOfficer or ABGP.Debug;
 end
 
-function ABGP:Notify(msg)
-    DEFAULT_CHAT_FRAME:AddMessage("|cFFCC0000ABGP|R: " .. msg);
-end
 
+--
+-- Content phase tracking support
+--
+
+ABGP.Phases = {
+    p1 = "Phase 1/2",
+    p3 = "Phase 3",
+};
+ABGP.CurrentPhase = "p1";
+
+
+--
+-- Converts the item value arrays to a table with name-based lookup.
+--
 
 local itemValues = {};
 
 function ABGP:RefreshItemValues()
     itemValues = {};
-    for _, item in pairs(ABGP_ItemValues) do
-        itemValues[item.item] = item;
+    for phase in pairs(self.Phases) do
+        for _, item in ipairs(ABGP_Data[phase].itemValues) do
+            itemValues[item.item] = item;
+        end
     end
 end
 
@@ -51,12 +75,19 @@ function ABGP:GetItemValue(itemName)
 end
 
 
+--
+-- An "active player" is one with an assigned priority value on the ABP spreadsheet.
+-- Importing EP/GP history is scoped to just active players to cut down on useless data.
+--
+
 local activePlayers = {};
 
 function ABGP:RefreshActivePlayers()
     activePlayers = {};
-    for _, pri in pairs(ABGP_Priority) do
-        activePlayers[pri.character] = true;
+    for phase in pairs(self.Phases) do
+        for _, pri in ipairs(ABGP_Data[phase].priority) do
+            activePlayers[pri.character] = true;
+        end
     end
 end
 
@@ -65,19 +96,12 @@ function ABGP:IsActivePlayer(name)
 end
 
 
-function ABGP:CheckForDataUpdates()
-    if ABGP_DataTimestamp == nil or ABGP_DataTimestamp < ABGP.InitialData.timestamp then
-        ABGP_DataTimestamp = ABGP.InitialData.timestamp;
-        ABGP_Priority = ABGP.InitialData.ABGP_Priority;
-        ABGP_EP = ABGP.InitialData.ABGP_EP;
-        ABGP_GP = ABGP.InitialData.ABGP_GP;
-        ABGP_ItemValues = ABGP.InitialData.ABGP_ItemValues;
-
-        local d = date("%I:%M%p, %m/%d/%y", ABGP_DataTimestamp); -- https://strftime.org/
-        ABGP:Notify(string.format("Loaded new data! (updated %s)", d));
-    end
-end
-
+--
+-- Override of HandleModifiedItemClick. This seems to be the easiest way to extend
+-- [mod]+clicking on items in a way that works across different AddOns and doesn't
+-- get in the way when trying to do something else with the action (e.g. insert
+-- link into chat, view model, etc.).
+--
 
 local hmicFns = {};
 
