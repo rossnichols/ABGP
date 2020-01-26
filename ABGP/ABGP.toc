@@ -10,4 +10,5 @@ core.lua
 data.lua
 announce.lua
 tooltips.lua
+spreadsheet.lua
 internal.xml

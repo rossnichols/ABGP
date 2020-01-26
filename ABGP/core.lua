@@ -17,7 +17,7 @@ function ABGP:OnInitialize()
         --         },
         --     },
         -- }, { "abp" });
-        ABGP:RegisterChatCommand("abgp", function() if ABGP.ShowWindow then ABGP:ShowWindow(); end end);
+        ABGP:RegisterChatCommand("abgp", function() ABGP:ShowWindow(); end);
     end
 
     self:CheckForDataUpdates();
