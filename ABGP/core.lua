@@ -37,8 +37,8 @@ end
 --
 
 function ABGP:IsPrivileged()
-    -- Check officer status by looking for the privilege to edit the officer note.
-    local isOfficer = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
+    -- Check officer status by looking for the privilege to speak in officer chat.
+    local isOfficer = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[4];
     return isOfficer or ABGP.Debug;
 end
 
