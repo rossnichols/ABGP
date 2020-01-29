@@ -120,17 +120,15 @@ function ABGP:AddAnnounceHooks()
         -- Check to see if the last announced target was this one.
         -- If nothing is targeted, we'll announce each time since we
         -- can't tell different non-target loot sources apart.
-        local useTarget = UnitExists("target") and UnitIsEnemy("player", "target");
-        if useTarget then
-            local targetGUID = UnitGUID("target");
-            if targetGUID == lastAnnounced then return; end
-            lastAnnounced = targetGUID;
-        end
+        local useTarget = UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target');
+        local targetGUID = useTarget and UnitGUID("target") or "<no target>";
+        if targetGUID == lastAnnounced then return; end
+        lastAnnounced = targetGUID;
 
         -- Send messages for each item that meets announcement criteria.
         SendAnnounceMessage(useTarget
             and string.format("Items from %s:", UnitName("target"))
-            or "Items from the void:");
+            or "Items in chest:");
         for i = 1, GetNumLootItems() do
             local item = loot[i];
             if item and ItemShouldBeAutoAnnounced(item) then
