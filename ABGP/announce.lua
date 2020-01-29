@@ -118,8 +118,6 @@ function ABGP:AddAnnounceHooks()
         if not announce then return; end
 
         -- Check to see if the last announced target was this one.
-        -- If nothing is targeted, we'll announce each time since we
-        -- can't tell different non-target loot sources apart.
         local useTarget = UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target');
         local targetGUID = useTarget and UnitGUID("target") or "<no target>";
         if targetGUID == lastAnnounced then return; end
