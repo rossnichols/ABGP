@@ -1,5 +1,5 @@
 local function ShouldAnnounceLoot()
-    return IsShiftKeyDown() and ABGP:IsPrivileged();
+    return IsAltKeyDown() and ABGP:IsPrivileged();
 end
 
 local function CanUseRaidWarning()

@@ -5,7 +5,7 @@ Features (all users):
 * Displays GP values for items in their tooltips
 
 Features (guild officers):
-* Shift+clicking on items while in a raid will announce the item to /rw to begin distribution.
+* Alt+clicking on items while in a raid will announce the item to /rw to begin distribution.
 * If you're the Master Looter, when the loot window appears, the loot will be automatically announced to /rw. This only occurs if at least one item is BoP and has a GP value, but all BoP items at or above the ML threshold will be announced.
 
 Helpful links:
