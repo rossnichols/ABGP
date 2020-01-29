@@ -75,13 +75,13 @@ local function ShouldAutoAnnounce()
 end
 
 local function ItemIsBoP(item)
-    local bindType = select(14, GetItemInfo(item.item));
-    return (bindType == 1) or ABGP.Debug;
+    local bindType = select(14, GetItemInfo(item.link));
+    return (bindType == 1);
 end
 
 local function ItemShouldTriggerAutoAnnounce(item)
     -- An item above the ML threshold that has a GP cost will trigger auto-announce.
-    local hasGP = ABGP:GetItemValue(item.item) or ABGP.Debug;
+    local hasGP = ABGP:GetItemValue(item.item);
     return item.quality >= GetLootThreshold() and hasGP and ItemIsBoP(item);
 end
 
@@ -108,9 +108,11 @@ function ABGP:AddAnnounceHooks()
         -- Check for an item that will trigger auto-announce.
         for i = 1, GetNumLootItems() do
             local item = loot[i];
-            if item and ItemShouldTriggerAutoAnnounce(item) then
-                announce = true;
-                break;
+            if item then
+                item.link = GetLootSlotLink(i);
+                if ItemShouldTriggerAutoAnnounce(item) then
+                    announce = true;
+                end
             end
         end
         if not announce then return; end
@@ -118,7 +120,7 @@ function ABGP:AddAnnounceHooks()
         -- Check to see if the last announced target was this one.
         -- If nothing is targeted, we'll announce each time since we
         -- can't tell different non-target loot sources apart.
-        local useTarget = UnitExists("target") and UnitIsEnemy("target");
+        local useTarget = UnitExists("target") and UnitIsEnemy("player", "target");
         if useTarget then
             local targetGUID = UnitGUID("target");
             if targetGUID == lastAnnounced then return; end
