@@ -47,9 +47,9 @@ local itemClasses = {
     ["garbage"] = "Garbage",
 };
 local itemMapping = {
-    ["Item"] = "item",
-    ["GP Cost"] = "gp",
-    ["4th Pass Cost"] = "gp",
+    ["Item"] = 1,
+    ["GP Cost"] = 2,
+    ["4th Pass Cost"] = 2,
     ["Notes"] = "notes",
 };
 for value, text in pairs(itemClasses) do
@@ -57,8 +57,8 @@ for value, text in pairs(itemClasses) do
 end
 local itemColumns = {
     weights = { 200, 50, 350 },
-    { value = "item", text = "Item" },
-    { value = "gp", text = "GP" },
+    { value = 1, text = "Item" },
+    { value = 2, text = "GP" },
     { value = "priority", text = "Priority" },
 };
 

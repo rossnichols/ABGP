@@ -31,6 +31,12 @@ function ABGP:Notify(str, ...)
     DEFAULT_CHAT_FRAME:AddMessage(ABGP.Color .. "ABGP|r: " .. string.format(str, ...));
 end
 
+function ABGP:LogVerbose(str, ...)
+    if self.Verbose then
+        self:Notify(str, ...);
+    end
+end
+
 
 --
 -- Checks for privilege to access certain features locked to guild officers.
@@ -64,7 +70,14 @@ function ABGP:RefreshItemValues()
     itemValues = {};
     for phase in pairs(self.Phases) do
         for _, item in ipairs(ABGP_Data[phase].itemValues) do
-            itemValues[item.item] = item;
+            local name = item.item or item[1];
+            local gp = item.gp or item[2];
+            itemValues[name] = {
+                gp = gp,
+                item = name,
+                priority = item.priority,
+                notes = item.notes
+            };
         end
     end
 end

@@ -8,191 +8,191 @@ ABGP_Data = {
 		},
 		["itemValues"] = {
 			{
-				["gp"] = 100,
-				["item"] = "Bindings of Transcendence",
+				"Bindings of Transcendence", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [1]
 			{
-				["gp"] = 100,
-				["item"] = "Netherwind Bindings",
+				"Netherwind Bindings", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [2]
 			{
-				["gp"] = 100,
-				["item"] = "Nemesis Bracers",
+				"Nemesis Bracers", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [3]
 			{
-				["gp"] = 100,
-				["item"] = "Bloodfang Bracers",
+				"Bloodfang Bracers", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 					"Stabby Rogue", -- [2]
 				},
 			}, -- [4]
 			{
-				["gp"] = 100,
-				["item"] = "Stormrage Bracers",
+				"Stormrage Bracers", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [5]
 			{
-				["gp"] = 100,
-				["item"] = "Dragonstalker's Bracers",
+				"Dragonstalker's Bracers", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [6]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Bindings",
+				"Judgement Bindings", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [7]
 			{
-				["gp"] = 100,
-				["item"] = "Bracelets of Wrath",
+				"Bracelets of Wrath", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [8]
 			{
-				["gp"] = 0,
-				["item"] = "Arcane Infused Gem",
+				"Arcane Infused Gem", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [9]
 			{
-				["gp"] = 0,
-				["item"] = "The Black Book",
+				"The Black Book", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [10]
 			{
-				["gp"] = 200,
+				"Mantle of the Blackwing Cabal", -- [1]
+				200, -- [2]
 				["notes"] = "Shadow Priest Super Priority",
-				["item"] = "Mantle of the Blackwing Cabal",
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
 				},
 			}, -- [11]
 			{
-				["gp"] = 0,
-				["item"] = "Gloves of Rapid Evolution",
+				"Gloves of Rapid Evolution", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [12]
 			{
-				["gp"] = 50,
-				["notes"] = "Catch up Priority",
-				["item"] = "Spineshatter",
+				"Spineshatter", -- [1]
+				70, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Slicey Rogue", -- [2]
 					"Stabby Rogue", -- [3]
 					"Tank", -- [4]
 				},
+				["notes"] = "Catch up Priority",
 			}, -- [13]
 			{
-				["gp"] = 100,
-				["item"] = "The Untamed Blade",
+				"The Untamed Blade", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
 			}, -- [14]
 			{
-				["gp"] = 100,
-				["item"] = "Belt of Transcendence",
+				"Belt of Transcendence", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [15]
 			{
-				["gp"] = 80,
-				["item"] = "Netherwind Belt",
+				"Netherwind Belt", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [16]
 			{
-				["gp"] = 200,
-				["item"] = "Nemesis Belt",
+				"Nemesis Belt", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [17]
 			{
-				["gp"] = 100,
-				["item"] = "Bloodfang Belt",
+				"Bloodfang Belt", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 					"Stabby Rogue", -- [2]
 				},
 			}, -- [18]
 			{
-				["gp"] = 0,
-				["item"] = "Stormrage Belt",
+				"Stormrage Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [19]
 			{
-				["gp"] = 100,
-				["item"] = "Dragonstalker's Belt",
+				"Dragonstalker's Belt", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [20]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Belt",
+				"Judgement Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [21]
 			{
-				["gp"] = 100,
-				["item"] = "Waistband of Wrath",
+				"Waistband of Wrath", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [22]
 			{
-				["gp"] = 100,
-				["item"] = "Mind Quickening Gem",
+				"Mind Quickening Gem", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [23]
 			{
-				["gp"] = 0,
-				["item"] = "Rune of Metamorphosis",
+				"Rune of Metamorphosis", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [24]
 			{
-				["gp"] = 150,
-				["item"] = "Helm of Endless Rage",
+				"Helm of Endless Rage", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [25]
 			{
-				["gp"] = 100,
-				["item"] = "Pendant of the Fallen Dragon",
+				"Pendant of the Fallen Dragon", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -200,103 +200,103 @@ ABGP_Data = {
 				},
 			}, -- [26]
 			{
-				["gp"] = 0,
-				["item"] = "Red Dragonscale Protector",
+				"Red Dragonscale Protector", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [27]
 			{
-				["gp"] = 50,
-				["notes"] = "Catch up Priority",
-				["item"] = "Dragonfang Blade",
+				"Dragonfang Blade", -- [1]
+				70, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 					"Stabby Rogue", -- [2]
 					"Tank", -- [3]
 				},
+				["notes"] = "Catch up Priority",
 			}, -- [28]
 			{
-				["gp"] = 50,
-				["item"] = "Boots of Transcendence",
+				"Boots of Transcendence", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [29]
 			{
-				["gp"] = 100,
-				["item"] = "Nemesis Boots",
+				"Nemesis Boots", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [30]
 			{
-				["gp"] = 50,
-				["item"] = "Netherwind Boots",
+				"Netherwind Boots", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [31]
 			{
-				["gp"] = 50,
-				["item"] = "Bloodfang Boots",
+				"Bloodfang Boots", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 				},
 			}, -- [32]
 			{
-				["gp"] = 50,
-				["item"] = "Stormrage Boots",
+				"Stormrage Boots", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [33]
 			{
-				["gp"] = 150,
-				["item"] = "Dragonstalker's Greaves",
+				"Dragonstalker's Greaves", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [34]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Sabatons",
+				"Judgement Sabatons", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [35]
 			{
-				["gp"] = 150,
-				["item"] = "Sabatons of Wrath",
+				"Sabatons of Wrath", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [36]
 			{
-				["gp"] = 200,
-				["item"] = "Lifegiving Gem",
+				"Lifegiving Gem", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [37]
 			{
-				["gp"] = 0,
-				["item"] = "Venomous Totem",
+				"Venomous Totem", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 					"Stabby Rogue", -- [2]
 				},
 			}, -- [38]
 			{
-				["gp"] = 0,
-				["item"] = "Black Brood Pauldrons",
+				"Black Brood Pauldrons", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [39]
 			{
-				["gp"] = 200,
-				["item"] = "Bracers of Arcane Accuracy",
+				"Bracers of Arcane Accuracy", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -304,8 +304,8 @@ ABGP_Data = {
 				},
 			}, -- [40]
 			{
-				["gp"] = 100,
-				["item"] = "Heartstriker",
+				"Heartstriker", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Slicey Rogue", -- [2]
@@ -314,87 +314,87 @@ ABGP_Data = {
 				},
 			}, -- [41]
 			{
-				["gp"] = 200,
-				["item"] = "Maladath, Runed Blade of the Black Flight",
+				"Maladath, Runed Blade of the Black Flight", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [42]
 			{
-				["gp"] = 80,
-				["item"] = "Handguards of Transcendence",
+				"Handguards of Transcendence", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [43]
 			{
-				["gp"] = 100,
-				["item"] = "Netherwind Gloves",
+				"Netherwind Gloves", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [44]
 			{
-				["gp"] = 100,
-				["item"] = "Nemesis Gloves",
+				"Nemesis Gloves", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [45]
 			{
-				["gp"] = 50,
-				["item"] = "Bloodfang Gloves",
+				"Bloodfang Gloves", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 				},
 			}, -- [46]
 			{
-				["gp"] = 150,
-				["item"] = "Stormrage Handguards",
+				"Stormrage Handguards", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [47]
 			{
-				["gp"] = 150,
-				["item"] = "Dragonstalker's Gauntlets",
+				"Dragonstalker's Gauntlets", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [48]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Gauntlets",
+				"Judgement Gauntlets", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [49]
 			{
-				["gp"] = 150,
-				["item"] = "Gauntlets of Wrath",
+				"Gauntlets of Wrath", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [50]
 			{
-				["gp"] = 0,
-				["item"] = "Scrolls of Blinding Light",
+				"Scrolls of Blinding Light", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [51]
 			{
-				["gp"] = 250,
-				["item"] = "Drake Talon Pauldrons",
+				"Drake Talon Pauldrons", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [52]
 			{
-				["gp"] = 150,
-				["item"] = "Cloak of Firemaw",
+				"Cloak of Firemaw", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Slicey Rogue", -- [2]
@@ -402,70 +402,70 @@ ABGP_Data = {
 				},
 			}, -- [53]
 			{
-				["gp"] = 0,
-				["item"] = "Black Ash Robe",
+				"Black Ash Robe", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [54]
 			{
-				["gp"] = 100,
+				"Firemaw's Clutch", -- [1]
+				100, -- [2]
 				["notes"] = "Shadow Priest Super Priority",
-				["item"] = "Firemaw's Clutch",
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
 				},
 			}, -- [55]
 			{
-				["gp"] = 0,
-				["item"] = "Taut Dragonhide Belt",
+				"Taut Dragonhide Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [56]
 			{
-				["gp"] = 0,
-				["item"] = "Primalist's Linked Legguards",
+				"Primalist's Linked Legguards", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [57]
 			{
-				["gp"] = 100,
-				["item"] = "Legguards of the Fallen Crusader",
+				"Legguards of the Fallen Crusader", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [58]
 			{
-				["gp"] = 0,
-				["item"] = "Claw of the Black Drake",
+				"Claw of the Black Drake", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [59]
 			{
-				["gp"] = 0,
-				["item"] = "Drake Talon Cleaver",
+				"Drake Talon Cleaver", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [60]
 			{
-				["gp"] = 50,
-				["notes"] = "Catch up Priority",
-				["item"] = "Shadow Wing Focus Staff",
+				"Shadow Wing Focus Staff", -- [1]
+				70, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Mage", -- [2]
 					"Warlock", -- [3]
 				},
+				["notes"] = "Catch up Priority",
 			}, -- [61]
 			{
-				["gp"] = 100,
-				["item"] = "Ring of Blackrock",
+				"Ring of Blackrock", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -474,8 +474,8 @@ ABGP_Data = {
 				},
 			}, -- [62]
 			{
-				["gp"] = 400,
-				["item"] = "Rejuvenating Gem",
+				"Rejuvenating Gem", -- [1]
+				400, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -483,25 +483,25 @@ ABGP_Data = {
 				},
 			}, -- [63]
 			{
-				["gp"] = 150,
-				["item"] = "Ebony Flame Gloves",
+				"Ebony Flame Gloves", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [64]
 			{
-				["gp"] = 150,
+				"Malfurion's Blessed Bulwark", -- [1]
+				150, -- [2]
 				["notes"] = "Feral Druid Super Priority",
-				["item"] = "Malfurion's Blessed Bulwark",
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
 				},
 			}, -- [65]
 			{
-				["gp"] = 100,
-				["item"] = "Dragonbreath Hand Cannon",
+				"Dragonbreath Hand Cannon", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 					"Stabby Rogue", -- [2]
@@ -509,8 +509,8 @@ ABGP_Data = {
 				},
 			}, -- [66]
 			{
-				["gp"] = 250,
-				["item"] = "Band of Forced Concentration",
+				"Band of Forced Concentration", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -518,26 +518,26 @@ ABGP_Data = {
 				},
 			}, -- [67]
 			{
-				["gp"] = 0,
-				["item"] = "Aegis of Preservation",
+				"Aegis of Preservation", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [68]
 			{
-				["gp"] = 400,
-				["notes"] = "Feral Druid prio unlocks after 4 drops",
-				["item"] = "Drake Fang Talisman",
+				"Drake Fang Talisman", -- [1]
+				400, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
 					"Slicey Rogue", -- [3]
 					"Stabby Rogue", -- [4]
 				},
+				["notes"] = "Feral Druid prio unlocks after 4 drops",
 			}, -- [69]
 			{
-				["gp"] = 200,
-				["item"] = "Shroud of Pure Thought",
+				"Shroud of Pure Thought", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -545,15 +545,15 @@ ABGP_Data = {
 				},
 			}, -- [70]
 			{
-				["gp"] = 0,
-				["item"] = "Emberweave Leggings",
+				"Emberweave Leggings", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [71]
 			{
-				["gp"] = 75,
-				["item"] = "Dragon's Touch",
+				"Dragon's Touch", -- [1]
+				75, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -561,15 +561,15 @@ ABGP_Data = {
 				},
 			}, -- [72]
 			{
-				["gp"] = 0,
-				["item"] = "Herald of Woe",
+				"Herald of Woe", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [73]
 			{
-				["gp"] = 100,
-				["item"] = "Circle of Applied Force",
+				"Circle of Applied Force", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -579,123 +579,123 @@ ABGP_Data = {
 				},
 			}, -- [74]
 			{
-				["gp"] = 325,
-				["item"] = "Styleen's Impeding Scarab",
+				"Styleen's Impeding Scarab", -- [1]
+				325, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [75]
 			{
-				["gp"] = 150,
-				["item"] = "Pauldrons of Transcendence",
+				"Pauldrons of Transcendence", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [76]
 			{
-				["gp"] = 80,
-				["item"] = "Netherwind Mantle",
+				"Netherwind Mantle", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [77]
 			{
-				["gp"] = 125,
-				["item"] = "Nemesis Spaulders",
+				"Nemesis Spaulders", -- [1]
+				125, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [78]
 			{
-				["gp"] = 50,
-				["item"] = "Bloodfang Spaulders",
+				"Bloodfang Spaulders", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 				},
 			}, -- [79]
 			{
-				["gp"] = 0,
-				["item"] = "Stormrage Pauldrons",
+				"Stormrage Pauldrons", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [80]
 			{
-				["gp"] = 200,
-				["item"] = "Dragonstalker's Spaulders",
+				"Dragonstalker's Spaulders", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [81]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Spaulders",
+				"Judgement Spaulders", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [82]
 			{
-				["gp"] = 200,
-				["item"] = "Pauldrons of Wrath",
+				"Pauldrons of Wrath", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [83]
 			{
-				["gp"] = 100,
-				["item"] = "Taut Dragonhide Shoulderpads",
+				"Taut Dragonhide Shoulderpads", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 				},
 			}, -- [84]
 			{
-				["gp"] = 150,
-				["item"] = "Elementium Threaded Cloak",
+				"Elementium Threaded Cloak", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [85]
 			{
-				["gp"] = 80,
-				["item"] = "Taut Dragonhide Gloves",
+				"Taut Dragonhide Gloves", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [86]
 			{
-				["gp"] = 0,
-				["item"] = "Angelista's Grasp",
+				"Angelista's Grasp", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [87]
 			{
-				["gp"] = 0,
-				["item"] = "Primalist's Linked Legguards",
+				"Primalist's Linked Legguards", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [88]
 			{
-				["gp"] = 0,
-				["item"] = "Girdle of the Fallen Crusader",
+				"Girdle of the Fallen Crusader", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [89]
 			{
-				["gp"] = 200,
-				["item"] = "Empowered Leggings",
+				"Empowered Leggings", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [90]
 			{
-				["gp"] = 100,
-				["item"] = "Shimmering Geta",
+				"Shimmering Geta", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -703,102 +703,102 @@ ABGP_Data = {
 				},
 			}, -- [91]
 			{
-				["gp"] = 250,
-				["item"] = "Chromatic Boots",
+				"Chromatic Boots", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
 			}, -- [92]
 			{
-				["gp"] = 400,
-				["item"] = "Ashjre'thul, Crossbow of Smiting",
+				"Ashjre'thul, Crossbow of Smiting", -- [1]
+				400, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [93]
 			{
-				["gp"] = 250,
-				["item"] = "Elementium Reinforced Bulwark",
+				"Elementium Reinforced Bulwark", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [94]
 			{
-				["gp"] = 300,
-				["item"] = "Claw of Chromaggus",
+				"Claw of Chromaggus", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [95]
 			{
-				["gp"] = 400,
-				["item"] = "Chromatically Tempered Sword",
+				"Chromatically Tempered Sword", -- [1]
+				400, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Slicey Rogue", -- [2]
 				},
 			}, -- [96]
 			{
-				["gp"] = 200,
-				["item"] = "Robes of Transcendence",
+				"Robes of Transcendence", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [97]
 			{
-				["gp"] = 175,
-				["item"] = "Netherwind Robes",
+				"Netherwind Robes", -- [1]
+				175, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [98]
 			{
-				["gp"] = 175,
-				["item"] = "Nemesis Robes",
+				"Nemesis Robes", -- [1]
+				175, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [99]
 			{
-				["gp"] = 200,
-				["item"] = "Bloodfang Chestpiece",
+				"Bloodfang Chestpiece", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Slicey Rogue", -- [1]
 					"Stabby Rogue", -- [2]
 				},
 			}, -- [100]
 			{
-				["gp"] = 0,
-				["item"] = "Stormrage Chestguard",
+				"Stormrage Chestguard", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [101]
 			{
-				["gp"] = 200,
-				["item"] = "Dragonstalker's Breastplate",
+				"Dragonstalker's Breastplate", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [102]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Breastplate",
+				"Judgement Breastplate", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [103]
 			{
-				["gp"] = 200,
-				["item"] = "Breastplate of Wrath",
+				"Breastplate of Wrath", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [104]
 			{
-				["gp"] = 150,
-				["item"] = "Head of Nefarian",
+				"Head of Nefarian", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 					"KAT4FITE", -- [2]
@@ -809,38 +809,38 @@ ABGP_Data = {
 				},
 			}, -- [105]
 			{
-				["gp"] = 400,
-				["item"] = "Lok'amir il Romathis",
+				"Lok'amir il Romathis", -- [1]
+				400, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [106]
 			{
-				["gp"] = 400,
-				["item"] = "Crul'shorukh, Edge of Chaos",
+				"Crul'shorukh, Edge of Chaos", -- [1]
+				400, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
 			}, -- [107]
 			{
-				["gp"] = 0,
-				["item"] = "Ashkandi, Greatsword of the Brotherhood",
+				"Ashkandi, Greatsword of the Brotherhood", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [108]
 			{
-				["gp"] = 450,
-				["item"] = "Staff of the Shadow Flame",
+				"Staff of the Shadow Flame", -- [1]
+				450, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [109]
 			{
-				["gp"] = 250,
-				["item"] = "Mish'undare, Circlet of the Mind Flayer",
+				"Mish'undare, Circlet of the Mind Flayer", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -848,8 +848,8 @@ ABGP_Data = {
 				},
 			}, -- [110]
 			{
-				["gp"] = 200,
-				["item"] = "Prestor's Talisman of Connivery",
+				"Prestor's Talisman of Connivery", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 					"KAT4FITE", -- [2]
@@ -858,8 +858,8 @@ ABGP_Data = {
 				},
 			}, -- [111]
 			{
-				["gp"] = 200,
-				["item"] = "Cloak of the Brood Lord",
+				"Cloak of the Brood Lord", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -867,31 +867,31 @@ ABGP_Data = {
 				},
 			}, -- [112]
 			{
-				["gp"] = 0,
-				["item"] = "Therazane's Link",
+				"Therazane's Link", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [113]
 			{
-				["gp"] = 200,
-				["item"] = "Boots of the Shadow Flame",
+				"Boots of the Shadow Flame", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Stabby Rogue", -- [2]
 				},
 			}, -- [114]
 			{
-				["gp"] = 125,
-				["item"] = "Archimtiros' Ring of Reckoning",
+				"Archimtiros' Ring of Reckoning", -- [1]
+				125, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [115]
 			{
-				["gp"] = 200,
-				["item"] = "Pure Elementium Band",
+				"Pure Elementium Band", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -899,32 +899,32 @@ ABGP_Data = {
 				},
 			}, -- [116]
 			{
-				["gp"] = 400,
+				"Neltharion's Tear", -- [1]
+				400, -- [2]
 				["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
-				["item"] = "Neltharion's Tear",
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [117]
 			{
-				["gp"] = 150,
-				["item"] = "Cloak of Draconic Might",
+				"Cloak of Draconic Might", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
 				},
 			}, -- [118]
 			{
-				["gp"] = 0,
-				["item"] = "Interlaced Shadow Jerkin",
+				"Interlaced Shadow Jerkin", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [119]
 			{
-				["gp"] = 200,
-				["item"] = "Boots of Pure Thought",
+				"Boots of Pure Thought", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -932,45 +932,45 @@ ABGP_Data = {
 				},
 			}, -- [120]
 			{
-				["gp"] = 200,
-				["item"] = "Ringo's Blizzard Boots",
+				"Ringo's Blizzard Boots", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [121]
 			{
-				["gp"] = 150,
-				["item"] = "Band of Dark Dominion",
+				"Band of Dark Dominion", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [122]
 			{
-				["gp"] = 100,
-				["item"] = "Essence Gatherer",
+				"Essence Gatherer", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [123]
 			{
-				["gp"] = 100,
-				["item"] = "Doom's Edge",
+				"Doom's Edge", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 					"Metal Rogue", -- [2]
 				},
 			}, -- [124]
 			{
-				["gp"] = 0,
-				["item"] = "Draconic Avenger",
+				"Draconic Avenger", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [125]
 			{
-				["gp"] = 300,
-				["item"] = "Draconic Maul",
+				"Draconic Maul", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 				},
@@ -986,101 +986,101 @@ ABGP_Data = {
 		},
 		["itemValues"] = {
 			{
-				["gp"] = 200,
-				["item"] = "Aged Core Leather Gloves",
+				"Aged Core Leather Gloves", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Rogue", -- [2]
 				},
 			}, -- [1]
 			{
-				["gp"] = 150,
-				["item"] = "Amberseal Keeper",
+				"Amberseal Keeper", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [2]
 			{
-				["gp"] = 0,
-				["item"] = "Ancient Cornerstone Grimoire",
+				"Ancient Cornerstone Grimoire", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [3]
 			{
-				["gp"] = 300,
-				["item"] = "Ancient Petrified Leaf",
+				"Ancient Petrified Leaf", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [4]
 			{
-				["gp"] = 0,
-				["item"] = "Arcanist Belt",
+				"Arcanist Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [5]
 			{
-				["gp"] = 60,
-				["item"] = "Arcanist Bindings",
+				"Arcanist Bindings", -- [1]
+				60, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [6]
 			{
-				["gp"] = 150,
-				["item"] = "Arcanist Boots",
+				"Arcanist Boots", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [7]
 			{
-				["gp"] = 200,
-				["item"] = "Arcanist Crown",
+				"Arcanist Crown", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [8]
 			{
-				["gp"] = 0,
-				["item"] = "Arcanist Gloves",
+				"Arcanist Gloves", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [9]
 			{
-				["gp"] = 80,
-				["item"] = "Arcanist Leggings",
+				"Arcanist Leggings", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [10]
 			{
-				["gp"] = 0,
-				["item"] = "Arcanist Mantle",
+				"Arcanist Mantle", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [11]
 			{
-				["gp"] = 0,
-				["item"] = "Arcanist Robes",
+				"Arcanist Robes", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [12]
 			{
-				["gp"] = 50,
-				["item"] = "Aurastone Hammer",
+				"Aurastone Hammer", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [13]
 			{
-				["gp"] = 300,
-				["item"] = "Azuresong Mageblade",
+				"Azuresong Mageblade", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -1088,8 +1088,8 @@ ABGP_Data = {
 				},
 			}, -- [14]
 			{
-				["gp"] = 300,
-				["item"] = "Band of Accuria",
+				"Band of Accuria", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Rogue", -- [2]
@@ -1097,29 +1097,29 @@ ABGP_Data = {
 				},
 			}, -- [15]
 			{
-				["gp"] = 0,
-				["item"] = "Band of Sulfuras",
+				"Band of Sulfuras", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [16]
 			{
-				["gp"] = 80,
-				["item"] = "Belt of Might",
+				"Belt of Might", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [17]
 			{
-				["gp"] = 0,
-				["item"] = "Blacklight Bracer",
+				"Blacklight Bracer", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [18]
 			{
-				["gp"] = 100,
-				["item"] = "Blastershot Launcher",
+				"Blastershot Launcher", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
@@ -1127,66 +1127,66 @@ ABGP_Data = {
 				},
 			}, -- [19]
 			{
-				["gp"] = 0,
-				["item"] = "Blazefury Medallion",
+				"Blazefury Medallion", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [20]
 			{
-				["gp"] = 200,
-				["item"] = "Bloodfang Hood",
+				"Bloodfang Hood", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [21]
 			{
-				["gp"] = 200,
-				["item"] = "Bloodfang Pants",
+				"Bloodfang Pants", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [22]
 			{
-				["gp"] = 300,
-				["item"] = "Bonereaver's Edge",
+				"Bonereaver's Edge", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
 				},
 			}, -- [23]
 			{
-				["gp"] = 0,
-				["item"] = "Boots of Prophecy",
+				"Boots of Prophecy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [24]
 			{
-				["gp"] = 60,
-				["item"] = "Bracers of Might",
+				"Bracers of Might", -- [1]
+				60, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [25]
 			{
-				["gp"] = 150,
-				["item"] = "Breastplate of Might",
+				"Breastplate of Might", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [26]
 			{
-				["gp"] = 300,
-				["item"] = "Brutality Blade",
+				"Brutality Blade", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
 				},
 			}, -- [27]
 			{
-				["gp"] = 250,
-				["item"] = "Cauterizing Band",
+				"Cauterizing Band", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -1194,64 +1194,64 @@ ABGP_Data = {
 				},
 			}, -- [28]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Belt",
+				"Cenarion Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [29]
 			{
-				["gp"] = 125,
-				["item"] = "Cenarion Boots",
+				"Cenarion Boots", -- [1]
+				125, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [30]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Bracers",
+				"Cenarion Bracers", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [31]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Gloves",
+				"Cenarion Gloves", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [32]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Helm",
+				"Cenarion Helm", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [33]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Leggings",
+				"Cenarion Leggings", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [34]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Spaulders",
+				"Cenarion Spaulders", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [35]
 			{
-				["gp"] = 0,
-				["item"] = "Cenarion Vestments",
+				"Cenarion Vestments", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [36]
 			{
-				["gp"] = 60,
-				["item"] = "Choker of Enlightenment",
+				"Choker of Enlightenment", -- [1]
+				60, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -1259,8 +1259,8 @@ ABGP_Data = {
 				},
 			}, -- [37]
 			{
-				["gp"] = 250,
-				["item"] = "Choker of the Fire Lord",
+				"Choker of the Fire Lord", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -1268,15 +1268,15 @@ ABGP_Data = {
 				},
 			}, -- [38]
 			{
-				["gp"] = 0,
-				["item"] = "Circlet of Prophecy",
+				"Circlet of Prophecy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [39]
 			{
-				["gp"] = 100,
-				["item"] = "Cloak of the Shrouded Mists",
+				"Cloak of the Shrouded Mists", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 					"KAT4FITE", -- [2]
@@ -1284,43 +1284,43 @@ ABGP_Data = {
 				},
 			}, -- [40]
 			{
-				["gp"] = 100,
-				["item"] = "Cold Snap",
+				"Cold Snap", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [41]
 			{
-				["gp"] = 0,
-				["item"] = "Core Forged Greaves",
+				"Core Forged Greaves", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [42]
 			{
-				["gp"] = 250,
-				["item"] = "Core Hound Tooth",
+				"Core Hound Tooth", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [43]
 			{
-				["gp"] = 0,
-				["item"] = "Crimson Shocker",
+				"Crimson Shocker", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [44]
 			{
-				["gp"] = 0,
-				["item"] = "Crown of Destruction",
+				"Crown of Destruction", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [45]
 			{
-				["gp"] = 300,
-				["item"] = "Crystal Adorned Crown",
+				"Crystal Adorned Crown", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -1328,22 +1328,22 @@ ABGP_Data = {
 				},
 			}, -- [46]
 			{
-				["gp"] = 200,
-				["item"] = "Deathbringer",
+				"Deathbringer", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
 			}, -- [47]
 			{
-				["gp"] = 0,
-				["item"] = "Deep Earth Spaulders",
+				"Deep Earth Spaulders", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [48]
 			{
-				["gp"] = 75,
-				["item"] = "Doomhide Gauntlets",
+				"Doomhide Gauntlets", -- [1]
+				75, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -1351,30 +1351,30 @@ ABGP_Data = {
 				},
 			}, -- [49]
 			{
-				["gp"] = 100,
-				["item"] = "Dragon's Blood Cape",
+				"Dragon's Blood Cape", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [50]
 			{
-				["gp"] = 250,
-				["item"] = "Dragonstalker's Helm",
+				"Dragonstalker's Helm", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [51]
 			{
-				["gp"] = 250,
-				["item"] = "Dragonstalker's Legguards",
+				"Dragonstalker's Legguards", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [52]
 			{
-				["gp"] = 50,
-				["item"] = "Drape of Benediction",
+				"Drape of Benediction", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -1382,37 +1382,37 @@ ABGP_Data = {
 				},
 			}, -- [53]
 			{
-				["gp"] = 100,
-				["item"] = "Drillborer Disk",
+				"Drillborer Disk", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [54]
 			{
-				["gp"] = 0,
-				["item"] = "Earthshaker",
+				"Earthshaker", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [55]
 			{
-				["gp"] = 300,
-				["item"] = "Empyrean Demolisher",
+				"Empyrean Demolisher", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
 			}, -- [56]
 			{
-				["gp"] = 30,
-				["item"] = "Eskhandar's Collar",
+				"Eskhandar's Collar", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [57]
 			{
-				["gp"] = 50,
-				["item"] = "Eskhandar's Left Claw",
+				"Eskhandar's Left Claw", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
@@ -1420,8 +1420,8 @@ ABGP_Data = {
 				},
 			}, -- [58]
 			{
-				["gp"] = 0,
-				["item"] = "Eskhandar's Pelt",
+				"Eskhandar's Pelt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -1430,247 +1430,244 @@ ABGP_Data = {
 				},
 			}, -- [59]
 			{
-				["gp"] = 100,
-				["item"] = "Eskhandar's Right Claw",
+				"Eskhandar's Right Claw", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [60]
 			{
-				["gp"] = 0,
-				["item"] = "Essence of the Pure Flame",
+				"Essence of the Pure Flame", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [61]
 			{
-				["gp"] = 320,
-				["item"] = "Fang of the Mystics",
+				"Fang of the Mystics", -- [1]
+				320, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [62]
 			{
-				["gp"] = 300,
-				["item"] = "Fel Infused Leggings",
+				"Fel Infused Leggings", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [63]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Belt",
+				"Felheart Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [64]
 			{
-				["gp"] = 60,
-				["item"] = "Felheart Bracers",
+				"Felheart Bracers", -- [1]
+				60, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [65]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Gloves",
+				"Felheart Gloves", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [66]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Horns",
+				"Felheart Horns", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [67]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Pants",
+				"Felheart Pants", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [68]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Robes",
+				"Felheart Robes", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [69]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Shoulder Pads",
+				"Felheart Shoulder Pads", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [70]
 			{
-				["gp"] = 0,
-				["item"] = "Felheart Slippers",
+				"Felheart Slippers", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [71]
 			{
-				["gp"] = 0,
-				["item"] = "Finkle's Lava Dredger",
+				"Finkle's Lava Dredger", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [72]
 			{
-				["gp"] = 30,
-				["item"] = "Fire Runed Grimoire",
+				"Fire Runed Grimoire", -- [1]
+				0, -- [2]
 				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Mage", -- [2]
-					"Priest (Shadow)", -- [3]
-					"Warlock", -- [4]
+					"Garbage", -- [1]
 				},
 			}, -- [73]
 			{
-				["gp"] = 0,
-				["item"] = "Fireguard Shoulders",
+				"Fireguard Shoulders", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Progression", -- [2]
 				},
 			}, -- [74]
 			{
-				["gp"] = 0,
-				["item"] = "Fireproof Cloak",
+				"Fireproof Cloak", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [75]
 			{
-				["gp"] = 100,
-				["item"] = "Flameguard Gauntlets",
+				"Flameguard Gauntlets", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
 				},
 			}, -- [76]
 			{
-				["gp"] = 0,
-				["item"] = "Flamewaker Legplates",
+				"Flamewaker Legplates", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [77]
 			{
-				["gp"] = 30,
-				["item"] = "Flayed Doomguard Belt",
+				"Flayed Doomguard Belt", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [78]
 			{
-				["gp"] = 100,
-				["item"] = "Gauntlets of Might",
+				"Gauntlets of Might", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [79]
 			{
-				["gp"] = 80,
-				["item"] = "Giantstalker's Belt",
+				"Giantstalker's Belt", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [80]
 			{
-				["gp"] = 150,
-				["item"] = "Giantstalker's Boots",
+				"Giantstalker's Boots", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [81]
 			{
-				["gp"] = 60,
-				["item"] = "Giantstalker's Bracers",
+				"Giantstalker's Bracers", -- [1]
+				60, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [82]
 			{
-				["gp"] = 150,
-				["item"] = "Giantstalker's Breastplate",
+				"Giantstalker's Breastplate", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [83]
 			{
-				["gp"] = 150,
-				["item"] = "Giantstalker's Epaulets",
+				"Giantstalker's Epaulets", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [84]
 			{
-				["gp"] = 100,
-				["item"] = "Giantstalker's Gloves",
+				"Giantstalker's Gloves", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [85]
 			{
-				["gp"] = 150,
-				["item"] = "Giantstalker's Helmet",
+				"Giantstalker's Helmet", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [86]
 			{
-				["gp"] = 150,
-				["item"] = "Giantstalker's Leggings",
+				"Giantstalker's Leggings", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
 			}, -- [87]
 			{
-				["gp"] = 0,
-				["item"] = "Girdle of Prophecy",
+				"Girdle of Prophecy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [88]
 			{
-				["gp"] = 50,
-				["item"] = "Gloves of Prophecy",
+				"Gloves of Prophecy", -- [1]
+				50, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [89]
 			{
-				["gp"] = 0,
-				["item"] = "Gloves of the Hypnotic Flame",
+				"Gloves of the Hypnotic Flame", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [90]
 			{
-				["gp"] = 70,
-				["item"] = "Gutgore Ripper",
+				"Gutgore Ripper", -- [1]
+				70, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [91]
 			{
-				["gp"] = 250,
-				["item"] = "Halo of Transcendence",
+				"Halo of Transcendence", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [92]
 			{
-				["gp"] = 75,
-				["item"] = "Head of Onyxia",
+				"Head of Onyxia", -- [1]
+				75, -- [2]
 				["priority"] = {
 					"Hunter", -- [1]
 					"KAT4FITE", -- [2]
@@ -1680,307 +1677,307 @@ ABGP_Data = {
 				},
 			}, -- [93]
 			{
-				["gp"] = 100,
-				["item"] = "Heavy Dark Iron Ring",
+				"Heavy Dark Iron Ring", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [94]
 			{
-				["gp"] = 0,
-				["item"] = "Helm of Might",
+				"Helm of Might", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [95]
 			{
-				["gp"] = 30,
-				["item"] = "Helm of the Lifegiver",
+				"Helm of the Lifegiver", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [96]
 			{
-				["gp"] = 250,
-				["item"] = "Helm of Wrath",
+				"Helm of Wrath", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [97]
 			{
-				["gp"] = 0,
-				["item"] = "Infernal Headcage",
+				"Infernal Headcage", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [98]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Crown",
+				"Judgement Crown", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [99]
 			{
-				["gp"] = 0,
-				["item"] = "Judgement Legplates",
+				"Judgement Legplates", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [100]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Belt",
+				"Lawbringer Belt", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [101]
 			{
-				["gp"] = 30,
-				["item"] = "Lawbringer Boots",
+				"Lawbringer Boots", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [102]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Bracers",
+				"Lawbringer Bracers", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [103]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Chestguard",
+				"Lawbringer Chestguard", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [104]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Gauntlets",
+				"Lawbringer Gauntlets", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [105]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Helm",
+				"Lawbringer Helm", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [106]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Legplates",
+				"Lawbringer Legplates", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [107]
 			{
-				["gp"] = 0,
-				["item"] = "Lawbringer Spaulders",
+				"Lawbringer Spaulders", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [108]
 			{
-				["gp"] = 0,
-				["item"] = "Leggings of Arcane Supremacy",
+				"Leggings of Arcane Supremacy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [109]
 			{
-				["gp"] = 200,
-				["item"] = "Leggings of Transcendence",
+				"Leggings of Transcendence", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [110]
 			{
-				["gp"] = 130,
-				["item"] = "Legplates of Might",
+				"Legplates of Might", -- [1]
+				130, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [111]
 			{
-				["gp"] = 250,
-				["item"] = "Legplates of Wrath",
+				"Legplates of Wrath", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [112]
 			{
-				["gp"] = 0,
-				["item"] = "Magma Tempered Boots",
+				"Magma Tempered Boots", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [113]
 			{
-				["gp"] = 30,
-				["item"] = "Malistar's Defender",
+				"Malistar's Defender", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
 			}, -- [114]
 			{
-				["gp"] = 250,
-				["item"] = "Mana Igniting Cord",
+				"Mana Igniting Cord", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [115]
 			{
-				["gp"] = 0,
-				["item"] = "Manastorm Leggings",
+				"Manastorm Leggings", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [116]
 			{
-				["gp"] = 0,
-				["item"] = "Mantle of Prophecy",
+				"Mantle of Prophecy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [117]
 			{
-				["gp"] = 150,
-				["item"] = "Medallion of Steadfast Might",
+				"Medallion of Steadfast Might", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
 				},
 			}, -- [118]
 			{
-				["gp"] = 250,
-				["item"] = "Nemesis Leggings",
+				"Nemesis Leggings", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [119]
 			{
-				["gp"] = 250,
-				["item"] = "Nemesis Skullcap",
+				"Nemesis Skullcap", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
 			}, -- [120]
 			{
-				["gp"] = 80,
-				["item"] = "Netherwind Crown",
+				"Netherwind Crown", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [121]
 			{
-				["gp"] = 250,
-				["item"] = "Netherwind Pants",
+				"Netherwind Pants", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 				},
 			}, -- [122]
 			{
-				["gp"] = 80,
-				["item"] = "Nightslayer Belt",
+				"Nightslayer Belt", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [123]
 			{
-				["gp"] = 100,
-				["item"] = "Nightslayer Boots",
+				"Nightslayer Boots", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [124]
 			{
-				["gp"] = 0,
-				["item"] = "Nightslayer Bracelets",
+				"Nightslayer Bracelets", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [125]
 			{
-				["gp"] = 100,
-				["item"] = "Nightslayer Chestpiece",
+				"Nightslayer Chestpiece", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [126]
 			{
-				["gp"] = 0,
-				["item"] = "Nightslayer Cover",
+				"Nightslayer Cover", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [127]
 			{
-				["gp"] = 0,
-				["item"] = "Nightslayer Gloves",
+				"Nightslayer Gloves", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [128]
 			{
-				["gp"] = 0,
-				["item"] = "Nightslayer Pants",
+				"Nightslayer Pants", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [129]
 			{
-				["gp"] = 100,
-				["item"] = "Nightslayer Shoulder Pads",
+				"Nightslayer Shoulder Pads", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
 			}, -- [130]
 			{
-				["gp"] = 0,
-				["item"] = "Obsidian Edged Blade",
+				"Obsidian Edged Blade", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [131]
 			{
-				["gp"] = 300,
-				["item"] = "Onslaught Girdle",
+				"Onslaught Girdle", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
 				},
 			}, -- [132]
 			{
-				["gp"] = 0,
-				["item"] = "Pants of Prophecy",
+				"Pants of Prophecy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [133]
 			{
-				["gp"] = 150,
-				["item"] = "Pauldrons of Might",
+				"Pauldrons of Might", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [134]
 			{
-				["gp"] = 300,
-				["item"] = "Perdition's Blade",
+				"Perdition's Blade", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
 				},
 			}, -- [135]
 			{
-				["gp"] = 150,
-				["item"] = "Puissant Cape",
+				"Puissant Cape", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -1988,8 +1985,8 @@ ABGP_Data = {
 				},
 			}, -- [136]
 			{
-				["gp"] = 200,
-				["item"] = "Quick Strike Ring",
+				"Quick Strike Ring", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -1997,15 +1994,15 @@ ABGP_Data = {
 				},
 			}, -- [137]
 			{
-				["gp"] = 0,
-				["item"] = "Ring of Binding",
+				"Ring of Binding", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [138]
 			{
-				["gp"] = 0,
-				["item"] = "Ring of Entropy",
+				"Ring of Entropy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -2013,8 +2010,8 @@ ABGP_Data = {
 				},
 			}, -- [139]
 			{
-				["gp"] = 250,
-				["item"] = "Ring of Spell Power",
+				"Ring of Spell Power", -- [1]
+				250, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -2022,8 +2019,8 @@ ABGP_Data = {
 				},
 			}, -- [140]
 			{
-				["gp"] = 300,
-				["item"] = "Robe of Volatile Power",
+				"Robe of Volatile Power", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -2031,37 +2028,37 @@ ABGP_Data = {
 				},
 			}, -- [141]
 			{
-				["gp"] = 0,
-				["item"] = "Robes of Prophecy",
+				"Robes of Prophecy", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [142]
 			{
-				["gp"] = 150,
-				["item"] = "Sabatons of Might",
+				"Sabatons of Might", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
 			}, -- [143]
 			{
-				["gp"] = 0,
-				["item"] = "Sabatons of the Flamewalker",
+				"Sabatons of the Flamewalker", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [144]
 			{
-				["gp"] = 100,
-				["item"] = "Salamander Scale Pants",
+				"Salamander Scale Pants", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [145]
 			{
-				["gp"] = 80,
-				["item"] = "Sapphiron Drape",
+				"Sapphiron Drape", -- [1]
+				80, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -2069,37 +2066,37 @@ ABGP_Data = {
 				},
 			}, -- [146]
 			{
-				["gp"] = 200,
-				["item"] = "Sash of Whispered Secrets",
+				"Sash of Whispered Secrets", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [147]
 			{
-				["gp"] = 0,
-				["item"] = "Seal of the Archmagus",
+				"Seal of the Archmagus", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [148]
 			{
-				["gp"] = 0,
-				["item"] = "Shadowstrike",
+				"Shadowstrike", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [149]
 			{
-				["gp"] = 0,
-				["item"] = "Shard of the Flame",
+				"Shard of the Flame", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [150]
 			{
-				["gp"] = 200,
-				["item"] = "Shard of the Scale",
+				"Shard of the Scale", -- [1]
+				200, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -2107,31 +2104,31 @@ ABGP_Data = {
 				},
 			}, -- [151]
 			{
-				["gp"] = 150,
-				["item"] = "Snowblind Shoes",
+				"Snowblind Shoes", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 				},
 			}, -- [152]
 			{
-				["gp"] = 30,
-				["item"] = "Sorcerous Dagger",
+				"Sorcerous Dagger", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
 			}, -- [153]
 			{
-				["gp"] = 110,
-				["item"] = "Spinal Reaper",
+				"Spinal Reaper", -- [1]
+				110, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
 				},
 			}, -- [154]
 			{
-				["gp"] = 300,
-				["item"] = "Staff of Dominance",
+				"Staff of Dominance", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Mage", -- [2]
@@ -2139,30 +2136,30 @@ ABGP_Data = {
 				},
 			}, -- [155]
 			{
-				["gp"] = 125,
-				["item"] = "Stormrage Cover",
+				"Stormrage Cover", -- [1]
+				125, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [156]
 			{
-				["gp"] = 75,
-				["item"] = "Stormrage Legguards",
+				"Stormrage Legguards", -- [1]
+				75, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [157]
 			{
-				["gp"] = 100,
-				["item"] = "Striker's Mark",
+				"Striker's Mark", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
 				},
 			}, -- [158]
 			{
-				["gp"] = 300,
-				["item"] = "Talisman of Ephemeral Power",
+				"Talisman of Ephemeral Power", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -2170,61 +2167,61 @@ ABGP_Data = {
 				},
 			}, -- [159]
 			{
-				["gp"] = 300,
-				["item"] = "The Eye of Divinity",
+				"The Eye of Divinity", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 					"Priest (Shadow)", -- [2]
 				},
 			}, -- [160]
 			{
-				["gp"] = 0,
-				["item"] = "Typhoon",
+				"Typhoon", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [161]
 			{
-				["gp"] = 0,
-				["item"] = "Unmelting Ice Girdle",
+				"Unmelting Ice Girdle", -- [1]
+				0, -- [2]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [162]
 			{
-				["gp"] = 100,
-				["item"] = "Vambraces of Prophecy",
+				"Vambraces of Prophecy", -- [1]
+				100, -- [2]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
 			}, -- [163]
 			{
-				["gp"] = 300,
-				["item"] = "Vis'kag the Bloodletter",
+				"Vis'kag the Bloodletter", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
 				},
 			}, -- [164]
 			{
-				["gp"] = 300,
-				["item"] = "Wild Growth Spaulders",
+				"Wild Growth Spaulders", -- [1]
+				300, -- [2]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
 			}, -- [165]
 			{
-				["gp"] = 150,
-				["item"] = "Wristguards of Stability",
+				"Wristguards of Stability", -- [1]
+				150, -- [2]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
 				},
 			}, -- [166]
 			{
-				["gp"] = 30,
-				["item"] = "Wristguards of True Flight",
+				"Wristguards of True Flight", -- [1]
+				30, -- [2]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -2237,7 +2234,7 @@ ABGP_Data = {
 -- END copy from SavedVariables
 --
 local initialData = {
-	timestamp = 1580073971, -- https://www.epochconverter.com/ or time() ingame
+	timestamp = 1580865380, -- https://www.epochconverter.com/ or time() ingame
 	ABGP_Data = ABGP_Data,
 };
 

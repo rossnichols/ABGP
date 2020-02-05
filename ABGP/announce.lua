@@ -40,7 +40,9 @@ local function SendAnnounceMessage(msg)
 end
 
 local function AnnounceLoot(itemLink)
-    if not (itemLink and ShouldAnnounceLoot()) then return; end
+    if not (itemLink and ShouldAnnounceLoot()) then
+        return;
+    end
     local value = ABGP:GetItemValue(GetItemInfo(itemLink));
     if value then
         local notes = "";
@@ -100,7 +102,9 @@ function ABGP:AddAnnounceHooks()
     local frame = CreateFrame("FRAME");
     frame:RegisterEvent("LOOT_OPENED");
     frame:SetScript("OnEvent", function(self, event, ...)
-        if not ShouldAutoAnnounce() then return; end
+        if not ShouldAutoAnnounce() then
+            return;
+        end
 
         local loot = GetLootInfo();
         local announce = false;
@@ -126,7 +130,7 @@ function ABGP:AddAnnounceHooks()
         -- Send messages for each item that meets announcement criteria.
         SendAnnounceMessage(useTarget
             and string.format("Items from %s:", UnitName("target"))
-            or "Items in chest:");
+            or "Items from loot:");
         for i = 1, GetNumLootItems() do
             local item = loot[i];
             if item and ItemShouldBeAutoAnnounced(item) then
