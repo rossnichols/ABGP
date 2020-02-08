@@ -1,10 +1,10 @@
-ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0");
+ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0");
 
 function ABGP:OnInitialize()
-    self:HookTooltips();
-    self:AddAnnounceHooks();
+    self:RegisterComm("ABGP");
+    ABGP:RegisterChatCommand("abgp", function() ABGP:PromptItemRequests(); end);
 
-    if self.Debug then
+    -- if self.Debug then
         -- local AceConfig = LibStub("AceConfig-3.0")
         -- AceConfig:RegisterOptionsTable("ABGP", {
         --     type = "group",
@@ -17,12 +17,15 @@ function ABGP:OnInitialize()
         --         },
         --     },
         -- }, { "abp" });
-        ABGP:RegisterChatCommand("abgp", function() ABGP:ShowWindow(); end);
-    end
+    -- end
 
+    self:HookTooltips();
+    self:AddAnnounceHooks();
     self:CheckForDataUpdates();
     self:RefreshActivePlayers();
     self:RefreshItemValues();
+    self:InitItemRequest();
+
 end
 
 ABGP.Color = "|cFF94E4FF";
@@ -133,4 +136,33 @@ local old_HandleModifiedItemClick = HandleModifiedItemClick;
 HandleModifiedItemClick = function(itemLink)
     local ret = old_HandleModifiedItemClick(itemLink);
     return ret or OnHandleModifiedItemClick(itemLink);
+end
+
+
+--
+-- Hook for CloseSpecialWindows to allow our UI windows to close on Escape.
+--
+
+local openWindows = {};
+local function CloseABGPWindows()
+    local found = false;
+    for window in pairs(openWindows) do
+        found = true;
+        window:Hide();
+    end
+    return found;
+end
+
+local old_CloseSpecialWindows = CloseSpecialWindows;
+CloseSpecialWindows = function()
+    local found = old_CloseSpecialWindows();
+    return CloseABGPWindows() or found;
+end
+
+function ABGP:OpenWindow(window)
+    openWindows[window] = true;
+end
+
+function ABGP:CloseWindow(window)
+    openWindows[window] = nil;
 end

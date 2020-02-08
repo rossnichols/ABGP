@@ -16,18 +16,6 @@ local function CanUseRaidWarning()
     return false;
 end
 
--- local function GetChatChannel()
---     if CanUseRaidWarning() then
---         return "RAID_WARNING";
---     elseif IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
---         return "INSTANCE_CHAT";
---     elseif GetNumGroupMembers() > 0 and IsInRaid() then
---         return "RAID";
---     elseif IsInGroup() then
---         return "PARTY";
---     end
--- end
-
 local function SendAnnounceMessage(msg)
     if CanUseRaidWarning() then
         SendChatMessage(msg, "RAID_WARNING");
@@ -41,7 +29,7 @@ end
 
 local function AnnounceLoot(itemLink)
     if not (itemLink and ShouldAnnounceLoot()) then
-        return;
+        return false;
     end
     local value = ABGP:GetItemValue(GetItemInfo(itemLink));
     if value then
@@ -56,13 +44,17 @@ local function AnnounceLoot(itemLink)
                 table.concat(value.priority, ", "),
                 notes));
         else
-            return SendAnnounceMessage(string.format(
+            local ret = SendAnnounceMessage(string.format(
                 "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s%s.",
                 itemLink,
                 UnitName("player"),
                 value.gp,
                 table.concat(value.priority, ", "),
                 notes));
+            if ret then
+                ABGP:ShowDistrib(itemLink);
+            end
+            return ret;
         end
     else
         return SendAnnounceMessage(string.format(

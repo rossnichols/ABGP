@@ -11,4 +11,7 @@ data.lua
 announce.lua
 tooltips.lua
 spreadsheet.lua
+distrib.lua
+request.lua
+comm.lua
 internal.xml
