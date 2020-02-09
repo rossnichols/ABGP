@@ -22,11 +22,14 @@ local function ShowStaticPopup(itemLink, which)
 end
 
 function ABGP:InitItemRequest()
+    self.ActiveDistributions = 0;
+
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED, function(self, event, data, distribution, sender)
         local itemLink = data.itemLink;
         activeItems[itemLink] = sender;
-        local prompt = "";
+        self.ActiveDistributions = self.ActiveDistributions + 1;
 
+        local prompt = "";
         local popup = GetStaticPopupType(itemLink);
         if popup == staticPopups.ABGP_LOOTDISTRIB_WISHLIST then
             ShowStaticPopup(itemLink, which);
@@ -40,6 +43,7 @@ function ABGP:InitItemRequest()
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, function(self, event, data)
         local itemLink = data.itemLink;
         activeItems[itemLink] = nil;
+        self.ActiveDistributions = self.ActiveDistributions - 1;
         self:Notify("Item distribution closed for %s.", itemLink);
 
         for index = 1, STATICPOPUP_NUMDIALOGS do

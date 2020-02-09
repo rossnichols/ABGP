@@ -15,19 +15,19 @@ local function GetBroadcastChannel()
 end
 
 ABGP.CommTypes = {
-    ITEM_REQUEST = "ITEM_REQUEST",
+    ITEM_REQUEST = "ABGP_ITEM_REQUEST",
     -- itemLink: item link string
     -- role: "ms" or "os"
     -- notes: string or nil
     -- equipped: array of item link strings
 
-    ITEM_PASS = "ITEM_PASS",
+    ITEM_PASS = "ABGP_ITEM_PASS",
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_OPENED = "ITEM_DISTRIBUTION_OPENED",
+    ITEM_DISTRIBUTION_OPENED = "ABGP_ITEM_DISTRIBUTION_OPENED",
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_CLOSED = "ITEM_DISTRIBUTION_CLOSED",
+    ITEM_DISTRIBUTION_CLOSED = "ABGP_ITEM_DISTRIBUTION_CLOSED",
     -- itemLink: item link string
 };
 

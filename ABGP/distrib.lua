@@ -4,54 +4,50 @@ do
     local Type, Version = "ABGP_DistribPlayer", 1;
 
     --[[-----------------------------------------------------------------------------
-    Support functions
-    -------------------------------------------------------------------------------]]
-
-    local function UpdateWidths(self)
-        if self.resizing then return end
-        local frame = self.frame;
-        local weights = { 100, 80, 60, 200, 40, 1.0 };
-        local width = frame:GetWidth();
-
-        local spareWidth = width;
-        local widths = {};
-        for i, weight in ipairs(weights) do
-            if weight > 1.0 then
-                widths[i] = weight;
-                spareWidth = spareWidth - weight;
-            end
-        end
-        for i, weight in ipairs(weights) do
-            if weight <= 1.0 then
-                widths[i] = spareWidth * weight;
-            end
-        end
-
-        self.player:SetWidth(widths[1]);
-        self.rank:SetWidth(widths[2]);
-        self.priority:SetWidth(widths[3]);
-        self.current:SetWidth(widths[4]);
-        self.role:SetWidth(widths[5]);
-        self.notes:SetWidth(widths[6]);
-    end
-
-    --[[-----------------------------------------------------------------------------
     Methods
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
-            -- set the flag to stop constant size updates
-            self.resizing = true;
+            self.player.text:SetText("");
+            self.rank.text:SetText("");
+            self.priority.text:SetText("");
+            self.equipped.textTop:SetText("");
+            self.equipped.textMid:SetText("");
+            self.equipped.textBot:SetText("");
+            self.role.text:SetText("");
+            self.notes.text:SetText("");
+            self.msg.text:SetText("");
 
-            -- reset the flag
-            self.resizing = nil
+            self.equipped:Show();
+            self.role:Show();
+            self.notes:Show();
+            self.msg:Show();
         end,
 
-        -- ["OnRelease"] = nil,
+        ["SetData"] = function(self, data)
+            self.data = data;
 
-        ["OnWidthSet"] = function(self, width)
-            self.frame:SetWidth(width);
-            UpdateWidths(self);
+            self.player.text:SetText(string.format("|c%s%s|r", data.playerColor or "ffffffff", data.player or ""));
+            self.rank.text:SetText(data.rank or "");
+            self.priority.text:SetText(string.format("%.3f", data.priority or 0));
+            if data.msg then
+                self.msg.text:SetText(data.msg);
+                self.equipped:Hide();
+                self.role:Hide();
+                self.notes:Hide();
+            else
+                self.msg:Hide();
+                if data.equipped then
+                    if #data.equipped == 2 then
+                        self.equipped.textTop:SetText(data.equipped[1]);
+                        self.equipped.textBot:SetText(data.equipped[2]);
+                    elseif #data.equipped == 1 then
+                        self.equipped.textMid:SetText(data.equipped[1]);
+                    end
+                end
+                self.role.text:SetText(data.role or "");
+                self.notes.text:SetText(data.notes or "--");
+            end
         end,
     }
 
@@ -63,33 +59,33 @@ do
 
         local frame = CreateFrame("Button", nil, UIParent);
         frame:SetHeight(25);
-        frame:EnableMouse(true);
-        frame:SetHyperlinksEnabled(true);
         frame:Hide();
 
-        -- frame:SetScript("OnClick", function(self)
-        --     self.selected = not self.selected;
-        --     if self.selected then
-        --         self:LockHighlight();
-        --     else
-        --         self:UnlockHighlight();
-        --     end
-        -- end);
-        frame:SetScript("OnHyperlinkEnter", function(self, itemLink)
-            ShowUIPanel(GameTooltip);
-            GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
-            GameTooltip:SetHyperlink(itemLink);
-            GameTooltip:Show();
-            self:LockHighlight();
-        end);
-        frame:SetScript("OnHyperlinkLeave", function(self)
-            GameTooltip:Hide();
-            self:UnlockHighlight();
-        end);
-
         local function createElement(frame, anchor)
-            local elt = CreateFrame("Frame", nil, frame);
+            local elt = CreateFrame("Button", nil, frame);
             elt:SetHeight(frame:GetHeight());
+            elt:EnableMouse(true);
+            elt:SetHyperlinksEnabled(true);
+            elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
+                ShowUIPanel(GameTooltip);
+                GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
+                GameTooltip:SetHyperlink(itemLink);
+                GameTooltip:Show();
+                self:GetParent():LockHighlight();
+            end);
+            elt:SetScript("OnHyperlinkLeave", function(self)
+                GameTooltip:Hide();
+                self:GetParent():UnlockHighlight();
+            end);
+            elt:SetScript("OnEnter", function(self)
+                self:GetParent():LockHighlight();
+            end);
+            elt:SetScript("OnLeave", function(self)
+                self:GetParent():UnlockHighlight();
+            end);
+            elt:SetScript("OnClick", function(self, ...)
+                self:GetParent().obj:Fire("OnClick", ...)
+            end);
 
             if anchor then
                 elt:SetPoint("TOPLEFT", anchor, "TOPRIGHT");
@@ -122,37 +118,39 @@ do
         highlight:SetTexCoord(0, 1, 0, 0.578125);
 
         local player = createElement(frame);
+        player:SetWidth(100);
         player.text = createFontString(player);
-        player.text:SetText("AbpSummonbot");
 
         local rank = createElement(frame, player);
+        rank:SetWidth(80);
         rank.text = createFontString(rank);
-        rank.text:SetText("Red Lobster");
 
         local priority = createElement(frame, rank);
+        priority:SetWidth(60);
         priority.text = createFontString(priority);
-        priority.text:SetText("888.888");
 
-        local current = createElement(frame, priority);
-        current.textTop = createFontString(current, 5);
-        current.textMid = createFontString(current);
-        current.textBot = createFontString(current, -5);
-        current.textTop:SetText("\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r");
-        current.textBot:SetText("\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r");
+        local equipped = createElement(frame, priority);
+        equipped:SetWidth(150);
+        equipped.textTop = createFontString(equipped, 5);
+        equipped.textMid = createFontString(equipped);
+        equipped.textBot = createFontString(equipped, -5);
 
-        local role = createElement(frame, current);
+        local role = createElement(frame, equipped);
+        role:SetWidth(40);
         role.text = createFontString(role);
-        role.text:SetText("MS");
 
         local notes = createElement(frame, role);
+        notes:SetPoint("TOPRIGHT", frame);
         notes.text = createFontString(notes);
         notes.text:SetWordWrap(true);
-        notes.text:SetText("This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.");
         notes:SetScript("OnEnter", function(self)
-            ShowUIPanel(GameTooltip);
-            GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
-            GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
-            GameTooltip:Show();
+            if self.text:IsTruncated() then
+                local text = self.text:GetText();
+                ShowUIPanel(GameTooltip);
+                GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
+                GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                GameTooltip:Show();
+            end
             self:GetParent():LockHighlight();
         end);
         notes:SetScript("OnLeave", function(self)
@@ -160,16 +158,34 @@ do
             self:GetParent():UnlockHighlight();
         end);
 
+        local msg = createElement(frame, priority);
+        msg:SetPoint("TOPRIGHT", frame);
+        msg.text = createFontString(msg);
+        msg.text:SetWordWrap(true);
+        msg:SetScript("OnEnter", function(self)
+            if self.text:IsTruncated() then
+                local text = self.text:GetText();
+                ShowUIPanel(GameTooltip);
+                GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
+                GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                GameTooltip:Show();
+            end
+            self:GetParent():LockHighlight();
+        end);
+        msg:SetScript("OnLeave", function(self)
+            GameTooltip:Hide();
+            self:GetParent():UnlockHighlight();
+        end);
+
         -- create widget
         local widget = {
-            weights = weights,
-
             player = player,
             rank = rank,
             priority = priority,
-            current = current,
+            equipped = equipped,
             role = role,
             notes = notes,
+            msg = msg,
 
             frame = frame,
             type  = Type
@@ -185,29 +201,86 @@ do
 end
 
 local activeDistributionWindow;
+local whisperFrame = CreateFrame("Frame");
+whisperFrame:RegisterEvent("CHAT_MSG_WHISPER");
+whisperFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
+whisperFrame:SetScript("OnEvent", function(self, event, ...)
+    if not activeDistributionWindow or ABGP.ActiveDistributions == 0 then
+        return;
+    end
 
-function ABGP:InitItemDistribution()
-    self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
-        local itemLink = data.itemLink;
-        if not activeDistributionWindow then return; end
+    local msg, sender, _;
+    if event == "CHAT_MSG_WHISPER" then
+        msg, _, _, _, sender = ...;
+    elseif event == "CHAT_MSG_BN_WHISPER" then
+        msg = ...;
+        local bnetId = select(13, ...);
+        local _, characterName, clientProgram, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, wowProjectID = BNGetGameAccountInfo(bnetId);
+        local gameInfo = C_BattleNet.GetGameAccountInfoByID(bnetId);
+        if clientProgram == BNET_CLIENT_WOW and wowProjectID == WOW_PROJECT_CLASSIC then
+            sender = characterName;
+        end
+    end
 
+    if ABGP.Debug then
+        ABGP:Notify("Whisper from %s: %s", sender, msg);
+    end
+
+    if msg and sender and UnitExists(sender) then
+        local _, class = UnitClass(sender);
         local playerGuild = GetGuildInfo("player");
         local guildName, guildRankName = GetGuildInfo(sender);
         if guildName and guildName ~= playerGuild then
-            guildRankName = "[Different guild]";
+            guildRankName = "[Other guild]";
         end
-
-        local _, class = UnitClass(sender);
 
         local elt = AceGUI:Create("ABGP_DistribPlayer");
         elt:SetFullWidth(true);
-        elt:SetWeights({ 100, 80, 60, 200, 40, 1.0 });
         elt:SetData({
             player = sender,
             playerColor = select(4, GetClassColor(class)),
             rank = guildRankName,
-            priority = 50 * math.random(),
-            current = data.equipped,
+            priority = 0, -- one day!
+            msg = msg
+        });
+        activeDistributionWindow:GetUserData("whispers"):AddChild(elt);
+    end
+end);
+
+function ABGP:InitItemDistribution()
+    self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
+        local itemLink = data.itemLink;
+        if not activeDistributionWindow then
+            ABGP:Notify("%s requested %s but there's no active distribution!", sender, itemLink);
+            return;
+        end
+
+        local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
+        if itemLink ~= itemLinkCmp then
+            ABGP:Notify("%s requested %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+            return;
+        end
+
+        if not UnitExists(sender) then
+            ABGP:Notify("%s requested %s but they're not grouped with you!", sender, itemLink);
+            return;
+        end
+
+        local _, class = UnitClass(sender);
+        local playerGuild = GetGuildInfo("player");
+        local guildName, guildRankName = GetGuildInfo(sender);
+        if guildName and guildName ~= playerGuild then
+            guildRankName = "[Other guild]";
+        end
+
+        local elt = AceGUI:Create("ABGP_DistribPlayer");
+        elt:SetFullWidth(true);
+        elt:SetData({
+            player = sender,
+            playerColor = select(4, GetClassColor(class)),
+            rank = guildRankName,
+            priority = 0, -- one day!
+            equipped = data.equipped,
             role = strupper(data.role),
             notes = data.notes,
         });
@@ -230,9 +303,17 @@ function ABGP:ShowDistrib(itemLink)
     end
 
     local window = AceGUI:Create("Window");
-    window:SetTitle("Loot Distribution")
+    local oldMinW, oldMinH = window.frame:GetMinResize();
+    local oldMaxW, oldMaxH = window.frame:GetMaxResize();
+    window:SetWidth(700);
+    window:SetHeight(500);
+    window.frame:SetMinResize(700, 500);
+    window.frame:SetMaxResize(700, 500);
+    window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
         -- self:CloseWindow(widget);
+        widget.frame:SetMinResize(oldMinW, oldMinH);
+        widget.frame:SetMaxResize(oldMaxW, oldMaxH);
         AceGUI:Release(widget);
         ItemRefTooltip:Hide();
 
@@ -242,8 +323,6 @@ function ABGP:ShowDistrib(itemLink)
         }, "BROADCAST");
     end);
     window:SetLayout("Flow");
-    window:SetWidth(800);
-    window:SetHeight(500);
     -- self:OpenWindow(window);
 
     local distrib = AceGUI:Create("Button");
@@ -275,7 +354,7 @@ function ABGP:ShowDistrib(itemLink)
         scroll:SetLayout("List");
         scrollContainer:AddChild(scroll);
 
-        local columns = { "Player", "Rank", "Priority", "Current", "Role", "Notes", weights = { 100, 80, 60, 200, 40, 1.0 }};
+        local columns = { "Player", "Rank", "Priority", "Equipped", "Role", "Notes", weights = { 100, 80, 60, 150, 40, 1.0 }};
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -289,11 +368,21 @@ function ABGP:ShowDistrib(itemLink)
         end
         window:SetUserData("requests", scroll);
 
-        for i = 1, 20 do
-            local player = AceGUI:Create("ABGP_DistribPlayer");
-            player:SetFullWidth(true);
-            scroll:AddChild(player);
-        end
+        -- for i = 1, 10 do
+        --     local elt = AceGUI:Create("ABGP_DistribPlayer");
+        --     elt:SetData({
+        --         player = "AbpSummonbot",
+        --         playerColor = select(4, GetClassColor("WARLOCK")),
+        --         rank = "Red Lobster",
+        --         priority = 50 * math.random(),
+        --         equipped = { "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
+        --             "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r" },
+        --         role = "MS",
+        --         notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
+        --     });
+        --     elt:SetFullWidth(true);
+        --     scroll:AddChild(elt);
+        -- end
     end
 
     do
@@ -329,6 +418,7 @@ function ABGP:ShowDistrib(itemLink)
     ItemRefTooltip:SetHyperlink(itemLink);
     ItemRefTooltip:Show();
 
+    window:SetUserData("itemLink", itemLink);
     activeDistributionWindow = window;
     self:SendComm({
         type = self.CommTypes.ITEM_DISTRIBUTION_OPENED,
