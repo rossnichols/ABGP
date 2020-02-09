@@ -307,8 +307,8 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
     window:SetWidth(700);
     window:SetHeight(500);
-    window.frame:SetMinResize(700, 500);
-    window.frame:SetMaxResize(700, 500);
+    window.frame:SetMinResize(600, 300);
+    window.frame:SetMaxResize(800, 700);
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
         -- self:CloseWindow(widget);
@@ -372,19 +372,28 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     desc:SetText("Cost");
     window:AddChild(desc);
 
+    local container = AceGUI:Create("SimpleGroup");
+    container:SetFullWidth(true);
+    container:SetFullHeight(true);
+    container:SetLayout("List");
+    container:SetUserData("table", { columns = { 1.0 } });
+    window:AddChild(container);
+
     do
         local scrollContainer = AceGUI:Create("InlineGroup");
         scrollContainer:SetTitle("Requests");
         scrollContainer:SetFullWidth(true);
-        scrollContainer:SetHeight(200);
+        scrollContainer:SetHeight(container.frame:GetHeight() / 2);
         scrollContainer:SetLayout("Fill");
-        window:AddChild(scrollContainer);
+        scrollContainer:SetAutoAdjustHeight(false);
+        container:AddChild(scrollContainer);
         window:SetUserData("requestsTitle", scrollContainer);
 
         local scroll = AceGUI:Create("ScrollFrame");
         scroll:SetFullWidth(true);
         scroll:SetLayout("List");
         scrollContainer:AddChild(scroll);
+        window:SetUserData("requests", scroll);
 
         local columns = { "Player", "Rank", "Priority", "Equipped", "Role", "Notes", weights = { 100, 80, 60, 150, 40, 1.0 }};
         local header = AceGUI:Create("SimpleGroup");
@@ -398,22 +407,23 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             desc:SetText(columns[i]);
             header:AddChild(desc);
         end
-        window:SetUserData("requests", scroll);
     end
 
     do
         local scrollContainer = AceGUI:Create("InlineGroup");
         scrollContainer:SetTitle("Whispers");
         scrollContainer:SetFullWidth(true);
-        scrollContainer:SetHeight(200);
+        scrollContainer:SetHeight(container.frame:GetHeight() / 2);
         scrollContainer:SetLayout("Fill");
-        window:AddChild(scrollContainer);
+        scrollContainer:SetAutoAdjustHeight(false);
+        container:AddChild(scrollContainer);
         window:SetUserData("whispersTitle", scrollContainer);
 
         local scroll = AceGUI:Create("ScrollFrame");
         scroll:SetFullWidth(true);
         scroll:SetLayout("List");
         scrollContainer:AddChild(scroll);
+        window:SetUserData("whispers", scroll);
 
         local columns = { "Player", "Rank", "Priority", "Message", weights = { 100, 80, 60, 1.0 }};
         local header = AceGUI:Create("SimpleGroup");
@@ -426,8 +436,17 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             desc:SetText(columns[i]);
             header:AddChild(desc);
         end
-        window:SetUserData("whispers", scroll);
     end
+
+    container.frame:SetScript("OnSizeChanged", function(self)
+        local height = self:GetHeight();
+        window:GetUserData("requestsTitle"):SetHeight(height / 2);
+        window:GetUserData("whispersTitle"):SetHeight(height / 2);
+        container:DoLayout();
+    end);
+    container:SetCallback("OnRelease", function(widget)
+        container.frame:SetScript("OnSizeChanged", nil);
+    end);
 
     ShowUIPanel(ItemRefTooltip);
     ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
@@ -448,7 +467,10 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             entry.player = "TestPlayer" .. i;
             if math.random() < 0.5 then
                 -- request
-                entry.equipped = {};
+                entry.equipped = {
+                    "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
+                    "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r"
+                };
                 entry.role = math.random() < 0.5 and "MS" or "OS";
                 entry.notes = "Test notes";
             else
