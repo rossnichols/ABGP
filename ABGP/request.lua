@@ -60,6 +60,8 @@ end
 
 function ABGP:RequestOnDistAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
+    activeItems[itemLink] = nil;
+
     local player = data.player;
     local cost = data.cost;
 

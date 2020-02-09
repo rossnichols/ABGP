@@ -81,7 +81,7 @@ local function RemoveData(sender)
     for i, existing in ipairs(data) do
         if existing.player == sender then
             table.remove(data, i);
-            ABGP:Notify("%s is passing on %s", ABGP:ColorizeName(sender), window:GetUserData("itemLink"));
+            ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), window:GetUserData("itemLink"));
             break;
         end
     end
@@ -230,7 +230,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         ["ms"] = "main spec",
         ["os"] = "off spec",
     };
-    ABGP:Notify("%s is requesting %s for %s", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
+    ABGP:Notify("%s is requesting %s for %s.", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
 
     ProcessNewData({
         player = sender,
