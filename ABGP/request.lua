@@ -56,6 +56,18 @@ function ABGP:InitItemRequest()
         end
     end, self);
 
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data)
+        local itemLink = data.itemLink;
+        local player = data.player;
+        local cost = data.cost;
+
+        if player == UnitName("player") then
+            self:Notify("%s was awarded to you (cost: %d)!", itemLink, cost);
+        else
+            self:Notify("%s was awarded to %s (cost: %d).", itemLink, ABGP:ColorizeName(player), cost);
+        end
+    end, self);
+
     -- TODO: figure out when the sender is no longer online?
     -- GROUP_ROSTER_UPDATE ?
 end
@@ -116,7 +128,7 @@ function ABGP:RequestItem(itemLink, role, notes)
         INVTYPE_WEAPONOFFHAND = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
         INVTYPE_WRIST = { INVSLOT_WRIST },
     };
-    ABGP:Notify("Requesting %s for %s!", itemLink, role);
+    ABGP:Notify("Requesting %s for %s!", itemLink, roles[role]);
     local equipLoc = select(9, GetItemInfo(itemLink));
     if equipLoc and itemMaps[equipLoc] then
         local current1 = itemMaps[equipLoc][1] and GetInventoryItemLink("player", itemMaps[equipLoc][1]) or nil;

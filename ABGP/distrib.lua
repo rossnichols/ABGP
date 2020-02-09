@@ -22,12 +22,15 @@ do
             self.role:Show();
             self.notes:Show();
             self.msg:Show();
+
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
         end,
 
         ["SetData"] = function(self, data)
             self.data = data;
 
-            self.player.text:SetText(string.format("|c%s%s|r", data.playerColor or "ffffffff", data.player or ""));
+            self.player.text:SetText(ABGP:ColorizeName(data.player or ""));
             self.rank.text:SetText(data.rank or "");
             self.priority.text:SetText(string.format("%.3f", data.priority or 0));
             if data.msg then
@@ -61,6 +64,12 @@ do
         frame:SetHeight(25);
         frame:Hide();
 
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
         local function createElement(frame, anchor)
             local elt = CreateFrame("Button", nil, frame);
             elt:SetHeight(frame:GetHeight());
@@ -71,17 +80,17 @@ do
                 GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
                 GameTooltip:SetHyperlink(itemLink);
                 GameTooltip:Show();
-                self:GetParent():LockHighlight();
+                self:GetParent():RequestHighlight(true);
             end);
             elt:SetScript("OnHyperlinkLeave", function(self)
                 GameTooltip:Hide();
-                self:GetParent():UnlockHighlight();
+                self:GetParent():RequestHighlight(false);
             end);
             elt:SetScript("OnEnter", function(self)
-                self:GetParent():LockHighlight();
+                self:GetParent():RequestHighlight(true);
             end);
             elt:SetScript("OnLeave", function(self)
-                self:GetParent():UnlockHighlight();
+                self:GetParent():RequestHighlight(false);
             end);
             elt:SetScript("OnClick", function(self, ...)
                 self:GetParent().obj:Fire("OnClick", ...)
@@ -151,11 +160,11 @@ do
                 GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
                 GameTooltip:Show();
             end
-            self:GetParent():LockHighlight();
+            self:GetParent():RequestHighlight(true);
         end);
         notes:SetScript("OnLeave", function(self)
             GameTooltip:Hide();
-            self:GetParent():UnlockHighlight();
+            self:GetParent():RequestHighlight(false);
         end);
 
         local msg = createElement(frame, priority);
@@ -170,11 +179,11 @@ do
                 GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
                 GameTooltip:Show();
             end
-            self:GetParent():LockHighlight();
+            self:GetParent():RequestHighlight(true);
         end);
         msg:SetScript("OnLeave", function(self)
             GameTooltip:Hide();
-            self:GetParent():UnlockHighlight();
+            self:GetParent():RequestHighlight(false);
         end);
 
         -- create widget
@@ -202,10 +211,95 @@ end
 
 local activeDistributionWindow;
 
+local function ProcessSelectedData()
+    local window = activeDistributionWindow;
+    local data = window:GetUserData("selectedData");
+
+    window:GetUserData("distributeButton"):SetDisabled(data == nil);
+    if not window:GetUserData("costEdited") then
+        window:GetUserData("costEdit"):SetText((data and data.role == "OS") and 0 or window:GetUserData("costBase"));
+    end
+end
+
+local function RebuildUI()
+    local window = activeDistributionWindow;
+    local data = window:GetUserData("data");
+    local requests = window:GetUserData("requests");
+    local whispers = window:GetUserData("whispers");
+
+    local requestsHeader = requests.children[1];
+    table.remove(requests.children, 1);
+    local whispersHeader = whispers.children[1];
+    table.remove(whispers.children, 1);
+
+    requests:ReleaseChildren();
+    requests:AddChild(requestsHeader);
+    whispers:ReleaseChildren();
+    whispers:AddChild(whispersHeader);
+
+    local selectedData = window:GetUserData("selectedData");
+    window:SetUserData("selectedData", nil);
+    window:SetUserData("selectedElt", nil);
+    ProcessSelectedData();
+
+    for i, existing in ipairs(data) do
+        local elt = AceGUI:Create("ABGP_DistribPlayer");
+        elt:SetFullWidth(true);
+        elt:SetData(existing);
+        elt:SetCallback("OnClick", function(elt)
+            local oldElt = window:GetUserData("selectedElt");
+            if oldElt then
+                oldElt.frame:RequestHighlight(false);
+            end
+
+            local oldData = window:GetUserData("selectedData");
+            if not oldData or oldData.player ~= elt.data.player then
+                window:SetUserData("selectedData", elt.data);
+                window:SetUserData("selectedElt", elt);
+                elt.frame:RequestHighlight(true);
+            else
+                window:SetUserData("selectedData", nil);
+                window:SetUserData("selectedElt", nil);
+            end
+            ProcessSelectedData();
+        end);
+
+        if existing.msg then
+            whispers:AddChild(elt);
+        else
+            requests:AddChild(elt);
+        end
+
+        if selectedData and existing.player == selectedData.player then
+            elt:Fire("OnClick");
+        end
+    end
+
+    local nRequests = #requests.children - 1;
+    window:GetUserData("requestsTitle"):SetTitle(string.format("Requests%s",
+        nRequests > 0 and " (" .. nRequests .. ")" or ""));
+    local nWhispers = #whispers.children - 1;
+    window:GetUserData("whispersTitle"):SetTitle(string.format("Whispers%s",
+    nWhispers > 0 and " (" .. nWhispers .. ")" or ""));
+end
+
+local function RemoveData(sender)
+    local window = activeDistributionWindow;
+    local data = window:GetUserData("data");
+
+    for i, existing in ipairs(data) do
+        if existing.player == sender then
+            table.remove(data, i);
+            break;
+        end
+    end
+
+    RebuildUI();
+end
+
 local function ProcessNewData(entry)
-    local data = activeDistributionWindow:GetUserData("data");
-    local requests = activeDistributionWindow:GetUserData("requests");
-    local whispers = activeDistributionWindow:GetUserData("whispers");
+    local window = activeDistributionWindow;
+    local data = window:GetUserData("data");
 
     entry.timestamp = time();
 
@@ -274,34 +368,7 @@ local function ProcessNewData(entry)
         end
     end);
 
-    local requestsHeader = requests.children[1];
-    table.remove(requests.children, 1);
-    local whispersHeader = whispers.children[1];
-    table.remove(whispers.children, 1);
-
-    requests:ReleaseChildren();
-    requests:AddChild(requestsHeader);
-    whispers:ReleaseChildren();
-    whispers:AddChild(whispersHeader);
-
-    for i, existing in ipairs(data) do
-        local elt = AceGUI:Create("ABGP_DistribPlayer");
-        elt:SetFullWidth(true);
-        elt:SetData(existing);
-        if existing.msg then
-            whispers:AddChild(elt);
-        else
-            requests:AddChild(elt);
-        end
-    end
-
-    local nRequests = #requests.children - 1;
-    activeDistributionWindow:GetUserData("requestsTitle"):SetTitle(string.format("Requests%s",
-        nRequests > 0 and " (" .. nRequests .. ")" or ""));
-    local nWhispers = #whispers.children - 1;
-    activeDistributionWindow:GetUserData("whispersTitle"):SetTitle(string.format("Whispers%s",
-    nWhispers > 0 and " (" .. nWhispers .. ")" or ""));
-
+    RebuildUI();
 end
 
 local whisperFrame = CreateFrame("Frame");
@@ -330,7 +397,6 @@ whisperFrame:SetScript("OnEvent", function(self, event, ...)
     end
 
     if msg and sender and UnitExists(sender) then
-        local _, class = UnitClass(sender);
         local playerGuild = GetGuildInfo("player");
         local guildName, guildRankName = GetGuildInfo(sender);
         if guildName and guildName ~= playerGuild then
@@ -339,7 +405,6 @@ whisperFrame:SetScript("OnEvent", function(self, event, ...)
 
         ProcessNewData({
             player = sender,
-            playerColor = select(4, GetClassColor(class)),
             rank = guildRankName,
             priority = 0, -- one day!
             msg = msg
@@ -366,7 +431,6 @@ function ABGP:InitItemDistribution()
             return;
         end
 
-        local _, class = UnitClass(sender);
         local playerGuild = GetGuildInfo("player");
         local guildName, guildRankName = GetGuildInfo(sender);
         if guildName and guildName ~= playerGuild then
@@ -375,7 +439,6 @@ function ABGP:InitItemDistribution()
 
         ProcessNewData({
             player = sender,
-            playerColor = select(4, GetClassColor(class)),
             rank = guildRankName,
             priority = 0, -- one day!
             equipped = data.equipped,
@@ -386,6 +449,23 @@ function ABGP:InitItemDistribution()
 
     self:RegisterMessage(self.CommTypes.ITEM_PASS, function(self, event, data, distribution, sender)
         local itemLink = data.itemLink;
+        if not activeDistributionWindow then
+            ABGP:Notify("%s requested %s but there's no active distribution!", sender, itemLink);
+            return;
+        end
+
+        local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
+        if itemLink ~= itemLinkCmp then
+            ABGP:Notify("%s requested %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+            return;
+        end
+
+        if not UnitExists(sender) then
+            ABGP:Notify("%s requested %s but they're not grouped with you!", sender, itemLink);
+            return;
+        end
+
+        RemoveData(sender);
     end, self);
 end
 
@@ -395,7 +475,7 @@ function ABGP:ShowDistrib(itemLink)
     if not value then return; end
 
     if activeDistributionWindow then
-        activeDistributionWindow.frame:Hide();
+        activeDistributionWindow:Hide();
         activeDistributionWindow = nil;
     end
 
@@ -409,6 +489,7 @@ function ABGP:ShowDistrib(itemLink)
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
         -- self:CloseWindow(widget);
+        activeDistributionWindow = nil;
         widget.frame:SetMinResize(oldMinW, oldMinH);
         widget.frame:SetMaxResize(oldMaxW, oldMaxH);
         AceGUI:Release(widget);
@@ -426,13 +507,38 @@ function ABGP:ShowDistrib(itemLink)
     distrib:SetWidth(100);
     distrib:SetText("Distribute");
     distrib:SetDisabled(true);
+    distrib:SetCallback("OnClick", function(widget)
+        local cost = tonumber(window:GetUserData("costEdit"):GetText());
+        local player = window:GetUserData("selectedData").player;
+
+        window:Hide();
+        self:SendComm({
+            type = self.CommTypes.ITEM_DISTRIBUTION_AWARDED,
+            itemLink = itemLink,
+            player = player,
+            cost = cost
+        }, "BROADCAST");
+    end);
     window:AddChild(distrib);
+    window:SetUserData("distributeButton", distrib);
 
     local cost = AceGUI:Create("EditBox");
     cost:SetWidth(75);
     cost:SetText(value.gp);
     window:AddChild(cost);
-    cost:SetCallback("OnEnterPressed", function(widget) AceGUI:ClearFocus(); end);
+    cost:SetCallback("OnEnterPressed", function(widget)
+        AceGUI:ClearFocus();
+        local text = widget:GetText();
+        if type(tonumber(text)) == "number" then
+            window:SetUserData("costEdited", true);
+        else
+            window:SetUserData("costEdited", false);
+        end
+        ProcessSelectedData();
+    end);
+    window:SetUserData("costEdit", cost);
+    window:SetUserData("costBase", value.gp);
+
     local desc = AceGUI:Create("Label");
     desc:SetWidth(50);
     desc:SetText("Cost");
@@ -465,22 +571,6 @@ function ABGP:ShowDistrib(itemLink)
             header:AddChild(desc);
         end
         window:SetUserData("requests", scroll);
-
-        -- for i = 1, 10 do
-        --     local elt = AceGUI:Create("ABGP_DistribPlayer");
-        --     elt:SetData({
-        --         player = "AbpSummonbot",
-        --         playerColor = select(4, GetClassColor("WARLOCK")),
-        --         rank = "Red Lobster",
-        --         priority = 50 * math.random(),
-        --         equipped = { "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
-        --             "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r" },
-        --         role = "MS",
-        --         notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
-        --     });
-        --     elt:SetFullWidth(true);
-        --     scroll:AddChild(elt);
-        -- end
     end
 
     do
@@ -527,7 +617,6 @@ function ABGP:ShowDistrib(itemLink)
 
     if self.Debug then
         local testBase = {
-            playerColor = "ffffffff",
             rank = "Test rank",
             priority = 0,
         };
@@ -547,4 +636,19 @@ function ABGP:ShowDistrib(itemLink)
             ProcessNewData(entry);
         end
     end
+
+    -- for i = 1, 10 do
+    --     local elt = AceGUI:Create("ABGP_DistribPlayer");
+    --     elt:SetData({
+    --         player = "AbpSummonbot",
+    --         rank = "Red Lobster",
+    --         priority = 50 * math.random(),
+    --         equipped = { "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
+    --             "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r" },
+    --         role = "MS",
+    --         notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
+    --     });
+    --     elt:SetFullWidth(true);
+    --     scroll:AddChild(elt);
+    -- end
 end

@@ -167,3 +167,15 @@ end
 function ABGP:CloseWindow(window)
     openWindows[window] = nil;
 end
+
+
+--
+-- Helper to color a name by its class.
+--
+
+function ABGP:ColorizeName(name)
+    if not UnitExists(name) then return name; end
+    local _, class = UnitClass(name);
+    local color = select(4, GetClassColor(class));
+    return string.format("|c%s%s", color, name);
+end

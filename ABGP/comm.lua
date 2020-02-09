@@ -29,6 +29,11 @@ ABGP.CommTypes = {
 
     ITEM_DISTRIBUTION_CLOSED = "ABGP_ITEM_DISTRIBUTION_CLOSED",
     -- itemLink: item link string
+
+    ITEM_DISTRIBUTION_AWARDED = "ABGP_ITEM_DISTRIBUTION_AWARDED",
+    -- itemLink: item link string
+    -- player: string
+    -- cost: number
 };
 
 function ABGP:SendComm(data, distribution, target)
@@ -50,14 +55,14 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     local serialized = LibCompress:Decompress(compressed);
     local _, data = AceSerializer:Deserialize(serialized);
 
-    if self.Debug then
-        self:Notify("COMM >>>");
-        self:Notify("Data from %s via %s:", sender, distribution);
+    if self.Verbose then
+        self:LogVerbose("COMM >>>");
+        self:LogVerbose("Data from %s via %s:", sender, distribution);
         for k, v in pairs(data) do
             if type(v) == "table" then v = table.concat(v, ", "); end
-            self:Notify("%s: %s", k, v);
+            self:LogVerbose("%s: %s", k, v);
         end
-        self:Notify("<<< COMM");
+        self:LogVerbose("<<< COMM");
     end
 
     self:SendMessage(data.type, data, distribution, sender);
