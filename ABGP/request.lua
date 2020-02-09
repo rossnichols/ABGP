@@ -21,55 +21,55 @@ local function ShowStaticPopup(itemLink, which)
     end
 end
 
-function ABGP:InitItemRequest()
-    self.ActiveDistributions = 0;
+function ABGP:RequestOnDistOpened(data, distribution, sender)
+    local itemLink = data.itemLink;
+    activeItems[itemLink] = sender;
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED, function(self, event, data, distribution, sender)
-        local itemLink = data.itemLink;
-        activeItems[itemLink] = sender;
-        self.ActiveDistributions = self.ActiveDistributions + 1;
+    local prompt = "";
+    local popup = GetStaticPopupType(itemLink);
+    if popup == staticPopups.ABGP_LOOTDISTRIB_WISHLIST then
+        ShowStaticPopup(itemLink, which);
+    else
+        prompt = "Type '/abgp' if you want to request this item."
+    end
 
-        local prompt = "";
-        local popup = GetStaticPopupType(itemLink);
-        if popup == staticPopups.ABGP_LOOTDISTRIB_WISHLIST then
-            ShowStaticPopup(itemLink, which);
-        else
-            prompt = "Type '/abgp' if you want to request this item."
-        end
+    self:Notify("%s is being distributed! %s", itemLink, prompt);
+end
 
-        self:Notify("%s is being distributed! %s", itemLink, prompt);
-    end, self);
+function ABGP:RequestOnDistClosed(data, distribution, sender)
+    local itemLink = data.itemLink;
+    activeItems[itemLink] = nil;
+    self:Notify("Item distribution closed for %s.", itemLink);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, function(self, event, data)
-        local itemLink = data.itemLink;
-        activeItems[itemLink] = nil;
-        self.ActiveDistributions = self.ActiveDistributions - 1;
-        self:Notify("Item distribution closed for %s.", itemLink);
-
-        for index = 1, STATICPOPUP_NUMDIALOGS do
-            local frame = _G["StaticPopup"..index];
-            if frame:IsShown() and staticPopups[frame.which] then
-                if frame.data.itemLink == itemLink then
-                    frame:Hide();
-                end
+    for index = 1, STATICPOPUP_NUMDIALOGS do
+        local frame = _G["StaticPopup"..index];
+        if frame:IsShown() and staticPopups[frame.which] then
+            if frame.data.itemLink == itemLink then
+                frame:Hide();
             end
         end
-    end, self);
+    end
+end
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data)
-        local itemLink = data.itemLink;
-        local player = data.player;
-        local cost = data.cost;
+function ABGP:RequestOnDistAwarded(data, distribution, sender)
+    local itemLink = data.itemLink;
+    local player = data.player;
+    local cost = data.cost;
 
-        if player == UnitName("player") then
-            self:Notify("%s was awarded to you (cost: %d)!", itemLink, cost);
-        else
-            self:Notify("%s was awarded to %s (cost: %d).", itemLink, ABGP:ColorizeName(player), cost);
+    if player == UnitName("player") then
+        self:Notify("%s was awarded to you (cost: %d)!", itemLink, cost);
+    else
+        self:Notify("%s was awarded to %s (cost: %d).", itemLink, ABGP:ColorizeName(player), cost);
+    end
+
+    for index = 1, STATICPOPUP_NUMDIALOGS do
+        local frame = _G["StaticPopup"..index];
+        if frame:IsShown() and staticPopups[frame.which] then
+            if frame.data.itemLink == itemLink then
+                frame:Hide();
+            end
         end
-    end, self);
-
-    -- TODO: figure out when the sender is no longer online?
-    -- GROUP_ROSTER_UPDATE ?
+    end
 end
 
 function ABGP:PromptItemRequests()

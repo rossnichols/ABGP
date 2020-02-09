@@ -9,7 +9,7 @@ local function GetBroadcastChannel()
         return "RAID";
     elseif IsInGroup() then
         return "PARTY";
-    else
+    elseif ABGP.Debug then
         return "WHISPER", UnitName("player");
     end
 end
@@ -47,7 +47,9 @@ function ABGP:SendComm(data, distribution, target)
         distribution, target = GetBroadcastChannel();
     end
 
-    self:SendCommMessage("ABGP", payload, distribution, target);
+    if distribution then
+        self:SendCommMessage("ABGP", payload, distribution, target);
+    end
 end
 
 function ABGP:OnCommReceived(prefix, payload, distribution, sender)

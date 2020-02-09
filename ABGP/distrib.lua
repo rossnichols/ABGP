@@ -1,214 +1,5 @@
 local AceGUI = LibStub("AceGUI-3.0");
 
-do
-    local Type, Version = "ABGP_DistribPlayer", 1;
-
-    --[[-----------------------------------------------------------------------------
-    Methods
-    -------------------------------------------------------------------------------]]
-    local methods = {
-        ["OnAcquire"] = function(self)
-            self.player.text:SetText("");
-            self.rank.text:SetText("");
-            self.priority.text:SetText("");
-            self.equipped.textTop:SetText("");
-            self.equipped.textMid:SetText("");
-            self.equipped.textBot:SetText("");
-            self.role.text:SetText("");
-            self.notes.text:SetText("");
-            self.msg.text:SetText("");
-
-            self.equipped:Show();
-            self.role:Show();
-            self.notes:Show();
-            self.msg:Show();
-
-            self.frame.highlightRequests = 0;
-            self.frame:UnlockHighlight();
-        end,
-
-        ["SetData"] = function(self, data)
-            self.data = data;
-
-            self.player.text:SetText(ABGP:ColorizeName(data.player or ""));
-            self.rank.text:SetText(data.rank or "");
-            self.priority.text:SetText(string.format("%.3f", data.priority or 0));
-            if data.msg then
-                self.msg.text:SetText(data.msg);
-                self.equipped:Hide();
-                self.role:Hide();
-                self.notes:Hide();
-            else
-                self.msg:Hide();
-                if data.equipped then
-                    if #data.equipped == 2 then
-                        self.equipped.textTop:SetText(data.equipped[1]);
-                        self.equipped.textBot:SetText(data.equipped[2]);
-                    elseif #data.equipped == 1 then
-                        self.equipped.textMid:SetText(data.equipped[1]);
-                    end
-                end
-                self.role.text:SetText(data.role or "");
-                self.notes.text:SetText(data.notes or "--");
-            end
-        end,
-    }
-
-    --[[-----------------------------------------------------------------------------
-    Constructor
-    -------------------------------------------------------------------------------]]
-    local function Constructor()
-        local itemLink = GetInventoryItemLink("player", 1);
-
-        local frame = CreateFrame("Button", nil, UIParent);
-        frame:SetHeight(25);
-        frame:Hide();
-
-        frame.highlightRequests = 0;
-        frame.RequestHighlight = function(self, enable)
-            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
-            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
-        end;
-
-        local function createElement(frame, anchor)
-            local elt = CreateFrame("Button", nil, frame);
-            elt:SetHeight(frame:GetHeight());
-            elt:EnableMouse(true);
-            elt:SetHyperlinksEnabled(true);
-            elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
-                ShowUIPanel(GameTooltip);
-                GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
-                GameTooltip:SetHyperlink(itemLink);
-                GameTooltip:Show();
-                self:GetParent():RequestHighlight(true);
-            end);
-            elt:SetScript("OnHyperlinkLeave", function(self)
-                GameTooltip:Hide();
-                self:GetParent():RequestHighlight(false);
-            end);
-            elt:SetScript("OnEnter", function(self)
-                self:GetParent():RequestHighlight(true);
-            end);
-            elt:SetScript("OnLeave", function(self)
-                self:GetParent():RequestHighlight(false);
-            end);
-            elt:SetScript("OnClick", function(self, ...)
-                self:GetParent().obj:Fire("OnClick", ...)
-            end);
-
-            if anchor then
-                elt:SetPoint("TOPLEFT", anchor, "TOPRIGHT");
-            else
-                elt:SetPoint("TOPLEFT", frame);
-            end
-
-            return elt;
-        end
-
-        local function createFontString(frame, y)
-            local fontstr = frame:CreateFontString(nil, "BACKGROUND", "GameFontNormalSmall");
-            fontstr:SetJustifyH("LEFT");
-            if y then
-                fontstr:SetPoint("LEFT", frame, 0, y);
-                fontstr:SetPoint("RIGHT", frame, -2, y);
-            else
-                fontstr:SetPoint("TOPLEFT", frame, 0, 0);
-                fontstr:SetPoint("BOTTOMRIGHT", frame, -2, 0);
-            end
-            fontstr:SetWordWrap(false);
-
-            return fontstr;
-        end
-
-        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
-        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
-        highlight:SetAllPoints();
-        highlight:SetBlendMode("ADD");
-        highlight:SetTexCoord(0, 1, 0, 0.578125);
-
-        local player = createElement(frame);
-        player:SetWidth(100);
-        player.text = createFontString(player);
-
-        local rank = createElement(frame, player);
-        rank:SetWidth(80);
-        rank.text = createFontString(rank);
-
-        local priority = createElement(frame, rank);
-        priority:SetWidth(60);
-        priority.text = createFontString(priority);
-
-        local equipped = createElement(frame, priority);
-        equipped:SetWidth(150);
-        equipped.textTop = createFontString(equipped, 5);
-        equipped.textMid = createFontString(equipped);
-        equipped.textBot = createFontString(equipped, -5);
-
-        local role = createElement(frame, equipped);
-        role:SetWidth(40);
-        role.text = createFontString(role);
-
-        local notes = createElement(frame, role);
-        notes:SetPoint("TOPRIGHT", frame);
-        notes.text = createFontString(notes);
-        notes.text:SetWordWrap(true);
-        notes:SetScript("OnEnter", function(self)
-            if self.text:IsTruncated() then
-                local text = self.text:GetText();
-                ShowUIPanel(GameTooltip);
-                GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
-                GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
-                GameTooltip:Show();
-            end
-            self:GetParent():RequestHighlight(true);
-        end);
-        notes:SetScript("OnLeave", function(self)
-            GameTooltip:Hide();
-            self:GetParent():RequestHighlight(false);
-        end);
-
-        local msg = createElement(frame, priority);
-        msg:SetPoint("TOPRIGHT", frame);
-        msg.text = createFontString(msg);
-        msg.text:SetWordWrap(true);
-        msg:SetScript("OnEnter", function(self)
-            if self.text:IsTruncated() then
-                local text = self.text:GetText();
-                ShowUIPanel(GameTooltip);
-                GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
-                GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
-                GameTooltip:Show();
-            end
-            self:GetParent():RequestHighlight(true);
-        end);
-        msg:SetScript("OnLeave", function(self)
-            GameTooltip:Hide();
-            self:GetParent():RequestHighlight(false);
-        end);
-
-        -- create widget
-        local widget = {
-            player = player,
-            rank = rank,
-            priority = priority,
-            equipped = equipped,
-            role = role,
-            notes = notes,
-            msg = msg,
-
-            frame = frame,
-            type  = Type
-        }
-        for method, func in pairs(methods) do
-            widget[method] = func
-        end
-
-        return AceGUI:RegisterAsWidget(widget)
-    end
-
-    AceGUI:RegisterWidgetType(Type, Constructor, Version)
-end
-
 local activeDistributionWindow;
 
 local function ProcessSelectedData()
@@ -376,7 +167,7 @@ local whisperFrame = CreateFrame("Frame");
 whisperFrame:RegisterEvent("CHAT_MSG_WHISPER");
 whisperFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
 whisperFrame:SetScript("OnEvent", function(self, event, ...)
-    if not activeDistributionWindow or ABGP.ActiveDistributions == 0 then
+    if not activeDistributionWindow then
         return;
     end
 
@@ -413,67 +204,71 @@ whisperFrame:SetScript("OnEvent", function(self, event, ...)
     end
 end);
 
-function ABGP:InitItemDistribution()
-    self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
-        local itemLink = data.itemLink;
-        if not activeDistributionWindow then
-            ABGP:Notify("%s requested %s but there's no active distribution!", sender, itemLink);
-            return;
-        end
+function ABGP:DistribOnItemRequest(data, distribution, sender)
+    local itemLink = data.itemLink;
+    if not activeDistributionWindow then return; end
 
-        local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
-        if itemLink ~= itemLinkCmp then
-            ABGP:Notify("%s requested %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
-            return;
-        end
+    -- Check if the sender is grouped with us
+    if not UnitExists(sender) then return; end
 
-        if not UnitExists(sender) then
-            ABGP:Notify("%s requested %s but they're not grouped with you!", sender, itemLink);
-            return;
-        end
+    -- Check if this is our own reflected message
+    if distribution == "OFFICER" and sender == UnitName("player") then return; end
 
-        local playerGuild = GetGuildInfo("player");
-        local guildName, guildRankName = GetGuildInfo(sender);
-        if guildName and guildName ~= playerGuild then
-            guildRankName = "[Other guild]";
-        end
+    local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
+    if itemLink ~= itemLinkCmp then
+        ABGP:Error("%s requested %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+        return;
+    end
 
-        local roles = {
-            ["ms"] = "main spec",
-            ["os"] = "off spec",
-        };
-        ABGP:Notify("%s is requesting %s for %s", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
+    local playerGuild = GetGuildInfo("player");
+    local guildName, guildRankName = GetGuildInfo(sender);
+    if guildName and guildName ~= playerGuild then
+        guildRankName = "[Other guild]";
+    end
 
-        ProcessNewData({
-            player = sender,
-            rank = guildRankName,
-            priority = 0, -- one day!
-            equipped = data.equipped,
-            role = strupper(data.role),
-            notes = data.notes
-        });
-    end, self);
+    local roles = {
+        ["ms"] = "main spec",
+        ["os"] = "off spec",
+    };
+    ABGP:Notify("%s is requesting %s for %s", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
 
-    self:RegisterMessage(self.CommTypes.ITEM_PASS, function(self, event, data, distribution, sender)
-        local itemLink = data.itemLink;
-        if not activeDistributionWindow then
-            ABGP:Notify("%s passed on %s but there's no active distribution!", sender, itemLink);
-            return;
-        end
+    ProcessNewData({
+        player = sender,
+        rank = guildRankName,
+        priority = 0, -- one day!
+        equipped = data.equipped,
+        role = strupper(data.role),
+        notes = data.notes
+    });
 
-        local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
-        if itemLink ~= itemLinkCmp then
-            ABGP:Notify("%s passed on %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
-            return;
-        end
+    -- reflect into officer channel
+    if distribution == "WHISPER" then
+        self:SendComm(data, "OFFICER");
+    end
+end
 
-        if not UnitExists(sender) then
-            ABGP:Notify("%s passed on %s but they're not grouped with you!", sender, itemLink);
-            return;
-        end
+function ABGP:DistribOnItemPass(data, distribution, sender)
+    local itemLink = data.itemLink;
+    if not activeDistributionWindow then return; end
 
-        RemoveData(sender);
-    end, self);
+    -- Check if the sender is grouped with us
+    if not UnitExists(sender) then return; end
+
+    -- Check if this is our own reflected message
+    if distribution == "OFFICER" and sender == UnitName("player") then return; end
+
+    local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
+    if itemLink ~= itemLinkCmp then
+        self:Error("%s passed on %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+        return;
+    end
+
+    RemoveData(sender);
+
+    -- reflect into officer channel
+    if distribution == "WHISPER" then
+        self:SendComm(data, "OFFICER");
+    end
 end
 
 function ABGP:ShowDistrib(itemLink)
@@ -482,8 +277,29 @@ function ABGP:ShowDistrib(itemLink)
     if not value then return; end
 
     if activeDistributionWindow then
+        activeDistributionWindow:SetUserData("owner", UnitName("player"));
         activeDistributionWindow:Hide();
-        activeDistributionWindow = nil;
+    end
+
+    self:SendComm({
+        type = self.CommTypes.ITEM_DISTRIBUTION_OPENED,
+        itemLink = itemLink
+    }, "BROADCAST");
+end
+
+function ABGP:DistribOnDistOpened(data, distribution, sender)
+    local itemLink = data.itemLink;
+    local itemName = GetItemInfo(itemLink);
+    local value = self:GetItemValue(itemName);
+    if not value then return; end
+
+    -- Only privileged users will see the distribution UI.
+    if not self:IsPrivileged() then return; end
+
+    if activeDistributionWindow then
+        self:Error("Received DISTRIB_OPENED with an active window!");
+        activeDistributionWindow:SetUserData("owner", nil);
+        activeDistributionWindow:Hide();
     end
 
     local window = AceGUI:Create("Window");
@@ -497,17 +313,23 @@ function ABGP:ShowDistrib(itemLink)
     window:SetCallback("OnClose", function(widget)
         -- self:CloseWindow(widget);
         activeDistributionWindow = nil;
+
+        if widget:GetUserData("owner") == UnitName("player") then
+            self:SendComm({
+                type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+                itemLink = itemLink
+            }, "BROADCAST");
+        end
+
         widget.frame:SetMinResize(oldMinW, oldMinH);
         widget.frame:SetMaxResize(oldMaxW, oldMaxH);
         AceGUI:Release(widget);
         ItemRefTooltip:Hide();
-
-        self:SendComm({
-            type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
-            itemLink = itemLink
-        }, "BROADCAST");
     end);
     window:SetLayout("Flow");
+    window:SetUserData("itemLink", itemLink);
+    window:SetUserData("data", {});
+    window:SetUserData("owner", sender);
     -- self:OpenWindow(window);
 
     local distrib = AceGUI:Create("Button");
@@ -518,7 +340,6 @@ function ABGP:ShowDistrib(itemLink)
         local cost = tonumber(window:GetUserData("costEdit"):GetText());
         local player = window:GetUserData("selectedData").player;
 
-        window:Hide();
         self:SendComm({
             type = self.CommTypes.ITEM_DISTRIBUTION_AWARDED,
             itemLink = itemLink,
@@ -614,13 +435,7 @@ function ABGP:ShowDistrib(itemLink)
     ItemRefTooltip:SetHyperlink(itemLink);
     ItemRefTooltip:Show();
 
-    window:SetUserData("itemLink", itemLink);
-    window:SetUserData("data", {});
     activeDistributionWindow = window;
-    self:SendComm({
-        type = self.CommTypes.ITEM_DISTRIBUTION_OPENED,
-        itemLink = itemLink
-    }, "BROADCAST");
 
     if self.Debug then
         local testBase = {
@@ -658,4 +473,24 @@ function ABGP:ShowDistrib(itemLink)
     --     elt:SetFullWidth(true);
     --     scroll:AddChild(elt);
     -- end
+end
+
+function ABGP:DistribOnDistAwarded(data, distribution, sender)
+    if activeDistributionWindow then
+        if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
+            self:Error("Received DISTRIB_CLOSED for mismatched item!");
+        end
+        activeDistributionWindow:SetUserData("owner", nil);
+        activeDistributionWindow:Hide();
+    end
+end
+
+function ABGP:DistribOnDistClosed(data, distribution, sender)
+    if activeDistributionWindow then
+        if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
+            self:Error("Received DISTRIB_CLOSED for mismatched item!");
+        end
+        activeDistributionWindow:SetUserData("owner", nil);
+        activeDistributionWindow:Hide();
+    end
 end

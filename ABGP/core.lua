@@ -24,9 +24,29 @@ function ABGP:OnInitialize()
     self:CheckForDataUpdates();
     self:RefreshActivePlayers();
     self:RefreshItemValues();
-    self:InitItemRequest();
-    self:InitItemDistribution();
 
+    self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
+        self:DistribOnItemRequest(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_PASS, function(self, event, data, distribution, sender)
+        self:DistribOnItemPass(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED, function(self, event, data, distribution, sender)
+        self:RequestOnDistOpened(data, distribution, sender);
+        self:DistribOnDistOpened(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, function(self, event, data, distribution, sender)
+        self:RequestOnDistClosed(data, distribution, sender);
+        self:DistribOnDistClosed(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data, distribution, sender)
+        self:RequestOnDistAwarded(data, distribution, sender);
+        self:DistribOnDistAwarded(data, distribution, sender);
+    end, self);
 end
 
 ABGP.Color = "|cFF94E4FF";
@@ -38,6 +58,12 @@ end
 function ABGP:LogVerbose(str, ...)
     if self.Verbose then
         self:Notify(str, ...);
+    end
+end
+
+function ABGP:Error(str, ...)
+    if self.Debug then
+        self:Notify("|cff0000ffERROR:|r " .. str, ...);
     end
 end
 
