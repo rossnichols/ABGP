@@ -52,7 +52,7 @@ function ABGP:OnInitialize()
     end, self);
 end
 
-function ABGP:EunSlashCommand(input)
+function ABGP:RunSlashCommand(input)
     self:ShowItemRequests();
 end
 
