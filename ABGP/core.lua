@@ -25,6 +25,7 @@ function ABGP:OnInitialize()
     self:RefreshActivePlayers();
     self:RefreshItemValues();
     self:InitItemRequest();
+    self:InitItemDistribution();
 
 end
 

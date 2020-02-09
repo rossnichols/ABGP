@@ -51,6 +51,9 @@ function ABGP:InitItemRequest()
             end
         end
     end, self);
+
+    -- TODO: figure out when the sender is no longer online?
+    -- GROUP_ROSTER_UPDATE ?
 end
 
 function ABGP:PromptItemRequests()
@@ -146,7 +149,8 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     button2 = "Request (OS)",
     button3 = "Pass",
 	hasEditBox = 1,
-	maxLetters = 50,
+	maxLetters = 255,
+	countInvisibleLetters = true,
     OnHyperlinkEnter = function(self, itemLink)
         ShowUIPanel(GameTooltip);
         GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
