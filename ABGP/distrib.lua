@@ -201,6 +201,109 @@ do
 end
 
 local activeDistributionWindow;
+
+local function ProcessNewData(entry)
+    local data = activeDistributionWindow:GetUserData("data");
+    local requests = activeDistributionWindow:GetUserData("requests");
+    local whispers = activeDistributionWindow:GetUserData("whispers");
+
+    entry.timestamp = time();
+
+    local insert = true;
+    for i, existing in ipairs(data) do
+        if existing.player == entry.player then
+            local existingWhisper = (existing.msg ~= nil);
+            local newWhisper = (entry.msg ~= nil);
+            if existingWhisper then
+                if newWhisper then
+                    -- If the existing entry is a whisper, and the new one is as well,
+                    -- remove the existing entry and prepend its msg contents to the new msg.
+                    table.remove(data, i);
+                    entry.msg = existing.msg .. "\n" .. entry.msg;
+                else
+                    -- If the existing entry is a whisper, and the new one is a request,
+                    -- remove the existing entry but prepend its msg contents to the notes.
+                    table.remove(data, i);
+                    if entry.notes then
+                        entry.notes = existing.msg .. "\n" .. entry.notes;
+                    else
+                        entry.notes = existing.msg;
+                    end
+                end
+            else
+                if newWhisper then
+                    -- If the existing entry is a request, and the new one is a whisper,
+                    -- modify the existing entry with the new msg.
+                    insert = false;
+                    if existing.notes then
+                        existing.notes = existing.notes .. "\n" .. entry.msg;
+                    else
+                        existing.notes = entry.msg;
+                    end
+                else
+                    -- If the existing entry is a request, and the new one is as well,
+                    -- remove the existing entry without preserving any data.
+                    table.remove(data, i);
+                end
+            end
+            break;
+        end
+    end
+
+    if insert then
+        table.insert(data, entry);
+    end
+
+    table.sort(data, function(a, b)
+        if a.priority ~= b.priority then
+            return a.priority > b.priority;
+        elseif (a.msg ~= nil) ~= (b.msg ~= nil) then
+            return a.msg ~= nil;
+        elseif a.msg ~= nil then
+            if a.timestamp ~= b.timestamp then
+                return a.timestamp < b.timestamp;
+            else
+                return a.player < b.player;
+            end
+        elseif a.role ~= b.role then
+            return a.role == "MS";
+        elseif a.timestamp ~= b.timestamp then
+            return a.timestamp < b.timestamp;
+        else
+            return a.player < b.player;
+        end
+    end);
+
+    local requestsHeader = requests.children[1];
+    table.remove(requests.children, 1);
+    local whispersHeader = whispers.children[1];
+    table.remove(whispers.children, 1);
+
+    requests:ReleaseChildren();
+    requests:AddChild(requestsHeader);
+    whispers:ReleaseChildren();
+    whispers:AddChild(whispersHeader);
+
+    for i, existing in ipairs(data) do
+        local elt = AceGUI:Create("ABGP_DistribPlayer");
+        elt:SetFullWidth(true);
+        elt:SetData(existing);
+        if existing.msg then
+            whispers:AddChild(elt);
+        else
+            requests:AddChild(elt);
+        end
+    end
+
+    local nRequests = #requests.children - 1;
+    activeDistributionWindow:GetUserData("requestsTitle"):SetTitle(string.format("Requests%s",
+        nRequests > 0 and " (" .. nRequests .. ")" or ""));
+    local nWhispers = #whispers.children - 1;
+    activeDistributionWindow:GetUserData("whispersTitle"):SetTitle(string.format("Whispers%s",
+    nWhispers > 0 and " (" .. nWhispers .. ")" or ""));
+
+end
+
 local whisperFrame = CreateFrame("Frame");
 whisperFrame:RegisterEvent("CHAT_MSG_WHISPER");
 whisperFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
@@ -234,16 +337,13 @@ whisperFrame:SetScript("OnEvent", function(self, event, ...)
             guildRankName = "[Other guild]";
         end
 
-        local elt = AceGUI:Create("ABGP_DistribPlayer");
-        elt:SetFullWidth(true);
-        elt:SetData({
+        ProcessNewData({
             player = sender,
             playerColor = select(4, GetClassColor(class)),
             rank = guildRankName,
             priority = 0, -- one day!
             msg = msg
         });
-        activeDistributionWindow:GetUserData("whispers"):AddChild(elt);
     end
 end);
 
@@ -273,18 +373,15 @@ function ABGP:InitItemDistribution()
             guildRankName = "[Other guild]";
         end
 
-        local elt = AceGUI:Create("ABGP_DistribPlayer");
-        elt:SetFullWidth(true);
-        elt:SetData({
+        ProcessNewData({
             player = sender,
             playerColor = select(4, GetClassColor(class)),
             rank = guildRankName,
             priority = 0, -- one day!
             equipped = data.equipped,
             role = strupper(data.role),
-            notes = data.notes,
+            notes = data.notes
         });
-        activeDistributionWindow:GetUserData("requests"):AddChild(elt);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_PASS, function(self, event, data, distribution, sender)
@@ -348,6 +445,7 @@ function ABGP:ShowDistrib(itemLink)
         scrollContainer:SetHeight(200);
         scrollContainer:SetLayout("Fill");
         window:AddChild(scrollContainer);
+        window:SetUserData("requestsTitle", scrollContainer);
 
         local scroll = AceGUI:Create("ScrollFrame");
         scroll:SetFullWidth(true);
@@ -392,6 +490,7 @@ function ABGP:ShowDistrib(itemLink)
         scrollContainer:SetHeight(200);
         scrollContainer:SetLayout("Fill");
         window:AddChild(scrollContainer);
+        window:SetUserData("whispersTitle", scrollContainer);
 
         local scroll = AceGUI:Create("ScrollFrame");
         scroll:SetFullWidth(true);
@@ -419,9 +518,33 @@ function ABGP:ShowDistrib(itemLink)
     ItemRefTooltip:Show();
 
     window:SetUserData("itemLink", itemLink);
+    window:SetUserData("data", {});
     activeDistributionWindow = window;
     self:SendComm({
         type = self.CommTypes.ITEM_DISTRIBUTION_OPENED,
         itemLink = itemLink
     }, "BROADCAST");
+
+    if self.Debug then
+        local testBase = {
+            playerColor = "ffffffff",
+            rank = "Test rank",
+            priority = 0,
+        };
+        for i = 1, 10 do
+            local entry = {};
+            for k, v in pairs(testBase) do entry[k] = v; end
+            entry.player = "TestPlayer" .. i;
+            if math.random() < 0.5 then
+                -- request
+                entry.equipped = {};
+                entry.role = math.random() < 0.5 and "MS" or "OS";
+                entry.notes = "Test notes";
+            else
+                -- whisper
+                entry.msg = "Test msg";
+            end
+            ProcessNewData(entry);
+        end
+    end
 end
