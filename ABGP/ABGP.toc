@@ -15,4 +15,5 @@ distrib.lua
 request.lua
 comm.lua
 widgets.lua
+bindings.xml
 internal.xml

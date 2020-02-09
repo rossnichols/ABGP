@@ -1,8 +1,11 @@
 ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0");
 
+BINDING_HEADER_ABGP = "ABGP";
+BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request interface";
+
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
-    ABGP:RegisterChatCommand("abgp", function() ABGP:PromptItemRequests(); end);
+    self:RegisterChatCommand("abgp", "RunSlashCommand");
 
     -- if self.Debug then
         -- local AceConfig = LibStub("AceConfig-3.0")
@@ -47,6 +50,10 @@ function ABGP:OnInitialize()
         self:RequestOnDistAwarded(data, distribution, sender);
         self:DistribOnDistAwarded(data, distribution, sender);
     end, self);
+end
+
+function ABGP:EunSlashCommand(input)
+    self:ShowItemRequests();
 end
 
 ABGP.Color = "|cFF94E4FF";

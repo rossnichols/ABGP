@@ -8,8 +8,8 @@ local function GetStaticPopupType(itemLink)
     if AtlasLoot and AtlasLoot.Addons and AtlasLoot.Addons.GetAddon then
         local faves = AtlasLoot.Addons:GetAddon("Favourites");
         if faves then
-            local itemId = itemLink:match("item:(%d+)");
-            if faves:IsFavouriteItemID(tonumber(itemId)) then
+            local itemId = tonumber(itemLink:match("item:(%d+)"));
+            if faves:IsFavouriteItemID(itemId) then
                 return staticPopups.ABGP_LOOTDISTRIB_WISHLIST;
             end
         end
@@ -81,7 +81,7 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     end
 end
 
-function ABGP:PromptItemRequests()
+function ABGP:ShowItemRequests()
     local found = false;
     for itemLink in pairs(activeItems) do
         ShowStaticPopup(itemLink);
