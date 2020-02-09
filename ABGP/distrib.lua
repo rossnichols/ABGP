@@ -290,6 +290,7 @@ local function RemoveData(sender)
     for i, existing in ipairs(data) do
         if existing.player == sender then
             table.remove(data, i);
+            ABGP:Notify("%s is passing on %s", ABGP:ColorizeName(sender), window:GetUserData("itemLink"));
             break;
         end
     end
@@ -437,6 +438,12 @@ function ABGP:InitItemDistribution()
             guildRankName = "[Other guild]";
         end
 
+        local roles = {
+            ["ms"] = "main spec",
+            ["os"] = "off spec",
+        };
+        ABGP:Notify("%s is requesting %s for %s", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
+
         ProcessNewData({
             player = sender,
             rank = guildRankName,
@@ -450,18 +457,18 @@ function ABGP:InitItemDistribution()
     self:RegisterMessage(self.CommTypes.ITEM_PASS, function(self, event, data, distribution, sender)
         local itemLink = data.itemLink;
         if not activeDistributionWindow then
-            ABGP:Notify("%s requested %s but there's no active distribution!", sender, itemLink);
+            ABGP:Notify("%s passed on %s but there's no active distribution!", sender, itemLink);
             return;
         end
 
         local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
         if itemLink ~= itemLinkCmp then
-            ABGP:Notify("%s requested %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+            ABGP:Notify("%s passed on %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
             return;
         end
 
         if not UnitExists(sender) then
-            ABGP:Notify("%s requested %s but they're not grouped with you!", sender, itemLink);
+            ABGP:Notify("%s passed on %s but they're not grouped with you!", sender, itemLink);
             return;
         end
 
