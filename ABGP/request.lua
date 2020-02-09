@@ -5,9 +5,15 @@ local staticPopups = {
 };
 
 local function GetStaticPopupType(itemLink)
-    local itemName = GetItemInfo(itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    if value and value.onWishList then return staticPopups.ABGP_LOOTDISTRIB_WISHLIST; end
+    if AtlasLoot and AtlasLoot.Addons and AtlasLoot.Addons.GetAddon then
+        local faves = AtlasLoot.Addons:GetAddon("Favourites");
+        if faves then
+            local itemId = itemLink:match("item:(%d+)");
+            if faves:IsFavouriteItemID(tonumber(itemId)) then
+                return staticPopups.ABGP_LOOTDISTRIB_WISHLIST;
+            end
+        end
+    end
     return staticPopups.ABGP_LOOTDISTRIB;
 end
 
@@ -29,6 +35,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     local popup = GetStaticPopupType(itemLink);
     if popup == staticPopups.ABGP_LOOTDISTRIB_WISHLIST then
         ShowStaticPopup(itemLink, which);
+        prompt = "This item is favorited in AtlasLoot."
     else
         prompt = "Type '/abgp' if you want to request this item."
     end
@@ -205,10 +212,11 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     multiple = true,
 };
 
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_WISHLIST] = { unpack(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB]) };
-local dialog = StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_WISHLIST];
-dialog.extraButton = "Pass and remove from wish list";
-dialog.OnExtraButton = function(self, data)
-    data.clicked = true;
-    ABGP:PassOnItem(data.itemLink, true);
-end
+local dialog = {};
+for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB]) do dialog[k] = v; end
+-- dialog.extraButton = "Pass and remove from wish list";
+-- dialog.OnExtraButton = function(self, data)
+--     data.clicked = true;
+--     ABGP:PassOnItem(data.itemLink, true);
+-- end
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_WISHLIST] = dialog;
