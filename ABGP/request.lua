@@ -42,7 +42,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         prompt = "This item is favorited in AtlasLoot."
     else
         local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "currently unbound";
-        prompt = string.format("Type '/abgp' or press your hotkey (%s) if you want to request this item.", keybinding);
+        prompt = string.format("Type '/abgp loot' or press your hotkey (%s) if you want to request this item.", keybinding);
     end
 
     self:Notify("%s is being distributed! %s", itemLink, prompt);
@@ -201,7 +201,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     end,
     OnHide = function(self, data)
         if not data.clicked and activeItems[data.itemLink] then
-            ABGP:Notify("Request window hidden. To show again, type '/abgp'.");
+            ABGP:Notify("Request window hidden. To show again, type '/abgp loot'.");
         end
         self.editBox:SetAutoFocus(true);
     end,

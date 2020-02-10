@@ -129,10 +129,19 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     };
     ABGP:Notify("%s is requesting %s for %s.", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
 
+    local priority = 0;
+    local epgp = ABGP:GetActivePlayer(sender);
+    local itemName = GetItemInfo(itemLink);
+    local value = ABGP:GetItemValue(itemName);
+
+    if epgp and epgp[value.phase] then
+        priority = epgp[value.phase].ratio;
+    end
+
     ProcessNewData({
         player = sender,
         rank = guildRankName,
-        priority = 0, -- one day!
+        priority = priority,
         equipped = data.equipped,
         role = strupper(data.role),
         notes = data.notes
@@ -162,6 +171,7 @@ function ABGP:ShowDistrib(itemLink)
 
     if activeDistributionWindow then
         activeDistributionWindow:SetUserData("owner", UnitName("player"));
+        activeDistributionWindow:SetUserData("closeConfirmed", true);
         activeDistributionWindow:Hide();
     end
 
@@ -196,10 +206,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window.frame:SetFrameStrata("HIGH");
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
-        if widget:GetUserData("closeConfirmed") then
+        local owned = (widget:GetUserData("owner") == UnitName("player"));
+        if not owned or widget:GetUserData("closeConfirmed") then
             activeDistributionWindow = nil;
 
-            if widget:GetUserData("owner") == UnitName("player") then
+            if owned then
                 self:SendComm({
                     type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
                     itemLink = itemLink

@@ -5,22 +5,26 @@ BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request interface";
 
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
-    self:RegisterChatCommand("abgp", "RunSlashCommand");
-
-    -- if self.Debug then
-        -- local AceConfig = LibStub("AceConfig-3.0")
-        -- AceConfig:RegisterOptionsTable("ABGP", {
-        --     type = "group",
-        --     args = {
-        --         show = {
-        --             name = "Show",
-        --             desc = "shows the window",
-        --             type = "execute",
-        --             func = function() ABGP:ShowWindow() end
-        --         },
-        --     },
-        -- }, { "abp" });
-    -- end
+    local AceConfig = LibStub("AceConfig-3.0");
+    AceConfig:RegisterOptionsTable("ABGP", {
+        type = "group",
+        args = {
+            loot = {
+                name = "loot",
+                desc = "shows the item request interface",
+                type = "execute",
+                func = function() ABGP:ShowItemRequests(); end
+            },
+            import = {
+                name = "import",
+                desc = "shows the import interface",
+                type = "execute",
+                cmdHidden = true,
+                validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+                func = function() ABGP:ShowImportWindow(); end
+            },
+        },
+    }, { "abgp" });
 
     self:HookTooltips();
     self:AddAnnounceHooks();
@@ -49,11 +53,8 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data, distribution, sender)
         self:RequestOnDistAwarded(data, distribution, sender);
         self:DistribOnDistAwarded(data, distribution, sender);
+        self:DataOnDistAwarded(data, distribution, sender);
     end, self);
-end
-
-function ABGP:RunSlashCommand(input)
-    self:ShowItemRequests();
 end
 
 ABGP.Color = "|cFF94E4FF";
@@ -113,7 +114,8 @@ function ABGP:RefreshItemValues()
                 gp = gp,
                 item = name,
                 priority = item.priority,
-                notes = item.notes
+                notes = item.notes,
+                phase = phase
             };
         end
     end
@@ -136,12 +138,13 @@ function ABGP:RefreshActivePlayers()
     activePlayers = {};
     for phase in pairs(self.Phases) do
         for _, pri in ipairs(ABGP_Data[phase].priority) do
-            activePlayers[pri.character] = true;
+            activePlayers[pri.character] = activePlayers[pri.character] or {};
+            activePlayers[pri.character][phase] = pri;
         end
     end
 end
 
-function ABGP:IsActivePlayer(name)
+function ABGP:GetActivePlayer(name)
     return activePlayers[name];
 end
 

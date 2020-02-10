@@ -2244,6 +2244,31 @@ function ABGP:CheckForDataUpdates()
         ABGP_Data = initialData.ABGP_Data;
 
         local d = date("%I:%M%p, %m/%d/%y", ABGP_DataTimestamp); -- https://strftime.org/
-        ABGP:Notify(string.format("Loaded new data! (updated %s)", d));
+        self:Notify(string.format("Loaded new data! (updated %s)", d));
     end
+end
+
+function ABGP:DataOnDistAwarded(data, distribution, sender)
+	local itemLink = data.itemLink;
+	local player = data.player;
+	local cost = data.cost;
+
+	local epgp = self:GetActivePlayer(player);
+	local itemName = GetItemInfo(itemLink);
+	local value = self:GetItemValue(itemName);
+
+	if epgp and epgp[value.phase] then
+		local db = ABGP_Data[value.phase].priority;
+		for _, data in ipairs(db) do
+			if data.character == player then
+				data.gp = data.gp + cost;
+				data.ratio = data.ep * 10 / data.gp;
+				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f RATIO=%.3f",
+					value.phase, player, data.ep, data.gp, data.ratio);
+				break;
+			end
+		end
+	end
+
+	self:RefreshActivePlayers();
 end

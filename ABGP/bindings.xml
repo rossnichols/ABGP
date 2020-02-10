@@ -1,5 +1,5 @@
 <Bindings>
     <Binding name="ABGP_SHOWITEMREQUESTS" header="ABGP" category="ADDONS">
-        ABGP:RunSlashCommand("");
+        ABGP:ShowItemRequests();
     </Binding>
 </Bindings>

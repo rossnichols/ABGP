@@ -180,7 +180,7 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local desc = AceGUI:Create("Label");
             local data = spreadsheet[i][columns[j].value];
             if type(data) == "number" then
-                data = string.format(floor(data) == data and "%d" or "%.2f", data);
+                data = string.format(floor(data) == data and "%d" or "%.3f", data);
             end
             if type(data) == "table" then
                 data = table.concat(data, ", ");
@@ -260,7 +260,7 @@ end
 local function DrawEP(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), ABGP_Data[ABGP.CurrentPhase].epHistory, epMapping, function(row)
-            return ABGP:IsActivePlayer(row.character);
+            return ABGP:GetActivePlayer(row.character);
         end);
 
         widget:GetUserData("window"):Hide();
@@ -285,7 +285,7 @@ local function DrawGP(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             if gpLine.gp == nil then gpLine.gp = 0; end
-            return ABGP:IsActivePlayer(row.character);
+            return ABGP:GetActivePlayer(row.character);
         end);
 
         widget:GetUserData("window"):Hide();
@@ -329,7 +329,7 @@ local function DrawItems(container)
     DrawTable(container, ABGP_Data[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
 end
 
-function ABGP:ShowWindow()
+function ABGP:ShowImportWindow()
     local window = AceGUI:Create("Window");
     window:SetTitle(string.format("ABGP (data updated %s)", date("%m/%d/%y %I:%M%p", ABGP_DataTimestamp))); -- https://strftime.org/
     window:SetWidth(650);
