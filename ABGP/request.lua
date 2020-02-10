@@ -192,7 +192,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
 	countInvisibleLetters = true,
     OnHyperlinkEnter = function(self, itemLink)
         ShowUIPanel(GameTooltip);
-        GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
+        GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
         GameTooltip:SetHyperlink(itemLink);
         GameTooltip:Show();
     end,
