@@ -23,6 +23,8 @@ do
 
             self.frame.highlightRequests = 0;
             self.frame:UnlockHighlight();
+
+            self.background:Hide();
         end,
 
         ["SetData"] = function(self, data)
@@ -48,7 +50,7 @@ do
             self.role.text:SetFontObject(specialFont);
         end,
 
-        SetWidths = function(self, widths)
+        ["SetWidths"] = function(self, widths)
             self.player:SetWidth(widths[1]);
             self.rank:SetWidth(widths[2]);
             self.ep:SetWidth(widths[3]);
@@ -56,6 +58,10 @@ do
             self.priority:SetWidth(widths[5]);
             self.equipped:SetWidth(widths[6]);
             self.role:SetWidth(widths[7]);
+        end,
+
+        ["ShowBackground"] = function(self, show)
+            self.background[show and "Show" or "Hide"](self.background);
         end,
     }
 
@@ -131,6 +137,10 @@ do
         highlight:SetBlendMode("ADD");
         highlight:SetTexCoord(0, 1, 0, 0.578125);
 
+        local background = frame:CreateTexture(nil, "BACKGROUND");
+        background:SetAllPoints();
+        background:SetColorTexture(0, 0, 0, 0.5);
+
         local player = createElement(frame);
         player.text = createFontString(player);
 
@@ -186,6 +196,8 @@ do
             equipped = equipped,
             role = role,
             notes = notes,
+
+            background = background,
 
             frame = frame,
             type  = Type

@@ -34,6 +34,7 @@ local function RebuildUI()
         elt:SetFullWidth(true);
         elt:SetData(existing);
         elt:SetWidths(widths);
+        elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt)
             local oldElt = window:GetUserData("selectedElt");
             if oldElt then
@@ -364,7 +365,7 @@ function ABGP:DistribOnDistClosed(data, distribution, sender)
 end
 
 StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
-    text = "Are you sure you want to end distribution?",
+    text = "Are you sure you want to stop distribution?",
     button1 = "I'm sure",
     button2 = "Nevermind",
 	OnAccept = function(self, data)
