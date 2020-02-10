@@ -1,6 +1,7 @@
 local AceGUI = LibStub("AceGUI-3.0");
 
 local activeDistributionWindow;
+local widths = { 110, 90, 65, 180, 35, 1.0 };
 
 local function ProcessSelectedData()
     local window = activeDistributionWindow;
@@ -16,17 +17,11 @@ local function RebuildUI()
     local window = activeDistributionWindow;
     local data = window:GetUserData("data");
     local requests = window:GetUserData("requests");
-    local whispers = window:GetUserData("whispers");
 
     local requestsHeader = requests.children[1];
     table.remove(requests.children, 1);
-    local whispersHeader = whispers.children[1];
-    table.remove(whispers.children, 1);
-
     requests:ReleaseChildren();
     requests:AddChild(requestsHeader);
-    whispers:ReleaseChildren();
-    whispers:AddChild(whispersHeader);
 
     local selectedData = window:GetUserData("selectedData");
     window:SetUserData("selectedData", nil);
@@ -37,6 +32,7 @@ local function RebuildUI()
         local elt = AceGUI:Create("ABGP_DistribPlayer");
         elt:SetFullWidth(true);
         elt:SetData(existing);
+        elt:SetWidths(widths);
         elt:SetCallback("OnClick", function(elt)
             local oldElt = window:GetUserData("selectedElt");
             if oldElt then
@@ -55,11 +51,7 @@ local function RebuildUI()
             ProcessSelectedData();
         end);
 
-        if existing.msg then
-            whispers:AddChild(elt);
-        else
-            requests:AddChild(elt);
-        end
+        requests:AddChild(elt);
 
         if selectedData and existing.player == selectedData.player then
             elt:Fire("OnClick");
@@ -69,9 +61,6 @@ local function RebuildUI()
     local nRequests = #requests.children - 1;
     window:GetUserData("requestsTitle"):SetTitle(string.format("Requests%s",
         nRequests > 0 and " (" .. nRequests .. ")" or ""));
-    local nWhispers = #whispers.children - 1;
-    window:GetUserData("whispersTitle"):SetTitle(string.format("Whispers%s",
-    nWhispers > 0 and " (" .. nWhispers .. ")" or ""));
 end
 
 local function RemoveData(sender)
@@ -93,68 +82,20 @@ local function ProcessNewData(entry)
     local window = activeDistributionWindow;
     local data = window:GetUserData("data");
 
-    entry.timestamp = time();
-
-    local insert = true;
     for i, existing in ipairs(data) do
         if existing.player == entry.player then
-            local existingWhisper = (existing.msg ~= nil);
-            local newWhisper = (entry.msg ~= nil);
-            if existingWhisper then
-                if newWhisper then
-                    -- If the existing entry is a whisper, and the new one is as well,
-                    -- remove the existing entry and prepend its msg contents to the new msg.
-                    table.remove(data, i);
-                    entry.msg = existing.msg .. "\n" .. entry.msg;
-                else
-                    -- If the existing entry is a whisper, and the new one is a request,
-                    -- remove the existing entry but prepend its msg contents to the notes.
-                    table.remove(data, i);
-                    if entry.notes then
-                        entry.notes = existing.msg .. "\n" .. entry.notes;
-                    else
-                        entry.notes = existing.msg;
-                    end
-                end
-            else
-                if newWhisper then
-                    -- If the existing entry is a request, and the new one is a whisper,
-                    -- modify the existing entry with the new msg.
-                    insert = false;
-                    if existing.notes then
-                        existing.notes = existing.notes .. "\n" .. entry.msg;
-                    else
-                        existing.notes = entry.msg;
-                    end
-                else
-                    -- If the existing entry is a request, and the new one is as well,
-                    -- remove the existing entry without preserving any data.
-                    table.remove(data, i);
-                end
-            end
+            table.remove(data, i);
             break;
         end
     end
 
-    if insert then
-        table.insert(data, entry);
-    end
+    table.insert(data, entry);
 
     table.sort(data, function(a, b)
-        if a.priority ~= b.priority then
-            return a.priority > b.priority;
-        elseif (a.msg ~= nil) ~= (b.msg ~= nil) then
-            return a.msg ~= nil;
-        elseif a.msg ~= nil then
-            if a.timestamp ~= b.timestamp then
-                return a.timestamp < b.timestamp;
-            else
-                return a.player < b.player;
-            end
-        elseif a.role ~= b.role then
+        if a.role ~= b.role then
             return a.role == "MS";
-        elseif a.timestamp ~= b.timestamp then
-            return a.timestamp < b.timestamp;
+        elseif a.priority ~= b.priority then
+            return a.priority > b.priority;
         else
             return a.player < b.player;
         end
@@ -163,56 +104,12 @@ local function ProcessNewData(entry)
     RebuildUI();
 end
 
-local whisperFrame = CreateFrame("Frame");
-whisperFrame:RegisterEvent("CHAT_MSG_WHISPER");
-whisperFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
-whisperFrame:SetScript("OnEvent", function(self, event, ...)
-    if not activeDistributionWindow then
-        return;
-    end
-
-    local msg, sender, _;
-    if event == "CHAT_MSG_WHISPER" then
-        msg, _, _, _, sender = ...;
-    elseif event == "CHAT_MSG_BN_WHISPER" then
-        msg = ...;
-        local bnetId = select(13, ...);
-        local _, characterName, clientProgram, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, wowProjectID = BNGetGameAccountInfo(bnetId);
-        local gameInfo = C_BattleNet.GetGameAccountInfoByID(bnetId);
-        if clientProgram == BNET_CLIENT_WOW and wowProjectID == WOW_PROJECT_CLASSIC then
-            sender = characterName;
-        end
-    end
-
-    if ABGP.Debug then
-        ABGP:Notify("Whisper from %s: %s", sender, msg);
-    end
-
-    if msg and sender and UnitExists(sender) then
-        local playerGuild = GetGuildInfo("player");
-        local guildName, guildRankName = GetGuildInfo(sender);
-        if guildName and guildName ~= playerGuild then
-            guildRankName = "[Other guild]";
-        end
-
-        ProcessNewData({
-            player = sender,
-            rank = guildRankName,
-            priority = 0, -- one day!
-            msg = msg
-        });
-    end
-end);
-
 function ABGP:DistribOnItemRequest(data, distribution, sender)
     local itemLink = data.itemLink;
     if not activeDistributionWindow then return; end
 
     -- Check if the sender is grouped with us
     if not UnitExists(sender) then return; end
-
-    -- Check if this is our own reflected message
-    if distribution == "OFFICER" and sender == UnitName("player") then return; end
 
     local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
     if itemLink ~= itemLinkCmp then
@@ -240,11 +137,6 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         role = strupper(data.role),
         notes = data.notes
     });
-
-    -- reflect into officer channel
-    if distribution == "WHISPER" then
-        self:SendComm(data, "OFFICER");
-    end
 end
 
 function ABGP:DistribOnItemPass(data, distribution, sender)
@@ -254,9 +146,6 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
     -- Check if the sender is grouped with us
     if not UnitExists(sender) then return; end
 
-    -- Check if this is our own reflected message
-    if distribution == "OFFICER" and sender == UnitName("player") then return; end
-
     local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
     if itemLink ~= itemLinkCmp then
         self:Error("%s passed on %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
@@ -264,11 +153,6 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
     end
 
     RemoveData(sender);
-
-    -- reflect into officer channel
-    if distribution == "WHISPER" then
-        self:SendComm(data, "OFFICER");
-    end
 end
 
 function ABGP:ShowDistrib(itemLink)
@@ -305,32 +189,36 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     local window = AceGUI:Create("Window");
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window:SetWidth(700);
-    window:SetHeight(500);
+    window:SetWidth(750);
+    window:SetHeight(425);
     window.frame:SetMinResize(600, 300);
-    window.frame:SetMaxResize(800, 700);
+    window.frame:SetMaxResize(900, 500);
+    window.frame:SetFrameStrata("HIGH");
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
-        -- self:CloseWindow(widget);
-        activeDistributionWindow = nil;
+        if widget:GetUserData("closeConfirmed") then
+            activeDistributionWindow = nil;
 
-        if widget:GetUserData("owner") == UnitName("player") then
-            self:SendComm({
-                type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
-                itemLink = itemLink
-            }, "BROADCAST");
+            if widget:GetUserData("owner") == UnitName("player") then
+                self:SendComm({
+                    type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+                    itemLink = itemLink
+                }, "BROADCAST");
+            end
+
+            widget.frame:SetMinResize(oldMinW, oldMinH);
+            widget.frame:SetMaxResize(oldMaxW, oldMaxH);
+            AceGUI:Release(widget);
+            ItemRefTooltip:Hide();
+        else
+            StaticPopup_Show("ABGP_CONFIRM_END_DIST");
+            widget:Show();
         end
-
-        widget.frame:SetMinResize(oldMinW, oldMinH);
-        widget.frame:SetMaxResize(oldMaxW, oldMaxH);
-        AceGUI:Release(widget);
-        ItemRefTooltip:Hide();
     end);
     window:SetLayout("Flow");
     window:SetUserData("itemLink", itemLink);
     window:SetUserData("data", {});
     window:SetUserData("owner", sender);
-    -- self:OpenWindow(window);
 
     local distrib = AceGUI:Create("Button");
     distrib:SetWidth(100);
@@ -372,81 +260,32 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     desc:SetText("Cost");
     window:AddChild(desc);
 
-    local container = AceGUI:Create("SimpleGroup");
-    container:SetFullWidth(true);
-    container:SetFullHeight(true);
-    container:SetLayout("List");
-    container:SetUserData("table", { columns = { 1.0 } });
-    window:AddChild(container);
+    local scrollContainer = AceGUI:Create("InlineGroup");
+    scrollContainer:SetTitle("Requests");
+    scrollContainer:SetFullWidth(true);
+    scrollContainer:SetFullHeight(true);
+    scrollContainer:SetLayout("Fill");
+    window:AddChild(scrollContainer);
+    window:SetUserData("requestsTitle", scrollContainer);
 
-    do
-        local scrollContainer = AceGUI:Create("InlineGroup");
-        scrollContainer:SetTitle("Requests");
-        scrollContainer:SetFullWidth(true);
-        scrollContainer:SetHeight(container.frame:GetHeight() / 2);
-        scrollContainer:SetLayout("Fill");
-        scrollContainer:SetAutoAdjustHeight(false);
-        container:AddChild(scrollContainer);
-        window:SetUserData("requestsTitle", scrollContainer);
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetFullWidth(true);
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("requests", scroll);
 
-        local scroll = AceGUI:Create("ScrollFrame");
-        scroll:SetFullWidth(true);
-        scroll:SetLayout("List");
-        scrollContainer:AddChild(scroll);
-        window:SetUserData("requests", scroll);
+    local columns = { "Player", "Rank", "Priority", "Equipped", "Role", "Notes", weights = { unpack(widths) } };
+    local header = AceGUI:Create("SimpleGroup");
+    header:SetFullWidth(true);
+    header:SetLayout("Table");
+    header:SetUserData("table", { columns = columns.weights});
+    scroll:AddChild(header);
 
-        local columns = { "Player", "Rank", "Priority", "Equipped", "Role", "Notes", weights = { 100, 80, 60, 150, 40, 1.0 }};
-        local header = AceGUI:Create("SimpleGroup");
-        header:SetFullWidth(true);
-        header:SetLayout("Table");
-        header:SetUserData("table", { columns = columns.weights});
-        scroll:AddChild(header);
-
-        for i = 1, #columns do
-            local desc = AceGUI:Create("Label");
-            desc:SetText(columns[i]);
-            header:AddChild(desc);
-        end
+    for i = 1, #columns do
+        local desc = AceGUI:Create("Label");
+        desc:SetText(columns[i]);
+        header:AddChild(desc);
     end
-
-    do
-        local scrollContainer = AceGUI:Create("InlineGroup");
-        scrollContainer:SetTitle("Whispers");
-        scrollContainer:SetFullWidth(true);
-        scrollContainer:SetHeight(container.frame:GetHeight() / 2);
-        scrollContainer:SetLayout("Fill");
-        scrollContainer:SetAutoAdjustHeight(false);
-        container:AddChild(scrollContainer);
-        window:SetUserData("whispersTitle", scrollContainer);
-
-        local scroll = AceGUI:Create("ScrollFrame");
-        scroll:SetFullWidth(true);
-        scroll:SetLayout("List");
-        scrollContainer:AddChild(scroll);
-        window:SetUserData("whispers", scroll);
-
-        local columns = { "Player", "Rank", "Priority", "Message", weights = { 100, 80, 60, 1.0 }};
-        local header = AceGUI:Create("SimpleGroup");
-        header:SetLayout("Table");
-        header:SetUserData("table", { columns = columns.weights});
-        scroll:AddChild(header);
-
-        for i = 1, #columns do
-            local desc = AceGUI:Create("Label");
-            desc:SetText(columns[i]);
-            header:AddChild(desc);
-        end
-    end
-
-    container.frame:SetScript("OnSizeChanged", function(self)
-        local height = self:GetHeight();
-        window:GetUserData("requestsTitle"):SetHeight(height / 2);
-        window:GetUserData("whispersTitle"):SetHeight(height / 2);
-        container:DoLayout();
-    end);
-    container:SetCallback("OnRelease", function(widget)
-        container.frame:SetScript("OnSizeChanged", nil);
-    end);
 
     ShowUIPanel(ItemRefTooltip);
     ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
@@ -458,43 +297,22 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
     if self.Debug then
         local testBase = {
-            rank = "Test rank",
-            priority = 0,
+            rank = "Blue Lobster",
+            notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
+            equipped = {
+                "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
+                "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r"
+            },
         };
-        for i = 1, 10 do
+        for i = 1, 9 do
             local entry = {};
             for k, v in pairs(testBase) do entry[k] = v; end
-            entry.player = "TestPlayer" .. i;
-            if math.random() < 0.5 then
-                -- request
-                entry.equipped = {
-                    "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
-                    "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r"
-                };
-                entry.role = math.random() < 0.5 and "MS" or "OS";
-                entry.notes = "Test notes";
-            else
-                -- whisper
-                entry.msg = "Test msg";
-            end
+            entry.player = "TestTestPlayer" .. i;
+            entry.role = math.random() < 0.5 and "MS" or "OS";
+            entry.priority = math.random() * 50;
             ProcessNewData(entry);
         end
     end
-
-    -- for i = 1, 10 do
-    --     local elt = AceGUI:Create("ABGP_DistribPlayer");
-    --     elt:SetData({
-    --         player = "AbpSummonbot",
-    --         rank = "Red Lobster",
-    --         priority = 50 * math.random(),
-    --         equipped = { "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
-    --             "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r" },
-    --         role = "MS",
-    --         notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
-    --     });
-    --     elt:SetFullWidth(true);
-    --     scroll:AddChild(elt);
-    -- end
 end
 
 function ABGP:DistribOnDistAwarded(data, distribution, sender)
@@ -516,3 +334,18 @@ function ABGP:DistribOnDistClosed(data, distribution, sender)
         activeDistributionWindow:Hide();
     end
 end
+
+StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
+    text = "Are you sure you want to end distribution?",
+    button1 = "I'm sure",
+    button2 = "Nevermind",
+	OnAccept = function(self, data)
+        if activeDistributionWindow then
+            activeDistributionWindow:SetUserData("closeConfirmed", true);
+            activeDistributionWindow:Hide();
+        end
+	end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+};
