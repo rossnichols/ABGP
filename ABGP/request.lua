@@ -23,12 +23,7 @@ end
 
 local function ShowStaticPopup(itemLink, which)
     which = which or GetStaticPopupType(itemLink);
-    local dialog = StaticPopup_Show(which, itemLink);
-    if dialog then
-        dialog.data = {
-            itemLink = itemLink,
-        };
-    end
+    StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
 end
 
 local function CloseStaticPopups(itemLink)

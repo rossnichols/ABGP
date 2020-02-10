@@ -241,14 +241,9 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     disenchant:SetWidth(100);
     disenchant:SetText("Disenchant");
     disenchant:SetCallback("OnClick", function(widget)
-        self:SendComm({
-            type = self.CommTypes.ITEM_DISTRIBUTION_TRASHED,
-            itemLink = itemLink,
-        }, "BROADCAST");
-        self:SendComm({
-            type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+        StaticPopup_Show("ABGP_CONFIRM_TRASH", itemLink, nil, {
             itemLink = itemLink
-        }, "BROADCAST");
+        });
     end);
     window:AddChild(disenchant);
     window:SetUserData("disenchantButton", disenchant);
@@ -260,17 +255,13 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     distrib:SetCallback("OnClick", function(widget)
         local cost = tonumber(window:GetUserData("costEdit"):GetText());
         local player = window:GetUserData("selectedData").player;
+        local award = string.format("%s for %d gp", ABGP:ColorizeName(player), cost);
 
-        self:SendComm({
-            type = self.CommTypes.ITEM_DISTRIBUTION_AWARDED,
+        StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
             itemLink = itemLink,
             player = player,
             cost = cost
-        }, "BROADCAST");
-        self:SendComm({
-            type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
-            itemLink = itemLink
-        }, "BROADCAST");
+        });
     end);
     window:AddChild(distrib);
     window:SetUserData("distributeButton", distrib);
@@ -364,10 +355,50 @@ function ABGP:DistribOnDistClosed(data, distribution, sender)
     end
 end
 
+StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
+    text = "Award %s to %s?",
+    button1 = "Yes",
+    button2 = "No",
+	OnAccept = function(self, data)
+        ABGP:SendComm({
+            type = ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED,
+            itemLink = data.itemLink,
+            player = data.player,
+            cost = data.cost
+        }, "BROADCAST");
+        ABGP:SendComm({
+            type = ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+            itemLink = data.itemLink
+        }, "BROADCAST");
+	end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+};
+
+StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
+    text = "Disenchant %s?",
+    button1 = "Yes",
+    button2 = "No",
+	OnAccept = function(self, data)
+        ABGP:SendComm({
+            type = ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED,
+            itemLink = data.itemLink
+        }, "BROADCAST");
+        ABGP:SendComm({
+            type = ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+            itemLink = data.itemLink
+        }, "BROADCAST");
+	end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+};
+
 StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
     text = "Are you sure you want to stop distribution?",
-    button1 = "I'm sure",
-    button2 = "Nevermind",
+    button1 = "Yes",
+    button2 = "No",
 	OnAccept = function(self, data)
         if activeDistributionWindow then
             activeDistributionWindow:SetUserData("closeConfirmed", true);
