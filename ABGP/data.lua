@@ -2254,7 +2254,7 @@ function ABGP:DataOnDistAwarded(data, distribution, sender)
 	local cost = data.cost;
 
 	local epgp = self:GetActivePlayer(player);
-	local itemName = GetItemInfo(itemLink);
+	local itemName = string.match(itemLink, "%[(.*)%]");
 	local value = self:GetItemValue(itemName);
 
 	if epgp and epgp[value.phase] then

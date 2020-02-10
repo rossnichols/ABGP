@@ -18,18 +18,29 @@ local function RebuildUI()
     local window = activeDistributionWindow;
     local data = window:GetUserData("data");
     local requests = window:GetUserData("requests");
-
-    local requestsHeader = requests.children[1];
-    table.remove(requests.children, 1);
     requests:ReleaseChildren();
-    requests:AddChild(requestsHeader);
 
     local selectedData = window:GetUserData("selectedData");
     window:SetUserData("selectedData", nil);
     window:SetUserData("selectedElt", nil);
     ProcessSelectedData();
 
+    local msHeading, osHeading;
     for i, existing in ipairs(data) do
+        if existing.role == "MS" and not msHeading then
+            msHeading = true;
+            local mainspec = AceGUI:Create("Heading");
+            mainspec:SetFullWidth(true);
+            mainspec:SetText("Main Spec");
+            requests:AddChild(mainspec);
+        end
+        if existing.role == "OS" and not osHeading then
+            osHeading = true;
+            local offspec = AceGUI:Create("Heading");
+            offspec:SetFullWidth(true);
+            offspec:SetText("Off Spec");
+            requests:AddChild(offspec);
+        end
         local elt = AceGUI:Create("ABGP_DistribPlayer");
         elt:SetFullWidth(true);
         elt:SetData(existing);
@@ -133,7 +144,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
 
     local priority, ep, gp = 0, 0, 0;
     local epgp = ABGP:GetActivePlayer(sender);
-    local itemName = GetItemInfo(itemLink);
+    local itemName = string.match(itemLink, "%[(.*)%]");
     local value = ABGP:GetItemValue(itemName);
 
     if epgp and epgp[value.phase] then
@@ -171,7 +182,7 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
 end
 
 function ABGP:ShowDistrib(itemLink)
-    local itemName = GetItemInfo(itemLink);
+    local itemName = string.match(itemLink, "%[(.*)%]");
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
@@ -189,12 +200,11 @@ end
 
 function ABGP:DistribOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
-    local itemName = GetItemInfo(itemLink);
+    local itemName = string.match(itemLink, "%[(.*)%]");
     local value = self:GetItemValue(itemName);
     if not value then return; end
 
-    -- Only privileged users will see the distribution UI.
-    if not self:IsPrivileged() then return; end
+    if sender ~= UnitName("player") then return; end
 
     if activeDistributionWindow then
         self:Error("Received DISTRIB_OPENED with an active window!");
@@ -292,28 +302,30 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     scrollContainer:SetTitle("Requests");
     scrollContainer:SetFullWidth(true);
     scrollContainer:SetFullHeight(true);
-    scrollContainer:SetLayout("Fill");
+    scrollContainer:SetLayout("Flow");
     window:AddChild(scrollContainer);
     window:SetUserData("requestsTitle", scrollContainer);
-
-    local scroll = AceGUI:Create("ScrollFrame");
-    scroll:SetFullWidth(true);
-    scroll:SetLayout("List");
-    scrollContainer:AddChild(scroll);
-    window:SetUserData("requests", scroll);
 
     local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Role", "Notes", weights = { unpack(widths) } };
     local header = AceGUI:Create("SimpleGroup");
     header:SetFullWidth(true);
     header:SetLayout("Table");
     header:SetUserData("table", { columns = columns.weights});
-    scroll:AddChild(header);
+    scrollContainer:AddChild(header);
 
     for i = 1, #columns do
         local desc = AceGUI:Create("Label");
-        desc:SetText(columns[i]);
+        desc:SetText(columns[i] .. "\n");
+        desc:SetFontObject(GameFontHighlight);
         header:AddChild(desc);
     end
+
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetFullWidth(true);
+    scroll:SetFullHeight(true);
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("requests", scroll);
 
     ShowUIPanel(ItemRefTooltip);
     ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
