@@ -2263,8 +2263,8 @@ function ABGP:DataOnDistAwarded(data, distribution, sender)
 			if data.character == player then
 				data.gp = data.gp + cost;
 				data.ratio = data.ep * 10 / data.gp;
-				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f RATIO=%.3f",
-					value.phase, player, data.ep, data.gp, data.ratio);
+				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) RATIO=%.3f",
+					value.phase, player, data.ep, data.gp, cost, data.ratio);
 				break;
 			end
 		end

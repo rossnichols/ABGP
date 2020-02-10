@@ -91,15 +91,28 @@ local function RemoveData(sender)
     RebuildUI();
 end
 
+local function CombineNotes(a, b)
+    if not a then return b; end
+    if not b then return a; end
+    return a .. "\n" .. b;
+end
+
 local function ProcessNewData(entry)
     local window = activeDistributionWindow;
     local data = window:GetUserData("data");
 
     for i, existing in ipairs(data) do
         if existing.player == entry.player then
+            entry.notes = CombineNotes(existing.notes, entry.notes);
             table.remove(data, i);
             break;
         end
+    end
+
+    local pending = window:GetUserData("pendingWhispers");
+    if pending and pending[entry.player] then
+        entry.notes = CombineNotes(pending[entry.player], entry.notes);
+        pending[entry.player] = nil;
     end
 
     table.insert(data, entry);
@@ -116,6 +129,60 @@ local function ProcessNewData(entry)
 
     RebuildUI();
 end
+
+local function GetPlayerFromBNet(bnetId)
+    local _, _, _, _, _, gameAccountID = BNGetFriendInfoByID(bnetId);
+    if gameAccountID then
+        -- local _, characterName, clientProgram, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, wowProjectID = BNGetGameAccountInfo(gameAccountID);
+        -- if clientProgram == BNET_CLIENT_WOW and wowProjectID == WOW_PROJECT_CLASSIC then
+        --     return characterName;
+        -- end
+        local _, characterName = BNGetGameAccountInfo(gameAccountID);
+        if UnitExists(characterName) then
+            return characterName;
+        end
+    end
+end
+
+local whisperFrame = CreateFrame("Frame");
+whisperFrame:RegisterEvent("CHAT_MSG_WHISPER");
+whisperFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
+whisperFrame:SetScript("OnEvent", function(self, event, ...)
+    if not activeDistributionWindow then
+        return;
+    end
+    local window = activeDistributionWindow;
+
+    local msg, sender, _;
+    if event == "CHAT_MSG_WHISPER" then
+        msg, _, _, _, sender = ...;
+    elseif event == "CHAT_MSG_BN_WHISPER" then
+        msg = ...;
+        local bnetId = select(13, ...);
+        sender = GetPlayerFromBNet(bnetId);
+    end
+
+    local found = false;
+    if msg and sender and UnitExists(sender) then
+        local requests = window:GetUserData("requests");
+        for _, elt in ipairs(requests.children) do
+            if elt.data and elt.data.player == sender then
+                elt.data.notes = CombineNotes(elt.data.notes, msg);
+                elt:SetData(elt.data);
+                found = true;
+                break;
+            end
+        end
+    end
+
+    if not found then
+        if not window:GetUserData("pendingWhispers") then
+            window:SetUserData("pendingWhispers", {});
+        end
+        local pending = window:GetUserData("pendingWhispers");
+        pending[sender] = CombineNotes(pending[sender], msg);
+    end
+end);
 
 function ABGP:DistribOnItemRequest(data, distribution, sender)
     local itemLink = data.itemLink;

@@ -1,7 +1,7 @@
 ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0");
 
 BINDING_HEADER_ABGP = "ABGP";
-BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request interface";
+BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
@@ -11,13 +11,13 @@ function ABGP:OnInitialize()
         args = {
             loot = {
                 name = "loot",
-                desc = "shows the item request interface",
+                desc = "shows the item request window",
                 type = "execute",
                 func = function() ABGP:ShowItemRequests(); end
             },
             import = {
                 name = "import",
-                desc = "shows the import interface",
+                desc = "shows the import window",
                 type = "execute",
                 cmdHidden = true,
                 validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,

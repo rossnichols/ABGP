@@ -71,9 +71,9 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     local cost = data.cost;
 
     if player == UnitName("player") then
-        self:Notify("%s was awarded to you (cost: %d)!", itemLink, cost);
+        self:Notify("%s was awarded to you for %d gp!", itemLink, cost);
     else
-        self:Notify("%s was awarded to %s (cost: %d).", itemLink, ABGP:ColorizeName(player), cost);
+        self:Notify("%s was awarded to %s for %d gp.", itemLink, ABGP:ColorizeName(player), cost);
     end
     CloseStaticPopups(itemLink);
 end
@@ -116,32 +116,33 @@ function ABGP:RequestItem(itemLink, role, notes)
         ["os"] = "off spec",
     };
     local itemMaps = {
-        INVTYPE_2HWEAPON = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_AMMO = { INVSLOT_AMMO },
+        INVTYPE_HEAD = { INVSLOT_HEAD },
+        INVTYPE_NECK = { INVSLOT_NECK },
+        INVTYPE_SHOULDER = { INVSLOT_SHOULDER },
         INVTYPE_BODY = { INVSLOT_BODY },
         INVTYPE_CHEST = { INVSLOT_CHEST },
-        INVTYPE_CLOAK = { INVSLOT_BACK },
-        INVTYPE_FEET = { INVSLOT_FEET },
-        INVTYPE_FINGER = { INVSLOT_FINGER1, INVSLOT_FINGER2 },
-        INVTYPE_HAND = { INVSLOT_HAND },
-        INVTYPE_HEAD = { INVSLOT_HEAD },
-        INVTYPE_HOLDABLE = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_LEGS = { INVSLOT_LEGS },
-        INVTYPE_NECK = { INVSLOT_NECK },
-        INVTYPE_RANGED = { INVSLOT_RANGED },
-        INVTYPE_RELIC = { INVSLOT_RANGED },
-        INVTYPE_ROBE = { INVSLOT_CHEST },
-        INVTYPE_SHIELD = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_SHOULDER = { INVSLOT_SHOULDER },
-        INVTYPE_TABARD = { INVSLOT_TABARD },
-        INVTYPE_TRINKET = { INVSLOT_TRINKET1, INVSLOT_TRINKET2 },
         INVTYPE_WAIST = { INVSLOT_WAIST },
+        INVTYPE_LEGS = { INVSLOT_LEGS },
+        INVTYPE_FEET = { INVSLOT_FEET },
+        INVTYPE_WRIST = { INVSLOT_WRIST },
+        INVTYPE_HAND = { INVSLOT_HAND },
+        INVTYPE_FINGER = { INVSLOT_FINGER1, INVSLOT_FINGER2 },
+        INVTYPE_TRINKET = { INVSLOT_TRINKET1, INVSLOT_TRINKET2 },
         INVTYPE_WEAPON = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
+        INVTYPE_SHIELD = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
+        INVTYPE_RANGED = { INVSLOT_RANGED },
+        INVTYPE_CLOAK = { INVSLOT_BACK },
+        INVTYPE_2HWEAPON = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
+        INVTYPE_TABARD = { INVSLOT_TABARD },
+        INVTYPE_ROBE = { INVSLOT_CHEST },
         INVTYPE_WEAPONMAINHAND = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
         INVTYPE_WEAPONOFFHAND = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_WRIST = { INVSLOT_WRIST },
+        INVTYPE_HOLDABLE = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
+        INVTYPE_AMMO = { INVSLOT_AMMO },
+        INVTYPE_THROWN = { INVSLOT_RANGED },
+        INVTYPE_RANGEDRIGHT = { INVSLOT_RANGED },
+        INVTYPE_RELIC = { INVSLOT_RANGED },
     };
-    ABGP:Notify("Requesting %s for %s!", itemLink, roles[role]);
     local equipLoc = select(9, GetItemInfo(itemLink));
     if equipLoc and itemMaps[equipLoc] then
         local current1 = itemMaps[equipLoc][1] and GetInventoryItemLink("player", itemMaps[equipLoc][1]) or nil;
@@ -149,6 +150,16 @@ function ABGP:RequestItem(itemLink, role, notes)
         if current1 then table.insert(data.equipped, current1); end
         if current2 then table.insert(data.equipped, current2); end
     end
+
+    local faveInfo = "";
+    local faves = AtlasLootFaves();
+    if faves then
+        local itemId = tonumber(itemLink:match("item:(%d+)"));
+        if not faves:IsFavouriteItemID(itemId) then
+            faveInfo = "To automatically show the request window for this item, favorite it in AtlasLoot.";
+        end
+    end
+    ABGP:Notify("Requesting %s for %s! %s", itemLink, roles[role], faveInfo);
 
     self:SendComm(data, "WHISPER", sender);
 end

@@ -45,7 +45,7 @@ local function AnnounceLoot(itemLink)
                 notes));
         else
             local ret = SendAnnounceMessage(string.format(
-                "Now distributing %s - please whisper %s if you want this item! GP cost: %d, Priority: %s%s.",
+                "Now distributing %s - please use ABGP to request this item! GP cost: %d, Priority: %s%s.",
                 itemLink,
                 UnitName("player"),
                 value.gp,
