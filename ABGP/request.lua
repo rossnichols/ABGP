@@ -61,9 +61,11 @@ end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
     local itemLink = data.itemLink;
-    activeItems[itemLink] = nil;
-    self:Notify("Item distribution closed for %s.", itemLink);
-    CloseStaticPopups(itemLink);
+    if activeItems[itemLink] then
+        activeItems[itemLink] = nil;
+        self:Notify("Item distribution closed for %s.", itemLink);
+        CloseStaticPopups(itemLink);
+    end
 end
 
 function ABGP:RequestOnDistAwarded(data, distribution, sender)

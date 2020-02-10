@@ -244,6 +244,10 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             type = self.CommTypes.ITEM_DISTRIBUTION_TRASHED,
             itemLink = itemLink,
         }, "BROADCAST");
+        self:SendComm({
+            type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+            itemLink = itemLink
+        }, "BROADCAST");
     end);
     window:AddChild(disenchant);
     window:SetUserData("disenchantButton", disenchant);
@@ -261,6 +265,10 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             itemLink = itemLink,
             player = player,
             cost = cost
+        }, "BROADCAST");
+        self:SendComm({
+            type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+            itemLink = itemLink
         }, "BROADCAST");
     end);
     window:AddChild(distrib);
@@ -342,26 +350,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             entry.priority = entry.ep * 10 / entry.gp;
             ProcessNewData(entry);
         end
-    end
-end
-
-function ABGP:DistribOnDistTrashed(data, distribution, sender)
-    if activeDistributionWindow then
-        if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
-            self:Error("Received DISTRIB_TRASHED for mismatched item!");
-        end
-        activeDistributionWindow:SetUserData("owner", nil);
-        activeDistributionWindow:Hide();
-    end
-end
-
-function ABGP:DistribOnDistAwarded(data, distribution, sender)
-    if activeDistributionWindow then
-        if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
-            self:Error("Received DISTRIB_AWARDED for mismatched item!");
-        end
-        activeDistributionWindow:SetUserData("owner", nil);
-        activeDistributionWindow:Hide();
     end
 end
 
