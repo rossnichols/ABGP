@@ -180,7 +180,7 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local desc = AceGUI:Create("Label");
             local data = spreadsheet[i][columns[j].value];
             if type(data) == "number" then
-                data = string.format(floor(data) == data and "%d" or "%.3f", data);
+                data = string.format(floor(data) == data and "%d" or "%.2f", data);
             end
             if type(data) == "table" then
                 data = table.concat(data, ", ");

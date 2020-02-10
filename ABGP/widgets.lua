@@ -30,7 +30,9 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or ""));
             self.rank.text:SetText(data.rank or "");
-            self.priority.text:SetText(string.format("%.3f", data.priority or 0));
+            self.ep.text:SetText(string.format("%.2f", data.ep or 0));
+            self.gp.text:SetText(string.format("%.2f", data.gp or 0));
+            self.priority.text:SetText(string.format("%.2f", data.priority or 0));
             if data.equipped then
                 if #data.equipped == 2 then
                     self.equipped.textTop:SetText(data.equipped[1]);
@@ -49,9 +51,11 @@ do
         SetWidths = function(self, widths)
             self.player:SetWidth(widths[1]);
             self.rank:SetWidth(widths[2]);
-            self.priority:SetWidth(widths[3]);
-            self.equipped:SetWidth(widths[4]);
-            self.role:SetWidth(widths[5]);
+            self.ep:SetWidth(widths[3]);
+            self.gp:SetWidth(widths[4]);
+            self.priority:SetWidth(widths[5]);
+            self.equipped:SetWidth(widths[6]);
+            self.role:SetWidth(widths[7]);
         end,
     }
 
@@ -133,7 +137,13 @@ do
         local rank = createElement(frame, player);
         rank.text = createFontString(rank);
 
-        local priority = createElement(frame, rank);
+        local ep = createElement(frame, rank);
+        ep.text = createFontString(ep);
+
+        local gp = createElement(frame, ep);
+        gp.text = createFontString(gp);
+
+        local priority = createElement(frame, gp);
         priority.text = createFontString(priority);
 
         local equipped = createElement(frame, priority);
@@ -170,6 +180,8 @@ do
         local widget = {
             player = player,
             rank = rank,
+            ep = ep,
+            gp = gp,
             priority = priority,
             equipped = equipped,
             role = role,

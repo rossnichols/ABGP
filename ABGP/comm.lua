@@ -34,6 +34,9 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- player: string
     -- cost: number
+
+    ITEM_DISTRIBUTION_TRASHED = "ABGP_ITEM_DISTRIBUTION_TRASHED",
+    -- itemLink: item link string
 };
 
 function ABGP:SendComm(data, distribution, target)

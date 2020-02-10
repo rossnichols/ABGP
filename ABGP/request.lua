@@ -31,6 +31,17 @@ local function ShowStaticPopup(itemLink, which)
     end
 end
 
+local function CloseStaticPopups(itemLink)
+    for index = 1, STATICPOPUP_NUMDIALOGS do
+        local frame = _G["StaticPopup"..index];
+        if frame:IsShown() and staticPopups[frame.which] then
+            if frame.data.itemLink == itemLink then
+                frame:Hide();
+            end
+        end
+    end
+end
+
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
     activeItems[itemLink] = sender;
@@ -52,15 +63,7 @@ function ABGP:RequestOnDistClosed(data, distribution, sender)
     local itemLink = data.itemLink;
     activeItems[itemLink] = nil;
     self:Notify("Item distribution closed for %s.", itemLink);
-
-    for index = 1, STATICPOPUP_NUMDIALOGS do
-        local frame = _G["StaticPopup"..index];
-        if frame:IsShown() and staticPopups[frame.which] then
-            if frame.data.itemLink == itemLink then
-                frame:Hide();
-            end
-        end
-    end
+    CloseStaticPopups(itemLink);
 end
 
 function ABGP:RequestOnDistAwarded(data, distribution, sender)
@@ -75,15 +78,14 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     else
         self:Notify("%s was awarded to %s (cost: %d).", itemLink, ABGP:ColorizeName(player), cost);
     end
+    CloseStaticPopups(itemLink);
+end
 
-    for index = 1, STATICPOPUP_NUMDIALOGS do
-        local frame = _G["StaticPopup"..index];
-        if frame:IsShown() and staticPopups[frame.which] then
-            if frame.data.itemLink == itemLink then
-                frame:Hide();
-            end
-        end
-    end
+function ABGP:RequestOnDistTrashed(data, distribution, sender)
+    local itemLink = data.itemLink;
+    activeItems[itemLink] = nil;
+    self:Notify("%s will be disenchanted.", itemLink);
+    CloseStaticPopups(itemLink);
 end
 
 function ABGP:ShowItemRequests()

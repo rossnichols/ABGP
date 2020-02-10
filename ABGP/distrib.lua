@@ -1,12 +1,13 @@
 local AceGUI = LibStub("AceGUI-3.0");
 
 local activeDistributionWindow;
-local widths = { 110, 90, 65, 180, 35, 1.0 };
+local widths = { 110, 90, 60, 60, 60, 180, 35, 1.0 };
 
 local function ProcessSelectedData()
     local window = activeDistributionWindow;
     local data = window:GetUserData("selectedData");
 
+    window:GetUserData("disenchantButton"):SetDisabled(data ~= nil);
     window:GetUserData("distributeButton"):SetDisabled(data == nil);
     if not window:GetUserData("costEdited") then
         window:GetUserData("costEdit"):SetText((data and data.role == "OS") and 0 or window:GetUserData("costBase"));
@@ -129,19 +130,23 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     };
     ABGP:Notify("%s is requesting %s for %s.", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
 
-    local priority = 0;
+    local priority, ep, gp = 0, 0, 0;
     local epgp = ABGP:GetActivePlayer(sender);
     local itemName = GetItemInfo(itemLink);
     local value = ABGP:GetItemValue(itemName);
 
     if epgp and epgp[value.phase] then
         priority = epgp[value.phase].ratio;
+        ep = epgp[value.phase].ep;
+        gp = epgp[value.phase].gp;
     end
 
     ProcessNewData({
         player = sender,
         rank = guildRankName,
         priority = priority,
+        ep = ep,
+        gp = gp,
         equipped = data.equipped,
         role = strupper(data.role),
         notes = data.notes
@@ -199,10 +204,10 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     local window = AceGUI:Create("Window");
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window:SetWidth(750);
+    window:SetWidth(900);
     window:SetHeight(425);
-    window.frame:SetMinResize(600, 300);
-    window.frame:SetMaxResize(900, 500);
+    window.frame:SetMinResize(700, 300);
+    window.frame:SetMaxResize(1000, 500);
     window.frame:SetFrameStrata("HIGH");
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
@@ -230,6 +235,18 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("itemLink", itemLink);
     window:SetUserData("data", {});
     window:SetUserData("owner", sender);
+
+    local disenchant = AceGUI:Create("Button");
+    disenchant:SetWidth(100);
+    disenchant:SetText("Disenchant");
+    disenchant:SetCallback("OnClick", function(widget)
+        self:SendComm({
+            type = self.CommTypes.ITEM_DISTRIBUTION_TRASHED,
+            itemLink = itemLink,
+        }, "BROADCAST");
+    end);
+    window:AddChild(disenchant);
+    window:SetUserData("disenchantButton", disenchant);
 
     local distrib = AceGUI:Create("Button");
     distrib:SetWidth(100);
@@ -285,7 +302,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     scrollContainer:AddChild(scroll);
     window:SetUserData("requests", scroll);
 
-    local columns = { "Player", "Rank", "Priority", "Equipped", "Role", "Notes", weights = { unpack(widths) } };
+    local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Role", "Notes", weights = { unpack(widths) } };
     local header = AceGUI:Create("SimpleGroup");
     header:SetFullWidth(true);
     header:SetLayout("Table");
@@ -320,16 +337,28 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
             entry.role = math.random() < 0.5 and "MS" or "OS";
-            entry.priority = math.random() * 50;
+            entry.ep = math.random() * 2000;
+            entry.gp = math.random() * 2000;
+            entry.priority = entry.ep * 10 / entry.gp;
             ProcessNewData(entry);
         end
+    end
+end
+
+function ABGP:DistribOnDistTrashed(data, distribution, sender)
+    if activeDistributionWindow then
+        if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
+            self:Error("Received DISTRIB_TRASHED for mismatched item!");
+        end
+        activeDistributionWindow:SetUserData("owner", nil);
+        activeDistributionWindow:Hide();
     end
 end
 
 function ABGP:DistribOnDistAwarded(data, distribution, sender)
     if activeDistributionWindow then
         if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
-            self:Error("Received DISTRIB_CLOSED for mismatched item!");
+            self:Error("Received DISTRIB_AWARDED for mismatched item!");
         end
         activeDistributionWindow:SetUserData("owner", nil);
         activeDistributionWindow:Hide();

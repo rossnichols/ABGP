@@ -55,6 +55,11 @@ function ABGP:OnInitialize()
         self:DistribOnDistAwarded(data, distribution, sender);
         self:DataOnDistAwarded(data, distribution, sender);
     end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED, function(self, event, data, distribution, sender)
+        self:RequestOnDistTrashed(data, distribution, sender);
+        self:DistribOnDistTrashed(data, distribution, sender);
+    end, self);
 end
 
 ABGP.Color = "|cFF94E4FF";
