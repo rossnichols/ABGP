@@ -74,11 +74,11 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
 
     local multiple = "";
     if activeItems[itemLink] then
-        if not activeItems[itemLink].notified then
-            activeItems[itemLink].notified = 1;
-        else
+        if activeItems[itemLink].notified then
             activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
             multiple = string.format(" #%d", activeItems[itemLink].notified);
+        else
+            activeItems[itemLink].notified = 1;
         end
     end
 
@@ -94,11 +94,11 @@ function ABGP:RequestOnDistTrashed(data, distribution, sender)
 
     local multiple = "";
     if activeItems[itemLink] then
-        if not activeItems[itemLink].notified then
-            activeItems[itemLink].notified = 1;
-        else
+        if activeItems[itemLink].notified then
             activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
             multiple = string.format(" #%d", activeItems[itemLink].notified);
+        else
+            activeItems[itemLink].notified = 1;
         end
     end
 

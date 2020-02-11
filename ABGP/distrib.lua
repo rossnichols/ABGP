@@ -297,6 +297,10 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             widget.frame:SetMaxResize(oldMaxW, oldMaxH);
             AceGUI:Release(widget);
             ItemRefTooltip:Hide();
+
+            StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
+            StaticPopup_Hide("ABGP_CONFIRM_DIST");
+            StaticPopup_Hide("ABGP_CONFIRM_TRASH");
         else
             StaticPopup_Show("ABGP_CONFIRM_END_DIST");
             widget:Show();
@@ -311,7 +315,12 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     disenchant:SetWidth(100);
     disenchant:SetText("Disenchant");
     disenchant:SetCallback("OnClick", function(widget)
-        StaticPopup_Show("ABGP_CONFIRM_TRASH", itemLink, nil, {
+        local item = itemLink;
+        if window:GetUserData("multipleItems") then
+            local count = window:GetUserData("distributionCount") or 0;
+            item = string.format("%s #%d", itemLink, count + 1);
+        end
+        StaticPopup_Show("ABGP_CONFIRM_TRASH", item, nil, {
             itemLink = itemLink
         });
     end);
@@ -325,9 +334,15 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     distrib:SetCallback("OnClick", function(widget)
         local cost = tonumber(window:GetUserData("costEdit"):GetText());
         local player = window:GetUserData("selectedData").player;
+
+        local item = itemLink;
+        if window:GetUserData("multipleItems") then
+            local count = window:GetUserData("distributionCount") or 0;
+            item = string.format("%s #%d", itemLink, count + 1);
+        end
         local award = string.format("%s for %d gp", ABGP:ColorizeName(player), cost);
 
-        StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
+        StaticPopup_Show("ABGP_CONFIRM_DIST", item, award, {
             itemLink = itemLink,
             player = player,
             cost = cost
@@ -364,6 +379,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         window:SetUserData("multipleItems", value);
     end);
     window:AddChild(multiple);
+    window:SetUserData("multipleItemsCheckbox", multiple);
 
     local scrollContainer = AceGUI:Create("InlineGroup");
     scrollContainer:SetTitle("Requests");
@@ -440,7 +456,14 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         }, "BROADCAST");
 
         window:SetUserData("closeConfirmed", true);
-        if not window:GetUserData("multipleItems") then
+        if window:GetUserData("multipleItems") then
+            window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
+            if window:GetUserData("distributionCount") then
+                window:SetUserData("distributionCount", window:GetUserData("distributionCount") + 1);
+            else
+                window:SetUserData("distributionCount", 1);
+            end
+        else
             window:Hide();
         end
 	end,
@@ -464,7 +487,14 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
         }, "BROADCAST");
 
         window:SetUserData("closeConfirmed", true);
-        if not window:GetUserData("multipleItems") then
+        if window:GetUserData("multipleItems") then
+            window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
+            if window:GetUserData("distributionCount") then
+                window:SetUserData("distributionCount", window:GetUserData("distributionCount") + 1);
+            else
+                window:SetUserData("distributionCount", 1);
+            end
+        else
             window:Hide();
         end
 	end,
