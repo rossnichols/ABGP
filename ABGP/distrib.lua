@@ -440,22 +440,14 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         }, "BROADCAST");
 
         window:SetUserData("closeConfirmed", true);
-        if window:GetUserData("multipleItems") then
-            local entries = window:GetUserData("data");
-            for i, existing in ipairs(entries) do
-                if existing.player == data.player then
-                    table.remove(entries, i);
-                    RebuildUI();
-                    break;
-                end
-            end
-        else
+        if not window:GetUserData("multipleItems") then
             window:Hide();
         end
 	end,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
+    exclusive = true,
 };
 
 StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
@@ -479,6 +471,7 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
+    exclusive = true,
 };
 
 StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
@@ -495,4 +488,6 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
+    exclusive = true,
+    showAlert = true,
 };

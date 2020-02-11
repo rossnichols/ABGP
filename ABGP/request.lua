@@ -72,24 +72,37 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     local player = data.player;
     local cost = data.cost;
 
-    if player == UnitName("player") then
-        self:Notify("%s was awarded to you for %d gp!", itemLink, cost);
-    else
-        self:Notify("%s was awarded to %s for %d gp.", itemLink, ABGP:ColorizeName(player), cost);
+    local multiple = "";
+    if activeItems[itemLink] then
+        if not activeItems[itemLink].notified then
+            activeItems[itemLink].notified = 1;
+        else
+            activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
+            multiple = string.format(" #%d", activeItems[itemLink].notified);
+        end
     end
 
-    if activeItems[itemLink] then
-        activeItems[itemLink].notified = true;
+    if player == UnitName("player") then
+        self:Notify("%s%s was awarded to you for %d gp!", itemLink, multiple, cost);
+    else
+        self:Notify("%s%s was awarded to %s for %d gp.", itemLink, multiple, ABGP:ColorizeName(player), cost);
     end
 end
 
 function ABGP:RequestOnDistTrashed(data, distribution, sender)
     local itemLink = data.itemLink;
-    self:Notify("%s will be disenchanted.", itemLink);
 
+    local multiple = "";
     if activeItems[itemLink] then
-        activeItems[itemLink].notified = true;
+        if not activeItems[itemLink].notified then
+            activeItems[itemLink].notified = 1;
+        else
+            activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
+            multiple = string.format(" #%d", activeItems[itemLink].notified);
+        end
     end
+
+    self:Notify("%s%s will be disenchanted.", itemLink, multiple);
 end
 
 function ABGP:ShowItemRequests()
