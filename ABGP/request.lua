@@ -39,7 +39,7 @@ end
 
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
-    activeItems[itemLink] = sender;
+    activeItems[itemLink] = { sender = sender };
 
     local prompt = "";
     local popup = GetStaticPopupType(itemLink);
@@ -57,15 +57,17 @@ end
 function ABGP:RequestOnDistClosed(data, distribution, sender)
     local itemLink = data.itemLink;
     if activeItems[itemLink] then
-        activeItems[itemLink] = nil;
-        self:Notify("Item distribution closed for %s.", itemLink);
+        if not activeItems[itemLink].notified then
+            self:Notify("Item distribution closed for %s.", itemLink);
+        end
+
         CloseStaticPopups(itemLink);
+        activeItems[itemLink] = nil;
     end
 end
 
 function ABGP:RequestOnDistAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
-    activeItems[itemLink] = nil;
 
     local player = data.player;
     local cost = data.cost;
@@ -75,14 +77,19 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     else
         self:Notify("%s was awarded to %s for %d gp.", itemLink, ABGP:ColorizeName(player), cost);
     end
-    CloseStaticPopups(itemLink);
+
+    if activeItems[itemLink] then
+        activeItems[itemLink].notified = true;
+    end
 end
 
 function ABGP:RequestOnDistTrashed(data, distribution, sender)
     local itemLink = data.itemLink;
-    activeItems[itemLink] = nil;
     self:Notify("%s will be disenchanted.", itemLink);
-    CloseStaticPopups(itemLink);
+
+    if activeItems[itemLink] then
+        activeItems[itemLink].notified = true;
+    end
 end
 
 function ABGP:ShowItemRequests()
@@ -102,7 +109,7 @@ function ABGP:RequestItem(itemLink, role, notes)
         self:Notify("Unable to request %s - no longer being distributed.", itemLink);
         return;
     end
-    local sender = activeItems[itemLink];
+    local sender = activeItems[itemLink].sender;
 
     local data = {
         type = self.CommTypes.ITEM_REQUEST,
@@ -169,7 +176,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
         self:Notify("Unable to pass on %s - no longer being distributed.", itemLink);
         return;
     end
-    local sender = activeItems[itemLink];
+    local sender = activeItems[itemLink].sender;
 
     self:SendComm({
         type = self.CommTypes.ITEM_PASS,

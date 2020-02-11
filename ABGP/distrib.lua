@@ -254,7 +254,6 @@ function ABGP:ShowDistrib(itemLink)
     if not value then return; end
 
     if activeDistributionWindow then
-        activeDistributionWindow:SetUserData("owner", UnitName("player"));
         activeDistributionWindow:SetUserData("closeConfirmed", true);
         activeDistributionWindow:Hide();
     end
@@ -273,12 +272,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
     if sender ~= UnitName("player") then return; end
 
-    if activeDistributionWindow then
-        self:Error("Received DISTRIB_OPENED with an active window!");
-        activeDistributionWindow:SetUserData("owner", nil);
-        activeDistributionWindow:Hide();
-    end
-
     local window = AceGUI:Create("Window");
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
@@ -289,11 +282,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window.frame:SetFrameStrata("HIGH");
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
-        local owned = (widget:GetUserData("owner") == UnitName("player"));
-        if not owned or widget:GetUserData("closeConfirmed") then
+        local primary = widget:GetUserData("primary");
+        if not primary or widget:GetUserData("closeConfirmed") then
             activeDistributionWindow = nil;
 
-            if owned then
+            if primary then
                 self:SendComm({
                     type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
                     itemLink = itemLink
@@ -312,7 +305,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetLayout("Flow");
     window:SetUserData("itemLink", itemLink);
     window:SetUserData("data", {});
-    window:SetUserData("owner", sender);
+    window:SetUserData("primary", true);
 
     local disenchant = AceGUI:Create("Button");
     disenchant:SetWidth(100);
@@ -364,6 +357,13 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     desc:SetWidth(50);
     desc:SetText("Cost");
     window:AddChild(desc);
+
+    local multiple = AceGUI:Create("CheckBox");
+    multiple:SetLabel("Multiple");
+    multiple:SetCallback("OnValueChanged", function(widget, value)
+        window:SetUserData("multipleItems", value);
+    end);
+    window:AddChild(multiple);
 
     local scrollContainer = AceGUI:Create("InlineGroup");
     scrollContainer:SetTitle("Requests");
@@ -424,31 +424,34 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     end
 end
 
-function ABGP:DistribOnDistClosed(data, distribution, sender)
-    if activeDistributionWindow then
-        if activeDistributionWindow:GetUserData("itemLink") ~= data.itemLink then
-            self:Error("Received DISTRIB_CLOSED for mismatched item!");
-        end
-        activeDistributionWindow:SetUserData("owner", nil);
-        activeDistributionWindow:Hide();
-    end
-end
-
 StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
     text = "Award %s to %s?",
     button1 = "Yes",
     button2 = "No",
 	OnAccept = function(self, data)
+        if not activeDistributionWindow then return; end
+        local window = activeDistributionWindow;
+
         ABGP:SendComm({
             type = ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED,
             itemLink = data.itemLink,
             player = data.player,
             cost = data.cost
         }, "BROADCAST");
-        ABGP:SendComm({
-            type = ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED,
-            itemLink = data.itemLink
-        }, "BROADCAST");
+
+        window:SetUserData("closeConfirmed", true);
+        if window:GetUserData("multipleItems") then
+            local entries = window:GetUserData("data");
+            for i, existing in ipairs(entries) do
+                if existing.player == data.player then
+                    table.remove(entries, i);
+                    RebuildUI();
+                    break;
+                end
+            end
+        else
+            window:Hide();
+        end
 	end,
     timeout = 0,
     whileDead = true,
@@ -459,15 +462,19 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
     text = "Disenchant %s?",
     button1 = "Yes",
     button2 = "No",
-	OnAccept = function(self, data)
+    OnAccept = function(self, data)
+        if not activeDistributionWindow then return; end
+        local window = activeDistributionWindow;
+
         ABGP:SendComm({
             type = ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED,
             itemLink = data.itemLink
         }, "BROADCAST");
-        ABGP:SendComm({
-            type = ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED,
-            itemLink = data.itemLink
-        }, "BROADCAST");
+
+        window:SetUserData("closeConfirmed", true);
+        if not window:GetUserData("multipleItems") then
+            window:Hide();
+        end
 	end,
     timeout = 0,
     whileDead = true,
@@ -479,10 +486,11 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
     button1 = "Yes",
     button2 = "No",
 	OnAccept = function(self, data)
-        if activeDistributionWindow then
-            activeDistributionWindow:SetUserData("closeConfirmed", true);
-            activeDistributionWindow:Hide();
-        end
+        if not activeDistributionWindow then return; end
+        local window = activeDistributionWindow;
+
+        window:SetUserData("closeConfirmed", true);
+        window:Hide();
 	end,
     timeout = 0,
     whileDead = true,

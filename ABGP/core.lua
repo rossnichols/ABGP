@@ -47,7 +47,6 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, function(self, event, data, distribution, sender)
         self:RequestOnDistClosed(data, distribution, sender);
-        self:DistribOnDistClosed(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data, distribution, sender)
