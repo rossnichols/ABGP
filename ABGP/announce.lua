@@ -47,7 +47,6 @@ local function AnnounceLoot(itemLink)
             local ret = SendAnnounceMessage(string.format(
                 "Now distributing %s - please use ABGP to request this item! GP cost: %d, Priority: %s%s.",
                 itemLink,
-                UnitName("player"),
                 value.gp,
                 table.concat(value.priority, ", "),
                 notes));
