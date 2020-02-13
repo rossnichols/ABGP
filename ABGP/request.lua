@@ -83,9 +83,9 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     end
 
     if player == UnitName("player") then
-        self:Notify("%s%s was awarded to you for %d gp!", itemLink, multiple, cost);
+        self:Notify("%s%s was awarded to you for %d GP!", itemLink, multiple, cost);
     else
-        self:Notify("%s%s was awarded to %s for %d gp.", itemLink, multiple, ABGP:ColorizeName(player), cost);
+        self:Notify("%s%s was awarded to %s for %d GP.", itemLink, multiple, ABGP:ColorizeName(player), cost);
     end
 end
 
@@ -225,13 +225,18 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     OnHyperlinkLeave = function(self, itemLink)
         GameTooltip:Hide();
     end,
+    OnShow = function(self)
+        self.editBox:SetAutoFocus(false);
+		self.editBox:ClearFocus();
+	end,
     EditBoxOnEscapePressed = function(self)
-        self:SetAutoFocus(false);
 		self:ClearFocus();
     end,
     OnHide = function(self, data)
         if not data.clicked and activeItems[data.itemLink] then
-            ABGP:Notify("Request window hidden. To show again, type '/abgp loot'.");
+            local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "currently unbound";
+            prompt = string.format("Request window hidden. To show again, type '/abgp loot' or press your hotkey (%s).", keybinding);
+            ABGP:Notify(prompt);
         end
         self.editBox:SetAutoFocus(true);
     end,

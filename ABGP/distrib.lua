@@ -340,7 +340,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             local count = window:GetUserData("distributionCount") or 0;
             item = string.format("%s #%d", itemLink, count + 1);
         end
-        local award = string.format("%s for %d gp", ABGP:ColorizeName(player), cost);
+        local award = string.format("%s for %d GP", ABGP:ColorizeName(player), cost);
 
         StaticPopup_Show("ABGP_CONFIRM_DIST", item, award, {
             itemLink = itemLink,
