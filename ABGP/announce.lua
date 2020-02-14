@@ -31,7 +31,7 @@ local function AnnounceLoot(itemLink)
     if not (itemLink and ShouldAnnounceLoot()) then
         return false;
     end
-    local value = ABGP:GetItemValue(string.match(itemLink, "%[(.*)%]"));
+    local value = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
     if value then
         local notes = "";
         if value.notes then

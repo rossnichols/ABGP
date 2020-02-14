@@ -211,7 +211,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
 
     local priority, ep, gp = 0, 0, 0;
     local epgp = ABGP:GetActivePlayer(sender);
-    local itemName = string.match(itemLink, "%[(.*)%]");
+    local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
 
     if epgp and epgp[value.phase] then
@@ -249,7 +249,7 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
 end
 
 function ABGP:ShowDistrib(itemLink)
-    local itemName = string.match(itemLink, "%[(.*)%]");
+    local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
@@ -258,15 +258,14 @@ function ABGP:ShowDistrib(itemLink)
         activeDistributionWindow:Hide();
     end
 
-    self:SendComm({
-        type = self.CommTypes.ITEM_DISTRIBUTION_OPENED,
+    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, {
         itemLink = itemLink
     }, "BROADCAST");
 end
 
 function ABGP:DistribOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
-    local itemName = string.match(itemLink, "%[(.*)%]");
+    local itemName = self:GetItemName(itemLink);
     local value = self:GetItemValue(itemName);
     if not value then return; end
 
@@ -287,8 +286,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             activeDistributionWindow = nil;
 
             if primary then
-                self:SendComm({
-                    type = self.CommTypes.ITEM_DISTRIBUTION_CLOSED,
+                self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, {
                     itemLink = itemLink
                 }, "BROADCAST");
             end
@@ -448,8 +446,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
 
-        ABGP:SendComm({
-            type = ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED,
+        ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
             itemLink = data.itemLink,
             player = data.player,
             cost = data.cost
@@ -481,8 +478,7 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
 
-        ABGP:SendComm({
-            type = ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED,
+        ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED, {
             itemLink = data.itemLink
         }, "BROADCAST");
 

@@ -37,10 +37,17 @@ ABGP.CommTypes = {
 
     ITEM_DISTRIBUTION_TRASHED = "ABGP_ITEM_DISTRIBUTION_TRASHED",
     -- itemLink: item link string
+
+    VERSION_REQUEST = "ABGP_VERSION_REQUEST",
+    -- reset: bool or nil
+
+    VERSION_RESPONSE = "ABGP_VERSION_RESPONSE",
+    -- no payload
 };
 
-function ABGP:SendComm(data, distribution, target)
-    data.version = GetAddOnMetadata("ABGP", "Version");
+function ABGP:SendComm(type, data, distribution, target)
+    data.type = type;
+    data.version = self:GetVersion();
 
     local serialized = AceSerializer:Serialize(data);
     local compressed = LibCompress:Compress(serialized);

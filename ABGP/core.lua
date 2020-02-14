@@ -1,4 +1,4 @@
-ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0");
+ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0");
 
 BINDING_HEADER_ABGP = "ABGP";
 BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
@@ -6,7 +6,7 @@ BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
     local AceConfig = LibStub("AceConfig-3.0");
-    AceConfig:RegisterOptionsTable("ABGP", {
+    AceConfig:RegisterOptionsTable(ABGP.Color .. "ABGP-v" .. self:GetVersion() .. "|r", {
         type = "group",
         args = {
             loot = {
@@ -23,6 +23,14 @@ function ABGP:OnInitialize()
                 validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
                 func = function() ABGP:ShowImportWindow(); end
             },
+            versioncheck = {
+                name = "versioncheck",
+                desc = "checks the raid for an outdated or missing addon versions",
+                type = "execute",
+                cmdHidden = not ABGP:IsPrivileged(),
+                validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+                func = function() ABGP:PerformVersionCheck(); end
+            },
         },
     }, { "abgp" });
 
@@ -31,6 +39,7 @@ function ABGP:OnInitialize()
     self:CheckForDataUpdates();
     self:RefreshActivePlayers();
     self:RefreshItemValues();
+    self:InitVersionCheck();
 
     self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
         self:DistribOnItemRequest(data, distribution, sender);
@@ -57,6 +66,14 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED, function(self, event, data, distribution, sender)
         self:RequestOnDistTrashed(data, distribution, sender);
     end, self);
+
+    self:RegisterMessage(self.CommTypes.VERSION_REQUEST, function(self, event, data, distribution, sender)
+        self:OnVersionRequest(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.VERSION_RESPONSE, function(self, event, data, distribution, sender)
+        self:OnVersionResponse(data, distribution, sender);
+    end, self);
 end
 
 ABGP.Color = "|cFF94E4FF";
@@ -73,7 +90,7 @@ end
 
 function ABGP:Error(str, ...)
     if self.Debug then
-        self:Notify("|cff0000ffERROR:|r " .. str, ...);
+        self:Notify("|cffff0000ERROR:|r " .. str, ...);
     end
 end
 
@@ -126,6 +143,14 @@ end
 function ABGP:GetItemValue(itemName)
     if not itemName then return; end
     return itemValues[itemName];
+end
+
+function ABGP:GetItemName(itemLink)
+    return itemLink:match("%[(.-)%]");
+end
+
+function ABGP:GetItemId(itemLink)
+    return tonumber(itemLink:match("item:(%d+)") or "");
 end
 
 

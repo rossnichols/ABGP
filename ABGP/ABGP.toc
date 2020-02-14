@@ -15,5 +15,6 @@ distrib.lua
 request.lua
 comm.lua
 widgets.lua
+version.lua
 bindings.xml
 internal.xml

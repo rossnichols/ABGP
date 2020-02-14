@@ -13,17 +13,12 @@ end
 local function GetStaticPopupType(itemLink)
     local faves = AtlasLootFaves();
     if faves then
-        local itemId = tonumber(itemLink:match("item:(%d+)"));
+        local itemId = ABGP:GetItemId(itemLink);
         if faves:IsFavouriteItemID(itemId) then
             return staticPopups.ABGP_LOOTDISTRIB_FAVORITE;
         end
     end
     return staticPopups.ABGP_LOOTDISTRIB;
-end
-
-local function ShowStaticPopup(itemLink, which)
-    which = which or GetStaticPopupType(itemLink);
-    StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
 end
 
 local function CloseStaticPopups(itemLink)
@@ -35,6 +30,12 @@ local function CloseStaticPopups(itemLink)
             end
         end
     end
+end
+
+local function ShowStaticPopup(itemLink, which)
+    which = which or GetStaticPopupType(itemLink);
+    CloseStaticPopups(itemLink);
+    StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
 end
 
 function ABGP:RequestOnDistOpened(data, distribution, sender)
@@ -125,7 +126,6 @@ function ABGP:RequestItem(itemLink, role, notes)
     local sender = activeItems[itemLink].sender;
 
     local data = {
-        type = self.CommTypes.ITEM_REQUEST,
         itemLink = itemLink,
         role = role,
         notes = (notes ~= "") and notes or nil,
@@ -174,14 +174,14 @@ function ABGP:RequestItem(itemLink, role, notes)
     local faveInfo = "";
     local faves = AtlasLootFaves();
     if faves then
-        local itemId = tonumber(itemLink:match("item:(%d+)"));
+        local itemId = ABGP:GetItemId(itemLink);
         if not faves:IsFavouriteItemID(itemId) then
-            faveInfo = "To automatically show the request window for this item, favorite it in AtlasLoot.";
+            faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
         end
     end
-    ABGP:Notify("Requesting %s for %s! %s", itemLink, roles[role], faveInfo);
+    ABGP:Notify("Requesting %s for %s! To update your request, open the window again. %s", itemLink, roles[role], faveInfo);
 
-    self:SendComm(data, "WHISPER", sender);
+    self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
 end
 
 function ABGP:PassOnItem(itemLink, removeFromFaves)
@@ -191,21 +191,20 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     end
     local sender = activeItems[itemLink].sender;
 
-    self:SendComm({
-        type = self.CommTypes.ITEM_PASS,
+    self:SendComm(self.CommTypes.ITEM_PASS, {
         itemLink = itemLink,
     }, "WHISPER", sender);
 
+    local faveRemove = "";
     if removeFromFaves then
-        ABGP:Notify("Passing on %s and removing from AtlasLoot favorites.", itemLink);
+        faveRemove = " and removing from AtlasLoot favorites";
         local faves = AtlasLootFaves();
         if faves then
-            local itemId = tonumber(itemLink:match("item:(%d+)"));
+            local itemId = ABGP:GetItemId(itemLink);
             faves:RemoveItemID(itemId);
         end
-    else
-        ABGP:Notify("Passing on %s.", itemLink);
     end
+    ABGP:Notify("Passing on %s%s. To update your request, open the window again.", itemLink, faveRemove);
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
@@ -233,23 +232,15 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
 		self:ClearFocus();
     end,
     OnHide = function(self, data)
-        if not data.clicked and activeItems[data.itemLink] then
-            local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "currently unbound";
-            prompt = string.format("Request window hidden. To show again, type '/abgp loot' or press your hotkey (%s).", keybinding);
-            ABGP:Notify(prompt);
-        end
         self.editBox:SetAutoFocus(true);
     end,
 	OnAccept = function(self, data)
-        data.clicked = true;
         ABGP:RequestItem(data.itemLink, "ms", self.editBox:GetText());
 	end,
 	OnCancel = function(self, data)
-        data.clicked = true;
         ABGP:RequestItem(data.itemLink, "os", self.editBox:GetText());
 	end,
 	OnAlt = function(self, data)
-        data.clicked = true;
         ABGP:PassOnItem(data.itemLink, false);
 	end,
     timeout = 0,
