@@ -1,4 +1,4 @@
-local function ShouldAnnounceLoot()
+local function ShouldDistributeLoot()
     return IsAltKeyDown() and ABGP:IsPrivileged();
 end
 
@@ -27,40 +27,12 @@ local function SendAnnounceMessage(msg)
     return false;
 end
 
-local function AnnounceLoot(itemLink)
-    if not (itemLink and ShouldAnnounceLoot()) then
+local function DistributeLoot(itemLink)
+    if not (itemLink and ShouldDistributeLoot()) then
         return false;
     end
-    local value = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
-    if value then
-        local notes = "";
-        if value.notes then
-            notes = ", Notes: " .. value.notes
-        end
-        if value.gp == 0 then
-            return SendAnnounceMessage(string.format(
-                "Now distributing %s - please roll if you want this item! No GP cost, Priority: %s%s.",
-                itemLink,
-                table.concat(value.priority, ", "),
-                notes));
-        else
-            local ret = SendAnnounceMessage(string.format(
-                "Now distributing %s - please use ABGP to request this item! GP cost: %d, Priority: %s%s.",
-                itemLink,
-                value.gp,
-                table.concat(value.priority, ", "),
-                notes));
-            if ret then
-                ABGP:ShowDistrib(itemLink);
-            end
-            return ret;
-        end
-    else
-        return SendAnnounceMessage(string.format(
-            "Now distributing %s - please roll if you want this item! No GP cost.",
-            itemLink));
-    end
-    return false;
+    ABGP:ShowDistrib(itemLink);
+    return true;
 end
 
 local function ShouldAutoAnnounce()
@@ -85,8 +57,8 @@ local function ItemShouldBeAutoAnnounced(item)
     return item.quality >= GetLootThreshold() and ItemIsBoP(item);
 end
 
-function ABGP:AddAnnounceHooks()
-    self:RegisterModifiedItemClickFn(AnnounceLoot);
+function ABGP:AddItemHooks()
+    self:RegisterModifiedItemClickFn(DistributeLoot);
 
     -- Create auto-announce frame
     local lastAnnounced;

@@ -14,33 +14,41 @@ local function GetBroadcastChannel()
     end
 end
 
+-- The commVersion can be revved to create a backwards-incompatible version.
+local commVersion = ":1";
+local function CV(str)
+    return str .. commVersion;
+end
+
 ABGP.CommTypes = {
-    ITEM_REQUEST = "ABGP_ITEM_REQUEST",
+    ITEM_REQUEST = CV("ABGP_ITEM_REQUEST"),
     -- itemLink: item link string
-    -- role: "ms" or "os"
+    -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings
 
-    ITEM_PASS = "ABGP_ITEM_PASS",
+    ITEM_PASS = CV("ABGP_ITEM_PASS"),
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_OPENED = "ABGP_ITEM_DISTRIBUTION_OPENED",
+    ITEM_DISTRIBUTION_OPENED = CV("ABGP_ITEM_DISTRIBUTION_OPENED"),
+    -- itemLink: item link string
+    -- value: table from ABGP:GetItemValue()
+    -- requestType: string from ABGP.RequestTypes
+
+    ITEM_DISTRIBUTION_CLOSED = CV("ABGP_ITEM_DISTRIBUTION_CLOSED"),
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_CLOSED = "ABGP_ITEM_DISTRIBUTION_CLOSED",
-    -- itemLink: item link string
-
-    ITEM_DISTRIBUTION_AWARDED = "ABGP_ITEM_DISTRIBUTION_AWARDED",
+    ITEM_DISTRIBUTION_AWARDED = CV("ABGP_ITEM_DISTRIBUTION_AWARDED"),
     -- itemLink: item link string
     -- player: string
     -- cost: number
 
-    ITEM_DISTRIBUTION_TRASHED = "ABGP_ITEM_DISTRIBUTION_TRASHED",
+    ITEM_DISTRIBUTION_TRASHED = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"),
     -- itemLink: item link string
 
+    -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = "ABGP_VERSION_REQUEST",
     -- reset: bool or nil
-
     VERSION_RESPONSE = "ABGP_VERSION_RESPONSE",
     -- no payload
 };

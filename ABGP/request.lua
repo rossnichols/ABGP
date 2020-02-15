@@ -1,7 +1,9 @@
 local activeItems = {};
 local staticPopups = {
-    ABGP_LOOTDISTRIB = "ABGP_LOOTDISTRIB",
-    ABGP_LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
+    LOOTDISTRIB = "ABGP_LOOTDISTRIB",
+    LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
+    LOOTDISTRIB_ROLL = "ABGP_LOOTDISTRIB_ROLL",
+    LOOTDISTRIB_ROLL_FAVORITE = "ABGP_LOOTDISTRIB_ROLL_FAVORITE",
 };
 
 local function AtlasLootFaves()
@@ -11,14 +13,26 @@ local function AtlasLootFaves()
 end
 
 local function GetStaticPopupType(itemLink)
+    if not activeItems[itemLink] then return; end
+
+    local favorited = false;
     local faves = AtlasLootFaves();
     if faves then
         local itemId = ABGP:GetItemId(itemLink);
         if faves:IsFavouriteItemID(itemId) then
-            return staticPopups.ABGP_LOOTDISTRIB_FAVORITE;
+            favorited = true;
         end
     end
-    return staticPopups.ABGP_LOOTDISTRIB;
+
+    if activeItems[itemLink].requestType == ABGP.RequestTypes.ROLL then
+        return (favorited)
+            and staticPopups.LOOTDISTRIB_ROLL_FAVORITE
+            or staticPopups.LOOTDISTRIB_ROLL;
+    end
+
+    return (favorited)
+        and staticPopups.LOOTDISTRIB_FAVORITE
+        or staticPopups.LOOTDISTRIB;
 end
 
 local function CloseStaticPopups(itemLink)
@@ -35,16 +49,39 @@ end
 local function ShowStaticPopup(itemLink, which)
     which = which or GetStaticPopupType(itemLink);
     CloseStaticPopups(itemLink);
-    StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
+    if which then
+        StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
+    end
 end
 
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
-    activeItems[itemLink] = { sender = sender };
+    activeItems[itemLink] = { sender = sender, requestType = data.requestType };
+
+    local msg;
+    local value = data.value;
+    if value then
+        local notes = "";
+        if value.notes then
+            notes = ", Notes: " .. value.notes
+        end
+        if value.gp == 0 then
+            msg = string.format("Now distributing %s! No GP cost, Priority: %s%s.",
+                itemLink, table.concat(value.priority, ", "), notes);
+        else
+            msg = string.format("Now distributing %s! GP cost: %d, Priority: %s%s.",
+                itemLink, value.gp, table.concat(value.priority, ", "), notes);
+        end
+    else
+        msg = string.format("Now distributing %s! No GP cost.",
+            itemLink);
+    end
+    RaidNotice_AddMessage(RaidWarningFrame, msg, ABGP.ColorTable);
+    PlaySound(SOUNDKIT.RAID_WARNING);
 
     local prompt = "";
     local popup = GetStaticPopupType(itemLink);
-    if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE then
+    if popup == staticPopups.LOOTDISTRIB_FAVORITE or popup == staticPopups.LOOTDISTRIB_ROLL_FAVORITE then
         ShowStaticPopup(itemLink, which);
         prompt = "This item is favorited in AtlasLoot."
     else
@@ -118,7 +155,7 @@ function ABGP:ShowItemRequests()
     end
 end
 
-function ABGP:RequestItem(itemLink, role, notes)
+function ABGP:RequestItem(itemLink, requestType, notes)
     if not activeItems[itemLink] then
         self:Notify("Unable to request %s - no longer being distributed.", itemLink);
         return;
@@ -127,13 +164,14 @@ function ABGP:RequestItem(itemLink, role, notes)
 
     local data = {
         itemLink = itemLink,
-        role = role,
+        requestType = requestType,
         notes = (notes ~= "") and notes or nil,
         equipped = {},
     };
-    local roles = {
-        ["ms"] = "main spec",
-        ["os"] = "off spec",
+    local requestTypes = {
+        [ABGP.RequestTypes.MS] = "for main spec",
+        [ABGP.RequestTypes.OS] = "for off spec",
+        [ABGP.RequestTypes.ROLL] = "by rolling",
     };
     local itemMaps = {
         INVTYPE_HEAD = { INVSLOT_HEAD },
@@ -179,7 +217,7 @@ function ABGP:RequestItem(itemLink, role, notes)
             faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
         end
     end
-    ABGP:Notify("Requesting %s for %s! To update your request, open the window again. %s", itemLink, roles[role], faveInfo);
+    ABGP:Notify("Requesting %s %s! To update your request, open the window again. %s", itemLink, requestTypes[requestType], faveInfo);
 
     self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
 end
@@ -207,7 +245,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     ABGP:Notify("Passing on %s%s. To update your request, open the window again.", itemLink, faveRemove);
 end
 
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
+StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
     text = "%s is being distributed! You may request it and provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
@@ -235,10 +273,10 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
         self.editBox:SetAutoFocus(true);
     end,
 	OnAccept = function(self, data)
-        ABGP:RequestItem(data.itemLink, "ms", self.editBox:GetText());
+        ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, self.editBox:GetText());
 	end,
 	OnCancel = function(self, data)
-        ABGP:RequestItem(data.itemLink, "os", self.editBox:GetText());
+        ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.OS, self.editBox:GetText());
 	end,
 	OnAlt = function(self, data)
         ABGP:PassOnItem(data.itemLink, false);
@@ -251,10 +289,30 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
 };
 
 local dialog = {};
-for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB]) do dialog[k] = v; end
+for k, v in pairs(StaticPopupDialogs[staticPopups.LOOTDISTRIB]) do dialog[k] = v; end
 dialog.extraButton = "Pass and unfavorite";
 dialog.OnExtraButton = function(self, data)
     data.clicked = true;
     ABGP:PassOnItem(data.itemLink, true);
 end
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = dialog;
+StaticPopupDialogs[staticPopups.LOOTDISTRIB_FAVORITE] = dialog;
+
+local dialog = {};
+for k, v in pairs(StaticPopupDialogs[staticPopups.LOOTDISTRIB]) do dialog[k] = v; end
+dialog.text = "%s is being distributed! You may roll for it and provide an optional note.";
+dialog.button1 = "Roll";
+dialog.button2 = nil;
+dialog.OnAccept = function(self, data)
+    RandomRoll(1, 100);
+    ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, self.editBox:GetText());
+end
+StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL] = dialog;
+
+local dialog = {};
+for k, v in pairs(StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL]) do dialog[k] = v; end
+dialog.extraButton = "Pass and unfavorite";
+dialog.OnExtraButton = function(self, data)
+    data.clicked = true;
+    ABGP:PassOnItem(data.itemLink, true);
+end
+StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL_FAVORITE] = dialog;

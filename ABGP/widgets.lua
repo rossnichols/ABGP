@@ -18,7 +18,7 @@ do
             self.equipped.textTop:SetText("");
             self.equipped.textMid:SetText("");
             self.equipped.textBot:SetText("");
-            self.role.text:SetText("");
+            self.requestType.text:SetText("");
             self.notes.text:SetText("");
 
             self.frame.highlightRequests = 0;
@@ -43,11 +43,17 @@ do
                     self.equipped.textMid:SetText(data.equipped[1]);
                 end
             end
-            self.role.text:SetText(data.role or "");
+            self.roll.text:SetText(data.roll or "");
             self.notes.text:SetText(data.notes or "--");
 
-            local specialFont = (data.role and data.role == "MS") and "ABGPMainSpec" or "GameFontHighlight";
-            self.role.text:SetFontObject(specialFont);
+            local requestTypes = {
+                [ABGP.RequestTypes.MS] = "MS",
+                [ABGP.RequestTypes.OS] = "OS",
+                [ABGP.RequestTypes.ROLL] = "",
+            };
+            self.requestType.text:SetText(data.requestType and requestTypes[data.requestType] or "");
+            local specialFont = (data.requestType and data.requestType == ABGP.RequestTypes.MS) and "ABGPMainSpec" or "GameFontHighlight";
+            self.requestType.text:SetFontObject(specialFont);
         end,
 
         ["SetWidths"] = function(self, widths)
@@ -57,7 +63,8 @@ do
             self.gp:SetWidth(widths[4]);
             self.priority:SetWidth(widths[5]);
             self.equipped:SetWidth(widths[6]);
-            self.role:SetWidth(widths[7]);
+            self.requestType:SetWidth(widths[7]);
+            self.roll:SetWidth(widths[8]);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -161,10 +168,14 @@ do
         equipped.textMid = createFontString(equipped);
         equipped.textBot = createFontString(equipped, -4);
 
-        local role = createElement(frame, equipped);
-        role.text = createFontString(role);
+        local requestType = createElement(frame, equipped);
+        requestType.text = createFontString(requestType);
+        requestType.text:SetJustifyH("CENTER");
 
-        local notes = createElement(frame, role);
+        local roll = createElement(frame, requestType);
+        roll.text = createFontString(roll);
+
+        local notes = createElement(frame, roll);
         notes:SetPoint("TOPRIGHT", frame);
         notes.text = createFontString(notes);
         notes.text:ClearAllPoints();
@@ -194,7 +205,8 @@ do
             gp = gp,
             priority = priority,
             equipped = equipped,
-            role = role,
+            requestType = requestType,
+            roll = roll,
             notes = notes,
 
             background = background,

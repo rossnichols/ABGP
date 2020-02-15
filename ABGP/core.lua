@@ -40,7 +40,7 @@ function ABGP:OnInitialize()
     }, { "abgp" });
 
     self:HookTooltips();
-    self:AddAnnounceHooks();
+    self:AddItemHooks();
     self:CheckForDataUpdates();
     self:RefreshActivePlayers();
     self:RefreshItemValues();
@@ -82,7 +82,7 @@ function ABGP:OnInitialize()
 end
 
 ABGP.Color = "|cFF94E4FF";
-ABGP.ColorTable = { 0.58, 0.89, 1 };
+ABGP.ColorTable = { 0.58, 0.89, 1, r = 0.58, g = 0.89, b = 1 };
 function ABGP:Notify(str, ...)
     DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. string.format(str, ...));
 end
@@ -168,6 +168,13 @@ end
 function ABGP:GetItemId(itemLink)
     return tonumber(itemLink:match("item:(%d+)") or "");
 end
+
+ABGP.RequestTypes = {
+    MS_OS = "MS_OS",
+    ROLL = "ROLL",
+    MS = "MS",
+    OS = "OS"
+};
 
 
 --

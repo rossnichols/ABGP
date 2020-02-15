@@ -1,7 +1,7 @@
 local AceGUI = LibStub("AceGUI-3.0");
 
 local activeDistributionWindow;
-local widths = { 110, 90, 60, 60, 60, 180, 35, 1.0 };
+local widths = { 110, 90, 60, 60, 60, 180, 60, 35, 1.0 };
 
 local function ProcessSelectedData()
     local window = activeDistributionWindow;
@@ -10,7 +10,7 @@ local function ProcessSelectedData()
     window:GetUserData("disenchantButton"):SetDisabled(data ~= nil);
     window:GetUserData("distributeButton"):SetDisabled(data == nil);
     if not window:GetUserData("costEdited") then
-        window:GetUserData("costEdit"):SetText((data and data.role == "OS") and 0 or window:GetUserData("costBase"));
+        window:GetUserData("costEdit"):SetText((data and data.requestType ~= ABGP.RequestTypes.MS) and 0 or window:GetUserData("costBase"));
     end
 end
 
@@ -20,26 +20,51 @@ local function RebuildUI()
     local requests = window:GetUserData("requests");
     requests:ReleaseChildren();
 
+    local requestTypes = {
+        [ABGP.RequestTypes.MS] = 1,
+        [ABGP.RequestTypes.OS] = 2,
+        [ABGP.RequestTypes.ROLL] = 3,
+    };
+
+    table.sort(data, function(a, b)
+        if a.requestType ~= b.requestType then
+            return requestTypes[a.requestType] < requestTypes[b.requestType];
+        elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
+            return a.priority > b.priority;
+        elseif a.roll ~= b.roll then
+            return (a.roll or 0) > (b.roll or 0);
+        else
+            return a.player < b.player;
+        end
+    end);
+
     local selectedData = window:GetUserData("selectedData");
     window:SetUserData("selectedData", nil);
     window:SetUserData("selectedElt", nil);
     ProcessSelectedData();
 
-    local msHeading, osHeading;
+    local msHeading, osHeading, rollHeading;
     for i, existing in ipairs(data) do
-        if existing.role == "MS" and not msHeading then
+        if existing.requestType == ABGP.RequestTypes.MS and not msHeading then
             msHeading = true;
             local mainspec = AceGUI:Create("Heading");
             mainspec:SetFullWidth(true);
             mainspec:SetText("Main Spec");
             requests:AddChild(mainspec);
         end
-        if existing.role == "OS" and not osHeading then
+        if existing.requestType == ABGP.RequestTypes.OS and not osHeading then
             osHeading = true;
             local offspec = AceGUI:Create("Heading");
             offspec:SetFullWidth(true);
             offspec:SetText("Off Spec");
             requests:AddChild(offspec);
+        end
+        if existing.requestType == ABGP.RequestTypes.ROLL and not rollHeading then
+            rollHeading = true;
+            local roll = AceGUI:Create("Heading");
+            roll:SetFullWidth(true);
+            roll:SetText("Rolls");
+            requests:AddChild(roll);
         end
         local elt = AceGUI:Create("ABGP_DistribPlayer");
         elt:SetFullWidth(true);
@@ -104,6 +129,7 @@ local function ProcessNewData(entry)
     for i, existing in ipairs(data) do
         if existing.player == entry.player then
             entry.notes = CombineNotes(existing.notes, entry.notes);
+            entry.roll = existing.roll;
             table.remove(data, i);
             break;
         end
@@ -115,18 +141,13 @@ local function ProcessNewData(entry)
         pending[entry.player] = nil;
     end
 
+    pending = window:GetUserData("pendingRolls");
+    if pending and pending[entry.player] then
+        entry.roll = pending[entry.player];
+        pending[entry.player] = nil;
+    end
+
     table.insert(data, entry);
-
-    table.sort(data, function(a, b)
-        if a.role ~= b.role then
-            return a.role == "MS";
-        elseif a.priority ~= b.priority then
-            return a.priority > b.priority;
-        else
-            return a.player < b.player;
-        end
-    end);
-
     RebuildUI();
 end
 
@@ -144,43 +165,71 @@ local function GetPlayerFromBNet(bnetId)
     end
 end
 
-local whisperFrame = CreateFrame("Frame");
-whisperFrame:RegisterEvent("CHAT_MSG_WHISPER");
-whisperFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
-whisperFrame:SetScript("OnEvent", function(self, event, ...)
+local function FindExistingElt(sender)
+    local requests = activeDistributionWindow:GetUserData("requests");
+    for _, elt in ipairs(requests.children) do
+        if elt.data and elt.data.player == sender then
+            return elt;
+        end
+    end
+end
+
+local msgFrame = CreateFrame("Frame");
+msgFrame:RegisterEvent("CHAT_MSG_WHISPER");
+msgFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
+msgFrame:RegisterEvent("CHAT_MSG_SYSTEM");
+msgFrame:SetScript("OnEvent", function(self, event, ...)
     if not activeDistributionWindow then
         return;
     end
     local window = activeDistributionWindow;
 
-    local msg, sender, _;
-    if event == "CHAT_MSG_WHISPER" then
-        msg, _, _, _, sender = ...;
-    elseif event == "CHAT_MSG_BN_WHISPER" then
-        msg = ...;
-        local bnetId = select(13, ...);
-        sender = GetPlayerFromBNet(bnetId);
-    end
-
-    local found = false;
-    if msg and sender and UnitExists(sender) then
-        local requests = window:GetUserData("requests");
-        for _, elt in ipairs(requests.children) do
-            if elt.data and elt.data.player == sender then
-                elt.data.notes = CombineNotes(elt.data.notes, msg);
-                elt:SetData(elt.data);
-                found = true;
-                break;
+    if event == "CHAT_MSG_SYSTEM" then
+        local text = ...;
+        local match = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
+        match = match:gsub("%%s", "(%%S+)");
+        match = match:gsub("%%d", "(%%d+)");
+        local sender, roll, minRoll, maxRoll = text:match(match);
+        if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
+            local elt = FindExistingElt(sender);
+            if elt then
+                if not elt.data.roll then
+                    elt.data.roll = tonumber(roll);
+                    RebuildUI();
+                end
+            else
+                if not window:GetUserData("pendingRolls") then
+                    window:SetUserData("pendingRolls", {});
+                end
+                local pending = window:GetUserData("pendingRolls");
+                if not pending[sender] then
+                    pending[sender] = tonumber(roll);
+                end
             end
         end
-    end
-
-    if not found then
-        if not window:GetUserData("pendingWhispers") then
-            window:SetUserData("pendingWhispers", {});
+    else
+        local msg, sender, _;
+        if event == "CHAT_MSG_WHISPER" then
+            msg, _, _, _, sender = ...;
+        elseif event == "CHAT_MSG_BN_WHISPER" then
+            msg = ...;
+            local bnetId = select(13, ...);
+            sender = GetPlayerFromBNet(bnetId);
         end
-        local pending = window:GetUserData("pendingWhispers");
-        pending[sender] = CombineNotes(pending[sender], msg);
+
+        if msg and sender and UnitExists(sender) then
+            local elt = FindExistingElt(sender);
+            if elt then
+                elt.data.notes = CombineNotes(elt.data.notes, msg);
+                elt:SetData(elt.data);
+            else
+                if not window:GetUserData("pendingWhispers") then
+                    window:SetUserData("pendingWhispers", {});
+                end
+                local pending = window:GetUserData("pendingWhispers");
+                pending[sender] = CombineNotes(pending[sender], msg);
+            end
+        end
     end
 end);
 
@@ -203,18 +252,19 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         guildRankName = "[Other guild]";
     end
 
-    local roles = {
-        ["ms"] = "main spec",
-        ["os"] = "off spec",
+    local requestTypes = {
+        [ABGP.RequestTypes.MS] = "for main spec",
+        [ABGP.RequestTypes.OS] = "for off spec",
+        [ABGP.RequestTypes.ROLL] = "by rolling",
     };
-    ABGP:Notify("%s is requesting %s for %s.", ABGP:ColorizeName(sender), itemLink, roles[data.role]);
+    ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(sender), itemLink, requestTypes[data.requestType]);
 
     local priority, ep, gp = 0, 0, 0;
     local epgp = ABGP:GetActivePlayer(sender);
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
 
-    if epgp and epgp[value.phase] then
+    if value and epgp and epgp[value.phase] then
         priority = epgp[value.phase].ratio;
         ep = epgp[value.phase].ep;
         gp = epgp[value.phase].gp;
@@ -227,7 +277,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         ep = ep,
         gp = gp,
         equipped = data.equipped,
-        role = strupper(data.role),
+        requestType = data.requestType,
         notes = data.notes
     });
 end
@@ -251,15 +301,20 @@ end
 function ABGP:ShowDistrib(itemLink)
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
-    if not value then return; end
 
     if activeDistributionWindow then
         activeDistributionWindow:SetUserData("closeConfirmed", true);
         activeDistributionWindow:Hide();
     end
 
+    local requestType = (value and value.gp ~= 0)
+        and self.RequestTypes.MS_OS
+        or self.RequestTypes.ROLL;
+
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, {
-        itemLink = itemLink
+        itemLink = itemLink,
+        value = value,
+        requestType = requestType,
     }, "BROADCAST");
 end
 
@@ -267,17 +322,16 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
     local itemName = self:GetItemName(itemLink);
     local value = self:GetItemValue(itemName);
-    if not value then return; end
 
     if sender ~= UnitName("player") then return; end
 
     local window = AceGUI:Create("Window");
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window:SetWidth(900);
-    window:SetHeight(425);
-    window.frame:SetMinResize(700, 300);
-    window.frame:SetMaxResize(1000, 500);
+    window:SetWidth(950);
+    window:SetHeight(500);
+    window.frame:SetMinResize(750, 300);
+    window.frame:SetMaxResize(1100, 600);
     window.frame:SetFrameStrata("HIGH");
     window:SetTitle("Loot Distribution: " .. itemLink);
     window:SetCallback("OnClose", function(widget)
@@ -308,6 +362,19 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("itemLink", itemLink);
     window:SetUserData("data", {});
     window:SetUserData("primary", true);
+
+    local resetRolls = AceGUI:Create("Button");
+    resetRolls:SetWidth(100);
+    resetRolls:SetText("Reset Rolls");
+    resetRolls:SetCallback("OnClick", function(widget)
+        window:SetUserData("pendingRolls", nil);
+        local data = window:GetUserData("data");
+        for _, entry in ipairs(data) do
+            entry.roll = nil;
+        end
+        RebuildUI();
+    end);
+    window:AddChild(resetRolls);
 
     local disenchant = AceGUI:Create("Button");
     disenchant:SetWidth(100);
@@ -350,8 +417,9 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("distributeButton", distrib);
 
     local cost = AceGUI:Create("EditBox");
+    local costBase = value and value.gp or 0;
     cost:SetWidth(75);
-    cost:SetText(value.gp);
+    cost:SetText(costBase);
     window:AddChild(cost);
     cost:SetCallback("OnEnterPressed", function(widget)
         AceGUI:ClearFocus();
@@ -364,7 +432,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         ProcessSelectedData();
     end);
     window:SetUserData("costEdit", cost);
-    window:SetUserData("costBase", value.gp);
+    window:SetUserData("costBase", costBase);
 
     local desc = AceGUI:Create("Label");
     desc:SetWidth(50);
@@ -387,7 +455,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:AddChild(scrollContainer);
     window:SetUserData("requestsTitle", scrollContainer);
 
-    local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Role", "Notes", weights = { unpack(widths) } };
+    local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
     local header = AceGUI:Create("SimpleGroup");
     header:SetFullWidth(true);
     header:SetLayout("Table");
@@ -429,10 +497,15 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             local entry = {};
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
-            entry.role = math.random() < 0.5 and "MS" or "OS";
+            local rand = math.random();
+            if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
+            elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
+            else entry.requestType = ABGP.RequestTypes.ROLL;
+            end
             entry.ep = math.random() * 2000;
             entry.gp = math.random() * 2000;
             entry.priority = entry.ep * 10 / entry.gp;
+            entry.roll = math.random(1, 100);
             ProcessNewData(entry);
         end
     end

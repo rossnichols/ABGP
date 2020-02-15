@@ -76,7 +76,7 @@ local function CompareVersion(versionCmp, sender)
 
     if VersionIsNewer(versionCmp, version) then
         StaticPopup_Show("ABGP_OUTDATED_VERSION", string.format(
-            "%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s.",
+            "%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade for the ability to request loot!",
             ABGP:ColorizeText("ABGP"), ABGP:ColorizeText(versionCmp), ABGP:ColorizeName(sender), ABGP:ColorizeText(version)));
         announcedVersion = versionCmp;
     end
