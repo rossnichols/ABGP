@@ -11,7 +11,7 @@ function ABGP:OnInitialize()
     if self:ParseVersion(version) then
         addonText = "ABGP-v" .. version;
     end
-    AceConfig:RegisterOptionsTable(ABGP.Color .. addonText .. "|r", {
+    AceConfig:RegisterOptionsTable(ABGP:ColorizeText(addonText), {
         type = "group",
         args = {
             loot = {
@@ -84,7 +84,7 @@ end
 ABGP.Color = "|cFF94E4FF";
 ABGP.ColorTable = { 0.58, 0.89, 1 };
 function ABGP:Notify(str, ...)
-    DEFAULT_CHAT_FRAME:AddMessage(ABGP.Color .. "ABGP|r: " .. string.format(str, ...));
+    DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. string.format(str, ...));
 end
 
 function ABGP:LogVerbose(str, ...)
@@ -97,6 +97,17 @@ function ABGP:Error(str, ...)
     if self.Debug then
         self:Notify("|cffff0000ERROR:|r " .. str, ...);
     end
+end
+
+function ABGP:ColorizeText(text)
+    return string.format("%s%s|r", ABGP.Color, text);
+end
+
+function ABGP:ColorizeName(name)
+    if not UnitExists(name) then return name; end
+    local _, class = UnitClass(name);
+    local color = select(4, GetClassColor(class));
+    return string.format("|c%s%s|r", color, name);
 end
 
 
@@ -234,16 +245,4 @@ end
 
 function ABGP:CloseWindow(window)
     openWindows[window] = nil;
-end
-
-
---
--- Helper to color a name by its class.
---
-
-function ABGP:ColorizeName(name)
-    if not UnitExists(name) then return name; end
-    local _, class = UnitClass(name);
-    local color = select(4, GetClassColor(class));
-    return string.format("|c%s%s|r", color, name);
 end

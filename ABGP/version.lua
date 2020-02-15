@@ -76,8 +76,8 @@ local function CompareVersion(versionCmp, sender)
 
     if VersionIsNewer(versionCmp, version) then
         StaticPopup_Show("ABGP_OUTDATED_VERSION", string.format(
-            "%sABGP|r: You're running an outdated addon version! Newer version %s%s|r discovered from %s, yours is %s%s|r.",
-            ABGP.Color, ABGP.Color, versionCmp, ABGP:ColorizeName(sender), ABGP.Color, version));
+            "%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s.",
+            ABGP:ColorizeText("ABGP"), ABGP:ColorizeText(versionCmp), ABGP:ColorizeName(sender), ABGP:ColorizeText(version)));
         announcedVersion = versionCmp;
     end
 end
@@ -154,12 +154,12 @@ function ABGP:VersionCheckCallback()
             local versionCmp = versionCheckData.players[player];
             if versionCmp then
                 if VersionIsNewer(version, versionCmp, true) then
-                    self:Notify("%s running an outdated version (%s%s|r)!", self:ColorizeName(player), ABGP.Color, versionCmp);
+                    self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
                     allUpToDate = false;
                 end
             else
                 self:Notify("%s is missing the addon!", self:ColorizeName(player));
-                SendChatMessage("You don't have the ABGP addon installed! Please install it for the ability to request loot.", "WHISPER", nil, player);
+                SendChatMessage("You don't have the ABGP addon installed! Please install it from Curse/Twitch for the ability to request loot.", "WHISPER", nil, player);
                 allUpToDate = false;
             end
         end
