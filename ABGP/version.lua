@@ -18,7 +18,7 @@ function ABGP:GetCompareVersion()
 end
 
 function ABGP:ParseVersion(version)
-    local major, minor, patch, prerelease = version:match("^(%d+)%.(%d+)%.(%d+)%.?(%a*%d*)$");
+    local major, minor, patch, prerelease = version:match("^(%d+)%.(%d+)%.(%d+)%-?(%a*%d*)$");
     if not (major and minor and patch) then return; end
     if prerelease == "" then prerelease = nil; end
 
