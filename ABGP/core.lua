@@ -6,7 +6,12 @@ BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
     local AceConfig = LibStub("AceConfig-3.0");
-    AceConfig:RegisterOptionsTable(ABGP.Color .. "ABGP-v" .. self:GetVersion() .. "|r", {
+    local addonText = "ABGP";
+    local version = self:GetVersion();
+    if self:ParseVersion(version) then
+        addonText = "ABGP-v" .. version;
+    end
+    AceConfig:RegisterOptionsTable(ABGP.Color .. addonText .. "|r", {
         type = "group",
         args = {
             loot = {

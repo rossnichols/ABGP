@@ -72,7 +72,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
         self:LogVerbose("Data from %s via %s:", sender, distribution);
         for k, v in pairs(data) do
             if type(v) == "table" then v = table.concat(v, ", "); end
-            self:LogVerbose("%s: %s", k, v);
+            self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
     end
