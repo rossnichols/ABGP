@@ -1,6 +1,7 @@
 local _G = _G;
 local date = date;
 local ipairs = ipairs;
+local table = table;
 
 _G.ABGP_Data = {
 	["p3"] = {
@@ -2272,6 +2273,13 @@ function ABGP:DataOnDistAwarded(data, distribution, sender)
 				break;
 			end
 		end
+		table.sort(db, function(a, b)
+			if a.ratio ~= b.ratio then
+				return a.ratio > b.ratio;
+			else
+				return a.character < b.character;
+			end
+		end);
 	end
 
 	self:RefreshActivePlayers();
