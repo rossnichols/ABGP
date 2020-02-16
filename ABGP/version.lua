@@ -18,34 +18,25 @@ function ABGP:GetCompareVersion()
 end
 
 function ABGP:ParseVersion(version)
-    local major, minor, patch, prerelease = version:match("^(%d+)%.(%d+)%.(%d+)%-?(%a*%d*)$");
+    local major, minor, patch, prerelType, prerelVersion = version:match("^(%d+)%.(%d+)%.(%d+)%-?(%a*)(%d*)$");
     if not (major and minor and patch) then return; end
-    if prerelease == "" then prerelease = nil; end
+    if prerelType == "" then prerelType = nil; end
+    if prerelVersion == "" then prerelVersion = nil; end
 
-    return tonumber(major), tonumber(minor), tonumber(patch), prerelease;
+    return tonumber(major), tonumber(minor), tonumber(patch), prerelType, tonumber(prerelVersion);
 end
 
 local function VersionIsNewer(versionCmp, version, allowPrerelease)
     if versionCmp == version then return false; end
 
-    local major, minor, patch, prerel = ABGP:ParseVersion(version);
-    local majorCmp, minorCmp, patchCmp, prerelCmp = ABGP:ParseVersion(versionCmp);
+    local major, minor, patch, prerelType, prerelVersion = ABGP:ParseVersion(version);
+    local majorCmp, minorCmp, patchCmp, prerelTypeCmp, prerelVersionCmp = ABGP:ParseVersion(versionCmp);
     -- print(major, minor, patch, prerel, majorCmp, minorCmp, patchCmp, prerelCmp);
     if not (major and minor and patch and majorCmp and minorCmp and patchCmp) then return false; end
 
     if not allowPrerelease then
         -- if the compared version is prerelease, the current one must be as well.
-        if prerelCmp and not prerel then return false; end
-    end
-
-    local prerelType, prerelVersion, prerelTypeCmp, prerelVersionCmp;
-    if prerelCmp then
-        prerelTypeCmp, prerelVersionCmp = prerelCmp:match("^(%a*)(%d*)$");
-        prerelVersionCmp = tonumber(prerelVersionCmp);
-    end
-    if prerel then
-        prerelType, prerelVersion = prerel:match("^(%a*)(%d*)$");
-        prerelVersion = tonumber(prerelVersion);
+        if prerelTypeCmp and not prerelType then return false; end
     end
 
     if majorCmp ~= major then
@@ -54,6 +45,8 @@ local function VersionIsNewer(versionCmp, version, allowPrerelease)
         return minorCmp > minor;
     elseif patchCmp ~= patch then
         return patchCmp > patch;
+    elseif (prerelTypeCmp ~= nil) ~= (prerelType ~= nil) then
+        return prerelTypeCmp == nil;
     elseif prerelTypeCmp ~= prerelType then
         return prerelTypeCmp > prerelType;
     elseif prerelVersionCmp ~= prerelVersion then
@@ -76,7 +69,7 @@ local function CompareVersion(versionCmp, sender)
 
     if VersionIsNewer(versionCmp, version) then
         StaticPopup_Show("ABGP_OUTDATED_VERSION", string.format(
-            "%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade for the ability to request loot!",
+            "%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade so you can request loot!",
             ABGP:ColorizeText("ABGP"), ABGP:ColorizeText(versionCmp), ABGP:ColorizeName(sender), ABGP:ColorizeText(version)));
         announcedVersion = versionCmp;
     end
@@ -111,13 +104,18 @@ function ABGP:PerformVersionCheck()
         self:Error("Already performing version check!");
         return;
     end
-    if not self:ParseVersion(self:GetVersion()) then
-        self:Error("Unable to parse your version!");
-        return;
-    end
     if not IsInGroup() then
         self:Error("Not in a group!");
         return;
+    end
+
+    local major, minor, patch, prerelType, prerelVersion = ABGP:ParseVersion(self:GetVersion());
+    if not major then
+        self:Error("Unable to parse your version!");
+        return;
+    end
+    if prerelType then
+        self:Notify("You're using a prerelease version! This check will likely find a lot of 'outdated' versions.");
     end
 
     -- Reset announcedVersion in case the version check reveals a newer version.
@@ -159,7 +157,7 @@ function ABGP:VersionCheckCallback()
                 end
             else
                 self:Notify("%s is missing the addon!", self:ColorizeName(player));
-                SendChatMessage("You don't have the ABGP addon installed! Please install it from Curse/Twitch for the ability to request loot.", "WHISPER", nil, player);
+                SendChatMessage("You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.", "WHISPER", nil, player);
                 allUpToDate = false;
             end
         end
@@ -174,9 +172,11 @@ function ABGP:VersionCheckCallback()
 end
 
 function ABGP:InitVersionCheck()
-    if IsInGuild() then
-        self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "GUILD");
-    end
+    self:ScheduleTimer(function()
+        if IsInGuild() then
+            self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "GUILD");
+        end
+    end, 10);
 
     local f = CreateFrame("FRAME");
     f:RegisterEvent("GROUP_JOINED");
