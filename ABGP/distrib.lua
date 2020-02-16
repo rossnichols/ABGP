@@ -1,7 +1,27 @@
-local AceGUI = LibStub("AceGUI-3.0");
+local _G = _G;
+local ABGP = ABGP;
+local AceGUI = _G.LibStub("AceGUI-3.0");
+
+local BNGetFriendInfoByID = BNGetFriendInfoByID;
+local BNGetGameAccountInfo = BNGetGameAccountInfo;
+local UnitExists = UnitExists;
+local GetGuildInfo = GetGuildInfo;
+local UnitName = UnitName;
+local table = table;
+local ipairs = ipairs;
+local pairs = pairs;
+local tonumber = tonumber;
+local select = select;
+local unpack = unpack;
+local math = math;
+local type = type;
+
+local rollRegex = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
+rollRegex = rollRegex:gsub("%%s", "(%%S+)");
+rollRegex = rollRegex:gsub("%%d", "(%%d+)");
 
 local activeDistributionWindow;
-local widths = { 110, 90, 60, 60, 60, 180, 60, 35, 1.0 };
+local widths = { 110, 90, 70, 70, 70, 180, 60, 35, 1.0 };
 
 local function ProcessSelectedData()
     local window = activeDistributionWindow;
@@ -44,6 +64,7 @@ local function RebuildUI()
     ProcessSelectedData();
 
     local msHeading, osHeading, rollHeading;
+    local ignoredChildren = 0;
     local maxRolls = {};
     for i, existing in ipairs(data) do
         if existing.requestType == ABGP.RequestTypes.MS and not msHeading then
@@ -52,6 +73,7 @@ local function RebuildUI()
             mainspec:SetFullWidth(true);
             mainspec:SetText("Main Spec");
             requests:AddChild(mainspec);
+            ignoredChildren = ignoredChildren + 1;
         end
         if existing.requestType == ABGP.RequestTypes.OS and not osHeading then
             osHeading = true;
@@ -59,6 +81,7 @@ local function RebuildUI()
             offspec:SetFullWidth(true);
             offspec:SetText("Off Spec");
             requests:AddChild(offspec);
+            ignoredChildren = ignoredChildren + 1;
         end
         if existing.requestType == ABGP.RequestTypes.ROLL and not rollHeading then
             rollHeading = true;
@@ -66,6 +89,7 @@ local function RebuildUI()
             roll:SetFullWidth(true);
             roll:SetText("Rolls");
             requests:AddChild(roll);
+            ignoredChildren = ignoredChildren + 1;
         end
 
         existing.currentMaxRoll = false;
@@ -118,8 +142,8 @@ local function RebuildUI()
         end
     end
 
-    local nRequests = #requests.children - 1;
-    window:GetUserData("requestsTitle"):SetTitle(string.format("Requests%s",
+    local nRequests = #requests.children - ignoredChildren;
+    window:GetUserData("requestsTitle"):SetTitle(("Requests%s"):format(
         nRequests > 0 and " (" .. nRequests .. ")" or ""));
 end
 
@@ -208,10 +232,7 @@ msgFrame:SetScript("OnEvent", function(self, event, ...)
 
     if event == "CHAT_MSG_SYSTEM" then
         local text = ...;
-        local match = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
-        match = match:gsub("%%s", "(%%S+)");
-        match = match:gsub("%%d", "(%%d+)");
-        local sender, roll, minRoll, maxRoll = text:match(match);
+        local sender, roll, minRoll, maxRoll = text:match(rollRegex);
         if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
             local elt = FindExistingElt(sender);
             if elt then
@@ -359,7 +380,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     local window = AceGUI:Create("Window");
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window:SetWidth(950);
+    window:SetWidth(975);
     window:SetHeight(500);
     window.frame:SetMinResize(750, 300);
     window.frame:SetMaxResize(1100, 600);
@@ -379,13 +400,13 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             widget.frame:SetMinResize(oldMinW, oldMinH);
             widget.frame:SetMaxResize(oldMaxW, oldMaxH);
             AceGUI:Release(widget);
-            ItemRefTooltip:Hide();
+            _G.ItemRefTooltip:Hide();
 
-            StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
-            StaticPopup_Hide("ABGP_CONFIRM_DIST");
-            StaticPopup_Hide("ABGP_CONFIRM_TRASH");
+            _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
+            _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
+            _G.StaticPopup_Hide("ABGP_CONFIRM_TRASH");
         else
-            StaticPopup_Show("ABGP_CONFIRM_END_DIST");
+            _G.StaticPopup_Show("ABGP_CONFIRM_END_DIST");
             widget:Show();
         end
     end);
@@ -414,9 +435,9 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         local item = itemLink;
         if window:GetUserData("multipleItems") then
             local count = window:GetUserData("distributionCount") or 0;
-            item = string.format("%s #%d", itemLink, count + 1);
+            item = ("%s #%d"):format(itemLink, count + 1);
         end
-        StaticPopup_Show("ABGP_CONFIRM_TRASH", item, nil, {
+        _G.StaticPopup_Show("ABGP_CONFIRM_TRASH", item, nil, {
             itemLink = itemLink
         });
     end);
@@ -434,11 +455,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         local item = itemLink;
         if window:GetUserData("multipleItems") then
             local count = window:GetUserData("distributionCount") or 0;
-            item = string.format("%s #%d", itemLink, count + 1);
+            item = ("%s #%d"):format(itemLink, count + 1);
         end
-        local award = string.format("%s for %d GP", ABGP:ColorizeName(player), cost);
+        local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
 
-        StaticPopup_Show("ABGP_CONFIRM_DIST", item, award, {
+        _G.StaticPopup_Show("ABGP_CONFIRM_DIST", item, award, {
             itemLink = itemLink,
             player = player,
             cost = cost
@@ -496,7 +517,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     for i = 1, #columns do
         local desc = AceGUI:Create("Label");
         desc:SetText(columns[i] .. "\n");
-        desc:SetFontObject(GameFontHighlight);
+        desc:SetFontObject(_G.GameFontHighlight);
         header:AddChild(desc);
     end
 
@@ -507,11 +528,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     scrollContainer:AddChild(scroll);
     window:SetUserData("requests", scroll);
 
-    ShowUIPanel(ItemRefTooltip);
-    ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
-    ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
-    ItemRefTooltip:SetHyperlink(itemLink);
-    ItemRefTooltip:Show();
+    _G.ShowUIPanel(_G.ItemRefTooltip);
+    _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
+    _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
+    _G.ItemRefTooltip:SetHyperlink(itemLink);
+    _G.ItemRefTooltip:Show();
 
     activeDistributionWindow = window;
 

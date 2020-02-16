@@ -1,4 +1,10 @@
+local _G = _G;
+local ABGP = ABGP;
 local AceGUI = LibStub("AceGUI-3.0");
+
+local CreateFrame = CreateFrame;
+local pairs = pairs;
+local floor = floor;
 
 do
     local Type, Version = "ABGP_DistribPlayer", 1;
@@ -32,9 +38,12 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or ""));
             self.rank.text:SetText(data.rank or "");
-            self.ep.text:SetText(string.format("%.2f", data.ep or 0));
-            self.gp.text:SetText(string.format("%.2f", data.gp or 0));
-            self.priority.text:SetText(string.format("%.2f", data.priority or 0));
+            local value = data.ep or 0;
+            self.ep.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
+            value = data.gp or 0;
+            self.gp.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
+            value = data.priority or 0;
+            self.priority.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
 
             if data.equipped then
                 if #data.equipped == 2 then
@@ -80,9 +89,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local itemLink = GetInventoryItemLink("player", 1);
-
-        local frame = CreateFrame("Button", nil, UIParent);
+        local frame = CreateFrame("Button");
         frame:SetHeight(32);
         frame:Hide();
 
@@ -98,14 +105,14 @@ do
             elt:EnableMouse(true);
             elt:SetHyperlinksEnabled(true);
             elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
-                ShowUIPanel(GameTooltip);
-                GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-                GameTooltip:SetHyperlink(itemLink);
-                GameTooltip:Show();
+                _G.ShowUIPanel(_G.GameTooltip);
+                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+                _G.GameTooltip:SetHyperlink(itemLink);
+                _G.GameTooltip:Show();
                 self:GetParent():RequestHighlight(true);
             end);
             elt:SetScript("OnHyperlinkLeave", function(self)
-                GameTooltip:Hide();
+                _G.GameTooltip:Hide();
                 self:GetParent():RequestHighlight(false);
             end);
             elt:SetScript("OnEnter", function(self)
@@ -188,15 +195,15 @@ do
         notes:SetScript("OnEnter", function(self)
             if self.text:IsTruncated() then
                 local text = self.text:GetText();
-                ShowUIPanel(GameTooltip);
-                GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-                GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
-                GameTooltip:Show();
+                _G.ShowUIPanel(_G.GameTooltip);
+                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+                _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                _G.GameTooltip:Show();
             end
             self:GetParent():RequestHighlight(true);
         end);
         notes:SetScript("OnLeave", function(self)
-            GameTooltip:Hide();
+            _G.GameTooltip:Hide();
             self:GetParent():RequestHighlight(false);
         end);
 

@@ -2,6 +2,17 @@ local AceSerializer = LibStub("AceSerializer-3.0");
 local LibCompress = LibStub("LibCompress");
 local AddonEncodeTable = LibCompress:GetAddonEncodeTable();
 
+local ABGP = ABGP;
+local IsInGroup = IsInGroup;
+local GetNumGroupMembers = GetNumGroupMembers;
+local IsInRaid = IsInRaid;
+local UnitName = UnitName;
+local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE;
+local pairs = pairs;
+local type = type;
+local table = table;
+local tostring = tostring;
+
 local function GetBroadcastChannel()
     if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
         return "INSTANCE_CHAT";

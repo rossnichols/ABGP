@@ -1,4 +1,8 @@
-ABGP_Data = {
+local _G = _G;
+local date = date;
+local ipairs = ipairs;
+
+_G.ABGP_Data = {
 	["p3"] = {
 		["gpHistory"] = {
 		},
@@ -2239,12 +2243,12 @@ local initialData = {
 };
 
 function ABGP:CheckForDataUpdates()
-    if ABGP_DataTimestamp == nil or ABGP_DataTimestamp < initialData.timestamp then
-        ABGP_DataTimestamp = initialData.timestamp;
-        ABGP_Data = initialData.ABGP_Data;
+    if _G.ABGP_DataTimestamp == nil or _G.ABGP_DataTimestamp < initialData.timestamp then
+        _G.ABGP_DataTimestamp = initialData.timestamp;
+        _G.ABGP_Data = initialData.ABGP_Data;
 
-        local d = date("%I:%M%p, %m/%d/%y", ABGP_DataTimestamp); -- https://strftime.org/
-        self:Notify(string.format("Loaded new data! (updated %s)", d));
+        local d = date("%I:%M%p, %m/%d/%y", _G.ABGP_DataTimestamp); -- https://strftime.org/
+        self:Notify(("Loaded new data! (updated %s)"):format(d));
     end
 end
 
@@ -2258,7 +2262,7 @@ function ABGP:DataOnDistAwarded(data, distribution, sender)
 	local value = self:GetItemValue(itemName);
 
 	if epgp and epgp[value.phase] then
-		local db = ABGP_Data[value.phase].priority;
+		local db = _G.ABGP_Data[value.phase].priority;
 		for _, data in ipairs(db) do
 			if data.character == player then
 				data.gp = data.gp + cost;

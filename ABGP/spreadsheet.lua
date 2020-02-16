@@ -1,4 +1,15 @@
+local _G = _G;
+local ABGP = ABGP;
 local AceGUI = LibStub("AceGUI-3.0");
+
+local pairs = pairs;
+local ipairs = ipairs;
+local date = date;
+local strupper = strupper;
+local type = type;
+local floor = floor;
+local table = table;
+local tonumber = tonumber;
 
 local epMapping = {
     ["Points Earned"] = "ep",
@@ -82,22 +93,6 @@ local priColumns = {
     { value = "ratio", text = "Ratio" },
 };
 
-local openWindows = {};
-local function CloseWindows()
-    local found = false;
-    for window in pairs(openWindows) do
-        found = true;
-        window:Hide();
-    end
-    return found;
-end
-
-local old_CloseSpecialWindows = CloseSpecialWindows;
-CloseSpecialWindows = function()
-    local found = old_CloseSpecialWindows();
-    return CloseWindows() or found;
-end
-
 local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc)
     container:SetLayout("Flow");
 
@@ -108,8 +103,8 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local window = AceGUI:Create("Window");
             window:SetTitle("Import");
             window:SetLayout("Fill");
-            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); openWindows[widget] = nil; end);
-            openWindows[window] = true;
+            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+            ABGP:OpenWindow(window);
 
             local edit = AceGUI:Create("MultiLineEditBox");
             edit:SetLabel("Copy the data from the ABP spreadsheet");
@@ -129,8 +124,8 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local window = AceGUI:Create("Window");
             window:SetTitle("Export");
             window:SetLayout("Fill");
-            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); openWindows[widget] = nil; end);
-            openWindows[window] = true;
+            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+            ABGP:OpenWindow(window);
 
             local edit = AceGUI:Create("MultiLineEditBox");
             edit:SetLabel("Export the data");
@@ -180,7 +175,7 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local desc = AceGUI:Create("Label");
             local data = spreadsheet[i][columns[j].value];
             if type(data) == "number" then
-                data = string.format(floor(data) == data and "%d" or "%.2f", data);
+                data = (floor(data) == data and "%d" or "%.3f"):format(data);
             end
             if type(data) == "table" then
                 data = table.concat(data, ", ");
@@ -200,17 +195,17 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
     table.wipe(spreadsheet);
 
     local labels;
-    for line in string.gmatch(text, "[^\n]+") do
+    for line in text:gmatch("[^\n]+") do
         if line:find("    ") then
             line = line .. "    ";
         else
             line = line .. ",";
         end
         local values = {};
-        for value in string.gmatch(line, "(.-)    ") do
+        for value in line:gmatch("(.-)    ") do
             table.insert(values, value);
         end
-        for value in string.gmatch(line, "(.-),") do
+        for value in line:gmatch("(.-),") do
             table.insert(values, value);
         end
         if not labels then
@@ -236,7 +231,7 @@ end
 
 local function DrawPriority(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), ABGP_Data[ABGP.CurrentPhase].priority, priMapping);
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].priority, priMapping);
         ABGP:RefreshActivePlayers();
 
         widget:GetUserData("window"):Hide();
@@ -246,20 +241,20 @@ local function DrawPriority(container)
 
     local exportFunc = function()
         local text = "Character,Rank,Class,Spec,Effort Points,Gear Points,Ratio\n";
-        for _, item in ipairs(ABGP_Data[ABGP.CurrentPhase].priority) do
-            text = text .. string.format("%s,%s,%s,%s,%s,%s,%s\n",
+        for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].priority) do
+            text = text .. ("%s,%s,%s,%s,%s,%s,%s\n"):format(
                 item.character, item.rank, item.class, item.role, item.ep, item.gp, item.ratio);
         end
 
         return text;
     end
 
-    DrawTable(container, ABGP_Data[ABGP.CurrentPhase].priority, priColumns, importFunc, exportFunc);
+    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].priority, priColumns, importFunc, exportFunc);
 end
 
 local function DrawEP(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), ABGP_Data[ABGP.CurrentPhase].epHistory, epMapping, function(row)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].epHistory, epMapping, function(row)
             return ABGP:GetActivePlayer(row.character);
         end);
 
@@ -270,21 +265,21 @@ local function DrawEP(container)
 
     local exportFunc = function()
         local text = "Points Earned,Action Taken,Character,Date\n";
-        for _, item in ipairs(ABGP_Data[ABGP.CurrentPhase].epHistory) do
-            text = text .. string.format("%s,%s,%s,%s\n",
+        for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].epHistory) do
+            text = text .. ("%s,%s,%s,%s\n"):format(
                 item.ep, item.action, item.character, item.date);
         end
 
         return text;
     end
 
-    DrawTable(container, ABGP_Data[ABGP.CurrentPhase].epHistory, epColumns, importFunc, exportFunc);
+    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].epHistory, epColumns, importFunc, exportFunc);
 end
 
 local function DrawGP(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
-            if gpLine.gp == nil then gpLine.gp = 0; end
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
+            if row.gp == nil then row.gp = 0; end
             return ABGP:GetActivePlayer(row.character);
         end);
 
@@ -295,20 +290,20 @@ local function DrawGP(container)
 
     local exportFunc = function()
         local text = "New Points,Item,Character,Date Won\n";
-        for _, item in ipairs(ABGP_Data[ABGP.CurrentPhase].gpHistory) do
-            text = text .. string.format("%s,%s,%s,%s\n",
+        for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory) do
+            text = text .. ("%s,%s,%s,%s\n"):format(
                 item.gp, item.item, item.character, item.date);
         end
 
         return text;
     end
 
-    DrawTable(container, ABGP_Data[ABGP.CurrentPhase].gpHistory, gpColumns, importFunc, exportFunc);
+    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpColumns, importFunc, exportFunc);
 end
 
 local function DrawItems(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
             row.priority = {};
             for k, v in pairs(row) do
                 if itemClasses[k] then
@@ -326,17 +321,17 @@ local function DrawItems(container)
         DrawItems(container);
     end
 
-    DrawTable(container, ABGP_Data[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
+    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
 end
 
 function ABGP:ShowImportWindow()
     local window = AceGUI:Create("Window");
-    window:SetTitle(string.format("ABGP (data updated %s)", date("%m/%d/%y %I:%M%p", ABGP_DataTimestamp))); -- https://strftime.org/
+    window:SetTitle(("ABGP (data updated %s)"):format(date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp))); -- https://strftime.org/
     window:SetWidth(650);
     window:SetHeight(400);
     window:SetLayout("Flow");
-    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); openWindows[widget] = nil; end);
-    openWindows[window] = true;
+    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+    ABGP:OpenWindow(window);
 
     local tabs = {
         { value = "priority", text = "Priority", selected = DrawPriority },

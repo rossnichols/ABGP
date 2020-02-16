@@ -1,3 +1,23 @@
+local ABGP = ABGP;
+local IsAltKeyDown = IsAltKeyDown;
+local IsInRaid = IsInRaid;
+local UnitName = UnitName;
+local GetNumGroupMembers = GetNumGroupMembers;
+local GetRaidRosterInfo = GetRaidRosterInfo;
+local SendChatMessage = SendChatMessage;
+local IsMasterLooter = IsMasterLooter;
+local GetItemInfo = GetItemInfo;
+local GetLootThreshold = GetLootThreshold;
+local CreateFrame = CreateFrame;
+local GetLootInfo = GetLootInfo;
+local GetNumLootItems = GetNumLootItems;
+local GetLootSlotLink = GetLootSlotLink;
+local UnitExists = UnitExists;
+local UnitIsFriend = UnitIsFriend;
+local UnitIsDead = UnitIsDead;
+local UnitGUID = UnitGUID;
+local select = select;
+
 local function ShouldDistributeLoot()
     return IsAltKeyDown() and ABGP:IsPrivileged();
 end
@@ -92,7 +112,7 @@ function ABGP:AddItemHooks()
 
         -- Send messages for each item that meets announcement criteria.
         SendAnnounceMessage(useTarget
-            and string.format("Items from %s:", UnitName("target"))
+            and ("Items from %s:"):format(UnitName("target"))
             or "Items from loot:");
         for i = 1, GetNumLootItems() do
             local item = loot[i];

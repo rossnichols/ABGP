@@ -1,3 +1,17 @@
+local _G = _G;
+local ABGP = ABGP;
+
+local PlaySound = PlaySound;
+local FlashClientIcon = FlashClientIcon;
+local UnitName = UnitName;
+local GetItemInfo = GetItemInfo;
+local GetInventoryItemLink = GetInventoryItemLink;
+local RandomRoll = RandomRoll;
+local GetBindingKey = GetBindingKey;
+local table = table;
+local pairs = pairs;
+local select = select;
+
 local activeItems = {};
 local staticPopups = {
     LOOTDISTRIB = "ABGP_LOOTDISTRIB",
@@ -7,8 +21,8 @@ local staticPopups = {
 };
 
 local function AtlasLootFaves()
-    if AtlasLoot and AtlasLoot.Addons and AtlasLoot.Addons.GetAddon then
-        return AtlasLoot.Addons:GetAddon("Favourites");
+    if _G.AtlasLoot and _G.AtlasLoot.Addons and _G.AtlasLoot.Addons.GetAddon then
+        return _G.AtlasLoot.Addons:GetAddon("Favourites");
     end
 end
 
@@ -36,7 +50,7 @@ local function GetStaticPopupType(itemLink)
 end
 
 local function CloseStaticPopups(itemLink)
-    for index = 1, STATICPOPUP_NUMDIALOGS do
+    for index = 1, _G.STATICPOPUP_NUMDIALOGS do
         local frame = _G["StaticPopup"..index];
         if frame:IsShown() and staticPopups[frame.which] then
             if frame.data.itemLink == itemLink then
@@ -50,7 +64,7 @@ local function ShowStaticPopup(itemLink, which)
     which = which or GetStaticPopupType(itemLink);
     CloseStaticPopups(itemLink);
     if which then
-        StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
+        _G.StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
     end
 end
 
@@ -66,29 +80,28 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
             notes = ", Notes: " .. value.notes
         end
         if value.gp == 0 then
-            msg = string.format("Now distributing %s! No GP cost, Priority: %s%s.",
+            msg = ("Now distributing %s! No GP cost, Priority: %s%s."):format(
                 itemLink, table.concat(value.priority, ", "), notes);
         else
-            msg = string.format("Now distributing %s! GP cost: %d, Priority: %s%s.",
+            msg = ("Now distributing %s! GP cost: %d, Priority: %s%s."):format(
                 itemLink, value.gp, table.concat(value.priority, ", "), notes);
         end
     else
-        msg = string.format("Now distributing %s! No GP cost.",
-            itemLink);
+        msg = ("Now distributing %s! No GP cost."):format(itemLink);
     end
 
-    RaidNotice_AddMessage(RaidWarningFrame, msg, ABGP.ColorTable);
-    PlaySound(SOUNDKIT.RAID_WARNING);
+    _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, ABGP.ColorTable);
+    PlaySound(_G.SOUNDKIT.RAID_WARNING);
     FlashClientIcon();
 
     local prompt = "";
     local popup = GetStaticPopupType(itemLink);
     if popup == staticPopups.LOOTDISTRIB_FAVORITE or popup == staticPopups.LOOTDISTRIB_ROLL_FAVORITE then
-        ShowStaticPopup(itemLink, which);
+        ShowStaticPopup(itemLink, popup);
         prompt = "This item is favorited in AtlasLoot."
     else
         local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "currently unbound";
-        prompt = string.format("Type '/abgp loot' or press your hotkey (%s) if you want to request this item.", keybinding);
+        prompt = ("Type '/abgp loot' or press your hotkey (%s) if you want to request this item."):format(keybinding);
     end
 
     self:Notify("%s is being distributed! %s", itemLink, prompt);
@@ -116,7 +129,7 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     if activeItems[itemLink] then
         if activeItems[itemLink].notified then
             activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
-            multiple = string.format(" #%d", activeItems[itemLink].notified);
+            multiple = (" #%d"):format(activeItems[itemLink].notified);
         else
             activeItems[itemLink].notified = 1;
         end
@@ -136,7 +149,7 @@ function ABGP:RequestOnDistTrashed(data, distribution, sender)
     if activeItems[itemLink] then
         if activeItems[itemLink].notified then
             activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
-            multiple = string.format(" #%d", activeItems[itemLink].notified);
+            multiple = (" #%d"):format(activeItems[itemLink].notified);
         else
             activeItems[itemLink].notified = 1;
         end
@@ -176,32 +189,32 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         [ABGP.RequestTypes.ROLL] = "by rolling",
     };
     local itemMaps = {
-        INVTYPE_HEAD = { INVSLOT_HEAD },
-        INVTYPE_NECK = { INVSLOT_NECK },
-        INVTYPE_SHOULDER = { INVSLOT_SHOULDER },
-        INVTYPE_BODY = { INVSLOT_BODY },
-        INVTYPE_CHEST = { INVSLOT_CHEST },
-        INVTYPE_WAIST = { INVSLOT_WAIST },
-        INVTYPE_LEGS = { INVSLOT_LEGS },
-        INVTYPE_FEET = { INVSLOT_FEET },
-        INVTYPE_WRIST = { INVSLOT_WRIST },
-        INVTYPE_HAND = { INVSLOT_HAND },
-        INVTYPE_FINGER = { INVSLOT_FINGER1, INVSLOT_FINGER2 },
-        INVTYPE_TRINKET = { INVSLOT_TRINKET1, INVSLOT_TRINKET2 },
-        INVTYPE_WEAPON = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_SHIELD = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_RANGED = { INVSLOT_RANGED },
-        INVTYPE_CLOAK = { INVSLOT_BACK },
-        INVTYPE_2HWEAPON = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_TABARD = { INVSLOT_TABARD },
-        INVTYPE_ROBE = { INVSLOT_CHEST },
-        INVTYPE_WEAPONMAINHAND = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_WEAPONOFFHAND = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_HOLDABLE = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-        INVTYPE_AMMO = { INVSLOT_AMMO },
-        INVTYPE_THROWN = { INVSLOT_RANGED },
-        INVTYPE_RANGEDRIGHT = { INVSLOT_RANGED },
-        INVTYPE_RELIC = { INVSLOT_RANGED },
+        INVTYPE_HEAD = { _G.INVSLOT_HEAD },
+        INVTYPE_NECK = { _G.INVSLOT_NECK },
+        INVTYPE_SHOULDER = { _G.INVSLOT_SHOULDER },
+        INVTYPE_BODY = { _G.INVSLOT_BODY },
+        INVTYPE_CHEST = { _G.INVSLOT_CHEST },
+        INVTYPE_WAIST = { _G.INVSLOT_WAIST },
+        INVTYPE_LEGS = { _G.INVSLOT_LEGS },
+        INVTYPE_FEET = { _G.INVSLOT_FEET },
+        INVTYPE_WRIST = { _G.INVSLOT_WRIST },
+        INVTYPE_HAND = { _G.INVSLOT_HAND },
+        INVTYPE_FINGER = { _G.INVSLOT_FINGER1, _G.INVSLOT_FINGER2 },
+        INVTYPE_TRINKET = { _G.INVSLOT_TRINKET1, _G.INVSLOT_TRINKET2 },
+        INVTYPE_WEAPON = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
+        INVTYPE_SHIELD = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
+        INVTYPE_RANGED = { _G.INVSLOT_RANGED },
+        INVTYPE_CLOAK = { _G.INVSLOT_BACK },
+        INVTYPE_2HWEAPON = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
+        INVTYPE_TABARD = { _G.INVSLOT_TABARD },
+        INVTYPE_ROBE = { _G.INVSLOT_CHEST },
+        INVTYPE_WEAPONMAINHAND = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
+        INVTYPE_WEAPONOFFHAND = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
+        INVTYPE_HOLDABLE = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
+        INVTYPE_AMMO = { _G.INVSLOT_AMMO },
+        INVTYPE_THROWN = { _G.INVSLOT_RANGED },
+        INVTYPE_RANGEDRIGHT = { _G.INVSLOT_RANGED },
+        INVTYPE_RELIC = { _G.INVSLOT_RANGED },
     };
     local equipLoc = select(9, GetItemInfo(itemLink));
     if equipLoc and itemMaps[equipLoc] then
@@ -256,13 +269,13 @@ StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
 	maxLetters = 255,
 	countInvisibleLetters = true,
     OnHyperlinkEnter = function(self, itemLink)
-        ShowUIPanel(GameTooltip);
-        GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
-        GameTooltip:SetHyperlink(itemLink);
-        GameTooltip:Show();
+        _G.ShowUIPanel(_G.GameTooltip);
+        _G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
+        _G.GameTooltip:SetHyperlink(itemLink);
+        _G.GameTooltip:Show();
     end,
     OnHyperlinkLeave = function(self, itemLink)
-        GameTooltip:Hide();
+        _G.GameTooltip:Hide();
     end,
     OnShow = function(self)
         self.editBox:SetAutoFocus(false);

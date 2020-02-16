@@ -1,11 +1,24 @@
-ABGP = LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0");
+local _G = _G;
+_G.ABGP = _G.LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0");
+local ABGP = ABGP;
 
-BINDING_HEADER_ABGP = "ABGP";
-BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
+local UnitExists = UnitExists;
+local UnitClass = UnitClass;
+local UnitGUID = UnitGUID;
+local GetClassColor = GetClassColor;
+local C_GuildInfo = C_GuildInfo;
+local select = select;
+local pairs = pairs;
+local ipairs = ipairs;
+local tonumber = tonumber;
+local table = table;
+
+_G.BINDING_HEADER_ABGP = "ABGP";
+_G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
-    local AceConfig = LibStub("AceConfig-3.0");
+    local AceConfig = _G.LibStub("AceConfig-3.0");
     local addonText = "ABGP";
     local version = self:GetVersion();
     if self:ParseVersion(version) then
@@ -84,7 +97,7 @@ end
 ABGP.Color = "|cFF94E4FF";
 ABGP.ColorTable = { 0.58, 0.89, 1, r = 0.58, g = 0.89, b = 1 };
 function ABGP:Notify(str, ...)
-    DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. string.format(str, ...));
+    _G.DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. str:format(...));
 end
 
 function ABGP:LogVerbose(str, ...)
@@ -100,14 +113,14 @@ function ABGP:Error(str, ...)
 end
 
 function ABGP:ColorizeText(text)
-    return string.format("%s%s|r", ABGP.Color, text);
+    return ("%s%s|r"):format(ABGP.Color, text);
 end
 
 function ABGP:ColorizeName(name)
     if not UnitExists(name) then return name; end
     local _, class = UnitClass(name);
     local color = select(4, GetClassColor(class));
-    return string.format("|c%s%s|r", color, name);
+    return ("|c%s%s|r"):format(color, name);
 end
 
 
@@ -142,7 +155,7 @@ local itemValues = {};
 function ABGP:RefreshItemValues()
     itemValues = {};
     for phase in pairs(self.Phases) do
-        for _, item in ipairs(ABGP_Data[phase].itemValues) do
+        for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
             local name = item.item or item[1];
             local gp = item.gp or item[2];
             itemValues[name] = {
@@ -187,7 +200,7 @@ local activePlayers = {};
 function ABGP:RefreshActivePlayers()
     activePlayers = {};
     for phase in pairs(self.Phases) do
-        for _, pri in ipairs(ABGP_Data[phase].priority) do
+        for _, pri in ipairs(_G.ABGP_Data[phase].priority) do
             activePlayers[pri.character] = activePlayers[pri.character] or {};
             activePlayers[pri.character][phase] = pri;
         end
@@ -219,8 +232,8 @@ local function OnHandleModifiedItemClick(itemLink)
     return false;
 end
 
-local old_HandleModifiedItemClick = HandleModifiedItemClick;
-HandleModifiedItemClick = function(itemLink)
+local old_HandleModifiedItemClick = _G.HandleModifiedItemClick;
+_G.HandleModifiedItemClick = function(itemLink)
     local ret = old_HandleModifiedItemClick(itemLink);
     return ret or OnHandleModifiedItemClick(itemLink);
 end
@@ -240,8 +253,8 @@ local function CloseABGPWindows()
     return found;
 end
 
-local old_CloseSpecialWindows = CloseSpecialWindows;
-CloseSpecialWindows = function()
+local old_CloseSpecialWindows = _G.CloseSpecialWindows;
+_G.CloseSpecialWindows = function()
     local found = old_CloseSpecialWindows();
     return CloseABGPWindows() or found;
 end

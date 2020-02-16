@@ -1,3 +1,17 @@
+local _G = _G;
+local ABGP = ABGP;
+
+local IsInGroup = IsInGroup;
+local GetNumGroupMembers = GetNumGroupMembers;
+local IsInRaid = IsInRaid;
+local IsInGuild = IsInGuild;
+local UnitName = UnitName;
+local UnitIsConnected = UnitIsConnected;
+local SendChatMessage = SendChatMessage;
+local CreateFrame = CreateFrame;
+local GetAddOnMetadata = GetAddOnMetadata;
+local tonumber = tonumber;
+
 local announcedVersion;
 local versionCheckData;
 
@@ -68,8 +82,8 @@ local function CompareVersion(versionCmp, sender)
     if not (ABGP:ParseVersion(version) and ABGP:ParseVersion(versionCmp)) then return; end
 
     if VersionIsNewer(versionCmp, version) then
-        StaticPopup_Show("ABGP_OUTDATED_VERSION", string.format(
-            "%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade so you can request loot!",
+        _G.StaticPopup_Show("ABGP_OUTDATED_VERSION",
+            ("%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade so you can request loot!"):format(
             ABGP:ColorizeText("ABGP"), ABGP:ColorizeText(versionCmp), ABGP:ColorizeName(sender), ABGP:ColorizeText(version)));
         announcedVersion = versionCmp;
     end
@@ -148,17 +162,21 @@ function ABGP:VersionCheckCallback()
             unit = "party" .. i;
         end
         local player = UnitName(unit);
-        if player and UnitIsConnected(unit) then
-            local versionCmp = versionCheckData.players[player];
-            if versionCmp then
-                if VersionIsNewer(version, versionCmp, true) then
-                    self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
+        if player then
+            if UnitIsConnected(unit) then
+                local versionCmp = versionCheckData.players[player];
+                if versionCmp then
+                    if VersionIsNewer(version, versionCmp, true) then
+                        self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
+                        allUpToDate = false;
+                    end
+                else
+                    self:Notify("%s is missing the addon!", self:ColorizeName(player));
+                    SendChatMessage("You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.", "WHISPER", nil, player);
                     allUpToDate = false;
                 end
             else
-                self:Notify("%s is missing the addon!", self:ColorizeName(player));
-                SendChatMessage("You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.", "WHISPER", nil, player);
-                allUpToDate = false;
+                self:Notify("%s was offline for the version check.", self:ColorizeName(player));
             end
         end
     end

@@ -1,5 +1,11 @@
+local _G = _G;
+local ABGP = ABGP;
+
+local table = table;
+local pairs = pairs;
+
 function ABGP:HookTooltips()
-    for _, tt in pairs({ GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2 }) do
+    for _, tt in pairs({ _G.GameTooltip, _G.ItemRefTooltip, _G.ShoppingTooltip1, _G.ShoppingTooltip2 }) do
         tt:HookScript("OnTooltipSetItem", function(self)
             local value = ABGP:GetItemValue(self:GetItem());
             if value then
