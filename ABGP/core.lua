@@ -253,3 +253,7 @@ end
 function ABGP:CloseWindow(window)
     openWindows[window] = nil;
 end
+
+hooksecurefunc("ReloadUI", function()
+    ABGP:DistribOnReloadUI();
+end);

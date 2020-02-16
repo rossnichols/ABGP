@@ -148,7 +148,7 @@ function ABGP:VersionCheckCallback()
             unit = "party" .. i;
         end
         local player = UnitName(unit);
-        if player then
+        if player and UnitIsConnected(unit) then
             local versionCmp = versionCheckData.players[player];
             if versionCmp then
                 if VersionIsNewer(version, versionCmp, true) then

@@ -76,8 +76,10 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         msg = string.format("Now distributing %s! No GP cost.",
             itemLink);
     end
+
     RaidNotice_AddMessage(RaidWarningFrame, msg, ABGP.ColorTable);
     PlaySound(SOUNDKIT.RAID_WARNING);
+    FlashClientIcon();
 
     local prompt = "";
     local popup = GetStaticPopupType(itemLink);

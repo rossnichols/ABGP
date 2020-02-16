@@ -44,6 +44,7 @@ local function RebuildUI()
     ProcessSelectedData();
 
     local msHeading, osHeading, rollHeading;
+    local maxRolls = {};
     for i, existing in ipairs(data) do
         if existing.requestType == ABGP.RequestTypes.MS and not msHeading then
             msHeading = true;
@@ -66,6 +67,9 @@ local function RebuildUI()
             roll:SetText("Rolls");
             requests:AddChild(roll);
         end
+
+        existing.currentMaxRoll = false;
+
         local elt = AceGUI:Create("ABGP_DistribPlayer");
         elt:SetFullWidth(true);
         elt:SetData(existing);
@@ -93,6 +97,24 @@ local function RebuildUI()
 
         if selectedData and existing.player == selectedData.player then
             elt:Fire("OnClick");
+        end
+
+        if existing.roll then
+            local reqType = existing.requestType;
+            if not maxRolls[reqType] then
+                maxRolls[reqType] = { roll = existing.roll, elts = { elt } };
+            elseif existing.roll > maxRolls[reqType].roll then
+                maxRolls[reqType] = { roll = existing.roll, elts = { elt } };
+            elseif existing.roll == maxRolls[reqType].roll then
+                table.insert(maxRolls[reqType].elts, elt);
+            end
+        end
+    end
+
+    for _, rolls in pairs(maxRolls) do
+        for _, elt in ipairs(rolls.elts) do
+            elt.data.currentMaxRoll = true;
+            elt:SetData(elt.data);
         end
     end
 
@@ -298,6 +320,15 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
     RemoveData(sender);
 end
 
+function ABGP:DistribOnReloadUI()
+    -- If distribution is open when reloading UI,
+    -- hide the window so it generates the appropriate comms.
+    if activeDistributionWindow then
+        activeDistributionWindow:SetUserData("closeConfirmed", true);
+        activeDistributionWindow:Hide();
+    end
+end
+
 function ABGP:ShowDistrib(itemLink)
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
@@ -364,7 +395,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("primary", true);
 
     local resetRolls = AceGUI:Create("Button");
-    resetRolls:SetWidth(100);
+    resetRolls:SetWidth(125);
     resetRolls:SetText("Reset Rolls");
     resetRolls:SetCallback("OnClick", function(widget)
         window:SetUserData("pendingRolls", nil);
@@ -377,7 +408,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:AddChild(resetRolls);
 
     local disenchant = AceGUI:Create("Button");
-    disenchant:SetWidth(100);
+    disenchant:SetWidth(125);
     disenchant:SetText("Disenchant");
     disenchant:SetCallback("OnClick", function(widget)
         local item = itemLink;
@@ -393,7 +424,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("disenchantButton", disenchant);
 
     local distrib = AceGUI:Create("Button");
-    distrib:SetWidth(100);
+    distrib:SetWidth(125);
     distrib:SetText("Distribute");
     distrib:SetDisabled(true);
     distrib:SetCallback("OnClick", function(widget)
@@ -489,8 +520,8 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             rank = "Blue Lobster",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
-                "\124cffff8000\124Hitem:19019::::::::60:::::\124h[Thunderfury, Blessed Blade of the Windseeker]\124h\124r",
-                "\124cffff8000\124Hitem:17182::::::::60:::::\124h[Sulfuras, Hand of Ragnaros]\124h\124r"
+                "|cffff8000|Hitem:19019::::::::60:::::|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
+                "|cffff8000|Hitem:17182::::::::60:::::|h[Sulfuras, Hand of Ragnaros]|h|r"
             },
         };
         for i = 1, 9 do

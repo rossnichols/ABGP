@@ -3,7 +3,7 @@ local AceGUI = LibStub("AceGUI-3.0");
 do
     local Type, Version = "ABGP_DistribPlayer", 1;
 
-    local mainSpecFont = CreateFont("ABGPMainSpec");
+    local mainSpecFont = CreateFont("ABGPHighlight");
     mainSpecFont:CopyFontObject(GameFontHighlight);
     mainSpecFont:SetTextColor(unpack(ABGP.ColorTable));
 
@@ -35,6 +35,7 @@ do
             self.ep.text:SetText(string.format("%.2f", data.ep or 0));
             self.gp.text:SetText(string.format("%.2f", data.gp or 0));
             self.priority.text:SetText(string.format("%.2f", data.priority or 0));
+
             if data.equipped then
                 if #data.equipped == 2 then
                     self.equipped.textTop:SetText(data.equipped[1]);
@@ -43,17 +44,20 @@ do
                     self.equipped.textMid:SetText(data.equipped[1]);
                 end
             end
-            self.roll.text:SetText(data.roll or "");
-            self.notes.text:SetText(data.notes or "--");
 
             local requestTypes = {
                 [ABGP.RequestTypes.MS] = "MS",
                 [ABGP.RequestTypes.OS] = "OS",
                 [ABGP.RequestTypes.ROLL] = "",
             };
-            self.requestType.text:SetText(data.requestType and requestTypes[data.requestType] or "");
-            local specialFont = (data.requestType and data.requestType == ABGP.RequestTypes.MS) and "ABGPMainSpec" or "GameFontHighlight";
+            self.requestType.text:SetText(data.requestType and "   " .. requestTypes[data.requestType] or "");
+            local specialFont = (data.requestType and data.requestType == ABGP.RequestTypes.MS) and "ABGPHighlight" or "GameFontHighlight";
             self.requestType.text:SetFontObject(specialFont);
+
+            self.roll.text:SetText(data.roll or "");
+            self.roll.text:SetFontObject(data.currentMaxRoll and "ABGPHighlight" or "GameFontHighlight");
+
+            self.notes.text:SetText(data.notes or "--");
         end,
 
         ["SetWidths"] = function(self, widths)
@@ -170,7 +174,6 @@ do
 
         local requestType = createElement(frame, equipped);
         requestType.text = createFontString(requestType);
-        requestType.text:SetJustifyH("CENTER");
 
         local roll = createElement(frame, requestType);
         roll.text = createFontString(roll);
