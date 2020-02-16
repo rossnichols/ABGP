@@ -6,12 +6,14 @@ local UnitExists = UnitExists;
 local UnitClass = UnitClass;
 local UnitGUID = UnitGUID;
 local GetClassColor = GetClassColor;
+local GuildRoster = GuildRoster;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
 local ipairs = ipairs;
 local tonumber = tonumber;
 local table = table;
+local tostring = tostring;
 
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
@@ -28,13 +30,13 @@ function ABGP:OnInitialize()
         type = "group",
         args = {
             loot = {
-                name = "loot",
+                name = "Loot",
                 desc = "shows the item request window",
                 type = "execute",
                 func = function() ABGP:ShowItemRequests(); end
             },
             import = {
-                name = "import",
+                name = "Data Import",
                 desc = "shows the import window",
                 type = "execute",
                 cmdHidden = true,
@@ -42,12 +44,18 @@ function ABGP:OnInitialize()
                 func = function() ABGP:ShowImportWindow(); end
             },
             versioncheck = {
-                name = "versioncheck",
+                name = "Version Check",
                 desc = "checks the raid for an outdated or missing addon versions",
                 type = "execute",
                 cmdHidden = not ABGP:IsPrivileged(),
                 validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
                 func = function() ABGP:PerformVersionCheck(); end
+            },
+            priority = {
+                name = "Priority",
+                desc = "shows the player priority window",
+                type = "execute",
+                func = function() ABGP:ShowPriority(); end
             },
         },
     }, { "abgp" });
@@ -58,6 +66,9 @@ function ABGP:OnInitialize()
     self:RefreshActivePlayers();
     self:RefreshItemValues();
     self:InitVersionCheck();
+
+    -- Trigger a guild roster update to refresh priorities.
+    GuildRoster();
 
     self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
         self:DistribOnItemRequest(data, distribution, sender);
@@ -78,7 +89,7 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data, distribution, sender)
         self:RequestOnDistAwarded(data, distribution, sender);
-        self:DataOnDistAwarded(data, distribution, sender);
+        self:PriorityOnDistAwarded(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED, function(self, event, data, distribution, sender)
@@ -92,12 +103,16 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.CommTypes.VERSION_RESPONSE, function(self, event, data, distribution, sender)
         self:OnVersionResponse(data, distribution, sender);
     end, self);
+
+    self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED, function(self, event, data, distribution, sender)
+        GuildRoster();
+    end, self);
 end
 
 ABGP.Color = "|cFF94E4FF";
 ABGP.ColorTable = { 0.58, 0.89, 1, r = 0.58, g = 0.89, b = 1 };
 function ABGP:Notify(str, ...)
-    _G.DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. str:format(...));
+    _G.DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. tostring(str):format(...));
 end
 
 function ABGP:LogVerbose(str, ...)
@@ -267,6 +282,18 @@ function ABGP:CloseWindow(window)
     openWindows[window] = nil;
 end
 
+
+--
+-- Support for other events delivered to components.
+--
+
 hooksecurefunc("ReloadUI", function()
     ABGP:DistribOnReloadUI();
+end);
+
+local f = CreateFrame("Frame");
+f:RegisterEvent("GUILD_ROSTER_UPDATE");
+f:SetScript("OnEvent", function(self, event)
+    ABGP:VersionOnGuildRosterUpdate();
+    ABGP:PriorityOnGuildRosterUpdate();
 end);

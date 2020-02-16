@@ -1,7 +1,7 @@
 local _G = _G;
+local ABGP = ABGP;
+
 local date = date;
-local ipairs = ipairs;
-local table = table;
 
 _G.ABGP_Data = {
 	["p3"] = {
@@ -2250,37 +2250,5 @@ function ABGP:CheckForDataUpdates()
 
         local d = date("%I:%M%p, %m/%d/%y", _G.ABGP_DataTimestamp); -- https://strftime.org/
         self:Notify(("Loaded new data! (updated %s)"):format(d));
-    end
-end
-
-function ABGP:DataOnDistAwarded(data, distribution, sender)
-	local itemLink = data.itemLink;
-	local player = data.player;
-	local cost = data.cost;
-
-	local epgp = self:GetActivePlayer(player);
-	local itemName = self:GetItemName(itemLink);
-	local value = self:GetItemValue(itemName);
-
-	if epgp and epgp[value.phase] then
-		local db = _G.ABGP_Data[value.phase].priority;
-		for _, data in ipairs(db) do
-			if data.character == player then
-				data.gp = data.gp + cost;
-				data.ratio = data.ep * 10 / data.gp;
-				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) RATIO=%.3f",
-					value.phase, player, data.ep, data.gp, cost, data.ratio);
-				break;
-			end
-		end
-		table.sort(db, function(a, b)
-			if a.ratio ~= b.ratio then
-				return a.ratio > b.ratio;
-			else
-				return a.character < b.character;
-			end
-		end);
 	end
-
-	self:RefreshActivePlayers();
 end

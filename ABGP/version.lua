@@ -14,6 +14,7 @@ local tonumber = tonumber;
 
 local announcedVersion;
 local versionCheckData;
+local checkedGuild = false;
 
 function ABGP:GetVersion()
     if ABGP.VersionDebug then
@@ -190,17 +191,18 @@ function ABGP:VersionCheckCallback()
 end
 
 function ABGP:InitVersionCheck()
-    self:ScheduleTimer(function()
-        if IsInGuild() then
-            self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "GUILD");
-        end
-    end, 10);
-
     local f = CreateFrame("FRAME");
     f:RegisterEvent("GROUP_JOINED");
     f:SetScript("OnEvent", function()
         self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "BROADCAST");
     end);
+end
+
+function ABGP:VersionOnGuildRosterUpdate()
+    if not checkedGuild then
+        checkedGuild = true;
+        self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "GUILD");
+    end
 end
 
 StaticPopupDialogs["ABGP_OUTDATED_VERSION"] = {

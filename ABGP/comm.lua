@@ -57,6 +57,9 @@ ABGP.CommTypes = {
     ITEM_DISTRIBUTION_TRASHED = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"),
     -- itemLink: item link string
 
+    OFFICER_NOTES_UPDATED = CV("ABGP_OFFICER_NOTES_UPDATED"),
+    -- no payload
+
     -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = "ABGP_VERSION_REQUEST",
     -- reset: bool or nil

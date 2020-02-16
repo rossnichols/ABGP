@@ -77,17 +77,16 @@ local priMapping = {
     ["Character"] = "character",
     ["Rank"] = "rank",
     ["Class"] = "class",
-    ["Spec"] = "role",
+    ["Spec"] = false,
     ["Effort Points"] = "ep",
     ["Gear Points"] = "gp",
     ["Ratio"] = "ratio",
 };
 local priColumns = {
-    weights = { 100, 60, 60, 70, 60, 60, 60 },
+    weights = { 110, 90, 60, 60, 60, 60 },
     { value = "character", text = "Character" },
     { value = "rank", text = "Rank" },
     { value = "class", text = "Class" },
-    { value = "role", text = "Role" },
     { value = "ep", text = "EP" },
     { value = "gp", text = "GP" },
     { value = "ratio", text = "Ratio" },
@@ -211,7 +210,7 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
         if not labels then
             labels = values;
             for j = 1, #labels do
-                if not mapping[labels[j]] then
+                if mapping[labels[j]] == nil then
                     ABGP:Notify("No mapping for column: %s. Data may be incorrect!", labels[j]);
                 end
             end
@@ -233,6 +232,8 @@ local function DrawPriority(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].priority, priMapping);
         ABGP:RefreshActivePlayers();
+        ABGP:RebuildOfficerNotes();
+        ABGP:RefreshFromOfficerNotes();
 
         widget:GetUserData("window"):Hide();
         container:ReleaseChildren();

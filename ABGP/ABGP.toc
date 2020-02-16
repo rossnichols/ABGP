@@ -16,5 +16,7 @@ request.lua
 comm.lua
 widgets.lua
 version.lua
+priority.lua
+
 bindings.xml
 internal.xml
