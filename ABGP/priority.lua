@@ -20,6 +20,7 @@ local unpack = unpack;
 
 local activeWindow;
 local widths = { 110, 100, 70, 70, 70 };
+local ignoredClasses = {};
 
 local function prioritySort(a, b)
 	if a.priority ~= b.priority then
@@ -36,18 +37,20 @@ local function PopulateUI()
 
     local priority = _G.ABGP_Data[ABGP.CurrentPhase].priority;
     for i, data in ipairs(priority) do
-        local elt = AceGUI:Create("ABGP_Player");
-        elt:SetFullWidth(true);
-        elt:SetData(data);
-        elt:SetWidths(widths);
-        elt:ShowBackground((i % 2) == 0);
-        elt:SetHeight(24);
-        elt:SetTextOffset(5);
-        if data.player == UnitName("player") then
-            elt.frame:RequestHighlight(true);
-        end
+        if not ignoredClasses[data.class] then
+            local elt = AceGUI:Create("ABGP_Player");
+            elt:SetFullWidth(true);
+            elt:SetData(data);
+            elt:SetWidths(widths);
+            elt:ShowBackground((i % 2) == 0);
+            elt:SetHeight(24);
+            elt:SetTextOffset(5);
+            if data.player == UnitName("player") then
+                elt.frame:RequestHighlight(true);
+            end
 
-        container:AddChild(elt);
+            container:AddChild(elt);
+        end
     end
 end
 
@@ -212,6 +215,39 @@ function ABGP:ShowPriority()
         PopulateUI();
     end);
     window:AddChild(phaseSelector);
+
+    local classSelector = AceGUI:Create("Dropdown");
+    classSelector:SetWidth(110);
+    local classes = {
+        "DRUID",
+        "HUNTER",
+        "MAGE",
+        "PALADIN",
+        "PRIEST",
+        "ROGUE",
+        "WARLOCK",
+        "WARRIOR",
+    };
+    classSelector:SetList({
+        DRUID = "Druid",
+        HUNTER = "Hunter",
+        MAGE = "Mage",
+        PALADIN = "Paladin",
+        PRIEST = "Priest",
+        ROGUE = "Rogue",
+        WARLOCK = "Warlock",
+        WARRIOR = "Warrior",
+    }, classes);
+    classSelector:SetMultiselect(true);
+    for _, class in ipairs(classes) do
+        classSelector:SetItemValue(class, not ignoredClasses[class]);
+    end
+    classSelector:SetCallback("OnValueChanged", function(widget, event, class, checked)
+        ignoredClasses[class] = not checked;
+        PopulateUI();
+    end);
+    classSelector:SetText("Classes");
+    window:AddChild(classSelector);
 
     local scrollContainer = AceGUI:Create("InlineGroup");
     scrollContainer:SetFullWidth(true);
