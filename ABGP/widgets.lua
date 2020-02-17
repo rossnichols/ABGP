@@ -6,6 +6,57 @@ local CreateFrame = CreateFrame;
 local pairs = pairs;
 local floor = floor;
 
+local function CreateElement(frame, anchor, template)
+    local elt = CreateFrame("Button", nil, frame, template);
+    elt:SetHeight(frame:GetHeight());
+    elt:EnableMouse(true);
+    elt:SetHyperlinksEnabled(true);
+    elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
+        _G.ShowUIPanel(_G.GameTooltip);
+        _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+        _G.GameTooltip:SetHyperlink(itemLink);
+        _G.GameTooltip:Show();
+        self:GetParent():RequestHighlight(true);
+    end);
+    elt:SetScript("OnHyperlinkLeave", function(self)
+        _G.GameTooltip:Hide();
+        self:GetParent():RequestHighlight(false);
+    end);
+    elt:SetScript("OnEnter", function(self)
+        self:GetParent():RequestHighlight(true);
+    end);
+    elt:SetScript("OnLeave", function(self)
+        self:GetParent():RequestHighlight(false);
+    end);
+    elt:SetScript("OnClick", function(self, ...)
+        self:GetParent().obj:Fire("OnClick", ...)
+    end);
+
+    if anchor then
+        elt:SetPoint("TOPLEFT", anchor, "TOPRIGHT");
+    else
+        elt:SetPoint("TOPLEFT", frame);
+    end
+    elt:SetPoint("BOTTOM", frame);
+
+    return elt;
+end
+
+local function CreateFontString(frame, y)
+    local fontstr = frame:CreateFontString(nil, "BACKGROUND", "GameFontNormal");
+    fontstr:SetJustifyH("LEFT");
+    if y then
+        fontstr:SetPoint("LEFT", frame, 0, y);
+        fontstr:SetPoint("RIGHT", frame, -2, y);
+    else
+        fontstr:SetPoint("LEFT", frame, 0, 1);
+        fontstr:SetPoint("RIGHT", frame, -2, 1);
+    end
+    fontstr:SetWordWrap(false);
+
+    return fontstr;
+end
+
 do
     local Type, Version = "ABGP_Player", 1;
 
@@ -102,57 +153,6 @@ do
             self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
         end;
 
-        local function createElement(frame, anchor)
-            local elt = CreateFrame("Button", nil, frame);
-            elt:SetHeight(frame:GetHeight());
-            elt:EnableMouse(true);
-            elt:SetHyperlinksEnabled(true);
-            elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
-                _G.ShowUIPanel(_G.GameTooltip);
-                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-                _G.GameTooltip:SetHyperlink(itemLink);
-                _G.GameTooltip:Show();
-                self:GetParent():RequestHighlight(true);
-            end);
-            elt:SetScript("OnHyperlinkLeave", function(self)
-                _G.GameTooltip:Hide();
-                self:GetParent():RequestHighlight(false);
-            end);
-            elt:SetScript("OnEnter", function(self)
-                self:GetParent():RequestHighlight(true);
-            end);
-            elt:SetScript("OnLeave", function(self)
-                self:GetParent():RequestHighlight(false);
-            end);
-            elt:SetScript("OnClick", function(self, ...)
-                self:GetParent().obj:Fire("OnClick", ...)
-            end);
-
-            if anchor then
-                elt:SetPoint("TOPLEFT", anchor, "TOPRIGHT");
-            else
-                elt:SetPoint("TOPLEFT", frame);
-            end
-            elt:SetPoint("BOTTOM", frame);
-
-            return elt;
-        end
-
-        local function createFontString(frame, y)
-            local fontstr = frame:CreateFontString(nil, "BACKGROUND", "GameFontNormal");
-            fontstr:SetJustifyH("LEFT");
-            if y then
-                fontstr:SetPoint("LEFT", frame, 0, y);
-                fontstr:SetPoint("RIGHT", frame, -2, y);
-            else
-                fontstr:SetPoint("LEFT", frame, 0, 1);
-                fontstr:SetPoint("RIGHT", frame, -2, 1);
-            end
-            fontstr:SetWordWrap(false);
-
-            return fontstr;
-        end
-
         local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
         highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
         highlight:SetAllPoints();
@@ -163,35 +163,35 @@ do
         background:SetAllPoints();
         background:SetColorTexture(0, 0, 0, 0.5);
 
-        local player = createElement(frame);
-        player.text = createFontString(player);
+        local player = CreateElement(frame);
+        player.text = CreateFontString(player);
 
-        local rank = createElement(frame, player);
-        rank.text = createFontString(rank);
+        local rank = CreateElement(frame, player);
+        rank.text = CreateFontString(rank);
 
-        local ep = createElement(frame, rank);
-        ep.text = createFontString(ep);
+        local ep = CreateElement(frame, rank);
+        ep.text = CreateFontString(ep);
 
-        local gp = createElement(frame, ep);
-        gp.text = createFontString(gp);
+        local gp = CreateElement(frame, ep);
+        gp.text = CreateFontString(gp);
 
-        local priority = createElement(frame, gp);
-        priority.text = createFontString(priority);
+        local priority = CreateElement(frame, gp);
+        priority.text = CreateFontString(priority);
 
-        local equipped = createElement(frame, priority);
-        equipped.textTop = createFontString(equipped, 8);
-        equipped.textMid = createFontString(equipped);
-        equipped.textBot = createFontString(equipped, -4);
+        local equipped = CreateElement(frame, priority);
+        equipped.textTop = CreateFontString(equipped, 8);
+        equipped.textMid = CreateFontString(equipped);
+        equipped.textBot = CreateFontString(equipped, -4);
 
-        local requestType = createElement(frame, equipped);
-        requestType.text = createFontString(requestType);
+        local requestType = CreateElement(frame, equipped);
+        requestType.text = CreateFontString(requestType);
 
-        local roll = createElement(frame, requestType);
-        roll.text = createFontString(roll);
+        local roll = CreateElement(frame, requestType);
+        roll.text = CreateFontString(roll);
 
-        local notes = createElement(frame, roll);
+        local notes = CreateElement(frame, roll);
         notes:SetPoint("TOPRIGHT", frame);
-        notes.text = createFontString(notes);
+        notes.text = CreateFontString(notes);
         notes.text:ClearAllPoints();
         notes.text:SetPoint("TOPLEFT", notes, 0, 1);
         notes.text:SetPoint("BOTTOMRIGHT", notes, -2, 1);
@@ -224,6 +224,79 @@ do
             notes = notes,
 
             background = background,
+
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_Item", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.itemLink.text:SetText("");
+
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
+        end,
+
+        ["SetData"] = function(self, data)
+            self.data = data;
+
+            self.itemLink.text:SetText(data.itemLink);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button");
+        frame:SetHeight(24);
+        frame:Hide();
+
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
+
+        local button = CreateElement(frame, nil, "UIPanelButtonTemplate");
+        button:SetWidth(75);
+        button:ClearAllPoints();
+        button:SetPoint("TOPRIGHT", frame, -1, -1);
+        button:SetPoint("BOTTOMRIGHT", frame, -1, 3);
+        button:SetText("Show");
+
+        local itemLink = CreateElement(frame);
+        itemLink.text = CreateFontString(itemLink);
+        itemLink:ClearAllPoints();
+        itemLink:SetPoint("TOPLEFT", frame);
+        itemLink:SetPoint("BOTTOMLEFT", frame);
+        itemLink:SetPoint("RIGHT", button, "LEFT");
+
+        -- create widget
+        local widget = {
+            itemLink = itemLink,
+            button = button,
 
             frame = frame,
             type  = Type

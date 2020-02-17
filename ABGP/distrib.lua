@@ -23,6 +23,7 @@ rollRegex = rollRegex:gsub("%%s", "(%%S+)");
 rollRegex = rollRegex:gsub("%%d", "(%%d+)");
 
 local activeDistributionWindow;
+local savedWindowSize = { width = 975, height = 500 };
 local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
 
 local function ProcessSelectedRequest()
@@ -469,8 +470,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         local window = AceGUI:Create("Window");
         local oldMinW, oldMinH = window.frame:GetMinResize();
         local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-        window:SetWidth(975);
-        window:SetHeight(500);
+        window:SetStatusTable(savedWindowSize);
         window.frame:SetMinResize(800, 300);
         window.frame:SetMaxResize(1100, 600);
         window.frame:SetFrameStrata("HIGH");
@@ -488,6 +488,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 for _, item in pairs(activeItems) do
                     RemoveActiveItem(item.itemLink);
                 end
+
+                savedWindowSize.left = widget.frame:GetLeft();
+                savedWindowSize.top = widget.frame:GetTop();
+                savedWindowSize.width = widget.frame:GetWidth();
+                savedWindowSize.height = widget.frame:GetHeight();
                 widget.frame:SetMinResize(oldMinW, oldMinH);
                 widget.frame:SetMaxResize(oldMaxW, oldMaxH);
                 AceGUI:Release(widget);

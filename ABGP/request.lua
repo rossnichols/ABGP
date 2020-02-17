@@ -1,5 +1,6 @@
 local _G = _G;
 local ABGP = ABGP;
+local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local PlaySound = PlaySound;
 local FlashClientIcon = FlashClientIcon;
@@ -11,7 +12,11 @@ local GetBindingKey = GetBindingKey;
 local table = table;
 local pairs = pairs;
 local select = select;
+local time = time;
+local ipairs = ipairs;
 
+local activeWindow;
+local savedWindowSize = { width = 325, height = 175 };
 local activeItems = {};
 local staticPopups = {
     LOOTDISTRIB = "ABGP_LOOTDISTRIB",
@@ -68,9 +73,40 @@ local function ShowStaticPopup(itemLink, which)
     end
 end
 
+local function PopulateUI()
+    if not activeWindow then return; end
+    local window = activeWindow;
+    local container = window:GetUserData("itemsContainer");
+    container:ReleaseChildren();
+
+    local sortedItems = {};
+    for _, item in pairs(activeItems) do
+        table.insert(sortedItems, item);
+    end
+    table.sort(sortedItems, function(a, b)
+        return a.time < b.time;
+    end);
+
+    for _, item in ipairs(sortedItems) do
+        local elt = AceGUI:Create("ABGP_Item");
+        elt:SetFullWidth(true);
+        elt:SetData(item);
+        elt:SetCallback("OnClick", function(elt)
+            ShowStaticPopup(elt.data.itemLink);
+        end);
+
+        container:AddChild(elt);
+    end
+end
+
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
-    activeItems[itemLink] = { sender = sender, requestType = data.requestType };
+    activeItems[itemLink] = {
+        itemLink = itemLink,
+        sender = sender,
+        requestType = data.requestType,
+        time = time()
+    };
 
     local msg;
     local value = data.value;
@@ -105,6 +141,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     end
 
     self:Notify("%s is being distributed! %s", itemLink, prompt);
+    PopulateUI();
 end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
@@ -116,6 +153,7 @@ function ABGP:RequestOnDistClosed(data, distribution, sender)
 
         CloseStaticPopups(itemLink);
         activeItems[itemLink] = nil;
+        PopulateUI();
     end
 end
 
@@ -159,15 +197,47 @@ function ABGP:RequestOnDistTrashed(data, distribution, sender)
 end
 
 function ABGP:ShowItemRequests()
-    local found = false;
-    for itemLink in pairs(activeItems) do
-        ShowStaticPopup(itemLink);
-        found = true;
+    if activeWindow then
+        activeWindow:Hide();
+        return;
     end
 
-    if not found then
-        self:Notify("There are no items being distributed.");
-    end
+    local window = AceGUI:Create("Window");
+    window:SetTitle("Item Requests");
+    window:SetLayout("Flow");
+    window:SetStatusTable(savedWindowSize);
+    local oldMinW, oldMinH = window.frame:GetMinResize();
+    local oldMaxW, oldMaxH = window.frame:GetMaxResize();
+    window.frame:SetMinResize(250, 100);
+    window.frame:SetMaxResize(400, 300);
+    window:SetCallback("OnClose", function(widget)
+        savedWindowSize.left = widget.frame:GetLeft();
+        savedWindowSize.top = widget.frame:GetTop();
+        savedWindowSize.width = widget.frame:GetWidth();
+        savedWindowSize.height = widget.frame:GetHeight();
+        widget.frame:SetMinResize(oldMinW, oldMinH);
+        widget.frame:SetMaxResize(oldMaxW, oldMaxH);
+        AceGUI:Release(widget);
+        ABGP:CloseWindow(widget);
+        activeWindow = nil;
+    end);
+    ABGP:OpenWindow(window);
+
+    local scrollContainer = AceGUI:Create("SimpleGroup");
+    scrollContainer:SetFullWidth(true);
+    scrollContainer:SetFullHeight(true);
+    scrollContainer:SetLayout("Flow");
+    window:AddChild(scrollContainer);
+
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetFullWidth(true);
+    scroll:SetFullHeight(true);
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("itemsContainer", scroll);
+
+    activeWindow = window;
+    PopulateUI();
 end
 
 function ABGP:RequestItem(itemLink, requestType, notes)
@@ -232,7 +302,7 @@ function ABGP:RequestItem(itemLink, requestType, notes)
             faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
         end
     end
-    ABGP:Notify("Requesting %s %s! To update your request, open the window again. %s", itemLink, requestTypes[requestType], faveInfo);
+    ABGP:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
 
     self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
 end
@@ -257,7 +327,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
             faves:RemoveItemID(itemId);
         end
     end
-    ABGP:Notify("Passing on %s%s. To update your request, open the window again.", itemLink, faveRemove);
+    ABGP:Notify("Passing on %s%s.", itemLink, faveRemove);
 end
 
 StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
@@ -290,7 +360,8 @@ StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
 	OnAccept = function(self, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, self.editBox:GetText());
 	end,
-	OnCancel = function(self, data)
+    OnCancel = function(self, data, reason)
+        if reason == "override" then return; end
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.OS, self.editBox:GetText());
 	end,
 	OnAlt = function(self, data)
@@ -300,7 +371,7 @@ StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
     whileDead = true,
     hideOnEscape = true,
     noCancelOnEscape = true,
-    multiple = true,
+    exclusive = true,
 };
 
 local dialog = {};
