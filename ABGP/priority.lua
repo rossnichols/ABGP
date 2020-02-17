@@ -17,6 +17,7 @@ local table = table;
 local floor = floor;
 local tonumber = tonumber;
 local unpack = unpack;
+local pairs = pairs;
 
 local activeWindow;
 local widths = { 110, 100, 70, 70, 70 };
@@ -230,6 +231,7 @@ function ABGP:ShowPriority()
         "ROGUE",
         "WARLOCK",
         "WARRIOR",
+        "ALL",
     };
     classSelector:SetList({
         DRUID = "Druid",
@@ -240,15 +242,75 @@ function ABGP:ShowPriority()
         ROGUE = "Rogue",
         WARLOCK = "Warlock",
         WARRIOR = "Warrior",
+        ALL = "All",
     }, classes);
     classSelector:SetMultiselect(true);
-    for _, class in ipairs(classes) do
-        classSelector:SetItemValue(class, not ignoredClasses[class]);
+
+    local function showingAll()
+        local hasIgnoredClass = false;
+        for _, state in pairs(ignoredClasses) do
+            if state then
+                hasIgnoredClass = true;
+                break;
+            end
+        end
+
+        return not hasIgnoredClass;
     end
-    classSelector:SetCallback("OnValueChanged", function(widget, event, class, checked)
-        ignoredClasses[class] = not checked;
+    local function showingNone()
+        local hasShownClass = false;
+        for _, class in ipairs(classes) do
+            if class ~= "ALL" and not ignoredClasses[class] then
+                hasShownClass = true;
+                break;
+            end
+        end
+
+        return not hasShownClass;
+    end
+    local function updateCheckboxes(widget)
+        local all = showingAll();
+        for _, class in ipairs(classes) do
+            if class == "ALL" then
+                widget:SetItemValue(class, all);
+            else
+                widget:SetItemValue(class, not all and not ignoredClasses[class]);
+            end
+        end
+    end
+    local function valueChangedCallback(widget, event, class, checked)
+        if class == "ALL" then
+            if checked then
+                ignoredClasses = {};
+            end
+        else
+            if checked then
+                if showingAll() then
+                    ignoredClasses = {
+                        DRUID = true,
+                        HUNTER = true,
+                        MAGE = true,
+                        PALADIN = true,
+                        PRIEST = true,
+                        ROGUE = true,
+                        WARLOCK = true,
+                        WARRIOR = true,
+                    };
+                end
+            end
+            ignoredClasses[class] = not checked;
+            if showingNone() then
+                ignoredClasses = {};
+            end
+        end
+
+        widget:SetCallback("OnValueChanged", nil);
+        updateCheckboxes(widget);
+        widget:SetCallback("OnValueChanged", valueChangedCallback);
         PopulateUI();
-    end);
+    end
+    updateCheckboxes(classSelector);
+    classSelector:SetCallback("OnValueChanged", valueChangedCallback);
     classSelector:SetText("Classes");
     window:AddChild(classSelector);
 
