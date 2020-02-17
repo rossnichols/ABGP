@@ -65,7 +65,7 @@ do
             self.roll.text:SetText(data.roll or "");
             self.roll.text:SetFontObject(data.currentMaxRoll and "ABGPHighlight" or "GameFontHighlight");
 
-            self.notes.text:SetText(data.notes or "--");
+            self.notes.text:SetText(data.notes or "");
         end,
 
         ["SetWidths"] = function(self, widths)
