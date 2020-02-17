@@ -296,9 +296,24 @@ hooksecurefunc("ReloadUI", function()
     ABGP:DistribOnReloadUI();
 end);
 
+local rollRegex = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
+rollRegex = rollRegex:gsub("%%s", "(%%S+)");
+rollRegex = rollRegex:gsub("%%d", "(%%d+)");
+
 local f = CreateFrame("Frame");
 f:RegisterEvent("GUILD_ROSTER_UPDATE");
-f:SetScript("OnEvent", function(self, event)
-    ABGP:VersionOnGuildRosterUpdate();
-    ABGP:PriorityOnGuildRosterUpdate();
+f:RegisterEvent("CHAT_MSG_SYSTEM");
+f:SetScript("OnEvent", function(self, event, ...)
+    if event == "GUILD_ROSTER_UPDATE" then
+        ABGP:VersionOnGuildRosterUpdate();
+        ABGP:PriorityOnGuildRosterUpdate();
+    elseif event == "CHAT_MSG_SYSTEM" then
+        local text = ...;
+        local sender, roll, minRoll, maxRoll = text:match(rollRegex);
+        if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
+            roll = tonumber(roll);
+            ABGP:DistribOnRoll(sender, roll);
+            ABGP:RequestOnRoll(sender, roll);
+        end
+    end
 end);

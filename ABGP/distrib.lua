@@ -18,10 +18,6 @@ local math = math;
 local type = type;
 local max = max;
 
-local rollRegex = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
-rollRegex = rollRegex:gsub("%%s", "(%%S+)");
-rollRegex = rollRegex:gsub("%%d", "(%%d+)");
-
 local activeDistributionWindow;
 local savedWindowSize = { width = 975, height = 500 };
 local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
@@ -240,56 +236,43 @@ local function FindExistingElt(sender)
     end
 end
 
+function ABGP:DistribOnRoll(sender, roll)
+    if not activeDistributionWindow then return; end
+
+    local elt = FindExistingElt(sender);
+    if elt and not elt.data.roll then
+        elt.data.roll = roll;
+        RebuildUI();
+    end
+end
+
 local msgFrame = CreateFrame("Frame");
 msgFrame:RegisterEvent("CHAT_MSG_WHISPER");
 msgFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
-msgFrame:RegisterEvent("CHAT_MSG_SYSTEM");
 msgFrame:SetScript("OnEvent", function(self, event, ...)
     local window = activeDistributionWindow;
     if not window then return; end
 
-    if event == "CHAT_MSG_SYSTEM" then
-        local text = ...;
-        local sender, roll, minRoll, maxRoll = text:match(rollRegex);
-        if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
-            local elt = FindExistingElt(sender);
-            if elt then
-                if not elt.data.roll then
-                    elt.data.roll = tonumber(roll);
-                    RebuildUI();
-                end
-            else
-                if not window:GetUserData("pendingRolls") then
-                    window:SetUserData("pendingRolls", {});
-                end
-                local pending = window:GetUserData("pendingRolls");
-                if not pending[sender] then
-                    pending[sender] = tonumber(roll);
-                end
-            end
-        end
-    else
-        local msg, sender, _;
-        if event == "CHAT_MSG_WHISPER" then
-            msg, _, _, _, sender = ...;
-        elseif event == "CHAT_MSG_BN_WHISPER" then
-            msg = ...;
-            local bnetId = select(13, ...);
-            sender = GetPlayerFromBNet(bnetId);
-        end
+    local msg, sender, _;
+    if event == "CHAT_MSG_WHISPER" then
+        msg, _, _, _, sender = ...;
+    elseif event == "CHAT_MSG_BN_WHISPER" then
+        msg = ...;
+        local bnetId = select(13, ...);
+        sender = GetPlayerFromBNet(bnetId);
+    end
 
-        if msg and sender and UnitExists(sender) then
-            local elt = FindExistingElt(sender);
-            if elt then
-                elt.data.notes = CombineNotes(elt.data.notes, msg);
-                elt:SetData(elt.data);
-            else
-                if not window:GetUserData("pendingWhispers") then
-                    window:SetUserData("pendingWhispers", {});
-                end
-                local pending = window:GetUserData("pendingWhispers");
-                pending[sender] = CombineNotes(pending[sender], msg);
+    if msg and sender and UnitExists(sender) then
+        local elt = FindExistingElt(sender);
+        if elt then
+            elt.data.notes = CombineNotes(elt.data.notes, msg);
+            elt:SetData(elt.data);
+        else
+            if not window:GetUserData("pendingWhispers") then
+                window:SetUserData("pendingWhispers", {});
             end
+            local pending = window:GetUserData("pendingWhispers");
+            pending[sender] = CombineNotes(pending[sender], msg);
         end
     end
 end);
@@ -404,7 +387,8 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         gp = gp,
         equipped = data.equipped,
         requestType = data.requestType,
-        notes = data.notes
+        notes = data.notes,
+        roll = data.roll
     });
 end
 

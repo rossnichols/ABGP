@@ -37,6 +37,7 @@ ABGP.CommTypes = {
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings
+    -- roll: number
 
     ITEM_PASS = CV("ABGP_ITEM_PASS"),
     -- itemLink: item link string

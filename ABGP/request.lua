@@ -18,6 +18,7 @@ local ipairs = ipairs;
 local activeWindow;
 local savedWindowSize = { width = 325, height = 175 };
 local activeItems = {};
+local pendingRollRequest;
 local staticPopups = {
     LOOTDISTRIB = "ABGP_LOOTDISTRIB",
     LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
@@ -96,6 +97,15 @@ local function PopulateUI()
         end);
 
         container:AddChild(elt);
+    end
+end
+
+function ABGP:RequestOnRoll(sender, roll)
+    if sender ~= UnitName("player") then return; end
+
+    if pendingRollRequest then
+        self:RequestItem(pendingRollRequest.itemLink, ABGP.RequestTypes.ROLL, pendingRollRequest.notes, roll);
+        pendingRollRequest = nil;
     end
 end
 
@@ -240,7 +250,7 @@ function ABGP:ShowItemRequests()
     PopulateUI();
 end
 
-function ABGP:RequestItem(itemLink, requestType, notes)
+function ABGP:RequestItem(itemLink, requestType, notes, roll)
     if not activeItems[itemLink] then
         self:Notify("Unable to request %s - no longer being distributed.", itemLink);
         return;
@@ -252,6 +262,7 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         requestType = requestType,
         notes = (notes ~= "") and notes or nil,
         equipped = {},
+        roll = roll,
     };
     local requestTypes = {
         [ABGP.RequestTypes.MS] = "for main spec",
@@ -389,8 +400,11 @@ dialog.text = "%s is being distributed! You may roll for it and provide an optio
 dialog.button1 = "Roll";
 dialog.button2 = nil;
 dialog.OnAccept = function(self, data)
+    pendingRollRequest = {
+        itemLink = data.itemLink,
+        notes = self.editBox:GetText()
+    };
     RandomRoll(1, 100);
-    ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, self.editBox:GetText());
 end
 StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL] = dialog;
 
