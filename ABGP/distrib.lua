@@ -16,6 +16,7 @@ local select = select;
 local unpack = unpack;
 local math = math;
 local type = type;
+local max = max;
 
 local rollRegex = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
 rollRegex = rollRegex:gsub("%%s", "(%%S+)");
@@ -142,11 +143,8 @@ local function RebuildUI()
         end
     end
 
-    local nRequests = #requests;
-    window:GetUserData("requestsTitle"):SetTitle(("Requests%s"):format(
-        nRequests > 0 and " (" .. nRequests .. ")" or ""));
-
     local multiple = window:GetUserData("multipleItemsCheckbox");
+    multiple:SetWidth(100);
     multiple:SetValue(currentItem.multipleItems);
     multiple:SetDisabled(currentItem.distributionCount > 0);
 
@@ -295,14 +293,6 @@ msgFrame:SetScript("OnEvent", function(self, event, ...)
     end
 end);
 
-local function SetActiveItem(itemLink)
-    local window = activeDistributionWindow;
-    local activeItems = window:GetUserData("activeItems");
-
-    window:SetUserData("currentItem", activeItems[itemLink]);
-    RebuildUI();
-end
-
 local function AddActiveItem(itemLink)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
@@ -324,7 +314,12 @@ local function AddActiveItem(itemLink)
     };
 
     activeItems[itemLink] = newItem;
-    SetActiveItem(itemLink);
+
+    local tabs = window:GetUserData("tabs");
+    table.insert(tabs, { value = itemLink, text = ABGP:GetItemName(itemLink) });
+    local tabGroup = window:GetUserData("tabGroup");
+    tabGroup:SetTabs(tabs);
+    tabGroup:SelectTab(itemLink);
 end
 
 local function RemoveActiveItem(itemLink)
@@ -338,15 +333,22 @@ local function RemoveActiveItem(itemLink)
         local currentItem = window:GetUserData("currentItem");
 
         activeItems[itemLink] = nil;
-        if currentItem.itemLink == itemLink then
-            local foundNew = false;
-            for _, item in pairs(activeItems) do
-                SetActiveItem(item.itemLink);
-                foundNew = true;
+        local tabs = window:GetUserData("tabs");
+        local removedIndex = 0;
+        for i, tab in ipairs(tabs) do
+            if tab.value == itemLink then
+                removedIndex = i;
+                table.remove(tabs, removedIndex);
                 break;
             end
+        end
 
-            if not foundNew then
+        local tabGroup = window:GetUserData("tabGroup");
+        tabGroup:SetTabs(tabs);
+        if currentItem.itemLink == itemLink then
+            if #tabs > 0 then
+                tabGroup:SelectTab(tabs[max(1, removedIndex - 1)].value);
+            else
                 window:Hide();
             end
         end
@@ -443,7 +445,7 @@ function ABGP:ShowDistrib(itemLink)
         if activeItems[itemLink] then
             local currentItem = window:GetUserData("currentItem");
             if currentItem.itemLink ~= itemLink then
-                SetActiveItem(itemLink);
+                window:GetUserData("tabGroup"):SelectTab(itemLink);
             end
             return;
         end
@@ -469,7 +471,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         local oldMaxW, oldMaxH = window.frame:GetMaxResize();
         window:SetWidth(975);
         window:SetHeight(500);
-        window.frame:SetMinResize(750, 300);
+        window.frame:SetMinResize(800, 300);
         window.frame:SetMaxResize(1100, 600);
         window.frame:SetFrameStrata("HIGH");
         window:SetCallback("OnClose", function(widget)
@@ -499,7 +501,17 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 widget:Show();
             end
         end);
-        window:SetLayout("Flow");
+        window:SetLayout("Fill");
+
+        local tabGroup = AceGUI:Create("TabGroup");
+        tabGroup:SetLayout("Flow");
+        tabGroup:SetCallback("OnGroupSelected", function(container, event, itemLink)
+            local activeItems = window:GetUserData("activeItems");
+            window:SetUserData("currentItem", activeItems[itemLink]);
+            RebuildUI();
+        end);
+        window:AddChild(tabGroup);
+        window:SetUserData("tabGroup", tabGroup);
 
         local disenchant = AceGUI:Create("Button");
         disenchant:SetWidth(125);
@@ -515,7 +527,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 itemLink = currentItem.itemLink
             });
         end);
-        window:AddChild(disenchant);
+        tabGroup:AddChild(disenchant);
         window:SetUserData("disenchantButton", disenchant);
 
         local distrib = AceGUI:Create("Button");
@@ -540,12 +552,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 cost = cost
             });
         end);
-        window:AddChild(distrib);
+        tabGroup:AddChild(distrib);
         window:SetUserData("distributeButton", distrib);
 
         local cost = AceGUI:Create("EditBox");
         cost:SetWidth(75);
-        window:AddChild(cost);
         cost:SetCallback("OnEnterPressed", function(widget)
             local currentItem = window:GetUserData("currentItem");
             AceGUI:ClearFocus();
@@ -557,12 +568,13 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             end
             ProcessSelectedRequest();
         end);
+        tabGroup:AddChild(cost);
         window:SetUserData("costEdit", cost);
 
         local desc = AceGUI:Create("Label");
         desc:SetWidth(100);
         desc:SetText("Cost");
-        window:AddChild(desc);
+        tabGroup:AddChild(desc);
 
         local resetRolls = AceGUI:Create("Button");
         resetRolls:SetWidth(125);
@@ -575,7 +587,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             end
             RebuildUI();
         end);
-        window:AddChild(resetRolls);
+        tabGroup:AddChild(resetRolls);
 
         local multiple = AceGUI:Create("CheckBox");
         multiple:SetLabel("Multiple");
@@ -583,16 +595,14 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             local currentItem = window:GetUserData("currentItem");
             currentItem.multipleItems = value;
         end);
-        window:AddChild(multiple);
+        tabGroup:AddChild(multiple);
         window:SetUserData("multipleItemsCheckbox", multiple);
 
-        local scrollContainer = AceGUI:Create("InlineGroup");
-        scrollContainer:SetTitle("Requests");
+        local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
         scrollContainer:SetLayout("Flow");
-        window:AddChild(scrollContainer);
-        window:SetUserData("requestsTitle", scrollContainer);
+        tabGroup:AddChild(scrollContainer);
 
         local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
@@ -603,7 +613,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
         for i = 1, #columns do
             local desc = AceGUI:Create("Label");
-            desc:SetText(columns[i] .. "\n");
+            desc:SetText(columns[i]);
             desc:SetFontObject(_G.GameFontHighlight);
             header:AddChild(desc);
         end
@@ -617,6 +627,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
         activeDistributionWindow = window;
         window:SetUserData("activeItems", {});
+        window:SetUserData("tabs", {});
     end
 
     AddActiveItem(data.itemLink);
