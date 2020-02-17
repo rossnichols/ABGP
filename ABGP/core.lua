@@ -131,9 +131,14 @@ function ABGP:ColorizeText(text)
     return ("%s%s|r"):format(ABGP.Color, text);
 end
 
-function ABGP:ColorizeName(name)
-    if not UnitExists(name) then return name; end
-    local _, class = UnitClass(name);
+function ABGP:ColorizeName(name, class)
+    if not class then
+        if UnitExists(name) then
+            local _, className = UnitClass(name);
+            class = className;
+        end
+    end
+    if not class then return name; end
     local color = select(4, GetClassColor(class));
     return ("|c%s%s|r"):format(color, name);
 end
@@ -158,7 +163,7 @@ ABGP.Phases = {
     p1 = "Phase 1/2",
     p3 = "Phase 3",
 };
-ABGP.CurrentPhase = "p1";
+ABGP.CurrentPhase = "p3";
 
 
 --
@@ -216,8 +221,8 @@ function ABGP:RefreshActivePlayers()
     activePlayers = {};
     for phase in pairs(self.Phases) do
         for _, pri in ipairs(_G.ABGP_Data[phase].priority) do
-            activePlayers[pri.character] = activePlayers[pri.character] or {};
-            activePlayers[pri.character][phase] = pri;
+            activePlayers[pri.player] = activePlayers[pri.player] or {};
+            activePlayers[pri.player][phase] = pri;
         end
     end
 end

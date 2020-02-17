@@ -7,7 +7,7 @@ local pairs = pairs;
 local floor = floor;
 
 do
-    local Type, Version = "ABGP_DistribPlayer", 1;
+    local Type, Version = "ABGP_Player", 1;
 
     local mainSpecFont = CreateFont("ABGPHighlight");
     mainSpecFont:CopyFontObject(GameFontHighlight);
@@ -18,6 +18,9 @@ do
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
+            self:SetHeight(32);
+            self:SetTextOffset(1);
+
             self.player.text:SetText("");
             self.rank.text:SetText("");
             self.priority.text:SetText("");
@@ -36,7 +39,7 @@ do
         ["SetData"] = function(self, data)
             self.data = data;
 
-            self.player.text:SetText(ABGP:ColorizeName(data.player or ""));
+            self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
             local value = data.ep or 0;
             self.ep.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
@@ -70,14 +73,31 @@ do
         end,
 
         ["SetWidths"] = function(self, widths)
-            self.player:SetWidth(widths[1]);
-            self.rank:SetWidth(widths[2]);
-            self.ep:SetWidth(widths[3]);
-            self.gp:SetWidth(widths[4]);
-            self.priority:SetWidth(widths[5]);
-            self.equipped:SetWidth(widths[6]);
-            self.requestType:SetWidth(widths[7]);
-            self.roll:SetWidth(widths[8]);
+            self.player:SetWidth(widths[1] or 0);
+            self.rank:SetWidth(widths[2] or 0);
+            self.ep:SetWidth(widths[3] or 0);
+            self.gp:SetWidth(widths[4] or 0);
+            self.priority:SetWidth(widths[5] or 0);
+            self.equipped:SetWidth(widths[6] or 0);
+            self.requestType:SetWidth(widths[7] or 0);
+            self.roll:SetWidth(widths[8] or 0);
+        end,
+
+        ["SetHeight"] = function(self, height)
+            self.frame:SetHeight(height);
+        end,
+
+        ["SetTextOffset"] = function(self, ofs)
+            local setPoints = function(elt)
+                elt:ClearAllPoints();
+                elt:SetPoint("LEFT", elt:GetParent(), 0, ofs);
+                elt:SetPoint("RIGHT", elt:GetParent(), -2, ofs);
+            end;
+            setPoints(self.player.text);
+            setPoints(self.rank.text);
+            setPoints(self.ep.text);
+            setPoints(self.gp.text);
+            setPoints(self.priority.text);
         end,
 
         ["ShowBackground"] = function(self, show)

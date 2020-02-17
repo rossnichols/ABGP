@@ -21,7 +21,7 @@ rollRegex = rollRegex:gsub("%%s", "(%%S+)");
 rollRegex = rollRegex:gsub("%%d", "(%%d+)");
 
 local activeDistributionWindow;
-local widths = { 110, 90, 70, 70, 70, 180, 60, 35, 1.0 };
+local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
 
 local function ProcessSelectedData()
     local window = activeDistributionWindow;
@@ -94,7 +94,7 @@ local function RebuildUI()
 
         existing.currentMaxRoll = false;
 
-        local elt = AceGUI:Create("ABGP_DistribPlayer");
+        local elt = AceGUI:Create("ABGP_Player");
         elt:SetFullWidth(true);
         elt:SetData(existing);
         elt:SetWidths(widths);
@@ -308,7 +308,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     local value = ABGP:GetItemValue(itemName);
 
     if value and epgp and epgp[value.phase] then
-        priority = epgp[value.phase].ratio;
+        priority = epgp[value.phase].priority;
         ep = epgp[value.phase].ep;
         gp = epgp[value.phase].gp;
     end
@@ -415,19 +415,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("data", {});
     window:SetUserData("primary", true);
 
-    local resetRolls = AceGUI:Create("Button");
-    resetRolls:SetWidth(125);
-    resetRolls:SetText("Reset Rolls");
-    resetRolls:SetCallback("OnClick", function(widget)
-        window:SetUserData("pendingRolls", nil);
-        local data = window:GetUserData("data");
-        for _, entry in ipairs(data) do
-            entry.roll = nil;
-        end
-        RebuildUI();
-    end);
-    window:AddChild(resetRolls);
-
     local disenchant = AceGUI:Create("Button");
     disenchant:SetWidth(125);
     disenchant:SetText("Disenchant");
@@ -487,9 +474,22 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     window:SetUserData("costBase", costBase);
 
     local desc = AceGUI:Create("Label");
-    desc:SetWidth(50);
+    desc:SetWidth(100);
     desc:SetText("Cost");
     window:AddChild(desc);
+
+    local resetRolls = AceGUI:Create("Button");
+    resetRolls:SetWidth(125);
+    resetRolls:SetText("Reset Rolls");
+    resetRolls:SetCallback("OnClick", function(widget)
+        window:SetUserData("pendingRolls", nil);
+        local data = window:GetUserData("data");
+        for _, entry in ipairs(data) do
+            entry.roll = nil;
+        end
+        RebuildUI();
+    end);
+    window:AddChild(resetRolls);
 
     local multiple = AceGUI:Create("CheckBox");
     multiple:SetLabel("Multiple");
@@ -511,7 +511,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     local header = AceGUI:Create("SimpleGroup");
     header:SetFullWidth(true);
     header:SetLayout("Table");
-    header:SetUserData("table", { columns = columns.weights});
+    header:SetUserData("table", { columns = columns.weights });
     scrollContainer:AddChild(header);
 
     for i = 1, #columns do

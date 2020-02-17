@@ -14,12 +14,12 @@ local tonumber = tonumber;
 local epMapping = {
     ["Points Earned"] = "ep",
     ["Action Taken"] = "action",
-    ["Character"] = "character",
+    ["Character"] = "player",
     ["Date"] = "date",
 };
 local epColumns = {
     weights = { 100, 75, 50, 1 },
-    { value = "character", text = "Character" },
+    { value = "player", text = "Character" },
     { value = "date", text = "Date" },
     { value = "ep", text = "Points" },
     { value = "action", text = "Action Taken" },
@@ -28,12 +28,12 @@ local epColumns = {
 local gpMapping = {
     ["New Points"] = "gp",
     ["Item"] = "item",
-    ["Character"] = "character",
+    ["Character"] = "player",
     ["Date Won"] = "date",
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
-    { value = "character", text = "Character" },
+    { value = "player", text = "Character" },
     { value = "date", text = "Date" },
     { value = "gp", text = "Points" },
     { value = "item", text = "Item" },
@@ -74,22 +74,22 @@ local itemColumns = {
 };
 
 local priMapping = {
-    ["Character"] = "character",
+    ["Character"] = "player",
     ["Rank"] = "rank",
     ["Class"] = "class",
     ["Spec"] = false,
     ["Effort Points"] = "ep",
     ["Gear Points"] = "gp",
-    ["Ratio"] = "ratio",
+    ["Ratio"] = "priority",
 };
 local priColumns = {
     weights = { 110, 90, 60, 60, 60, 60 },
-    { value = "character", text = "Character" },
+    { value = "player", text = "Character" },
     { value = "rank", text = "Rank" },
     { value = "class", text = "Class" },
     { value = "ep", text = "EP" },
     { value = "gp", text = "GP" },
-    { value = "ratio", text = "Ratio" },
+    { value = "priority", text = "Ratio" },
 };
 
 local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc)
@@ -244,7 +244,7 @@ local function DrawPriority(container)
         local text = "Character,Rank,Class,Spec,Effort Points,Gear Points,Ratio\n";
         for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].priority) do
             text = text .. ("%s,%s,%s,%s,%s,%s,%s\n"):format(
-                item.character, item.rank, item.class, item.role, item.ep, item.gp, item.ratio);
+                item.player, item.rank, item.class, item.role, item.ep, item.gp, item.priority);
         end
 
         return text;
@@ -256,7 +256,7 @@ end
 local function DrawEP(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].epHistory, epMapping, function(row)
-            return ABGP:GetActivePlayer(row.character);
+            return ABGP:GetActivePlayer(row.player);
         end);
 
         widget:GetUserData("window"):Hide();
@@ -268,7 +268,7 @@ local function DrawEP(container)
         local text = "Points Earned,Action Taken,Character,Date\n";
         for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].epHistory) do
             text = text .. ("%s,%s,%s,%s\n"):format(
-                item.ep, item.action, item.character, item.date);
+                item.ep, item.action, item.player, item.date);
         end
 
         return text;
@@ -281,7 +281,7 @@ local function DrawGP(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             if row.gp == nil then row.gp = 0; end
-            return ABGP:GetActivePlayer(row.character);
+            return ABGP:GetActivePlayer(row.player);
         end);
 
         widget:GetUserData("window"):Hide();
@@ -293,7 +293,7 @@ local function DrawGP(container)
         local text = "New Points,Item,Character,Date Won\n";
         for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory) do
             text = text .. ("%s,%s,%s,%s\n"):format(
-                item.gp, item.item, item.character, item.date);
+                item.gp, item.item, item.player, item.date);
         end
 
         return text;
