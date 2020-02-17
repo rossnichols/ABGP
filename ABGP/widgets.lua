@@ -81,14 +81,6 @@ do
 
         ["SetHeight"] = function(self, height)
             self.frame:SetHeight(height);
-            self.player:SetHeight(height);
-            self.rank:SetHeight(height);
-            self.ep:SetHeight(height);
-            self.gp:SetHeight(height);
-            self.priority:SetHeight(height);
-            self.equipped:SetHeight(height);
-            self.requestType:SetHeight(height);
-            self.roll:SetHeight(height);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -141,6 +133,7 @@ do
             else
                 elt:SetPoint("TOPLEFT", frame);
             end
+            elt:SetPoint("BOTTOM", frame);
 
             return elt;
         end
