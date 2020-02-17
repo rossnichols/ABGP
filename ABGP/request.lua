@@ -70,7 +70,10 @@ local function ShowStaticPopup(itemLink, which)
     which = which or GetStaticPopupType(itemLink);
     CloseStaticPopups(itemLink);
     if which then
-        _G.StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
+        local dialog = _G.StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
+        if not dialog then
+            ABGP:Error("Unable to open window for %s! Try closing other open ones.", itemLink);
+        end
     end
 end
 
@@ -372,6 +375,7 @@ StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, self.editBox:GetText());
 	end,
     OnCancel = function(self, data, reason)
+        if not self then return; end
         if reason == "override" then return; end
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.OS, self.editBox:GetText());
 	end,
@@ -382,7 +386,7 @@ StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
     whileDead = true,
     hideOnEscape = true,
     noCancelOnEscape = true,
-    exclusive = true,
+    multiple = true,
 };
 
 local dialog = {};
