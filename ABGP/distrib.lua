@@ -64,7 +64,6 @@ local function RebuildUI()
     ProcessSelectedData();
 
     local msHeading, osHeading, rollHeading;
-    local ignoredChildren = 0;
     local maxRolls = {};
     for i, existing in ipairs(data) do
         if existing.requestType == ABGP.RequestTypes.MS and not msHeading then
@@ -73,7 +72,6 @@ local function RebuildUI()
             mainspec:SetFullWidth(true);
             mainspec:SetText("Main Spec");
             requests:AddChild(mainspec);
-            ignoredChildren = ignoredChildren + 1;
         end
         if existing.requestType == ABGP.RequestTypes.OS and not osHeading then
             osHeading = true;
@@ -81,7 +79,6 @@ local function RebuildUI()
             offspec:SetFullWidth(true);
             offspec:SetText("Off Spec");
             requests:AddChild(offspec);
-            ignoredChildren = ignoredChildren + 1;
         end
         if existing.requestType == ABGP.RequestTypes.ROLL and not rollHeading then
             rollHeading = true;
@@ -89,7 +86,6 @@ local function RebuildUI()
             roll:SetFullWidth(true);
             roll:SetText("Rolls");
             requests:AddChild(roll);
-            ignoredChildren = ignoredChildren + 1;
         end
 
         existing.currentMaxRoll = false;
@@ -142,7 +138,7 @@ local function RebuildUI()
         end
     end
 
-    local nRequests = #requests.children - ignoredChildren;
+    local nRequests = #data;
     window:GetUserData("requestsTitle"):SetTitle(("Requests%s"):format(
         nRequests > 0 and " (" .. nRequests .. ")" or ""));
 end
