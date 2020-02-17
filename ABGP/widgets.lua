@@ -19,7 +19,6 @@ do
     local methods = {
         ["OnAcquire"] = function(self)
             self:SetHeight(32);
-            self:SetTextOffset(1);
 
             self.player.text:SetText("");
             self.rank.text:SetText("");
@@ -41,12 +40,9 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
-            local value = data.ep or 0;
-            self.ep.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
-            value = data.gp or 0;
-            self.gp.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
-            value = data.priority or 0;
-            self.priority.text:SetText((floor(value) == value and "%d" or "%.3f"):format(value));
+            self.ep.text:SetText(("%.3f"):format(data.ep or 0));
+            self.gp.text:SetText(("%.3f"):format(data.gp or 0));
+            self.priority.text:SetText(("%.3f"):format(data.priority or 0));
 
             if data.equipped then
                 if #data.equipped == 2 then
@@ -85,19 +81,14 @@ do
 
         ["SetHeight"] = function(self, height)
             self.frame:SetHeight(height);
-        end,
-
-        ["SetTextOffset"] = function(self, ofs)
-            local setPoints = function(elt)
-                elt:ClearAllPoints();
-                elt:SetPoint("LEFT", elt:GetParent(), 0, ofs);
-                elt:SetPoint("RIGHT", elt:GetParent(), -2, ofs);
-            end;
-            setPoints(self.player.text);
-            setPoints(self.rank.text);
-            setPoints(self.ep.text);
-            setPoints(self.gp.text);
-            setPoints(self.priority.text);
+            self.player:SetHeight(height);
+            self.rank:SetHeight(height);
+            self.ep:SetHeight(height);
+            self.gp:SetHeight(height);
+            self.priority:SetHeight(height);
+            self.equipped:SetHeight(height);
+            self.requestType:SetHeight(height);
+            self.roll:SetHeight(height);
         end,
 
         ["ShowBackground"] = function(self, show)

@@ -44,7 +44,6 @@ local function PopulateUI()
             elt:SetWidths(widths);
             elt:ShowBackground((i % 2) == 0);
             elt:SetHeight(24);
-            elt:SetTextOffset(5);
             if data.player == UnitName("player") then
                 elt.frame:RequestHighlight(true);
             end
