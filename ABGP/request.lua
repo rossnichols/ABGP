@@ -213,7 +213,7 @@ function ABGP:ShowItemRequests()
     end
 
     local window = AceGUI:Create("Window");
-    window:SetTitle("Item Requests");
+    window:SetTitle(("%s Item Requests"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
     window:SetStatusTable(savedWindowSize);
     local oldMinW, oldMinH = window.frame:GetMinResize();
