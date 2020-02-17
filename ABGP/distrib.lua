@@ -7,6 +7,7 @@ local BNGetGameAccountInfo = BNGetGameAccountInfo;
 local UnitExists = UnitExists;
 local GetGuildInfo = GetGuildInfo;
 local UnitName = UnitName;
+local UnitIsInMyGuild = UnitIsInMyGuild;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -23,22 +24,24 @@ rollRegex = rollRegex:gsub("%%d", "(%%d+)");
 local activeDistributionWindow;
 local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
 
-local function ProcessSelectedData()
+local function ProcessSelectedRequest()
     local window = activeDistributionWindow;
-    local data = window:GetUserData("selectedData");
+    local currentItem = window:GetUserData("currentItem");
+    local selected = currentItem.selectedRequest;
 
-    window:GetUserData("disenchantButton"):SetDisabled(data ~= nil);
-    window:GetUserData("distributeButton"):SetDisabled(data == nil);
-    if not window:GetUserData("costEdited") then
-        window:GetUserData("costEdit"):SetText((data and data.requestType ~= ABGP.RequestTypes.MS) and 0 or window:GetUserData("costBase"));
-    end
+    window:GetUserData("disenchantButton"):SetDisabled(selected ~= nil);
+    window:GetUserData("distributeButton"):SetDisabled(selected == nil);
+    local costBaseForSelection = (selected and selected.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
+    currentItem.costCurrent = currentItem.costEdited or costBaseForSelection;
+    window:GetUserData("costEdit"):SetText(currentItem.costCurrent);
 end
 
 local function RebuildUI()
     local window = activeDistributionWindow;
-    local data = window:GetUserData("data");
-    local requests = window:GetUserData("requests");
-    requests:ReleaseChildren();
+    local currentItem = window:GetUserData("currentItem");
+    local requests = currentItem.requests;
+    local requestsContainer = window:GetUserData("requestsContainer");
+    requestsContainer:ReleaseChildren();
 
     local requestTypes = {
         [ABGP.RequestTypes.MS] = 1,
@@ -46,7 +49,7 @@ local function RebuildUI()
         [ABGP.RequestTypes.ROLL] = 3,
     };
 
-    table.sort(data, function(a, b)
+    table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
         elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
@@ -58,74 +61,75 @@ local function RebuildUI()
         end
     end);
 
-    local selectedData = window:GetUserData("selectedData");
-    window:SetUserData("selectedData", nil);
-    window:SetUserData("selectedElt", nil);
-    ProcessSelectedData();
+    local selectedRequest = currentItem.selectedRequest;
+    currentItem.selectedRequest = nil;
+    currentItem.selectedElt = nil;
+    ProcessSelectedRequest();
 
     local msHeading, osHeading, rollHeading;
     local maxRolls = {};
-    for i, existing in ipairs(data) do
-        if existing.requestType == ABGP.RequestTypes.MS and not msHeading then
+    for i, request in ipairs(requests) do
+        if request.requestType == ABGP.RequestTypes.MS and not msHeading then
             msHeading = true;
             local mainspec = AceGUI:Create("Heading");
             mainspec:SetFullWidth(true);
             mainspec:SetText("Main Spec");
-            requests:AddChild(mainspec);
+            requestsContainer:AddChild(mainspec);
         end
-        if existing.requestType == ABGP.RequestTypes.OS and not osHeading then
+        if request.requestType == ABGP.RequestTypes.OS and not osHeading then
             osHeading = true;
             local offspec = AceGUI:Create("Heading");
             offspec:SetFullWidth(true);
             offspec:SetText("Off Spec");
-            requests:AddChild(offspec);
+            requestsContainer:AddChild(offspec);
         end
-        if existing.requestType == ABGP.RequestTypes.ROLL and not rollHeading then
+        if request.requestType == ABGP.RequestTypes.ROLL and not rollHeading then
             rollHeading = true;
             local roll = AceGUI:Create("Heading");
             roll:SetFullWidth(true);
             roll:SetText("Rolls");
-            requests:AddChild(roll);
+            requestsContainer:AddChild(roll);
         end
 
-        existing.currentMaxRoll = false;
+        request.currentMaxRoll = false;
 
         local elt = AceGUI:Create("ABGP_Player");
         elt:SetFullWidth(true);
-        elt:SetData(existing);
+        elt:SetData(request);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt)
-            local oldElt = window:GetUserData("selectedElt");
+            local currentItem = window:GetUserData("currentItem");
+            local oldElt = currentItem.selectedElt;
             if oldElt then
                 oldElt.frame:RequestHighlight(false);
             end
 
-            local oldData = window:GetUserData("selectedData");
-            if not oldData or oldData.player ~= elt.data.player then
-                window:SetUserData("selectedData", elt.data);
-                window:SetUserData("selectedElt", elt);
+            local oldRequest = currentItem.selectedRequest;
+            if not oldRequest or oldRequest.player ~= elt.data.player then
+                currentItem.selectedRequest = elt.data;
+                currentItem.selectedElt = elt;
                 elt.frame:RequestHighlight(true);
             else
-                window:SetUserData("selectedData", nil);
-                window:SetUserData("selectedElt", nil);
+                currentItem.selectedRequest = nil;
+                currentItem.selectedElt = nil;
             end
-            ProcessSelectedData();
+            ProcessSelectedRequest();
         end);
 
-        requests:AddChild(elt);
+        requestsContainer:AddChild(elt);
 
-        if selectedData and existing.player == selectedData.player then
+        if selectedRequest and request.player == selectedRequest.player then
             elt:Fire("OnClick");
         end
 
-        if existing.roll then
-            local reqType = existing.requestType;
+        if request.roll then
+            local reqType = request.requestType;
             if not maxRolls[reqType] then
-                maxRolls[reqType] = { roll = existing.roll, elts = { elt } };
-            elseif existing.roll > maxRolls[reqType].roll then
-                maxRolls[reqType] = { roll = existing.roll, elts = { elt } };
-            elseif existing.roll == maxRolls[reqType].roll then
+                maxRolls[reqType] = { roll = request.roll, elts = { elt } };
+            elseif request.roll > maxRolls[reqType].roll then
+                maxRolls[reqType] = { roll = request.roll, elts = { elt } };
+            elseif request.roll == maxRolls[reqType].roll then
                 table.insert(maxRolls[reqType].elts, elt);
             end
         end
@@ -138,24 +142,40 @@ local function RebuildUI()
         end
     end
 
-    local nRequests = #data;
+    local nRequests = #requests;
     window:GetUserData("requestsTitle"):SetTitle(("Requests%s"):format(
         nRequests > 0 and " (" .. nRequests .. ")" or ""));
+
+    local multiple = window:GetUserData("multipleItemsCheckbox");
+    multiple:SetValue(currentItem.multipleItems);
+    multiple:SetDisabled(currentItem.distributionCount > 0);
+
+    window:SetTitle("Loot Distribution: " .. currentItem.itemLink);
+
+    _G.ShowUIPanel(_G.ItemRefTooltip);
+    _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
+    _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
+    _G.ItemRefTooltip:SetHyperlink(currentItem.itemLink);
+    _G.ItemRefTooltip:Show();
 end
 
-local function RemoveData(sender)
+local function RemoveRequest(sender, itemLink)
     local window = activeDistributionWindow;
-    local data = window:GetUserData("data");
+    local activeItems = window:GetUserData("activeItems");
+    local requests = activeItems[itemLink].requests;
+    local currentItem = window:GetUserData("currentItem");
 
-    for i, existing in ipairs(data) do
-        if existing.player == sender then
-            table.remove(data, i);
-            ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), window:GetUserData("itemLink"));
+    for i, request in ipairs(requests) do
+        if request.player == sender then
+            table.remove(requests, i);
+            ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), currentItem.itemLink);
             break;
         end
     end
 
-    RebuildUI();
+    if itemLink == currentItem.itemLink then
+        RebuildUI();
+    end
 end
 
 local function CombineNotes(a, b)
@@ -164,33 +184,38 @@ local function CombineNotes(a, b)
     return a .. "\n" .. b;
 end
 
-local function ProcessNewData(entry)
+local function ProcessNewRequest(request)
     local window = activeDistributionWindow;
-    local data = window:GetUserData("data");
+    local activeItems = window:GetUserData("activeItems");
+    local requests = activeItems[request.itemLink].requests;
+    local currentItem = window:GetUserData("currentItem");
 
-    for i, existing in ipairs(data) do
-        if existing.player == entry.player then
-            entry.notes = CombineNotes(existing.notes, entry.notes);
-            entry.roll = existing.roll;
-            table.remove(data, i);
+    for i, existing in ipairs(requests) do
+        if existing.player == request.player then
+            request.notes = CombineNotes(existing.notes, request.notes);
+            request.roll = existing.roll;
+            table.remove(requests, i);
             break;
         end
     end
 
     local pending = window:GetUserData("pendingWhispers");
-    if pending and pending[entry.player] then
-        entry.notes = CombineNotes(pending[entry.player], entry.notes);
-        pending[entry.player] = nil;
+    if pending and pending[request.player] then
+        request.notes = CombineNotes(pending[request.player], request.notes);
+        pending[request.player] = nil;
     end
 
     pending = window:GetUserData("pendingRolls");
-    if pending and pending[entry.player] then
-        entry.roll = pending[entry.player];
-        pending[entry.player] = nil;
+    if pending and pending[request.player] then
+        request.roll = pending[request.player];
+        pending[request.player] = nil;
     end
 
-    table.insert(data, entry);
-    RebuildUI();
+    table.insert(requests, request);
+
+    if request.itemLink == currentItem.itemLink then
+        RebuildUI();
+    end
 end
 
 local function GetPlayerFromBNet(bnetId)
@@ -208,7 +233,7 @@ local function GetPlayerFromBNet(bnetId)
 end
 
 local function FindExistingElt(sender)
-    local requests = activeDistributionWindow:GetUserData("requests");
+    local requests = activeDistributionWindow:GetUserData("requestsContainer");
     for _, elt in ipairs(requests.children) do
         if elt.data and elt.data.player == sender then
             return elt;
@@ -221,10 +246,8 @@ msgFrame:RegisterEvent("CHAT_MSG_WHISPER");
 msgFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
 msgFrame:RegisterEvent("CHAT_MSG_SYSTEM");
 msgFrame:SetScript("OnEvent", function(self, event, ...)
-    if not activeDistributionWindow then
-        return;
-    end
     local window = activeDistributionWindow;
+    if not window then return; end
 
     if event == "CHAT_MSG_SYSTEM" then
         local text = ...;
@@ -272,22 +295,82 @@ msgFrame:SetScript("OnEvent", function(self, event, ...)
     end
 end);
 
+local function SetActiveItem(itemLink)
+    local window = activeDistributionWindow;
+    local activeItems = window:GetUserData("activeItems");
+
+    window:SetUserData("currentItem", activeItems[itemLink]);
+    RebuildUI();
+end
+
+local function AddActiveItem(itemLink)
+    local window = activeDistributionWindow;
+    local activeItems = window:GetUserData("activeItems");
+
+    local itemName = ABGP:GetItemName(itemLink);
+    local value = ABGP:GetItemValue(itemName);
+
+    local newItem = {
+        itemLink = itemLink,
+        requests = {},
+        costBase = value and value.gp or 0,
+        costCurrent = nil,
+        selectedRequest = nil,
+        selectedElt = nil,
+        costEdited = nil,
+        closeConfirmed = false,
+        multipleItems = false,
+        distributionCount = 0,
+    };
+
+    activeItems[itemLink] = newItem;
+    SetActiveItem(itemLink);
+end
+
+local function RemoveActiveItem(itemLink)
+    ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED, {
+        itemLink = itemLink
+    }, "BROADCAST");
+
+    if activeDistributionWindow then
+        local window = activeDistributionWindow;
+        local activeItems = window:GetUserData("activeItems");
+        local currentItem = window:GetUserData("currentItem");
+
+        activeItems[itemLink] = nil;
+        if currentItem.itemLink == itemLink then
+            local foundNew = false;
+            for _, item in pairs(activeItems) do
+                SetActiveItem(item.itemLink);
+                foundNew = true;
+                break;
+            end
+
+            if not foundNew then
+                window:Hide();
+            end
+        end
+    end
+end
+
 function ABGP:DistribOnItemRequest(data, distribution, sender)
     local itemLink = data.itemLink;
-    if not activeDistributionWindow then return; end
+    local window = activeDistributionWindow;
+    if not window then return; end
 
     -- Check if the sender is grouped with us
     if not UnitExists(sender) then return; end
 
-    local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
-    if itemLink ~= itemLinkCmp then
-        ABGP:Error("%s requested %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+    local activeItems = window:GetUserData("activeItems");
+    if not activeItems[itemLink] then
+        ABGP:Error("%s requested %s but it's not being distributed!", sender, itemLink);
         return;
     end
 
-    local playerGuild = GetGuildInfo("player");
-    local guildName, guildRankName = GetGuildInfo(sender);
-    if guildName and guildName ~= playerGuild then
+    local guildName, guildRankName;
+    if UnitIsInMyGuild(sender) then
+        guildName, guildRankName = GetGuildInfo(sender);
+    else
         guildRankName = "[Other guild]";
     end
 
@@ -309,7 +392,8 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         gp = epgp[value.phase].gp;
     end
 
-    ProcessNewData({
+    ProcessNewRequest({
+        itemLink = itemLink,
         player = sender,
         rank = guildRankName,
         priority = priority,
@@ -328,22 +412,25 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
     -- Check if the sender is grouped with us
     if not UnitExists(sender) then return; end
 
-    local itemLinkCmp = activeDistributionWindow:GetUserData("itemLink");
-    if itemLink ~= itemLinkCmp then
-        self:Error("%s passed on %s but you're distributing %s!", sender, itemLink, itemLinkCmp);
+    local activeItems = activeDistributionWindow:GetUserData("activeItems");
+    if not activeItems[itemLink] then
+        ABGP:Error("%s passed on %s but it's not being distributed!", sender, itemLink);
         return;
     end
 
-    RemoveData(sender);
+    RemoveRequest(sender, itemLink);
 end
 
 function ABGP:DistribOnReloadUI()
     -- If distribution is open when reloading UI,
     -- hide the window so it generates the appropriate comms.
-    if activeDistributionWindow then
-        activeDistributionWindow:SetUserData("closeConfirmed", true);
-        activeDistributionWindow:Hide();
+    if not activeDistributionWindow then return; end
+    local window = activeDistributionWindow;
+
+    for _, item in pairs(window:GetUserData("activeItems")) do
+        item.closeConfirmed = true;
     end
+    window:Hide();
 end
 
 function ABGP:ShowDistrib(itemLink)
@@ -351,8 +438,15 @@ function ABGP:ShowDistrib(itemLink)
     local value = ABGP:GetItemValue(itemName);
 
     if activeDistributionWindow then
-        activeDistributionWindow:SetUserData("closeConfirmed", true);
-        activeDistributionWindow:Hide();
+        local window = activeDistributionWindow;
+        local activeItems = window:GetUserData("activeItems");
+        if activeItems[itemLink] then
+            local currentItem = window:GetUserData("currentItem");
+            if currentItem.itemLink ~= itemLink then
+                SetActiveItem(itemLink);
+            end
+            return;
+        end
     end
 
     local requestType = (value and value.gp ~= 0)
@@ -367,173 +461,169 @@ function ABGP:ShowDistrib(itemLink)
 end
 
 function ABGP:DistribOnDistOpened(data, distribution, sender)
-    local itemLink = data.itemLink;
-    local itemName = self:GetItemName(itemLink);
-    local value = self:GetItemValue(itemName);
-
     if sender ~= UnitName("player") then return; end
 
-    local window = AceGUI:Create("Window");
-    local oldMinW, oldMinH = window.frame:GetMinResize();
-    local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window:SetWidth(975);
-    window:SetHeight(500);
-    window.frame:SetMinResize(750, 300);
-    window.frame:SetMaxResize(1100, 600);
-    window.frame:SetFrameStrata("HIGH");
-    window:SetTitle("Loot Distribution: " .. itemLink);
-    window:SetCallback("OnClose", function(widget)
-        local primary = widget:GetUserData("primary");
-        if not primary or widget:GetUserData("closeConfirmed") then
-            activeDistributionWindow = nil;
-
-            if primary then
-                self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, {
-                    itemLink = itemLink
-                }, "BROADCAST");
+    if not activeDistributionWindow then
+        local window = AceGUI:Create("Window");
+        local oldMinW, oldMinH = window.frame:GetMinResize();
+        local oldMaxW, oldMaxH = window.frame:GetMaxResize();
+        window:SetWidth(975);
+        window:SetHeight(500);
+        window.frame:SetMinResize(750, 300);
+        window.frame:SetMaxResize(1100, 600);
+        window.frame:SetFrameStrata("HIGH");
+        window:SetCallback("OnClose", function(widget)
+            local closeConfirmed = true;
+            local activeItems = widget:GetUserData("activeItems");
+            for _, item in pairs(activeItems) do
+                if not item.closeConfirmed then
+                    closeConfirmed = false;
+                    break;
+                end
             end
+            if closeConfirmed then
+                activeDistributionWindow = nil;
+                for _, item in pairs(activeItems) do
+                    RemoveActiveItem(item.itemLink);
+                end
+                widget.frame:SetMinResize(oldMinW, oldMinH);
+                widget.frame:SetMaxResize(oldMaxW, oldMaxH);
+                AceGUI:Release(widget);
+                _G.ItemRefTooltip:Hide();
 
-            widget.frame:SetMinResize(oldMinW, oldMinH);
-            widget.frame:SetMaxResize(oldMaxW, oldMaxH);
-            AceGUI:Release(widget);
-            _G.ItemRefTooltip:Hide();
+                _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
+                _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
+                _G.StaticPopup_Hide("ABGP_CONFIRM_TRASH");
+            else
+                _G.StaticPopup_Show("ABGP_CONFIRM_END_DIST");
+                widget:Show();
+            end
+        end);
+        window:SetLayout("Flow");
 
-            _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
-            _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
-            _G.StaticPopup_Hide("ABGP_CONFIRM_TRASH");
-        else
-            _G.StaticPopup_Show("ABGP_CONFIRM_END_DIST");
-            widget:Show();
-        end
-    end);
-    window:SetLayout("Flow");
-    window:SetUserData("itemLink", itemLink);
-    window:SetUserData("data", {});
-    window:SetUserData("primary", true);
+        local disenchant = AceGUI:Create("Button");
+        disenchant:SetWidth(125);
+        disenchant:SetText("Disenchant");
+        disenchant:SetCallback("OnClick", function(widget)
+            local currentItem = window:GetUserData("currentItem");
+            local itemLink = currentItem.itemLink;
+            if currentItem.multipleItems then
+                local count = currentItem.distributionCount;
+                itemLink = ("%s #%d"):format(itemLink, count + 1);
+            end
+            _G.StaticPopup_Show("ABGP_CONFIRM_TRASH", itemLink, nil, {
+                itemLink = currentItem.itemLink
+            });
+        end);
+        window:AddChild(disenchant);
+        window:SetUserData("disenchantButton", disenchant);
 
-    local disenchant = AceGUI:Create("Button");
-    disenchant:SetWidth(125);
-    disenchant:SetText("Disenchant");
-    disenchant:SetCallback("OnClick", function(widget)
-        local item = itemLink;
-        if window:GetUserData("multipleItems") then
-            local count = window:GetUserData("distributionCount") or 0;
-            item = ("%s #%d"):format(itemLink, count + 1);
-        end
-        _G.StaticPopup_Show("ABGP_CONFIRM_TRASH", item, nil, {
-            itemLink = itemLink
-        });
-    end);
-    window:AddChild(disenchant);
-    window:SetUserData("disenchantButton", disenchant);
+        local distrib = AceGUI:Create("Button");
+        distrib:SetWidth(125);
+        distrib:SetText("Distribute");
+        distrib:SetDisabled(true);
+        distrib:SetCallback("OnClick", function(widget)
+            local currentItem = window:GetUserData("currentItem");
+            local cost = currentItem.costCurrent;
+            local player = currentItem.selectedRequest.player;
 
-    local distrib = AceGUI:Create("Button");
-    distrib:SetWidth(125);
-    distrib:SetText("Distribute");
-    distrib:SetDisabled(true);
-    distrib:SetCallback("OnClick", function(widget)
-        local cost = tonumber(window:GetUserData("costEdit"):GetText());
-        local player = window:GetUserData("selectedData").player;
+            local itemLink = currentItem.itemLink;
+            if currentItem.multipleItems then
+                local count = currentItem.distributionCount;
+                itemLink = ("%s #%d"):format(itemLink, count + 1);
+            end
+            local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
 
-        local item = itemLink;
-        if window:GetUserData("multipleItems") then
-            local count = window:GetUserData("distributionCount") or 0;
-            item = ("%s #%d"):format(itemLink, count + 1);
-        end
-        local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
+            _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
+                itemLink = currentItem.itemLink,
+                player = player,
+                cost = cost
+            });
+        end);
+        window:AddChild(distrib);
+        window:SetUserData("distributeButton", distrib);
 
-        _G.StaticPopup_Show("ABGP_CONFIRM_DIST", item, award, {
-            itemLink = itemLink,
-            player = player,
-            cost = cost
-        });
-    end);
-    window:AddChild(distrib);
-    window:SetUserData("distributeButton", distrib);
+        local cost = AceGUI:Create("EditBox");
+        cost:SetWidth(75);
+        window:AddChild(cost);
+        cost:SetCallback("OnEnterPressed", function(widget)
+            local currentItem = window:GetUserData("currentItem");
+            AceGUI:ClearFocus();
+            local text = widget:GetText();
+            if type(tonumber(text)) == "number" then
+                currentItem.costEdited = tonumber(text);
+            else
+                currentItem.costEdited = nil;
+            end
+            ProcessSelectedRequest();
+        end);
+        window:SetUserData("costEdit", cost);
 
-    local cost = AceGUI:Create("EditBox");
-    local costBase = value and value.gp or 0;
-    cost:SetWidth(75);
-    cost:SetText(costBase);
-    window:AddChild(cost);
-    cost:SetCallback("OnEnterPressed", function(widget)
-        AceGUI:ClearFocus();
-        local text = widget:GetText();
-        if type(tonumber(text)) == "number" then
-            window:SetUserData("costEdited", true);
-        else
-            window:SetUserData("costEdited", false);
-        end
-        ProcessSelectedData();
-    end);
-    window:SetUserData("costEdit", cost);
-    window:SetUserData("costBase", costBase);
-
-    local desc = AceGUI:Create("Label");
-    desc:SetWidth(100);
-    desc:SetText("Cost");
-    window:AddChild(desc);
-
-    local resetRolls = AceGUI:Create("Button");
-    resetRolls:SetWidth(125);
-    resetRolls:SetText("Reset Rolls");
-    resetRolls:SetCallback("OnClick", function(widget)
-        window:SetUserData("pendingRolls", nil);
-        local data = window:GetUserData("data");
-        for _, entry in ipairs(data) do
-            entry.roll = nil;
-        end
-        RebuildUI();
-    end);
-    window:AddChild(resetRolls);
-
-    local multiple = AceGUI:Create("CheckBox");
-    multiple:SetLabel("Multiple");
-    multiple:SetCallback("OnValueChanged", function(widget, value)
-        window:SetUserData("multipleItems", value);
-    end);
-    window:AddChild(multiple);
-    window:SetUserData("multipleItemsCheckbox", multiple);
-
-    local scrollContainer = AceGUI:Create("InlineGroup");
-    scrollContainer:SetTitle("Requests");
-    scrollContainer:SetFullWidth(true);
-    scrollContainer:SetFullHeight(true);
-    scrollContainer:SetLayout("Flow");
-    window:AddChild(scrollContainer);
-    window:SetUserData("requestsTitle", scrollContainer);
-
-    local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
-    local header = AceGUI:Create("SimpleGroup");
-    header:SetFullWidth(true);
-    header:SetLayout("Table");
-    header:SetUserData("table", { columns = columns.weights });
-    scrollContainer:AddChild(header);
-
-    for i = 1, #columns do
         local desc = AceGUI:Create("Label");
-        desc:SetText(columns[i] .. "\n");
-        desc:SetFontObject(_G.GameFontHighlight);
-        header:AddChild(desc);
+        desc:SetWidth(100);
+        desc:SetText("Cost");
+        window:AddChild(desc);
+
+        local resetRolls = AceGUI:Create("Button");
+        resetRolls:SetWidth(125);
+        resetRolls:SetText("Reset Rolls");
+        resetRolls:SetCallback("OnClick", function(widget)
+            window:SetUserData("pendingRolls", nil);
+            local currentItem = window:GetUserData("currentItem");
+            for _, request in ipairs(currentItem.requests) do
+                request.roll = nil;
+            end
+            RebuildUI();
+        end);
+        window:AddChild(resetRolls);
+
+        local multiple = AceGUI:Create("CheckBox");
+        multiple:SetLabel("Multiple");
+        multiple:SetCallback("OnValueChanged", function(widget, value)
+            local currentItem = window:GetUserData("currentItem");
+            currentItem.multipleItems = value;
+        end);
+        window:AddChild(multiple);
+        window:SetUserData("multipleItemsCheckbox", multiple);
+
+        local scrollContainer = AceGUI:Create("InlineGroup");
+        scrollContainer:SetTitle("Requests");
+        scrollContainer:SetFullWidth(true);
+        scrollContainer:SetFullHeight(true);
+        scrollContainer:SetLayout("Flow");
+        window:AddChild(scrollContainer);
+        window:SetUserData("requestsTitle", scrollContainer);
+
+        local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
+        local header = AceGUI:Create("SimpleGroup");
+        header:SetFullWidth(true);
+        header:SetLayout("Table");
+        header:SetUserData("table", { columns = columns.weights });
+        scrollContainer:AddChild(header);
+
+        for i = 1, #columns do
+            local desc = AceGUI:Create("Label");
+            desc:SetText(columns[i] .. "\n");
+            desc:SetFontObject(_G.GameFontHighlight);
+            header:AddChild(desc);
+        end
+
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetFullWidth(true);
+        scroll:SetFullHeight(true);
+        scroll:SetLayout("List");
+        scrollContainer:AddChild(scroll);
+        window:SetUserData("requestsContainer", scroll);
+
+        activeDistributionWindow = window;
+        window:SetUserData("activeItems", {});
     end
 
-    local scroll = AceGUI:Create("ScrollFrame");
-    scroll:SetFullWidth(true);
-    scroll:SetFullHeight(true);
-    scroll:SetLayout("List");
-    scrollContainer:AddChild(scroll);
-    window:SetUserData("requests", scroll);
-
-    _G.ShowUIPanel(_G.ItemRefTooltip);
-    _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
-    _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
-    _G.ItemRefTooltip:SetHyperlink(itemLink);
-    _G.ItemRefTooltip:Show();
-
-    activeDistributionWindow = window;
+    AddActiveItem(data.itemLink);
 
     if self.Debug then
         local testBase = {
+            itemLink = data.itemLink,
             rank = "Blue Lobster",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
@@ -554,7 +644,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             entry.gp = math.random() * 2000;
             entry.priority = entry.ep * 10 / entry.gp;
             entry.roll = math.random(1, 100);
-            ProcessNewData(entry);
+            ProcessNewRequest(entry);
         end
     end
 end
@@ -566,6 +656,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
 	OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
+        local activeItems = window:GetUserData("activeItems");
 
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
             itemLink = data.itemLink,
@@ -573,16 +664,13 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
             cost = data.cost
         }, "BROADCAST");
 
-        window:SetUserData("closeConfirmed", true);
-        if window:GetUserData("multipleItems") then
+        local currentItem = activeItems[data.itemLink];
+        currentItem.closeConfirmed = true;
+        if currentItem.multipleItems then
             window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
-            if window:GetUserData("distributionCount") then
-                window:SetUserData("distributionCount", window:GetUserData("distributionCount") + 1);
-            else
-                window:SetUserData("distributionCount", 1);
-            end
+            currentItem.distributionCount = currentItem.distributionCount + 1;
         else
-            window:Hide();
+            RemoveActiveItem(data.itemLink);
         end
 	end,
     timeout = 0,
@@ -598,21 +686,19 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
+        local activeItems = window:GetUserData("activeItems");
 
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED, {
             itemLink = data.itemLink
         }, "BROADCAST");
 
-        window:SetUserData("closeConfirmed", true);
-        if window:GetUserData("multipleItems") then
+        local currentItem = activeItems[data.itemLink];
+        currentItem.closeConfirmed = true;
+        if currentItem.multipleItems then
             window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
-            if window:GetUserData("distributionCount") then
-                window:SetUserData("distributionCount", window:GetUserData("distributionCount") + 1);
-            else
-                window:SetUserData("distributionCount", 1);
-            end
+            currentItem.distributionCount = currentItem.distributionCount + 1;
         else
-            window:Hide();
+            RemoveActiveItem(data.itemLink);
         end
 	end,
     timeout = 0,
@@ -629,7 +715,9 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
 
-        window:SetUserData("closeConfirmed", true);
+        for _, item in pairs(window:GetUserData("activeItems")) do
+            item.closeConfirmed = true;
+        end
         window:Hide();
 	end,
     timeout = 0,
