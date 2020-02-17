@@ -59,8 +59,8 @@ function ABGP:PriorityOnGuildRosterUpdate()
 end
 
 function ABGP:RefreshFromOfficerNotes()
-	local p1 = _G.ABGP_Data["p1"].priority;
-	local p3 = _G.ABGP_Data["p3"].priority;
+	local p1 = _G.ABGP_Data[ABGP.Phases.p1].priority;
+	local p3 = _G.ABGP_Data[ABGP.Phases.p3].priority;
 	table.wipe(p1);
 	table.wipe(p3);
 	for i = 1, GetNumGuildMembers() do
@@ -165,8 +165,8 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
 
 	local note = "";
 	if epgp then
-		local p1 = epgp["p1"];
-		local p3 = epgp["p3"];
+		local p1 = epgp[ABGP.Phases.p1];
+		local p3 = epgp[ABGP.Phases.p3];
 		local p1ep, p1gp, p3ep, p3gp = 0, 0, 0, 0;
 		if p1 then
 			p1ep = floor(p1.ep * 1000);
@@ -205,9 +205,13 @@ function ABGP:ShowPriority()
     end);
     ABGP:OpenWindow(window);
 
+    local phases = {
+        [ABGP.Phases.p1] = "Phase 1/2",
+        [ABGP.Phases.p3] = "Phase 3",
+    };
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
-    phaseSelector:SetList(ABGP.Phases);
+    phaseSelector:SetList(phases);
     phaseSelector:SetValue(ABGP.CurrentPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
         ABGP.CurrentPhase = value;

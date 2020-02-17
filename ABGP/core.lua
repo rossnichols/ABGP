@@ -160,10 +160,10 @@ end
 --
 
 ABGP.Phases = {
-    p1 = "Phase 1/2",
-    p3 = "Phase 3",
+    p1 = "p1",
+    p3 = "p3",
 };
-ABGP.CurrentPhase = "p3";
+ABGP.CurrentPhase = ABGP.Phases.p3;
 
 
 --

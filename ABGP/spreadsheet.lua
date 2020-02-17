@@ -342,9 +342,13 @@ function ABGP:ShowImportWindow()
     };
     local selectedTab = tabs[1].value;
 
+    local phases = {
+        [ABGP.Phases.p1] = "Phase 1/2",
+        [ABGP.Phases.p3] = "Phase 3",
+    };
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
-    phaseSelector:SetList(ABGP.Phases);
+    phaseSelector:SetList(phases);
     phaseSelector:SetValue(ABGP.CurrentPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
         ABGP.CurrentPhase = value;
