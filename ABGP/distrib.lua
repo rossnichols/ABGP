@@ -467,6 +467,12 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         window:AddChild(tabGroup);
         window:SetUserData("tabGroup", tabGroup);
 
+        local mainLine = AceGUI:Create("SimpleGroup");
+        mainLine:SetFullWidth(true);
+        mainLine:SetLayout("table");
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0 } });
+        tabGroup:AddChild(mainLine);
+
         local disenchant = AceGUI:Create("Button");
         disenchant:SetWidth(125);
         disenchant:SetText("Disenchant");
@@ -481,7 +487,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 itemLink = currentItem.itemLink
             });
         end);
-        tabGroup:AddChild(disenchant);
+        mainLine:AddChild(disenchant);
         window:SetUserData("disenchantButton", disenchant);
 
         local distrib = AceGUI:Create("Button");
@@ -506,7 +512,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 cost = cost
             });
         end);
-        tabGroup:AddChild(distrib);
+        mainLine:AddChild(distrib);
         window:SetUserData("distributeButton", distrib);
 
         local cost = AceGUI:Create("EditBox");
@@ -522,13 +528,13 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             end
             ProcessSelectedRequest();
         end);
-        tabGroup:AddChild(cost);
+        mainLine:AddChild(cost);
         window:SetUserData("costEdit", cost);
 
         local desc = AceGUI:Create("Label");
         desc:SetWidth(50);
         desc:SetText("Cost");
-        tabGroup:AddChild(desc);
+        mainLine:AddChild(desc);
 
         local multiple = AceGUI:Create("CheckBox");
         multiple:SetLabel("Multiple");
@@ -536,7 +542,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             local currentItem = window:GetUserData("currentItem");
             currentItem.multipleItems = value;
         end);
-        tabGroup:AddChild(multiple);
+        mainLine:AddChild(multiple);
         window:SetUserData("multipleItemsCheckbox", multiple);
 
         local resetRolls = AceGUI:Create("Button");
@@ -552,8 +558,11 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             end
             RebuildUI();
         end);
-        tabGroup:AddChild(resetRolls);
+        mainLine:AddChild(resetRolls);
         window:SetUserData("resetRollsButton", resetRolls);
+
+        local spacer = AceGUI:Create("Label");
+        mainLine:AddChild(spacer);
 
         local done = AceGUI:Create("Button");
         done:SetWidth(80);
@@ -566,7 +575,12 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 itemLink = itemLink,
             });
         end);
-        tabGroup:AddChild(done);
+        mainLine:AddChild(done);
+
+        local spacer = AceGUI:Create("Label");
+        spacer:SetFullWidth(true);
+        spacer:SetText(" ");
+        tabGroup:AddChild(spacer);
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
