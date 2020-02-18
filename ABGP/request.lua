@@ -20,10 +20,10 @@ local savedWindowSize = { width = 325, height = 175 };
 local activeItems = {};
 local pendingRollRequest;
 local staticPopups = {
-    LOOTDISTRIB = "ABGP_LOOTDISTRIB",
-    LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
-    LOOTDISTRIB_ROLL = "ABGP_LOOTDISTRIB_ROLL",
-    LOOTDISTRIB_ROLL_FAVORITE = "ABGP_LOOTDISTRIB_ROLL_FAVORITE",
+    ABGP_LOOTDISTRIB = "ABGP_LOOTDISTRIB",
+    ABGP_LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
+    ABGP_LOOTDISTRIB_ROLL = "ABGP_LOOTDISTRIB_ROLL",
+    ABGP_LOOTDISTRIB_ROLL_FAVORITE = "ABGP_LOOTDISTRIB_ROLL_FAVORITE",
 };
 
 local function AtlasLootFaves()
@@ -46,18 +46,18 @@ local function GetStaticPopupType(itemLink)
 
     if activeItems[itemLink].requestType == ABGP.RequestTypes.ROLL then
         return (favorited)
-            and staticPopups.LOOTDISTRIB_ROLL_FAVORITE
-            or staticPopups.LOOTDISTRIB_ROLL;
+            and staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE
+            or staticPopups.ABGP_LOOTDISTRIB_ROLL;
     end
 
     return (favorited)
-        and staticPopups.LOOTDISTRIB_FAVORITE
-        or staticPopups.LOOTDISTRIB;
+        and staticPopups.ABGP_LOOTDISTRIB_FAVORITE
+        or staticPopups.ABGP_LOOTDISTRIB;
 end
 
-local function CloseStaticPopups(itemLink)
+function CloseStaticPopups(itemLink)
     for index = 1, _G.STATICPOPUP_NUMDIALOGS do
-        local frame = _G["StaticPopup"..index];
+        local frame = _G["StaticPopup" .. index];
         if frame:IsShown() and staticPopups[frame.which] then
             if frame.data.itemLink == itemLink then
                 frame:Hide();
@@ -145,7 +145,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
 
     local prompt = "";
     local popup = GetStaticPopupType(itemLink);
-    if popup == staticPopups.LOOTDISTRIB_FAVORITE or popup == staticPopups.LOOTDISTRIB_ROLL_FAVORITE then
+    if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
         ShowStaticPopup(itemLink, popup);
         prompt = "This item is favorited in AtlasLoot."
     else
@@ -344,7 +344,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     ABGP:Notify("Passing on %s%s.", itemLink, faveRemove);
 end
 
-StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     text = "%s is being distributed! You may request it and provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
@@ -390,16 +390,16 @@ StaticPopupDialogs[staticPopups.LOOTDISTRIB] = {
 };
 
 local dialog = {};
-for k, v in pairs(StaticPopupDialogs[staticPopups.LOOTDISTRIB]) do dialog[k] = v; end
+for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB]) do dialog[k] = v; end
 dialog.extraButton = "Pass and unfavorite";
 dialog.OnExtraButton = function(self, data)
     data.clicked = true;
     ABGP:PassOnItem(data.itemLink, true);
 end
-StaticPopupDialogs[staticPopups.LOOTDISTRIB_FAVORITE] = dialog;
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = dialog;
 
 local dialog = {};
-for k, v in pairs(StaticPopupDialogs[staticPopups.LOOTDISTRIB]) do dialog[k] = v; end
+for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB]) do dialog[k] = v; end
 dialog.text = "%s is being distributed! You may roll for it and provide an optional note.";
 dialog.button1 = "Roll";
 dialog.button2 = nil;
@@ -410,13 +410,13 @@ dialog.OnAccept = function(self, data)
     };
     RandomRoll(1, 100);
 end
-StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL] = dialog;
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = dialog;
 
 local dialog = {};
-for k, v in pairs(StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL]) do dialog[k] = v; end
+for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL]) do dialog[k] = v; end
 dialog.extraButton = "Pass and unfavorite";
 dialog.OnExtraButton = function(self, data)
     data.clicked = true;
     ABGP:PassOnItem(data.itemLink, true);
 end
-StaticPopupDialogs[staticPopups.LOOTDISTRIB_ROLL_FAVORITE] = dialog;
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE] = dialog;
