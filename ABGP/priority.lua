@@ -200,12 +200,12 @@ function ABGP:ShowPriority()
     local window = AceGUI:Create("Window");
     window:SetTitle("ABGP Player Priority");
     window:SetLayout("Flow");
-    window:SetWidth(500);
-    window:SetHeight(600);
+    window:SetWidth(480);
+    window:SetHeight(500);
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window.frame:SetMinResize(500, 300);
-    window.frame:SetMaxResize(500, 750);
+    window.frame:SetMinResize(480, 300);
+    window.frame:SetMaxResize(480, 700);
     window:SetCallback("OnClose", function(widget)
         widget.frame:SetMinResize(oldMinW, oldMinH);
         widget.frame:SetMaxResize(oldMaxW, oldMaxH);
