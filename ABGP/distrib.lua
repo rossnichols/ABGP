@@ -194,18 +194,6 @@ local function ProcessNewRequest(request)
         end
     end
 
-    local pending = window:GetUserData("pendingWhispers");
-    if pending and pending[request.player] then
-        request.notes = CombineNotes(pending[request.player], request.notes);
-        pending[request.player] = nil;
-    end
-
-    pending = window:GetUserData("pendingRolls");
-    if pending and pending[request.player] then
-        request.roll = pending[request.player];
-        pending[request.player] = nil;
-    end
-
     table.insert(requests, request);
 
     if request.itemLink == currentItem.itemLink then
@@ -245,37 +233,6 @@ function ABGP:DistribOnRoll(sender, roll)
         RebuildUI();
     end
 end
-
-local msgFrame = CreateFrame("Frame");
-msgFrame:RegisterEvent("CHAT_MSG_WHISPER");
-msgFrame:RegisterEvent("CHAT_MSG_BN_WHISPER");
-msgFrame:SetScript("OnEvent", function(self, event, ...)
-    local window = activeDistributionWindow;
-    if not window then return; end
-
-    local msg, sender, _;
-    if event == "CHAT_MSG_WHISPER" then
-        msg, _, _, _, sender = ...;
-    elseif event == "CHAT_MSG_BN_WHISPER" then
-        msg = ...;
-        local bnetId = select(13, ...);
-        sender = GetPlayerFromBNet(bnetId);
-    end
-
-    if msg and sender and UnitExists(sender) then
-        local elt = FindExistingElt(sender);
-        if elt then
-            elt.data.notes = CombineNotes(elt.data.notes, msg);
-            elt:SetData(elt.data);
-        else
-            if not window:GetUserData("pendingWhispers") then
-                window:SetUserData("pendingWhispers", {});
-            end
-            local pending = window:GetUserData("pendingWhispers");
-            pending[sender] = CombineNotes(pending[sender], msg);
-        end
-    end
-end);
 
 local function AddActiveItem(itemLink)
     local window = activeDistributionWindow;
@@ -570,7 +527,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         resetRolls:SetWidth(125);
         resetRolls:SetText("Reset Rolls");
         resetRolls:SetCallback("OnClick", function(widget)
-            window:SetUserData("pendingRolls", nil);
             local currentItem = window:GetUserData("currentItem");
             for _, request in ipairs(currentItem.requests) do
                 request.roll = nil;
