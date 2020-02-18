@@ -145,6 +145,9 @@ local function RebuildUI()
     multiple:SetValue(currentItem.multipleItems);
     multiple:SetDisabled(currentItem.distributionCount > 0);
 
+    local resetRolls = window:GetUserData("resetRollsButton");
+    resetRolls:SetText(currentItem.rollsAllowed and "Reset Rolls" or "Allow Rolls");
+
     window:SetTitle("Loot Distribution: " .. currentItem.itemLink);
 
     _G.ShowUIPanel(_G.ItemRefTooltip);
@@ -226,15 +229,18 @@ end
 
 function ABGP:DistribOnRoll(sender, roll)
     if not activeDistributionWindow then return; end
+    local currentItem = activeDistributionWindow:GetUserData("currentItem");
 
-    local elt = FindExistingElt(sender);
-    if elt and not elt.data.roll then
-        elt.data.roll = roll;
-        RebuildUI();
+    if currentItem.rollsAllowed then
+        local elt = FindExistingElt(sender);
+        if elt and not elt.data.roll then
+            elt.data.roll = roll;
+            RebuildUI();
+        end
     end
 end
 
-local function AddActiveItem(itemLink)
+local function AddActiveItem(itemLink, requestType)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
 
@@ -252,6 +258,7 @@ local function AddActiveItem(itemLink)
         closeConfirmed = false,
         multipleItems = false,
         distributionCount = 0,
+        rollsAllowed = (requestType == ABGP.RequestTypes.ROLL),
     };
 
     activeItems[itemLink] = newItem;
@@ -525,15 +532,19 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
         local resetRolls = AceGUI:Create("Button");
         resetRolls:SetWidth(125);
-        resetRolls:SetText("Reset Rolls");
         resetRolls:SetCallback("OnClick", function(widget)
             local currentItem = window:GetUserData("currentItem");
-            for _, request in ipairs(currentItem.requests) do
-                request.roll = nil;
+            if currentItem.rollsAllowed then
+                for _, request in ipairs(currentItem.requests) do
+                    request.roll = nil;
+                end
+            else
+                currentItem.rollsAllowed = true;
             end
             RebuildUI();
         end);
         tabGroup:AddChild(resetRolls);
+        window:SetUserData("resetRollsButton", resetRolls);
 
         local multiple = AceGUI:Create("CheckBox");
         multiple:SetLabel("Multiple");
@@ -589,7 +600,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         window:SetUserData("tabs", {});
     end
 
-    AddActiveItem(data.itemLink);
+    AddActiveItem(data.itemLink, data.requestType);
 
     if self.Debug then
         local testBase = {
