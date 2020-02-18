@@ -137,17 +137,24 @@ end
 function ABGP:RebuildOfficerNotes()
 	if not self:IsPrivileged() then return; end
 
+    local count = 0;
 	for i = 1, GetNumGuildMembers() do
 		local name = GetGuildRosterInfo(i);
 		local player = Ambiguate(name, "short");
-		self:UpdateOfficerNote(player, i, true);
+        if self:UpdateOfficerNote(player, i, true) then
+            count = count + 1;
+        end
     end
 
-    self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+    if count ~= 0 then
+        self:Notify("Updated %d officer notes with the latest priority data!", count);
+        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+    end
 end
 
 function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
-	if not guildIndex and not self:IsPrivileged() then return; end
+    if not guildIndex and not self:IsPrivileged() then return; end
+    if not self:CanEditOfficerNotes() then return; end
 	local epgp = self:GetActivePlayer(player);
 
 	if not guildIndex then
@@ -183,6 +190,8 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
     if not suppressComms then
         self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
     end
+
+    return (note ~= "");
 end
 
 function ABGP:ShowPriority()

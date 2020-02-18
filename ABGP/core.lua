@@ -154,6 +154,10 @@ function ABGP:IsPrivileged()
     return isOfficer or ABGP.Debug;
 end
 
+function ABGP:CanEditOfficerNotes()
+    return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
+end
+
 
 --
 -- Content phase tracking support
