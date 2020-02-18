@@ -114,6 +114,24 @@ function ABGP:OnVersionResponse(data, distribution, sender)
     end
 end
 
+local function GetNumOnlineGroupMembers()
+    local count = 0;
+    local groupSize = GetNumGroupMembers();
+    for i = 1, groupSize do
+        local unit = "player";
+        if IsInRaid() then
+            unit = "raid" .. i;
+        elseif i ~= groupSize then
+            unit = "party" .. i;
+        end
+        if UnitIsConnected(unit) then
+            count = count + 1;
+        end
+    end
+
+    return count;
+end
+
 function ABGP:PerformVersionCheck()
     if versionCheckData then
         self:Error("Already performing version check!");
@@ -137,7 +155,7 @@ function ABGP:PerformVersionCheck()
     announcedVersion = nil;
 
     versionCheckData = {
-        total = GetNumGroupMembers(),
+        total = GetNumOnlineGroupMembers(),
         received = 0,
         players = {},
     };
@@ -178,6 +196,7 @@ function ABGP:VersionCheckCallback()
                 end
             else
                 self:Notify("%s was offline for the version check.", self:ColorizeName(player));
+                allUpToDate = false;
             end
         end
     end
