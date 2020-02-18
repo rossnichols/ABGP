@@ -485,6 +485,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
                 _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
                 _G.StaticPopup_Hide("ABGP_CONFIRM_TRASH");
+                _G.StaticPopup_Hide("ABGP_CONFIRM_DONE");
             else
                 _G.StaticPopup_Show("ABGP_CONFIRM_END_DIST");
                 widget:Show();
@@ -561,7 +562,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         window:SetUserData("costEdit", cost);
 
         local desc = AceGUI:Create("Label");
-        desc:SetWidth(100);
+        desc:SetWidth(80);
         desc:SetText("Cost");
         tabGroup:AddChild(desc);
 
@@ -586,6 +587,19 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         end);
         tabGroup:AddChild(multiple);
         window:SetUserData("multipleItemsCheckbox", multiple);
+
+        local done = AceGUI:Create("Button");
+        done:SetWidth(100);
+        done:SetText("Done");
+        done:SetCallback("OnClick", function(widget)
+            local currentItem = window:GetUserData("currentItem");
+            local itemLink = currentItem.itemLink;
+
+            _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, nil, {
+                itemLink = itemLink,
+            });
+        end);
+        tabGroup:AddChild(done);
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
@@ -725,4 +739,17 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
     hideOnEscape = true,
     exclusive = true,
     showAlert = true,
+};
+
+StaticPopupDialogs["ABGP_CONFIRM_DONE"] = {
+    text = "Done distributing %s?",
+    button1 = "Yes",
+    button2 = "No",
+	OnAccept = function(self, data)
+        RemoveActiveItem(data.itemLink);
+	end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
 };
