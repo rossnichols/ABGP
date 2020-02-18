@@ -303,7 +303,7 @@ function ABGP:RequestItem(itemLink, requestType, notes, roll)
         requestType = requestType,
         notes = (notes ~= "") and notes or nil,
         equipped = {},
-        roll = roll,
+        roll = roll or activeItems[itemLink].roll,
     };
     local requestTypes = {
         [ABGP.RequestTypes.MS] = "for main spec",
@@ -354,10 +354,16 @@ function ABGP:RequestItem(itemLink, requestType, notes, roll)
             faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
         end
     end
-    ABGP:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
+
+    if activeItems[itemLink].sentComms and activeItems[itemLink].sentRequest then
+        self:Notify("Updated request for %s.", itemLink);
+    else
+        self:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
+    end
 
     self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
     activeItems[itemLink].sentComms = true;
+    activeItems[itemLink].sentRequest = true;
     local elt = FindExistingElt(itemLink);
     if elt then
         SetEltText(elt);
@@ -384,7 +390,8 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
             faves:RemoveItemID(itemId);
         end
     end
-    ABGP:Notify("Passing on %s%s.", itemLink, faveRemove);
+
+    self:Notify("Passing on %s%s.", itemLink, faveRemove);
     activeItems[itemLink].sentComms = true;
     local elt = FindExistingElt(itemLink);
     if elt then
