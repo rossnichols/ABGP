@@ -526,9 +526,18 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         window:SetUserData("costEdit", cost);
 
         local desc = AceGUI:Create("Label");
-        desc:SetWidth(80);
+        desc:SetWidth(50);
         desc:SetText("Cost");
         tabGroup:AddChild(desc);
+
+        local multiple = AceGUI:Create("CheckBox");
+        multiple:SetLabel("Multiple");
+        multiple:SetCallback("OnValueChanged", function(widget, value)
+            local currentItem = window:GetUserData("currentItem");
+            currentItem.multipleItems = value;
+        end);
+        tabGroup:AddChild(multiple);
+        window:SetUserData("multipleItemsCheckbox", multiple);
 
         local resetRolls = AceGUI:Create("Button");
         resetRolls:SetWidth(125);
@@ -546,17 +555,8 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         tabGroup:AddChild(resetRolls);
         window:SetUserData("resetRollsButton", resetRolls);
 
-        local multiple = AceGUI:Create("CheckBox");
-        multiple:SetLabel("Multiple");
-        multiple:SetCallback("OnValueChanged", function(widget, value)
-            local currentItem = window:GetUserData("currentItem");
-            currentItem.multipleItems = value;
-        end);
-        tabGroup:AddChild(multiple);
-        window:SetUserData("multipleItemsCheckbox", multiple);
-
         local done = AceGUI:Create("Button");
-        done:SetWidth(100);
+        done:SetWidth(80);
         done:SetText("Done");
         done:SetCallback("OnClick", function(widget)
             local currentItem = window:GetUserData("currentItem");
