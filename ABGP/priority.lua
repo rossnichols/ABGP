@@ -198,7 +198,7 @@ function ABGP:ShowPriority()
     if activeWindow then return; end
 
     local window = AceGUI:Create("Window");
-    window:SetTitle("ABGP Player Priority");
+    window:SetTitle(("%s Player Priority"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
     window:SetWidth(480);
     window:SetHeight(500);
