@@ -246,6 +246,7 @@ do
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
+            self.button:SetText("")
             self.itemLink.text:SetText("");
 
             self.frame.highlightRequests = 0;
@@ -256,6 +257,10 @@ do
             self.data = data;
 
             self.itemLink.text:SetText(data.itemLink);
+        end,
+
+        ["SetText"] = function(self, text)
+            self.button:SetText(text);
         end,
     }
 
@@ -284,7 +289,6 @@ do
         button:ClearAllPoints();
         button:SetPoint("TOPRIGHT", frame, -1, -1);
         button:SetPoint("BOTTOMRIGHT", frame, -1, 3);
-        button:SetText("Show");
 
         local itemLink = CreateElement(frame);
         itemLink.text = CreateFontString(itemLink);

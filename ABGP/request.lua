@@ -55,15 +55,19 @@ local function GetStaticPopupType(itemLink)
         or staticPopups.ABGP_LOOTDISTRIB;
 end
 
-function CloseStaticPopups(itemLink)
+local function CloseStaticPopups(itemLink)
+    local found = false;
     for index = 1, _G.STATICPOPUP_NUMDIALOGS do
         local frame = _G["StaticPopup" .. index];
         if frame:IsShown() and staticPopups[frame.which] then
             if frame.data.itemLink == itemLink then
                 frame:Hide();
+                found = true;
             end
         end
     end
+
+    return found;
 end
 
 local function ShowStaticPopup(itemLink, which)
@@ -74,6 +78,31 @@ local function ShowStaticPopup(itemLink, which)
         if not dialog then
             ABGP:Error("Unable to open window for %s! Try closing other open ones.", itemLink);
         end
+    end
+end
+
+local function FindExistingElt(itemLink)
+    if not activeWindow then return; end
+    local window = activeWindow;
+    local container = window:GetUserData("itemsContainer");
+
+    for _, elt in ipairs(container.children) do
+        if elt.data and elt.data.itemLink == itemLink then
+            return elt;
+        end
+    end
+end
+
+local function SetEltText(elt)
+    local item = activeItems[elt.data.itemLink];
+    if item then
+        local text = "Show";
+        if item.dialogShown then
+            text = "Hide";
+        elseif item.sentComms then
+            text = "Update";
+        end
+        elt:SetText(text);
     end
 end
 
@@ -95,8 +124,11 @@ local function PopulateUI()
         local elt = AceGUI:Create("ABGP_Item");
         elt:SetFullWidth(true);
         elt:SetData(item);
+        SetEltText(elt);
         elt:SetCallback("OnClick", function(elt)
-            ShowStaticPopup(elt.data.itemLink);
+            if not CloseStaticPopups(elt.data.itemLink) then
+                ShowStaticPopup(elt.data.itemLink);
+            end
         end);
 
         container:AddChild(elt);
@@ -107,7 +139,13 @@ function ABGP:RequestOnRoll(sender, roll)
     if sender ~= UnitName("player") then return; end
 
     if pendingRollRequest then
-        self:RequestItem(pendingRollRequest.itemLink, ABGP.RequestTypes.ROLL, pendingRollRequest.notes, roll);
+        local itemLink = pendingRollRequest.itemLink;
+        if not activeItems[itemLink] then
+            self:Notify("Unable to request %s - no longer being distributed.", itemLink);
+            return;
+        end
+        self:RequestItem(itemLink, ABGP.RequestTypes.ROLL, pendingRollRequest.notes, roll);
+        activeItems[itemLink].roll = roll;
         pendingRollRequest = nil;
     end
 end
@@ -319,6 +357,11 @@ function ABGP:RequestItem(itemLink, requestType, notes, roll)
     ABGP:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
 
     self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
+    activeItems[itemLink].sentComms = true;
+    local elt = FindExistingElt(itemLink);
+    if elt then
+        SetEltText(elt);
+    end
 end
 
 function ABGP:PassOnItem(itemLink, removeFromFaves)
@@ -342,6 +385,11 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
         end
     end
     ABGP:Notify("Passing on %s%s.", itemLink, faveRemove);
+    activeItems[itemLink].sentComms = true;
+    local elt = FindExistingElt(itemLink);
+    if elt then
+        SetEltText(elt);
+    end
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
@@ -361,15 +409,29 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     OnHyperlinkLeave = function(self, itemLink)
         _G.GameTooltip:Hide();
     end,
-    OnShow = function(self)
+    OnShow = function(self, data)
         self.editBox:SetAutoFocus(false);
-		self.editBox:ClearFocus();
+        self.editBox:ClearFocus();
+        if activeItems[data.itemLink] then
+            activeItems[data.itemLink].dialogShown = true;
+            local elt = FindExistingElt(data.itemLink);
+            if elt then
+                SetEltText(elt);
+            end
+        end
 	end,
     EditBoxOnEscapePressed = function(self)
 		self:ClearFocus();
     end,
     OnHide = function(self, data)
         self.editBox:SetAutoFocus(true);
+        if activeItems[data.itemLink] then
+            activeItems[data.itemLink].dialogShown = false;
+            local elt = FindExistingElt(data.itemLink);
+            if elt then
+                SetEltText(elt);
+            end
+        end
     end,
 	OnAccept = function(self, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, self.editBox:GetText());
@@ -404,11 +466,15 @@ dialog.text = "%s is being distributed! You may roll for it and provide an optio
 dialog.button1 = "Roll";
 dialog.button2 = nil;
 dialog.OnAccept = function(self, data)
-    pendingRollRequest = {
-        itemLink = data.itemLink,
-        notes = self.editBox:GetText()
-    };
-    RandomRoll(1, 100);
+    if activeItems[data.itemLink].roll then
+        ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, self.editBox:GetText());
+    else
+        pendingRollRequest = {
+            itemLink = data.itemLink,
+            notes = self.editBox:GetText()
+        };
+        RandomRoll(1, 100);
+    end
 end
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = dialog;
 
