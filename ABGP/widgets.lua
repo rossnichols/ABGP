@@ -46,10 +46,10 @@ local function CreateFontString(frame, y)
     local fontstr = frame:CreateFontString(nil, "BACKGROUND", "GameFontNormal");
     fontstr:SetJustifyH("LEFT");
     if y then
-        fontstr:SetPoint("LEFT", frame, 0, y);
+        fontstr:SetPoint("LEFT", frame, 2, y);
         fontstr:SetPoint("RIGHT", frame, -2, y);
     else
-        fontstr:SetPoint("LEFT", frame, 0, 1);
+        fontstr:SetPoint("LEFT", frame, 2, 1);
         fontstr:SetPoint("RIGHT", frame, -2, 1);
     end
     fontstr:SetWordWrap(false);
