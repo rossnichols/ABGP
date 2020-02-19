@@ -20,6 +20,7 @@ local unpack = unpack;
 local pairs = pairs;
 
 local activeWindow;
+local savedWindowSize = { width = 480, height = 500 };
 local widths = { 110, 100, 70, 70, 70 };
 local ignoredClasses = {};
 
@@ -131,7 +132,7 @@ function ABGP:PriorityOnDistAwarded(data, distribution, sender)
 
 	self:RefreshActivePlayers();
 
-	if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) then
+	if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) and not self.SkipOfficerNote then
 		self:UpdateOfficerNote(player);
 	end
 end
@@ -202,13 +203,16 @@ function ABGP:ShowPriority()
     local window = AceGUI:Create("Window");
     window:SetTitle(("%s Player Priority"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
-    window:SetWidth(480);
-    window:SetHeight(500);
+    window:SetStatusTable(savedWindowSize);
     local oldMinW, oldMinH = window.frame:GetMinResize();
     local oldMaxW, oldMaxH = window.frame:GetMaxResize();
     window.frame:SetMinResize(480, 300);
     window.frame:SetMaxResize(480, 700);
     window:SetCallback("OnClose", function(widget)
+        savedWindowSize.left = widget.frame:GetLeft();
+        savedWindowSize.top = widget.frame:GetTop();
+        savedWindowSize.width = widget.frame:GetWidth();
+        savedWindowSize.height = widget.frame:GetHeight();
         widget.frame:SetMinResize(oldMinW, oldMinH);
         widget.frame:SetMaxResize(oldMaxW, oldMaxH);
         AceGUI:Release(widget);
