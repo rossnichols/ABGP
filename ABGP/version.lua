@@ -164,7 +164,7 @@ function ABGP:PerformVersionCheck()
     self:SendComm(self.CommTypes.VERSION_REQUEST, {
         reset = true,
     }, "BROADCAST");
-    versionCheckData.timer = self:ScheduleTimer("VersionCheckCallback", 3);
+    versionCheckData.timer = self:ScheduleTimer("VersionCheckCallback", 5);
 end
 
 function ABGP:VersionCheckCallback()
@@ -187,11 +187,16 @@ function ABGP:VersionCheckCallback()
                 if versionCmp then
                     if VersionIsNewer(version, versionCmp, true) then
                         self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
+                        SendChatMessage(
+                            ("You don't have the latest ABGP version installed! Please update it from Curse/Twitch so you can request loot. The latest version is %s."):format(version),
+                            "WHISPER", nil, player);
                         allUpToDate = false;
                     end
                 else
                     self:Notify("%s is missing the addon!", self:ColorizeName(player));
-                    SendChatMessage("You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.", "WHISPER", nil, player);
+                    SendChatMessage(
+                        "You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.",
+                        "WHISPER", nil, player);
                     allUpToDate = false;
                 end
             else
@@ -205,7 +210,6 @@ function ABGP:VersionCheckCallback()
         self:Notify("Everyone is up to date!");
     end
 
-    self:Notify("Version check complete!");
     versionCheckData = nil;
 end
 
