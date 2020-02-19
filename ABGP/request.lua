@@ -18,6 +18,7 @@ local ipairs = ipairs;
 local activeWindow;
 local savedWindowSize = { width = 325, height = 175 };
 local activeItems = {};
+local sortedItems = {};
 local pendingRollRequest;
 local staticPopups = {
     ABGP_LOOTDISTRIB = "ABGP_LOOTDISTRIB",
@@ -112,14 +113,6 @@ local function PopulateUI()
     local container = window:GetUserData("itemsContainer");
     container:ReleaseChildren();
 
-    local sortedItems = {};
-    for _, item in pairs(activeItems) do
-        table.insert(sortedItems, item);
-    end
-    table.sort(sortedItems, function(a, b)
-        return a.time < b.time;
-    end);
-
     for _, item in ipairs(sortedItems) do
         local elt = AceGUI:Create("ABGP_Item");
         elt:SetFullWidth(true);
@@ -155,9 +148,9 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     activeItems[itemLink] = {
         itemLink = itemLink,
         sender = sender,
-        requestType = data.requestType,
-        time = time()
+        requestType = data.requestType
     };
+    table.insert(sortedItems, activeItems[itemLink]);
 
     local msg;
     local value = data.value;
@@ -185,14 +178,16 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     local popup = GetStaticPopupType(itemLink);
     if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
         ShowStaticPopup(itemLink, popup);
-        prompt = "This item is favorited in AtlasLoot."
-    else
-        local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "currently unbound";
-        prompt = ("Type '/abgp loot' or press your hotkey (%s) if you want to request this item."):format(keybinding);
     end
 
-    self:Notify("%s is being distributed! %s", itemLink, prompt);
-    PopulateUI();
+    self:Notify("Item distribution opened for %s!", itemLink);
+
+    if #sortedItems == 1 then
+        self:ShowItemRequests();
+    end
+    if activeWindow then
+        PopulateUI();
+    end
 end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
@@ -203,8 +198,21 @@ function ABGP:RequestOnDistClosed(data, distribution, sender)
         end
 
         CloseStaticPopups(itemLink);
+        for i, item in ipairs(sortedItems) do
+            if item == activeItems[itemLink] then
+                table.remove(sortedItems, i);
+                break;
+            end
+        end
         activeItems[itemLink] = nil;
-        PopulateUI();
+
+        if activeWindow then
+            if #sortedItems == 0 then
+                activeWindow:Hide();
+            else
+                PopulateUI();
+            end
+        end
     end
 end
 
