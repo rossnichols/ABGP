@@ -60,8 +60,8 @@ local itemClasses = {
 local itemMapping = {
     ["Item"] = 1,
     ["GP Cost"] = 2,
-    ["4th Pass Cost"] = 2,
     ["Notes"] = "notes",
+    ["Boss"] = false,
 };
 for value, text in pairs(itemClasses) do
     itemMapping[text] = value;

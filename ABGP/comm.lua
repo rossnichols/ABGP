@@ -14,6 +14,8 @@ local table = table;
 local tostring = tostring;
 
 local function GetBroadcastChannel()
+    if ABGP.PrivateComms then return "WHISPER", UnitName("player"); end
+
     if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
         return "INSTANCE_CHAT";
     elseif GetNumGroupMembers() > 0 and IsInRaid() then
