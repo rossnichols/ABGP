@@ -26,38 +26,44 @@ function ABGP:OnInitialize()
     if self:ParseVersion(version) then
         addonText = "ABGP-v" .. version;
     end
+    local options = {
+        loot = {
+            name = "Loot",
+            desc = "shows the item request window",
+            type = "execute",
+            func = function() ABGP:ShowItemRequests(); end
+        },
+        import = {
+            name = "Data Import",
+            desc = "shows the import window",
+            type = "execute",
+            cmdHidden = true,
+            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+            func = function() ABGP:ShowImportWindow(); end
+        },
+        versioncheck = {
+            name = "Version Check",
+            desc = "checks the raid for an outdated or missing addon versions (alias: vc)",
+            type = "execute",
+            cmdHidden = not ABGP:IsPrivileged(),
+            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+            func = function() ABGP:PerformVersionCheck(); end
+        },
+        priority = {
+            name = "Priority",
+            desc = "shows the player priority window (alias: prio)",
+            type = "execute",
+            func = function() ABGP:ShowPriority(); end
+        },
+    };
+    options.prio = { hidden = true };
+    for k, v in pairs(options.priority) do options.prio[k] = v; end
+    options.vc = { hidden = true };
+    for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
+
     AceConfig:RegisterOptionsTable(ABGP:ColorizeText(addonText), {
         type = "group",
-        args = {
-            loot = {
-                name = "Loot",
-                desc = "shows the item request window",
-                type = "execute",
-                func = function() ABGP:ShowItemRequests(); end
-            },
-            import = {
-                name = "Data Import",
-                desc = "shows the import window",
-                type = "execute",
-                cmdHidden = true,
-                validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-                func = function() ABGP:ShowImportWindow(); end
-            },
-            versioncheck = {
-                name = "Version Check",
-                desc = "checks the raid for an outdated or missing addon versions",
-                type = "execute",
-                cmdHidden = not ABGP:IsPrivileged(),
-                validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-                func = function() ABGP:PerformVersionCheck(); end
-            },
-            priority = {
-                name = "Priority",
-                desc = "shows the player priority window",
-                type = "execute",
-                func = function() ABGP:ShowPriority(); end
-            },
-        },
+        args = options,
     }, { "abgp" });
 
     self:HookTooltips();
