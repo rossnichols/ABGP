@@ -20,7 +20,6 @@ local unpack = unpack;
 local pairs = pairs;
 
 local activeWindow;
-local savedWindowSize = { width = 480, height = 500 };
 local widths = { 110, 100, 70, 70, 70 };
 local ignoredClasses = {};
 
@@ -203,23 +202,22 @@ function ABGP:ShowPriority()
     local window = AceGUI:Create("Window");
     window:SetTitle(("%s Player Priority"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
-    window:SetStatusTable(savedWindowSize);
-    local oldMinW, oldMinH = window.frame:GetMinResize();
-    local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window.frame:SetMinResize(480, 300);
-    window.frame:SetMaxResize(480, 700);
+    self:BeginWindowManagement(window, "priority", {
+        version = 1,
+        defaultWidth = 480,
+        minWidth = 480,
+        maxWidth = 480,
+        defaultHeight = 500,
+        minHeight = 300,
+        maxHeight = 700
+    });
+    ABGP:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
-        savedWindowSize.left = widget.frame:GetLeft();
-        savedWindowSize.top = widget.frame:GetTop();
-        savedWindowSize.width = widget.frame:GetWidth();
-        savedWindowSize.height = widget.frame:GetHeight();
-        widget.frame:SetMinResize(oldMinW, oldMinH);
-        widget.frame:SetMaxResize(oldMaxW, oldMaxH);
-        AceGUI:Release(widget);
+        ABGP:EndWindowManagement(widget);
         ABGP:CloseWindow(widget);
+        AceGUI:Release(widget);
         activeWindow = nil;
     end);
-    ABGP:OpenWindow(window);
 
     local phases = {
         [ABGP.Phases.p1] = "Phase 1/2",

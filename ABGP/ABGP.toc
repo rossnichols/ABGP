@@ -3,7 +3,7 @@
 ## Notes: EPGP AddOn for <Always Be Pulling>
 ## Author: Xanido
 ## Version: ${ADDON_VERSION}
-## SavedVariables: ABGP_DataTimestamp, ABGP_Data
+## SavedVariables: ABGP_DataTimestamp, ABGP_Data, ABGP_DB, ABGP_WindowManagement
 
 embeds.xml
 core.lua

@@ -16,7 +16,6 @@ local time = time;
 local ipairs = ipairs;
 
 local activeWindow;
-local savedWindowSize = { width = 325, height = 175 };
 local activeItems = {};
 local sortedItems = {};
 local pendingRollRequest;
@@ -264,23 +263,22 @@ function ABGP:ShowItemRequests()
     local window = AceGUI:Create("Window");
     window:SetTitle(("%s Item Requests"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
-    window:SetStatusTable(savedWindowSize);
-    local oldMinW, oldMinH = window.frame:GetMinResize();
-    local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-    window.frame:SetMinResize(250, 100);
-    window.frame:SetMaxResize(400, 300);
+    self:BeginWindowManagement(window, "request", {
+        version = 1,
+        defaultWidth = 325,
+        minWidth = 250,
+        maxWidth = 400,
+        defaultHeight = 175,
+        minHeight = 100,
+        maxHeight = 300
+    });
+    self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
-        savedWindowSize.left = widget.frame:GetLeft();
-        savedWindowSize.top = widget.frame:GetTop();
-        savedWindowSize.width = widget.frame:GetWidth();
-        savedWindowSize.height = widget.frame:GetHeight();
-        widget.frame:SetMinResize(oldMinW, oldMinH);
-        widget.frame:SetMaxResize(oldMaxW, oldMaxH);
-        AceGUI:Release(widget);
+        ABGP:EndWindowManagement(window);
         ABGP:CloseWindow(widget);
+        AceGUI:Release(widget);
         activeWindow = nil;
     end);
-    ABGP:OpenWindow(window);
 
     local scrollContainer = AceGUI:Create("SimpleGroup");
     scrollContainer:SetFullWidth(true);

@@ -19,7 +19,6 @@ local type = type;
 local max = max;
 
 local activeDistributionWindow;
-local savedWindowSize = { width = 975, height = 500 };
 local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
 
 local function ProcessSelectedRequest()
@@ -154,6 +153,7 @@ local function RebuildUI()
     _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
     _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
     _G.ItemRefTooltip:SetHyperlink(currentItem.itemLink);
+    _G.ItemRefTooltip:SetFrameStrata("HIGH");
     _G.ItemRefTooltip:Show();
 end
 
@@ -416,12 +416,17 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
     if not activeDistributionWindow then
         local window = AceGUI:Create("Window");
-        local oldMinW, oldMinH = window.frame:GetMinResize();
-        local oldMaxW, oldMaxH = window.frame:GetMaxResize();
-        window:SetStatusTable(savedWindowSize);
-        window.frame:SetMinResize(800, 300);
-        window.frame:SetMaxResize(1100, 600);
-        window.frame:SetFrameStrata("HIGH");
+        window:SetLayout("Fill");
+        window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
+        self:BeginWindowManagement(window, "distrib", {
+            version = 1,
+            defaultWidth = 975,
+            minWidth = 800,
+            maxWidth = 1100,
+            defaultHeight = 500,
+            minHeight = 300,
+            maxHeight = 600
+        });
         window:SetCallback("OnClose", function(widget)
             local closeConfirmed = true;
             local activeItems = widget:GetUserData("activeItems");
@@ -437,14 +442,10 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                     RemoveActiveItem(item.itemLink);
                 end
 
-                savedWindowSize.left = widget.frame:GetLeft();
-                savedWindowSize.top = widget.frame:GetTop();
-                savedWindowSize.width = widget.frame:GetWidth();
-                savedWindowSize.height = widget.frame:GetHeight();
-                widget.frame:SetMinResize(oldMinW, oldMinH);
-                widget.frame:SetMaxResize(oldMaxW, oldMaxH);
+                ABGP:EndWindowManagement(widget);
                 AceGUI:Release(widget);
                 _G.ItemRefTooltip:Hide();
+                _G.ItemRefTooltip:SetFrameStrata("TOOLTIP");
 
                 _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
                 _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
@@ -455,7 +456,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 widget:Show();
             end
         end);
-        window:SetLayout("Fill");
 
         local tabGroup = AceGUI:Create("TabGroup");
         tabGroup:SetLayout("Flow");

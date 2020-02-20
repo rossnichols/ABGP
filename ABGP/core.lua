@@ -14,6 +14,8 @@ local ipairs = ipairs;
 local tonumber = tonumber;
 local table = table;
 local tostring = tostring;
+local min = min;
+local max = max;
 
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
@@ -65,6 +67,11 @@ function ABGP:OnInitialize()
         type = "group",
         args = options,
     }, { "abgp" });
+
+    local defaults = {
+
+    };
+    self.db = _G.LibStub("AceDB-3.0"):New("ABGP_DB", defaults);
 
     self:HookTooltips();
     self:AddItemHooks();
@@ -327,3 +334,46 @@ f:SetScript("OnEvent", function(self, event, ...)
         end
     end
 end);
+
+
+--
+-- Support for maintaining window positions/sizes across reloads/relogs
+--
+
+_G.ABGP_WindowManagement = {};
+
+function ABGP:BeginWindowManagement(window, name, defaults)
+    _G.ABGP_WindowManagement[name] = _G.ABGP_WindowManagement[name] or {};
+    local saved = _G.ABGP_WindowManagement[name];
+    if saved.version ~= defaults.version then
+        table.wipe(saved);
+        saved.version = defaults.version;
+    end
+
+    local management = { name = name, defaults = defaults };
+    window:SetUserData("windowManagement", management);
+
+    saved.width = min(max(defaults.minWidth, saved.width or defaults.defaultWidth), defaults.maxWidth);
+    saved.height = min(max(defaults.minHeight, saved.height or defaults.defaultHeight), defaults.maxHeight);
+    window:SetStatusTable(saved);
+
+    management.oldMinW, management.oldMinH = window.frame:GetMinResize();
+    management.oldMaxW, management.oldMaxH = window.frame:GetMaxResize();
+    window.frame:SetMinResize(defaults.minWidth, defaults.minHeight);
+    window.frame:SetMaxResize(defaults.maxWidth, defaults.maxHeight);
+end
+
+function ABGP:EndWindowManagement(window)
+    local management = window:GetUserData("windowManagement");
+    local name = management.name;
+    local defaults = management.defaults;
+    _G.ABGP_WindowManagement[name] = _G.ABGP_WindowManagement[name] or {};
+    local saved = _G.ABGP_WindowManagement[name];
+
+    saved.left = window.frame:GetLeft();
+    saved.top = window.frame:GetTop();
+    saved.width = window.frame:GetWidth();
+    saved.height = window.frame:GetHeight();
+    window.frame:SetMinResize(management.oldMinW, management.oldMinH);
+    window.frame:SetMaxResize(management.oldMaxW, management.oldMaxH);
+end
