@@ -185,17 +185,36 @@ end
 local function ProcessNewRequest(request)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
-    local requests = activeItems[request.itemLink].requests;
+    local item = activeItems[request.itemLink];
+    local requests = item.requests;
     local currentItem = window:GetUserData("currentItem");
 
     for i, existing in ipairs(requests) do
         if existing.player == request.player then
             request.notes = CombineNotes(existing.notes, request.notes);
-            request.roll = existing.roll;
             table.remove(requests, i);
             break;
         end
     end
+
+    -- Restore roll if we've previously recorded one
+    if item.rolls[request.player] then
+        request.roll = item.rolls[request.player];
+    end
+
+    -- Generate a new roll if necessary
+    if request.requestType == ABGP.RequestTypes.ROLL and not request.roll then
+        request.roll = math.random(1, 100);
+        if UnitExists(request.player) then
+            ABGP:SendComm(ABGP.CommTypes.ITEM_ROLLED, {
+                itemLink = request.itemLink,
+                roll = request.roll,
+            }, "WHISPER", request.player);
+        end
+    end
+
+    -- Persist the roll
+    item.rolls[request.player] = request.roll;
 
     table.insert(requests, request);
 
@@ -235,6 +254,7 @@ function ABGP:DistribOnRoll(sender, roll)
         local elt = FindExistingElt(sender);
         if elt and not elt.data.roll then
             elt.data.roll = roll;
+            currentItem.rolls[elt.data.player] = roll;
             RebuildUI();
         end
     end
@@ -250,6 +270,7 @@ local function AddActiveItem(itemLink, requestType)
     local newItem = {
         itemLink = itemLink,
         requests = {},
+        rolls = {},
         costBase = value and value.gp or 0,
         costCurrent = nil,
         selectedRequest = nil,
@@ -351,8 +372,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         gp = gp,
         equipped = data.equipped,
         requestType = data.requestType,
-        notes = data.notes,
-        roll = data.roll
+        notes = data.notes
     });
 end
 
@@ -537,6 +557,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         mainLine:AddChild(desc);
 
         local multiple = AceGUI:Create("CheckBox");
+        multiple:SetWidth(100);
         multiple:SetLabel("Multiple");
         multiple:SetCallback("OnValueChanged", function(widget, value)
             local currentItem = window:GetUserData("currentItem");
@@ -553,6 +574,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 for _, request in ipairs(currentItem.requests) do
                     request.roll = nil;
                 end
+                table.wipe(currentItem.rolls);
             else
                 currentItem.rollsAllowed = true;
             end
@@ -638,7 +660,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             entry.ep = math.random() * 2000;
             entry.gp = math.random() * 2000;
             entry.priority = entry.ep * 10 / entry.gp;
-            entry.roll = math.random(1, 100);
             ProcessNewRequest(entry);
         end
     end

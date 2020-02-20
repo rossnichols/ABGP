@@ -120,6 +120,10 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED, function(self, event, data, distribution, sender)
         GuildRoster();
     end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_ROLLED, function(self, event, data, distribution, sender)
+        self:RequestOnItemRolled(data, distribution, sender);
+    end, self);
 end
 
 ABGP.Color = "|cFF94E4FF";
@@ -330,7 +334,6 @@ f:SetScript("OnEvent", function(self, event, ...)
         if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
             roll = tonumber(roll);
             ABGP:DistribOnRoll(sender, roll);
-            ABGP:RequestOnRoll(sender, roll);
         end
     end
 end);

@@ -18,7 +18,6 @@ local ipairs = ipairs;
 local activeWindow;
 local activeItems = {};
 local sortedItems = {};
-local pendingRollRequest;
 local staticPopups = {
     ABGP_LOOTDISTRIB = "ABGP_LOOTDISTRIB",
     ABGP_LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
@@ -127,19 +126,8 @@ local function PopulateUI()
     end
 end
 
-function ABGP:RequestOnRoll(sender, roll)
-    if sender ~= UnitName("player") then return; end
-
-    if pendingRollRequest then
-        local itemLink = pendingRollRequest.itemLink;
-        if not activeItems[itemLink] then
-            self:Notify("Unable to request %s - no longer being distributed.", itemLink);
-            return;
-        end
-        self:RequestItem(itemLink, ABGP.RequestTypes.ROLL, pendingRollRequest.notes, roll);
-        activeItems[itemLink].roll = roll;
-        pendingRollRequest = nil;
-    end
+function ABGP:RequestOnItemRolled(data, distribution, sender)
+    self:Notify("You rolled %d on %s.", data.roll, data.itemLink);
 end
 
 function ABGP:RequestOnDistOpened(data, distribution, sender)
@@ -297,7 +285,7 @@ function ABGP:ShowItemRequests()
     PopulateUI();
 end
 
-function ABGP:RequestItem(itemLink, requestType, notes, roll)
+function ABGP:RequestItem(itemLink, requestType, notes)
     if not activeItems[itemLink] then
         self:Notify("Unable to request %s - no longer being distributed.", itemLink);
         return;
@@ -309,7 +297,6 @@ function ABGP:RequestItem(itemLink, requestType, notes, roll)
         requestType = requestType,
         notes = (notes ~= "") and notes or nil,
         equipped = {},
-        roll = roll or activeItems[itemLink].roll,
     };
     local requestTypes = {
         [ABGP.RequestTypes.MS] = "for main spec",
@@ -479,15 +466,7 @@ dialog.text = "%s is being distributed! You may roll for it and provide an optio
 dialog.button1 = "Roll";
 dialog.button2 = nil;
 dialog.OnAccept = function(self, data)
-    if activeItems[data.itemLink].roll then
-        ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, self.editBox:GetText());
-    else
-        pendingRollRequest = {
-            itemLink = data.itemLink,
-            notes = self.editBox:GetText()
-        };
-        RandomRoll(1, 100);
-    end
+    ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, self.editBox:GetText());
 end
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = dialog;
 

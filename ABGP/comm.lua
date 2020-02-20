@@ -28,7 +28,7 @@ local function GetBroadcastChannel()
 end
 
 -- The commVersion can be revved to create a backwards-incompatible version.
-local commVersion = ":1";
+local commVersion = ":2";
 local function CV(str)
     return str .. commVersion;
 end
@@ -39,7 +39,6 @@ ABGP.CommTypes = {
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings
-    -- roll: number
 
     ITEM_PASS = CV("ABGP_ITEM_PASS"),
     -- itemLink: item link string
@@ -59,6 +58,10 @@ ABGP.CommTypes = {
 
     ITEM_DISTRIBUTION_TRASHED = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"),
     -- itemLink: item link string
+
+    ITEM_ROLLED = CV("ABGP_ITEM_ROLLED"),
+    -- itemLink: item link string
+    -- roll: number
 
     OFFICER_NOTES_UPDATED = CV("ABGP_OFFICER_NOTES_UPDATED"),
     -- no payload
