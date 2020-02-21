@@ -1,6 +1,7 @@
 local _G = _G;
 _G.ABGP = _G.LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0");
 local ABGP = ABGP;
+local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local UnitExists = UnitExists;
 local UnitClass = UnitClass;
@@ -8,6 +9,7 @@ local UnitGUID = UnitGUID;
 local GetClassColor = GetClassColor;
 local GuildRoster = GuildRoster;
 local SendSystemMessage = SendSystemMessage;
+local UnitAffectingCombat = UnitAffectingCombat;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -129,6 +131,15 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.CommTypes.ITEM_ROLLED, function(self, event, data, distribution, sender)
         self:RequestOnItemRolled(data, distribution, sender);
     end, self);
+
+    -- Precreate frames to avoid issues generating them during combat.
+    if not UnitAffectingCombat("player") then
+        AceGUI:Release(self:CreatePriorityWindow());
+        AceGUI:Release(self:CreateDistribWindow());
+        AceGUI:Release(self:CreateRequestWindow());
+        for i = 1, 10 do AceGUI:Release(AceGUI:Create("ABGP_Item")); end
+        for i = 1, 50 do AceGUI:Release(AceGUI:Create("ABGP_Player")); end
+    end
 end
 
 ABGP.Color = "|cFF94E4FF";

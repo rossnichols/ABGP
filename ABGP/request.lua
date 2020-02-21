@@ -174,7 +174,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     self:Notify("Item distribution opened for %s!", itemLink);
 
     if #sortedItems == 1 then
-        self:ShowItemRequests();
+        self:ShowItemRequests(true);
     end
     if activeWindow then
         PopulateUI();
@@ -246,12 +246,7 @@ function ABGP:RequestOnDistTrashed(data, distribution, sender)
     self:Notify("%s%s will be disenchanted.", itemLink, multiple);
 end
 
-function ABGP:ShowItemRequests()
-    if activeWindow then
-        activeWindow:Hide();
-        return;
-    end
-
+function ABGP:CreateRequestWindow()
     local window = AceGUI:Create("Window");
     window:SetTitle(("%s Item Requests"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
@@ -285,7 +280,16 @@ function ABGP:ShowItemRequests()
     scrollContainer:AddChild(scroll);
     window:SetUserData("itemsContainer", scroll);
 
-    activeWindow = window;
+    return window;
+end
+
+function ABGP:ShowItemRequests(noAutoHide)
+    if activeWindow then
+        if not noAutoHide then activeWindow:Hide(); end
+        return;
+    end
+
+    activeWindow = self:CreateRequestWindow();
     PopulateUI();
 end
 

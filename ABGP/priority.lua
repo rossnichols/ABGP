@@ -1,6 +1,6 @@
 local _G = _G;
 local ABGP = ABGP;
-local AceGUI = LibStub("AceGUI-3.0");
+local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
@@ -196,9 +196,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
     return (note ~= "");
 end
 
-function ABGP:ShowPriority()
-    if activeWindow then return; end
-
+function ABGP:CreatePriorityWindow()
     local window = AceGUI:Create("Window");
     window:SetTitle(("%s Player Priority"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
@@ -354,6 +352,12 @@ function ABGP:ShowPriority()
     scrollContainer:AddChild(scroll);
     window:SetUserData("priorities", scroll);
 
-    activeWindow = window;
+    return window;
+end
+
+function ABGP:ShowPriority()
+    if activeWindow then return; end
+
+    activeWindow = self:CreatePriorityWindow();
     PopulateUI();
 end

@@ -1,6 +1,6 @@
 local _G = _G;
 local ABGP = ABGP;
-local AceGUI = LibStub("AceGUI-3.0");
+local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local pairs = pairs;
 local ipairs = ipairs;

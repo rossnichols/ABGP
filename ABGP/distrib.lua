@@ -440,209 +440,214 @@ function ABGP:ShowDistrib(itemLink)
     }, "BROADCAST");
 end
 
+function ABGP:CreateDistribWindow()
+    local window = AceGUI:Create("Window");
+    window:SetLayout("Fill");
+    window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
+    self:BeginWindowManagement(window, "distrib", {
+        version = 1,
+        defaultWidth = 975,
+        minWidth = 800,
+        maxWidth = 1100,
+        defaultHeight = 500,
+        minHeight = 300,
+        maxHeight = 600
+    });
+    window:SetCallback("OnClose", function(widget)
+        local closeConfirmed = true;
+        local activeItems = widget:GetUserData("activeItems");
+        for _, item in pairs(activeItems) do
+            if not item.closeConfirmed then
+                closeConfirmed = false;
+                break;
+            end
+        end
+        if closeConfirmed then
+            activeDistributionWindow = nil;
+            for _, item in pairs(activeItems) do
+                RemoveActiveItem(item.itemLink);
+            end
+
+            ABGP:EndWindowManagement(widget);
+            AceGUI:Release(widget);
+            _G.ItemRefTooltip:Hide();
+            _G.ItemRefTooltip:SetFrameStrata("TOOLTIP");
+
+            _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
+            _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
+            _G.StaticPopup_Hide("ABGP_CONFIRM_TRASH");
+            _G.StaticPopup_Hide("ABGP_CONFIRM_DONE");
+        else
+            _G.StaticPopup_Show("ABGP_CONFIRM_END_DIST");
+            widget:Show();
+        end
+    end);
+
+    local tabGroup = AceGUI:Create("TabGroup");
+    tabGroup:SetLayout("Flow");
+    tabGroup:SetCallback("OnGroupSelected", function(container, event, itemLink)
+        local activeItems = window:GetUserData("activeItems");
+        window:SetUserData("currentItem", activeItems[itemLink]);
+        RebuildUI();
+    end);
+    window:AddChild(tabGroup);
+    window:SetUserData("tabGroup", tabGroup);
+
+    local mainLine = AceGUI:Create("SimpleGroup");
+    mainLine:SetFullWidth(true);
+    mainLine:SetLayout("table");
+    mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0 } });
+    tabGroup:AddChild(mainLine);
+
+    local disenchant = AceGUI:Create("Button");
+    disenchant:SetWidth(125);
+    disenchant:SetText("Disenchant");
+    disenchant:SetCallback("OnClick", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        local itemLink = currentItem.itemLink;
+        if currentItem.multipleItems then
+            local count = currentItem.distributionCount;
+            itemLink = ("%s #%d"):format(itemLink, count + 1);
+        end
+        _G.StaticPopup_Show("ABGP_CONFIRM_TRASH", itemLink, nil, {
+            itemLink = currentItem.itemLink
+        });
+    end);
+    mainLine:AddChild(disenchant);
+    window:SetUserData("disenchantButton", disenchant);
+
+    local distrib = AceGUI:Create("Button");
+    distrib:SetWidth(125);
+    distrib:SetText("Distribute");
+    distrib:SetDisabled(true);
+    distrib:SetCallback("OnClick", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        local cost = currentItem.costCurrent;
+        local player = currentItem.selectedRequest.player;
+
+        local itemLink = currentItem.itemLink;
+        if currentItem.multipleItems then
+            local count = currentItem.distributionCount;
+            itemLink = ("%s #%d"):format(itemLink, count + 1);
+        end
+        local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
+
+        _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
+            itemLink = currentItem.itemLink,
+            player = player,
+            cost = cost
+        });
+    end);
+    mainLine:AddChild(distrib);
+    window:SetUserData("distributeButton", distrib);
+
+    local cost = AceGUI:Create("EditBox");
+    cost:SetWidth(75);
+    cost:SetCallback("OnEnterPressed", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        AceGUI:ClearFocus();
+        local text = widget:GetText();
+        if type(tonumber(text)) == "number" then
+            currentItem.costEdited = tonumber(text);
+        else
+            currentItem.costEdited = nil;
+        end
+        ProcessSelectedRequest();
+    end);
+    mainLine:AddChild(cost);
+    window:SetUserData("costEdit", cost);
+
+    local desc = AceGUI:Create("Label");
+    desc:SetWidth(50);
+    desc:SetText("Cost");
+    mainLine:AddChild(desc);
+
+    local multiple = AceGUI:Create("CheckBox");
+    multiple:SetWidth(100);
+    multiple:SetLabel("Multiple");
+    multiple:SetCallback("OnValueChanged", function(widget, value)
+        local currentItem = window:GetUserData("currentItem");
+        currentItem.multipleItems = value;
+    end);
+    mainLine:AddChild(multiple);
+    window:SetUserData("multipleItemsCheckbox", multiple);
+
+    local resetRolls = AceGUI:Create("Button");
+    resetRolls:SetWidth(125);
+    resetRolls:SetCallback("OnClick", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        if currentItem.rollsAllowed then
+            for _, request in ipairs(currentItem.requests) do
+                request.roll = nil;
+            end
+            table.wipe(currentItem.rolls);
+        else
+            currentItem.rollsAllowed = true;
+        end
+        RebuildUI();
+    end);
+    mainLine:AddChild(resetRolls);
+    window:SetUserData("resetRollsButton", resetRolls);
+
+    local spacer = AceGUI:Create("Label");
+    mainLine:AddChild(spacer);
+
+    local done = AceGUI:Create("Button");
+    done:SetWidth(80);
+    done:SetText("Done");
+    done:SetCallback("OnClick", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        local itemLink = currentItem.itemLink;
+
+        _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, nil, {
+            itemLink = itemLink,
+        });
+    end);
+    mainLine:AddChild(done);
+
+    local spacer = AceGUI:Create("Label");
+    spacer:SetFullWidth(true);
+    spacer:SetText(" ");
+    tabGroup:AddChild(spacer);
+
+    local scrollContainer = AceGUI:Create("SimpleGroup");
+    scrollContainer:SetFullWidth(true);
+    scrollContainer:SetFullHeight(true);
+    scrollContainer:SetLayout("Flow");
+    tabGroup:AddChild(scrollContainer);
+
+    local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
+    local header = AceGUI:Create("SimpleGroup");
+    header:SetFullWidth(true);
+    header:SetLayout("Table");
+    header:SetUserData("table", { columns = columns.weights });
+    scrollContainer:AddChild(header);
+
+    for i = 1, #columns do
+        local desc = AceGUI:Create("Label");
+        desc:SetText(columns[i]);
+        desc:SetFontObject(_G.GameFontHighlight);
+        header:AddChild(desc);
+    end
+
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetFullWidth(true);
+    scroll:SetFullHeight(true);
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("requestsContainer", scroll);
+
+    window:SetUserData("activeItems", {});
+    window:SetUserData("tabs", {});
+
+    return window;
+end
+
 function ABGP:DistribOnDistOpened(data, distribution, sender)
     if sender ~= UnitName("player") then return; end
 
     if not activeDistributionWindow then
-        local window = AceGUI:Create("Window");
-        window:SetLayout("Fill");
-        window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
-        self:BeginWindowManagement(window, "distrib", {
-            version = 1,
-            defaultWidth = 975,
-            minWidth = 800,
-            maxWidth = 1100,
-            defaultHeight = 500,
-            minHeight = 300,
-            maxHeight = 600
-        });
-        window:SetCallback("OnClose", function(widget)
-            local closeConfirmed = true;
-            local activeItems = widget:GetUserData("activeItems");
-            for _, item in pairs(activeItems) do
-                if not item.closeConfirmed then
-                    closeConfirmed = false;
-                    break;
-                end
-            end
-            if closeConfirmed then
-                activeDistributionWindow = nil;
-                for _, item in pairs(activeItems) do
-                    RemoveActiveItem(item.itemLink);
-                end
-
-                ABGP:EndWindowManagement(widget);
-                AceGUI:Release(widget);
-                _G.ItemRefTooltip:Hide();
-                _G.ItemRefTooltip:SetFrameStrata("TOOLTIP");
-
-                _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
-                _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
-                _G.StaticPopup_Hide("ABGP_CONFIRM_TRASH");
-                _G.StaticPopup_Hide("ABGP_CONFIRM_DONE");
-            else
-                _G.StaticPopup_Show("ABGP_CONFIRM_END_DIST");
-                widget:Show();
-            end
-        end);
-
-        local tabGroup = AceGUI:Create("TabGroup");
-        tabGroup:SetLayout("Flow");
-        tabGroup:SetCallback("OnGroupSelected", function(container, event, itemLink)
-            local activeItems = window:GetUserData("activeItems");
-            window:SetUserData("currentItem", activeItems[itemLink]);
-            RebuildUI();
-        end);
-        window:AddChild(tabGroup);
-        window:SetUserData("tabGroup", tabGroup);
-
-        local mainLine = AceGUI:Create("SimpleGroup");
-        mainLine:SetFullWidth(true);
-        mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0 } });
-        tabGroup:AddChild(mainLine);
-
-        local disenchant = AceGUI:Create("Button");
-        disenchant:SetWidth(125);
-        disenchant:SetText("Disenchant");
-        disenchant:SetCallback("OnClick", function(widget)
-            local currentItem = window:GetUserData("currentItem");
-            local itemLink = currentItem.itemLink;
-            if currentItem.multipleItems then
-                local count = currentItem.distributionCount;
-                itemLink = ("%s #%d"):format(itemLink, count + 1);
-            end
-            _G.StaticPopup_Show("ABGP_CONFIRM_TRASH", itemLink, nil, {
-                itemLink = currentItem.itemLink
-            });
-        end);
-        mainLine:AddChild(disenchant);
-        window:SetUserData("disenchantButton", disenchant);
-
-        local distrib = AceGUI:Create("Button");
-        distrib:SetWidth(125);
-        distrib:SetText("Distribute");
-        distrib:SetDisabled(true);
-        distrib:SetCallback("OnClick", function(widget)
-            local currentItem = window:GetUserData("currentItem");
-            local cost = currentItem.costCurrent;
-            local player = currentItem.selectedRequest.player;
-
-            local itemLink = currentItem.itemLink;
-            if currentItem.multipleItems then
-                local count = currentItem.distributionCount;
-                itemLink = ("%s #%d"):format(itemLink, count + 1);
-            end
-            local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
-
-            _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
-                itemLink = currentItem.itemLink,
-                player = player,
-                cost = cost
-            });
-        end);
-        mainLine:AddChild(distrib);
-        window:SetUserData("distributeButton", distrib);
-
-        local cost = AceGUI:Create("EditBox");
-        cost:SetWidth(75);
-        cost:SetCallback("OnEnterPressed", function(widget)
-            local currentItem = window:GetUserData("currentItem");
-            AceGUI:ClearFocus();
-            local text = widget:GetText();
-            if type(tonumber(text)) == "number" then
-                currentItem.costEdited = tonumber(text);
-            else
-                currentItem.costEdited = nil;
-            end
-            ProcessSelectedRequest();
-        end);
-        mainLine:AddChild(cost);
-        window:SetUserData("costEdit", cost);
-
-        local desc = AceGUI:Create("Label");
-        desc:SetWidth(50);
-        desc:SetText("Cost");
-        mainLine:AddChild(desc);
-
-        local multiple = AceGUI:Create("CheckBox");
-        multiple:SetWidth(100);
-        multiple:SetLabel("Multiple");
-        multiple:SetCallback("OnValueChanged", function(widget, value)
-            local currentItem = window:GetUserData("currentItem");
-            currentItem.multipleItems = value;
-        end);
-        mainLine:AddChild(multiple);
-        window:SetUserData("multipleItemsCheckbox", multiple);
-
-        local resetRolls = AceGUI:Create("Button");
-        resetRolls:SetWidth(125);
-        resetRolls:SetCallback("OnClick", function(widget)
-            local currentItem = window:GetUserData("currentItem");
-            if currentItem.rollsAllowed then
-                for _, request in ipairs(currentItem.requests) do
-                    request.roll = nil;
-                end
-                table.wipe(currentItem.rolls);
-            else
-                currentItem.rollsAllowed = true;
-            end
-            RebuildUI();
-        end);
-        mainLine:AddChild(resetRolls);
-        window:SetUserData("resetRollsButton", resetRolls);
-
-        local spacer = AceGUI:Create("Label");
-        mainLine:AddChild(spacer);
-
-        local done = AceGUI:Create("Button");
-        done:SetWidth(80);
-        done:SetText("Done");
-        done:SetCallback("OnClick", function(widget)
-            local currentItem = window:GetUserData("currentItem");
-            local itemLink = currentItem.itemLink;
-
-            _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, nil, {
-                itemLink = itemLink,
-            });
-        end);
-        mainLine:AddChild(done);
-
-        local spacer = AceGUI:Create("Label");
-        spacer:SetFullWidth(true);
-        spacer:SetText(" ");
-        tabGroup:AddChild(spacer);
-
-        local scrollContainer = AceGUI:Create("SimpleGroup");
-        scrollContainer:SetFullWidth(true);
-        scrollContainer:SetFullHeight(true);
-        scrollContainer:SetLayout("Flow");
-        tabGroup:AddChild(scrollContainer);
-
-        local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
-        local header = AceGUI:Create("SimpleGroup");
-        header:SetFullWidth(true);
-        header:SetLayout("Table");
-        header:SetUserData("table", { columns = columns.weights });
-        scrollContainer:AddChild(header);
-
-        for i = 1, #columns do
-            local desc = AceGUI:Create("Label");
-            desc:SetText(columns[i]);
-            desc:SetFontObject(_G.GameFontHighlight);
-            header:AddChild(desc);
-        end
-
-        local scroll = AceGUI:Create("ScrollFrame");
-        scroll:SetFullWidth(true);
-        scroll:SetFullHeight(true);
-        scroll:SetLayout("List");
-        scrollContainer:AddChild(scroll);
-        window:SetUserData("requestsContainer", scroll);
-
-        activeDistributionWindow = window;
-        window:SetUserData("activeItems", {});
-        window:SetUserData("tabs", {});
+        activeDistributionWindow = self:CreateDistribWindow();
     end
 
     AddActiveItem(data);
