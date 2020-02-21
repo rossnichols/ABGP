@@ -55,6 +55,7 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- player: string
     -- cost: number
+    -- roll: number
 
     ITEM_DISTRIBUTION_CHECK = CV("ABGP_ITEM_DISTRIBUTION_CHECK"),
     -- no payload

@@ -233,7 +233,11 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     if player == UnitName("player") then
         self:Notify("%s%s was awarded to you for %d GP!", itemLink, multiple, cost);
     else
-        self:Notify("%s%s was awarded to %s for %d GP.", itemLink, multiple, ABGP:ColorizeName(player), cost);
+        local roll = "";
+        if data.roll then
+            roll = (" with a roll of %d"):format(data.roll);
+        end
+        self:Notify("%s%s was awarded to %s for %d GP%s.", itemLink, multiple, ABGP:ColorizeName(player), cost, roll);
     end
 end
 

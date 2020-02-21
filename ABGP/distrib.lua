@@ -547,7 +547,8 @@ function ABGP:CreateDistribWindow()
         _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
             itemLink = currentItem.itemLink,
             player = player,
-            cost = cost
+            cost = cost,
+            roll = currentItem.selectedRequest.roll
         });
     end);
     mainLine:AddChild(distrib);
@@ -703,7 +704,8 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
             itemLink = data.itemLink,
             player = data.player,
-            cost = data.cost
+            cost = data.cost,
+            roll = data.roll
         }, "BROADCAST");
 
         local currentItem = activeItems[data.itemLink];
