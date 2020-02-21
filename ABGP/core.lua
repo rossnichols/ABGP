@@ -7,6 +7,7 @@ local UnitClass = UnitClass;
 local UnitGUID = UnitGUID;
 local GetClassColor = GetClassColor;
 local GuildRoster = GuildRoster;
+local SendSystemMessage = SendSystemMessage;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -130,7 +131,7 @@ end
 ABGP.Color = "|cFF94E4FF";
 ABGP.ColorTable = { 0.58, 0.89, 1, r = 0.58, g = 0.89, b = 1 };
 function ABGP:Notify(str, ...)
-    _G.DEFAULT_CHAT_FRAME:AddMessage(self:ColorizeText("ABGP") .. ": " .. tostring(str):format(...));
+    SendSystemMessage(("%s: %s"):format(self:ColorizeText("ABGP"), tostring(str):format(...)));
 end
 
 function ABGP:LogVerbose(str, ...)
