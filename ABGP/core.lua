@@ -62,6 +62,7 @@ function ABGP:OnInitialize()
     for k, v in pairs(options.priority) do options.prio[k] = v; end
     options.vc = { hidden = true };
     for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
+    options.vc.cmdHidden = nil;
 
     AceConfig:RegisterOptionsTable(ABGP:ColorizeText(addonText), {
         type = "group",
