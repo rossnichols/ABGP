@@ -155,35 +155,30 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     };
     table.insert(sortedItems, activeItems[itemLink]);
 
-    local msg;
-    local value = data.value;
-    if value then
-        local notes = "";
-        if value.notes then
-            notes = ", Notes: " .. value.notes
-        end
-        if value.gp == 0 then
-            msg = ("Now distributing %s! No GP cost, Priority: %s%s."):format(
-                itemLink, table.concat(value.priority, ", "), notes);
-        else
-            msg = ("Now distributing %s! GP cost: %d, Priority: %s%s."):format(
-                itemLink, value.gp, table.concat(value.priority, ", "), notes);
-        end
-    else
-        msg = ("Now distributing %s! No GP cost."):format(itemLink);
-    end
-
-    _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, ABGP.ColorTable);
+    local msg = ("%s: %s is open for distribution!"):format(self:ColorizeText("ABGP"), itemLink);
+    _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, { r = 1, g = 1, b = 1 });
     PlaySound(_G.SOUNDKIT.RAID_WARNING);
     FlashClientIcon();
 
-    local prompt = "";
     local popup = GetStaticPopupType(itemLink);
     if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
         ShowStaticPopup(itemLink, popup);
     end
 
-    self:Notify("Item distribution opened for %s!", itemLink);
+    local gpCost, priority, notes = "No GP cost", "", "";
+    local value = data.value;
+    if value then
+        if value.gp ~= 0 then
+            gpCost = ("GP cost: %d"):format(value.gp);
+        end
+        if value.priority then
+            priority = (", Priority: %s"):format(table.concat(value.priority, ", "));
+        end
+        if value.notes then
+            notes = (". Notes: %s"):format(value.notes);
+        end
+    end
+    self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
 
     if #sortedItems == 1 then
         self:ShowItemRequests(true);
