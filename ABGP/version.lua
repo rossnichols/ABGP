@@ -213,12 +213,8 @@ function ABGP:VersionCheckCallback()
     versionCheckData = nil;
 end
 
-function ABGP:InitVersionCheck()
-    local f = CreateFrame("FRAME");
-    f:RegisterEvent("GROUP_JOINED");
-    f:SetScript("OnEvent", function()
-        self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "BROADCAST");
-    end);
+function ABGP:VersionOnGroupJoined()
+    self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "BROADCAST");
 end
 
 function ABGP:VersionOnGuildRosterUpdate()

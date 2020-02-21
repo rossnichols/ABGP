@@ -126,6 +126,10 @@ local function PopulateUI()
     end
 end
 
+function ABGP:RequestOnGroupJoined()
+    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
+end
+
 function ABGP:RequestOnItemRolled(data, distribution, sender)
     self:Notify("You rolled %d on %s.", data.roll, data.itemLink);
 end

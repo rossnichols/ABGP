@@ -80,7 +80,6 @@ function ABGP:OnInitialize()
     self:CheckForDataUpdates();
     self:RefreshActivePlayers();
     self:RefreshItemValues();
-    self:InitVersionCheck();
 
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
@@ -109,6 +108,10 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED, function(self, event, data, distribution, sender)
         self:RequestOnDistTrashed(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK, function(self, event, data, distribution, sender)
+        self:DistribOnCheck(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.VERSION_REQUEST, function(self, event, data, distribution, sender)
@@ -326,6 +329,7 @@ rollRegex = rollRegex:gsub("%%d", "(%%d+)");
 local f = CreateFrame("Frame");
 f:RegisterEvent("GUILD_ROSTER_UPDATE");
 f:RegisterEvent("CHAT_MSG_SYSTEM");
+f:RegisterEvent("GROUP_JOINED");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:VersionOnGuildRosterUpdate();
@@ -337,6 +341,9 @@ f:SetScript("OnEvent", function(self, event, ...)
             roll = tonumber(roll);
             ABGP:DistribOnRoll(sender, roll);
         end
+    elseif event == "GROUP_JOINED" then
+        ABGP:VersionOnGroupJoined();
+        ABGP:RequestOnGroupJoined();
     end
 end);
 

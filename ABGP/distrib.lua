@@ -260,18 +260,16 @@ function ABGP:DistribOnRoll(sender, roll)
     end
 end
 
-local function AddActiveItem(itemLink, requestType)
+local function AddActiveItem(data)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
-
-    local itemName = ABGP:GetItemName(itemLink);
-    local value = ABGP:GetItemValue(itemName);
+    local itemLink = data.itemLink;
 
     local newItem = {
         itemLink = itemLink,
         requests = {},
         rolls = {},
-        costBase = value and value.gp or 0,
+        costBase = data.value and data.value.gp or 0,
         costCurrent = nil,
         selectedRequest = nil,
         selectedElt = nil,
@@ -279,7 +277,8 @@ local function AddActiveItem(itemLink, requestType)
         closeConfirmed = false,
         multipleItems = false,
         distributionCount = 0,
-        rollsAllowed = (requestType == ABGP.RequestTypes.ROLL),
+        rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
+        data = data,
     };
 
     activeItems[itemLink] = newItem;
@@ -321,6 +320,16 @@ local function RemoveActiveItem(itemLink)
                 window:Hide();
             end
         end
+    end
+end
+
+function ABGP:DistribOnCheck(data, distribution, sender)
+    local window = activeDistributionWindow;
+    if not window then return; end
+
+    local activeItems = window:GetUserData("activeItems");
+    for _, item in pairs(activeItems) do
+        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, item.data, "WHISPER", sender);
     end
 end
 
@@ -636,7 +645,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         window:SetUserData("tabs", {});
     end
 
-    AddActiveItem(data.itemLink, data.requestType);
+    AddActiveItem(data);
 
     if self.Debug then
         local testBase = {
