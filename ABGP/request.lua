@@ -126,6 +126,10 @@ local function PopulateUI()
     end
 end
 
+function ABGP:GetActiveItem(itemLink)
+    return activeItems[itemLink];
+end
+
 function ABGP:RequestOnGroupJoined()
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
 end
@@ -136,6 +140,14 @@ end
 
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
+    if activeItems[itemLink] then
+        if sender ~= activeItems[itemLink].sender then
+            self:Error("Duplicate distribution for %s! (%s new, %s existing)",
+                itemLink, ABGP:ColorizeName(sender), ABGP:ColorizeName(activeItems[itemLink].sender));
+        end
+        return;
+    end
+
     activeItems[itemLink] = {
         itemLink = itemLink,
         sender = sender,

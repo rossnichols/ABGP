@@ -341,6 +341,7 @@ local f = CreateFrame("Frame");
 f:RegisterEvent("GUILD_ROSTER_UPDATE");
 f:RegisterEvent("CHAT_MSG_SYSTEM");
 f:RegisterEvent("GROUP_JOINED");
+f:RegisterEvent("PLAYER_LEAVING_WORLD");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:VersionOnGuildRosterUpdate();
@@ -355,6 +356,8 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif event == "GROUP_JOINED" then
         ABGP:VersionOnGroupJoined();
         ABGP:RequestOnGroupJoined();
+    elseif event == "PLAYER_LEAVING_WORLD" then
+        ABGP:DistribOnLeavingWorld();
     end
 end);
 

@@ -343,7 +343,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
 
     local activeItems = window:GetUserData("activeItems");
     if not activeItems[itemLink] then
-        ABGP:Error("%s requested %s but it's not being distributed!", sender, itemLink);
+        ABGP:Error("%s requested %s but it's not being distributed!", ABGP:ColorizeName(sender), itemLink);
         return;
     end
 
@@ -394,16 +394,14 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
 
     local activeItems = activeDistributionWindow:GetUserData("activeItems");
     if not activeItems[itemLink] then
-        ABGP:Error("%s passed on %s but it's not being distributed!", sender, itemLink);
+        ABGP:Error("%s passed on %s but it's not being distributed!", ABGP:ColorizeName(sender), itemLink);
         return;
     end
 
     RemoveRequest(sender, itemLink);
 end
 
-function ABGP:DistribOnReloadUI()
-    -- If distribution is open when reloading UI,
-    -- hide the window so it generates the appropriate comms.
+local function EndDistribution()
     if not activeDistributionWindow then return; end
     local window = activeDistributionWindow;
 
@@ -413,10 +411,17 @@ function ABGP:DistribOnReloadUI()
     window:Hide();
 end
 
-function ABGP:ShowDistrib(itemLink)
-    local itemName = ABGP:GetItemName(itemLink);
-    local value = ABGP:GetItemValue(itemName);
+function ABGP:DistribOnLeavingWorld()
+    EndDistribution();
+end
 
+function ABGP:DistribOnReloadUI()
+    -- If distribution is open when reloading UI,
+    -- hide the window so it generates the appropriate comms.
+    EndDistribution();
+end
+
+function ABGP:ShowDistrib(itemLink)
     if activeDistributionWindow then
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
@@ -429,6 +434,13 @@ function ABGP:ShowDistrib(itemLink)
         end
     end
 
+    local existing = self:GetActiveItem(itemLink);
+    if existing then
+        self:Error("%s is already being distributed by %s!", itemLink, ABGP:ColorizeName(existing.sender));
+        return;
+    end
+
+    local value = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
     local requestType = (value and value.gp ~= 0)
         and self.RequestTypes.MS_OS
         or self.RequestTypes.ROLL;
