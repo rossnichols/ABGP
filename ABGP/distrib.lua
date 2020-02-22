@@ -33,6 +33,29 @@ local function ProcessSelectedRequest()
     window:GetUserData("costEdit"):SetText(currentItem.costCurrent);
 end
 
+local function AwardItem()
+    if not activeDistributionWindow then return; end
+    local window = activeDistributionWindow;
+
+    local currentItem = window:GetUserData("currentItem");
+    local cost = currentItem.costCurrent;
+    local player = currentItem.selectedRequest.player;
+
+    local itemLink = currentItem.itemLink;
+    if currentItem.multipleItems then
+        local count = currentItem.distributionCount;
+        itemLink = ("%s #%d"):format(itemLink, count + 1);
+    end
+    local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
+
+    _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
+        itemLink = currentItem.itemLink,
+        player = player,
+        cost = cost,
+        roll = currentItem.selectedRequest.roll
+    });
+end
+
 local function RebuildUI()
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
@@ -95,23 +118,36 @@ local function RebuildUI()
         elt:SetData(request);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
-        elt:SetCallback("OnClick", function(elt)
+        elt:SetCallback("OnClick", function(elt, event, button)
             local currentItem = window:GetUserData("currentItem");
             local oldElt = currentItem.selectedElt;
             if oldElt then
                 oldElt.frame:RequestHighlight(false);
             end
 
+            local showMenu = false;
+            local isRight = (button == "RightButton");
             local oldRequest = currentItem.selectedRequest;
-            if not oldRequest or oldRequest.player ~= elt.data.player then
+            if isRight or not oldRequest or oldRequest.player ~= elt.data.player then
                 currentItem.selectedRequest = elt.data;
                 currentItem.selectedElt = elt;
                 elt.frame:RequestHighlight(true);
+                showMenu = true;
             else
                 currentItem.selectedRequest = nil;
                 currentItem.selectedElt = nil;
             end
+
             ProcessSelectedRequest();
+
+            if isRight and showMenu then
+                ABGP:ShowContextMenu({
+                    { text = ("Award for %d GP"):format(currentItem.costCurrent), func = AwardItem },
+                    { text = "Close" },
+                });
+            else
+                ABGP:HideContextMenu();
+            end
         end);
 
         requestsContainer:AddChild(elt);
@@ -155,6 +191,8 @@ local function RebuildUI()
     _G.ItemRefTooltip:SetHyperlink(currentItem.itemLink);
     _G.ItemRefTooltip:SetFrameStrata("HIGH");
     _G.ItemRefTooltip:Show();
+
+    ABGP:HideContextMenu();
 end
 
 local function RemoveRequest(sender, itemLink)
@@ -532,25 +570,7 @@ function ABGP:CreateDistribWindow()
     distrib:SetWidth(125);
     distrib:SetText("Distribute");
     distrib:SetDisabled(true);
-    distrib:SetCallback("OnClick", function(widget)
-        local currentItem = window:GetUserData("currentItem");
-        local cost = currentItem.costCurrent;
-        local player = currentItem.selectedRequest.player;
-
-        local itemLink = currentItem.itemLink;
-        if currentItem.multipleItems then
-            local count = currentItem.distributionCount;
-            itemLink = ("%s #%d"):format(itemLink, count + 1);
-        end
-        local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
-
-        _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
-            itemLink = currentItem.itemLink,
-            player = player,
-            cost = cost,
-            roll = currentItem.selectedRequest.roll
-        });
-    end);
+    distrib:SetCallback("OnClick", AwardItem);
     mainLine:AddChild(distrib);
     window:SetUserData("distributeButton", distrib);
 

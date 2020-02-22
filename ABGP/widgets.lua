@@ -10,6 +10,7 @@ local function CreateElement(frame, anchor, template)
     local elt = CreateFrame("Button", nil, frame, template);
     elt:SetHeight(frame:GetHeight());
     elt:EnableMouse(true);
+    elt:RegisterForClicks("LeftButtonUp", "RightButtonUp");
     elt:SetHyperlinksEnabled(true);
     elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
         _G.ShowUIPanel(_G.GameTooltip);

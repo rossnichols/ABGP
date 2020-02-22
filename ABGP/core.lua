@@ -10,6 +10,9 @@ local GetClassColor = GetClassColor;
 local GuildRoster = GuildRoster;
 local SendSystemMessage = SendSystemMessage;
 local UnitAffectingCombat = UnitAffectingCombat;
+local EasyMenu = EasyMenu;
+local ToggleDropDownMenu = ToggleDropDownMenu;
+local CreateFrame = CreateFrame;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -402,4 +405,20 @@ function ABGP:EndWindowManagement(window)
     saved.height = window.frame:GetHeight();
     window.frame:SetMinResize(management.oldMinW, management.oldMinH);
     window.frame:SetMaxResize(management.oldMaxW, management.oldMaxH);
+end
+
+
+-- 
+-- Context Menu support
+--
+
+local contextFrame = CreateFrame("Frame", "ABGPContextMenu", UIParent, "UIDropDownMenuTemplate");
+function ABGP:ShowContextMenu(context)
+    EasyMenu(context, contextFrame, "cursor", 3, -3, "MENU");
+end
+
+function ABGP:HideContextMenu()
+    if _G.UIDROPDOWNMENU_OPEN_MENU == contextFrame then
+        ToggleDropDownMenu(nil, nil, contextFrame);
+    end
 end
