@@ -21,6 +21,13 @@ local max = max;
 local activeDistributionWindow;
 local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
 
+local function CalculateCost(request)
+    local window = activeDistributionWindow;
+    local currentItem = window:GetUserData("currentItem");
+    local costBase = (request and request.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
+    return currentItem.costEdited or costBase;
+end
+
 local function ProcessSelectedRequest()
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
@@ -28,18 +35,18 @@ local function ProcessSelectedRequest()
 
     window:GetUserData("disenchantButton"):SetDisabled(selected ~= nil);
     window:GetUserData("distributeButton"):SetDisabled(selected == nil);
-    local costBaseForSelection = (selected and selected.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
-    currentItem.costCurrent = currentItem.costEdited or costBaseForSelection;
-    window:GetUserData("costEdit"):SetText(currentItem.costCurrent);
+
+    window:GetUserData("costEdit"):SetText(CalculateCost(selected));
 end
 
-local function AwardItem()
+local function AwardItem(request)
     if not activeDistributionWindow then return; end
     local window = activeDistributionWindow;
-
     local currentItem = window:GetUserData("currentItem");
-    local cost = currentItem.costCurrent;
-    local player = currentItem.selectedRequest.player;
+    request = request or currentItem.selectedRequest;
+    
+    local player = request.player;
+    local cost = CalculateCost(request);
 
     local itemLink = currentItem.itemLink;
     if currentItem.multipleItems then
@@ -52,7 +59,7 @@ local function AwardItem()
         itemLink = currentItem.itemLink,
         player = player,
         cost = cost,
-        roll = currentItem.selectedRequest.roll
+        roll = request.roll
     });
 end
 
@@ -119,33 +126,37 @@ local function RebuildUI()
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt, event, button)
-            local currentItem = window:GetUserData("currentItem");
-            local oldElt = currentItem.selectedElt;
-            if oldElt then
-                oldElt.frame:RequestHighlight(false);
-            end
-
-            local showMenu = false;
-            local isRight = (button == "RightButton");
-            local oldRequest = currentItem.selectedRequest;
-            if isRight or not oldRequest or oldRequest.player ~= elt.data.player then
-                currentItem.selectedRequest = elt.data;
-                currentItem.selectedElt = elt;
-                elt.frame:RequestHighlight(true);
-                showMenu = true;
-            else
-                currentItem.selectedRequest = nil;
-                currentItem.selectedElt = nil;
-            end
-
-            ProcessSelectedRequest();
-
-            if isRight and showMenu then
+            if button == "RightButton" then
+                local cost = CalculateCost(elt.data);
                 ABGP:ShowContextMenu({
-                    { text = ("Award for %d GP"):format(currentItem.costCurrent), func = AwardItem },
-                    { text = "Close" },
+                    {
+                        text = ("Award for %d GP"):format(cost),
+                        func = function(self, request)
+                            AwardItem(request);
+                        end,
+                        arg1 = elt.data,
+                        notCheckable = true
+                    },
+                    { text = "Cancel", notCheckable = true },
                 });
             else
+                local currentItem = window:GetUserData("currentItem");
+                local oldElt = currentItem.selectedElt;
+                if oldElt then
+                    oldElt.frame:RequestHighlight(false);
+                end
+
+                local oldRequest = currentItem.selectedRequest;
+                if not oldRequest or oldRequest.player ~= elt.data.player then
+                    currentItem.selectedRequest = elt.data;
+                    currentItem.selectedElt = elt;
+                    elt.frame:RequestHighlight(true);
+                else
+                    currentItem.selectedRequest = nil;
+                    currentItem.selectedElt = nil;
+                end
+    
+                ProcessSelectedRequest();
                 ABGP:HideContextMenu();
             end
         end);
@@ -308,7 +319,6 @@ local function AddActiveItem(data)
         requests = {},
         rolls = {},
         costBase = data.value and data.value.gp or 0,
-        costCurrent = nil,
         selectedRequest = nil,
         selectedElt = nil,
         costEdited = nil,
@@ -570,7 +580,7 @@ function ABGP:CreateDistribWindow()
     distrib:SetWidth(125);
     distrib:SetText("Distribute");
     distrib:SetDisabled(true);
-    distrib:SetCallback("OnClick", AwardItem);
+    distrib:SetCallback("OnClick", function() AwardItem(); end);
     mainLine:AddChild(distrib);
     window:SetUserData("distributeButton", distrib);
 
@@ -721,18 +731,20 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
 
+        local currentItem = activeItems[data.itemLink];
+        currentItem.distributionCount = currentItem.distributionCount + 1;
+
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
             itemLink = data.itemLink,
             player = data.player,
             cost = data.cost,
-            roll = data.roll
+            roll = data.roll,
+            count = currentItem.distributionCount
         }, "BROADCAST");
 
-        local currentItem = activeItems[data.itemLink];
         currentItem.closeConfirmed = true;
         if currentItem.multipleItems then
             window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
-            currentItem.distributionCount = currentItem.distributionCount + 1;
         else
             RemoveActiveItem(data.itemLink);
         end
@@ -752,15 +764,17 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
 
+        local currentItem = activeItems[data.itemLink];
+        currentItem.distributionCount = currentItem.distributionCount + 1;
+
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED, {
-            itemLink = data.itemLink
+            itemLink = data.itemLink,
+            count = currentItem.distributionCount
         }, "BROADCAST");
 
-        local currentItem = activeItems[data.itemLink];
         currentItem.closeConfirmed = true;
         if currentItem.multipleItems then
             window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
-            currentItem.distributionCount = currentItem.distributionCount + 1;
         else
             RemoveActiveItem(data.itemLink);
         end

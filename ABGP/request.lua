@@ -221,13 +221,11 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     local cost = data.cost;
 
     local multiple = "";
+    if data.count > 1 then
+        multiple = (" #%d"):format(data.count);
+    end
     if activeItems[itemLink] then
-        if activeItems[itemLink].notified then
-            activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
-            multiple = (" #%d"):format(activeItems[itemLink].notified);
-        else
-            activeItems[itemLink].notified = 1;
-        end
+        activeItems[itemLink].notified = true;
     end
 
     if player == UnitName("player") then
@@ -245,13 +243,11 @@ function ABGP:RequestOnDistTrashed(data, distribution, sender)
     local itemLink = data.itemLink;
 
     local multiple = "";
+    if data.count > 1 then
+        multiple = (" #%d"):format(data.count);
+    end
     if activeItems[itemLink] then
-        if activeItems[itemLink].notified then
-            activeItems[itemLink].notified = activeItems[itemLink].notified + 1;
-            multiple = (" #%d"):format(activeItems[itemLink].notified);
-        else
-            activeItems[itemLink].notified = 1;
-        end
+        activeItems[itemLink].notified = true;
     end
 
     self:Notify("%s%s will be disenchanted.", itemLink, multiple);
