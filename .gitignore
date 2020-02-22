@@ -1,2 +1,3 @@
 ABGP/internal.xml
 ABGP/_*.lua
+FindGlobals/*

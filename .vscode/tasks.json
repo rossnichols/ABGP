@@ -6,7 +6,7 @@
         {
             "label": "FindGlobals",
             "type": "shell",
-            "command": "C:\\Users\\Ross\\source\\lua-wow\\luac-wow.exe -p -l '${file}' | C:\\Users\\Ross\\source\\lua-wow\\lua-wow.exe 'C:\\Users\\Ross\\source\\lua-wow\\globals.lua' '${file}'",
+            "command": ".\\FindGlobals\\luac-wow.exe -p -l '${file}' | .\\FindGlobals\\lua-wow.exe '.\\FindGlobals\\globals.lua' '${file}'",
             "group": {
                 "kind": "build",
                 "isDefault": true
