@@ -27,7 +27,7 @@ local function PopulateUI(rebuild)
 end
 
 local function DrawPriority(container, rebuild)
-    local widths = { 110, 100, 70, 70, 70 };
+    local widths = { 120, 110, 75, 75, 75 };
 
     if rebuild then
         local classSelector = AceGUI:Create("Dropdown");
@@ -178,7 +178,7 @@ local function DrawPriority(container, rebuild)
 end
 
 local function DrawItemHistory(container, rebuild)
-    local widths = { 1.0, 110, 70, 100 };
+    local widths = { 120, 80, 45, 1.0 };
     if rebuild then
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
@@ -186,7 +186,7 @@ local function DrawItemHistory(container, rebuild)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Item", "Player", "GP", "Date", weights = { unpack(widths) } };
+        local columns = { "Player", "Date", "GP", "Item", weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -215,8 +215,11 @@ local function DrawItemHistory(container, rebuild)
     history:ReleaseChildren();
     local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
     for i, data in ipairs(gpHistory) do
-        local elt = AceGUI:Create("Label");
-        elt:SetText(data.itemLink or data.item);
+        local elt = AceGUI:Create("ABGP_ItemHistory");
+        elt:SetFullWidth(true);
+        elt:SetData(data);
+        elt:SetWidths(widths);
+        elt:ShowBackground((i % 2) == 0);
         history:AddChild(elt);
     end
 end
@@ -230,10 +233,10 @@ function ABGP:CreateMainWindow()
     window:SetTitle(self:ColorizeText("ABGP"));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
-        version = math.random(),
-        defaultWidth = 700,
-        minWidth = 600,
-        maxWidth = 800,
+        version = 1,
+        defaultWidth = 600,
+        minWidth = 550,
+        maxWidth = 700,
         defaultHeight = 500,
         minHeight = 300,
         maxHeight = 700

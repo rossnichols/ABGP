@@ -315,3 +315,101 @@ do
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
 end
+
+do
+    local Type, Version = "ABGP_ItemHistory", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.player.text:SetText("");
+            self.gp.text:SetText("");
+            self.date.text:SetText("");
+            self.itemLink.text:SetText("");
+
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
+
+            self.background:Hide();
+        end,
+
+        ["SetData"] = function(self, data)
+            self.data = data;
+
+            self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
+            self.gp.text:SetText(data.gp);
+            self.date.text:SetText(data.date);
+            self.itemLink.text:SetText(data.itemLink);
+        end,
+
+        ["SetWidths"] = function(self, widths)
+            self.player:SetWidth(widths[1] or 0);
+            self.date:SetWidth(widths[2] or 0);
+            self.gp:SetWidth(widths[3] or 0);
+        end,
+
+        ["ShowBackground"] = function(self, show)
+            self.background[show and "Show" or "Hide"](self.background);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button");
+        frame:SetHeight(24);
+        frame:Hide();
+
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
+
+        local background = frame:CreateTexture(nil, "BACKGROUND");
+        background:SetAllPoints();
+        background:SetColorTexture(0, 0, 0, 0.5);
+
+        local player = CreateElement(frame);
+        player.text = CreateFontString(player);
+
+        local date = CreateElement(frame, player);
+        date.text = CreateFontString(date);
+
+        local gp = CreateElement(frame, date);
+        gp.text = CreateFontString(gp);
+
+        local itemLink = CreateElement(frame, gp);
+        itemLink.text = CreateFontString(itemLink);
+        itemLink:SetPoint("TOPRIGHT", frame);
+
+        -- create widget
+        local widget = {
+            player = player,
+            gp = gp,
+            date = date,
+            itemLink = itemLink,
+
+            background = background,
+
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end

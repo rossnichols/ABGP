@@ -170,16 +170,25 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
-    if not value then return; end
+	if not value then return; end
+
+	local class;
+	local epgp = ABGP:GetActivePlayer(data.player);
+	if epgp and epgp[value.phase] then
+		class = epgp[value.phase].class;
+	end
 
     local d = date("%m/%d/%y", time()); -- https://strftime.org/
 
     local history = _G.ABGP_Data[value.phase].gpHistory;
     table.insert(history, 1, {
 		itemLink = itemLink,
-        player = data.player,
+		player = data.player,
+		class = class,
         item = itemName,
         gp = data.cost,
         date = d,
-    });
+	});
+
+	self.CurrentPhase = value.phase;
 end
