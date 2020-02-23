@@ -16,19 +16,21 @@ local activeWindow;
 local widths = { 110, 100, 70, 70, 70 };
 local ignoredClasses = {};
 
-local function PopulateUI()
+local function RebuildUI()
     if not activeWindow then return; end
     local container = activeWindow:GetUserData("priorities");
     container:ReleaseChildren();
 
+    local count = 0;
     local priority = _G.ABGP_Data[ABGP.CurrentPhase].priority;
     for i, data in ipairs(priority) do
         if not ignoredClasses[data.class] then
+            count = count + 1;
             local elt = AceGUI:Create("ABGP_Player");
             elt:SetFullWidth(true);
             elt:SetData(data);
             elt:SetWidths(widths);
-            elt:ShowBackground((i % 2) == 0);
+            elt:ShowBackground((count % 2) == 0);
             elt:SetHeight(20);
             if data.player == UnitName("player") then
                 elt.frame:RequestHighlight(true);
@@ -40,7 +42,7 @@ local function PopulateUI()
 end
 
 function ABGP:RefreshUI()
-    PopulateUI();
+    RebuildUI();
 end
 
 function ABGP:CreateMainWindow()
@@ -68,15 +70,27 @@ function ABGP:CreateMainWindow()
         [ABGP.Phases.p1] = "Phase 1/2",
         [ABGP.Phases.p3] = "Phase 3",
     };
+
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
-    phaseSelector:SetList(phases);
+    phaseSelector:SetList(phases, { ABGP.Phases.p1, ABGP.Phases.p3 });
     phaseSelector:SetValue(ABGP.CurrentPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
         ABGP.CurrentPhase = value;
-        PopulateUI();
+        RebuildUI();
     end);
     window:AddChild(phaseSelector);
+
+    local tabGroup = AceGUI:Create("TabGroup");
+    tabGroup:SetLayout("Flow");
+    tabGroup:SetFullWidth(true);
+    tabGroup:SetFullHeight(true);
+    tabGroup:SetTabs({ { value = "priority", text = "Priority" } });
+    tabGroup:SelectTab("priority");
+    tabGroup:SetCallback("OnGroupSelected", function(container, event, itemLink)
+        RebuildUI();
+    end);
+    window:AddChild(tabGroup);
 
     local classSelector = AceGUI:Create("Dropdown");
     classSelector:SetWidth(110);
@@ -165,18 +179,18 @@ function ABGP:CreateMainWindow()
         widget:SetCallback("OnValueChanged", nil);
         updateCheckboxes(widget);
         widget:SetCallback("OnValueChanged", valueChangedCallback);
-        PopulateUI();
+        RebuildUI();
     end
     updateCheckboxes(classSelector);
     classSelector:SetCallback("OnValueChanged", valueChangedCallback);
     classSelector:SetText("Classes");
-    window:AddChild(classSelector);
+    tabGroup:AddChild(classSelector);
 
-    local scrollContainer = AceGUI:Create("InlineGroup");
+    local scrollContainer = AceGUI:Create("SimpleGroup");
     scrollContainer:SetFullWidth(true);
     scrollContainer:SetFullHeight(true);
     scrollContainer:SetLayout("Flow");
-    window:AddChild(scrollContainer);
+    tabGroup:AddChild(scrollContainer);
 
     local columns = { "Player", "Rank", "EP", "GP", "Priority", weights = { unpack(widths) } };
     local header = AceGUI:Create("SimpleGroup");
@@ -187,8 +201,11 @@ function ABGP:CreateMainWindow()
 
     for i = 1, #columns do
         local desc = AceGUI:Create("Label");
-        desc:SetText(columns[i] .. "\n");
+        desc:SetText(columns[i]);
         desc:SetFontObject(_G.GameFontHighlight);
+        -- hack to add padding above the label
+        desc.imageshown = true;
+        desc:SetImageSize(1, 5);
         header:AddChild(desc);
     end
 
@@ -206,5 +223,5 @@ function ABGP:ShowMainWindow()
     if activeWindow then return; end
 
     activeWindow = self:CreateMainWindow();
-    PopulateUI();
+    RebuildUI();
 end
