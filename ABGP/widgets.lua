@@ -110,7 +110,7 @@ do
                 [ABGP.RequestTypes.OS] = "OS",
                 [ABGP.RequestTypes.ROLL] = "",
             };
-            self.requestType.text:SetText(data.requestType and "   " .. requestTypes[data.requestType] or "");
+            self.requestType.text:SetText(data.requestType and requestTypes[data.requestType] or "");
             local specialFont = (data.requestType and data.requestType == ABGP.RequestTypes.MS) and "ABGPHighlight" or "GameFontHighlight";
             self.requestType.text:SetFontObject(specialFont);
 
@@ -186,9 +186,12 @@ do
 
         local requestType = CreateElement(frame, equipped);
         requestType.text = CreateFontString(requestType);
+        requestType.text:SetJustifyH("CENTER");
 
         local roll = CreateElement(frame, requestType);
         roll.text = CreateFontString(roll);
+        roll.text:SetJustifyH("RIGHT");
+        roll.text:SetPoint("RIGHT", roll, -10, 1);
 
         local notes = CreateElement(frame, roll);
         notes:SetPoint("TOPRIGHT", frame);
@@ -360,7 +363,7 @@ do
     -------------------------------------------------------------------------------]]
     local function Constructor()
         local frame = CreateFrame("Button");
-        frame:SetHeight(24);
+        frame:SetHeight(20);
         frame:Hide();
 
         frame.highlightRequests = 0;
@@ -387,6 +390,9 @@ do
 
         local gp = CreateElement(frame, date);
         gp.text = CreateFontString(gp);
+        gp.text:SetJustifyH("RIGHT");
+        gp.text:SetPoint("LEFT", gp, 2, 1);
+        gp.text:SetPoint("RIGHT", gp, -10, 1);
 
         local itemLink = CreateElement(frame, gp);
         itemLink.text = CreateFontString(itemLink);
@@ -400,6 +406,77 @@ do
             itemLink = itemLink,
 
             background = background,
+
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_Header", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.text:SetText("");
+            self.frame:SetWidth(100);
+            self.frame:SetHeight(16);
+            self.text:SetJustifyH("LEFT");
+            self.text:SetJustifyV("CENTER");
+            self.text:SetPoint("LEFT", self.frame, 2, 1);
+            self.text:SetPoint("RIGHT", self.frame, -2, 1);
+        end,
+
+        ["SetText"] = function(self, text)
+            self.text:SetText(text);
+        end,
+
+        ["SetWidth"] = function(self, width)
+            self.frame:SetWidth(width);
+        end,
+
+        ["SetHeight"] = function(self, height)
+            self.frame:SetHeight(height);
+        end,
+
+        ["SetJustifyH"] = function(self, justify)
+            self.text:SetJustifyH(justify);
+        end,
+
+        ["SetJustifyV"] = function(self, justify)
+            self.text:SetJustifyV(justify);
+        end,
+
+        ["SetPadding"] = function(self, left, right)
+            self.text:SetPoint("LEFT", self.frame, left, 1);
+            self.text:SetPoint("RIGHT", self.frame, right, 1);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button");
+        frame:SetHeight(16);
+        frame:Hide();
+
+        local text = CreateFontString(frame);
+        text:SetFontObject(_G.GameFontHighlight);
+
+        -- create widget
+        local widget = {
+            text = text,
 
             frame = frame,
             type  = Type

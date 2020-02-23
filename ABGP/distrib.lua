@@ -44,7 +44,7 @@ local function AwardItem(request)
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
     request = request or currentItem.selectedRequest;
-    
+
     local player = request.player;
     local cost = CalculateCost(request);
 
@@ -155,7 +155,7 @@ local function RebuildUI()
                     currentItem.selectedRequest = nil;
                     currentItem.selectedElt = nil;
                 end
-    
+
                 ProcessSelectedRequest();
                 ABGP:HideContextMenu();
             end
@@ -506,7 +506,7 @@ function ABGP:CreateDistribWindow()
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "distrib", {
         version = 1,
-        defaultWidth = 975,
+        defaultWidth = 950,
         minWidth = 800,
         maxWidth = 1100,
         defaultHeight = 500,
@@ -667,9 +667,8 @@ function ABGP:CreateDistribWindow()
     scrollContainer:AddChild(header);
 
     for i = 1, #columns do
-        local desc = AceGUI:Create("Label");
+        local desc = AceGUI:Create("ABGP_Header");
         desc:SetText(columns[i]);
-        desc:SetFontObject(_G.GameFontHighlight);
         header:AddChild(desc);
     end
 

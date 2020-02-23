@@ -138,12 +138,8 @@ local function DrawPriority(container, rebuild)
         scrollContainer:AddChild(header);
 
         for i = 1, #columns do
-            local desc = AceGUI:Create("Label");
+            local desc = AceGUI:Create("ABGP_Header");
             desc:SetText(columns[i]);
-            desc:SetFontObject(_G.GameFontHighlight);
-            -- hack to add padding above the label
-            desc.imageshown = true;
-            desc:SetImageSize(1, 5);
             header:AddChild(desc);
         end
 
@@ -178,7 +174,7 @@ local function DrawPriority(container, rebuild)
 end
 
 local function DrawItemHistory(container, rebuild)
-    local widths = { 120, 80, 45, 1.0 };
+    local widths = { 120, 70, 50, 1.0 };
     if rebuild then
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
@@ -194,12 +190,12 @@ local function DrawItemHistory(container, rebuild)
         scrollContainer:AddChild(header);
 
         for i = 1, #columns do
-            local desc = AceGUI:Create("Label");
+            local desc = AceGUI:Create("ABGP_Header");
             desc:SetText(columns[i]);
-            desc:SetFontObject(_G.GameFontHighlight);
-            -- hack to add padding above the label
-            desc.imageshown = true;
-            desc:SetImageSize(1, 5);
+            if columns[i] == "GP" then
+                desc:SetJustifyH("RIGHT");
+                desc:SetPadding(2, -10);
+            end
             header:AddChild(desc);
         end
 
