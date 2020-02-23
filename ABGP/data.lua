@@ -176,6 +176,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
 
     local history = _G.ABGP_Data[value.phase].gpHistory;
     table.insert(history, 1, {
+		itemLink = itemLink,
         player = data.player,
         item = itemName,
         gp = data.cost,

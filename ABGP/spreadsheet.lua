@@ -16,6 +16,7 @@ local epMapping = {
     ["Action Taken"] = "action",
     ["Character"] = "player",
     ["Date"] = "date",
+    ["Notes"] = false,
 };
 local epColumns = {
     weights = { 100, 75, 50, 1 },
@@ -30,6 +31,7 @@ local gpMapping = {
     ["Item"] = "item",
     ["Character"] = "player",
     ["Date Won"] = "date",
+    ["Boss"] = false,
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
