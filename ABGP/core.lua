@@ -8,7 +8,7 @@ local UnitClass = UnitClass;
 local UnitGUID = UnitGUID;
 local GetClassColor = GetClassColor;
 local GuildRoster = GuildRoster;
-local SendSystemMessage = SendSystemMessage;
+local GetChatWindowInfo = GetChatWindowInfo;
 local UnitAffectingCombat = UnitAffectingCombat;
 local EasyMenu = EasyMenu;
 local ToggleDropDownMenu = ToggleDropDownMenu;
@@ -144,10 +144,27 @@ function ABGP:OnInitialize()
     end
 end
 
+local function GetSystemFrame()
+    for i = 1, _G.NUM_CHAT_WINDOWS do
+        local shown = select(7, GetChatWindowInfo(i));
+        if shown then
+            local frame = _G["ChatFrame" .. i];
+            for _, type in ipairs(frame.messageTypeList) do
+                if type == "SYSTEM" then
+                    return frame;
+                end
+            end
+        end
+    end
+
+    return _G.DEFAULT_CHAT_FRAME;
+end
+
 ABGP.Color = "|cFF94E4FF";
 ABGP.ColorTable = { 0.58, 0.89, 1, r = 0.58, g = 0.89, b = 1 };
 function ABGP:Notify(str, ...)
-    SendSystemMessage(("%s: %s"):format(self:ColorizeText("ABGP"), tostring(str):format(...)));
+    local msg = ("%s: %s"):format(self:ColorizeText("ABGP"), tostring(str):format(...));
+    GetSystemFrame():AddMessage(msg, 1, 1, 1);
 end
 
 function ABGP:LogVerbose(str, ...)
@@ -407,7 +424,7 @@ function ABGP:EndWindowManagement(window)
 end
 
 
--- 
+--
 -- Context Menu support
 --
 
