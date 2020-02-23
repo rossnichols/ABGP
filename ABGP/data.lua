@@ -9,8 +9,8 @@ local Ambiguate = Ambiguate;
 local UnitExists = UnitExists;
 local UnitIsInMyGuild = UnitIsInMyGuild;
 local UnitName = UnitName;
+local GetServerTime = GetServerTime;
 local date = date;
-local time = time;
 local ipairs = ipairs;
 local table = table;
 local floor = floor;
@@ -178,7 +178,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
 		class = epgp[value.phase].class;
 	end
 
-    local d = date("%m/%d/%y", time()); -- https://strftime.org/
+    local d = date("%m/%d/%y", GetServerTime()); -- https://strftime.org/
 
     local history = _G.ABGP_Data[value.phase].gpHistory;
     table.insert(history, 1, {

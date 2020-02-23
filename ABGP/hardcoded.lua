@@ -2239,14 +2239,14 @@ _G.ABGP_Data = {
 -- END copy from SavedVariables
 --
 local initialData = {
-	timestamp = 1580865380, -- https://www.epochconverter.com/ or time() ingame
+	timestamp = 1580865380, -- https://www.epochconverter.com/ or GetServerTime() ingame
 	ABGP_Data = ABGP_Data,
 };
 
 function ABGP:CheckHardcodedData()
     if _G.ABGP_DataTimestamp == nil or _G.ABGP_DataTimestamp < initialData.timestamp then
 		_G.ABGP_DataTimestamp = initialData.timestamp;
-		
+
 		-- Since only item values are actually stored in the hardcoded data, just import those.
         _G.ABGP_Data.p1.itemValues = initialData.ABGP_Data.p1.itemValues;
         _G.ABGP_Data.p3.itemValues = initialData.ABGP_Data.p3.itemValues;
