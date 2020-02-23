@@ -176,6 +176,39 @@ end
 local function DrawItemHistory(container, rebuild)
     local widths = { 120, 70, 50, 1.0 };
     if rebuild then
+        local search = AceGUI:Create("EditBox");
+        search:SetWidth(150);
+        search:SetCallback("OnEnterPressed", function(widget)
+            AceGUI:ClearFocus();
+            PopulateUI(false);
+        end);
+        search:SetCallback("OnEnter", function(widget)
+            _G.ShowUIPanel(_G.GameTooltip);
+            _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
+            _G.GameTooltip:SetText("Search by player, class, item, or date.", 1, 1, 1, 1, true);
+            _G.GameTooltip:Show();
+        end);
+        search:SetCallback("OnLeave", function(widget)
+            _G.GameTooltip:Hide();
+        end);
+        container:AddChild(search);
+        container:SetUserData("search", search);
+
+        local desc = AceGUI:Create("Label");
+        desc:SetWidth(50);
+        desc:SetText(" Search");
+        container:AddChild(desc);
+
+        local reset = AceGUI:Create("Button");
+        reset:SetWidth(75);
+        reset:SetText("Reset");
+        reset:SetCallback("OnClick", function(widget)
+            container:GetUserData("search"):SetText("");
+            PopulateUI(false);
+        end);
+        container:AddChild(reset);
+        container:SetUserData("reset", reset);
+
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
@@ -209,14 +242,25 @@ local function DrawItemHistory(container, rebuild)
 
     local history = container:GetUserData("itemHistory");
     history:ReleaseChildren();
+
+    local searchText = container:GetUserData("search"):GetText():lower();
+    container:GetUserData("reset"):SetDisabled(searchText == "");
     local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
+    local count = 0;
     for i, data in ipairs(gpHistory) do
-        local elt = AceGUI:Create("ABGP_ItemHistory");
-        elt:SetFullWidth(true);
-        elt:SetData(data);
-        elt:SetWidths(widths);
-        elt:ShowBackground((i % 2) == 0);
-        history:AddChild(elt);
+        if searchText == "" or
+           data.player:lower():find(searchText, 1, true) or
+           data.item:lower():find(searchText, 1, true) or
+           data.class:lower():find(searchText, 1, true) or
+           data.date:lower():find(searchText, 1, true) then
+            count = count + 1;
+            local elt = AceGUI:Create("ABGP_ItemHistory");
+            elt:SetFullWidth(true);
+            elt:SetData(data);
+            elt:SetWidths(widths);
+            elt:ShowBackground((count % 2) == 0);
+            history:AddChild(elt);
+        end
     end
 end
 

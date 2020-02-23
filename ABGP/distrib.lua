@@ -602,7 +602,7 @@ function ABGP:CreateDistribWindow()
 
     local desc = AceGUI:Create("Label");
     desc:SetWidth(50);
-    desc:SetText("Cost");
+    desc:SetText(" Cost");
     mainLine:AddChild(desc);
 
     local multiple = AceGUI:Create("CheckBox");
