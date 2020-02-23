@@ -7,7 +7,7 @@
 
 embeds.xml
 core.lua
-data.lua
+hardcoded.lua
 announce.lua
 tooltips.lua
 spreadsheet.lua
@@ -16,7 +16,8 @@ request.lua
 comm.lua
 widgets.lua
 version.lua
-priority.lua
+data.lua
+ui.lua
 
 bindings.xml
 internal.xml

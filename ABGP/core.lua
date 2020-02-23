@@ -35,6 +35,12 @@ function ABGP:OnInitialize()
         addonText = "ABGP-v" .. version;
     end
     local options = {
+        show = {
+            name = "Show",
+            desc = "shows the main window",
+            type = "execute",
+            func = function() ABGP:ShowMainWindow(); end
+        },
         loot = {
             name = "Loot",
             desc = "shows the item request window",
@@ -57,15 +63,7 @@ function ABGP:OnInitialize()
             validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
             func = function() ABGP:PerformVersionCheck(); end
         },
-        priority = {
-            name = "Priority",
-            desc = "shows the player priority window (alias: prio)",
-            type = "execute",
-            func = function() ABGP:ShowPriority(); end
-        },
     };
-    options.prio = { hidden = true };
-    for k, v in pairs(options.priority) do options.prio[k] = v; end
     options.vc = { hidden = true };
     for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
     options.vc.cmdHidden = nil;
@@ -82,7 +80,7 @@ function ABGP:OnInitialize()
 
     self:HookTooltips();
     self:AddItemHooks();
-    self:CheckForDataUpdates();
+    self:CheckHardcodedData();
     self:RefreshActivePlayers();
     self:RefreshItemValues();
 
@@ -107,12 +105,13 @@ function ABGP:OnInitialize()
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data, distribution, sender)
-        self:RequestOnDistAwarded(data, distribution, sender);
-        self:PriorityOnDistAwarded(data, distribution, sender);
+        self:RequestOnItemAwarded(data, distribution, sender);
+        self:PriorityOnItemAwarded(data, distribution, sender);
+        self:HistoryOnItemAwarded(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED, function(self, event, data, distribution, sender)
-        self:RequestOnDistTrashed(data, distribution, sender);
+        self:RequestOnItemTrashed(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK, function(self, event, data, distribution, sender)
@@ -137,7 +136,7 @@ function ABGP:OnInitialize()
 
     -- Precreate frames to avoid issues generating them during combat.
     if not UnitAffectingCombat("player") then
-        AceGUI:Release(self:CreatePriorityWindow());
+        AceGUI:Release(self:CreateMainWindow());
         AceGUI:Release(self:CreateDistribWindow());
         AceGUI:Release(self:CreateRequestWindow());
         for i = 1, 10 do AceGUI:Release(AceGUI:Create("ABGP_Item")); end

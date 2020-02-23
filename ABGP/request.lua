@@ -214,7 +214,7 @@ function ABGP:RequestOnDistClosed(data, distribution, sender)
     end
 end
 
-function ABGP:RequestOnDistAwarded(data, distribution, sender)
+function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
 
     local player = data.player;
@@ -239,7 +239,7 @@ function ABGP:RequestOnDistAwarded(data, distribution, sender)
     end
 end
 
-function ABGP:RequestOnDistTrashed(data, distribution, sender)
+function ABGP:RequestOnItemTrashed(data, distribution, sender)
     local itemLink = data.itemLink;
 
     local multiple = "";
