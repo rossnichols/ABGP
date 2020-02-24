@@ -287,7 +287,7 @@ local function DrawGP(container)
         ["promotion to raider"] = true,
         ["conversion to raider"] = true,
         ["week 9 decay"] = true,
-    }
+    };
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             row.gp = row.gp or 0;

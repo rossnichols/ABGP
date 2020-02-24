@@ -725,7 +725,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
     text = "Award %s to %s?",
     button1 = "Yes",
     button2 = "No",
-	OnAccept = function(self, data)
+    OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
@@ -747,7 +747,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         else
             RemoveActiveItem(data.itemLink);
         end
-	end,
+    end,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
@@ -777,7 +777,7 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
         else
             RemoveActiveItem(data.itemLink);
         end
-	end,
+    end,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
@@ -788,7 +788,7 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
     text = "Are you sure you want to stop distribution?",
     button1 = "Yes",
     button2 = "No",
-	OnAccept = function(self, data)
+    OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
 
@@ -796,7 +796,7 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
             item.closeConfirmed = true;
         end
         window:Hide();
-	end,
+    end,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
@@ -808,9 +808,9 @@ StaticPopupDialogs["ABGP_CONFIRM_DONE"] = {
     text = "Done distributing %s?",
     button1 = "Yes",
     button2 = "No",
-	OnAccept = function(self, data)
+    OnAccept = function(self, data)
         RemoveActiveItem(data.itemLink);
-	end,
+    end,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
