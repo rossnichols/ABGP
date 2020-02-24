@@ -3,6 +3,8 @@ local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local CreateFrame = CreateFrame;
+local IsModifiedClick = IsModifiedClick;
+local GetItemInfo = GetItemInfo;
 local pairs = pairs;
 local floor = floor;
 local min = min;
@@ -24,6 +26,14 @@ local function CreateElement(frame, anchor, template)
     elt:SetScript("OnHyperlinkLeave", function(self)
         _G.GameTooltip:Hide();
         self:GetParent():RequestHighlight(false);
+    end);
+    elt:SetScript("OnHyperlinkClick", function(self, itemLink)
+        if IsModifiedClick() then
+            local _, fullLink = GetItemInfo(itemLink);
+            if fullLink then
+                _G.HandleModifiedItemClick(fullLink);
+            end
+        end
     end);
     elt:SetScript("OnEnter", function(self)
         self:GetParent():RequestHighlight(true);
@@ -431,13 +441,6 @@ do
     local methods = {
         ["OnAcquire"] = function(self)
             self.text:SetText("");
-            self:SimpleGroupOnAcquire();
-        end,
-
-        ["Initialize"] = function(self)
-            self:SetFullWidth(true);
-            self:SetLayout("table");
-            self:SetUserData("table", { columns = { 0, 0, 1.0, 0, 0 } });
             self.page = 1;
         end,
 
@@ -466,6 +469,10 @@ do
             end
         end,
 
+        ["SetPage"] = function(self, page)
+            self.page = page;
+        end,
+
         ["GetRange"] = function(self)
             return self.first, self.last;
         end,
@@ -475,14 +482,19 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
+        local widget = {};
+
         local container = AceGUI:Create("SimpleGroup");
+        container:SetFullWidth(true);
+        container:SetLayout("table");
+        container:SetUserData("table", { columns = { 0, 0, 1.0, 0, 0 } });
 
         local left1 = AceGUI:Create("Button");
         left1:SetWidth(45);
         left1:SetText("<<");
         left1:SetCallback("OnClick", function()
-            container.page = 1;
-            container:CalculateRange();
+            widget.page = 1;
+            widget:CalculateRange();
         end);
         container:AddChild(left1);
 
@@ -490,8 +502,8 @@ do
         left2:SetWidth(40);
         left2:SetText("<");
         left2:SetCallback("OnClick", function()
-            container.page = container.page - 1;
-            container:CalculateRange();
+            widget.page = widget.page - 1;
+            widget:CalculateRange();
         end);
         container:AddChild(left2);
 
@@ -504,8 +516,8 @@ do
         right1:SetWidth(40);
         right1:SetText(">");
         right1:SetCallback("OnClick", function()
-            container.page = container.page + 1;
-            container:CalculateRange();
+            widget.page = widget.page + 1;
+            widget:CalculateRange();
         end);
         container:AddChild(right1);
 
@@ -513,23 +525,25 @@ do
         right2:SetWidth(45);
         right2:SetText(">>");
         right2:SetCallback("OnClick", function()
-            container.page = container.pageCount;
-            container:CalculateRange();
+            widget.page = widget.pageCount;
+            widget:CalculateRange();
         end);
         container:AddChild(right2);
 
-        container.type = Type;
-        container.firstBtn = left1;
-        container.prevBtn = left2;
-        container.text = mid;
-        container.nextBtn = right1;
-        container.lastBtn = right2;
-        container.SimpleGroupOnAcquire = container.OnAcquire;
+        -- create widget
+        widget.container = container;
+        widget.firstBtn = left1;
+        widget.prevBtn = left2;
+        widget.text = mid;
+        widget.nextBtn = right1;
+        widget.lastBtn = right2;
+        widget.frame = container.frame;
+        widget.type  = Type;
         for method, func in pairs(methods) do
-            container[method] = func;
+            widget[method] = func
         end
 
-        return container;
+        return AceGUI:RegisterAsWidget(widget)
     end
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
