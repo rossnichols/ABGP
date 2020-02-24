@@ -155,7 +155,7 @@ local function DrawPriority(container, rebuild)
     local priorities = container:GetUserData("priorities");
     priorities:ReleaseChildren();
     local count = 0;
-    local priority = _G.ABGP_Data[ABGP.CurrentPhase].priority;
+    local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
         if not ignoredClasses[data.class] then
             count = count + 1;

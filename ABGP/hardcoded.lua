@@ -7,8 +7,6 @@ _G.ABGP_Data = {
 	["p3"] = {
 		["gpHistory"] = {
 		},
-		["priority"] = {
-		},
 		["epHistory"] = {
 		},
 		["itemValues"] = {
@@ -984,8 +982,6 @@ _G.ABGP_Data = {
 	},
 	["p1"] = {
 		["gpHistory"] = {
-		},
-		["priority"] = {
 		},
 		["epHistory"] = {
 		},

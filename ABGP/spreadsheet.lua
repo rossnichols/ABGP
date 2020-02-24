@@ -232,7 +232,7 @@ end
 
 local function DrawPriority(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].priority, priMapping);
+        PopulateSpreadsheet(widget:GetText(), ABGP.Priorities[ABGP.CurrentPhase], priMapping);
         ABGP:RefreshActivePlayers();
         ABGP:RebuildOfficerNotes();
         ABGP:RefreshFromOfficerNotes();
@@ -244,7 +244,7 @@ local function DrawPriority(container)
 
     local exportFunc = function()
         local text = "Character,Rank,Class,Spec,Effort Points,Gear Points,Ratio\n";
-        for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].priority) do
+        for _, item in ipairs(ABGP.Priorities[ABGP.CurrentPhase]) do
             text = text .. ("%s,%s,%s,%s,%s,%s,%s\n"):format(
                 item.player, item.rank, item.class, item.role, item.ep, item.gp, item.priority);
         end
@@ -252,7 +252,7 @@ local function DrawPriority(container)
         return text;
     end
 
-    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].priority, priColumns, importFunc, exportFunc);
+    DrawTable(container, ABGP.Priorities[ABGP.CurrentPhase], priColumns, importFunc, exportFunc);
 end
 
 local function DrawEP(container)

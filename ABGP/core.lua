@@ -219,6 +219,10 @@ ABGP.Phases = {
     p1 = "p1",
     p3 = "p3",
 };
+ABGP.Priorities = {};
+for phase in pairs(ABGP.Phases) do
+    ABGP.Priorities[phase] = {};
+end
 ABGP.CurrentPhase = ABGP.Phases.p3;
 
 
@@ -276,7 +280,7 @@ local activePlayers = {};
 function ABGP:RefreshActivePlayers()
     activePlayers = {};
     for phase in pairs(self.Phases) do
-        for _, pri in ipairs(_G.ABGP_Data[phase].priority) do
+        for _, pri in ipairs(self.Priorities[phase]) do
             activePlayers[pri.player] = activePlayers[pri.player] or {};
             activePlayers[pri.player][phase] = pri;
         end

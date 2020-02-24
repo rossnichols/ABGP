@@ -25,8 +25,8 @@ local function prioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
-	local p1 = _G.ABGP_Data[ABGP.Phases.p1].priority;
-	local p3 = _G.ABGP_Data[ABGP.Phases.p3].priority;
+	local p1 = self.Priorities[ABGP.Phases.p1];
+	local p3 = self.Priorities[ABGP.Phases.p3];
 	table.wipe(p1);
 	table.wipe(p3);
 	for i = 1, GetNumGuildMembers() do
@@ -144,7 +144,7 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 
 	local epgp = self:GetActivePlayer(player);
 	if epgp and epgp[value.phase] then
-		local db = _G.ABGP_Data[value.phase].priority;
+		local db = self.Priorities[value.phase];
 		for _, data in ipairs(db) do
 			if data.player == player then
 				data.gp = data.gp + cost;
