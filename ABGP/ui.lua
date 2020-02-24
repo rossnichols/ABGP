@@ -177,38 +177,11 @@ end
 local function DrawItemHistory(container, rebuild)
     local widths = { 120, 70, 50, 1.0 };
     if rebuild then
-        local search = AceGUI:Create("EditBox");
-        search:SetWidth(150);
-        search:SetCallback("OnEnterPressed", function(widget)
-            AceGUI:ClearFocus();
-            PopulateUI(false);
-        end);
-        search:SetCallback("OnEnter", function(widget)
-            _G.ShowUIPanel(_G.GameTooltip);
-            _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
-            _G.GameTooltip:SetText("Search by player, class, item, or date.", 1, 1, 1, 1, true);
-            _G.GameTooltip:Show();
-        end);
-        search:SetCallback("OnLeave", function(widget)
-            _G.GameTooltip:Hide();
-        end);
-        container:AddChild(search);
-        container:SetUserData("search", search);
-
-        local desc = AceGUI:Create("Label");
-        desc:SetWidth(50);
-        desc:SetText(" Search");
-        container:AddChild(desc);
-
-        local reset = AceGUI:Create("Button");
-        reset:SetWidth(75);
-        reset:SetText("Reset");
-        reset:SetCallback("OnClick", function(widget)
-            container:GetUserData("search"):SetText("");
-            PopulateUI(false);
-        end);
-        container:AddChild(reset);
-        container:SetUserData("reset", reset);
+        local mainLine = AceGUI:Create("SimpleGroup");
+        mainLine:SetFullWidth(true);
+        mainLine:SetLayout("table");
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0 } });
+        container:AddChild(mainLine);
 
         local pageSizes = {
             [10] = "10",
@@ -217,22 +190,106 @@ local function DrawItemHistory(container, rebuild)
             [100] = "100",
         };
         local pageSizeSelector = AceGUI:Create("Dropdown");
-        pageSizeSelector:SetWidth(110);
+        pageSizeSelector:SetWidth(70);
         pageSizeSelector:SetList(pageSizes, { 10, 25, 50, 100 });
         pageSizeSelector:SetValue(pageSize);
         pageSizeSelector:SetCallback("OnValueChanged", function(widget, event, value)
             pageSize = value;
             PopulateUI(false);
         end);
-        container:AddChild(pageSizeSelector);
+        mainLine:AddChild(pageSizeSelector);
 
         local desc = AceGUI:Create("Label");
-        desc:SetWidth(75);
+        desc:SetWidth(70);
         desc:SetText(" Page Size");
-        container:AddChild(desc);
+        mainLine:AddChild(desc);
+
+        local search = AceGUI:Create("EditBox");
+        search:SetWidth(125);
+        search:SetCallback("OnEnterPressed", function(widget)
+            AceGUI:ClearFocus();
+            PopulateUI(false);
+        end);
+        search:SetCallback("OnEnter", function(widget)
+            _G.ShowUIPanel(_G.GameTooltip);
+            _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
+            _G.GameTooltip:ClearLines();
+            _G.GameTooltip:AddLine("Help");
+            _G.GameTooltip:AddLine("Search by player, class, item, or date. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
+            _G.GameTooltip:Show();
+        end);
+        search:SetCallback("OnLeave", function(widget)
+            _G.GameTooltip:Hide();
+        end);
+        mainLine:AddChild(search);
+        container:SetUserData("search", search);
+
+        local desc = AceGUI:Create("Label");
+        desc:SetWidth(50);
+        desc:SetText(" Search");
+        mainLine:AddChild(desc);
+
+        local reset = AceGUI:Create("Button");
+        reset:SetWidth(70);
+        reset:SetText("Reset");
+        reset:SetCallback("OnClick", function(widget)
+            container:GetUserData("search"):SetText("");
+            PopulateUI(false);
+        end);
+        mainLine:AddChild(reset);
+        container:SetUserData("reset", reset);
+
+        if ABGP:IsPrivileged() then
+            local spacer = AceGUI:Create("Label");
+            mainLine:AddChild(spacer);
+
+            local export = AceGUI:Create("Button");
+            export:SetWidth(100);
+            export:SetText("Export");
+            export:SetCallback("OnClick", function(widget, event)
+                local history = container:GetUserData("itemHistory");
+                local text = "";
+                for i = #history.children, 1, -1 do
+                    local elt = history.children[i];
+                    local data = elt.data;
+
+                    local item = data.item;
+                    local value = ABGP:GetItemValue(item);
+                    if value and value.gp ~= data.gp then
+                        if data.gp == 0 then
+                            item = item .. " OFF";
+                        else
+                            item = ("%s @ %d"):format(item, data.gp);
+                        end
+                    end
+
+                    text = text .. ("%s;%s;%s%s"):format(
+                        item, data.player, data.date, (i == 1 and "" or "\n"));
+                end
+
+                local window = AceGUI:Create("Window");
+                window:SetTitle("Export");
+                window:SetLayout("Fill");
+                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+                ABGP:OpenWindow(window);
+
+                local edit = AceGUI:Create("MultiLineEditBox");
+                edit:SetLabel("In the spreadsheet, paste into the 'Item' column, then choose Data > Split Text to Columns and use semicolon as the separator.");
+                edit:SetText(text);
+                edit.button:Enable();
+                window:AddChild(edit);
+                window.frame:Raise();
+                edit:SetFocus();
+                edit:HighlightText();
+                edit:SetCallback("OnEnterPressed", function()
+                    window:Hide();
+                end);
+            end);
+            mainLine:AddChild(export);
+        end
 
         local pagination = AceGUI:Create("ABGP_Paginator");
-        pagination:Initialize();
+        pagination:SetFullWidth(true);
         pagination:SetCallback("OnRangeSet", function()
             PopulateUI(false);
         end);
@@ -282,28 +339,41 @@ local function DrawItemHistory(container, rebuild)
         filtered = gpHistory;
     else
         filtered = {};
+        local exact = searchText:match("^\"(.+)\"$");
+        exact = exact and exact:lower() or exact;
         for _, data in ipairs(gpHistory) do
-            if data.player:lower():find(searchText, 1, true) or
-               data.item:lower():find(searchText, 1, true) or
-               data.class:lower():find(searchText, 1, true) or
-               data.date:lower():find(searchText, 1, true) then
-                table.insert(filtered, data);
+            if exact then
+                if data.player:lower() == exact or
+                   data.item:lower() == exact or
+                   data.class:lower() == exact or
+                   data.date:lower() == exact then
+                    table.insert(filtered, data);
+                end
+            else
+                if data.player:lower():find(searchText, 1, true) or
+                   data.item:lower():find(searchText, 1, true) or
+                   data.class:lower():find(searchText, 1, true) or
+                   data.date:lower():find(searchText, 1, true) then
+                    table.insert(filtered, data);
+                end
             end
         end
     end
 
-    pagination:SetValues(#filtered, pageSize);
-    local first, last = pagination:GetRange();
-    local count = 0;
-    for i = first, last do
-        count = count + 1;
-        local data = filtered[i];
-        local elt = AceGUI:Create("ABGP_ItemHistory");
-        elt:SetFullWidth(true);
-        elt:SetData(data);
-        elt:SetWidths(widths);
-        elt:ShowBackground((count % 2) == 0);
-        history:AddChild(elt);
+    if #filtered > 0 then
+        pagination:SetValues(#filtered, pageSize);
+        local first, last = pagination:GetRange();
+        local count = 0;
+        for i = first, last do
+            count = count + 1;
+            local data = filtered[i];
+            local elt = AceGUI:Create("ABGP_ItemHistory");
+            elt:SetFullWidth(true);
+            elt:SetData(data);
+            elt:SetWidths(widths);
+            elt:ShowBackground((count % 2) == 0);
+            history:AddChild(elt);
+        end
     end
 end
 
@@ -342,6 +412,14 @@ function ABGP:CreateMainWindow()
     phaseSelector:SetValue(ABGP.CurrentPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
         ABGP.CurrentPhase = value;
+
+        if activeWindow then
+            local container = activeWindow:GetUserData("container");
+            local pagination = container:GetUserData("pagination");
+            if pagination then
+                pagination:SetPage(1);
+            end
+        end
         PopulateUI(false);
     end);
     window:AddChild(phaseSelector);
