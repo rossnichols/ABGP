@@ -14,7 +14,7 @@ local unpack = unpack;
 
 local activeWindow;
 local ignoredClasses = {};
-local pageSize = 20;
+local pageSize = 25;
 
 local function PopulateUI(rebuild)
     if not activeWindow then return; end
@@ -212,13 +212,13 @@ local function DrawItemHistory(container, rebuild)
 
         local pageSizes = {
             [10] = "10",
-            [20] = "20",
+            [25] = "25",
             [50] = "50",
             [100] = "100",
         };
         local pageSizeSelector = AceGUI:Create("Dropdown");
         pageSizeSelector:SetWidth(110);
-        pageSizeSelector:SetList(pageSizes, { 10, 20, 50, 100 });
+        pageSizeSelector:SetList(pageSizes, { 10, 25, 50, 100 });
         pageSizeSelector:SetValue(pageSize);
         pageSizeSelector:SetCallback("OnValueChanged", function(widget, event, value)
             pageSize = value;
