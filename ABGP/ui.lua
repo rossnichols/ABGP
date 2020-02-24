@@ -14,6 +14,7 @@ local unpack = unpack;
 
 local activeWindow;
 local ignoredClasses = {};
+local pageSize = 20;
 
 local function PopulateUI(rebuild)
     if not activeWindow then return; end
@@ -209,6 +210,35 @@ local function DrawItemHistory(container, rebuild)
         container:AddChild(reset);
         container:SetUserData("reset", reset);
 
+        local pageSizes = {
+            [10] = "10",
+            [20] = "20",
+            [50] = "50",
+            [100] = "100",
+        };
+        local pageSizeSelector = AceGUI:Create("Dropdown");
+        pageSizeSelector:SetWidth(110);
+        pageSizeSelector:SetList(pageSizes, { 10, 20, 50, 100 });
+        pageSizeSelector:SetValue(pageSize);
+        pageSizeSelector:SetCallback("OnValueChanged", function(widget, event, value)
+            pageSize = value;
+            PopulateUI(false);
+        end);
+        container:AddChild(pageSizeSelector);
+
+        local desc = AceGUI:Create("Label");
+        desc:SetWidth(75);
+        desc:SetText(" Page Size");
+        container:AddChild(desc);
+
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:Initialize();
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
+
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
@@ -243,24 +273,37 @@ local function DrawItemHistory(container, rebuild)
     local history = container:GetUserData("itemHistory");
     history:ReleaseChildren();
 
+    local pagination = container:GetUserData("pagination");
     local searchText = container:GetUserData("search"):GetText():lower();
     container:GetUserData("reset"):SetDisabled(searchText == "");
     local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
-    local count = 0;
-    for i, data in ipairs(gpHistory) do
-        if searchText == "" or
-           data.player:lower():find(searchText, 1, true) or
-           data.item:lower():find(searchText, 1, true) or
-           data.class:lower():find(searchText, 1, true) or
-           data.date:lower():find(searchText, 1, true) then
-            count = count + 1;
-            local elt = AceGUI:Create("ABGP_ItemHistory");
-            elt:SetFullWidth(true);
-            elt:SetData(data);
-            elt:SetWidths(widths);
-            elt:ShowBackground((count % 2) == 0);
-            history:AddChild(elt);
+    local filtered;
+    if searchText == "" then
+        filtered = gpHistory;
+    else
+        filtered = {};
+        for _, data in ipairs(gpHistory) do
+            if data.player:lower():find(searchText, 1, true) or
+               data.item:lower():find(searchText, 1, true) or
+               data.class:lower():find(searchText, 1, true) or
+               data.date:lower():find(searchText, 1, true) then
+                table.insert(filtered, data);
+            end
         end
+    end
+
+    pagination:SetValues(#filtered, pageSize);
+    local first, last = pagination:GetRange();
+    local count = 0;
+    for i = first, last do
+        count = count + 1;
+        local data = filtered[i];
+        local elt = AceGUI:Create("ABGP_ItemHistory");
+        elt:SetFullWidth(true);
+        elt:SetData(data);
+        elt:SetWidths(widths);
+        elt:ShowBackground((count % 2) == 0);
+        history:AddChild(elt);
     end
 end
 

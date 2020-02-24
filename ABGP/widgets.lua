@@ -5,6 +5,8 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local CreateFrame = CreateFrame;
 local pairs = pairs;
 local floor = floor;
+local min = min;
+local mod = mod;
 
 local function CreateElement(frame, anchor, template)
     local elt = CreateFrame("Button", nil, frame, template);
@@ -415,6 +417,119 @@ do
         end
 
         return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_Paginator", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.text:SetText("");
+            self:SimpleGroupOnAcquire();
+        end,
+
+        ["Initialize"] = function(self)
+            self:SetFullWidth(true);
+            self:SetLayout("table");
+            self:SetUserData("table", { columns = { 0, 0, 1.0, 0, 0 } });
+            self.page = 1;
+        end,
+
+        ["SetValues"] = function(self, dataCount, pageSize)
+            self.dataCount = dataCount;
+            self.pageSize = pageSize;
+            self.pageCount = floor(self.dataCount / self.pageSize) + ((mod(self.dataCount, self.pageSize) == 0) and 0 or 1);
+            self.page = min(self.page, self.pageCount);
+            self:CalculateRange(true);
+        end,
+
+        ["CalculateRange"] = function(self, suppressEvent)
+            self.first = 1 + (self.pageSize * (self.page - 1));
+            self.last = min(self.first + self.pageSize - 1, self.dataCount);
+
+            self.firstBtn:SetDisabled(self.page == 1);
+            self.prevBtn:SetDisabled(self.page == 1);
+
+            self.nextBtn:SetDisabled(self.page == self.pageCount);
+            self.lastBtn:SetDisabled(self.page == self.pageCount);
+
+            self.text:SetText(("Showing %d-%d of %d"):format(self.first, self.last, self.dataCount));
+
+            if not suppressEvent then
+                self:Fire("OnRangeSet", self.first, self.last);
+            end
+        end,
+
+        ["GetRange"] = function(self)
+            return self.first, self.last;
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local container = AceGUI:Create("SimpleGroup");
+
+        local left1 = AceGUI:Create("Button");
+        left1:SetWidth(45);
+        left1:SetText("<<");
+        left1:SetCallback("OnClick", function()
+            container.page = 1;
+            container:CalculateRange();
+        end);
+        container:AddChild(left1);
+
+        local left2 = AceGUI:Create("Button");
+        left2:SetWidth(40);
+        left2:SetText("<");
+        left2:SetCallback("OnClick", function()
+            container.page = container.page - 1;
+            container:CalculateRange();
+        end);
+        container:AddChild(left2);
+
+        local mid = AceGUI:Create("ABGP_Header");
+        mid:SetFullWidth(true);
+        mid:SetJustifyH("CENTER");
+        container:AddChild(mid);
+
+        local right1 = AceGUI:Create("Button");
+        right1:SetWidth(40);
+        right1:SetText(">");
+        right1:SetCallback("OnClick", function()
+            container.page = container.page + 1;
+            container:CalculateRange();
+        end);
+        container:AddChild(right1);
+
+        local right2 = AceGUI:Create("Button");
+        right2:SetWidth(45);
+        right2:SetText(">>");
+        right2:SetCallback("OnClick", function()
+            container.page = container.pageCount;
+            container:CalculateRange();
+        end);
+        container:AddChild(right2);
+
+        container.type = Type;
+        container.firstBtn = left1;
+        container.prevBtn = left2;
+        container.text = mid;
+        container.nextBtn = right1;
+        container.lastBtn = right2;
+        container.SimpleGroupOnAcquire = container.OnAcquire;
+        for method, func in pairs(methods) do
+            container[method] = func;
+        end
+
+        return container;
     end
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
