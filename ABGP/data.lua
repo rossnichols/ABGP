@@ -66,6 +66,8 @@ function ABGP:RefreshFromOfficerNotes()
 
 	table.sort(p1, prioritySort);
 	table.sort(p3, prioritySort);
+
+	self:RefreshActivePlayers();
 end
 
 function ABGP:RebuildOfficerNotes()
