@@ -280,11 +280,31 @@ local function DrawEP(container)
 end
 
 local function DrawGP(container)
+    local banned = {
+        ["placeholder decay"] = true,
+        ["starting gp"] = true,
+        ["conversion from trial"] = true,
+        ["promotion to raider"] = true,
+        ["conversion to raider"] = true,
+        ["week 9 decay"] = true,
+    }
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
-            if row.gp == nil then row.gp = 0; end
-            return ABGP:GetActivePlayer(row.player);
+            row.gp = row.gp or 0;
+            row.date = row.date or "";
+            row.date = row.date:gsub("20(%d%d)", "%1");
+            return row.gp >= 0 and not banned[row.item:lower()] and ABGP:GetActivePlayer(row.player);
         end);
+
+        local function reverse(arr)
+            local i, j = 1, #arr;
+            while i < j do
+                arr[i], arr[j] = arr[j], arr[i];
+                i = i + 1;
+                j = j - 1;
+            end
+        end
+        reverse(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory);
 
         widget:GetUserData("window"):Hide();
         container:ReleaseChildren();

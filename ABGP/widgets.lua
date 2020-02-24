@@ -346,7 +346,7 @@ do
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.gp.text:SetText(data.gp);
             self.date.text:SetText(data.date);
-            self.itemLink.text:SetText(data.itemLink);
+            self.itemLink.text:SetText(data.itemLink or data.item);
         end,
 
         ["SetWidths"] = function(self, widths)
