@@ -13,6 +13,7 @@ local UnitAffectingCombat = UnitAffectingCombat;
 local EasyMenu = EasyMenu;
 local ToggleDropDownMenu = ToggleDropDownMenu;
 local CreateFrame = CreateFrame;
+local GetItemInfo = GetItemInfo;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -306,8 +307,13 @@ function ABGP:RegisterModifiedItemClickFn(fn)
 end
 
 local function OnHandleModifiedItemClick(itemLink)
-    for _, fn in ipairs(hmicFns) do
-        if fn(itemLink) then return true; end
+    local _, fullLink = GetItemInfo(itemLink);
+    if fullLink then
+        for _, fn in ipairs(hmicFns) do
+            if fn(fullLink) then return true; end
+        end
+    elseif ABGP.Debug then
+        ABGP:Error("Failed GetItemInfo on %s!", itemLink);
     end
     return false;
 end

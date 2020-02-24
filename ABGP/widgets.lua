@@ -4,7 +4,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local CreateFrame = CreateFrame;
 local IsModifiedClick = IsModifiedClick;
-local GetItemInfo = GetItemInfo;
 local pairs = pairs;
 local floor = floor;
 local min = min;
@@ -29,10 +28,7 @@ local function CreateElement(frame, anchor, template)
     end);
     elt:SetScript("OnHyperlinkClick", function(self, itemLink)
         if IsModifiedClick() then
-            local _, fullLink = GetItemInfo(itemLink);
-            if fullLink then
-                _G.HandleModifiedItemClick(fullLink);
-            end
+            _G.HandleModifiedItemClick(itemLink);
         end
     end);
     elt:SetScript("OnEnter", function(self)
