@@ -82,7 +82,6 @@ function ABGP:OnInitialize()
     self:HookTooltips();
     self:AddItemHooks();
     self:CheckHardcodedData();
-    self:RefreshActivePlayers();
     self:RefreshItemValues();
 
     -- Trigger a guild roster update to refresh priorities.

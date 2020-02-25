@@ -177,14 +177,13 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
 					value.phase, player, data.ep, data.gp, cost, data.priority);
 			end
-			table.sort(self.Priorities[value.phase], prioritySort);
+            table.sort(self.Priorities[value.phase], prioritySort);
+            
+            self:RefreshUI();
+            if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) and not self.SkipOfficerNote then
+                self:UpdateOfficerNote(player);
+            end
 		end
-    end
-
-    self:RefreshActivePlayers();
-
-    if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) and not self.SkipOfficerNote then
-        self:UpdateOfficerNote(player);
     end
 end
 
@@ -212,5 +211,5 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         date = d,
     });
 
-    self.CurrentPhase = value.phase;
+    self:RefreshUI();
 end

@@ -15,6 +15,7 @@ local unpack = unpack;
 local activeWindow;
 local ignoredClasses = {};
 local pageSize = 25;
+local selectedPhase = ABGP.CurrentPhase;
 
 local function PopulateUI(rebuild)
     if not activeWindow then return; end
@@ -155,7 +156,7 @@ local function DrawPriority(container, rebuild)
     local priorities = container:GetUserData("priorities");
     priorities:ReleaseChildren();
     local count = 0;
-    local priority = ABGP.Priorities[ABGP.CurrentPhase];
+    local priority = ABGP.Priorities[selectedPhase];
     for i, data in ipairs(priority) do
         if not ignoredClasses[data.class] then
             count = count + 1;
@@ -333,7 +334,7 @@ local function DrawItemHistory(container, rebuild)
     local pagination = container:GetUserData("pagination");
     local searchText = container:GetUserData("search"):GetText():lower();
     container:GetUserData("reset"):SetDisabled(searchText == "");
-    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
+    local gpHistory = _G.ABGP_Data[selectedPhase].gpHistory;
     local filtered;
     if searchText == "" then
         filtered = gpHistory;
@@ -409,9 +410,9 @@ function ABGP:CreateMainWindow()
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
     phaseSelector:SetList(phases, { ABGP.Phases.p1, ABGP.Phases.p3 });
-    phaseSelector:SetValue(ABGP.CurrentPhase);
+    phaseSelector:SetValue(selectedPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        ABGP.CurrentPhase = value;
+        selectedPhase = value;
 
         if activeWindow then
             local container = activeWindow:GetUserData("container");
