@@ -2,8 +2,8 @@ ABGP.Debug = true;
 -- ABGP.Verbose = true;
 -- ABGP.PrivateComms = true;
 ABGP.SkipOfficerNote = true;
-ABGP.VersionDebug = "3.1.0";
-ABGP.VersionCmpDebug = "3.1.0";
+ABGP.VersionDebug = "3.2.2";
+ABGP.VersionCmpDebug = "3.2.2";
 
 function ABGP:FixupHistory()
     self.lookup = {};
