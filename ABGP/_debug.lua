@@ -1,7 +1,7 @@
 ABGP.Debug = true;
 -- ABGP.Verbose = true;
 -- ABGP.PrivateComms = true;
-ABGP.SkipOfficerNote = true;
+ABGP.IgnoreSelfDistributed = true;
 ABGP.VersionDebug = "3.2.2";
 ABGP.VersionCmpDebug = "3.2.2";
 
