@@ -24,6 +24,10 @@ local function prioritySort(a, b)
     end
 end
 
+local function IsTrial(rank)
+	return (rank == "Trial");
+end
+
 function ABGP:RefreshFromOfficerNotes()
     local p1 = self.Priorities[ABGP.Phases.p1];
     local p3 = self.Priorities[ABGP.Phases.p3];
@@ -31,8 +35,27 @@ function ABGP:RefreshFromOfficerNotes()
     table.wipe(p3);
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
-        local player = Ambiguate(name, "short");
-        if note ~= "" then
+		local player = Ambiguate(name, "short");
+		if IsTrial(rank) then
+			table.insert(p1, {
+				player = player,
+				rank = rank,
+				class = class,
+				ep = 0,
+				gp = 0,
+				priority = 0,
+				trial = true
+			});
+			table.insert(p3, {
+				player = player,
+				rank = rank,
+				class = class,
+				ep = 0,
+				gp = 0,
+				priority = 0,
+				trial = true
+			});
+        elseif note ~= "" then
             local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
             if p1ep then
                 p1ep = tonumber(p1ep) / 1000;
@@ -146,19 +169,16 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 
     local epgp = self:GetActivePlayer(player);
     if epgp and epgp[value.phase] then
-        local db = self.Priorities[value.phase];
-        for _, data in ipairs(db) do
-            if data.player == player then
-                data.gp = data.gp + cost;
-                data.priority = data.ep * 10 / data.gp;
-                if self.Debug then
-                    self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-                        value.phase, player, data.ep, data.gp, cost, data.priority);
-                end
-                break;
-            end
-        end
-        table.sort(db, prioritySort);
+		local data = epgp[value.phase];
+		if not data.trial then
+			data.gp = data.gp + cost;
+			data.priority = data.ep * 10 / data.gp;
+			if self.Debug then
+				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
+					value.phase, player, data.ep, data.gp, cost, data.priority);
+			end
+			table.sort(self.Priorities[value.phase], prioritySort);
+		end
     end
 
     self:RefreshActivePlayers();
