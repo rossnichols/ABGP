@@ -6591,7 +6591,7 @@ _G.ABGP_Data = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1582655063, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1582655064, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
