@@ -31,7 +31,7 @@ _G.ABGP_Data = {
 				["gp"] = 0,
 			}, -- [3]
 			{
-				["gp"] = 0,
+				["gp"] = 175,
 				["item"] = "Nemesis Robes",
 				["date"] = "2/18/20",
 				["class"] = "WARLOCK",
@@ -1361,7 +1361,7 @@ _G.ABGP_Data = {
 				["gp"] = 300,
 			}, -- [1]
             {
-                ["gp"] = 0,
+                ["gp"] = 200,
                 ["item"] = "Arcanist Crown",
                 ["date"] = "2/18/20",
                 ["class"] = "MAGE",
