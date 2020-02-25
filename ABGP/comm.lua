@@ -57,6 +57,7 @@ ABGP.CommTypes = {
     -- cost: number
     -- roll: number
     -- count: number
+    -- requestType: string from ABGP.RequestTypes
 
     ITEM_DISTRIBUTION_CHECK = CV("ABGP_ITEM_DISTRIBUTION_CHECK"),
     -- no payload

@@ -59,7 +59,8 @@ local function AwardItem(request)
         itemLink = currentItem.itemLink,
         player = player,
         cost = cost,
-        roll = request.roll
+        roll = request.roll,
+        requestType = request.requestType,
     });
 end
 
@@ -738,6 +739,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
             player = data.player,
             cost = data.cost,
             roll = data.roll,
+            requestType = data.requestType,
             count = currentItem.distributionCount
         }, "BROADCAST");
 

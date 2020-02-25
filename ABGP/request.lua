@@ -228,14 +228,20 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
         activeItems[itemLink].notified = true;
     end
 
+    local requestTypes = {
+        [ABGP.RequestTypes.MS] = " (main spec)",
+        [ABGP.RequestTypes.OS] = " (off spec)",
+    };
+    local requestType = requestTypes[data.requestType] or "";
     if player == UnitName("player") then
-        self:Notify("%s%s was awarded to you for %d GP!", itemLink, multiple, cost);
+        self:Notify("%s%s was awarded to you for %d GP%s!", itemLink, multiple, cost, requestType);
     else
         local roll = "";
         if data.roll then
             roll = (" with a roll of %d"):format(data.roll);
         end
-        self:Notify("%s%s was awarded to %s for %d GP%s.", itemLink, multiple, ABGP:ColorizeName(player), cost, roll);
+        self:Notify("%s%s was awarded to %s for %d GP%s%s.",
+            itemLink, multiple, ABGP:ColorizeName(player), cost, requestType, roll);
     end
 end
 
