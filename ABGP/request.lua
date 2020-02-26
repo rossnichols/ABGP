@@ -225,10 +225,14 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     end
 
     local requestTypes = {
-        [ABGP.RequestTypes.MS] = " (main spec)",
-        [ABGP.RequestTypes.OS] = " (off spec)",
+        [ABGP.RequestTypes.MS] = " (%smain spec)",
+        [ABGP.RequestTypes.OS] = " (%soff spec)",
     };
-    local requestType = requestTypes[data.requestType] or "";
+    local requestType = "";
+    if requestTypes[data.requestType] then
+        local override = data.override and ("%s, "):format(data.override) or "";
+        requestType = requestTypes[data.requestType]:format(override);
+    end
     if player == UnitName("player") then
         self:Notify("%s%s was awarded to you for %d GP%s!", itemLink, multiple, cost, requestType);
     else

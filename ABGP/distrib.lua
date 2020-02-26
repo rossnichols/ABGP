@@ -25,10 +25,8 @@ local function CalculateCost(request)
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
 
-    if request then
-        if not request.guilded or ABGP:IsTrial(request.rank) then
-            return 0, false;
-        end
+    if request and request.override then
+        return 0, false;
     end
     local costBase = (request and request.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
     return currentItem.costEdited or costBase, currentItem.data.value ~= nil;
@@ -70,6 +68,7 @@ local function AwardItem(request)
         cost = cost,
         roll = request.roll,
         requestType = request.requestType,
+        override = request.override,
     });
 end
 
@@ -405,13 +404,16 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         return;
     end
 
-    local guilded = true;
+    local override;
     local guildName, guildRankName;
     if UnitIsInMyGuild(sender) then
         guildName, guildRankName = GetGuildInfo(sender);
+        if self:IsTrial(guildRankName) then
+            override = "trial";
+        end
     else
-        guilded = false;
-        guildRankName = "[Other guild]";
+        guildRankName = "[Non-guildie]";
+        override = "non-guildie";
     end
 
     local requestTypes = {
@@ -435,7 +437,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     ProcessNewRequest({
         itemLink = itemLink,
         player = sender,
-        guilded = guilded,
+        override = override,
         rank = guildRankName,
         priority = priority,
         ep = ep,
@@ -730,7 +732,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     if self.Debug then
         local testBase = {
             itemLink = data.itemLink,
-            guilded = true,
             rank = "Blue Lobster",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
@@ -773,6 +774,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
             cost = data.cost,
             roll = data.roll,
             requestType = data.requestType,
+            override = data.override,
             count = currentItem.distributionCount
         }, "BROADCAST");
 
