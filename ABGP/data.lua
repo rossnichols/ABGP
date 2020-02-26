@@ -15,6 +15,7 @@ local ipairs = ipairs;
 local table = table;
 local floor = floor;
 local tonumber = tonumber;
+local select = select;
 
 local function prioritySort(a, b)
     if a.priority ~= b.priority then
@@ -126,8 +127,9 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         self:Error("Couldn't find %s in the guild!", self:ColorizeName(player));
     end
 
+    local rank = select(2, GetGuildRosterInfo(guildIndex));
     local note = "";
-    if epgp then
+    if epgp and not self:IsTrial(rank) then
         local p1 = epgp[ABGP.Phases.p1];
         local p3 = epgp[ABGP.Phases.p3];
         local p1ep, p1gp, p3ep, p3gp = 0, 0, 0, 0;
