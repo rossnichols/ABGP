@@ -206,12 +206,14 @@ local function RebuildUI()
 
     window:SetTitle("Loot Distribution: " .. currentItem.itemLink);
 
-    _G.ShowUIPanel(_G.ItemRefTooltip);
-    _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
-    _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
-    _G.ItemRefTooltip:SetHyperlink(currentItem.itemLink);
-    _G.ItemRefTooltip:SetFrameStrata("HIGH");
-    _G.ItemRefTooltip:Show();
+    if _G.ItemRefTooltip:IsOwned(window.frame) then
+        _G.ShowUIPanel(_G.ItemRefTooltip);
+        _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
+        _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
+        _G.ItemRefTooltip:SetHyperlink(currentItem.itemLink);
+        _G.ItemRefTooltip:SetFrameStrata("HIGH");
+        _G.ItemRefTooltip:Show();
+    end
 
     ABGP:HideContextMenu();
 end
@@ -733,6 +735,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
 
     if not activeDistributionWindow then
         activeDistributionWindow = self:CreateDistribWindow();
+        _G.ItemRefTooltip:SetOwner(activeDistributionWindow.frame, "ANCHOR_NONE");
     end
 
     AddActiveItem(data);
