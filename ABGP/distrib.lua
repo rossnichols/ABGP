@@ -454,8 +454,7 @@ function ABGP:DistribOnActivePlayersRefreshed()
     if not activeDistributionWindow then return; end
     local activeItems = activeDistributionWindow:GetUserData("activeItems");
     for itemLink, item in pairs(activeItems) do
-        local itemName = self:GetItemName(itemLink);
-        local value = self:GetItemValue(itemName);
+        local value = item.data.value;
         if value then
             for _, request in ipairs(item.requests) do
                 local epgp = self:GetActivePlayer(request.player);
