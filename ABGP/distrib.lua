@@ -477,6 +477,10 @@ function ABGP:DistribOnActivePlayersRefreshed()
                     request.priority = epgp[value.phase].priority;
                     request.ep = epgp[value.phase].ep;
                     request.gp = epgp[value.phase].gp;
+                else
+                    request.priority = 0;
+                    request.ep = 0;
+                    request.gp = 0;
                 end
             end
         end

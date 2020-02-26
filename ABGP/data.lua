@@ -16,6 +16,7 @@ local table = table;
 local floor = floor;
 local tonumber = tonumber;
 local select = select;
+local pairs = pairs;
 
 local function prioritySort(a, b)
     if a.priority ~= b.priority then
@@ -26,15 +27,17 @@ local function prioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
-    local p1 = self.Priorities[ABGP.Phases.p1];
-    local p3 = self.Priorities[ABGP.Phases.p3];
-    table.wipe(p1);
-    table.wipe(p3);
+    local needsUpdate = false;
+    local p1 = self.Priorities[self.Phases.p1];
+    local p3 = self.Priorities[self.Phases.p3];
+
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
-		local player = Ambiguate(name, "short");
+        local player = Ambiguate(name, "short");
+        local epgp = self:GetActivePlayer(player);
+        local p1New, p3New;
 		if self:IsTrial(rank) then
-			table.insert(p1, {
+			p1New = {
 				player = player,
 				rank = rank,
 				class = class,
@@ -42,8 +45,8 @@ function ABGP:RefreshFromOfficerNotes()
 				gp = 0,
 				priority = 0,
 				trial = true
-			});
-			table.insert(p3, {
+			};
+			p3New = {
 				player = player,
 				rank = rank,
 				class = class,
@@ -51,7 +54,7 @@ function ABGP:RefreshFromOfficerNotes()
 				gp = 0,
 				priority = 0,
 				trial = true
-			});
+			};
         elseif note ~= "" then
             local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
             if p1ep then
@@ -60,34 +63,64 @@ function ABGP:RefreshFromOfficerNotes()
                 p3ep = tonumber(p3ep) / 1000;
                 p3gp = tonumber(p3gp) / 1000;
 
-                if p1ep ~= 0 and p1gp ~= 0 then
-                    table.insert(p1, {
+                if p1gp ~= 0 then
+                    p1New = {
                         player = player,
                         rank = rank,
                         class = class,
                         ep = p1ep,
                         gp = p1gp,
                         priority = p1ep * 10 / p1gp
-                    });
+                    };
                 end
-                if p3ep ~= 0 and p3gp ~= 0 then
-                    table.insert(p3, {
+                if p3gp ~= 0 then
+                    p3New = {
                         player = player,
                         rank = rank,
                         class = class,
                         ep = p3ep,
                         gp = p3gp,
                         priority = p3ep * 10 / p3gp
-                    });
+                    };
                 end
             end
         end
+
+        local function checkData(db, old, new)
+            if (old == nil) ~= (new == nil) then
+                needsUpdate = true;
+                if old == nil then
+                    -- Seeing this player for the first time: insert into db
+                    table.insert(db, new);
+                else
+                    -- Player no longer tracked: remove from db
+                    for i, data in ipairs(db) do
+                        if data.player == old.player then
+                            table.remove(db, i);
+                            break;
+                        end
+                    end
+                end
+            elseif new then
+                -- Check if any of the player's data changed
+                for key, value in pairs(new) do
+                    if old[key] ~= value then
+                        needsUpdate = true;
+                        old[key] = value;
+                    end
+                end
+            end
+        end
+
+        checkData(p1, epgp and epgp[self.Phases.p1], p1New);
+        checkData(p3, epgp and epgp[self.Phases.p3], p3New);
     end
 
-    table.sort(p1, prioritySort);
-    table.sort(p3, prioritySort);
-
-    self:RefreshActivePlayers();
+    if needsUpdate then
+        table.sort(p1, prioritySort);
+        table.sort(p3, prioritySort);
+        self:RefreshActivePlayers();
+    end
 end
 
 function ABGP:RebuildOfficerNotes()
@@ -127,7 +160,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         self:Error("Couldn't find %s in the guild!", self:ColorizeName(player));
     end
 
-    local rank = select(2, GetGuildRosterInfo(guildIndex));
+    local _, rank, _, _, _, _, _, existingNote = GetGuildRosterInfo(guildIndex);
     local note = "";
     if epgp and not self:IsTrial(rank) then
         local p1 = epgp[ABGP.Phases.p1];
@@ -143,12 +176,15 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         end
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
     end
-    GuildRosterSetOfficerNote(guildIndex, note);
-    if not suppressComms then
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+
+    if note ~= existingNote then
+        GuildRosterSetOfficerNote(guildIndex, note);
+        if not suppressComms then
+            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+        end
     end
 
-    return (note ~= "");
+    return (note ~= existingNote);
 end
 
 function ABGP:PriorityOnGuildRosterUpdate()
