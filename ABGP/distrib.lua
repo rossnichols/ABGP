@@ -36,7 +36,9 @@ local function ProcessSelectedRequest()
     window:GetUserData("disenchantButton"):SetDisabled(selected ~= nil);
     window:GetUserData("distributeButton"):SetDisabled(selected == nil);
 
-    window:GetUserData("costEdit"):SetText(CalculateCost(selected));
+    local edit = window:GetUserData("costEdit");
+    edit:SetText(CalculateCost(selected));
+    edit:SetDisabled(currentItem.data.value == nil);
 end
 
 local function AwardItem(request)
