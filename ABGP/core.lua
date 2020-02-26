@@ -276,6 +276,10 @@ function ABGP:GetItemId(itemLink)
     return tonumber(itemLink:match("item:(%d+)") or "");
 end
 
+function ABGP:ShortenLink(itemLink)
+    return itemLink:gsub("|H(item:%d+).-|h", "|H%1|h");
+end
+
 ABGP.RequestTypes = {
     MS_OS = "MS_OS",
     ROLL = "ROLL",

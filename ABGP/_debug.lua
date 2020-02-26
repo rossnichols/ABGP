@@ -19,7 +19,7 @@ function ABGP:FixupHistory()
                 for _, item in ipairs(sub[1]) do
                     local name, link = GetItemInfo(item[2]);
                     if name then
-                        self.lookup[name] = link;
+                        self.lookup[name] = self:ShortenLink(link);
                     else
                         failed = true;
                     end

@@ -8,6 +8,7 @@ local UnitExists = UnitExists;
 local GetGuildInfo = GetGuildInfo;
 local UnitName = UnitName;
 local UnitIsInMyGuild = UnitIsInMyGuild;
+local GetItemInfo = GetItemInfo;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -505,6 +506,9 @@ function ABGP:DistribOnReloadUI()
 end
 
 function ABGP:ShowDistrib(itemLink)
+    local _, fullLink = GetItemInfo(itemLink);
+    itemLink = self:ShortenLink(fullLink or itemLink);
+
     if activeDistributionWindow then
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
