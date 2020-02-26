@@ -155,7 +155,6 @@ end
 
 function ABGP:PriorityOnGuildRosterUpdate()
     self:RefreshFromOfficerNotes();
-    self:RefreshUI();
 end
 
 function ABGP:PriorityOnItemAwarded(data, distribution, sender)
@@ -178,8 +177,9 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 					value.phase, player, data.ep, data.gp, cost, data.priority);
 			end
             table.sort(self.Priorities[value.phase], prioritySort);
-            
-            self:RefreshUI();
+
+            self:RefreshActivePlayers();
+
             if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) and not self.IgnoreSelfDistributed then
                 self:UpdateOfficerNote(player);
             end
@@ -191,7 +191,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if sender == UnitName("player") and self.IgnoreSelfDistributed then
         return;
     end
-    
+
     local itemLink = data.itemLink;
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);

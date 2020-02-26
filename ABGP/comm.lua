@@ -79,6 +79,10 @@ ABGP.CommTypes = {
     -- no payload
 };
 
+ABGP.InternalEvents = {
+    ACTIVE_PLAYERS_REFRESHED = "ABGP_ACTIVE_PLAYERS_REFRESHED",
+};
+
 function ABGP:SendComm(type, data, distribution, target)
     data.type = type;
     data.version = self:GetVersion();

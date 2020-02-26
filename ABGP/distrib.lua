@@ -19,7 +19,7 @@ local type = type;
 local max = max;
 
 local activeDistributionWindow;
-local widths = { 110, 100, 70, 70, 70, 180, 60, 35, 1.0 };
+local widths = { 110, 100, 70, 70, 70, 180, 60, 40, 1.0 };
 
 local function CalculateCost(request)
     local window = activeDistributionWindow;
@@ -448,6 +448,27 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
     end
 
     RemoveRequest(sender, itemLink);
+end
+
+function ABGP:DistribOnActivePlayersRefreshed()
+    if not activeDistributionWindow then return; end
+    local activeItems = activeDistributionWindow:GetUserData("activeItems");
+    for itemLink, item in pairs(activeItems) do
+        local itemName = self:GetItemName(itemLink);
+        local value = self:GetItemValue(itemName);
+        if value then
+            for _, request in ipairs(item.requests) do
+                local epgp = self:GetActivePlayer(request.player);
+                if epgp and epgp[value.phase] then
+                    request.priority = epgp[value.phase].priority;
+                    request.ep = epgp[value.phase].ep;
+                    request.gp = epgp[value.phase].gp;
+                end
+            end
+        end
+    end
+
+    RebuildUI();
 end
 
 local function EndDistribution()

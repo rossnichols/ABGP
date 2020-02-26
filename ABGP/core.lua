@@ -134,6 +134,11 @@ function ABGP:OnInitialize()
         self:RequestOnItemRolled(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
+        self:DistribOnActivePlayersRefreshed();
+        self:RefreshUI();
+    end, self);
+
     -- Precreate frames to avoid issues generating them during combat.
     if not UnitAffectingCombat("player") then
         AceGUI:Release(self:CreateMainWindow());
@@ -285,6 +290,8 @@ function ABGP:RefreshActivePlayers()
             activePlayers[pri.player][phase] = pri;
         end
     end
+
+    self:SendMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED);
 end
 
 function ABGP:GetActivePlayer(name)
