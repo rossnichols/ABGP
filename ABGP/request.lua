@@ -180,12 +180,8 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     end
     self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
 
-    if #sortedItems == 1 then
-        self:ShowItemRequests(true);
-    end
-    if activeWindow then
-        PopulateUI();
-    end
+    self:ShowItemRequests(true);
+    PopulateUI();
 end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
