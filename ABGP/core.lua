@@ -220,6 +220,10 @@ function ABGP:CanEditOfficerNotes()
     return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
 end
 
+function ABGP:IsTrial(rank)
+    return (rank == "Trial");
+end
+
 
 --
 -- Content phase tracking support

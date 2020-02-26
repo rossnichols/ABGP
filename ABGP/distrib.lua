@@ -24,8 +24,14 @@ local widths = { 110, 100, 70, 70, 70, 180, 60, 40, 1.0 };
 local function CalculateCost(request)
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
+
+    if request then
+        if not request.guilded or ABGP:IsTrial(request.rank) then
+            return 0, false;
+        end
+    end
     local costBase = (request and request.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
-    return currentItem.costEdited or costBase;
+    return currentItem.costEdited or costBase, currentItem.data.value ~= nil;
 end
 
 local function ProcessSelectedRequest()
@@ -36,9 +42,10 @@ local function ProcessSelectedRequest()
     window:GetUserData("disenchantButton"):SetDisabled(selected ~= nil);
     window:GetUserData("distributeButton"):SetDisabled(selected == nil);
 
+    local cost, editable = CalculateCost(selected);
     local edit = window:GetUserData("costEdit");
-    edit:SetText(CalculateCost(selected));
-    edit:SetDisabled(currentItem.data.value == nil);
+    edit:SetText(cost);
+    edit:SetDisabled(not editable);
 end
 
 local function AwardItem(request)
@@ -398,10 +405,12 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         return;
     end
 
+    local guilded = true;
     local guildName, guildRankName;
     if UnitIsInMyGuild(sender) then
         guildName, guildRankName = GetGuildInfo(sender);
     else
+        guilded = false;
         guildRankName = "[Other guild]";
     end
 
@@ -426,6 +435,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     ProcessNewRequest({
         itemLink = itemLink,
         player = sender,
+        guilded = guilded,
         rank = guildRankName,
         priority = priority,
         ep = ep,
@@ -720,6 +730,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     if self.Debug then
         local testBase = {
             itemLink = data.itemLink,
+            guilded = true,
             rank = "Blue Lobster",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {

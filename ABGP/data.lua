@@ -24,10 +24,6 @@ local function prioritySort(a, b)
     end
 end
 
-local function IsTrial(rank)
-	return (rank == "Trial");
-end
-
 function ABGP:RefreshFromOfficerNotes()
     local p1 = self.Priorities[ABGP.Phases.p1];
     local p3 = self.Priorities[ABGP.Phases.p3];
@@ -36,7 +32,7 @@ function ABGP:RefreshFromOfficerNotes()
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
 		local player = Ambiguate(name, "short");
-		if IsTrial(rank) then
+		if self:IsTrial(rank) then
 			table.insert(p1, {
 				player = player,
 				rank = rank,
