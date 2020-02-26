@@ -14,6 +14,7 @@ local EasyMenu = EasyMenu;
 local ToggleDropDownMenu = ToggleDropDownMenu;
 local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
+local IsInGroup = IsInGroup;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -146,6 +147,10 @@ function ABGP:OnInitialize()
         AceGUI:Release(self:CreateRequestWindow());
         for i = 1, 10 do AceGUI:Release(AceGUI:Create("ABGP_Item")); end
         for i = 1, 50 do AceGUI:Release(AceGUI:Create("ABGP_Player")); end
+    end
+
+    if IsInGroup() then
+        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
     end
 end
 
