@@ -119,6 +119,10 @@ function ABGP:OnInitialize()
         self:DistribOnCheck(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE, function(self, event, data, distribution, sender)
+        self:RequestOnCheckResponse(data, distribution, sender);
+    end, self);
+
     self:RegisterMessage(self.CommTypes.VERSION_REQUEST, function(self, event, data, distribution, sender)
         self:OnVersionRequest(data, distribution, sender);
     end, self);
@@ -389,6 +393,8 @@ local f = CreateFrame("Frame");
 f:RegisterEvent("GUILD_ROSTER_UPDATE");
 f:RegisterEvent("CHAT_MSG_SYSTEM");
 f:RegisterEvent("GROUP_JOINED");
+f:RegisterEvent("GROUP_LEFT");
+f:RegisterEvent("GROUP_ROSTER_UPDATE");
 f:RegisterEvent("PLAYER_LEAVING_WORLD");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
@@ -404,6 +410,10 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif event == "GROUP_JOINED" then
         ABGP:VersionOnGroupJoined();
         ABGP:RequestOnGroupJoined();
+    elseif event == "GROUP_LEFT" then
+        ABGP:RequestOnGroupLeft();
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        ABGP:RequestOnGroupUpdate();
     elseif event == "PLAYER_LEAVING_WORLD" then
         ABGP:DistribOnLeavingWorld();
     end

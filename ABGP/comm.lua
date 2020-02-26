@@ -61,7 +61,11 @@ ABGP.CommTypes = {
     -- override: string
 
     ITEM_DISTRIBUTION_CHECK = CV("ABGP_ITEM_DISTRIBUTION_CHECK"),
-    -- no payload
+    -- itemLink: optional item link string
+
+    ITEM_DISTRIBUTION_CHECK_RESPONSE = CV("ABGP_ITEM_DISTRIBUTION_CHECK_RESPONSE"),
+    -- itemLink: item link string
+    -- valid: bool
 
     ITEM_DISTRIBUTION_TRASHED = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"),
     -- itemLink: item link string

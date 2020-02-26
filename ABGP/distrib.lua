@@ -385,11 +385,17 @@ end
 
 function ABGP:DistribOnCheck(data, distribution, sender)
     local window = activeDistributionWindow;
-    if not window then return; end
+    local activeItems = window and window:GetUserData("activeItems") or {};
 
-    local activeItems = window:GetUserData("activeItems");
-    for _, item in pairs(activeItems) do
-        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, item.data, "WHISPER", sender);
+    if data.itemLink then
+        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE, { 
+            itemLink = data.itemLink,
+            valid = (activeItems[data.itemLink] ~= nil),
+        }, "WHISPER", sender);
+    else
+        for _, item in pairs(activeItems) do
+            self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, item.data, "WHISPER", sender);
+        end
     end
 end
 

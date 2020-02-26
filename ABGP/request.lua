@@ -9,6 +9,7 @@ local GetItemInfo = GetItemInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
 local RandomRoll = RandomRoll;
 local GetBindingKey = GetBindingKey;
+local UnitExists = UnitExists;
 local table = table;
 local pairs = pairs;
 local select = select;
@@ -131,7 +132,36 @@ function ABGP:GetActiveItem(itemLink)
 end
 
 function ABGP:RequestOnGroupJoined()
+    -- Check if any items are being actively distributed.
+    -- Depending on the circumstances, the player may not
+    -- be eligible for them, but it's still better to see.
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
+end
+
+local function VerifyItemRequests()
+    for itemLink, item in pairs(activeItems) do
+        if UnitExists(item.sender) then
+            -- Ask the sender if the item is still being distributed.
+            ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_CHECK, { itemLink = itemLink }, "WHISPER", item.sender);
+        else
+            -- The sender is gone, close the item.
+            ABGP:RequestOnDistClosed({ itemLink = itemLink });
+        end
+    end
+end
+
+function ABGP:RequestOnGroupLeft()
+    VerifyItemRequests();
+end
+
+function ABGP:RequestOnGroupUpdate()
+    VerifyItemRequests();
+end
+
+function ABGP:RequestOnCheckResponse(data, distribution, sender)
+    if not data.valid then
+        self:RequestOnDistClosed({ itemLink = data.itemLink });
+    end
 end
 
 function ABGP:RequestOnItemRolled(data, distribution, sender)
