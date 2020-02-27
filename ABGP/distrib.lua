@@ -58,7 +58,7 @@ local function AwardItem(request)
 
     local itemLink = currentItem.itemLink;
     if currentItem.multipleItems then
-        local count = currentItem.distributionCount;
+        local count = #currentItem.distributions;
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
     local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
@@ -199,7 +199,7 @@ local function RebuildUI()
     local multiple = window:GetUserData("multipleItemsCheckbox");
     multiple:SetWidth(100);
     multiple:SetValue(currentItem.multipleItems);
-    multiple:SetDisabled(currentItem.distributionCount > 0);
+    multiple:SetDisabled(#currentItem.distributions > 0);
 
     local resetRolls = window:GetUserData("resetRollsButton");
     resetRolls:SetText(currentItem.rollsAllowed and "Reset Rolls" or "Allow Rolls");
@@ -336,7 +336,7 @@ local function AddActiveItem(data)
         costEdited = nil,
         closeConfirmed = false,
         multipleItems = false,
-        distributionCount = 0,
+        distributions = {},
         rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
         data = data,
     };
@@ -388,7 +388,7 @@ function ABGP:DistribOnCheck(data, distribution, sender)
     local activeItems = window and window:GetUserData("activeItems") or {};
 
     if data.itemLink then
-        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE, { 
+        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE, {
             itemLink = data.itemLink,
             valid = (activeItems[data.itemLink] ~= nil),
         }, "WHISPER", sender);
@@ -617,7 +617,7 @@ function ABGP:CreateDistribWindow()
         local currentItem = window:GetUserData("currentItem");
         local itemLink = currentItem.itemLink;
         if currentItem.multipleItems then
-            local count = currentItem.distributionCount;
+            local count = #currentItem.distributions;
             itemLink = ("%s #%d"):format(itemLink, count + 1);
         end
         _G.StaticPopup_Show("ABGP_CONFIRM_TRASH", itemLink, nil, {
@@ -783,7 +783,26 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
         local activeItems = window:GetUserData("activeItems");
 
         local currentItem = activeItems[data.itemLink];
-        currentItem.distributionCount = currentItem.distributionCount + 1;
+        local ep, gp, priority = 0, 0, 0;
+        local value = currentItem.data.value;
+        if value then
+            local epgp = ABGP:GetActivePlayer(data.player);
+            if epgp and epgp[value.phase] then
+                ep = epgp[value.phase].ep;
+                gp = epgp[value.phase].gp;
+                priority = epgp[value.phase].priority;
+            end
+        end
+        table.insert(currentItem.distributions, {
+            player = data.player,
+            ep = ep,
+            gp = gp,
+            priority = priority,
+            cost = data.cost,
+            roll = data.roll,
+            requestType = data.requestType,
+            override = data.override,
+        });
 
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
             itemLink = data.itemLink,
@@ -792,7 +811,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
             roll = data.roll,
             requestType = data.requestType,
             override = data.override,
-            count = currentItem.distributionCount
+            count = #currentItem.distributions
         }, "BROADCAST");
 
         currentItem.closeConfirmed = true;
@@ -818,11 +837,13 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
         local activeItems = window:GetUserData("activeItems");
 
         local currentItem = activeItems[data.itemLink];
-        currentItem.distributionCount = currentItem.distributionCount + 1;
+        table.insert(currentItem.distributions, {
+            trashed = true,
+        });
 
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED, {
             itemLink = data.itemLink,
-            count = currentItem.distributionCount
+            count = #currentItem.distributions
         }, "BROADCAST");
 
         currentItem.closeConfirmed = true;
