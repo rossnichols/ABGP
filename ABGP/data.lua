@@ -254,10 +254,14 @@ end
 
 
 _G.ABGP_ItemAuditLog = {};
+for phase in pairs(ABGP.Phases) do
+    _G.ABGP_ItemAuditLog[phase] = {};
+end
 
 function ABGP:AuditItemDistribution(item)
-    if #item.distributions > 0 then
-        table.insert(_G.ABGP_ItemAuditLog, 1, {
+    local value = item.data.value;
+    if value and #item.distributions > 0 then
+        table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
             itemLink = item.itemLink,
             requests = item.requests,
             distributions = item.distributions,
