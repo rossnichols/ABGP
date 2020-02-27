@@ -251,3 +251,16 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
 
     self:RefreshUI();
 end
+
+
+_G.ABGP_ItemAuditLog = {};
+
+function ABGP:AuditItemDistribution(item)
+    if #item.distributions > 0 then
+        table.insert(_G.ABGP_ItemAuditLog, 1, {
+            itemLink = item.itemLink,
+            requests = item.requests,
+            distributions = item.distributions,
+        });
+    end
+end

@@ -350,7 +350,7 @@ local function AddActiveItem(data)
     tabGroup:SelectTab(itemLink);
 end
 
-local function RemoveActiveItem(itemLink)
+local function RemoveActiveItem(itemLink, item)
     ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED, {
         itemLink = itemLink
     }, "BROADCAST");
@@ -360,6 +360,7 @@ local function RemoveActiveItem(itemLink)
         local activeItems = window:GetUserData("activeItems");
         local currentItem = window:GetUserData("currentItem");
 
+        item = activeItems[itemLink];
         activeItems[itemLink] = nil;
         local tabs = window:GetUserData("tabs");
         local removedIndex = 0;
@@ -381,6 +382,8 @@ local function RemoveActiveItem(itemLink)
             end
         end
     end
+
+    ABGP:AuditItemDistribution(item);
 end
 
 function ABGP:DistribOnCheck(data, distribution, sender)
@@ -576,7 +579,7 @@ function ABGP:CreateDistribWindow()
         if closeConfirmed then
             activeDistributionWindow = nil;
             for _, item in pairs(activeItems) do
-                RemoveActiveItem(item.itemLink);
+                RemoveActiveItem(item.itemLink, item);
             end
 
             ABGP:EndWindowManagement(widget);
