@@ -360,8 +360,8 @@ local function DrawItemHistory(container, rebuild)
         end
     end
 
+    pagination:SetValues(#filtered, pageSize);
     if #filtered > 0 then
-        pagination:SetValues(#filtered, pageSize);
         local first, last = pagination:GetRange();
         local count = 0;
         for i = first, last do
@@ -373,6 +373,88 @@ local function DrawItemHistory(container, rebuild)
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             history:AddChild(elt);
+        end
+    end
+end
+
+local function DrawAuditLog(container, rebuild)
+    local widths = { 70, 1.0 };
+    if rebuild then
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
+
+        local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetFullWidth(true);
+        scrollContainer:SetFullHeight(true);
+        scrollContainer:SetLayout("Flow");
+        container:AddChild(scrollContainer);
+
+        local columns = { "Date", "Info", weights = { unpack(widths) } };
+        local header = AceGUI:Create("SimpleGroup");
+        header:SetFullWidth(true);
+        header:SetLayout("Table");
+        header:SetUserData("table", { columns = columns.weights });
+        scrollContainer:AddChild(header);
+
+        for i = 1, #columns do
+            local desc = AceGUI:Create("ABGP_Header");
+            desc:SetText(columns[i]);
+            header:AddChild(desc);
+        end
+
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetFullWidth(true);
+        scroll:SetFullHeight(true);
+        scroll:SetLayout("List");
+        scrollContainer:AddChild(scroll);
+        container:SetUserData("auditLog", scroll);
+    end
+
+    local audit = container:GetUserData("auditLog");
+    audit:ReleaseChildren();
+
+    local entries = _G.ABGP_ItemAuditLog[selectedPhase];
+    local pagination = container:GetUserData("pagination");
+    pagination:SetValues(#entries, 100);
+    if #entries > 0 then
+        local first, last = pagination:GetRange();
+        for i = first, last do
+            local data = entries[i];
+            local logged = {};
+            for _, distrib in ipairs(data.distributions) do
+                local audit = ("%s awarded to %s (ep=%.3f gp=%.3f pri=%.3f) for %d gp"):format(
+                    data.itemLink, distrib.player, distrib.ep, distrib.gp, distrib.priority, distrib.cost);
+                local elt = AceGUI:Create("ABGP_AuditLog");
+                elt:SetFullWidth(true);
+                elt:SetData({
+                    date = date("%m/%d/%y", data.time),
+                    audit = audit,
+                    important = true,
+                });
+                elt:SetWidths(widths);
+                audit:AddChild(elt);
+                logged[distrib.player] = true;
+            end
+            for _, request in ipairs(data.requests) do
+                if not logged[request.player] then
+                    local audit = ("%s requested by %s (ep=%.3f gp=%.3f pri=%.3f)"):format(
+                        data.itemLink, request.player, request.ep, request.gp, request.priority);
+                    local elt = AceGUI:Create("ABGP_AuditLog");
+                    elt:SetFullWidth(true);
+                    elt:SetData({
+                        date = date("%m/%d/%y", data.time),
+                        audit = audit,
+                        important = false,
+                    });
+                    elt:SetWidths(widths);
+                    audit:AddChild(elt);
+                end
+            end
         end
     end
 end
@@ -430,6 +512,9 @@ function ABGP:CreateMainWindow()
         { value = "gp", text = "Item History", draw = DrawItemHistory },
         -- { value = "items", text = "Items", draw = DrawItems },
     };
+    if #_G.ABGP_ItemAuditLog[ABGP.Phases.p1] > 0 or #_G.ABGP_ItemAuditLog[ABGP.Phases.p3] > 0 then
+        table.insert(tabs, { value = "audit", text = "Audit Log", draw = DrawAuditLog });
+    end
     local tabGroup = AceGUI:Create("TabGroup");
     tabGroup:SetLayout("Flow");
     tabGroup:SetFullWidth(true);

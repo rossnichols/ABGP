@@ -265,6 +265,7 @@ function ABGP:AuditItemDistribution(item)
             itemLink = item.itemLink,
             requests = item.requests,
             distributions = item.distributions,
+            time = GetServerTime(),
         });
     end
 end

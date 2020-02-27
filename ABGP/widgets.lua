@@ -449,16 +449,29 @@ do
         end,
 
         ["CalculateRange"] = function(self, suppressEvent)
-            self.first = 1 + (self.pageSize * (self.page - 1));
-            self.last = min(self.first + self.pageSize - 1, self.dataCount);
+            if self.dataCount == 0 then
+                self.first = 0;
+                self.last = 0;
 
-            self.firstBtn:SetDisabled(self.page == 1);
-            self.prevBtn:SetDisabled(self.page == 1);
+                self.firstBtn:SetDisabled(true);
+                self.prevBtn:SetDisabled(true);
 
-            self.nextBtn:SetDisabled(self.page == self.pageCount);
-            self.lastBtn:SetDisabled(self.page == self.pageCount);
+                self.nextBtn:SetDisabled(true);
+                self.lastBtn:SetDisabled(true);
 
-            self.text:SetText(("Showing %d-%d of %d"):format(self.first, self.last, self.dataCount));
+                self.text:SetText("");
+            else
+                self.first = 1 + (self.pageSize * (self.page - 1));
+                self.last = min(self.first + self.pageSize - 1, self.dataCount);
+
+                self.firstBtn:SetDisabled(self.page == 1);
+                self.prevBtn:SetDisabled(self.page == 1);
+
+                self.nextBtn:SetDisabled(self.page == self.pageCount);
+                self.lastBtn:SetDisabled(self.page == self.pageCount);
+
+                self.text:SetText(("Showing %d-%d of %d"):format(self.first, self.last, self.dataCount));
+            end
 
             if not suppressEvent then
                 self:Fire("OnRangeSet", self.first, self.last);
@@ -602,6 +615,107 @@ do
         -- create widget
         local widget = {
             text = text,
+
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_AuditLog", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.date.text:SetText("");
+            self.audit.text:SetText("");
+
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
+
+            self.background:Hide();
+        end,
+
+        ["SetData"] = function(self, data)
+            self.data = data;
+
+            self.date.text:SetText(data.date);
+            self.audit.text:SetText(data.audit);
+
+            local specialFont = (data.important) and "ABGPHighlight" or "GameFontHighlight";
+            self.audit.text:SetFontObject(specialFont);
+        end,
+
+        ["SetWidths"] = function(self, widths)
+            self.date:SetWidth(widths[1] or 0);
+        end,
+
+        ["ShowBackground"] = function(self, show)
+            self.background[show and "Show" or "Hide"](self.background);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button");
+        frame:SetHeight(20);
+        frame:Hide();
+
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
+
+        local background = frame:CreateTexture(nil, "BACKGROUND");
+        background:SetAllPoints();
+        background:SetColorTexture(0, 0, 0, 0.5);
+
+        local date = CreateElement(frame);
+        date.text = CreateFontString(date);
+
+        local audit = CreateElement(frame, date);
+        audit.text = CreateFontString(audit);
+        audit:SetPoint("TOPRIGHT", frame);
+        audit:SetScript("OnEnter", function(self)
+            if self.text:IsTruncated() then
+                local text = self.text:GetText();
+                _G.ShowUIPanel(_G.GameTooltip);
+                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+                _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                _G.GameTooltip:Show();
+            end
+            self:GetParent():RequestHighlight(true);
+        end);
+        audit:SetScript("OnLeave", function(self)
+            _G.GameTooltip:Hide();
+            self:GetParent():RequestHighlight(false);
+        end);
+
+        -- create widget
+        local widget = {
+            date = date,
+            audit = audit,
+
+            background = background,
 
             frame = frame,
             type  = Type
