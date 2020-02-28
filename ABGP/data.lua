@@ -6,8 +6,6 @@ local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
 local GuildRosterSetOfficerNote = GuildRosterSetOfficerNote;
 local Ambiguate = Ambiguate;
-local UnitExists = UnitExists;
-local UnitIsInMyGuild = UnitIsInMyGuild;
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
 local date = date;
@@ -18,12 +16,42 @@ local tonumber = tonumber;
 local select = select;
 local pairs = pairs;
 
-local function prioritySort(a, b)
+local function PrioritySort(a, b)
     if a.priority ~= b.priority then
         return a.priority > b.priority;
     else
         return a.player < b.player;
     end
+end
+
+local function CheckActivePlayer(db, old, new)
+    local needsUpdate = false;
+
+    if (old == nil) ~= (new == nil) then
+        needsUpdate = true;
+        if old == nil then
+            -- Seeing this player for the first time: insert into db
+            table.insert(db, new);
+        else
+            -- Player no longer tracked: remove from db
+            for i, data in ipairs(db) do
+                if data.player == old.player then
+                    table.remove(db, i);
+                    break;
+                end
+            end
+        end
+    elseif new then
+        -- Check if any of the player's data changed
+        for key, value in pairs(new) do
+            if old[key] ~= value then
+                needsUpdate = true;
+                old[key] = value;
+            end
+        end
+    end
+
+    return needsUpdate;
 end
 
 function ABGP:RefreshFromOfficerNotes()
@@ -34,7 +62,7 @@ function ABGP:RefreshFromOfficerNotes()
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
         local player = Ambiguate(name, "short");
-        local epgp = self:GetActivePlayer(player);
+        local epgp = self:GetActivePlayer(player, true);
         local p1New, p3New;
 		if self:IsTrial(rank) then
 			p1New = {
@@ -86,39 +114,17 @@ function ABGP:RefreshFromOfficerNotes()
             end
         end
 
-        local function checkData(db, old, new)
-            if (old == nil) ~= (new == nil) then
-                needsUpdate = true;
-                if old == nil then
-                    -- Seeing this player for the first time: insert into db
-                    table.insert(db, new);
-                else
-                    -- Player no longer tracked: remove from db
-                    for i, data in ipairs(db) do
-                        if data.player == old.player then
-                            table.remove(db, i);
-                            break;
-                        end
-                    end
-                end
-            elseif new then
-                -- Check if any of the player's data changed
-                for key, value in pairs(new) do
-                    if old[key] ~= value then
-                        needsUpdate = true;
-                        old[key] = value;
-                    end
-                end
-            end
+        if CheckActivePlayer(p1, epgp and epgp[self.Phases.p1], p1New) then
+            needsUpdate = true;
         end
-
-        checkData(p1, epgp and epgp[self.Phases.p1], p1New);
-        checkData(p3, epgp and epgp[self.Phases.p3], p3New);
+        if CheckActivePlayer(p3, epgp and epgp[self.Phases.p3], p3New) then
+            needsUpdate = true;
+        end
     end
 
     if needsUpdate then
-        table.sort(p1, prioritySort);
-        table.sort(p3, prioritySort);
+        table.sort(p1, PrioritySort);
+        table.sort(p3, PrioritySort);
         self:RefreshActivePlayers();
     end
 end
@@ -210,13 +216,13 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
 					value.phase, player, data.ep, data.gp, cost, data.priority);
 			end
-            table.sort(self.Priorities[value.phase], prioritySort);
+            table.sort(self.Priorities[value.phase], PrioritySort);
 
             self:RefreshActivePlayers();
 
-            if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) and not self.IgnoreSelfDistributed then
+            if sender == UnitName("player") and not self.IgnoreSelfDistributed then
                 -- Use player name from epgp table in case the player was an alt
-                self:UpdateOfficerNote(epgp[value.phase].player);
+                self:UpdateOfficerNote(epgp.player);
             end
 		end
     end

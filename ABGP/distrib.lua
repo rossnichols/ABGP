@@ -419,7 +419,12 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     local override;
     local guildName, guildRankName;
     if UnitIsInMyGuild(sender) then
-        guildName, guildRankName = GetGuildInfo(sender);
+        local guildInfo = self:GetGuildInfo(sender);
+        if guildInfo then
+            guildRankName = guildInfo[2];
+        else
+            guildName, guildRankName = GetGuildInfo(sender);
+        end
         if self:IsTrial(guildRankName) then
             override = "trial";
         end
@@ -447,7 +452,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     end
 
     if alt then
-        guildRankName = "ALT";
+        guildRankName = ("ALT (%s)"):format(epgp.player);
     end
 
     ProcessNewRequest({

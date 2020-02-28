@@ -329,14 +329,15 @@ function ABGP:RefreshActivePlayers()
         for _, pri in ipairs(self.Priorities[phase]) do
             activePlayers[pri.player] = activePlayers[pri.player] or {};
             activePlayers[pri.player][phase] = pri;
+            activePlayers[pri.player].player = pri.player;
         end
     end
 
     self:SendMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED);
 end
 
-function ABGP:GetActivePlayer(name)
-    if not activePlayers[name] then
+function ABGP:GetActivePlayer(name, ignoreAlts)
+    if not activePlayers[name] and not ignoreAlts then
         local guildInfo = self:GetGuildInfo(name);
         if guildInfo then
             if self:IsAlt(guildInfo[2]) and activePlayers[guildInfo[7]] then
