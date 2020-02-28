@@ -444,12 +444,13 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     };
     ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(sender), itemLink, requestTypes[data.requestType]);
 
-    local priority, ep, gp = 0, 0, 0;
+    local priority, ep, gp;
     local epgp, alt = ABGP:GetActivePlayer(sender);
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
 
     if value then
+        priority, ep, gp = 0, 0, 0;
         if epgp and epgp[value.phase] then
             priority = epgp[value.phase].priority;
             ep = epgp[value.phase].ep;
@@ -457,8 +458,6 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         elseif not override then
             override = "non-raider";
         end
-    else
-        priority, ep, gp = nil, nil, nil;
     end
 
     if alt then
@@ -794,8 +793,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
                 entry.ep = math.random() * 2000;
                 entry.gp = math.random() * 2000;
                 entry.priority = entry.ep * 10 / entry.gp;
-            else
-                entry.ep, entry.gp, entry.priority = nil, nil, nil;
             end
             ProcessNewRequest(entry);
         end
