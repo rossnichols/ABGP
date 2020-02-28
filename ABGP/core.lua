@@ -429,6 +429,7 @@ f:RegisterEvent("GROUP_JOINED");
 f:RegisterEvent("GROUP_LEFT");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 f:RegisterEvent("PLAYER_LEAVING_WORLD");
+f:RegisterEvent("LOADING_SCREEN_ENABLED");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:RebuildGuildInfo();
@@ -450,6 +451,8 @@ f:SetScript("OnEvent", function(self, event, ...)
         ABGP:RequestOnGroupUpdate();
     elseif event == "PLAYER_LEAVING_WORLD" then
         ABGP:DistribOnLeavingWorld();
+    elseif event == "LOADING_SCREEN_ENABLED" then
+        ABGP:DistribOnLoadingScreen();
     end
 end);
 

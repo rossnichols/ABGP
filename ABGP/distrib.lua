@@ -523,9 +523,11 @@ function ABGP:DistribOnLeavingWorld()
     EndDistribution();
 end
 
+function ABGP:DistribOnLoadingScreen()
+    EndDistribution();
+end
+
 function ABGP:DistribOnReloadUI()
-    -- If distribution is open when reloading UI,
-    -- hide the window so it generates the appropriate comms.
     EndDistribution();
 end
 
