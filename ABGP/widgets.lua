@@ -100,9 +100,9 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
-            self.ep.text:SetText(("%.3f"):format(data.ep or 0));
-            self.gp.text:SetText(("%.3f"):format(data.gp or 0));
-            self.priority.text:SetText(("%.3f"):format(data.priority or 0));
+            self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");
+            self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
+            self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
 
             if data.equipped then
                 if #data.equipped == 2 then

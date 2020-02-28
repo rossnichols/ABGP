@@ -26,6 +26,10 @@ local function CalculateCost(request)
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
 
+    if not currentItem.data.value then
+        return 0, false, "no value";
+    end
+
     if request and request.override then
         return 0, false, request.override;
     end
@@ -445,10 +449,16 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
 
-    if value and epgp and epgp[value.phase] then
-        priority = epgp[value.phase].priority;
-        ep = epgp[value.phase].ep;
-        gp = epgp[value.phase].gp;
+    if value then
+        if epgp and epgp[value.phase] then
+            priority = epgp[value.phase].priority;
+            ep = epgp[value.phase].ep;
+            gp = epgp[value.phase].gp;
+        elseif not override then
+            override = "non-raider";
+        end
+    else
+        priority, ep, gp = nil, nil, nil;
     end
 
     if alt then
@@ -764,7 +774,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         local testBase = {
             itemLink = data.itemLink,
             rank = "Blue Lobster",
-            override = "trial",
+            -- override = "trial",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
                 "|cffff8000|Hitem:19019::::::::60:::::|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
@@ -780,9 +790,13 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
             else entry.requestType = ABGP.RequestTypes.ROLL;
             end
-            entry.ep = math.random() * 2000;
-            entry.gp = math.random() * 2000;
-            entry.priority = entry.ep * 10 / entry.gp;
+            if data.value then
+                entry.ep = math.random() * 2000;
+                entry.gp = math.random() * 2000;
+                entry.priority = entry.ep * 10 / entry.gp;
+            else
+                entry.ep, entry.gp, entry.priority = nil, nil, nil;
+            end
             ProcessNewRequest(entry);
         end
     end
