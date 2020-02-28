@@ -215,7 +215,8 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
             self:RefreshActivePlayers();
 
             if sender == UnitName("player") and UnitExists(player) and UnitIsInMyGuild(player) and not self.IgnoreSelfDistributed then
-                self:UpdateOfficerNote(player);
+                -- Use player name from epgp table in case the player was an alt
+                self:UpdateOfficerNote(epgp[value.phase].player);
             end
 		end
     end

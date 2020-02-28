@@ -15,6 +15,9 @@ local ToggleDropDownMenu = ToggleDropDownMenu;
 local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
 local IsInGroup = IsInGroup;
+local GetNumGuildMembers = GetNumGuildMembers;
+local GetGuildRosterInfo = GetGuildRosterInfo;
+local Ambiguate = Ambiguate;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -84,6 +87,7 @@ function ABGP:OnInitialize()
     self:AddItemHooks();
     self:CheckHardcodedData();
     self:RefreshItemValues();
+    self:RefreshFromOfficerNotes();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
 
     -- Trigger a guild roster update to refresh priorities.
@@ -225,8 +229,27 @@ function ABGP:CanEditOfficerNotes()
     return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
 end
 
+local guildInfo = {};
+
+function ABGP:RebuildGuildInfo()
+    table.wipe(guildInfo);
+    for i = 1, GetNumGuildMembers() do
+        local data = { GetGuildRosterInfo(i) };
+        local player = Ambiguate(data[1], "short");
+        guildInfo[player] = data;
+    end
+end
+
+function ABGP:GetGuildInfo(player)
+    return guildInfo[player];
+end
+
 function ABGP:IsTrial(rank)
     return (rank == "Trial");
+end
+
+function ABGP:IsAlt(rank)
+    return (rank == "Lobster Alt");
 end
 
 
@@ -313,6 +336,14 @@ function ABGP:RefreshActivePlayers()
 end
 
 function ABGP:GetActivePlayer(name)
+    if not activePlayers[name] then
+        local guildInfo = self:GetGuildInfo(name);
+        if guildInfo then
+            if self:IsAlt(guildInfo[2]) and activePlayers[guildInfo[7]] then
+                return activePlayers[guildInfo[7]], true;
+            end
+        end
+    end
     return activePlayers[name];
 end
 
@@ -399,6 +430,7 @@ f:RegisterEvent("GROUP_ROSTER_UPDATE");
 f:RegisterEvent("PLAYER_LEAVING_WORLD");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
+        ABGP:RebuildGuildInfo();
         ABGP:VersionOnGuildRosterUpdate();
         ABGP:PriorityOnGuildRosterUpdate();
     elseif event == "CHAT_MSG_SYSTEM" then

@@ -436,7 +436,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(sender), itemLink, requestTypes[data.requestType]);
 
     local priority, ep, gp = 0, 0, 0;
-    local epgp = ABGP:GetActivePlayer(sender);
+    local epgp, alt = ABGP:GetActivePlayer(sender);
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
 
@@ -444,6 +444,10 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         priority = epgp[value.phase].priority;
         ep = epgp[value.phase].ep;
         gp = epgp[value.phase].gp;
+    end
+
+    if alt then
+        guildRankName = "ALT";
     end
 
     ProcessNewRequest({
