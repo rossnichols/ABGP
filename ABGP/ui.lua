@@ -14,7 +14,6 @@ local unpack = unpack;
 
 local activeWindow;
 local ignoredClasses = {};
-local pageSize = 50;
 local selectedPhase = ABGP.CurrentPhase;
 
 local function PopulateUI(rebuild)
@@ -204,26 +203,6 @@ local function DrawItemHistory(container, rebuild)
         mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0 } });
         container:AddChild(mainLine);
 
-        local pageSizes = {
-            [25] = "25",
-            [50] = "50",
-            [100] = "100",
-        };
-        local pageSizeSelector = AceGUI:Create("Dropdown");
-        pageSizeSelector:SetWidth(70);
-        pageSizeSelector:SetList(pageSizes, { 25, 50, 100 });
-        pageSizeSelector:SetValue(pageSize);
-        pageSizeSelector:SetCallback("OnValueChanged", function(widget, event, value)
-            pageSize = value;
-            PopulateUI(false);
-        end);
-        mainLine:AddChild(pageSizeSelector);
-
-        local desc = AceGUI:Create("Label");
-        desc:SetWidth(70);
-        desc:SetText(" Page Size");
-        mainLine:AddChild(desc);
-
         local search = AceGUI:Create("EditBox");
         search:SetWidth(125);
         search:SetCallback("OnEnterPressed", function(widget)
@@ -380,7 +359,7 @@ local function DrawItemHistory(container, rebuild)
         end
     end
 
-    pagination:SetValues(#filtered, pageSize);
+    pagination:SetValues(#filtered, 50);
     if #filtered > 0 then
         local first, last = pagination:GetRange();
         local count = 0;
