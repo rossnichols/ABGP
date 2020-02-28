@@ -169,6 +169,26 @@ local function DrawPriority(container, rebuild)
             if data.player == UnitName("player") then
                 elt.frame:RequestHighlight(true);
             end
+            elt:SetCallback("OnClick", function(widget, event, button)
+                if button == "RightButton" then
+                    ABGP:ShowContextMenu({
+                        {
+                            text = "Show item history",
+                            func = function(self, data)
+                                if activeWindow then
+                                    local container = activeWindow:GetUserData("container");
+                                    container:SelectTab("gp");
+                                    container:GetUserData("search"):SetText(("\"%s\""):format(data.player));
+                                    PopulateUI(false);
+                                end
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        },
+                        { text = "Cancel", notCheckable = true },
+                    });
+                end
+            end);
 
             priorities:AddChild(elt);
         end
