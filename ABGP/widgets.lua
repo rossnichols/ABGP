@@ -638,6 +638,7 @@ do
     local methods = {
         ["OnAcquire"] = function(self)
             self.date.text:SetText("");
+            self.auditType.text:SetText("");
             self.audit.text:SetText("");
 
             self.frame.highlightRequests = 0;
@@ -650,14 +651,17 @@ do
             self.data = data;
 
             self.date.text:SetText(data.date);
+            self.auditType.text:SetText(data.type);
             self.audit.text:SetText(data.audit);
 
             local specialFont = (data.important) and "ABGPHighlight" or "GameFontHighlight";
+            self.auditType.text:SetFontObject(specialFont);
             self.audit.text:SetFontObject(specialFont);
         end,
 
         ["SetWidths"] = function(self, widths)
             self.date:SetWidth(widths[1] or 0);
+            self.auditType:SetWidth(widths[2] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -692,7 +696,10 @@ do
         local date = CreateElement(frame);
         date.text = CreateFontString(date);
 
-        local audit = CreateElement(frame, date);
+        local auditType = CreateElement(frame, date);
+        auditType.text = CreateFontString(auditType);
+
+        local audit = CreateElement(frame, auditType);
         audit.text = CreateFontString(audit);
         audit:SetPoint("TOPRIGHT", frame);
         audit:SetScript("OnEnter", function(self)
@@ -713,6 +720,7 @@ do
         -- create widget
         local widget = {
             date = date,
+            auditType = auditType,
             audit = audit,
 
             background = background,

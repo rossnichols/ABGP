@@ -377,7 +377,7 @@ local function DrawItemHistory(container, rebuild)
 end
 
 local function DrawAuditLog(container, rebuild)
-    local widths = { 70, 1.0 };
+    local widths = { 70, 60, 1.0 };
     if rebuild then
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
@@ -393,7 +393,7 @@ local function DrawAuditLog(container, rebuild)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Date", "Info", weights = { unpack(widths) } };
+        local columns = { "Date", "Type", "Info", weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -419,7 +419,7 @@ local function DrawAuditLog(container, rebuild)
 
     local entries = _G.ABGP_ItemAuditLog[selectedPhase];
     local pagination = container:GetUserData("pagination");
-    pagination:SetValues(#entries, 10);
+    pagination:SetValues(#entries, 100);
     if #entries > 0 then
         local first, last = pagination:GetRange();
         local requestTypes = {
@@ -429,45 +429,46 @@ local function DrawAuditLog(container, rebuild)
         };
         for i = first, last do
             local data = entries[i];
-            local logged = {};
-            for _, distrib in ipairs(data.distributions) do
+            if data.distribution then
+                local distrib = data.distribution;
                 local audit;
                 if distrib.trashed then
                     audit = ("%s was disenchanted"):format(data.itemLink);
                 else
-                    logged[distrib.player] = true;
                     local requestType = requestTypes[distrib.requestType];
                     local override = distrib.override
                         and (",%s"):format(distrib.override)
                         or "";
-                    audit = ("%s for %dgp to %s (%s%s): ep=%.2f gp=%.2f pri=%.2f"):format(
-                        data.itemLink, distrib.cost, distrib.player, requestType, override, distrib.ep, distrib.gp, distrib.priority);
+                    local epgp = ("ep=%.2f gp=%.2f pri=%.2f"):format(distrib.ep, distrib.gp, distrib.priority);
+                    audit = ("%s for %dgp to %s (%s%s): %s"):format(
+                        data.itemLink, distrib.cost, distrib.player, requestType, override, epgp);
                 end
                 local elt = AceGUI:Create("ABGP_AuditLog");
                 elt:SetFullWidth(true);
                 elt:SetData({
                     date = date("%m/%d/%y", data.time),
+                    type = "Distrib",
                     audit = audit,
                     important = true,
                 });
                 elt:SetWidths(widths);
                 auditLog:AddChild(elt);
-            end
-            for _, request in ipairs(data.requests) do
-                if not logged[request.player] then
-                    local requestType = requestTypes[request.requestType];
-                    local audit = ("%s by %s (%s): ep=%.2f gp=%.2f pri=%.2f"):format(
-                        data.itemLink, request.player, requestType, request.ep, request.gp, request.priority);
-                    local elt = AceGUI:Create("ABGP_AuditLog");
-                    elt:SetFullWidth(true);
-                    elt:SetData({
-                        date = date("%m/%d/%y", data.time),
-                        audit = audit,
-                        important = false,
-                    });
-                    elt:SetWidths(widths);
-                    auditLog:AddChild(elt);
-                end
+            elseif data.request then
+                local request = data.request;
+                local requestType = requestTypes[request.requestType];
+                local epgp = ("ep=%.2f gp=%.2f pri=%.2f"):format(request.ep, request.gp, request.priority);
+                local audit = ("%s by %s (%s): %s"):format(
+                    data.itemLink, request.player, requestType, epgp);
+                local elt = AceGUI:Create("ABGP_AuditLog");
+                elt:SetFullWidth(true);
+                elt:SetData({
+                    date = date("%m/%d/%y", data.time),
+                    type = "Request",
+                    audit = audit,
+                    important = false,
+                });
+                elt:SetWidths(widths);
+                auditLog:AddChild(elt);
             end
         end
     end
@@ -485,7 +486,7 @@ function ABGP:CreateMainWindow()
         version = 1,
         defaultWidth = 600,
         minWidth = 550,
-        maxWidth = 700,
+        maxWidth = 750,
         defaultHeight = 500,
         minHeight = 300,
         maxHeight = 700

@@ -281,13 +281,30 @@ function ABGP:TrimAuditLog(threshold)
 end
 
 function ABGP:AuditItemDistribution(item)
+    local time = GetServerTime();
     local value = item.data.value;
     if value and #item.distributions > 0 then
-        table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
-            itemLink = item.itemLink,
-            requests = item.requests,
-            distributions = item.distributions,
-            time = GetServerTime(),
-        });
+        local players = {};
+        for _, distrib in ipairs(item.distributions) do
+            if not distrib.trashed then
+                players[distrib.player] = true;
+            end
+        end
+        for _, request in ipairs(item.requests) do
+            if not players[request.player] then
+                table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
+                    itemLink = item.itemLink,
+                    time = time,
+                    request = request,
+                });
+            end
+        end
+        for _, distrib in ipairs(item.distributions) do
+            table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
+                itemLink = item.itemLink,
+                time = time,
+                distribution = distrib,
+            });
+        end
     end
 end
