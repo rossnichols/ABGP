@@ -258,6 +258,21 @@ for phase in pairs(ABGP.Phases) do
     _G.ABGP_ItemAuditLog[phase] = {};
 end
 
+function ABGP:TrimAuditLog(threshold)
+    local current = GetServerTime();
+    for _, phaseLog in pairs(_G.ABGP_ItemAuditLog) do
+        local i = 1;
+        while i <= #phaseLog do
+            local age = current - phaseLog[i].time;
+            if age >= threshold then
+                table.remove(phaseLog, i);
+            else
+                i = i + 1;
+            end
+        end
+    end
+end
+
 function ABGP:AuditItemDistribution(item)
     local value = item.data.value;
     if value and #item.distributions > 0 then

@@ -27,7 +27,7 @@ local function CalculateCost(request)
     local currentItem = window:GetUserData("currentItem");
 
     if request and request.override then
-        return 0, false;
+        return 0, false, request.override;
     end
     local costBase = (request and request.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
     return currentItem.costEdited or costBase, currentItem.data.value ~= nil;
@@ -41,9 +41,9 @@ local function ProcessSelectedRequest()
     window:GetUserData("disenchantButton"):SetDisabled(selected ~= nil);
     window:GetUserData("distributeButton"):SetDisabled(selected == nil);
 
-    local cost, editable = CalculateCost(selected);
+    local cost, editable, reason = CalculateCost(selected);
     local edit = window:GetUserData("costEdit");
-    edit:SetText(cost);
+    edit:SetText(reason or cost);
     edit:SetDisabled(not editable);
 end
 
@@ -753,6 +753,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         local testBase = {
             itemLink = data.itemLink,
             rank = "Blue Lobster",
+            override = "trial",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
                 "|cffff8000|Hitem:19019::::::::60:::::|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",

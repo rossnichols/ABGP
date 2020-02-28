@@ -415,20 +415,35 @@ local function DrawAuditLog(container, rebuild)
         container:SetUserData("auditLog", scroll);
     end
 
-    local audit = container:GetUserData("auditLog");
-    audit:ReleaseChildren();
+    local auditLog = container:GetUserData("auditLog");
+    auditLog:ReleaseChildren();
 
     local entries = _G.ABGP_ItemAuditLog[selectedPhase];
     local pagination = container:GetUserData("pagination");
-    pagination:SetValues(#entries, 100);
+    pagination:SetValues(#entries, 10);
     if #entries > 0 then
         local first, last = pagination:GetRange();
+        local requestTypes = {
+            [ABGP.RequestTypes.MS] = "ms",
+            [ABGP.RequestTypes.OS] = "os",
+            [ABGP.RequestTypes.ROLL] = "roll",
+        };
         for i = first, last do
             local data = entries[i];
             local logged = {};
             for _, distrib in ipairs(data.distributions) do
-                local audit = ("%s awarded to %s (ep=%.3f gp=%.3f pri=%.3f) for %d gp"):format(
-                    data.itemLink, distrib.player, distrib.ep, distrib.gp, distrib.priority, distrib.cost);
+                local audit;
+                if distrib.trashed then
+                    audit = ("%s was disenchanted"):format(data.itemLink);
+                else
+                    logged[distrib.player] = true;
+                    local requestType = requestTypes[distrib.requestType];
+                    local override = distrib.override
+                        and (",%s"):format(distrib.override)
+                        or "";
+                    audit = ("%s for %dgp to %s (%s%s): ep=%.2f gp=%.2f pri=%.2f"):format(
+                        data.itemLink, distrib.cost, distrib.player, requestType, override, distrib.ep, distrib.gp, distrib.priority);
+                end
                 local elt = AceGUI:Create("ABGP_AuditLog");
                 elt:SetFullWidth(true);
                 elt:SetData({
@@ -437,13 +452,13 @@ local function DrawAuditLog(container, rebuild)
                     important = true,
                 });
                 elt:SetWidths(widths);
-                audit:AddChild(elt);
-                logged[distrib.player] = true;
+                auditLog:AddChild(elt);
             end
             for _, request in ipairs(data.requests) do
                 if not logged[request.player] then
-                    local audit = ("%s requested by %s (ep=%.3f gp=%.3f pri=%.3f)"):format(
-                        data.itemLink, request.player, request.ep, request.gp, request.priority);
+                    local requestType = requestTypes[request.requestType];
+                    local audit = ("%s by %s (%s): ep=%.2f gp=%.2f pri=%.2f"):format(
+                        data.itemLink, request.player, requestType, request.ep, request.gp, request.priority);
                     local elt = AceGUI:Create("ABGP_AuditLog");
                     elt:SetFullWidth(true);
                     elt:SetData({
@@ -452,7 +467,7 @@ local function DrawAuditLog(container, rebuild)
                         important = false,
                     });
                     elt:SetWidths(widths);
-                    audit:AddChild(elt);
+                    auditLog:AddChild(elt);
                 end
             end
         end
