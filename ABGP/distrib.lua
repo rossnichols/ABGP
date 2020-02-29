@@ -497,25 +497,37 @@ end
 function ABGP:DistribOnActivePlayersRefreshed()
     if not activeDistributionWindow then return; end
     local activeItems = activeDistributionWindow:GetUserData("activeItems");
+
+    local needsUpdate = false;
+    local function checkValue(t, k, v)
+        local old = t[k];
+        if old ~= v then
+            t[k] = v;
+            needsUpdate = true;
+        end
+    end
+
     for itemLink, item in pairs(activeItems) do
         local value = item.data.value;
         if value then
             for _, request in ipairs(item.requests) do
                 local epgp = self:GetActivePlayer(request.player);
                 if epgp and epgp[value.phase] then
-                    request.priority = epgp[value.phase].priority;
-                    request.ep = epgp[value.phase].ep;
-                    request.gp = epgp[value.phase].gp;
+                    checkValue(request, "priority", epgp[value.phase].priority);
+                    checkValue(request, "ep", epgp[value.phase].ep);
+                    checkValue(request, "gp", epgp[value.phase].gp);
                 else
-                    request.priority = 0;
-                    request.ep = 0;
-                    request.gp = 0;
+                    checkValue(request, "priority", 0);
+                    checkValue(request, "ep", 0);
+                    checkValue(request, "gp", 0);
                 end
             end
         end
     end
 
-    RebuildUI();
+    if needsUpdate then
+        RebuildUI();
+    end
 end
 
 local function EndDistribution()

@@ -87,7 +87,6 @@ function ABGP:OnInitialize()
     self:AddItemHooks();
     self:CheckHardcodedData();
     self:RefreshItemValues();
-    self:RefreshFromOfficerNotes();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
 
     -- Trigger a guild roster update to refresh priorities.

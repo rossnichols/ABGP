@@ -24,40 +24,12 @@ local function PrioritySort(a, b)
     end
 end
 
-local function CheckActivePlayer(db, old, new)
-    local needsUpdate = false;
-
-    if (old == nil) ~= (new == nil) then
-        needsUpdate = true;
-        if old == nil then
-            -- Seeing this player for the first time: insert into db
-            table.insert(db, new);
-        else
-            -- Player no longer tracked: remove from db
-            for i, data in ipairs(db) do
-                if data.player == old.player then
-                    table.remove(db, i);
-                    break;
-                end
-            end
-        end
-    elseif new then
-        -- Check if any of the player's data changed
-        for key, value in pairs(new) do
-            if old[key] ~= value then
-                needsUpdate = true;
-                old[key] = value;
-            end
-        end
-    end
-
-    return needsUpdate;
-end
-
 function ABGP:RefreshFromOfficerNotes()
     local needsUpdate = false;
     local p1 = self.Priorities[self.Phases.p1];
     local p3 = self.Priorities[self.Phases.p3];
+    table.wipe(p1);
+    table.wipe(p3);
 
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
@@ -65,7 +37,7 @@ function ABGP:RefreshFromOfficerNotes()
         local epgp = self:GetActivePlayer(player, true);
         local p1New, p3New;
 		if self:IsTrial(rank) then
-			p1New = {
+			table.insert(p1, {
 				player = player,
 				rank = rank,
 				class = class,
@@ -73,8 +45,8 @@ function ABGP:RefreshFromOfficerNotes()
 				gp = 0,
 				priority = 0,
 				trial = true
-			};
-			p3New = {
+			});
+			table.insert(p3, {
 				player = player,
 				rank = rank,
 				class = class,
@@ -82,7 +54,7 @@ function ABGP:RefreshFromOfficerNotes()
 				gp = 0,
 				priority = 0,
 				trial = true
-			};
+			});
         elseif note ~= "" then
             local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
             if p1ep then
@@ -92,41 +64,32 @@ function ABGP:RefreshFromOfficerNotes()
                 p3gp = tonumber(p3gp) / 1000;
 
                 if p1gp ~= 0 then
-                    p1New = {
+                    table.insert(p1, {
                         player = player,
                         rank = rank,
                         class = class,
                         ep = p1ep,
                         gp = p1gp,
                         priority = p1ep * 10 / p1gp
-                    };
+                    });
                 end
                 if p3gp ~= 0 then
-                    p3New = {
+                    table.insert(p3, {
                         player = player,
                         rank = rank,
                         class = class,
                         ep = p3ep,
                         gp = p3gp,
                         priority = p3ep * 10 / p3gp
-                    };
+                    });
                 end
             end
         end
-
-        if CheckActivePlayer(p1, epgp and epgp[self.Phases.p1], p1New) then
-            needsUpdate = true;
-        end
-        if CheckActivePlayer(p3, epgp and epgp[self.Phases.p3], p3New) then
-            needsUpdate = true;
-        end
     end
 
-    if needsUpdate then
-        table.sort(p1, PrioritySort);
-        table.sort(p3, PrioritySort);
-        self:RefreshActivePlayers();
-    end
+    table.sort(p1, PrioritySort);
+    table.sort(p3, PrioritySort);
+    self:RefreshActivePlayers();
 end
 
 function ABGP:RebuildOfficerNotes()
@@ -181,6 +144,8 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
             p3gp = floor(p3.gp * 1000);
         end
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
+    elseif not existingNote:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$") then
+        note = existingNote;
     end
 
     if note ~= existingNote then
