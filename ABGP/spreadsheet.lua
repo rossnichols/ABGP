@@ -77,12 +77,12 @@ local itemColumns = {
 
 local priMapping = {
     ["Character"] = "player",
-    ["Rank"] = "rank",
-    ["Class"] = "class",
+    ["Rank"] = false,
+    ["Class"] = false,
     ["Spec"] = false,
     ["Effort Points"] = "ep",
     ["Gear Points"] = "gp",
-    ["Ratio"] = "priority",
+    ["Ratio"] = false,
 };
 local priColumns = {
     weights = { 110, 90, 60, 60, 60, 60 },
