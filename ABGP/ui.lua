@@ -200,7 +200,7 @@ local function DrawItemHistory(container, rebuild)
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0 } });
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 1.0, 0 } });
         container:AddChild(mainLine);
 
         local search = AceGUI:Create("EditBox");
