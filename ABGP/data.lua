@@ -104,7 +104,9 @@ function ABGP:RebuildOfficerNotes()
         end
     end
 
-    if count ~= 0 then
+    if count == 0 then
+        self:Notify("Everything already up to date!");
+    else
         self:Notify("Updated %d officer notes with the latest priority data!", count);
         self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
     end
@@ -113,7 +115,7 @@ end
 function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
     if not guildIndex and not self:IsPrivileged() then return; end
     if not self:CanEditOfficerNotes() then return; end
-    local epgp = self:GetActivePlayer(player);
+    local epgp = self:GetActivePlayer(player, true);
 
     if not guildIndex then
         for i = 1, GetNumGuildMembers() do

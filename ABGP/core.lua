@@ -326,7 +326,7 @@ ABGP.RequestTypes = {
 local activePlayers = {};
 
 function ABGP:RefreshActivePlayers()
-    activePlayers = {};
+    table.wipe(activePlayers);
     for phase in pairs(self.Phases) do
         for _, pri in ipairs(self.Priorities[phase]) do
             activePlayers[pri.player] = activePlayers[pri.player] or {};
