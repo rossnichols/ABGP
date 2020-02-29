@@ -203,7 +203,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
-    local class;
+    local class = "";
     local epgp = ABGP:GetActivePlayer(data.player);
     if epgp and epgp[value.phase] then
         class = epgp[value.phase].class;
