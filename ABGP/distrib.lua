@@ -406,6 +406,54 @@ function ABGP:DistribOnCheck(data, distribution, sender)
     end
 end
 
+local function PopulateRequest(request, value)
+    local override;
+    local rank;
+    local guildInfo = ABGP:GetGuildInfo(request.player);
+    if guildInfo then
+        rank = guildInfo[2];
+        if ABGP:IsTrial(rank) then
+            override = "trial";
+        end
+    else
+        rank = "Non-guildie";
+        override = "non-guildie";
+    end
+
+    local priority, ep, gp;
+    local epgp, alt = ABGP:GetActivePlayer(request.player);
+    if value then
+        priority, ep, gp = 0, 0, 0;
+        if epgp and epgp[value.phase] then
+            priority = epgp[value.phase].priority;
+            ep = epgp[value.phase].ep;
+            gp = epgp[value.phase].gp;
+        elseif not override then
+            override = "non-raider";
+        end
+    end
+
+    if alt then
+        rank = ("(%s)"):format(ABGP:ColorizeName(epgp.player));
+    end
+
+    local needsUpdate = false;
+    local function checkValue(t, k, v)
+        local old = t[k];
+        if old ~= v then
+            t[k] = v;
+            needsUpdate = true;
+        end
+    end
+
+    checkValue(request, "priority", priority);
+    checkValue(request, "ep", ep);
+    checkValue(request, "gp", gp);
+    checkValue(request, "rank", rank);
+    checkValue(request, "override", override);
+    return needsUpdate;
+end
+
 function ABGP:DistribOnItemRequest(data, distribution, sender)
     local itemLink = data.itemLink;
     local window = activeDistributionWindow;
@@ -420,23 +468,6 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         return;
     end
 
-    local override;
-    local guildName, guildRankName;
-    if UnitIsInMyGuild(sender) then
-        local guildInfo = self:GetGuildInfo(sender);
-        if guildInfo then
-            guildRankName = guildInfo[2];
-        else
-            guildName, guildRankName = GetGuildInfo(sender);
-        end
-        if self:IsTrial(guildRankName) then
-            override = "trial";
-        end
-    else
-        guildRankName = "[Non-guildie]";
-        override = "non-guildie";
-    end
-
     local requestTypes = {
         [ABGP.RequestTypes.MS] = "for main spec",
         [ABGP.RequestTypes.OS] = "for off spec",
@@ -444,38 +475,16 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
     };
     ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(sender), itemLink, requestTypes[data.requestType]);
 
-    local priority, ep, gp;
-    local epgp, alt = ABGP:GetActivePlayer(sender);
-    local itemName = ABGP:GetItemName(itemLink);
-    local value = ABGP:GetItemValue(itemName);
-
-    if value then
-        priority, ep, gp = 0, 0, 0;
-        if epgp and epgp[value.phase] then
-            priority = epgp[value.phase].priority;
-            ep = epgp[value.phase].ep;
-            gp = epgp[value.phase].gp;
-        elseif not override then
-            override = "non-raider";
-        end
-    end
-
-    if alt then
-        guildRankName = ("ALT (%s)"):format(epgp.player);
-    end
-
-    ProcessNewRequest({
+    local request = {
         itemLink = itemLink,
         player = sender,
-        override = override,
-        rank = guildRankName,
-        priority = priority,
-        ep = ep,
-        gp = gp,
         equipped = data.equipped,
         requestType = data.requestType,
         notes = data.notes
-    });
+    };
+    PopulateRequest(request, activeItems[itemLink].data.value);
+
+    ProcessNewRequest(request);
 end
 
 function ABGP:DistribOnItemPass(data, distribution, sender)
@@ -499,27 +508,12 @@ function ABGP:DistribOnActivePlayersRefreshed()
     local activeItems = activeDistributionWindow:GetUserData("activeItems");
 
     local needsUpdate = false;
-    local function checkValue(t, k, v)
-        local old = t[k];
-        if old ~= v then
-            t[k] = v;
-            needsUpdate = true;
-        end
-    end
-
     for itemLink, item in pairs(activeItems) do
         local value = item.data.value;
         if value then
             for _, request in ipairs(item.requests) do
-                local epgp = self:GetActivePlayer(request.player);
-                if epgp and epgp[value.phase] then
-                    checkValue(request, "priority", epgp[value.phase].priority);
-                    checkValue(request, "ep", epgp[value.phase].ep);
-                    checkValue(request, "gp", epgp[value.phase].gp);
-                else
-                    checkValue(request, "priority", 0);
-                    checkValue(request, "ep", 0);
-                    checkValue(request, "gp", 0);
+                if PopulateRequest(request, value) then
+                    needsUpdate = true;
                 end
             end
         end
@@ -796,6 +790,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             local entry = {};
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
+            if i == 1 then entry.player = "Basil"; end
             local rand = math.random();
             if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
             elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;

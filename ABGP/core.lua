@@ -208,6 +208,12 @@ function ABGP:ColorizeName(name, class)
             class = className;
         end
     end
+    if not class then
+        local guildInfo = self:GetGuildInfo(name);
+        if guildInfo then
+            class = guildInfo[11];
+        end
+    end
     if not class then return name; end
     local color = select(4, GetClassColor(class));
     return ("|c%s%s|r"):format(color, name);
@@ -234,8 +240,9 @@ function ABGP:RebuildGuildInfo()
     table.wipe(guildInfo);
     for i = 1, GetNumGuildMembers() do
         local data = { GetGuildRosterInfo(i) };
-        local player = Ambiguate(data[1], "short");
-        guildInfo[player] = data;
+        data.player = Ambiguate(data[1], "short");
+        data.index = i;
+        guildInfo[data.player] = data;
     end
 end
 
@@ -245,10 +252,6 @@ end
 
 function ABGP:IsTrial(rank)
     return (rank == "Trial");
-end
-
-function ABGP:IsAlt(rank)
-    return (rank == "Lobster Alt");
 end
 
 
@@ -338,10 +341,8 @@ end
 function ABGP:GetActivePlayer(name, ignoreAlts)
     if not activePlayers[name] and not ignoreAlts then
         local guildInfo = self:GetGuildInfo(name);
-        if guildInfo then
-            if self:IsAlt(guildInfo[2]) and activePlayers[guildInfo[7]] then
-                return activePlayers[guildInfo[7]], true;
-            end
+        if guildInfo and activePlayers[guildInfo[8]] then
+            return activePlayers[guildInfo[8]], true;
         end
     end
     return activePlayers[name];
