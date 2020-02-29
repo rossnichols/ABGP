@@ -53,11 +53,6 @@ function ABGP:FixupHistory()
                     print(("FAILED TO FIND [%s]"):format(entry.item));
                 end
             end
-            local epgp = ABGP:GetActivePlayer(entry.player);
-            if epgp then
-                if epgp.p1 then entry.class = epgp.p1.class; end
-                if epgp.p3 then entry.class = epgp.p3.class; end
-            end
         end
     end
 end

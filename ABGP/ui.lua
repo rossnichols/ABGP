@@ -341,17 +341,19 @@ local function DrawItemHistory(container, rebuild)
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
         for _, data in ipairs(gpHistory) do
+            local guildInfo = ABGP:GetGuildInfo(data.player);
+            local class = guildInfo and guildInfo[11] or "";
             if exact then
                 if data.player:lower() == exact or
                    data.item:lower() == exact or
-                   data.class:lower() == exact or
+                   class:lower() == exact or
                    data.date:lower() == exact then
                     table.insert(filtered, data);
                 end
             else
                 if data.player:lower():find(searchText, 1, true) or
                    data.item:lower():find(searchText, 1, true) or
-                   data.class:lower():find(searchText, 1, true) or
+                   class:lower():find(searchText, 1, true) or
                    data.date:lower():find(searchText, 1, true) then
                     table.insert(filtered, data);
                 end
