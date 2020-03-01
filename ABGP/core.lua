@@ -414,10 +414,6 @@ end
 -- Support for other events delivered to components.
 --
 
-hooksecurefunc("ReloadUI", function()
-    ABGP:DistribOnReloadUI();
-end);
-
 local rollRegex = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
 rollRegex = rollRegex:gsub("%%s", "(%%S+)");
 rollRegex = rollRegex:gsub("%%d", "(%%d+)");
@@ -430,6 +426,7 @@ f:RegisterEvent("GROUP_LEFT");
 f:RegisterEvent("GROUP_ROSTER_UPDATE");
 f:RegisterEvent("PLAYER_LEAVING_WORLD");
 f:RegisterEvent("LOADING_SCREEN_ENABLED");
+f:RegisterEvent("PLAYER_LOGOUT");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:RebuildGuildInfo();
@@ -453,6 +450,8 @@ f:SetScript("OnEvent", function(self, event, ...)
         ABGP:DistribOnLeavingWorld();
     elseif event == "LOADING_SCREEN_ENABLED" then
         ABGP:DistribOnLoadingScreen();
+    elseif event == "PLAYER_LOGOUT" then
+        ABGP:DistribOnLogout();
     end
 end);
 

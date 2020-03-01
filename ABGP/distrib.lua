@@ -542,7 +542,7 @@ function ABGP:DistribOnLoadingScreen()
     EndDistribution();
 end
 
-function ABGP:DistribOnReloadUI()
+function ABGP:DistribOnLogout()
     EndDistribution();
 end
 
