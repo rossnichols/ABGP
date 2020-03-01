@@ -790,7 +790,6 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
             local entry = {};
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
-            if i == 1 then entry.player = "Basil"; end
             local rand = math.random();
             if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
             elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
