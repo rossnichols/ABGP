@@ -31,20 +31,9 @@ local function DrawPriority(container, rebuild)
     local widths = { 120, 110, 75, 75, 75 };
 
     if rebuild then
-        local classSelector = AceGUI:Create("Dropdown");
+        local classSelector = AceGUI:Create("ABGP_Filter");
         classSelector:SetWidth(110);
-        local classes = {
-            "DRUID",
-            "HUNTER",
-            "MAGE",
-            "PALADIN",
-            "PRIEST",
-            "ROGUE",
-            "WARLOCK",
-            "WARRIOR",
-            "ALL",
-        };
-        classSelector:SetList({
+        classSelector:SetValues(ignoredClasses, {
             DRUID = "Druid",
             HUNTER = "Hunter",
             MAGE = "Mage",
@@ -53,75 +42,19 @@ local function DrawPriority(container, rebuild)
             ROGUE = "Rogue",
             WARLOCK = "Warlock",
             WARRIOR = "Warrior",
-            ALL = "All",
-        }, classes);
-        classSelector:SetMultiselect(true);
-
-        local function showingAll()
-            local hasIgnoredClass = false;
-            for _, state in pairs(ignoredClasses) do
-                if state then
-                    hasIgnoredClass = true;
-                    break;
-                end
-            end
-
-            return not hasIgnoredClass;
-        end
-        local function showingNone()
-            local hasShownClass = false;
-            for _, class in ipairs(classes) do
-                if class ~= "ALL" and not ignoredClasses[class] then
-                    hasShownClass = true;
-                    break;
-                end
-            end
-
-            return not hasShownClass;
-        end
-        local function updateCheckboxes(widget)
-            local all = showingAll();
-            for _, class in ipairs(classes) do
-                if class == "ALL" then
-                    widget:SetItemValue(class, all);
-                else
-                    widget:SetItemValue(class, not all and not ignoredClasses[class]);
-                end
-            end
-        end
-        local function valueChangedCallback(widget, event, class, checked)
-            if class == "ALL" then
-                if checked then
-                    ignoredClasses = {};
-                end
-            else
-                if checked then
-                    if showingAll() then
-                        ignoredClasses = {
-                            DRUID = true,
-                            HUNTER = true,
-                            MAGE = true,
-                            PALADIN = true,
-                            PRIEST = true,
-                            ROGUE = true,
-                            WARLOCK = true,
-                            WARRIOR = true,
-                        };
-                    end
-                end
-                ignoredClasses[class] = not checked;
-                if showingNone() then
-                    ignoredClasses = {};
-                end
-            end
-
-            widget:SetCallback("OnValueChanged", nil);
-            updateCheckboxes(widget);
-            widget:SetCallback("OnValueChanged", valueChangedCallback);
+        }, {
+            "DRUID",
+            "HUNTER",
+            "MAGE",
+            "PALADIN",
+            "PRIEST",
+            "ROGUE",
+            "WARLOCK",
+            "WARRIOR",
+        });
+        classSelector:SetCallback("OnFilterUpdated", function()
             PopulateUI(false);
-        end
-        updateCheckboxes(classSelector);
-        classSelector:SetCallback("OnValueChanged", valueChangedCallback);
+        end);
         classSelector:SetText("Classes");
         container:AddChild(classSelector);
 

@@ -8,6 +8,7 @@ local pairs = pairs;
 local floor = floor;
 local min = min;
 local mod = mod;
+local table = table;
 
 local function CreateElement(frame, anchor, template)
     local elt = CreateFrame("Button", nil, frame, template);
@@ -554,6 +555,104 @@ do
         end
 
         return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_Filter", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+
+    local function ShowingAll(filtered)
+        for _, state in pairs(filtered) do
+            if state then return false; end
+        end
+
+        return true;
+    end
+
+    local function ShowingNone(values, filtered)
+        local hasShownClass = false;
+        for value in pairs(values) do
+            if value ~= "ALL" and not filtered[value] then return false; end
+        end
+
+        return true;
+    end
+
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self:DropdownOnAcquire();
+            self:SetMultiselect(true);
+        end,
+
+        ["SetValues"] = function(self, filtered, values, sorted)
+            self.filtered = filtered;
+            self.values = values;
+
+            values.ALL = "All";
+            table.insert(sorted, "ALL");
+            self:SetList(values, sorted);
+
+            self:SetCallback("OnValueChanged", nil);
+            self:UpdateCheckboxes();
+            self:SetCallback("OnValueChanged", self.ValueChangedCallback);
+        end,
+
+        ["ValueChangedCallback"] = function(self, event, value, checked)
+            if value == "ALL" then
+                if checked then
+                    table.wipe(self.filtered);
+                end
+            else
+                if checked then
+                    if ShowingAll(self.filtered) then
+                        for value in pairs(self.values) do
+                            if value ~= "ALL" then self.filtered[value] = true; end
+                        end
+                    end
+                end
+                self.filtered[value] = not checked;
+                if ShowingNone(self.values, self.filtered) then
+                    table.wipe(self.filtered);
+                end
+            end
+
+            self:SetCallback("OnValueChanged", nil);
+            self:UpdateCheckboxes();
+            self:SetCallback("OnValueChanged", self.ValueChangedCallback);
+            self:Fire("OnFilterUpdated");
+        end,
+
+        ["UpdateCheckboxes"] = function(self)
+            local all = ShowingAll(self.filtered);
+            for value in pairs(self.values) do
+                if value == "ALL" then
+                    self:SetItemValue(value, all);
+                else
+                    self:SetItemValue(value, not all and not self.filtered[value]);
+                end
+            end
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local dropdown = AceGUI:Create("Dropdown");
+
+        dropdown.type = Type;
+        dropdown.DropdownOnAcquire = dropdown.OnAcquire;
+        for method, func in pairs(methods) do
+            dropdown[method] = func;
+        end
+    
+        return dropdown;
     end
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
