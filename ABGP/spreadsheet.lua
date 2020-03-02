@@ -293,7 +293,7 @@ local function DrawGP(container)
             row.gp = row.gp or 0;
             row.date = row.date or "";
             row.date = row.date:gsub("20(%d%d)", "%1");
-            return row.gp >= 0 and not banned[row.item:lower()] and ABGP:GetActivePlayer(row.player);
+            return row.player and row.item and row.gp >= 0 and not banned[row.item:lower()] and ABGP:GetActivePlayer(row.player);
         end);
 
         local function reverse(arr)
@@ -338,7 +338,7 @@ local function DrawItems(container)
             return true;
         end);
 
-        table.sert(_G.ABGP_Data[ABGP.CurrentPhase].itemValues, function(a, b)
+        table.sort(_G.ABGP_Data[ABGP.CurrentPhase].itemValues, function(a, b)
             return a[1] < b[1];
         end);
 
