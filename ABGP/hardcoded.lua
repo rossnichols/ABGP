@@ -4,5343 +4,3472 @@ local ABGP = ABGP;
 local date = date;
 
 _G.ABGP_Data = {
-	["p3"] = {
-		["gpHistory"] = {
-			{
-				["player"] = "Yoink",
-				["item"] = "Head of Nefarian",
-				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:19003::::::::60:::::::|h[Head of Nefarian]|h|r",
-				["gp"] = 150,
-			}, -- [1]
-			{
-				["player"] = "Righteous",
-				["item"] = "Judgement Breastplate",
-				["date"] = "2/18/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16958::::::::60:::::::|h[Judgement Breastplate]|h|r",
-				["gp"] = 0,
-			}, -- [2]
-			{
-				["player"] = "Tikki",
-				["item"] = "Therazane's Link",
-				["date"] = "2/18/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19380::::::::60:::::::|h[Therazane's Link]|h|r",
-				["gp"] = 0,
-			}, -- [3]
-			{
-				["gp"] = 175,
-				["item"] = "Nemesis Robes",
-				["date"] = "2/18/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16931::::::::60:::::::|h[Nemesis Robes]|h|r",
-				["player"] = "Krustytop",
-			}, -- [4]
-			{
-				["player"] = "Xanido",
-				["item"] = "Cloak of the Brood Lord",
-				["date"] = "2/18/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19378::::::::60:::::::|h[Cloak of the Brood Lord]|h|r",
-				["gp"] = 200,
-			}, -- [5]
-			{
-				["player"] = "Jezail",
-				["item"] = "Chromatic Boots",
-				["date"] = "2/18/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19387::::::::60:::::::|h[Chromatic Boots]|h|r",
-				["gp"] = 250,
-			}, -- [6]
-			{
-				["player"] = "Priestpimp",
-				["item"] = "Pauldrons of Transcendence",
-				["date"] = "2/18/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16924::::::::60:::::::|h[Pauldrons of Transcendence]|h|r",
-				["gp"] = 150,
-			}, -- [7]
-			{
-				["player"] = "Xanido",
-				["item"] = "Netherwind Mantle",
-				["date"] = "2/18/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16917::::::::60:::::::|h[Netherwind Mantle]|h|r",
-				["gp"] = 80,
-			}, -- [8]
-			{
-				["player"] = "Klisk",
-				["item"] = "Styleen's Impeding Scarab",
-				["date"] = "2/18/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19431::::::::60:::::::|h[Styleen's Impeding Scarab]|h|r",
-				["gp"] = 325,
-			}, -- [9]
-			{
-				["player"] = "Groggy",
-				["item"] = "Judgement Gauntlets",
-				["date"] = "2/18/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16956::::::::60:::::::|h[Judgement Gauntlets]|h|r",
-				["gp"] = 0,
-			}, -- [10]
-			{
-				["player"] = "Quellia",
-				["item"] = "Malfurion's Blessed Bulwark",
-				["date"] = "2/18/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:19405::::::::60:::::::|h[Malfurion's Blessed Bulwark]|h|r",
-				["gp"] = 150,
-			}, -- [11]
-			{
-				["player"] = "Juicetea",
-				["item"] = "Bloodfang Gloves",
-				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16907::::::::60:::::::|h[Bloodfang Gloves]|h|r",
-				["gp"] = 50,
-			}, -- [12]
-			{
-				["gp"] = 0,
-				["item"] = "Firemaw's Clutch",
-				["date"] = "2/18/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19400::::::::60:::::::|h[Firemaw's Clutch]|h|r",
-				["player"] = "Lago",
-			}, -- [13]
-			{
-				["player"] = "Xanido",
-				["item"] = "Shadow Wing Focus Staff",
-				["date"] = "2/18/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19355::::::::60:::::::|h[Shadow Wing Focus Staff]|h|r",
-				["gp"] = 70,
-			}, -- [14]
-			{
-				["player"] = "Wardrust",
-				["item"] = "Maladath, Runed Blade of the Black Flight",
-				["date"] = "2/18/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19351::::::::60:::::::|h[Maladath, Runed Blade of the Black Flight]|h|r",
-				["gp"] = 200,
-			}, -- [15]
-			{
-				["gp"] = 0,
-				["item"] = "Sabatons of Wrath",
-				["date"] = "2/18/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16965::::::::60:::::::|h[Sabatons of Wrath]|h|r",
-				["player"] = "Cleaves",
-			}, -- [16]
-			{
-				["player"] = "Juicetea",
-				["item"] = "Bloodfang Boots",
-				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16906::::::::60:::::::|h[Bloodfang Boots]|h|r",
-				["gp"] = 50,
-			}, -- [17]
-			{
-				["player"] = "Gyda",
-				["item"] = "Dragonfang Blade",
-				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:19346::::::::60:::::::|h[Dragonfang Blade]|h|r",
-				["gp"] = 70,
-			}, -- [18]
-			{
-				["player"] = "Bakedpancake",
-				["item"] = "Belt of Transcendence",
-				["date"] = "2/18/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16925::::::::60:::::::|h[Belt of Transcendence]|h|r",
-				["gp"] = 100,
-			}, -- [19]
-			{
-				["player"] = "Juicetea",
-				["item"] = "Bloodfang Belt",
-				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16910::::::::60:::::::|h[Bloodfang Belt]|h|r",
-				["gp"] = 100,
-			}, -- [20]
-			{
-				["player"] = "Friend",
-				["item"] = "The Black Book",
-				["date"] = "2/18/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19337::::::::60:::::::|h[The Black Book]|h|r",
-				["gp"] = 0,
-			}, -- [21]
-			{
-				["player"] = "Gyda",
-				["item"] = "Bloodfang Bracers",
-				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16911::::::::60:::::::|h[Bloodfang Bracers]|h|r",
-				["gp"] = 100,
-			}, -- [22]
-			{
-				["player"] = "Clem",
-				["item"] = "Netherwind Bindings",
-				["date"] = "2/18/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16918::::::::60:::::::|h[Netherwind Bindings]|h|r",
-				["gp"] = 100,
-			}, -- [23]
-			{
-				["player"] = "Zomby",
-				["item"] = "Head of Nefarian",
-				["date"] = "2/12/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:19003::::::::60:::::::|h[Head of Nefarian]|h|r",
-				["gp"] = 150,
-			}, -- [24]
-			{
-				["player"] = "Lunamar",
-				["item"] = "Neltharion's Tear",
-				["date"] = "2/12/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19379::::::::60:::::::|h[Neltharion's Tear]|h|r",
-				["gp"] = 400,
-			}, -- [25]
-			{
-				["player"] = "Krustytop",
-				["item"] = "Cloak of the Brood Lord",
-				["date"] = "2/12/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19378::::::::60:::::::|h[Cloak of the Brood Lord]|h|r",
-				["gp"] = 200,
-			}, -- [26]
-			{
-				["player"] = "Lago",
-				["item"] = "Robes of Transcendence",
-				["date"] = "2/12/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16923::::::::60:::::::|h[Robes of Transcendence]|h|r",
-				["gp"] = 200,
-			}, -- [27]
-			{
-				["player"] = "Frostishot",
-				["item"] = "Dragonstalker's Breastplate",
-				["date"] = "2/12/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16942::::::::60:::::::|h[Dragonstalker's Breastplate]|h|r",
-				["gp"] = 200,
-			}, -- [28]
-			{
-				["player"] = "Quellia",
-				["item"] = "Taut Dragonhide Shoulderpads",
-				["date"] = "2/12/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:19389::::::::60:::::::|h[Taut Dragonhide Shoulderpads]|h|r",
-				["gp"] = 100,
-			}, -- [29]
-			{
-				["player"] = "Basherslice",
-				["item"] = "Ashjre'thul, Crossbow of Smiting",
-				["date"] = "2/12/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:19361::::::::60:::::::|h[Ashjre'thul, Crossbow of Smiting]|h|r",
-				["gp"] = 400,
-			}, -- [30]
-			{
-				["player"] = "Groggy",
-				["item"] = "Judgement Spaulders",
-				["date"] = "2/12/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16953::::::::60:::::::|h[Judgement Spaulders]|h|r",
-				["gp"] = 0,
-			}, -- [31]
-			{
-				["player"] = "Tracer",
-				["item"] = "Pauldrons of Wrath",
-				["date"] = "2/12/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16961::::::::60:::::::|h[Pauldrons of Wrath]|h|r",
-				["gp"] = 200,
-			}, -- [32]
-			{
-				["player"] = "Tikki",
-				["item"] = "Drake Talon Pauldrons",
-				["date"] = "2/12/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19394::::::::60:::::::|h[Drake Talon Pauldrons]|h|r",
-				["gp"] = 250,
-			}, -- [33]
-			{
-				["player"] = "Nadrell",
-				["item"] = "Judgement Gauntlets",
-				["date"] = "2/12/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16956::::::::60:::::::|h[Judgement Gauntlets]|h|r",
-				["gp"] = 0,
-			}, -- [34]
-			{
-				["player"] = "Marizol",
-				["item"] = "Ebony Flame Gloves",
-				["date"] = "2/12/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19407::::::::60:::::::|h[Ebony Flame Gloves]|h|r",
-				["gp"] = 150,
-			}, -- [35]
-			{
-				["player"] = "Coop",
-				["item"] = "Doom's Edge",
-				["date"] = "2/12/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19362::::::::60:::::::|h[Doom's Edge]|h|r",
-				["gp"] = 100,
-			}, -- [36]
-			{
-				["player"] = "Xan",
-				["item"] = "Ring of Blackrock",
-				["date"] = "2/12/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19397::::::::60:::::::|h[Ring of Blackrock]|h|r",
-				["gp"] = 100,
-			}, -- [37]
-			{
-				["player"] = "Xan",
-				["item"] = "Firemaw's Clutch",
-				["date"] = "2/12/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19400::::::::60:::::::|h[Firemaw's Clutch]|h|r",
-				["gp"] = 100,
-			}, -- [38]
-			{
-				["player"] = "Friend",
-				["item"] = "Bracers of Arcane Accuracy",
-				["date"] = "2/12/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19374::::::::60:::::::|h[Bracers of Arcane Accuracy]|h|r",
-				["gp"] = 200,
-			}, -- [39]
-			{
-				["player"] = "Righteous",
-				["item"] = "Judgement Sabatons",
-				["date"] = "2/12/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16957::::::::60:::::::|h[Judgement Sabatons]|h|r",
-				["gp"] = 0,
-			}, -- [40]
-			{
-				["player"] = "Klisk",
-				["item"] = "Sabatons of Wrath",
-				["date"] = "2/12/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16965::::::::60:::::::|h[Sabatons of Wrath]|h|r",
-				["gp"] = 150,
-			}, -- [41]
-			{
-				["player"] = "Groggy",
-				["item"] = "Red Dragonscale Protector",
-				["date"] = "2/12/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19348::::::::60:::::::|h[Red Dragonscale Protector]|h|r",
-				["gp"] = 0,
-			}, -- [42]
-			{
-				["player"] = "Krustytop",
-				["item"] = "Nemesis Belt",
-				["date"] = "2/12/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16933::::::::60:::::::|h[Nemesis Belt]|h|r",
-				["gp"] = 0,
-			}, -- [43]
-			{
-				["player"] = "Knutbag",
-				["item"] = "Nemesis Belt",
-				["date"] = "2/12/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16933::::::::60:::::::|h[Nemesis Belt]|h|r",
-				["gp"] = 0,
-			}, -- [44]
-			{
-				["player"] = "Azuj",
-				["item"] = "Bloodfang Bracers",
-				["date"] = "2/12/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16911::::::::60:::::::|h[Bloodfang Bracers]|h|r",
-				["gp"] = 100,
-			}, -- [45]
-			{
-				["player"] = "Klisk",
-				["item"] = "Bracelets of Wrath",
-				["date"] = "2/12/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16959::::::::60:::::::|h[Bracelets of Wrath]|h|r",
-				["gp"] = 100,
-			}, -- [46]
-		},
-		["itemValues"] = {
-			{
-				"Bindings of Transcendence", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [1]
-			{
-				"Netherwind Bindings", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [2]
-			{
-				"Nemesis Bracers", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [3]
-			{
-				"Bloodfang Bracers", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-					"Stabby Rogue", -- [2]
-				},
-			}, -- [4]
-			{
-				"Stormrage Bracers", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [5]
-			{
-				"Dragonstalker's Bracers", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [6]
-			{
-				"Judgement Bindings", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [7]
-			{
-				"Bracelets of Wrath", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [8]
-			{
-				"Arcane Infused Gem", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [9]
-			{
-				"The Black Book", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [10]
-			{
-				"Mantle of the Blackwing Cabal", -- [1]
-				200, -- [2]
-				["notes"] = "Shadow Priest Super Priority",
-				["priority"] = {
-					"Mage", -- [1]
-					"Priest (Shadow)", -- [2]
-				},
-			}, -- [11]
-			{
-				"Gloves of Rapid Evolution", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [12]
-			{
-				"Spineshatter", -- [1]
-				70, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Slicey Rogue", -- [2]
-					"Stabby Rogue", -- [3]
-					"Tank", -- [4]
-				},
-				["notes"] = "Catch up Priority",
-			}, -- [13]
-			{
-				"The Untamed Blade", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [14]
-			{
-				"Belt of Transcendence", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [15]
-			{
-				"Netherwind Belt", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [16]
-			{
-				"Nemesis Belt", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [17]
-			{
-				"Bloodfang Belt", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-					"Stabby Rogue", -- [2]
-				},
-			}, -- [18]
-			{
-				"Stormrage Belt", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [19]
-			{
-				"Dragonstalker's Belt", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [20]
-			{
-				"Judgement Belt", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [21]
-			{
-				"Waistband of Wrath", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [22]
-			{
-				"Mind Quickening Gem", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [23]
-			{
-				"Rune of Metamorphosis", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [24]
-			{
-				"Helm of Endless Rage", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [25]
-			{
-				"Pendant of the Fallen Dragon", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-				},
-			}, -- [26]
-			{
-				"Red Dragonscale Protector", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [27]
-			{
-				"Dragonfang Blade", -- [1]
-				70, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-					"Stabby Rogue", -- [2]
-					"Tank", -- [3]
-				},
-				["notes"] = "Catch up Priority",
-			}, -- [28]
-			{
-				"Boots of Transcendence", -- [1]
-				50, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [29]
-			{
-				"Nemesis Boots", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [30]
-			{
-				"Netherwind Boots", -- [1]
-				50, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [31]
-			{
-				"Bloodfang Boots", -- [1]
-				50, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-				},
-			}, -- [32]
-			{
-				"Stormrage Boots", -- [1]
-				50, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [33]
-			{
-				"Dragonstalker's Greaves", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [34]
-			{
-				"Judgement Sabatons", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [35]
-			{
-				"Sabatons of Wrath", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [36]
-			{
-				"Lifegiving Gem", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [37]
-			{
-				"Venomous Totem", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-					"Stabby Rogue", -- [2]
-				},
-			}, -- [38]
-			{
-				"Black Brood Pauldrons", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [39]
-			{
-				"Bracers of Arcane Accuracy", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Priest (Shadow)", -- [2]
-					"Warlock", -- [3]
-				},
-			}, -- [40]
-			{
-				"Heartstriker", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Slicey Rogue", -- [2]
-					"Stabby Rogue", -- [3]
-					"Tank", -- [4]
-				},
-			}, -- [41]
-			{
-				"Maladath, Runed Blade of the Black Flight", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Tank", -- [2]
-				},
-				["notes"] = "Non-Human Rogues also",
-			}, -- [42]
-			{
-				"Handguards of Transcendence", -- [1]
-				80, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [43]
-			{
-				"Netherwind Gloves", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [44]
-			{
-				"Nemesis Gloves", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [45]
-			{
-				"Bloodfang Gloves", -- [1]
-				50, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-				},
-			}, -- [46]
-			{
-				"Stormrage Handguards", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [47]
-			{
-				"Dragonstalker's Gauntlets", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [48]
-			{
-				"Judgement Gauntlets", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [49]
-			{
-				"Gauntlets of Wrath", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [50]
-			{
-				"Scrolls of Blinding Light", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [51]
-			{
-				"Drake Talon Pauldrons", -- [1]
-				250, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Tank", -- [2]
-				},
-			}, -- [52]
-			{
-				"Cloak of Firemaw", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Slicey Rogue", -- [2]
-					"Stabby Rogue", -- [3]
-				},
-			}, -- [53]
-			{
-				"Black Ash Robe", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Progression", -- [1]
-				},
-			}, -- [54]
-			{
-				"Firemaw's Clutch", -- [1]
-				100, -- [2]
-				["notes"] = "Shadow Priest Super Priority",
-				["priority"] = {
-					"Mage", -- [1]
-					"Priest (Shadow)", -- [2]
-				},
-			}, -- [55]
-			{
-				"Taut Dragonhide Belt", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [56]
-			{
-				"Primalist's Linked Legguards", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [57]
-			{
-				"Legguards of the Fallen Crusader", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Tank", -- [2]
-				},
-			}, -- [58]
-			{
-				"Claw of the Black Drake", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [59]
-			{
-				"Drake Talon Cleaver", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [60]
-			{
-				"Shadow Wing Focus Staff", -- [1]
-				70, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Mage", -- [2]
-					"Warlock", -- [3]
-				},
-				["notes"] = "Catch up Priority",
-			}, -- [61]
-			{
-				"Ring of Blackrock", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-					"Priest (Shadow)", -- [4]
-				},
-			}, -- [62]
-			{
-				"Rejuvenating Gem", -- [1]
-				400, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-				},
-			}, -- [63]
-			{
-				"Ebony Flame Gloves", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Priest (Shadow)", -- [1]
-					"Warlock", -- [2]
-				},
-			}, -- [64]
-			{
-				"Malfurion's Blessed Bulwark", -- [1]
-				150, -- [2]
-				["notes"] = "Feral Druid Super Priority",
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Metal Rogue", -- [2]
-				},
-			}, -- [65]
-			{
-				"Dragonbreath Hand Cannon", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-					"Stabby Rogue", -- [2]
-					"Tank", -- [3]
-				},
-			}, -- [66]
-			{
-				"Band of Forced Concentration", -- [1]
-				250, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Priest (Shadow)", -- [2]
-					"Warlock", -- [3]
-				},
-			}, -- [67]
-			{
-				"Aegis of Preservation", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [68]
-			{
-				"Drake Fang Talisman", -- [1]
-				400, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Metal Rogue", -- [2]
-					"Slicey Rogue", -- [3]
-					"Stabby Rogue", -- [4]
-				},
-				["notes"] = "Feral Druid prio unlocks after 4 drops",
-			}, -- [69]
-			{
-				"Shroud of Pure Thought", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-				},
-			}, -- [70]
-			{
-				"Emberweave Leggings", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Progression", -- [1]
-				},
-			}, -- [71]
-			{
-				"Dragon's Touch", -- [1]
-				75, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Priest (Shadow)", -- [2]
-					"Warlock", -- [3]
-				},
-			}, -- [72]
-			{
-				"Herald of Woe", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [73]
-			{
-				"Circle of Applied Force", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Metal Rogue", -- [2]
-					"Slicey Rogue", -- [3]
-					"Stabby Rogue", -- [4]
-					"Tank", -- [5]
-				},
-			}, -- [74]
-			{
-				"Styleen's Impeding Scarab", -- [1]
-				325, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [75]
-			{
-				"Pauldrons of Transcendence", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [76]
-			{
-				"Netherwind Mantle", -- [1]
-				80, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [77]
-			{
-				"Nemesis Spaulders", -- [1]
-				125, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [78]
-			{
-				"Bloodfang Spaulders", -- [1]
-				50, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-				},
-			}, -- [79]
-			{
-				"Stormrage Pauldrons", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [80]
-			{
-				"Dragonstalker's Spaulders", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [81]
-			{
-				"Judgement Spaulders", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [82]
-			{
-				"Pauldrons of Wrath", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [83]
-			{
-				"Taut Dragonhide Shoulderpads", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-				},
-			}, -- [84]
-			{
-				"Elementium Threaded Cloak", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Tank", -- [2]
-				},
-			}, -- [85]
-			{
-				"Taut Dragonhide Gloves", -- [1]
-				80, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-				},
-			}, -- [86]
-			{
-				"Angelista's Grasp", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [87]
-			{
-				"Primalist's Linked Legguards", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [88]
-			{
-				"Girdle of the Fallen Crusader", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [89]
-			{
-				"Empowered Leggings", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-				},
-			}, -- [90]
-			{
-				"Shimmering Geta", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-				},
-			}, -- [91]
-			{
-				"Chromatic Boots", -- [1]
-				250, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-				},
-			}, -- [92]
-			{
-				"Ashjre'thul, Crossbow of Smiting", -- [1]
-				400, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [93]
-			{
-				"Elementium Reinforced Bulwark", -- [1]
-				250, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [94]
-			{
-				"Claw of Chromaggus", -- [1]
-				300, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Warlock", -- [2]
-				},
-			}, -- [95]
-			{
-				"Chromatically Tempered Sword", -- [1]
-				400, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-					"Slicey Rogue", -- [2]
-				},
-			}, -- [96]
-			{
-				"Robes of Transcendence", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [97]
-			{
-				"Netherwind Robes", -- [1]
-				175, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [98]
-			{
-				"Nemesis Robes", -- [1]
-				175, -- [2]
-				["priority"] = {
-					"Warlock", -- [1]
-				},
-			}, -- [99]
-			{
-				"Bloodfang Chestpiece", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Slicey Rogue", -- [1]
-					"Stabby Rogue", -- [2]
-				},
-			}, -- [100]
-			{
-				"Stormrage Chestguard", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [101]
-			{
-				"Dragonstalker's Breastplate", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-				},
-			}, -- [102]
-			{
-				"Judgement Breastplate", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Paladin (Holy)", -- [1]
-				},
-			}, -- [103]
-			{
-				"Breastplate of Wrath", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Tank", -- [1]
-				},
-			}, -- [104]
-			{
-				"Head of Nefarian", -- [1]
-				150, -- [2]
-				["notes"] = "Casters with a BWL 1h also eligible",
-				["priority"] = {
-					"Hunter", -- [1]
-					"KAT4FITE", -- [2]
-					"Metal Rogue", -- [3]
-					"Slicey Rogue", -- [4]
-					"Stabby Rogue", -- [5]
-					"Tank", -- [6]
-				},
-			}, -- [105]
-			{
-				"Lok'amir il Romathis", -- [1]
-				400, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-				},
-			}, -- [106]
-			{
-				"Crul'shorukh, Edge of Chaos", -- [1]
-				400, -- [2]
-				["priority"] = {
-					"Metal Rogue", -- [1]
-				},
-			}, -- [107]
-			{
-				"Ashkandi, Greatsword of the Brotherhood", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [108]
-			{
-				"Staff of the Shadow Flame", -- [1]
-				450, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Warlock", -- [2]
-				},
-			}, -- [109]
-			{
-				"Mish'undare, Circlet of the Mind Flayer", -- [1]
-				300, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Warlock", -- [3]
-				},
-			}, -- [110]
-			{
-				"Prestor's Talisman of Connivery", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-					"KAT4FITE", -- [2]
-					"Slicey Rogue", -- [3]
-					"Stabby Rogue", -- [4]
-				},
-			}, -- [111]
-			{
-				"Cloak of the Brood Lord", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-					"Priest (Shadow)", -- [2]
-					"Warlock", -- [3]
-				},
-			}, -- [112]
-			{
-				"Therazane's Link", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [113]
-			{
-				"Boots of the Shadow Flame", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Stabby Rogue", -- [2]
-				},
-			}, -- [114]
-			{
-				"Archimtiros' Ring of Reckoning", -- [1]
-				125, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Tank", -- [2]
-				},
-			}, -- [115]
-			{
-				"Pure Elementium Band", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-				},
-			}, -- [116]
-			{
-				"Neltharion's Tear", -- [1]
-				400, -- [2]
-				["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
-				["priority"] = {
-					"Mage", -- [1]
-					"Warlock", -- [2]
-				},
-			}, -- [117]
-			{
-				"Cloak of Draconic Might", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-					"Metal Rogue", -- [2]
-				},
-			}, -- [118]
-			{
-				"Interlaced Shadow Jerkin", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Progression", -- [1]
-				},
-			}, -- [119]
-			{
-				"Boots of Pure Thought", -- [1]
-				200, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-					"Paladin (Holy)", -- [2]
-					"Priest (Heal)", -- [3]
-				},
-			}, -- [120]
-			{
-				"Ringo's Blizzard Boots", -- [1]
-				250, -- [2]
-				["priority"] = {
-					"Mage", -- [1]
-				},
-			}, -- [121]
-			{
-				"Band of Dark Dominion", -- [1]
-				150, -- [2]
-				["priority"] = {
-					"Priest (Shadow)", -- [1]
-					"Warlock", -- [2]
-				},
-			}, -- [122]
-			{
-				"Essence Gatherer", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Priest (Heal)", -- [1]
-				},
-			}, -- [123]
-			{
-				"Doom's Edge", -- [1]
-				100, -- [2]
-				["priority"] = {
-					"Hunter", -- [1]
-					"Metal Rogue", -- [2]
-				},
-			}, -- [124]
-			{
-				"Draconic Avenger", -- [1]
-				0, -- [2]
-				["priority"] = {
-					"Garbage", -- [1]
-				},
-			}, -- [125]
-			{
-				"Draconic Maul", -- [1]
-				300, -- [2]
-				["priority"] = {
-					"KAT4FITE", -- [1]
-				},
-			}, -- [126]
-		},
-		["epHistory"] = {
-		},
-	},
 	["p1"] = {
 		["gpHistory"] = {
+			{
+				["player"] = "Frostishot",
+				["item"] = "Core Hound Tooth",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:18805|h[Core Hound Tooth]|h|r",
+				["gp"] = 250,
+			}, -- [1]
+			{
+				["player"] = "Nadrell",
+				["item"] = "Azuresong Mageblade",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:17103|h[Azuresong Mageblade]|h|r",
+				["gp"] = 300,
+			}, -- [2]
+			{
+				["player"] = "Starlight",
+				["item"] = "Aurastone Hammer",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r",
+				["gp"] = 50,
+			}, -- [3]
+			{
+				["player"] = "Clem",
+				["item"] = "Choker of Enlightenment",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
+				["gp"] = 60,
+			}, -- [4]
+			{
+				["player"] = "Xanido",
+				["item"] = "Arcanist Crown",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16795|h[Arcanist Crown]|h|r",
+				["gp"] = 200,
+			}, -- [5]
 			{
 				["player"] = "Zomby",
 				["item"] = "Band of Accuria",
 				["date"] = "2/18/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17063::::::::60:::::::|h[Band of Accuria]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r",
 				["gp"] = 300,
-			}, -- [1]
-            {
-                ["gp"] = 200,
-                ["item"] = "Arcanist Crown",
-                ["date"] = "2/18/20",
-                ["class"] = "MAGE",
-                ["itemLink"] = "|cffa335ee|Hitem:16795::::::::60:::::::|h[Arcanist Crown]|h|r",
-                ["player"] = "Xanido",
-            }, -- [2]
+			}, -- [6]
 			{
 				["player"] = "Huntingkabu",
 				["item"] = "Giantstalker's Boots",
 				["date"] = "2/18/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16849::::::::60:::::::|h[Giantstalker's Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16849|h[Giantstalker's Boots]|h|r",
 				["gp"] = 150,
-			}, -- [2]
+			}, -- [7]
 			{
 				["player"] = "Xan",
 				["item"] = "Choker of Enlightenment",
 				["date"] = "2/18/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17109::::::::60:::::::|h[Choker of Enlightenment]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
 				["gp"] = 60,
-			}, -- [3]
+			}, -- [8]
 			{
 				["player"] = "Coop",
 				["item"] = "Deathbringer",
 				["date"] = "2/11/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17068::::::::60:::::::|h[Deathbringer]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17068|h[Deathbringer]|h|r",
 				["gp"] = 200,
-			}, -- [4]
-            {
-                ["gp"] = 0,
-                ["item"] = "Eskhandar's Collar",
-                ["date"] = "2/11/20",
-                ["class"] = "WARRIOR",
-                ["itemLink"] = "|cffa335ee|Hitem:18205::::::::60:::::::|h[Eskhandar's Collar]|h|r",
-                ["player"] = "Jearom",
-            }, -- [6]
+			}, -- [9]
+			{
+				["player"] = "Jearom",
+				["item"] = "Eskhandar's Collar",
+				["date"] = "2/11/20",
+				["itemLink"] = "|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r",
+				["gp"] = 0,
+			}, -- [10]
 			{
 				["player"] = "Tracer",
 				["item"] = "Aged Core Leather Gloves",
 				["date"] = "2/11/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18823::::::::60:::::::|h[Aged Core Leather Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18823|h[Aged Core Leather Gloves]|h|r",
 				["gp"] = 200,
-			}, -- [5]
+			}, -- [11]
 			{
 				["player"] = "Quellia",
 				["item"] = "Dragon's Blood Cape",
 				["date"] = "2/11/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:17107::::::::60:::::::|h[Dragon's Blood Cape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r",
 				["gp"] = 100,
-			}, -- [6]
+			}, -- [12]
 			{
 				["player"] = "Xane",
 				["item"] = "Sapphiron Drape",
 				["date"] = "2/11/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [7]
+			}, -- [13]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Blastershot Launcher",
 				["date"] = "2/11/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17072::::::::60:::::::|h[Blastershot Launcher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
 				["gp"] = 100,
-			}, -- [8]
+			}, -- [14]
 			{
 				["player"] = "Gyda",
 				["item"] = "Puissant Cape",
 				["date"] = "2/4/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18541::::::::60:::::::|h[Puissant Cape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18541|h[Puissant Cape]|h|r",
 				["gp"] = 150,
-			}, -- [9]
+			}, -- [15]
 			{
 				["player"] = "Azuj",
 				["item"] = "Vis'kag the Bloodletter",
 				["date"] = "2/4/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17075::::::::60:::::::|h[Vis'kag the Bloodletter]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17075|h[Vis'kag the Bloodletter]|h|r",
 				["gp"] = 300,
-			}, -- [10]
+			}, -- [16]
 			{
-				["player"] = "Huntingkabu",
+				["gp"] = 0,
 				["item"] = "Cloak of the Shrouded Mists",
 				["date"] = "2/4/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
-				["gp"] = 100,
-			}, -- [11]
+				["itemLink"] = "|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
+				["player"] = "Huntingkabu",
+			}, -- [17]
 			{
 				["player"] = "Starlight",
 				["item"] = "Stormrage Legguards",
 				["date"] = "2/4/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16901::::::::60:::::::|h[Stormrage Legguards]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16901|h[Stormrage Legguards]|h|r",
 				["gp"] = 75,
-			}, -- [12]
+			}, -- [18]
 			{
 				["player"] = "Tikki",
 				["item"] = "Wristguards of True Flight",
 				["date"] = "2/4/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18812::::::::60:::::::|h[Wristguards of True Flight]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18812|h[Wristguards of True Flight]|h|r",
 				["gp"] = 30,
-			}, -- [13]
+			}, -- [19]
 			{
 				["player"] = "Friend",
 				["item"] = "Robe of Volatile Power",
 				["date"] = "2/4/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19145::::::::60:::::::|h[Robe of Volatile Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r",
 				["gp"] = 300,
-			}, -- [14]
+			}, -- [20]
 			{
 				["player"] = "Clem",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "2/4/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [15]
+			}, -- [21]
 			{
 				["player"] = "Jearom",
 				["item"] = "Obsidian Edged Blade",
 				["date"] = "2/4/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18822::::::::60:::::::|h[Obsidian Edged Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r",
 				["gp"] = 0,
-			}, -- [16]
+			}, -- [22]
 			{
 				["player"] = "Gyda",
 				["item"] = "Nightslayer Pants",
 				["date"] = "2/4/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16822::::::::60:::::::|h[Nightslayer Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16822|h[Nightslayer Pants]|h|r",
 				["gp"] = 0,
-			}, -- [17]
+			}, -- [23]
 			{
 				["player"] = "Klisk",
 				["item"] = "Medallion of Steadfast Might",
 				["date"] = "2/4/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17065::::::::60:::::::|h[Medallion of Steadfast Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17065|h[Medallion of Steadfast Might]|h|r",
 				["gp"] = 150,
-			}, -- [18]
+			}, -- [24]
 			{
 				["player"] = "Xanido",
 				["item"] = "Cold Snap",
 				["date"] = "2/2/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19130::::::::60:::::::|h[Cold Snap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19130|h[Cold Snap]|h|r",
 				["gp"] = 100,
-			}, -- [19]
+			}, -- [25]
 			{
 				["player"] = "Xan",
 				["item"] = "Fel Infused Leggings",
 				["date"] = "2/1/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19133::::::::60:::::::|h[Fel Infused Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
 				["gp"] = 300,
-			}, -- [20]
+			}, -- [26]
 			{
 				["player"] = "Xan",
 				["item"] = "Sapphiron Drape",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [21]
+			}, -- [27]
 			{
 				["gp"] = 0,
 				["item"] = "Halo of Transcendence",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["player"] = "Soggybottom",
-			}, -- [22]
+			}, -- [28]
 			{
 				["player"] = "Sausage",
 				["item"] = "Halo of Transcendence",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["gp"] = 250,
-			}, -- [23]
+			}, -- [29]
 			{
 				["player"] = "Lago",
 				["item"] = "Leggings of Transcendence",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16922::::::::60:::::::|h[Leggings of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r",
 				["gp"] = 200,
-			}, -- [24]
+			}, -- [30]
 			{
 				["player"] = "Sausage",
 				["item"] = "Leggings of Transcendence",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16922::::::::60:::::::|h[Leggings of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r",
 				["gp"] = 200,
-			}, -- [25]
+			}, -- [31]
 			{
 				["player"] = "Tikki",
 				["item"] = "Band of Accuria",
 				["date"] = "1/28/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17063::::::::60:::::::|h[Band of Accuria]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r",
 				["gp"] = 300,
-			}, -- [26]
+			}, -- [32]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Cauterizing Band",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19140::::::::60:::::::|h[Cauterizing Band]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19140|h[Cauterizing Band]|h|r",
 				["gp"] = 250,
-			}, -- [27]
+			}, -- [33]
 			{
 				["player"] = "Jearom",
 				["item"] = "Blastershot Launcher",
 				["date"] = "1/28/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17072::::::::60:::::::|h[Blastershot Launcher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
 				["gp"] = 100,
-			}, -- [28]
+			}, -- [34]
 			{
 				["player"] = "Starlight",
 				["item"] = "Cenarion Helm",
 				["date"] = "1/28/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16834::::::::60:::::::|h[Cenarion Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16834|h[Cenarion Helm]|h|r",
 				["gp"] = 0,
-			}, -- [29]
+			}, -- [35]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Circlet of Prophecy",
 				["date"] = "1/28/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16813::::::::60:::::::|h[Circlet of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16813|h[Circlet of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [30]
+			}, -- [36]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Obsidian Edged Blade",
 				["date"] = "1/28/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18822::::::::60:::::::|h[Obsidian Edged Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r",
 				["gp"] = 0,
-			}, -- [31]
+			}, -- [37]
 			{
 				["gp"] = 0,
 				["item"] = "Gauntlets of Might",
 				["date"] = "1/28/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["player"] = "Oya",
-			}, -- [32]
+			}, -- [38]
 			{
 				["gp"] = 0,
 				["item"] = "Sabatons of Might",
 				["date"] = "1/28/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16862::::::::60:::::::|h[Sabatons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
 				["player"] = "Esconar",
-			}, -- [33]
+			}, -- [39]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Leggings",
 				["date"] = "1/28/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16847::::::::60:::::::|h[Giantstalker's Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16847|h[Giantstalker's Leggings]|h|r",
 				["gp"] = 150,
-			}, -- [34]
+			}, -- [40]
 			{
 				["player"] = "Azuj",
 				["item"] = "Striker's Mark",
 				["date"] = "1/28/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17069::::::::60:::::::|h[Striker's Mark]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17069|h[Striker's Mark]|h|r",
 				["gp"] = 100,
-			}, -- [35]
+			}, -- [41]
 			{
 				["player"] = "Quellia",
 				["item"] = "Doomhide Gauntlets",
 				["date"] = "1/22/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:18544::::::::60:::::::|h[Doomhide Gauntlets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18544|h[Doomhide Gauntlets]|h|r",
 				["gp"] = 75,
-			}, -- [36]
+			}, -- [42]
 			{
 				["player"] = "Friend",
 				["item"] = "Fang of the Mystics",
 				["date"] = "1/21/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:17070::::::::60:::::::|h[Fang of the Mystics]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17070|h[Fang of the Mystics]|h|r",
 				["gp"] = 320,
-			}, -- [37]
+			}, -- [43]
 			{
 				["gp"] = 0,
 				["item"] = "Helm of Wrath",
 				["date"] = "1/21/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16963::::::::60:::::::|h[Helm of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
 				["player"] = "Esconar",
-			}, -- [38]
+			}, -- [44]
 			{
 				["gp"] = 0,
 				["item"] = "Sapphiron Drape",
 				["date"] = "1/21/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["player"] = "Clem",
-			}, -- [39]
+			}, -- [45]
 			{
 				["gp"] = 0,
 				["item"] = "Head of Onyxia",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["player"] = "Darknéss",
-			}, -- [40]
+			}, -- [46]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Wrath",
 				["date"] = "1/21/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["player"] = "Esconar",
-			}, -- [41]
+			}, -- [47]
 			{
 				["player"] = "Xanido",
 				["item"] = "Band of Sulfuras",
 				["date"] = "1/21/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19138::::::::60:::::::|h[Band of Sulfuras]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19138|h[Band of Sulfuras]|h|r",
 				["gp"] = 0,
-			}, -- [42]
-			{
-				["gp"] = 0,
-				["item"] = "Dragonstalker's Legguards",
-				["date"] = "1/21/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16938::::::::60:::::::|h[Dragonstalker's Legguards]|h|r",
-				["player"] = "Solborion",
-			}, -- [43]
+			}, -- [48]
 			{
 				["player"] = "Tracer",
 				["item"] = "Band of Accuria",
 				["date"] = "1/21/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17063::::::::60:::::::|h[Band of Accuria]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r",
 				["gp"] = 300,
-			}, -- [44]
+			}, -- [49]
 			{
 				["gp"] = 0,
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "1/21/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["player"] = "Clem",
-			}, -- [45]
+			}, -- [50]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Arcanist Bindings",
 				["date"] = "1/21/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16799::::::::60:::::::|h[Arcanist Bindings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16799|h[Arcanist Bindings]|h|r",
 				["gp"] = 60,
-			}, -- [46]
+			}, -- [51]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Nightslayer Chestpiece",
 				["date"] = "1/21/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16820::::::::60:::::::|h[Nightslayer Chestpiece]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16820|h[Nightslayer Chestpiece]|h|r",
 				["gp"] = 100,
-			}, -- [47]
+			}, -- [52]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Robe of Volatile Power",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19145::::::::60:::::::|h[Robe of Volatile Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r",
 				["gp"] = 300,
-			}, -- [48]
+			}, -- [53]
 			{
 				["player"] = "Klue",
 				["item"] = "Felheart Bracers",
 				["date"] = "1/21/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16804::::::::60:::::::|h[Felheart Bracers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16804|h[Felheart Bracers]|h|r",
 				["gp"] = 60,
-			}, -- [49]
+			}, -- [54]
 			{
 				["player"] = "Groggy",
 				["item"] = "Lawbringer Bracers",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16857::::::::60:::::::|h[Lawbringer Bracers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16857|h[Lawbringer Bracers]|h|r",
 				["gp"] = 0,
-			}, -- [50]
+			}, -- [55]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "Boots of Prophecy",
 				["date"] = "1/21/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16811::::::::60:::::::|h[Boots of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16811|h[Boots of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [51]
+			}, -- [56]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Lawbringer Spaulders",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16856::::::::60:::::::|h[Lawbringer Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16856|h[Lawbringer Spaulders]|h|r",
 				["gp"] = 0,
-			}, -- [52]
+			}, -- [57]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Quick Strike Ring",
 				["date"] = "1/21/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18821::::::::60:::::::|h[Quick Strike Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18821|h[Quick Strike Ring]|h|r",
 				["gp"] = 200,
-			}, -- [53]
+			}, -- [58]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Lawbringer Helm",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16854::::::::60:::::::|h[Lawbringer Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16854|h[Lawbringer Helm]|h|r",
 				["gp"] = 0,
-			}, -- [54]
+			}, -- [59]
 			{
 				["player"] = "Groggy",
 				["item"] = "Robe of Volatile Power",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19145::::::::60:::::::|h[Robe of Volatile Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r",
 				["gp"] = 300,
-			}, -- [55]
+			}, -- [60]
 			{
 				["gp"] = 0,
 				["item"] = "Pants of Prophecy",
 				["date"] = "1/21/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16814::::::::60:::::::|h[Pants of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16814|h[Pants of Prophecy]|h|r",
 				["player"] = "Xan",
-			}, -- [56]
+			}, -- [61]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Might",
 				["date"] = "1/21/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16867::::::::60:::::::|h[Legplates of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
 				["player"] = "Esconar",
-			}, -- [57]
+			}, -- [62]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "1/21/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [58]
+			}, -- [63]
 			{
 				["player"] = "Groggy",
 				["item"] = "Flayed Doomguard Belt",
 				["date"] = "1/21/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19134::::::::60:::::::|h[Flayed Doomguard Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19134|h[Flayed Doomguard Belt]|h|r",
 				["gp"] = 30,
-			}, -- [59]
+			}, -- [64]
 			{
 				["player"] = "Groggy",
 				["item"] = "Flayed Doomguard Belt",
 				["date"] = "1/15/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19134::::::::60:::::::|h[Flayed Doomguard Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19134|h[Flayed Doomguard Belt]|h|r",
 				["gp"] = 30,
-			}, -- [60]
+			}, -- [65]
 			{
 				["player"] = "Esconar",
 				["item"] = "Puissant Cape",
 				["date"] = "1/15/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18541::::::::60:::::::|h[Puissant Cape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18541|h[Puissant Cape]|h|r",
 				["gp"] = 150,
-			}, -- [61]
+			}, -- [66]
 			{
 				["gp"] = 0,
 				["item"] = "Head of Onyxia",
 				["date"] = "1/14/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["player"] = "Soggybottom",
-			}, -- [62]
+			}, -- [67]
 			{
 				["gp"] = 0,
 				["item"] = "Nemesis Skullcap",
 				["date"] = "1/14/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16929::::::::60:::::::|h[Nemesis Skullcap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
 				["player"] = "Azuj",
-			}, -- [63]
+			}, -- [68]
 			{
 				["gp"] = 0,
 				["item"] = "Stormrage Cover",
 				["date"] = "1/14/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16900::::::::60:::::::|h[Stormrage Cover]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16900|h[Stormrage Cover]|h|r",
 				["player"] = "Righteous",
-			}, -- [64]
+			}, -- [69]
 			{
 				["gp"] = 0,
 				["item"] = "Eskhandar's Collar",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18205::::::::60:::::::|h[Eskhandar's Collar]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r",
 				["player"] = "Coop",
-			}, -- [65]
+			}, -- [70]
 			{
 				["player"] = "Xanido",
 				["item"] = "Netherwind Pants",
 				["date"] = "1/14/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16915::::::::60:::::::|h[Netherwind Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16915|h[Netherwind Pants]|h|r",
 				["gp"] = 250,
-			}, -- [66]
+			}, -- [71]
 			{
 				["player"] = "Tracer",
 				["item"] = "Perdition's Blade",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18816::::::::60:::::::|h[Perdition's Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18816|h[Perdition's Blade]|h|r",
 				["gp"] = 300,
-			}, -- [67]
+			}, -- [72]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Dragonstalker's Legguards",
 				["date"] = "1/14/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16938::::::::60:::::::|h[Dragonstalker's Legguards]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16938|h[Dragonstalker's Legguards]|h|r",
 				["gp"] = 250,
-			}, -- [68]
+			}, -- [73]
 			{
 				["player"] = "Oya",
 				["item"] = "Onslaught Girdle",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19137::::::::60:::::::|h[Onslaught Girdle]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19137|h[Onslaught Girdle]|h|r",
 				["gp"] = 300,
-			}, -- [69]
+			}, -- [74]
 			{
 				["gp"] = 0,
 				["item"] = "The Eye of Divinity",
 				["date"] = "1/14/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["player"] = "Sausage",
-			}, -- [70]
+			}, -- [75]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Robes",
 				["date"] = "1/14/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16809::::::::60:::::::|h[Felheart Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16809|h[Felheart Robes]|h|r",
 				["gp"] = 0,
-			}, -- [71]
+			}, -- [76]
 			{
 				["player"] = "Marizol",
 				["item"] = "Staff of Dominance",
 				["date"] = "1/14/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18842::::::::60:::::::|h[Staff of Dominance]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18842|h[Staff of Dominance]|h|r",
 				["gp"] = 300,
-			}, -- [72]
+			}, -- [77]
 			{
 				["gp"] = 0,
 				["item"] = "Bracers of Might",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["player"] = "Jearom",
-			}, -- [73]
+			}, -- [78]
 			{
 				["player"] = "Righteous",
 				["item"] = "Robe of Volatile Power",
 				["date"] = "1/14/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19145::::::::60:::::::|h[Robe of Volatile Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r",
 				["gp"] = 300,
-			}, -- [74]
+			}, -- [79]
 			{
 				["player"] = "Klue",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "1/14/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [75]
+			}, -- [80]
 			{
 				["player"] = "Lago",
 				["item"] = "Vambraces of Prophecy",
 				["date"] = "1/14/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16819::::::::60:::::::|h[Vambraces of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16819|h[Vambraces of Prophecy]|h|r",
 				["gp"] = 100,
-			}, -- [76]
+			}, -- [81]
 			{
 				["gp"] = 0,
 				["item"] = "Sabatons of Might",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16862::::::::60:::::::|h[Sabatons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [77]
+			}, -- [82]
 			{
 				["gp"] = 0,
 				["item"] = "Gauntlets of Might",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["player"] = "Esconar",
-			}, -- [78]
+			}, -- [83]
 			{
 				["gp"] = 0,
 				["item"] = "Belt of Might",
 				["date"] = "1/14/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16864::::::::60:::::::|h[Belt of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16864|h[Belt of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [79]
+			}, -- [84]
 			{
 				["player"] = "Carod",
 				["item"] = "Arcanist Bindings",
 				["date"] = "1/14/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16799::::::::60:::::::|h[Arcanist Bindings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16799|h[Arcanist Bindings]|h|r",
 				["gp"] = 60,
-			}, -- [80]
+			}, -- [85]
 			{
 				["gp"] = 0,
 				["item"] = "Halo of Transcendence",
 				["date"] = "1/7/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["player"] = "Xan",
-			}, -- [81]
+			}, -- [86]
 			{
 				["gp"] = 0,
 				["item"] = "Halo of Transcendence",
 				["date"] = "1/7/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["player"] = "Lago",
-			}, -- [82]
+			}, -- [87]
 			{
 				["player"] = "Gyda",
 				["item"] = "Head of Onyxia",
 				["date"] = "1/7/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 0,
-			}, -- [83]
+			}, -- [88]
 			{
 				["gp"] = 0,
 				["item"] = "Head of Onyxia",
 				["date"] = "1/7/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["player"] = "Carod",
-			}, -- [84]
+			}, -- [89]
 			{
 				["player"] = "Klue",
 				["item"] = "Ancient Cornerstone Grimoire",
 				["date"] = "1/7/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:17067::::::::60:::::::|h[Ancient Cornerstone Grimoire]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17067|h[Ancient Cornerstone Grimoire]|h|r",
 				["gp"] = 0,
-			}, -- [85]
+			}, -- [90]
 			{
 				["gp"] = 0,
 				["item"] = "Nemesis Skullcap",
 				["date"] = "1/7/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16929::::::::60:::::::|h[Nemesis Skullcap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
 				["player"] = "Krustytop",
-			}, -- [86]
+			}, -- [91]
 			{
 				["gp"] = 0,
 				["item"] = "Helm of Wrath",
 				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16963::::::::60:::::::|h[Helm of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
 				["player"] = "Jezail",
-			}, -- [87]
+			}, -- [92]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Wrath",
 				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["player"] = "Oya",
-			}, -- [88]
+			}, -- [93]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Wrath",
 				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["player"] = "Jearom",
-			}, -- [89]
+			}, -- [94]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Cloak of the Shrouded Mists",
 				["date"] = "1/7/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
 				["gp"] = 100,
-			}, -- [90]
+			}, -- [95]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Cauterizing Band",
 				["date"] = "1/7/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19140::::::::60:::::::|h[Cauterizing Band]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19140|h[Cauterizing Band]|h|r",
 				["gp"] = 250,
-			}, -- [91]
+			}, -- [96]
 			{
 				["player"] = "Tikki",
 				["item"] = "Blastershot Launcher",
 				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17072::::::::60:::::::|h[Blastershot Launcher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
 				["gp"] = 100,
-			}, -- [92]
+			}, -- [97]
 			{
 				["gp"] = 0,
 				["item"] = "Pauldrons of Might",
 				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16868::::::::60:::::::|h[Pauldrons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r",
 				["player"] = "Coop",
-			}, -- [93]
+			}, -- [98]
 			{
 				["player"] = "Klue",
 				["item"] = "Felheart Slippers",
 				["date"] = "1/7/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16803::::::::60:::::::|h[Felheart Slippers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16803|h[Felheart Slippers]|h|r",
 				["gp"] = 0,
-			}, -- [94]
+			}, -- [99]
 			{
 				["player"] = "Xanido",
 				["item"] = "Arcanist Mantle",
 				["date"] = "1/7/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16797::::::::60:::::::|h[Arcanist Mantle]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16797|h[Arcanist Mantle]|h|r",
 				["gp"] = 0,
-			}, -- [95]
+			}, -- [100]
 			{
 				["player"] = "Zomby",
 				["item"] = "Aged Core Leather Gloves",
 				["date"] = "1/7/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18823::::::::60:::::::|h[Aged Core Leather Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18823|h[Aged Core Leather Gloves]|h|r",
 				["gp"] = 200,
-			}, -- [96]
+			}, -- [101]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "1/7/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [97]
+			}, -- [102]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Felheart Horns",
 				["date"] = "1/7/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16808::::::::60:::::::|h[Felheart Horns]|h|r",
-				["gp"] = 0,
-			}, -- [98]
-			{
-				["gp"] = 0,
-				["item"] = "Drillborer Disk",
-				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17066::::::::60:::::::|h[Drillborer Disk]|h|r",
-				["player"] = "Coop",
-			}, -- [99]
-			{
-				["player"] = "Lunamar",
-				["item"] = "Ring of Spell Power",
-				["date"] = "1/7/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19147::::::::60:::::::|h[Ring of Spell Power]|h|r",
-				["gp"] = 250,
-			}, -- [100]
-			{
-				["gp"] = 0,
-				["item"] = "Gloves of Prophecy",
-				["date"] = "1/7/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16812::::::::60:::::::|h[Gloves of Prophecy]|h|r",
-				["player"] = "Xan",
-			}, -- [101]
-			{
-				["gp"] = 0,
-				["item"] = "Legplates of Might",
-				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16867::::::::60:::::::|h[Legplates of Might]|h|r",
-				["player"] = "Esconar",
-			}, -- [102]
-			{
-				["player"] = "Friend",
-				["item"] = "Felheart Pants",
-				["date"] = "1/7/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16810::::::::60:::::::|h[Felheart Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16808|h[Felheart Horns]|h|r",
 				["gp"] = 0,
 			}, -- [103]
 			{
 				["gp"] = 0,
-				["item"] = "Aged Core Leather Gloves",
+				["item"] = "Drillborer Disk",
 				["date"] = "1/7/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18823::::::::60:::::::|h[Aged Core Leather Gloves]|h|r",
-				["player"] = "Gyda",
+				["itemLink"] = "|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
+				["player"] = "Coop",
 			}, -- [104]
+			{
+				["player"] = "Lunamar",
+				["item"] = "Ring of Spell Power",
+				["date"] = "1/7/20",
+				["itemLink"] = "|cffa335ee|Hitem:19147|h[Ring of Spell Power]|h|r",
+				["gp"] = 250,
+			}, -- [105]
+			{
+				["gp"] = 0,
+				["item"] = "Gloves of Prophecy",
+				["date"] = "1/7/20",
+				["itemLink"] = "|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r",
+				["player"] = "Xan",
+			}, -- [106]
+			{
+				["gp"] = 0,
+				["item"] = "Legplates of Might",
+				["date"] = "1/7/20",
+				["itemLink"] = "|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
+				["player"] = "Esconar",
+			}, -- [107]
+			{
+				["player"] = "Friend",
+				["item"] = "Felheart Pants",
+				["date"] = "1/7/20",
+				["itemLink"] = "|cffa335ee|Hitem:16810|h[Felheart Pants]|h|r",
+				["gp"] = 0,
+			}, -- [108]
+			{
+				["gp"] = 0,
+				["item"] = "Core Leather",
+				["date"] = "1/7/20",
+				["itemLink"] = "|cffffffff|Hitem:17012|h[Core Leather]|h|r",
+				["player"] = "Gyda",
+			}, -- [109]
 			{
 				["gp"] = 0,
 				["item"] = "Gauntlets of Might",
 				["date"] = "1/7/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["player"] = "Coop",
-			}, -- [105]
+			}, -- [110]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Dragonstalker's Helm",
 				["date"] = "1/2/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16939::::::::60:::::::|h[Dragonstalker's Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16939|h[Dragonstalker's Helm]|h|r",
 				["gp"] = 250,
-			}, -- [106]
+			}, -- [111]
 			{
 				["player"] = "Righteous",
 				["item"] = "Malistar's Defender",
 				["date"] = "1/2/20",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17106::::::::60:::::::|h[Malistar's Defender]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17106|h[Malistar's Defender]|h|r",
 				["gp"] = 30,
-			}, -- [107]
+			}, -- [112]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Bloodfang Pants",
 				["date"] = "1/2/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16909::::::::60:::::::|h[Bloodfang Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r",
 				["gp"] = 200,
-			}, -- [108]
+			}, -- [113]
 			{
 				["player"] = "Zomby",
 				["item"] = "Bloodfang Pants",
 				["date"] = "1/2/20",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16909::::::::60:::::::|h[Bloodfang Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r",
 				["gp"] = 200,
-			}, -- [109]
+			}, -- [114]
 			{
 				["player"] = "Klue",
 				["item"] = "Sash of Whispered Secrets",
 				["date"] = "1/2/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18809::::::::60:::::::|h[Sash of Whispered Secrets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18809|h[Sash of Whispered Secrets]|h|r",
 				["gp"] = 200,
-			}, -- [110]
+			}, -- [115]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Gloves of the Hypnotic Flame",
 				["date"] = "1/2/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18808::::::::60:::::::|h[Gloves of the Hypnotic Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18808|h[Gloves of the Hypnotic Flame]|h|r",
 				["gp"] = 0,
-			}, -- [111]
+			}, -- [116]
 			{
 				["player"] = "Xan",
 				["item"] = "Robes of Prophecy",
 				["date"] = "1/2/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16815::::::::60:::::::|h[Robes of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16815|h[Robes of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [112]
+			}, -- [117]
 			{
 				["gp"] = 0,
 				["item"] = "Pauldrons of Might",
 				["date"] = "1/2/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16868::::::::60:::::::|h[Pauldrons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [113]
+			}, -- [118]
 			{
 				["player"] = "Xanido",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "1/2/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [114]
+			}, -- [119]
 			{
 				["player"] = "Klisk",
 				["item"] = "Heavy Dark Iron Ring",
 				["date"] = "1/2/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18879::::::::60:::::::|h[Heavy Dark Iron Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r",
 				["gp"] = 100,
-			}, -- [115]
+			}, -- [120]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Giantstalker's Gloves",
 				["date"] = "1/2/20",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16852::::::::60:::::::|h[Giantstalker's Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16852|h[Giantstalker's Gloves]|h|r",
 				["gp"] = 100,
-			}, -- [116]
+			}, -- [121]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Felheart Shoulder Pads",
 				["date"] = "1/2/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16807::::::::60:::::::|h[Felheart Shoulder Pads]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16807|h[Felheart Shoulder Pads]|h|r",
 				["gp"] = 0,
-			}, -- [117]
+			}, -- [122]
 			{
 				["player"] = "Xan",
 				["item"] = "Girdle of Prophecy",
 				["date"] = "1/2/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16817::::::::60:::::::|h[Girdle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16817|h[Girdle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [118]
+			}, -- [123]
 			{
 				["player"] = "Marizol",
 				["item"] = "Felheart Horns",
 				["date"] = "1/2/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16808::::::::60:::::::|h[Felheart Horns]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16808|h[Felheart Horns]|h|r",
 				["gp"] = 0,
-			}, -- [119]
+			}, -- [124]
 			{
 				["gp"] = 0,
 				["item"] = "Drillborer Disk",
 				["date"] = "1/2/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17066::::::::60:::::::|h[Drillborer Disk]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
 				["player"] = "Jezail",
-			}, -- [120]
+			}, -- [125]
 			{
 				["player"] = "Tracer",
 				["item"] = "Sabatons of Might",
 				["date"] = "1/2/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16862::::::::60:::::::|h[Sabatons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
 				["gp"] = 150,
-			}, -- [121]
+			}, -- [126]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Gloves of Prophecy",
 				["date"] = "1/2/20",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16812::::::::60:::::::|h[Gloves of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r",
 				["gp"] = 50,
-			}, -- [122]
+			}, -- [127]
 			{
 				["player"] = "Esconar",
 				["item"] = "Flamewaker Legplates",
 				["date"] = "1/2/20",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18861::::::::60:::::::|h[Flamewaker Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [123]
+			}, -- [128]
 			{
 				["player"] = "Starlight",
 				["item"] = "Cenarion Leggings",
 				["date"] = "1/2/20",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16835::::::::60:::::::|h[Cenarion Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16835|h[Cenarion Leggings]|h|r",
 				["gp"] = 0,
-			}, -- [124]
+			}, -- [129]
 			{
 				["player"] = "Xanido",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "1/2/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [125]
+			}, -- [130]
 			{
 				["player"] = "Xanido",
 				["item"] = "Arcanist Leggings",
 				["date"] = "1/2/20",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16796::::::::60:::::::|h[Arcanist Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16796|h[Arcanist Leggings]|h|r",
 				["gp"] = 80,
-			}, -- [126]
+			}, -- [131]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Fel Infused Leggings",
 				["date"] = "1/2/20",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19133::::::::60:::::::|h[Fel Infused Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
 				["gp"] = 300,
-			}, -- [127]
+			}, -- [132]
 			{
 				["player"] = "Jezail",
 				["item"] = "Head of Onyxia",
 				["date"] = "12/30/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [128]
+			}, -- [133]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Halo of Transcendence",
 				["date"] = "12/30/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["gp"] = 250,
-			}, -- [129]
-			{
-				["player"] = "Solborion",
-				["item"] = "Cloak of the Shrouded Mists",
-				["date"] = "12/30/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
-				["gp"] = 100,
-			}, -- [130]
+			}, -- [134]
 			{
 				["player"] = "Xane",
 				["item"] = "Netherwind Pants",
 				["date"] = "12/30/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16915::::::::60:::::::|h[Netherwind Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16915|h[Netherwind Pants]|h|r",
 				["gp"] = 250,
-			}, -- [131]
+			}, -- [135]
 			{
 				["player"] = "Xanido",
 				["item"] = "Arcanist Bindings",
 				["date"] = "12/30/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16799::::::::60:::::::|h[Arcanist Bindings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16799|h[Arcanist Bindings]|h|r",
 				["gp"] = 60,
-			}, -- [132]
+			}, -- [136]
 			{
 				["player"] = "Starlight",
 				["item"] = "Wild Growth Spaulders",
 				["date"] = "12/30/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:18810::::::::60:::::::|h[Wild Growth Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18810|h[Wild Growth Spaulders]|h|r",
 				["gp"] = 300,
-			}, -- [133]
+			}, -- [137]
 			{
 				["player"] = "Xane",
 				["item"] = "Azuresong Mageblade",
 				["date"] = "12/30/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17103::::::::60:::::::|h[Azuresong Mageblade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17103|h[Azuresong Mageblade]|h|r",
 				["gp"] = 300,
-			}, -- [134]
+			}, -- [138]
 			{
 				["player"] = "Tracer",
 				["item"] = "Pauldrons of Might",
 				["date"] = "12/30/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16868::::::::60:::::::|h[Pauldrons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r",
 				["gp"] = 150,
-			}, -- [135]
+			}, -- [139]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Giantstalker's Epaulets",
 				["date"] = "12/30/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16848::::::::60:::::::|h[Giantstalker's Epaulets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16848|h[Giantstalker's Epaulets]|h|r",
 				["gp"] = 150,
-			}, -- [136]
+			}, -- [140]
 			{
 				["gp"] = 0,
 				["item"] = "Heavy Dark Iron Ring",
 				["date"] = "12/30/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18879::::::::60:::::::|h[Heavy Dark Iron Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r",
 				["player"] = "Oya",
-			}, -- [137]
+			}, -- [141]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "12/30/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [138]
+			}, -- [142]
 			{
 				["player"] = "Groggy",
 				["item"] = "Lawbringer Spaulders",
 				["date"] = "12/30/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16856::::::::60:::::::|h[Lawbringer Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16856|h[Lawbringer Spaulders]|h|r",
 				["gp"] = 0,
-			}, -- [139]
+			}, -- [143]
 			{
 				["player"] = "Jezail",
 				["item"] = "Quick Strike Ring",
 				["date"] = "12/30/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18821::::::::60:::::::|h[Quick Strike Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18821|h[Quick Strike Ring]|h|r",
 				["gp"] = 200,
-			}, -- [140]
+			}, -- [144]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Cover",
 				["date"] = "12/30/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16821::::::::60:::::::|h[Nightslayer Cover]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16821|h[Nightslayer Cover]|h|r",
 				["gp"] = 0,
-			}, -- [141]
+			}, -- [145]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Helm",
 				["date"] = "12/30/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16854::::::::60:::::::|h[Lawbringer Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16854|h[Lawbringer Helm]|h|r",
 				["gp"] = 0,
-			}, -- [142]
+			}, -- [146]
 			{
 				["player"] = "Tracer",
 				["item"] = "Earthshaker",
 				["date"] = "12/30/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17073::::::::60:::::::|h[Earthshaker]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17073|h[Earthshaker]|h|r",
 				["gp"] = 0,
-			}, -- [143]
+			}, -- [147]
 			{
 				["player"] = "Zomby",
 				["item"] = "Striker's Mark",
 				["date"] = "12/30/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17069::::::::60:::::::|h[Striker's Mark]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17069|h[Striker's Mark]|h|r",
 				["gp"] = 100,
-			}, -- [144]
+			}, -- [148]
 			{
 				["gp"] = 0,
 				["item"] = "Head of Onyxia",
 				["date"] = "12/21/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["player"] = "Krustytop",
-			}, -- [145]
+			}, -- [149]
 			{
 				["player"] = "Jezail",
 				["item"] = "Ring of Binding",
 				["date"] = "12/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18813::::::::60:::::::|h[Ring of Binding]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r",
 				["gp"] = 0,
-			}, -- [146]
+			}, -- [150]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Judgement Crown",
 				["date"] = "12/17/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16955::::::::60:::::::|h[Judgement Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16955|h[Judgement Crown]|h|r",
 				["gp"] = 0,
-			}, -- [147]
+			}, -- [151]
 			{
 				["player"] = "Klue",
 				["item"] = "Nemesis Skullcap",
 				["date"] = "12/17/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16929::::::::60:::::::|h[Nemesis Skullcap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
 				["gp"] = 250,
-			}, -- [148]
+			}, -- [152]
 			{
 				["player"] = "Marizol",
 				["item"] = "Sapphiron Drape",
 				["date"] = "12/17/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [149]
+			}, -- [153]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Shard of the Scale",
 				["date"] = "12/17/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17064::::::::60:::::::|h[Shard of the Scale]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17064|h[Shard of the Scale]|h|r",
 				["gp"] = 200,
-			}, -- [150]
+			}, -- [154]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Wrath",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["player"] = "Jezail",
-			}, -- [151]
+			}, -- [155]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Essence of the Pure Flame",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18815::::::::60:::::::|h[Essence of the Pure Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r",
 				["gp"] = 0,
-			}, -- [152]
+			}, -- [156]
 			{
 				["gp"] = 0,
 				["item"] = "Dragon's Blood Cape",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17107::::::::60:::::::|h[Dragon's Blood Cape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r",
 				["player"] = "Jezail",
-			}, -- [153]
+			}, -- [157]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "Leggings of Transcendence",
 				["date"] = "12/17/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16922::::::::60:::::::|h[Leggings of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r",
 				["gp"] = 200,
-			}, -- [154]
+			}, -- [158]
 			{
 				["player"] = "Groggy",
 				["item"] = "Finkle's Lava Dredger",
 				["date"] = "12/17/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18803::::::::60:::::::|h[Finkle's Lava Dredger]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18803|h[Finkle's Lava Dredger]|h|r",
 				["gp"] = 0,
-			}, -- [155]
+			}, -- [159]
 			{
 				["player"] = "Klisk",
 				["item"] = "Core Forged Greaves",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18806::::::::60:::::::|h[Core Forged Greaves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18806|h[Core Forged Greaves]|h|r",
 				["gp"] = 0,
-			}, -- [156]
+			}, -- [160]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Chestpiece",
 				["date"] = "12/17/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16820::::::::60:::::::|h[Nightslayer Chestpiece]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16820|h[Nightslayer Chestpiece]|h|r",
 				["gp"] = 100,
-			}, -- [157]
+			}, -- [161]
 			{
 				["player"] = "Groggy",
 				["item"] = "Azuresong Mageblade",
 				["date"] = "12/17/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17103::::::::60:::::::|h[Azuresong Mageblade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17103|h[Azuresong Mageblade]|h|r",
 				["gp"] = 300,
-			}, -- [158]
+			}, -- [162]
 			{
 				["player"] = "Lago",
 				["item"] = "Mantle of Prophecy",
 				["date"] = "12/17/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16816::::::::60:::::::|h[Mantle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16816|h[Mantle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [159]
+			}, -- [163]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Nightslayer Shoulder Pads",
 				["date"] = "12/17/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16823::::::::60:::::::|h[Nightslayer Shoulder Pads]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16823|h[Nightslayer Shoulder Pads]|h|r",
 				["gp"] = 100,
-			}, -- [160]
+			}, -- [164]
 			{
 				["gp"] = 0,
 				["item"] = "Bracers of Might",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["player"] = "Jezail",
-			}, -- [161]
+			}, -- [165]
 			{
 				["gp"] = 0,
 				["item"] = "Bracers of Might",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["player"] = "Coop",
-			}, -- [162]
+			}, -- [166]
 			{
 				["gp"] = 0,
 				["item"] = "Sabatons of Might",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16862::::::::60:::::::|h[Sabatons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
 				["player"] = "Jezail",
-			}, -- [163]
+			}, -- [167]
 			{
 				["player"] = "Tracer",
 				["item"] = "Heavy Dark Iron Ring",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18879::::::::60:::::::|h[Heavy Dark Iron Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r",
 				["gp"] = 100,
-			}, -- [164]
+			}, -- [168]
 			{
 				["player"] = "Xanido",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "12/17/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [165]
+			}, -- [169]
 			{
 				["player"] = "Friend",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "12/17/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [166]
+			}, -- [170]
 			{
 				["gp"] = 0,
 				["item"] = "Drillborer Disk",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17066::::::::60:::::::|h[Drillborer Disk]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
 				["player"] = "Cleaves",
-			}, -- [167]
+			}, -- [171]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Nightslayer Cover",
 				["date"] = "12/17/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16821::::::::60:::::::|h[Nightslayer Cover]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16821|h[Nightslayer Cover]|h|r",
 				["gp"] = 0,
-			}, -- [168]
+			}, -- [172]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Aurastone Hammer",
 				["date"] = "12/17/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17105::::::::60:::::::|h[Aurastone Hammer]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r",
 				["gp"] = 50,
-			}, -- [169]
+			}, -- [173]
 			{
 				["gp"] = 0,
 				["item"] = "Eskhandar's Right Claw",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18203::::::::60:::::::|h[Eskhandar's Right Claw]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18203|h[Eskhandar's Right Claw]|h|r",
 				["player"] = "Jezail",
-			}, -- [170]
+			}, -- [174]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Might",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16867::::::::60:::::::|h[Legplates of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
 				["player"] = "Jezail",
-			}, -- [171]
+			}, -- [175]
 			{
 				["gp"] = 0,
 				["item"] = "Choker of Enlightenment",
 				["date"] = "12/17/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17109::::::::60:::::::|h[Choker of Enlightenment]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
 				["player"] = "Xanido",
-			}, -- [172]
+			}, -- [176]
 			{
 				["gp"] = 0,
 				["item"] = "Gauntlets of Might",
 				["date"] = "12/17/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["player"] = "Jezail",
-			}, -- [173]
+			}, -- [177]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Belt",
 				["date"] = "12/17/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16858::::::::60:::::::|h[Lawbringer Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16858|h[Lawbringer Belt]|h|r",
 				["gp"] = 0,
-			}, -- [174]
+			}, -- [178]
 			{
 				["gp"] = 0,
 				["item"] = "Head of Onyxia",
 				["date"] = "12/10/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["player"] = "Darknéss",
-			}, -- [175]
+			}, -- [179]
 			{
 				["gp"] = 0,
 				["item"] = "Netherwind Crown",
 				["date"] = "12/10/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16914::::::::60:::::::|h[Netherwind Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r",
 				["player"] = "Xanido",
-			}, -- [176]
+			}, -- [180]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Nemesis Skullcap",
 				["date"] = "12/10/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16929::::::::60:::::::|h[Nemesis Skullcap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
 				["gp"] = 250,
-			}, -- [177]
+			}, -- [181]
 			{
 				["player"] = "Tracer",
 				["item"] = "Head of Onyxia",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [178]
+			}, -- [182]
 			{
 				["player"] = "Lago",
 				["item"] = "Halo of Transcendence",
 				["date"] = "12/10/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["gp"] = 250,
-			}, -- [179]
+			}, -- [183]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Bloodfang Hood",
 				["date"] = "12/10/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16908::::::::60:::::::|h[Bloodfang Hood]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16908|h[Bloodfang Hood]|h|r",
 				["gp"] = 200,
-			}, -- [180]
+			}, -- [184]
 			{
 				["player"] = "Friend",
 				["item"] = "Band of Sulfuras",
 				["date"] = "12/10/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19138::::::::60:::::::|h[Band of Sulfuras]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19138|h[Band of Sulfuras]|h|r",
 				["gp"] = 0,
-			}, -- [181]
+			}, -- [185]
 			{
 				["gp"] = 0,
 				["item"] = "Dragon's Blood Cape",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17107::::::::60:::::::|h[Dragon's Blood Cape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r",
 				["player"] = "Oya",
-			}, -- [182]
+			}, -- [186]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Wrath",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["player"] = "Cleaves",
-			}, -- [183]
+			}, -- [187]
 			{
 				["player"] = "Righteous",
 				["item"] = "Wild Growth Spaulders",
 				["date"] = "12/10/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18810::::::::60:::::::|h[Wild Growth Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18810|h[Wild Growth Spaulders]|h|r",
 				["gp"] = 300,
-			}, -- [184]
+			}, -- [188]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "12/10/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [185]
+			}, -- [189]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Robes",
 				["date"] = "12/10/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16809::::::::60:::::::|h[Felheart Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16809|h[Felheart Robes]|h|r",
 				["gp"] = 0,
-			}, -- [186]
+			}, -- [190]
 			{
 				["gp"] = 0,
 				["item"] = "Breastplate of Might",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16865::::::::60:::::::|h[Breastplate of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16865|h[Breastplate of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [187]
+			}, -- [191]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "Mantle of Prophecy",
 				["date"] = "12/10/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16816::::::::60:::::::|h[Mantle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16816|h[Mantle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [188]
+			}, -- [192]
 			{
 				["player"] = "Klisk",
 				["item"] = "Pauldrons of Might",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16868::::::::60:::::::|h[Pauldrons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r",
 				["gp"] = 150,
-			}, -- [189]
+			}, -- [193]
 			{
 				["player"] = "Marizol",
 				["item"] = "Felheart Belt",
 				["date"] = "12/10/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16806::::::::60:::::::|h[Felheart Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16806|h[Felheart Belt]|h|r",
 				["gp"] = 0,
-			}, -- [190]
+			}, -- [194]
 			{
 				["player"] = "Starlight",
 				["item"] = "Cenarion Gloves",
 				["date"] = "12/10/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16831::::::::60:::::::|h[Cenarion Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16831|h[Cenarion Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [191]
+			}, -- [195]
 			{
 				["player"] = "Klue",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "12/10/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [192]
+			}, -- [196]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "12/10/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [193]
+			}, -- [197]
 			{
 				["player"] = "Coop",
 				["item"] = "Flameguard Gauntlets",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19143::::::::60:::::::|h[Flameguard Gauntlets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19143|h[Flameguard Gauntlets]|h|r",
 				["gp"] = 100,
-			}, -- [194]
+			}, -- [198]
 			{
 				["player"] = "Carod",
 				["item"] = "Arcanist Crown",
 				["date"] = "12/10/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16795::::::::60:::::::|h[Arcanist Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16795|h[Arcanist Crown]|h|r",
 				["gp"] = 200,
-			}, -- [195]
+			}, -- [199]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Vambraces of Prophecy",
 				["date"] = "12/10/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16819::::::::60:::::::|h[Vambraces of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16819|h[Vambraces of Prophecy]|h|r",
 				["gp"] = 100,
-			}, -- [196]
+			}, -- [200]
 			{
 				["player"] = "Carod",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "12/10/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [197]
+			}, -- [201]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Felheart Pants",
 				["date"] = "12/10/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16810::::::::60:::::::|h[Felheart Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16810|h[Felheart Pants]|h|r",
 				["gp"] = 0,
-			}, -- [198]
+			}, -- [202]
 			{
 				["gp"] = 0,
 				["item"] = "Gauntlets of Might",
 				["date"] = "12/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [199]
+			}, -- [203]
 			{
 				["player"] = "Marizol",
 				["item"] = "Fel Infused Leggings",
 				["date"] = "12/8/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19133::::::::60:::::::|h[Fel Infused Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
 				["gp"] = 300,
-			}, -- [200]
+			}, -- [204]
 			{
 				["gp"] = 0,
 				["item"] = "Head of Onyxia",
 				["date"] = "12/3/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["player"] = "Klue",
-			}, -- [201]
+			}, -- [205]
 			{
 				["player"] = "Friend",
 				["item"] = "Sapphiron Drape",
 				["date"] = "12/3/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [202]
+			}, -- [206]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Netherwind Crown",
 				["date"] = "12/3/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16914::::::::60:::::::|h[Netherwind Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r",
 				["gp"] = 80,
-			}, -- [203]
+			}, -- [207]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Halo of Transcendence",
 				["date"] = "12/3/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["gp"] = 250,
-			}, -- [204]
+			}, -- [208]
 			{
 				["player"] = "Tikki",
 				["item"] = "Legplates of Wrath",
 				["date"] = "12/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["gp"] = 250,
-			}, -- [205]
+			}, -- [209]
 			{
 				["player"] = "Marizol",
 				["item"] = "Choker of the Fire Lord",
 				["date"] = "12/3/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18814::::::::60:::::::|h[Choker of the Fire Lord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18814|h[Choker of the Fire Lord]|h|r",
 				["gp"] = 250,
-			}, -- [206]
+			}, -- [210]
 			{
 				["gp"] = 0,
 				["item"] = "Sash of Whispered Secrets",
 				["date"] = "12/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18809::::::::60:::::::|h[Sash of Whispered Secrets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18809|h[Sash of Whispered Secrets]|h|r",
 				["player"] = "Darknéss",
-			}, -- [207]
+			}, -- [211]
 			{
 				["player"] = "Carod",
 				["item"] = "Arcanist Robes",
 				["date"] = "12/3/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16798::::::::60:::::::|h[Arcanist Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16798|h[Arcanist Robes]|h|r",
 				["gp"] = 0,
-			}, -- [208]
+			}, -- [212]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Arcanist Belt",
 				["date"] = "12/3/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16802::::::::60:::::::|h[Arcanist Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16802|h[Arcanist Belt]|h|r",
 				["gp"] = 0,
-			}, -- [209]
+			}, -- [213]
 			{
 				["player"] = "Esconar",
 				["item"] = "Blastershot Launcher",
 				["date"] = "12/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17072::::::::60:::::::|h[Blastershot Launcher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
 				["gp"] = 100,
-			}, -- [210]
+			}, -- [214]
 			{
 				["player"] = "Xan",
 				["item"] = "The Eye of Divinity",
 				["date"] = "12/3/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["gp"] = 300,
-			}, -- [211]
+			}, -- [215]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Shoulder Pads",
 				["date"] = "12/3/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16823::::::::60:::::::|h[Nightslayer Shoulder Pads]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16823|h[Nightslayer Shoulder Pads]|h|r",
 				["gp"] = 100,
-			}, -- [212]
+			}, -- [216]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Boots of Prophecy",
 				["date"] = "12/3/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16811::::::::60:::::::|h[Boots of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16811|h[Boots of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [213]
+			}, -- [217]
 			{
 				["player"] = "Marizol",
 				["item"] = "Felheart Shoulder Pads",
 				["date"] = "12/3/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16807::::::::60:::::::|h[Felheart Shoulder Pads]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16807|h[Felheart Shoulder Pads]|h|r",
 				["gp"] = 0,
-			}, -- [214]
+			}, -- [218]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "12/3/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [215]
+			}, -- [219]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Aurastone Hammer",
 				["date"] = "12/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17105::::::::60:::::::|h[Aurastone Hammer]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r",
 				["gp"] = 50,
-			}, -- [216]
+			}, -- [220]
 			{
 				["player"] = "Groggy",
 				["item"] = "Lawbringer Helm",
 				["date"] = "12/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16854::::::::60:::::::|h[Lawbringer Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16854|h[Lawbringer Helm]|h|r",
 				["gp"] = 0,
-			}, -- [217]
+			}, -- [221]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Gloves of Prophecy",
 				["date"] = "12/3/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16812::::::::60:::::::|h[Gloves of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r",
 				["gp"] = 50,
-			}, -- [218]
+			}, -- [222]
 			{
 				["player"] = "Friend",
 				["item"] = "Ring of Spell Power",
 				["date"] = "12/3/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19147::::::::60:::::::|h[Ring of Spell Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19147|h[Ring of Spell Power]|h|r",
 				["gp"] = 250,
-			}, -- [219]
+			}, -- [223]
 			{
 				["player"] = "Groggy",
 				["item"] = "Lawbringer Legplates",
 				["date"] = "12/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16855::::::::60:::::::|h[Lawbringer Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16855|h[Lawbringer Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [220]
+			}, -- [224]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Lawbringer Belt",
 				["date"] = "12/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16858::::::::60:::::::|h[Lawbringer Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16858|h[Lawbringer Belt]|h|r",
 				["gp"] = 0,
-			}, -- [221]
+			}, -- [225]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Nightslayer Belt",
 				["date"] = "12/3/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16827::::::::60:::::::|h[Nightslayer Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16827|h[Nightslayer Belt]|h|r",
 				["gp"] = 80,
-			}, -- [222]
+			}, -- [226]
 			{
 				["player"] = "Xane",
 				["item"] = "Arcanist Belt",
 				["date"] = "12/3/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16802::::::::60:::::::|h[Arcanist Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16802|h[Arcanist Belt]|h|r",
 				["gp"] = 0,
-			}, -- [223]
+			}, -- [227]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Nightslayer Pants",
 				["date"] = "12/3/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16822::::::::60:::::::|h[Nightslayer Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16822|h[Nightslayer Pants]|h|r",
 				["gp"] = 0,
-			}, -- [224]
+			}, -- [228]
 			{
 				["player"] = "Oya",
 				["item"] = "Earthshaker",
 				["date"] = "12/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17073::::::::60:::::::|h[Earthshaker]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17073|h[Earthshaker]|h|r",
 				["gp"] = 0,
-			}, -- [225]
+			}, -- [229]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Lawbringer Boots",
 				["date"] = "12/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16859::::::::60:::::::|h[Lawbringer Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16859|h[Lawbringer Boots]|h|r",
 				["gp"] = 0,
-			}, -- [226]
+			}, -- [230]
 			{
 				["gp"] = 0,
 				["item"] = "Shard of the Flame",
 				["date"] = "12/2/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17082::::::::60:::::::|h[Shard of the Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17082|h[Shard of the Flame]|h|r",
 				["player"] = "Nadrell",
-			}, -- [227]
+			}, -- [231]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Leggings of Transcendence",
 				["date"] = "12/2/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16922::::::::60:::::::|h[Leggings of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r",
 				["gp"] = 200,
-			}, -- [228]
+			}, -- [232]
 			{
 				["player"] = "Klisk",
 				["item"] = "Cloak of the Shrouded Mists",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
 				["gp"] = 100,
-			}, -- [229]
+			}, -- [233]
 			{
 				["player"] = "Tracer",
 				["item"] = "Essence of the Pure Flame",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18815::::::::60:::::::|h[Essence of the Pure Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r",
 				["gp"] = 0,
-			}, -- [230]
+			}, -- [234]
 			{
 				["player"] = "Tikki",
 				["item"] = "Core Forged Greaves",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18806::::::::60:::::::|h[Core Forged Greaves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18806|h[Core Forged Greaves]|h|r",
 				["gp"] = 0,
-			}, -- [231]
+			}, -- [235]
 			{
 				["player"] = "Esconar",
 				["item"] = "Finkle's Lava Dredger",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18803::::::::60:::::::|h[Finkle's Lava Dredger]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18803|h[Finkle's Lava Dredger]|h|r",
 				["gp"] = 0,
-			}, -- [232]
+			}, -- [236]
 			{
 				["player"] = "Xane",
 				["item"] = "Arcanist Robes",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16798::::::::60:::::::|h[Arcanist Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16798|h[Arcanist Robes]|h|r",
 				["gp"] = 0,
-			}, -- [233]
+			}, -- [237]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Chestguard",
 				["date"] = "12/2/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16853::::::::60:::::::|h[Lawbringer Chestguard]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16853|h[Lawbringer Chestguard]|h|r",
 				["gp"] = 0,
-			}, -- [234]
+			}, -- [238]
 			{
 				["player"] = "Coop",
 				["item"] = "Flamewaker Legplates",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18861::::::::60:::::::|h[Flamewaker Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [235]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Bracers",
-				["date"] = "12/2/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16850::::::::60:::::::|h[Giantstalker's Bracers]|h|r",
-				["gp"] = 60,
-			}, -- [236]
+			}, -- [239]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Nightslayer Bracelets",
 				["date"] = "12/2/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16825::::::::60:::::::|h[Nightslayer Bracelets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16825|h[Nightslayer Bracelets]|h|r",
 				["gp"] = 0,
-			}, -- [237]
+			}, -- [240]
 			{
 				["player"] = "Tikki",
 				["item"] = "Heavy Dark Iron Ring",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18879::::::::60:::::::|h[Heavy Dark Iron Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r",
 				["gp"] = 100,
-			}, -- [238]
+			}, -- [241]
 			{
 				["player"] = "Carod",
 				["item"] = "Arcanist Gloves",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16801::::::::60:::::::|h[Arcanist Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16801|h[Arcanist Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [239]
+			}, -- [242]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Fire Runed Grimoire",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19142::::::::60:::::::|h[Fire Runed Grimoire]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r",
 				["gp"] = 30,
-			}, -- [240]
+			}, -- [243]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Arcanist Mantle",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16797::::::::60:::::::|h[Arcanist Mantle]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16797|h[Arcanist Mantle]|h|r",
 				["gp"] = 0,
-			}, -- [241]
+			}, -- [244]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Arcanist Belt",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16802::::::::60:::::::|h[Arcanist Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16802|h[Arcanist Belt]|h|r",
 				["gp"] = 0,
-			}, -- [242]
+			}, -- [245]
 			{
 				["player"] = "Tracer",
 				["item"] = "Drillborer Disk",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17066::::::::60:::::::|h[Drillborer Disk]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
 				["gp"] = 100,
-			}, -- [243]
+			}, -- [246]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Arcanist Crown",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16795::::::::60:::::::|h[Arcanist Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16795|h[Arcanist Crown]|h|r",
 				["gp"] = 200,
-			}, -- [244]
+			}, -- [247]
 			{
 				["gp"] = 0,
 				["item"] = "Bracers of Might",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [245]
+			}, -- [248]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Gloves",
 				["date"] = "12/2/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16826::::::::60:::::::|h[Nightslayer Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16826|h[Nightslayer Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [246]
+			}, -- [249]
 			{
 				["gp"] = 0,
 				["item"] = "Heavy Dark Iron Ring",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18879::::::::60:::::::|h[Heavy Dark Iron Ring]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r",
 				["player"] = "Coop",
-			}, -- [247]
+			}, -- [250]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Belt",
 				["date"] = "12/2/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16827::::::::60:::::::|h[Nightslayer Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16827|h[Nightslayer Belt]|h|r",
 				["gp"] = 80,
-			}, -- [248]
+			}, -- [251]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Pants",
 				["date"] = "12/2/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16822::::::::60:::::::|h[Nightslayer Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16822|h[Nightslayer Pants]|h|r",
 				["gp"] = 0,
-			}, -- [249]
+			}, -- [252]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "12/2/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [250]
+			}, -- [253]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Legplates",
 				["date"] = "12/2/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16855::::::::60:::::::|h[Lawbringer Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16855|h[Lawbringer Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [251]
+			}, -- [254]
 			{
 				["player"] = "Starlight",
 				["item"] = "Cenarion Boots",
 				["date"] = "12/2/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16829::::::::60:::::::|h[Cenarion Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16829|h[Cenarion Boots]|h|r",
 				["gp"] = 125,
-			}, -- [252]
+			}, -- [255]
 			{
 				["player"] = "Tracer",
 				["item"] = "Gauntlets of Might",
 				["date"] = "12/2/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["gp"] = 100,
-			}, -- [253]
+			}, -- [256]
 			{
 				["player"] = "Starlight",
 				["item"] = "Amberseal Keeper",
 				["date"] = "12/2/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:17113::::::::60:::::::|h[Amberseal Keeper]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17113|h[Amberseal Keeper]|h|r",
 				["gp"] = 150,
-			}, -- [254]
+			}, -- [257]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "Crystal Adorned Crown",
 				["date"] = "12/1/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19132::::::::60:::::::|h[Crystal Adorned Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19132|h[Crystal Adorned Crown]|h|r",
 				["gp"] = 300,
-			}, -- [255]
+			}, -- [258]
 			{
 				["gp"] = 0,
 				["item"] = "Fel Infused Leggings",
 				["date"] = "11/27/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19133::::::::60:::::::|h[Fel Infused Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
 				["player"] = "Darknéss",
-			}, -- [256]
+			}, -- [259]
 			{
 				["gp"] = 0,
 				["item"] = "Fel Infused Leggings",
 				["date"] = "11/27/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19133::::::::60:::::::|h[Fel Infused Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
 				["player"] = "Tikki",
-			}, -- [257]
+			}, -- [260]
 			{
 				["player"] = "Klisk",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/26/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [258]
+			}, -- [261]
 			{
 				["gp"] = 0,
 				["item"] = "Eskhandar's Collar",
 				["date"] = "11/26/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18205::::::::60:::::::|h[Eskhandar's Collar]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r",
 				["player"] = "Jezail",
-			}, -- [259]
+			}, -- [262]
 			{
 				["player"] = "Starlight",
 				["item"] = "Stormrage Cover",
 				["date"] = "11/26/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16900::::::::60:::::::|h[Stormrage Cover]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16900|h[Stormrage Cover]|h|r",
 				["gp"] = 125,
-			}, -- [260]
+			}, -- [263]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Empyrean Demolisher",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17112::::::::60:::::::|h[Empyrean Demolisher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17112|h[Empyrean Demolisher]|h|r",
 				["gp"] = 300,
-			}, -- [261]
+			}, -- [264]
 			{
 				["player"] = "Carod",
 				["item"] = "Cold Snap",
 				["date"] = "11/21/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19130::::::::60:::::::|h[Cold Snap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19130|h[Cold Snap]|h|r",
 				["gp"] = 100,
-			}, -- [262]
+			}, -- [265]
 			{
 				["player"] = "Azuj",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/21/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [263]
+			}, -- [266]
+			{
+				["player"] = "Odonn",
+				["item"] = "Ring of Binding",
+				["date"] = "11/21/19",
+				["itemLink"] = "|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r",
+				["gp"] = 0,
+			}, -- [267]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Judgement Crown",
 				["date"] = "11/21/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16955::::::::60:::::::|h[Judgement Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16955|h[Judgement Crown]|h|r",
 				["gp"] = 0,
-			}, -- [264]
+			}, -- [268]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [265]
+			}, -- [269]
 			{
 				["gp"] = 0,
 				["item"] = "Helm of Wrath",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16963::::::::60:::::::|h[Helm of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
 				["player"] = "Cleaves",
-			}, -- [266]
+			}, -- [270]
 			{
 				["gp"] = 0,
 				["item"] = "Sapphiron Drape",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["player"] = "Tikki",
-			}, -- [267]
+			}, -- [271]
 			{
 				["player"] = "Zomby",
 				["item"] = "Ancient Cornerstone Grimoire",
 				["date"] = "11/21/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17067::::::::60:::::::|h[Ancient Cornerstone Grimoire]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17067|h[Ancient Cornerstone Grimoire]|h|r",
 				["gp"] = 0,
-			}, -- [268]
+			}, -- [272]
 			{
 				["player"] = "Oya",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [269]
+			}, -- [273]
 			{
 				["player"] = "Carod",
 				["item"] = "Netherwind Crown",
 				["date"] = "11/21/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16914::::::::60:::::::|h[Netherwind Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r",
 				["gp"] = 80,
-			}, -- [270]
+			}, -- [274]
+			{
+				["player"] = "Frost",
+				["item"] = "Stormrage Cover",
+				["date"] = "11/21/19",
+				["itemLink"] = "|cffa335ee|Hitem:16900|h[Stormrage Cover]|h|r",
+				["gp"] = 125,
+			}, -- [275]
 			{
 				["player"] = "Tikki",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [271]
+			}, -- [276]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Dragonstalker's Helm",
 				["date"] = "11/21/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16939::::::::60:::::::|h[Dragonstalker's Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16939|h[Dragonstalker's Helm]|h|r",
 				["gp"] = 250,
-			}, -- [272]
+			}, -- [277]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Ring of Binding",
 				["date"] = "11/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18813::::::::60:::::::|h[Ring of Binding]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r",
 				["gp"] = 0,
-			}, -- [273]
+			}, -- [278]
 			{
 				["gp"] = 0,
 				["item"] = "Stormrage Cover",
 				["date"] = "11/21/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16900::::::::60:::::::|h[Stormrage Cover]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16900|h[Stormrage Cover]|h|r",
 				["player"] = "Friend",
-			}, -- [274]
+			}, -- [279]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Leggings of Transcendence",
 				["date"] = "11/19/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16922::::::::60:::::::|h[Leggings of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r",
 				["gp"] = 200,
-			}, -- [275]
+			}, -- [280]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Band of Accuria",
 				["date"] = "11/19/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17063::::::::60:::::::|h[Band of Accuria]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r",
 				["gp"] = 300,
-			}, -- [276]
+			}, -- [281]
 			{
 				["player"] = "Groggy",
 				["item"] = "Essence of the Pure Flame",
 				["date"] = "11/19/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18815::::::::60:::::::|h[Essence of the Pure Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r",
 				["gp"] = 0,
-			}, -- [277]
+			}, -- [282]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Nemesis Leggings",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16930::::::::60:::::::|h[Nemesis Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16930|h[Nemesis Leggings]|h|r",
 				["gp"] = 250,
-			}, -- [278]
+			}, -- [283]
 			{
 				["player"] = "Esconar",
 				["item"] = "Bonereaver's Edge",
 				["date"] = "11/19/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17076::::::::60:::::::|h[Bonereaver's Edge]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17076|h[Bonereaver's Edge]|h|r",
 				["gp"] = 300,
-			}, -- [279]
+			}, -- [284]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Belt",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16806::::::::60:::::::|h[Felheart Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16806|h[Felheart Belt]|h|r",
 				["gp"] = 0,
-			}, -- [280]
+			}, -- [285]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Wristguards of True Flight",
 				["date"] = "11/19/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18812::::::::60:::::::|h[Wristguards of True Flight]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18812|h[Wristguards of True Flight]|h|r",
 				["gp"] = 0,
-			}, -- [281]
+			}, -- [286]
 			{
 				["player"] = "Zomby",
 				["item"] = "Core Hound Tooth",
 				["date"] = "11/19/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18805::::::::60:::::::|h[Core Hound Tooth]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18805|h[Core Hound Tooth]|h|r",
 				["gp"] = 250,
-			}, -- [282]
+			}, -- [287]
+			{
+				["player"] = "Sogy",
+				["item"] = "Ancient Petrified Leaf",
+				["date"] = "11/19/19",
+				["itemLink"] = "|cffa335ee|Hitem:18703|h[Ancient Petrified Leaf]|h|r",
+				["gp"] = 300,
+			}, -- [288]
 			{
 				["gp"] = 0,
 				["item"] = "Cenarion Vestments",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16833::::::::60:::::::|h[Cenarion Vestments]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16833|h[Cenarion Vestments]|h|r",
 				["player"] = "Klue",
-			}, -- [283]
+			}, -- [289]
 			{
 				["player"] = "Coop",
 				["item"] = "Blastershot Launcher",
 				["date"] = "11/19/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17072::::::::60:::::::|h[Blastershot Launcher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
 				["gp"] = 100,
-			}, -- [284]
+			}, -- [290]
 			{
 				["player"] = "Marizol",
 				["item"] = "Felheart Robes",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16809::::::::60:::::::|h[Felheart Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16809|h[Felheart Robes]|h|r",
 				["gp"] = 0,
-			}, -- [285]
+			}, -- [291]
 			{
 				["player"] = "Tikki",
 				["item"] = "Pauldrons of Might",
 				["date"] = "11/19/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16868::::::::60:::::::|h[Pauldrons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r",
 				["gp"] = 150,
-			}, -- [286]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Belt",
-				["date"] = "11/19/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16851::::::::60:::::::|h[Giantstalker's Belt]|h|r",
-				["gp"] = 80,
-			}, -- [287]
+			}, -- [292]
 			{
 				["player"] = "Klue",
 				["item"] = "Cenarion Gloves",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16831::::::::60:::::::|h[Cenarion Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16831|h[Cenarion Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [288]
+			}, -- [293]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Boots",
 				["date"] = "11/19/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16824::::::::60:::::::|h[Nightslayer Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16824|h[Nightslayer Boots]|h|r",
 				["gp"] = 100,
-			}, -- [289]
+			}, -- [294]
 			{
 				["gp"] = 0,
 				["item"] = "Cenarion Spaulders",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16836::::::::60:::::::|h[Cenarion Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16836|h[Cenarion Spaulders]|h|r",
 				["player"] = "Klue",
-			}, -- [290]
+			}, -- [295]
 			{
 				["player"] = "Groggy",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "11/19/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [291]
+			}, -- [296]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Flamewaker Legplates",
 				["date"] = "11/19/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18861::::::::60:::::::|h[Flamewaker Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [292]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Helmet",
-				["date"] = "11/19/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16846::::::::60:::::::|h[Giantstalker's Helmet]|h|r",
-				["gp"] = 150,
-			}, -- [293]
+			}, -- [297]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Circlet of Prophecy",
 				["date"] = "11/19/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16813::::::::60:::::::|h[Circlet of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16813|h[Circlet of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [294]
+			}, -- [298]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Giantstalker's Boots",
 				["date"] = "11/19/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16849::::::::60:::::::|h[Giantstalker's Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16849|h[Giantstalker's Boots]|h|r",
 				["gp"] = 150,
-			}, -- [295]
+			}, -- [299]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Bracers",
 				["date"] = "11/19/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16857::::::::60:::::::|h[Lawbringer Bracers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16857|h[Lawbringer Bracers]|h|r",
 				["gp"] = 0,
-			}, -- [296]
+			}, -- [300]
 			{
 				["gp"] = 0,
 				["item"] = "Legplates of Might",
 				["date"] = "11/19/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16867::::::::60:::::::|h[Legplates of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
 				["player"] = "Cleaves",
-			}, -- [297]
+			}, -- [301]
 			{
 				["player"] = "Carod",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "11/19/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [298]
+			}, -- [302]
 			{
 				["gp"] = 0,
 				["item"] = "Lawbringer Boots",
 				["date"] = "11/19/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16859::::::::60:::::::|h[Lawbringer Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16859|h[Lawbringer Boots]|h|r",
 				["player"] = "Righteous",
-			}, -- [299]
+			}, -- [303]
 			{
 				["player"] = "Klue",
 				["item"] = "Fel Infused Leggings",
 				["date"] = "11/19/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19133::::::::60:::::::|h[Fel Infused Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
 				["gp"] = 300,
-			}, -- [300]
+			}, -- [304]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Vambraces of Prophecy",
 				["date"] = "11/19/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16819::::::::60:::::::|h[Vambraces of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16819|h[Vambraces of Prophecy]|h|r",
 				["gp"] = 100,
-			}, -- [301]
-			{
-				["player"] = "Solborion",
-				["item"] = "Head of Onyxia",
-				["date"] = "11/14/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
-				["gp"] = 75,
-			}, -- [302]
+			}, -- [305]
 			{
 				["player"] = "Klue",
 				["item"] = "Eskhandar's Collar",
 				["date"] = "11/14/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18205::::::::60:::::::|h[Eskhandar's Collar]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r",
 				["gp"] = 0,
-			}, -- [303]
+			}, -- [306]
 			{
 				["player"] = "Xane",
 				["item"] = "Netherwind Crown",
 				["date"] = "11/14/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16914::::::::60:::::::|h[Netherwind Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r",
 				["gp"] = 80,
-			}, -- [304]
+			}, -- [307]
 			{
 				["player"] = "Jezail",
 				["item"] = "Vis'kag the Bloodletter",
 				["date"] = "11/14/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17075::::::::60:::::::|h[Vis'kag the Bloodletter]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17075|h[Vis'kag the Bloodletter]|h|r",
 				["gp"] = 300,
-			}, -- [305]
+			}, -- [308]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/14/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [306]
+			}, -- [309]
 			{
 				["player"] = "Righteous",
 				["item"] = "Judgement Crown",
 				["date"] = "11/14/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16955::::::::60:::::::|h[Judgement Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16955|h[Judgement Crown]|h|r",
 				["gp"] = 0,
-			}, -- [307]
+			}, -- [310]
 			{
 				["player"] = "Zomby",
 				["item"] = "Bloodfang Hood",
 				["date"] = "11/14/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16908::::::::60:::::::|h[Bloodfang Hood]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16908|h[Bloodfang Hood]|h|r",
 				["gp"] = 200,
-			}, -- [308]
+			}, -- [311]
 			{
 				["player"] = "Zomby",
 				["item"] = "Vis'kag the Bloodletter",
 				["date"] = "11/14/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:17075::::::::60:::::::|h[Vis'kag the Bloodletter]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17075|h[Vis'kag the Bloodletter]|h|r",
 				["gp"] = 300,
-			}, -- [309]
+			}, -- [312]
 			{
 				["player"] = "Klisk",
 				["item"] = "Essence of the Pure Flame",
 				["date"] = "11/12/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18815::::::::60:::::::|h[Essence of the Pure Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r",
 				["gp"] = 0,
-			}, -- [310]
+			}, -- [313]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Judgement Legplates",
 				["date"] = "11/12/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16954::::::::60:::::::|h[Judgement Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16954|h[Judgement Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [311]
+			}, -- [314]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Netherwind Pants",
 				["date"] = "11/12/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16915::::::::60:::::::|h[Netherwind Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16915|h[Netherwind Pants]|h|r",
 				["gp"] = 250,
-			}, -- [312]
+			}, -- [315]
 			{
 				["player"] = "Klisk",
 				["item"] = "Dragon's Blood Cape",
 				["date"] = "11/12/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17107::::::::60:::::::|h[Dragon's Blood Cape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r",
 				["gp"] = 100,
-			}, -- [313]
+			}, -- [316]
 			{
 				["player"] = "Xane",
 				["item"] = "Gloves of the Hypnotic Flame",
 				["date"] = "11/12/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18808::::::::60:::::::|h[Gloves of the Hypnotic Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18808|h[Gloves of the Hypnotic Flame]|h|r",
 				["gp"] = 0,
-			}, -- [314]
+			}, -- [317]
 			{
 				["player"] = "Lago",
 				["item"] = "The Eye of Divinity",
 				["date"] = "11/12/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["gp"] = 300,
-			}, -- [315]
+			}, -- [318]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Arcanist Robes",
 				["date"] = "11/12/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16798::::::::60:::::::|h[Arcanist Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16798|h[Arcanist Robes]|h|r",
 				["gp"] = 0,
-			}, -- [316]
+			}, -- [319]
 			{
 				["player"] = "Klue",
 				["item"] = "Cenarion Vestments",
 				["date"] = "11/12/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16833::::::::60:::::::|h[Cenarion Vestments]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16833|h[Cenarion Vestments]|h|r",
 				["gp"] = 0,
-			}, -- [317]
+			}, -- [320]
 			{
 				["player"] = "Xane",
 				["item"] = "Arcanist Gloves",
 				["date"] = "11/12/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16801::::::::60:::::::|h[Arcanist Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16801|h[Arcanist Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [318]
+			}, -- [321]
 			{
 				["player"] = "Groggy",
 				["item"] = "Magma Tempered Boots",
 				["date"] = "11/12/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18824::::::::60:::::::|h[Magma Tempered Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18824|h[Magma Tempered Boots]|h|r",
 				["gp"] = 0,
-			}, -- [319]
+			}, -- [322]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Shoulder Pads",
 				["date"] = "11/12/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16807::::::::60:::::::|h[Felheart Shoulder Pads]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16807|h[Felheart Shoulder Pads]|h|r",
 				["gp"] = 0,
-			}, -- [320]
+			}, -- [323]
 			{
 				["player"] = "Klisk",
 				["item"] = "Drillborer Disk",
 				["date"] = "11/12/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17066::::::::60:::::::|h[Drillborer Disk]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
 				["gp"] = 100,
-			}, -- [321]
+			}, -- [324]
 			{
 				["player"] = "Xane",
 				["item"] = "Ring of Spell Power",
 				["date"] = "11/12/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:19147::::::::60:::::::|h[Ring of Spell Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19147|h[Ring of Spell Power]|h|r",
 				["gp"] = 250,
-			}, -- [322]
+			}, -- [325]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Giantstalker's Belt",
 				["date"] = "11/12/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16851::::::::60:::::::|h[Giantstalker's Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16851|h[Giantstalker's Belt]|h|r",
 				["gp"] = 80,
-			}, -- [323]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Leggings",
-				["date"] = "11/12/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16847::::::::60:::::::|h[Giantstalker's Leggings]|h|r",
-				["gp"] = 150,
-			}, -- [324]
+			}, -- [326]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Choker of Enlightenment",
 				["date"] = "11/12/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17109::::::::60:::::::|h[Choker of Enlightenment]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
 				["gp"] = 60,
-			}, -- [325]
+			}, -- [327]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Felheart Gloves",
 				["date"] = "11/12/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16805::::::::60:::::::|h[Felheart Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16805|h[Felheart Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [326]
+			}, -- [328]
 			{
 				["player"] = "Zomby",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/7/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [327]
+			}, -- [329]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Bracelets",
 				["date"] = "11/5/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16825::::::::60:::::::|h[Nightslayer Bracelets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16825|h[Nightslayer Bracelets]|h|r",
 				["gp"] = 0,
-			}, -- [328]
+			}, -- [330]
 			{
 				["player"] = "Xan",
 				["item"] = "Ring of Spell Power",
 				["date"] = "11/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19147::::::::60:::::::|h[Ring of Spell Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19147|h[Ring of Spell Power]|h|r",
 				["gp"] = 250,
-			}, -- [329]
+			}, -- [331]
 			{
 				["player"] = "Tracer",
 				["item"] = "Blastershot Launcher",
 				["date"] = "11/5/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17072::::::::60:::::::|h[Blastershot Launcher]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
 				["gp"] = 100,
-			}, -- [330]
+			}, -- [332]
 			{
 				["player"] = "Tracer",
 				["item"] = "Medallion of Steadfast Might",
 				["date"] = "11/5/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17065::::::::60:::::::|h[Medallion of Steadfast Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17065|h[Medallion of Steadfast Might]|h|r",
 				["gp"] = 150,
-			}, -- [331]
+			}, -- [333]
 			{
 				["player"] = "Tikki",
 				["item"] = "Dragon's Blood Cape",
 				["date"] = "11/5/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17107::::::::60:::::::|h[Dragon's Blood Cape]|h|r",
-				["gp"] = 0,
-			}, -- [332]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Epaulets",
-				["date"] = "11/5/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16848::::::::60:::::::|h[Giantstalker's Epaulets]|h|r",
-				["gp"] = 150,
-			}, -- [333]
-			{
-				["player"] = "Soggybottom",
-				["item"] = "Robes of Prophecy",
-				["date"] = "11/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16815::::::::60:::::::|h[Robes of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r",
 				["gp"] = 0,
 			}, -- [334]
 			{
 				["player"] = "Soggybottom",
-				["item"] = "Fire Runed Grimoire",
+				["item"] = "Robes of Prophecy",
 				["date"] = "11/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19142::::::::60:::::::|h[Fire Runed Grimoire]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16815|h[Robes of Prophecy]|h|r",
 				["gp"] = 0,
 			}, -- [335]
+			{
+				["player"] = "Soggybottom",
+				["item"] = "Fire Runed Grimoire",
+				["date"] = "11/5/19",
+				["itemLink"] = "|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r",
+				["gp"] = 0,
+			}, -- [336]
 			{
 				["player"] = "Righteous",
 				["item"] = "Judgement Legplates",
 				["date"] = "11/5/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16954::::::::60:::::::|h[Judgement Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16954|h[Judgement Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [336]
+			}, -- [337]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "The Eye of Divinity",
 				["date"] = "11/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["gp"] = 300,
-			}, -- [337]
+			}, -- [338]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Pants of Prophecy",
 				["date"] = "11/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16814::::::::60:::::::|h[Pants of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16814|h[Pants of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [338]
+			}, -- [339]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "11/5/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [339]
+			}, -- [340]
 			{
 				["player"] = "Marizol",
 				["item"] = "Nemesis Leggings",
 				["date"] = "11/5/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16930::::::::60:::::::|h[Nemesis Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16930|h[Nemesis Leggings]|h|r",
 				["gp"] = 250,
-			}, -- [340]
+			}, -- [341]
 			{
 				["player"] = "Lago",
 				["item"] = "Cauterizing Band",
 				["date"] = "11/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:19140::::::::60:::::::|h[Cauterizing Band]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19140|h[Cauterizing Band]|h|r",
 				["gp"] = 250,
-			}, -- [341]
+			}, -- [342]
 			{
 				["player"] = "Krustytop",
 				["item"] = "Felheart Slippers",
 				["date"] = "11/5/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16803::::::::60:::::::|h[Felheart Slippers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16803|h[Felheart Slippers]|h|r",
 				["gp"] = 0,
-			}, -- [342]
+			}, -- [343]
 			{
 				["player"] = "Klue",
 				["item"] = "Cenarion Helm",
 				["date"] = "11/5/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16834::::::::60:::::::|h[Cenarion Helm]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16834|h[Cenarion Helm]|h|r",
 				["gp"] = 0,
-			}, -- [343]
+			}, -- [344]
 			{
 				["player"] = "Klisk",
 				["item"] = "Gauntlets of Might",
 				["date"] = "11/5/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["gp"] = 100,
-			}, -- [344]
+			}, -- [345]
 			{
 				["player"] = "Starlight",
 				["item"] = "Choker of the Fire Lord",
 				["date"] = "11/5/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:18814::::::::60:::::::|h[Choker of the Fire Lord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18814|h[Choker of the Fire Lord]|h|r",
 				["gp"] = 250,
-			}, -- [345]
+			}, -- [346]
 			{
 				["player"] = "Groggy",
 				["item"] = "Aurastone Hammer",
 				["date"] = "11/5/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17105::::::::60:::::::|h[Aurastone Hammer]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r",
 				["gp"] = 50,
-			}, -- [346]
+			}, -- [347]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Giantstalker's Breastplate",
 				["date"] = "11/5/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16845::::::::60:::::::|h[Giantstalker's Breastplate]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16845|h[Giantstalker's Breastplate]|h|r",
 				["gp"] = 150,
-			}, -- [347]
+			}, -- [348]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Horns",
 				["date"] = "11/5/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16808::::::::60:::::::|h[Felheart Horns]|h|r",
-				["gp"] = 0,
-			}, -- [348]
-			{
-				["player"] = "Ezekkiel",
-				["item"] = "Arcanist Gloves",
-				["date"] = "11/5/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16801::::::::60:::::::|h[Arcanist Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16808|h[Felheart Horns]|h|r",
 				["gp"] = 0,
 			}, -- [349]
 			{
 				["player"] = "Ezekkiel",
+				["item"] = "Arcanist Gloves",
+				["date"] = "11/5/19",
+				["itemLink"] = "|cffa335ee|Hitem:16801|h[Arcanist Gloves]|h|r",
+				["gp"] = 0,
+			}, -- [350]
+			{
+				["player"] = "Ezekkiel",
 				["item"] = "Arcanist Boots",
 				["date"] = "11/5/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16800::::::::60:::::::|h[Arcanist Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16800|h[Arcanist Boots]|h|r",
 				["gp"] = 150,
-			}, -- [350]
+			}, -- [351]
 			{
 				["player"] = "Azuj",
 				["item"] = "Core Hound Tooth",
 				["date"] = "11/5/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18805::::::::60:::::::|h[Core Hound Tooth]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18805|h[Core Hound Tooth]|h|r",
 				["gp"] = 250,
-			}, -- [351]
+			}, -- [352]
 			{
 				["player"] = "Marizol",
 				["item"] = "Nemesis Skullcap",
 				["date"] = "11/4/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16929::::::::60:::::::|h[Nemesis Skullcap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
 				["gp"] = 250,
-			}, -- [352]
+			}, -- [353]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Sapphiron Drape",
 				["date"] = "11/4/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [353]
+			}, -- [354]
 			{
 				["player"] = "Frostishot",
 				["item"] = "Mature Black Dragon Sinew",
 				["date"] = "11/4/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18705::::::::60:::::::|h[Mature Black Dragon Sinew]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18705|h[Mature Black Dragon Sinew]|h|r",
 				["gp"] = 0,
-			}, -- [354]
+			}, -- [355]
 			{
 				["player"] = "Coop",
 				["item"] = "Head of Onyxia",
 				["date"] = "11/4/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [355]
+			}, -- [356]
 			{
 				["player"] = "Azuj",
 				["item"] = "Bloodfang Hood",
 				["date"] = "11/4/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16908::::::::60:::::::|h[Bloodfang Hood]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16908|h[Bloodfang Hood]|h|r",
 				["gp"] = 200,
-			}, -- [356]
+			}, -- [357]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Belt",
 				["date"] = "10/29/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16827::::::::60:::::::|h[Nightslayer Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16827|h[Nightslayer Belt]|h|r",
 				["gp"] = 80,
-			}, -- [357]
+			}, -- [358]
 			{
 				["player"] = "Tracer",
 				["item"] = "Breastplate of Might",
 				["date"] = "10/29/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16865::::::::60:::::::|h[Breastplate of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16865|h[Breastplate of Might]|h|r",
 				["gp"] = 150,
-			}, -- [358]
+			}, -- [359]
 			{
 				["player"] = "Tikki",
 				["item"] = "Essence of the Pure Flame",
 				["date"] = "10/29/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18815::::::::60:::::::|h[Essence of the Pure Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r",
 				["gp"] = 0,
-			}, -- [359]
+			}, -- [360]
 			{
 				["player"] = "Tikki",
 				["item"] = "Bindings of the Windseeker",
 				["date"] = "10/29/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffff8000|Hitem:18563::::::::60:::::::|h[Bindings of the Windseeker]|h|r",
+				["itemLink"] = "|cffff8000|Hitem:18563|h[Bindings of the Windseeker]|h|r",
 				["gp"] = 0,
-			}, -- [360]
+			}, -- [361]
 			{
 				["player"] = "Righteous",
 				["item"] = "Cauterizing Band",
 				["date"] = "10/29/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:19140::::::::60:::::::|h[Cauterizing Band]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19140|h[Cauterizing Band]|h|r",
 				["gp"] = 250,
-			}, -- [361]
+			}, -- [362]
 			{
 				["player"] = "Righteous",
 				["item"] = "Aurastone Hammer",
 				["date"] = "10/29/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17105::::::::60:::::::|h[Aurastone Hammer]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r",
 				["gp"] = 50,
-			}, -- [362]
+			}, -- [363]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Gauntlets",
 				["date"] = "10/29/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16860::::::::60:::::::|h[Lawbringer Gauntlets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16860|h[Lawbringer Gauntlets]|h|r",
 				["gp"] = 0,
-			}, -- [363]
+			}, -- [364]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Mantle of Prophecy",
 				["date"] = "10/29/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16816::::::::60:::::::|h[Mantle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16816|h[Mantle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [364]
+			}, -- [365]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Lawbringer Boots",
 				["date"] = "10/29/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16859::::::::60:::::::|h[Lawbringer Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16859|h[Lawbringer Boots]|h|r",
 				["gp"] = 0,
-			}, -- [365]
+			}, -- [366]
 			{
 				["player"] = "Marizol",
 				["item"] = "Mana Igniting Cord",
 				["date"] = "10/29/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19136::::::::60:::::::|h[Mana Igniting Cord]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
 				["gp"] = 250,
-			}, -- [366]
+			}, -- [367]
 			{
 				["player"] = "Lago",
 				["item"] = "Shard of the Flame",
 				["date"] = "10/29/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17082::::::::60:::::::|h[Shard of the Flame]|h|r",
-				["gp"] = 0,
-			}, -- [367]
-			{
-				["player"] = "Lago",
-				["item"] = "Fireproof Cloak",
-				["date"] = "10/29/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18811::::::::60:::::::|h[Fireproof Cloak]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17082|h[Shard of the Flame]|h|r",
 				["gp"] = 0,
 			}, -- [368]
 			{
 				["player"] = "Lago",
-				["item"] = "Robes of Prophecy",
+				["item"] = "Fireproof Cloak",
 				["date"] = "10/29/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16815::::::::60:::::::|h[Robes of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18811|h[Fireproof Cloak]|h|r",
 				["gp"] = 0,
 			}, -- [369]
+			{
+				["player"] = "Lago",
+				["item"] = "Robes of Prophecy",
+				["date"] = "10/29/19",
+				["itemLink"] = "|cffa335ee|Hitem:16815|h[Robes of Prophecy]|h|r",
+				["gp"] = 0,
+			}, -- [370]
 			{
 				["player"] = "Klisk",
 				["item"] = "Sabatons of Might",
 				["date"] = "10/29/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16862::::::::60:::::::|h[Sabatons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
 				["gp"] = 150,
-			}, -- [370]
+			}, -- [371]
 			{
 				["player"] = "Starlight",
 				["item"] = "Felheart Horns",
 				["date"] = "10/29/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16808::::::::60:::::::|h[Felheart Horns]|h|r",
-				["gp"] = 0,
-			}, -- [371]
-			{
-				["player"] = "Frostishot",
-				["item"] = "Ancient Petrified Leaf",
-				["date"] = "10/29/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18703::::::::60:::::::|h[Ancient Petrified Leaf]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16808|h[Felheart Horns]|h|r",
 				["gp"] = 0,
 			}, -- [372]
 			{
 				["player"] = "Frostishot",
-				["item"] = "Giantstalker's Helmet",
+				["item"] = "Ancient Petrified Leaf",
 				["date"] = "10/29/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16846::::::::60:::::::|h[Giantstalker's Helmet]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18703|h[Ancient Petrified Leaf]|h|r",
 				["gp"] = 0,
 			}, -- [373]
+			{
+				["player"] = "Frostishot",
+				["item"] = "Giantstalker's Helmet",
+				["date"] = "10/29/19",
+				["itemLink"] = "|cffa335ee|Hitem:16846|h[Giantstalker's Helmet]|h|r",
+				["gp"] = 0,
+			}, -- [374]
 			{
 				["player"] = "Friend",
 				["item"] = "Nemesis Leggings",
 				["date"] = "10/29/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16930::::::::60:::::::|h[Nemesis Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16930|h[Nemesis Leggings]|h|r",
 				["gp"] = 250,
-			}, -- [374]
+			}, -- [375]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Arcanist Mantle",
 				["date"] = "10/29/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16797::::::::60:::::::|h[Arcanist Mantle]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16797|h[Arcanist Mantle]|h|r",
 				["gp"] = 0,
-			}, -- [375]
+			}, -- [376]
 			{
 				["player"] = "Coop",
 				["item"] = "Onslaught Girdle",
 				["date"] = "10/29/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19137::::::::60:::::::|h[Onslaught Girdle]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19137|h[Onslaught Girdle]|h|r",
 				["gp"] = 300,
-			}, -- [376]
+			}, -- [377]
 			{
 				["player"] = "Carod",
 				["item"] = "Arcanist Belt",
 				["date"] = "10/29/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16802::::::::60:::::::|h[Arcanist Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16802|h[Arcanist Belt]|h|r",
 				["gp"] = 0,
-			}, -- [377]
+			}, -- [378]
 			{
 				["player"] = "Xan",
 				["item"] = "Ancient Cornerstone Grimoire",
 				["date"] = "10/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17067::::::::60:::::::|h[Ancient Cornerstone Grimoire]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17067|h[Ancient Cornerstone Grimoire]|h|r",
 				["gp"] = 0,
-			}, -- [378]
+			}, -- [379]
 			{
 				["player"] = "Tracer",
 				["item"] = "Helm of Wrath",
 				["date"] = "10/28/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16963::::::::60:::::::|h[Helm of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
 				["gp"] = 250,
-			}, -- [379]
-			{
-				["player"] = "Solborion",
-				["item"] = "Mature Black Dragon Sinew",
-				["date"] = "10/28/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18705::::::::60:::::::|h[Mature Black Dragon Sinew]|h|r",
-				["gp"] = 0,
 			}, -- [380]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Netherwind Crown",
 				["date"] = "10/28/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16914::::::::60:::::::|h[Netherwind Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r",
 				["gp"] = 80,
 			}, -- [381]
 			{
 				["player"] = "Lago",
 				["item"] = "Shard of the Scale",
 				["date"] = "10/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17064::::::::60:::::::|h[Shard of the Scale]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17064|h[Shard of the Scale]|h|r",
 				["gp"] = 200,
 			}, -- [382]
 			{
 				["player"] = "Tracer",
 				["item"] = "Cloak of the Shrouded Mists",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
 				["gp"] = 100,
 			}, -- [383]
 			{
 				["player"] = "Tikki",
 				["item"] = "Helm of Wrath",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16963::::::::60:::::::|h[Helm of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
 				["gp"] = 250,
 			}, -- [384]
 			{
 				["player"] = "Tikki",
 				["item"] = "Flamewaker Legplates",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18861::::::::60:::::::|h[Flamewaker Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r",
 				["gp"] = 0,
 			}, -- [385]
 			{
 				["player"] = "Tikki",
 				["item"] = "Drillborer Disk",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17066::::::::60:::::::|h[Drillborer Disk]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
 				["gp"] = 100,
 			}, -- [386]
 			{
 				["player"] = "Tikki",
 				["item"] = "Breastplate of Might",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16865::::::::60:::::::|h[Breastplate of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16865|h[Breastplate of Might]|h|r",
 				["gp"] = 150,
 			}, -- [387]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Boots",
-				["date"] = "10/22/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16849::::::::60:::::::|h[Giantstalker's Boots]|h|r",
-				["gp"] = 0,
-			}, -- [388]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "Pants of Prophecy",
 				["date"] = "10/22/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16814::::::::60:::::::|h[Pants of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16814|h[Pants of Prophecy]|h|r",
 				["gp"] = 30,
-			}, -- [389]
+			}, -- [388]
 			{
 				["player"] = "Oya",
 				["item"] = "Perdition's Blade",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18816::::::::60:::::::|h[Perdition's Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18816|h[Perdition's Blade]|h|r",
 				["gp"] = 300,
-			}, -- [390]
+			}, -- [389]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Lawbringer Legplates",
 				["date"] = "10/22/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16855::::::::60:::::::|h[Lawbringer Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16855|h[Lawbringer Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [391]
+			}, -- [390]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Gloves of the Hypnotic Flame",
 				["date"] = "10/22/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18808::::::::60:::::::|h[Gloves of the Hypnotic Flame]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18808|h[Gloves of the Hypnotic Flame]|h|r",
 				["gp"] = 0,
-			}, -- [392]
+			}, -- [391]
 			{
 				["player"] = "Lago",
 				["item"] = "Gloves of Prophecy",
 				["date"] = "10/22/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16812::::::::60:::::::|h[Gloves of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r",
 				["gp"] = 50,
-			}, -- [393]
+			}, -- [392]
 			{
 				["player"] = "Klue",
 				["item"] = "Robe of Volatile Power",
 				["date"] = "10/22/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:19145::::::::60:::::::|h[Robe of Volatile Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r",
 				["gp"] = 300,
-			}, -- [394]
+			}, -- [393]
 			{
 				["player"] = "Klisk",
 				["item"] = "Eskhandar's Collar",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18205::::::::60:::::::|h[Eskhandar's Collar]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r",
 				["gp"] = 30,
-			}, -- [395]
+			}, -- [394]
 			{
 				["player"] = "Klisk",
 				["item"] = "Bracers of Might",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["gp"] = 60,
-			}, -- [396]
+			}, -- [395]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Head of Onyxia",
 				["date"] = "10/22/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [397]
+			}, -- [396]
 			{
 				["player"] = "Jezail",
 				["item"] = "Flameguard Gauntlets",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19143::::::::60:::::::|h[Flameguard Gauntlets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19143|h[Flameguard Gauntlets]|h|r",
 				["gp"] = 100,
-			}, -- [398]
+			}, -- [397]
 			{
 				["player"] = "Groggy",
 				["item"] = "Lawbringer Boots",
 				["date"] = "10/22/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16859::::::::60:::::::|h[Lawbringer Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16859|h[Lawbringer Boots]|h|r",
 				["gp"] = 30,
-			}, -- [399]
+			}, -- [398]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Slippers",
 				["date"] = "10/22/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16803::::::::60:::::::|h[Felheart Slippers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16803|h[Felheart Slippers]|h|r",
 				["gp"] = 0,
-			}, -- [400]
+			}, -- [399]
 			{
 				["player"] = "Friend",
 				["item"] = "Felheart Gloves",
 				["date"] = "10/22/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16805::::::::60:::::::|h[Felheart Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16805|h[Felheart Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [401]
+			}, -- [400]
 			{
 				["player"] = "Esconar",
 				["item"] = "Shadowstrike",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17074::::::::60:::::::|h[Shadowstrike]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17074|h[Shadowstrike]|h|r",
 				["gp"] = 0,
-			}, -- [402]
+			}, -- [401]
 			{
 				["player"] = "Coop",
 				["item"] = "Gutgore Ripper",
 				["date"] = "10/22/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17071::::::::60:::::::|h[Gutgore Ripper]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17071|h[Gutgore Ripper]|h|r",
 				["gp"] = 0,
-			}, -- [403]
+			}, -- [402]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Dragonstalker's Legguards",
 				["date"] = "10/22/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16938::::::::60:::::::|h[Dragonstalker's Legguards]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16938|h[Dragonstalker's Legguards]|h|r",
 				["gp"] = 250,
-			}, -- [404]
+			}, -- [403]
 			{
 				["player"] = "Azuj",
 				["item"] = "Bloodfang Pants",
 				["date"] = "10/22/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16909::::::::60:::::::|h[Bloodfang Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r",
 				["gp"] = 200,
-			}, -- [405]
+			}, -- [404]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Sapphiron Drape",
 				["date"] = "10/17/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [406]
+			}, -- [405]
 			{
 				["player"] = "Xane",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "10/15/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [407]
+			}, -- [406]
 			{
 				["player"] = "Tracer",
 				["item"] = "Legplates of Wrath",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["gp"] = 250,
-			}, -- [408]
+			}, -- [407]
 			{
 				["player"] = "Tracer",
 				["item"] = "Helm of Might",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16866::::::::60:::::::|h[Helm of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16866|h[Helm of Might]|h|r",
 				["gp"] = 150,
-			}, -- [409]
+			}, -- [408]
 			{
 				["player"] = "Tracer",
 				["item"] = "Flamewaker Legplates",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18861::::::::60:::::::|h[Flamewaker Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [410]
+			}, -- [409]
 			{
 				["player"] = "Tracer",
 				["item"] = "Bracers of Might",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["gp"] = 60,
-			}, -- [411]
+			}, -- [410]
 			{
 				["player"] = "Tikki",
 				["item"] = "Sabatons of Might",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16862::::::::60:::::::|h[Sabatons of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
 				["gp"] = 150,
-			}, -- [412]
+			}, -- [411]
 			{
 				["player"] = "Tikki",
 				["item"] = "Cloak of the Shrouded Mists",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
 				["gp"] = 0,
-			}, -- [413]
+			}, -- [412]
 			{
 				["player"] = "Tikki",
 				["item"] = "Bracers of Might",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16861::::::::60:::::::|h[Bracers of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
 				["gp"] = 60,
-			}, -- [414]
-			{
-				["player"] = "Solborion",
-				["item"] = "Giantstalker's Breastplate",
-				["date"] = "10/15/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16845::::::::60:::::::|h[Giantstalker's Breastplate]|h|r",
-				["gp"] = 0,
-			}, -- [415]
+			}, -- [413]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Gauntlets",
 				["date"] = "10/15/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16860::::::::60:::::::|h[Lawbringer Gauntlets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16860|h[Lawbringer Gauntlets]|h|r",
 				["gp"] = 0,
-			}, -- [416]
+			}, -- [414]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Girdle of Prophecy",
 				["date"] = "10/15/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16817::::::::60:::::::|h[Girdle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16817|h[Girdle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [417]
+			}, -- [415]
 			{
 				["player"] = "Oya",
 				["item"] = "Striker's Mark",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17069::::::::60:::::::|h[Striker's Mark]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17069|h[Striker's Mark]|h|r",
 				["gp"] = 100,
-			}, -- [418]
+			}, -- [416]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Wild Growth Spaulders",
 				["date"] = "10/15/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18810::::::::60:::::::|h[Wild Growth Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18810|h[Wild Growth Spaulders]|h|r",
 				["gp"] = 300,
-			}, -- [419]
+			}, -- [417]
 			{
 				["player"] = "Nadrell",
 				["item"] = "Shard of the Scale",
 				["date"] = "10/15/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:17064::::::::60:::::::|h[Shard of the Scale]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17064|h[Shard of the Scale]|h|r",
 				["gp"] = 200,
-			}, -- [420]
+			}, -- [418]
 			{
 				["player"] = "Klue",
 				["item"] = "Felheart Robes",
 				["date"] = "10/15/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16809::::::::60:::::::|h[Felheart Robes]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16809|h[Felheart Robes]|h|r",
 				["gp"] = 0,
-			}, -- [421]
+			}, -- [419]
 			{
 				["player"] = "Klisk",
 				["item"] = "Legplates of Wrath",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16962::::::::60:::::::|h[Legplates of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
 				["gp"] = 250,
-			}, -- [422]
+			}, -- [420]
 			{
 				["player"] = "Starlight",
 				["item"] = "Felheart Belt",
 				["date"] = "10/15/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16806::::::::60:::::::|h[Felheart Belt]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16806|h[Felheart Belt]|h|r",
 				["gp"] = 0,
-			}, -- [423]
+			}, -- [421]
 			{
 				["player"] = "Esconar",
 				["item"] = "Ring of Binding",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18813::::::::60:::::::|h[Ring of Binding]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r",
 				["gp"] = 0,
-			}, -- [424]
+			}, -- [422]
 			{
 				["player"] = "Esconar",
 				["item"] = "Head of Onyxia",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [425]
+			}, -- [423]
 			{
 				["player"] = "Coop",
 				["item"] = "Obsidian Edged Blade",
 				["date"] = "10/15/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18822::::::::60:::::::|h[Obsidian Edged Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r",
 				["gp"] = 0,
-			}, -- [426]
+			}, -- [424]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Mature Black Dragon Sinew",
 				["date"] = "10/15/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18705::::::::60:::::::|h[Mature Black Dragon Sinew]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18705|h[Mature Black Dragon Sinew]|h|r",
 				["gp"] = 0,
-			}, -- [427]
+			}, -- [425]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Gloves",
 				["date"] = "10/15/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16852::::::::60:::::::|h[Giantstalker's Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16852|h[Giantstalker's Gloves]|h|r",
 				["gp"] = 100,
-			}, -- [428]
+			}, -- [426]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Epaulets",
 				["date"] = "10/15/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16848::::::::60:::::::|h[Giantstalker's Epaulets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16848|h[Giantstalker's Epaulets]|h|r",
 				["gp"] = 150,
-			}, -- [429]
+			}, -- [427]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "The Eye of Divinity",
 				["date"] = "10/15/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["gp"] = 300,
-			}, -- [430]
+			}, -- [428]
 			{
 				["player"] = "Xane",
 				["item"] = "Arcanist Bindings",
 				["date"] = "10/10/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16799::::::::60:::::::|h[Arcanist Bindings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16799|h[Arcanist Bindings]|h|r",
 				["gp"] = 60,
-			}, -- [431]
+			}, -- [429]
 			{
 				["player"] = "Tikki",
 				["item"] = "Crown of Destruction",
 				["date"] = "10/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18817::::::::60:::::::|h[Crown of Destruction]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18817|h[Crown of Destruction]|h|r",
 				["gp"] = 0,
-			}, -- [432]
+			}, -- [430]
 			{
 				["player"] = "Oya",
 				["item"] = "Finkle's Lava Dredger",
 				["date"] = "10/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18803::::::::60:::::::|h[Finkle's Lava Dredger]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18803|h[Finkle's Lava Dredger]|h|r",
 				["gp"] = 0,
-			}, -- [433]
+			}, -- [431]
 			{
 				["player"] = "Groggy",
 				["item"] = "Wild Growth Spaulders",
 				["date"] = "10/10/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18810::::::::60:::::::|h[Wild Growth Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18810|h[Wild Growth Spaulders]|h|r",
 				["gp"] = 300,
-			}, -- [434]
+			}, -- [432]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Bloodfang Pants",
 				["date"] = "10/10/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16909::::::::60:::::::|h[Bloodfang Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r",
 				["gp"] = 200,
-			}, -- [435]
+			}, -- [433]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Cloak of the Shrouded Mists",
 				["date"] = "10/10/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:17102::::::::60:::::::|h[Cloak of the Shrouded Mists]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
 				["gp"] = 100,
-			}, -- [436]
+			}, -- [434]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Ancient Petrified Leaf",
 				["date"] = "10/10/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18703::::::::60:::::::|h[Ancient Petrified Leaf]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18703|h[Ancient Petrified Leaf]|h|r",
 				["gp"] = 300,
-			}, -- [437]
+			}, -- [435]
 			{
 				["player"] = "Righteous",
 				["item"] = "Lawbringer Spaulders",
 				["date"] = "10/8/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16856::::::::60:::::::|h[Lawbringer Spaulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16856|h[Lawbringer Spaulders]|h|r",
 				["gp"] = 0,
-			}, -- [438]
+			}, -- [436]
 			{
 				["player"] = "Oya",
 				["item"] = "Brutality Blade",
 				["date"] = "10/8/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18832::::::::60:::::::|h[Brutality Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18832|h[Brutality Blade]|h|r",
 				["gp"] = 300,
-			}, -- [439]
+			}, -- [437]
 			{
 				["player"] = "Marizol",
 				["item"] = "Felheart Bracers",
 				["date"] = "10/8/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16804::::::::60:::::::|h[Felheart Bracers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16804|h[Felheart Bracers]|h|r",
 				["gp"] = 60,
-			}, -- [440]
+			}, -- [438]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "10/8/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [441]
+			}, -- [439]
 			{
 				["player"] = "Lago",
 				["item"] = "Boots of Prophecy",
 				["date"] = "10/8/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16811::::::::60:::::::|h[Boots of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16811|h[Boots of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [442]
+			}, -- [440]
 			{
 				["player"] = "Klisk",
 				["item"] = "Helm of Wrath",
 				["date"] = "10/8/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16963::::::::60:::::::|h[Helm of Wrath]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
 				["gp"] = 250,
-			}, -- [443]
+			}, -- [441]
 			{
 				["player"] = "Starlight",
 				["item"] = "Sapphiron Drape",
 				["date"] = "10/8/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [444]
+			}, -- [442]
 			{
 				["player"] = "Groggy",
 				["item"] = "Obsidian Edged Blade",
 				["date"] = "10/8/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18822::::::::60:::::::|h[Obsidian Edged Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r",
 				["gp"] = 0,
-			}, -- [445]
+			}, -- [443]
 			{
 				["player"] = "Friend",
 				["item"] = "Choker of Enlightenment",
 				["date"] = "10/8/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:17109::::::::60:::::::|h[Choker of Enlightenment]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
 				["gp"] = 60,
-			}, -- [446]
+			}, -- [444]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Arcanist Leggings",
 				["date"] = "10/8/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16796::::::::60:::::::|h[Arcanist Leggings]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16796|h[Arcanist Leggings]|h|r",
 				["gp"] = 0,
-			}, -- [447]
+			}, -- [445]
 			{
 				["player"] = "Carod",
 				["item"] = "Sorcerous Dagger",
 				["date"] = "10/8/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18878::::::::60:::::::|h[Sorcerous Dagger]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18878|h[Sorcerous Dagger]|h|r",
 				["gp"] = 30,
-			}, -- [448]
+			}, -- [446]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Mature Black Dragon Sinew",
 				["date"] = "10/8/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18705::::::::60:::::::|h[Mature Black Dragon Sinew]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18705|h[Mature Black Dragon Sinew]|h|r",
 				["gp"] = 0,
-			}, -- [449]
+			}, -- [447]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Helmet",
 				["date"] = "10/8/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16846::::::::60:::::::|h[Giantstalker's Helmet]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16846|h[Giantstalker's Helmet]|h|r",
 				["gp"] = 150,
-			}, -- [450]
+			}, -- [448]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Boots",
 				["date"] = "10/8/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16849::::::::60:::::::|h[Giantstalker's Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16849|h[Giantstalker's Boots]|h|r",
 				["gp"] = 150,
-			}, -- [451]
+			}, -- [449]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Gloves",
 				["date"] = "10/8/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16826::::::::60:::::::|h[Nightslayer Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16826|h[Nightslayer Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [452]
+			}, -- [450]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Bracelets",
 				["date"] = "10/8/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16825::::::::60:::::::|h[Nightslayer Bracelets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16825|h[Nightslayer Bracelets]|h|r",
 				["gp"] = 0,
-			}, -- [453]
+			}, -- [451]
 			{
 				["player"] = "Xane",
 				["item"] = "Sorcerous Dagger",
 				["date"] = "10/5/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18878::::::::60:::::::|h[Sorcerous Dagger]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18878|h[Sorcerous Dagger]|h|r",
 				["gp"] = 30,
-			}, -- [454]
+			}, -- [452]
 			{
 				["player"] = "Darknéss",
 				["item"] = "The Eye of Divinity",
 				["date"] = "10/5/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["gp"] = 300,
-			}, -- [455]
+			}, -- [453]
 			{
 				["player"] = "Lago",
 				["item"] = "Seal of the Archmagus",
 				["date"] = "10/5/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17110::::::::60:::::::|h[Seal of the Archmagus]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
 				["gp"] = 0,
-			}, -- [456]
+			}, -- [454]
 			{
 				["player"] = "Klisk",
 				["item"] = "Fireguard Shoulders",
 				["date"] = "10/5/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19139::::::::60:::::::|h[Fireguard Shoulders]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19139|h[Fireguard Shoulders]|h|r",
 				["gp"] = 0,
-			}, -- [457]
+			}, -- [455]
 			{
 				["player"] = "Friend",
 				["item"] = "Sash of Whispered Secrets",
 				["date"] = "10/5/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:18809::::::::60:::::::|h[Sash of Whispered Secrets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18809|h[Sash of Whispered Secrets]|h|r",
 				["gp"] = 200,
-			}, -- [458]
+			}, -- [456]
 			{
 				["player"] = "Ezekkiel",
 				["item"] = "Staff of Dominance",
 				["date"] = "10/5/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18842::::::::60:::::::|h[Staff of Dominance]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18842|h[Staff of Dominance]|h|r",
 				["gp"] = 300,
-			}, -- [459]
+			}, -- [457]
 			{
 				["player"] = "Cleaves",
 				["item"] = "Perdition's Blade",
 				["date"] = "10/5/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18816::::::::60:::::::|h[Perdition's Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18816|h[Perdition's Blade]|h|r",
 				["gp"] = 300,
-			}, -- [460]
+			}, -- [458]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Breastplate",
 				["date"] = "10/5/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16845::::::::60:::::::|h[Giantstalker's Breastplate]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16845|h[Giantstalker's Breastplate]|h|r",
 				["gp"] = 150,
-			}, -- [461]
+			}, -- [459]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Shoulder Pads",
 				["date"] = "10/5/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16823::::::::60:::::::|h[Nightslayer Shoulder Pads]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16823|h[Nightslayer Shoulder Pads]|h|r",
 				["gp"] = 100,
-			}, -- [462]
+			}, -- [460]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Chestpiece",
 				["date"] = "10/5/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16820::::::::60:::::::|h[Nightslayer Chestpiece]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16820|h[Nightslayer Chestpiece]|h|r",
 				["gp"] = 100,
-			}, -- [463]
+			}, -- [461]
 			{
 				["player"] = "Tracer",
 				["item"] = "Legplates of Might",
 				["date"] = "10/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16867::::::::60:::::::|h[Legplates of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
 				["gp"] = 130,
-			}, -- [464]
+			}, -- [462]
 			{
 				["player"] = "Tikki",
 				["item"] = "Gauntlets of Might",
 				["date"] = "10/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16863::::::::60:::::::|h[Gauntlets of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
 				["gp"] = 100,
-			}, -- [465]
+			}, -- [463]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "Gloves of Prophecy",
 				["date"] = "10/3/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16812::::::::60:::::::|h[Gloves of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r",
 				["gp"] = 50,
-			}, -- [466]
+			}, -- [464]
 			{
 				["player"] = "Darknéss",
 				["item"] = "Halo of Transcendence",
 				["date"] = "10/3/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16921::::::::60:::::::|h[Halo of Transcendence]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
 				["gp"] = 250,
-			}, -- [467]
+			}, -- [465]
 			{
 				["player"] = "Lago",
 				["item"] = "Girdle of Prophecy",
 				["date"] = "10/3/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16817::::::::60:::::::|h[Girdle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16817|h[Girdle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [468]
+			}, -- [466]
 			{
 				["player"] = "Klisk",
 				["item"] = "Ring of Binding",
 				["date"] = "10/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18813::::::::60:::::::|h[Ring of Binding]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r",
 				["gp"] = 0,
-			}, -- [469]
+			}, -- [467]
 			{
 				["player"] = "Klisk",
 				["item"] = "Eskhandar's Right Claw",
 				["date"] = "10/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18203::::::::60:::::::|h[Eskhandar's Right Claw]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18203|h[Eskhandar's Right Claw]|h|r",
 				["gp"] = 0,
-			}, -- [470]
+			}, -- [468]
 			{
 				["player"] = "Starlight",
 				["item"] = "Nemesis Skullcap",
 				["date"] = "10/3/19",
-				["class"] = "DRUID",
-				["itemLink"] = "|cffa335ee|Hitem:16929::::::::60:::::::|h[Nemesis Skullcap]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
 				["gp"] = 250,
-			}, -- [471]
+			}, -- [469]
 			{
 				["player"] = "Esconar",
 				["item"] = "Deathbringer",
 				["date"] = "10/3/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17068::::::::60:::::::|h[Deathbringer]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17068|h[Deathbringer]|h|r",
 				["gp"] = 0,
-			}, -- [472]
+			}, -- [470]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Head of Onyxia",
 				["date"] = "10/3/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [473]
+			}, -- [471]
 			{
 				["player"] = "Azuj",
 				["item"] = "Nightslayer Cover",
 				["date"] = "10/3/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16821::::::::60:::::::|h[Nightslayer Cover]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16821|h[Nightslayer Cover]|h|r",
 				["gp"] = 0,
-			}, -- [474]
+			}, -- [472]
 			{
 				["player"] = "Zomby",
 				["item"] = "Nightslayer Boots",
 				["date"] = "9/28/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:16824::::::::60:::::::|h[Nightslayer Boots]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16824|h[Nightslayer Boots]|h|r",
 				["gp"] = 100,
-			}, -- [475]
+			}, -- [473]
 			{
 				["player"] = "Xan",
 				["item"] = "Sash of Whispered Secrets",
 				["date"] = "9/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18809::::::::60:::::::|h[Sash of Whispered Secrets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18809|h[Sash of Whispered Secrets]|h|r",
 				["gp"] = 200,
-			}, -- [476]
+			}, -- [474]
 			{
 				["player"] = "Xan",
 				["item"] = "Head of Onyxia",
 				["date"] = "9/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18423::::::::60:::::::|h[Head of Onyxia]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
 				["gp"] = 75,
-			}, -- [477]
+			}, -- [475]
 			{
 				["player"] = "Tracer",
 				["item"] = "Eskhandar's Right Claw",
 				["date"] = "9/28/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18203::::::::60:::::::|h[Eskhandar's Right Claw]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18203|h[Eskhandar's Right Claw]|h|r",
 				["gp"] = 100,
-			}, -- [478]
+			}, -- [476]
 			{
 				["player"] = "Tikki",
 				["item"] = "Medallion of Steadfast Might",
 				["date"] = "9/28/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:17065::::::::60:::::::|h[Medallion of Steadfast Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17065|h[Medallion of Steadfast Might]|h|r",
 				["gp"] = 150,
-			}, -- [479]
+			}, -- [477]
 			{
 				["player"] = "Soggybottom",
 				["item"] = "The Eye of Divinity",
 				["date"] = "9/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:18646::::::::60:::::::|h[The Eye of Divinity]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
 				["gp"] = 300,
-			}, -- [480]
+			}, -- [478]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Sapphiron Drape",
 				["date"] = "9/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17078::::::::60:::::::|h[Sapphiron Drape]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
 				["gp"] = 80,
-			}, -- [481]
+			}, -- [479]
 			{
 				["player"] = "Priestpimp",
 				["item"] = "Choker of Enlightenment",
 				["date"] = "9/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:17109::::::::60:::::::|h[Choker of Enlightenment]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
 				["gp"] = 60,
-			}, -- [482]
+			}, -- [480]
 			{
 				["player"] = "Marizol",
 				["item"] = "Felheart Gloves",
 				["date"] = "9/28/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16805::::::::60:::::::|h[Felheart Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16805|h[Felheart Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [483]
+			}, -- [481]
 			{
 				["player"] = "Lago",
 				["item"] = "Pants of Prophecy",
 				["date"] = "9/28/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16814::::::::60:::::::|h[Pants of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16814|h[Pants of Prophecy]|h|r",
 				["gp"] = 30,
-			}, -- [484]
+			}, -- [482]
 			{
 				["player"] = "Juicetea",
 				["item"] = "Brutality Blade",
 				["date"] = "9/28/19",
-				["class"] = "ROGUE",
-				["itemLink"] = "|cffa335ee|Hitem:18832::::::::60:::::::|h[Brutality Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18832|h[Brutality Blade]|h|r",
 				["gp"] = 300,
-			}, -- [485]
+			}, -- [483]
 			{
 				["player"] = "Jezail",
 				["item"] = "Onslaught Girdle",
 				["date"] = "9/28/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:19137::::::::60:::::::|h[Onslaught Girdle]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:19137|h[Onslaught Girdle]|h|r",
 				["gp"] = 300,
-			}, -- [486]
+			}, -- [484]
 			{
 				["player"] = "Groggy",
 				["item"] = "Judgement Legplates",
 				["date"] = "9/28/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16954::::::::60:::::::|h[Judgement Legplates]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16954|h[Judgement Legplates]|h|r",
 				["gp"] = 0,
-			}, -- [487]
+			}, -- [485]
 			{
 				["player"] = "Groggy",
 				["item"] = "Judgement Crown",
 				["date"] = "9/28/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16955::::::::60:::::::|h[Judgement Crown]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16955|h[Judgement Crown]|h|r",
 				["gp"] = 0,
-			}, -- [488]
+			}, -- [486]
 			{
 				["player"] = "Esconar",
 				["item"] = "Obsidian Edged Blade",
 				["date"] = "9/28/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:18822::::::::60:::::::|h[Obsidian Edged Blade]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r",
 				["gp"] = 0,
-			}, -- [489]
+			}, -- [487]
 			{
 				["player"] = "Carod",
 				["item"] = "Netherwind Pants",
 				["date"] = "9/28/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:16915::::::::60:::::::|h[Netherwind Pants]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16915|h[Netherwind Pants]|h|r",
 				["gp"] = 250,
-			}, -- [490]
+			}, -- [488]
 			{
 				["player"] = "Tikki",
 				["item"] = "Legplates of Might",
 				["date"] = "9/21/19",
-				["class"] = "WARRIOR",
-				["itemLink"] = "|cffa335ee|Hitem:16867::::::::60:::::::|h[Legplates of Might]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
 				["gp"] = 130,
-			}, -- [491]
+			}, -- [489]
 			{
 				["player"] = "Lunamar",
 				["item"] = "Talisman of Ephemeral Power",
 				["date"] = "9/21/19",
-				["class"] = "MAGE",
-				["itemLink"] = "|cffa335ee|Hitem:18820::::::::60:::::::|h[Talisman of Ephemeral Power]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
 				["gp"] = 300,
-			}, -- [492]
+			}, -- [490]
 			{
 				["player"] = "Klue",
 				["item"] = "Felheart Gloves",
 				["date"] = "9/21/19",
-				["class"] = "WARLOCK",
-				["itemLink"] = "|cffa335ee|Hitem:16805::::::::60:::::::|h[Felheart Gloves]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16805|h[Felheart Gloves]|h|r",
 				["gp"] = 0,
-			}, -- [493]
+			}, -- [491]
 			{
 				["player"] = "Groggy",
 				["item"] = "Lawbringer Gauntlets",
 				["date"] = "9/21/19",
-				["class"] = "PALADIN",
-				["itemLink"] = "|cffa335ee|Hitem:16860::::::::60:::::::|h[Lawbringer Gauntlets]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16860|h[Lawbringer Gauntlets]|h|r",
 				["gp"] = 0,
-			}, -- [494]
+			}, -- [492]
 			{
 				["player"] = "Basherslice",
 				["item"] = "Giantstalker's Bracers",
 				["date"] = "9/21/19",
-				["class"] = "HUNTER",
-				["itemLink"] = "|cffa335ee|Hitem:16850::::::::60:::::::|h[Giantstalker's Bracers]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16850|h[Giantstalker's Bracers]|h|r",
 				["gp"] = 60,
-			}, -- [495]
+			}, -- [493]
 			{
 				["player"] = "Bakedpancake",
 				["item"] = "Mantle of Prophecy",
 				["date"] = "9/21/19",
-				["class"] = "PRIEST",
-				["itemLink"] = "|cffa335ee|Hitem:16816::::::::60:::::::|h[Mantle of Prophecy]|h|r",
+				["itemLink"] = "|cffa335ee|Hitem:16816|h[Mantle of Prophecy]|h|r",
 				["gp"] = 0,
-			}, -- [496]
+			}, -- [494]
 		},
 		["itemValues"] = {
 			{
 				"Aged Core Leather Gloves", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:18823|h[Aged Core Leather Gloves]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Rogue", -- [2]
@@ -5349,6 +3478,7 @@ _G.ABGP_Data = {
 			{
 				"Amberseal Keeper", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:17113|h[Amberseal Keeper]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
@@ -5356,6 +3486,7 @@ _G.ABGP_Data = {
 			{
 				"Ancient Cornerstone Grimoire", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:17067|h[Ancient Cornerstone Grimoire]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5363,6 +3494,7 @@ _G.ABGP_Data = {
 			{
 				"Ancient Petrified Leaf", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18703|h[Ancient Petrified Leaf]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5370,6 +3502,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Belt", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16802|h[Arcanist Belt]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5377,6 +3510,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Bindings", -- [1]
 				60, -- [2]
+				"|cffa335ee|Hitem:16799|h[Arcanist Bindings]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -5384,6 +3518,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Boots", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16800|h[Arcanist Boots]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -5391,6 +3526,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Crown", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:16795|h[Arcanist Crown]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -5398,6 +3534,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Gloves", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16801|h[Arcanist Gloves]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5405,6 +3542,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Leggings", -- [1]
 				80, -- [2]
+				"|cffa335ee|Hitem:16796|h[Arcanist Leggings]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -5412,6 +3550,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Mantle", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16797|h[Arcanist Mantle]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5419,6 +3558,7 @@ _G.ABGP_Data = {
 			{
 				"Arcanist Robes", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16798|h[Arcanist Robes]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5426,6 +3566,7 @@ _G.ABGP_Data = {
 			{
 				"Aurastone Hammer", -- [1]
 				50, -- [2]
+				"|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -5434,6 +3575,7 @@ _G.ABGP_Data = {
 			{
 				"Azuresong Mageblade", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:17103|h[Azuresong Mageblade]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -5443,6 +3585,7 @@ _G.ABGP_Data = {
 			{
 				"Band of Accuria", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Rogue", -- [2]
@@ -5452,6 +3595,7 @@ _G.ABGP_Data = {
 			{
 				"Band of Sulfuras", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:19138|h[Band of Sulfuras]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5459,6 +3603,7 @@ _G.ABGP_Data = {
 			{
 				"Belt of Might", -- [1]
 				80, -- [2]
+				"|cffa335ee|Hitem:16864|h[Belt of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -5466,6 +3611,7 @@ _G.ABGP_Data = {
 			{
 				"Blacklight Bracer", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:19135|h[Blacklight Bracer]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5473,6 +3619,7 @@ _G.ABGP_Data = {
 			{
 				"Blastershot Launcher", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
@@ -5482,6 +3629,7 @@ _G.ABGP_Data = {
 			{
 				"Blazefury Medallion", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:17111|h[Blazefury Medallion]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5489,6 +3637,7 @@ _G.ABGP_Data = {
 			{
 				"Bloodfang Hood", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:16908|h[Bloodfang Hood]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -5496,6 +3645,7 @@ _G.ABGP_Data = {
 			{
 				"Bloodfang Pants", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -5503,6 +3653,7 @@ _G.ABGP_Data = {
 			{
 				"Bonereaver's Edge", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:17076|h[Bonereaver's Edge]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
@@ -5511,6 +3662,7 @@ _G.ABGP_Data = {
 			{
 				"Boots of Prophecy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16811|h[Boots of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5518,6 +3670,7 @@ _G.ABGP_Data = {
 			{
 				"Bracers of Might", -- [1]
 				60, -- [2]
+				"|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -5525,6 +3678,7 @@ _G.ABGP_Data = {
 			{
 				"Breastplate of Might", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16865|h[Breastplate of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -5532,6 +3686,7 @@ _G.ABGP_Data = {
 			{
 				"Brutality Blade", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18832|h[Brutality Blade]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 					"Metal Rogue", -- [2]
@@ -5541,6 +3696,7 @@ _G.ABGP_Data = {
 			{
 				"Cauterizing Band", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:19140|h[Cauterizing Band]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -5550,6 +3706,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Belt", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16828|h[Cenarion Belt]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5557,6 +3714,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Boots", -- [1]
 				125, -- [2]
+				"|cffa335ee|Hitem:16829|h[Cenarion Boots]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
@@ -5564,6 +3722,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Bracers", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16830|h[Cenarion Bracers]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5571,6 +3730,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Gloves", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16831|h[Cenarion Gloves]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5578,6 +3738,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Helm", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16834|h[Cenarion Helm]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5585,6 +3746,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Leggings", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16835|h[Cenarion Leggings]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5592,6 +3754,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Spaulders", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16836|h[Cenarion Spaulders]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5599,6 +3762,7 @@ _G.ABGP_Data = {
 			{
 				"Cenarion Vestments", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16833|h[Cenarion Vestments]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5606,6 +3770,7 @@ _G.ABGP_Data = {
 			{
 				"Choker of Enlightenment", -- [1]
 				60, -- [2]
+				"|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -5615,6 +3780,7 @@ _G.ABGP_Data = {
 			{
 				"Choker of the Fire Lord", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:18814|h[Choker of the Fire Lord]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -5624,6 +3790,7 @@ _G.ABGP_Data = {
 			{
 				"Circlet of Prophecy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16813|h[Circlet of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5631,6 +3798,7 @@ _G.ABGP_Data = {
 			{
 				"Cloak of the Shrouded Mists", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 					"KAT4FITE", -- [2]
@@ -5640,6 +3808,7 @@ _G.ABGP_Data = {
 			{
 				"Cold Snap", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:19130|h[Cold Snap]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -5647,6 +3816,7 @@ _G.ABGP_Data = {
 			{
 				"Core Forged Greaves", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18806|h[Core Forged Greaves]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -5654,6 +3824,7 @@ _G.ABGP_Data = {
 			{
 				"Core Hound Tooth", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:18805|h[Core Hound Tooth]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 					"Rogue", -- [2]
@@ -5662,6 +3833,7 @@ _G.ABGP_Data = {
 			{
 				"Crimson Shocker", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:17077|h[Crimson Shocker]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -5669,6 +3841,7 @@ _G.ABGP_Data = {
 			{
 				"Crown of Destruction", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18817|h[Crown of Destruction]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5676,6 +3849,7 @@ _G.ABGP_Data = {
 			{
 				"Crystal Adorned Crown", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:19132|h[Crystal Adorned Crown]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -5685,6 +3859,7 @@ _G.ABGP_Data = {
 			{
 				"Deathbringer", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:17068|h[Deathbringer]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
@@ -5692,6 +3867,7 @@ _G.ABGP_Data = {
 			{
 				"Deep Earth Spaulders", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18829|h[Deep Earth Spaulders]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5699,6 +3875,7 @@ _G.ABGP_Data = {
 			{
 				"Doomhide Gauntlets", -- [1]
 				75, -- [2]
+				"|cffa335ee|Hitem:18544|h[Doomhide Gauntlets]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -5708,6 +3885,7 @@ _G.ABGP_Data = {
 			{
 				"Dragon's Blood Cape", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
@@ -5716,6 +3894,7 @@ _G.ABGP_Data = {
 			{
 				"Dragonstalker's Helm", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16939|h[Dragonstalker's Helm]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5723,6 +3902,7 @@ _G.ABGP_Data = {
 			{
 				"Dragonstalker's Legguards", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16938|h[Dragonstalker's Legguards]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5730,6 +3910,7 @@ _G.ABGP_Data = {
 			{
 				"Drape of Benediction", -- [1]
 				50, -- [2]
+				"|cffa335ee|Hitem:18208|h[Drape of Benediction]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -5739,6 +3920,7 @@ _G.ABGP_Data = {
 			{
 				"Drillborer Disk", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -5746,6 +3928,7 @@ _G.ABGP_Data = {
 			{
 				"Earthshaker", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:17073|h[Earthshaker]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5753,6 +3936,7 @@ _G.ABGP_Data = {
 			{
 				"Empyrean Demolisher", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:17112|h[Empyrean Demolisher]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 				},
@@ -5760,6 +3944,7 @@ _G.ABGP_Data = {
 			{
 				"Eskhandar's Collar", -- [1]
 				30, -- [2]
+				"|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
@@ -5768,6 +3953,7 @@ _G.ABGP_Data = {
 			{
 				"Eskhandar's Left Claw", -- [1]
 				50, -- [2]
+				"|cffa335ee|Hitem:18202|h[Eskhandar's Left Claw]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
@@ -5777,6 +3963,7 @@ _G.ABGP_Data = {
 			{
 				"Eskhandar's Pelt", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18204|h[Eskhandar's Pelt]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -5787,6 +3974,7 @@ _G.ABGP_Data = {
 			{
 				"Eskhandar's Right Claw", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:18203|h[Eskhandar's Right Claw]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -5794,6 +3982,7 @@ _G.ABGP_Data = {
 			{
 				"Essence of the Pure Flame", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5801,6 +3990,7 @@ _G.ABGP_Data = {
 			{
 				"Fang of the Mystics", -- [1]
 				320, -- [2]
+				"|cffa335ee|Hitem:17070|h[Fang of the Mystics]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
@@ -5809,6 +3999,7 @@ _G.ABGP_Data = {
 			{
 				"Fel Infused Leggings", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 					"Warlock", -- [2]
@@ -5817,6 +4008,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Belt", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16806|h[Felheart Belt]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5824,6 +4016,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Bracers", -- [1]
 				60, -- [2]
+				"|cffa335ee|Hitem:16804|h[Felheart Bracers]|h|r", -- [3]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
@@ -5831,6 +4024,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Gloves", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16805|h[Felheart Gloves]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5838,6 +4032,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Horns", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16808|h[Felheart Horns]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5845,6 +4040,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Pants", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16810|h[Felheart Pants]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5852,6 +4048,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Robes", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16809|h[Felheart Robes]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5859,6 +4056,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Shoulder Pads", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16807|h[Felheart Shoulder Pads]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5866,6 +4064,7 @@ _G.ABGP_Data = {
 			{
 				"Felheart Slippers", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16803|h[Felheart Slippers]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5873,6 +4072,7 @@ _G.ABGP_Data = {
 			{
 				"Finkle's Lava Dredger", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18803|h[Finkle's Lava Dredger]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -5880,6 +4080,7 @@ _G.ABGP_Data = {
 			{
 				"Fire Runed Grimoire", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5887,6 +4088,7 @@ _G.ABGP_Data = {
 			{
 				"Fireguard Shoulders", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:19139|h[Fireguard Shoulders]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Progression", -- [2]
@@ -5895,6 +4097,7 @@ _G.ABGP_Data = {
 			{
 				"Fireproof Cloak", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18811|h[Fireproof Cloak]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -5902,6 +4105,7 @@ _G.ABGP_Data = {
 			{
 				"Flameguard Gauntlets", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:19143|h[Flameguard Gauntlets]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
@@ -5910,6 +4114,7 @@ _G.ABGP_Data = {
 			{
 				"Flamewaker Legplates", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -5917,6 +4122,7 @@ _G.ABGP_Data = {
 			{
 				"Flayed Doomguard Belt", -- [1]
 				30, -- [2]
+				"|cffa335ee|Hitem:19134|h[Flayed Doomguard Belt]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -5925,6 +4131,7 @@ _G.ABGP_Data = {
 			{
 				"Gauntlets of Might", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -5932,6 +4139,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Belt", -- [1]
 				80, -- [2]
+				"|cffa335ee|Hitem:16851|h[Giantstalker's Belt]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5939,6 +4147,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Boots", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16849|h[Giantstalker's Boots]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5946,6 +4155,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Bracers", -- [1]
 				60, -- [2]
+				"|cffa335ee|Hitem:16850|h[Giantstalker's Bracers]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5953,6 +4163,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Breastplate", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16845|h[Giantstalker's Breastplate]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5960,6 +4171,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Epaulets", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16848|h[Giantstalker's Epaulets]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5967,6 +4179,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Gloves", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:16852|h[Giantstalker's Gloves]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5974,6 +4187,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Helmet", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16846|h[Giantstalker's Helmet]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5981,6 +4195,7 @@ _G.ABGP_Data = {
 			{
 				"Giantstalker's Leggings", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16847|h[Giantstalker's Leggings]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 				},
@@ -5988,6 +4203,7 @@ _G.ABGP_Data = {
 			{
 				"Girdle of Prophecy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16817|h[Girdle of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -5995,6 +4211,7 @@ _G.ABGP_Data = {
 			{
 				"Gloves of Prophecy", -- [1]
 				50, -- [2]
+				"|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
@@ -6002,6 +4219,7 @@ _G.ABGP_Data = {
 			{
 				"Gloves of the Hypnotic Flame", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18808|h[Gloves of the Hypnotic Flame]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6009,6 +4227,7 @@ _G.ABGP_Data = {
 			{
 				"Gutgore Ripper", -- [1]
 				70, -- [2]
+				"|cffa335ee|Hitem:17071|h[Gutgore Ripper]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -6016,6 +4235,7 @@ _G.ABGP_Data = {
 			{
 				"Halo of Transcendence", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
@@ -6023,6 +4243,7 @@ _G.ABGP_Data = {
 			{
 				"Head of Onyxia", -- [1]
 				75, -- [2]
+				"|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r", -- [3]
 				["priority"] = {
 					"Hunter", -- [1]
 					"KAT4FITE", -- [2]
@@ -6034,6 +4255,7 @@ _G.ABGP_Data = {
 			{
 				"Heavy Dark Iron Ring", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
@@ -6042,27 +4264,31 @@ _G.ABGP_Data = {
 			{
 				"Helm of Might", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16866|h[Helm of Might]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
 			}, -- [95]
 			{
-				"Helm of the Lifegiver", -- [1]
-				30, -- [2]
+				"Helm of Wrath", -- [1]
+				250, -- [2]
+				"|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r", -- [3]
 				["priority"] = {
-					"Paladin (Holy)", -- [1]
+					"Tank", -- [1]
 				},
 			}, -- [96]
 			{
-				"Helm of Wrath", -- [1]
-				250, -- [2]
+				"Helm of the Lifegiver", -- [1]
+				30, -- [2]
+				"|cffa335ee|Hitem:18870|h[Helm of the Lifegiver]|h|r", -- [3]
 				["priority"] = {
-					"Tank", -- [1]
+					"Paladin (Holy)", -- [1]
 				},
 			}, -- [97]
 			{
 				"Infernal Headcage", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18546|h[Infernal Headcage]|h|r", -- [3]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
@@ -6070,6 +4296,7 @@ _G.ABGP_Data = {
 			{
 				"Judgement Crown", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16955|h[Judgement Crown]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -6077,6 +4304,7 @@ _G.ABGP_Data = {
 			{
 				"Judgement Legplates", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16954|h[Judgement Legplates]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -6084,6 +4312,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Belt", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16858|h[Lawbringer Belt]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6091,6 +4320,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Boots", -- [1]
 				30, -- [2]
+				"|cffa335ee|Hitem:16859|h[Lawbringer Boots]|h|r", -- [3]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
@@ -6098,6 +4328,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Bracers", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16857|h[Lawbringer Bracers]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6105,6 +4336,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Chestguard", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16853|h[Lawbringer Chestguard]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6112,6 +4344,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Gauntlets", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16860|h[Lawbringer Gauntlets]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6119,6 +4352,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Helm", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16854|h[Lawbringer Helm]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6126,6 +4360,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Legplates", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16855|h[Lawbringer Legplates]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6133,6 +4368,7 @@ _G.ABGP_Data = {
 			{
 				"Lawbringer Spaulders", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16856|h[Lawbringer Spaulders]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6140,6 +4376,7 @@ _G.ABGP_Data = {
 			{
 				"Leggings of Arcane Supremacy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18545|h[Leggings of Arcane Supremacy]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -6147,6 +4384,7 @@ _G.ABGP_Data = {
 			{
 				"Leggings of Transcendence", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
@@ -6154,6 +4392,7 @@ _G.ABGP_Data = {
 			{
 				"Legplates of Might", -- [1]
 				130, -- [2]
+				"|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -6161,6 +4400,7 @@ _G.ABGP_Data = {
 			{
 				"Legplates of Wrath", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -6168,6 +4408,7 @@ _G.ABGP_Data = {
 			{
 				"Magma Tempered Boots", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18824|h[Magma Tempered Boots]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -6175,6 +4416,7 @@ _G.ABGP_Data = {
 			{
 				"Malistar's Defender", -- [1]
 				30, -- [2]
+				"|cffa335ee|Hitem:17106|h[Malistar's Defender]|h|r", -- [3]
 				["priority"] = {
 					"Paladin (Holy)", -- [1]
 				},
@@ -6182,6 +4424,7 @@ _G.ABGP_Data = {
 			{
 				"Mana Igniting Cord", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
@@ -6190,6 +4433,7 @@ _G.ABGP_Data = {
 			{
 				"Manastorm Leggings", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18872|h[Manastorm Leggings]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6197,6 +4441,7 @@ _G.ABGP_Data = {
 			{
 				"Mantle of Prophecy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16816|h[Mantle of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6204,6 +4449,7 @@ _G.ABGP_Data = {
 			{
 				"Medallion of Steadfast Might", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:17065|h[Medallion of Steadfast Might]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Tank", -- [2]
@@ -6212,6 +4458,7 @@ _G.ABGP_Data = {
 			{
 				"Nemesis Leggings", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16930|h[Nemesis Leggings]|h|r", -- [3]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
@@ -6219,6 +4466,7 @@ _G.ABGP_Data = {
 			{
 				"Nemesis Skullcap", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r", -- [3]
 				["priority"] = {
 					"Warlock", -- [1]
 				},
@@ -6226,6 +4474,7 @@ _G.ABGP_Data = {
 			{
 				"Netherwind Crown", -- [1]
 				80, -- [2]
+				"|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -6233,6 +4482,7 @@ _G.ABGP_Data = {
 			{
 				"Netherwind Pants", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:16915|h[Netherwind Pants]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 				},
@@ -6240,6 +4490,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Belt", -- [1]
 				80, -- [2]
+				"|cffa335ee|Hitem:16827|h[Nightslayer Belt]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -6247,6 +4498,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Boots", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:16824|h[Nightslayer Boots]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -6254,6 +4506,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Bracelets", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16825|h[Nightslayer Bracelets]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6261,6 +4514,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Chestpiece", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:16820|h[Nightslayer Chestpiece]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -6268,6 +4522,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Cover", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16821|h[Nightslayer Cover]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6275,6 +4530,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Gloves", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16826|h[Nightslayer Gloves]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -6282,6 +4538,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Pants", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16822|h[Nightslayer Pants]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6289,6 +4546,7 @@ _G.ABGP_Data = {
 			{
 				"Nightslayer Shoulder Pads", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:16823|h[Nightslayer Shoulder Pads]|h|r", -- [3]
 				["priority"] = {
 					"Rogue", -- [1]
 				},
@@ -6296,6 +4554,7 @@ _G.ABGP_Data = {
 			{
 				"Obsidian Edged Blade", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6303,6 +4562,7 @@ _G.ABGP_Data = {
 			{
 				"Onslaught Girdle", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:19137|h[Onslaught Girdle]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
@@ -6311,6 +4571,7 @@ _G.ABGP_Data = {
 			{
 				"Pants of Prophecy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16814|h[Pants of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
@@ -6318,6 +4579,7 @@ _G.ABGP_Data = {
 			{
 				"Pauldrons of Might", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -6325,6 +4587,7 @@ _G.ABGP_Data = {
 			{
 				"Perdition's Blade", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18816|h[Perdition's Blade]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
@@ -6333,6 +4596,7 @@ _G.ABGP_Data = {
 			{
 				"Puissant Cape", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:18541|h[Puissant Cape]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -6342,6 +4606,7 @@ _G.ABGP_Data = {
 			{
 				"Quick Strike Ring", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:18821|h[Quick Strike Ring]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
@@ -6351,6 +4616,7 @@ _G.ABGP_Data = {
 			{
 				"Ring of Binding", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -6358,6 +4624,7 @@ _G.ABGP_Data = {
 			{
 				"Ring of Entropy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18543|h[Ring of Entropy]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -6367,6 +4634,7 @@ _G.ABGP_Data = {
 			{
 				"Ring of Spell Power", -- [1]
 				250, -- [2]
+				"|cffa335ee|Hitem:19147|h[Ring of Spell Power]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -6376,6 +4644,7 @@ _G.ABGP_Data = {
 			{
 				"Robe of Volatile Power", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -6385,6 +4654,7 @@ _G.ABGP_Data = {
 			{
 				"Robes of Prophecy", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:16815|h[Robes of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6392,6 +4662,7 @@ _G.ABGP_Data = {
 			{
 				"Sabatons of Might", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
@@ -6399,6 +4670,7 @@ _G.ABGP_Data = {
 			{
 				"Sabatons of the Flamewalker", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:19144|h[Sabatons of the Flamewalker]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
@@ -6406,6 +4678,7 @@ _G.ABGP_Data = {
 			{
 				"Salamander Scale Pants", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:18875|h[Salamander Scale Pants]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
@@ -6414,6 +4687,7 @@ _G.ABGP_Data = {
 			{
 				"Sapphiron Drape", -- [1]
 				80, -- [2]
+				"|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
@@ -6423,6 +4697,7 @@ _G.ABGP_Data = {
 			{
 				"Sash of Whispered Secrets", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:18809|h[Sash of Whispered Secrets]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 					"Warlock", -- [2]
@@ -6431,6 +4706,7 @@ _G.ABGP_Data = {
 			{
 				"Seal of the Archmagus", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
@@ -6438,149 +4714,1762 @@ _G.ABGP_Data = {
 			{
 				"Shadowstrike", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:17074|h[Shadowstrike]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
 			}, -- [149]
-            {
-                "Shard of the Flame", -- [1]
-                0, -- [2]
-                ["priority"] = {
-                    "Garbage", -- [1]
-                },
-            }, -- [150]
+			{
+				"Shard of the Flame", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:17082|h[Shard of the Flame]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [150]
 			{
 				"Shard of the Scale", -- [1]
 				200, -- [2]
+				"|cffa335ee|Hitem:17064|h[Shard of the Scale]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 					"Priest (Heal)", -- [3]
 				},
-			}, -- [150]
+			}, -- [151]
 			{
 				"Snowblind Shoes", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:19131|h[Snowblind Shoes]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Shadow)", -- [1]
 				},
-			}, -- [151]
+			}, -- [152]
 			{
 				"Sorcerous Dagger", -- [1]
 				30, -- [2]
+				"|cffa335ee|Hitem:18878|h[Sorcerous Dagger]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Warlock", -- [2]
 				},
-			}, -- [152]
+			}, -- [153]
 			{
 				"Spinal Reaper", -- [1]
 				110, -- [2]
+				"|cffa335ee|Hitem:17104|h[Spinal Reaper]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Paladin (Ret)", -- [2]
 				},
-			}, -- [153]
+			}, -- [154]
 			{
 				"Staff of Dominance", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18842|h[Staff of Dominance]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Mage", -- [2]
 					"Warlock", -- [3]
 				},
-			}, -- [154]
+			}, -- [155]
 			{
 				"Stormrage Cover", -- [1]
 				125, -- [2]
-				["priority"] = {
-					"Druid (Heal)", -- [1]
-				},
-			}, -- [155]
-			{
-				"Stormrage Legguards", -- [1]
-				75, -- [2]
+				"|cffa335ee|Hitem:16900|h[Stormrage Cover]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 				},
 			}, -- [156]
 			{
+				"Stormrage Legguards", -- [1]
+				75, -- [2]
+				"|cffa335ee|Hitem:16901|h[Stormrage Legguards]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [157]
+			{
 				"Striker's Mark", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:17069|h[Striker's Mark]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
 				},
-			}, -- [157]
+			}, -- [158]
 			{
 				"Talisman of Ephemeral Power", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r", -- [3]
 				["priority"] = {
 					"Mage", -- [1]
 					"Priest (Shadow)", -- [2]
 					"Warlock", -- [3]
 				},
-			}, -- [158]
+			}, -- [159]
 			{
 				"The Eye of Divinity", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 					"Priest (Shadow)", -- [2]
 				},
-			}, -- [159]
+			}, -- [160]
 			{
 				"Typhoon", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18542|h[Typhoon]|h|r", -- [3]
 				["priority"] = {
 					"Garbage", -- [1]
 				},
-			}, -- [160]
+			}, -- [161]
 			{
 				"Unmelting Ice Girdle", -- [1]
 				0, -- [2]
+				"|cffa335ee|Hitem:18547|h[Unmelting Ice Girdle]|h|r", -- [3]
 				["priority"] = {
 					"Progression", -- [1]
 				},
-			}, -- [161]
+			}, -- [162]
 			{
 				"Vambraces of Prophecy", -- [1]
 				100, -- [2]
+				"|cffa335ee|Hitem:16819|h[Vambraces of Prophecy]|h|r", -- [3]
 				["priority"] = {
 					"Priest (Heal)", -- [1]
 				},
-			}, -- [162]
+			}, -- [163]
 			{
 				"Vis'kag the Bloodletter", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:17075|h[Vis'kag the Bloodletter]|h|r", -- [3]
 				["priority"] = {
 					"Metal Rogue", -- [1]
 					"Rogue", -- [2]
 				},
-			}, -- [163]
+			}, -- [164]
 			{
 				"Wild Growth Spaulders", -- [1]
 				300, -- [2]
+				"|cffa335ee|Hitem:18810|h[Wild Growth Spaulders]|h|r", -- [3]
 				["priority"] = {
 					"Druid (Heal)", -- [1]
 					"Paladin (Holy)", -- [2]
 				},
-			}, -- [164]
+			}, -- [165]
 			{
 				"Wristguards of Stability", -- [1]
 				150, -- [2]
+				"|cffa335ee|Hitem:19146|h[Wristguards of Stability]|h|r", -- [3]
 				["priority"] = {
 					"KAT4FITE", -- [1]
 					"Metal Rogue", -- [2]
 				},
-			}, -- [165]
+			}, -- [166]
 			{
 				"Wristguards of True Flight", -- [1]
 				30, -- [2]
+				"|cffa335ee|Hitem:18812|h[Wristguards of True Flight]|h|r", -- [3]
 				["priority"] = {
 					"Tank", -- [1]
 				},
-			}, -- [166]
+			}, -- [167]
+		},
+		["epHistory"] = {
+		},
+	},
+	["p3"] = {
+		["gpHistory"] = {
+			{
+				["player"] = "Tracer",
+				["item"] = "Head of Nefarian",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+				["gp"] = 150,
+			}, -- [1]
+			{
+				["player"] = "Ezekkiel",
+				["item"] = "Staff of the Shadow Flame",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
+				["gp"] = 450,
+			}, -- [2]
+			{
+				["player"] = "Clem",
+				["item"] = "Cloak of the Brood Lord",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
+				["gp"] = 200,
+			}, -- [3]
+			{
+				["player"] = "Azuj",
+				["item"] = "Bloodfang Chestpiece",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r",
+				["gp"] = 200,
+			}, -- [4]
+			{
+				["player"] = "Huntingkabu",
+				["item"] = "Dragonstalker's Breastplate",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
+				["gp"] = 200,
+			}, -- [5]
+			{
+				["player"] = "Starlight",
+				["item"] = "Shimmering Geta",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
+				["gp"] = 100,
+			}, -- [6]
+			{
+				["player"] = "Cleaves",
+				["item"] = "Chromatic Boots",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
+				["gp"] = 250,
+			}, -- [7]
+			{
+				["player"] = "Soggybottom",
+				["item"] = "Pauldrons of Transcendence",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
+				["gp"] = 150,
+			}, -- [8]
+			{
+				["player"] = "Sausage",
+				["item"] = "Pauldrons of Transcendence",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
+				["gp"] = 150,
+			}, -- [9]
+			{
+				["player"] = "Soggybottom",
+				["item"] = "Dragon's Touch",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
+				["gp"] = 30,
+			}, -- [10]
+			{
+				["player"] = "Yoink",
+				["item"] = "Bloodfang Gloves",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
+				["gp"] = 0,
+			}, -- [11]
+			{
+				["gp"] = 0,
+				["item"] = "Bloodfang Gloves",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
+				["player"] = "Suzukagozen",
+			}, -- [12]
+			{
+				["player"] = "Sausage",
+				["item"] = "Aegis of Preservation",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r",
+				["gp"] = 0,
+			}, -- [13]
+			{
+				["gp"] = 0,
+				["item"] = "Doom's Edge",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
+				["player"] = "Tracer",
+			}, -- [14]
+			{
+				["player"] = "Frostishot",
+				["item"] = "Dragonstalker's Gauntlets",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
+				["gp"] = 150,
+			}, -- [15]
+			{
+				["player"] = "Friend",
+				["item"] = "Black Ash Robe",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r",
+				["gp"] = 0,
+			}, -- [16]
+			{
+				["player"] = "Marizol",
+				["item"] = "Nemesis Boots",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
+				["gp"] = 100,
+			}, -- [17]
+			{
+				["player"] = "Friend",
+				["item"] = "Nemesis Boots",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
+				["gp"] = 100,
+			}, -- [18]
+			{
+				["player"] = "Coop",
+				["item"] = "Cloak of Draconic Might",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
+				["gp"] = 150,
+			}, -- [19]
+			{
+				["player"] = "Oya",
+				["item"] = "Cloak of Draconic Might",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
+				["gp"] = 150,
+			}, -- [20]
+			{
+				["player"] = "Righteous",
+				["item"] = "Judgement Belt",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
+				["gp"] = 0,
+			}, -- [21]
+			{
+				["player"] = "Nadrell",
+				["item"] = "Judgement Belt",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
+				["gp"] = 0,
+			}, -- [22]
+			{
+				["player"] = "Quellia",
+				["item"] = "Rune of Metamorphosis",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r",
+				["gp"] = 0,
+			}, -- [23]
+			{
+				["gp"] = 0,
+				["item"] = "Bracelets of Wrath",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
+				["player"] = "Cleaves",
+			}, -- [24]
+			{
+				["player"] = "Xan",
+				["item"] = "Mantle of the Blackwing Cabal",
+				["date"] = "2/25/20",
+				["itemLink"] = "|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
+				["gp"] = 200,
+			}, -- [25]
+			{
+				["player"] = "Yoink",
+				["item"] = "Head of Nefarian",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+				["gp"] = 150,
+			}, -- [26]
+			{
+				["player"] = "Righteous",
+				["item"] = "Judgement Breastplate",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
+				["gp"] = 0,
+			}, -- [27]
+			{
+				["player"] = "Tikki",
+				["item"] = "Therazane's Link",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
+				["gp"] = 0,
+			}, -- [28]
+			{
+				["player"] = "Krustytop",
+				["item"] = "Nemesis Robes",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
+				["gp"] = 175,
+			}, -- [29]
+			{
+				["player"] = "Xanido",
+				["item"] = "Cloak of the Brood Lord",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
+				["gp"] = 200,
+			}, -- [30]
+			{
+				["player"] = "Jezail",
+				["item"] = "Chromatic Boots",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
+				["gp"] = 250,
+			}, -- [31]
+			{
+				["player"] = "Priestpimp",
+				["item"] = "Pauldrons of Transcendence",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
+				["gp"] = 150,
+			}, -- [32]
+			{
+				["player"] = "Xanido",
+				["item"] = "Netherwind Mantle",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
+				["gp"] = 80,
+			}, -- [33]
+			{
+				["player"] = "Klisk",
+				["item"] = "Styleen's Impeding Scarab",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
+				["gp"] = 325,
+			}, -- [34]
+			{
+				["player"] = "Groggy",
+				["item"] = "Judgement Gauntlets",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
+				["gp"] = 0,
+			}, -- [35]
+			{
+				["player"] = "Quellia",
+				["item"] = "Malfurion's Blessed Bulwark",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
+				["gp"] = 150,
+			}, -- [36]
+			{
+				["player"] = "Juicetea",
+				["item"] = "Bloodfang Gloves",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
+				["gp"] = 50,
+			}, -- [37]
+			{
+				["gp"] = 0,
+				["item"] = "Firemaw's Clutch",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
+				["player"] = "Lago",
+			}, -- [38]
+			{
+				["player"] = "Xanido",
+				["item"] = "Shadow Wing Focus Staff",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r",
+				["gp"] = 70,
+			}, -- [39]
+			{
+				["player"] = "Wardrust",
+				["item"] = "Maladath, Runed Blade of the Black Flight",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
+				["gp"] = 200,
+			}, -- [40]
+			{
+				["gp"] = 0,
+				["item"] = "Sabatons of Wrath",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
+				["player"] = "Cleaves",
+			}, -- [41]
+			{
+				["player"] = "Juicetea",
+				["item"] = "Bloodfang Boots",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
+				["gp"] = 50,
+			}, -- [42]
+			{
+				["player"] = "Gyda",
+				["item"] = "Dragonfang Blade",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
+				["gp"] = 70,
+			}, -- [43]
+			{
+				["player"] = "Bakedpancake",
+				["item"] = "Belt of Transcendence",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
+				["gp"] = 100,
+			}, -- [44]
+			{
+				["player"] = "Juicetea",
+				["item"] = "Bloodfang Belt",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
+				["gp"] = 100,
+			}, -- [45]
+			{
+				["player"] = "Friend",
+				["item"] = "The Black Book",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
+				["gp"] = 0,
+			}, -- [46]
+			{
+				["player"] = "Gyda",
+				["item"] = "Bloodfang Bracers",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
+				["gp"] = 100,
+			}, -- [47]
+			{
+				["player"] = "Clem",
+				["item"] = "Netherwind Bindings",
+				["date"] = "2/18/20",
+				["itemLink"] = "|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
+				["gp"] = 100,
+			}, -- [48]
+			{
+				["player"] = "Zomby",
+				["item"] = "Head of Nefarian",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+				["gp"] = 150,
+			}, -- [49]
+			{
+				["player"] = "Lunamar",
+				["item"] = "Neltharion's Tear",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r",
+				["gp"] = 400,
+			}, -- [50]
+			{
+				["player"] = "Krustytop",
+				["item"] = "Cloak of the Brood Lord",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
+				["gp"] = 200,
+			}, -- [51]
+			{
+				["player"] = "Lago",
+				["item"] = "Robes of Transcendence",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r",
+				["gp"] = 200,
+			}, -- [52]
+			{
+				["player"] = "Frostishot",
+				["item"] = "Dragonstalker's Breastplate",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
+				["gp"] = 200,
+			}, -- [53]
+			{
+				["player"] = "Quellia",
+				["item"] = "Taut Dragonhide Shoulderpads",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
+				["gp"] = 100,
+			}, -- [54]
+			{
+				["player"] = "Basherslice",
+				["item"] = "Ashjre'thul, Crossbow of Smiting",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
+				["gp"] = 400,
+			}, -- [55]
+			{
+				["player"] = "Groggy",
+				["item"] = "Judgement Spaulders",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
+				["gp"] = 0,
+			}, -- [56]
+			{
+				["player"] = "Tracer",
+				["item"] = "Pauldrons of Wrath",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
+				["gp"] = 200,
+			}, -- [57]
+			{
+				["player"] = "Tikki",
+				["item"] = "Drake Talon Pauldrons",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
+				["gp"] = 250,
+			}, -- [58]
+			{
+				["player"] = "Nadrell",
+				["item"] = "Judgement Gauntlets",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
+				["gp"] = 0,
+			}, -- [59]
+			{
+				["player"] = "Marizol",
+				["item"] = "Ebony Flame Gloves",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
+				["gp"] = 150,
+			}, -- [60]
+			{
+				["player"] = "Coop",
+				["item"] = "Doom's Edge",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
+				["gp"] = 100,
+			}, -- [61]
+			{
+				["player"] = "Xan",
+				["item"] = "Ring of Blackrock",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
+				["gp"] = 100,
+			}, -- [62]
+			{
+				["player"] = "Xan",
+				["item"] = "Firemaw's Clutch",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
+				["gp"] = 100,
+			}, -- [63]
+			{
+				["player"] = "Friend",
+				["item"] = "Bracers of Arcane Accuracy",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
+				["gp"] = 200,
+			}, -- [64]
+			{
+				["player"] = "Righteous",
+				["item"] = "Judgement Sabatons",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
+				["gp"] = 0,
+			}, -- [65]
+			{
+				["player"] = "Klisk",
+				["item"] = "Sabatons of Wrath",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
+				["gp"] = 150,
+			}, -- [66]
+			{
+				["player"] = "Groggy",
+				["item"] = "Red Dragonscale Protector",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r",
+				["gp"] = 0,
+			}, -- [67]
+			{
+				["player"] = "Krustytop",
+				["item"] = "Nemesis Belt",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
+				["gp"] = 0,
+			}, -- [68]
+			{
+				["player"] = "Azuj",
+				["item"] = "Bloodfang Bracers",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
+				["gp"] = 100,
+			}, -- [69]
+			{
+				["player"] = "Klisk",
+				["item"] = "Bracelets of Wrath",
+				["date"] = "2/12/20",
+				["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
+				["gp"] = 100,
+			}, -- [70]
+		},
+		["itemValues"] = {
+			{
+				"Aegis of Preservation", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [1]
+			{
+				"Angelista's Grasp", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19388|h[Angelista's Grasp]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [2]
+			{
+				"Arcane Infused Gem", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19336|h[Arcane Infused Gem]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [3]
+			{
+				"Archimtiros' Ring of Reckoning", -- [1]
+				125, -- [2]
+				"|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Tank", -- [2]
+				},
+			}, -- [4]
+			{
+				"Ashjre'thul, Crossbow of Smiting", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [5]
+			{
+				"Ashkandi, Greatsword of the Brotherhood", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19364|h[Ashkandi, Greatsword of the Brotherhood]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [6]
+			{
+				"Band of Dark Dominion", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19434|h[Band of Dark Dominion]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Shadow)", -- [1]
+					"Warlock", -- [2]
+				},
+			}, -- [7]
+			{
+				"Band of Forced Concentration", -- [1]
+				250, -- [2]
+				"|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Priest (Shadow)", -- [2]
+					"Warlock", -- [3]
+				},
+			}, -- [8]
+			{
+				"Belt of Transcendence", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [9]
+			{
+				"Bindings of Transcendence", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16926|h[Bindings of Transcendence]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [10]
+			{
+				"Black Ash Robe", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r", -- [3]
+				["priority"] = {
+					"Progression", -- [1]
+				},
+			}, -- [11]
+			{
+				"Black Brood Pauldrons", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19373|h[Black Brood Pauldrons]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [12]
+			{
+				"Bloodfang Belt", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+					"Stabby Rogue", -- [2]
+				},
+			}, -- [13]
+			{
+				"Bloodfang Boots", -- [1]
+				50, -- [2]
+				"|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+				},
+			}, -- [14]
+			{
+				"Bloodfang Bracers", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+					"Stabby Rogue", -- [2]
+				},
+			}, -- [15]
+			{
+				"Bloodfang Chestpiece", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+					"Stabby Rogue", -- [2]
+				},
+			}, -- [16]
+			{
+				"Bloodfang Gloves", -- [1]
+				50, -- [2]
+				"|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+				},
+			}, -- [17]
+			{
+				"Bloodfang Spaulders", -- [1]
+				50, -- [2]
+				"|cffa335ee|Hitem:16832|h[Bloodfang Spaulders]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+				},
+			}, -- [18]
+			{
+				"Boots of Pure Thought", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+				},
+			}, -- [19]
+			{
+				"Boots of Transcendence", -- [1]
+				50, -- [2]
+				"|cffa335ee|Hitem:16919|h[Boots of Transcendence]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [20]
+			{
+				"Boots of the Shadow Flame", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19381|h[Boots of the Shadow Flame]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Stabby Rogue", -- [2]
+				},
+			}, -- [21]
+			{
+				"Bracelets of Wrath", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [22]
+			{
+				"Bracers of Arcane Accuracy", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Priest (Shadow)", -- [2]
+					"Warlock", -- [3]
+				},
+			}, -- [23]
+			{
+				"Breastplate of Wrath", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [24]
+			{
+				"Chromatic Boots", -- [1]
+				250, -- [2]
+				"|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+				},
+			}, -- [25]
+			{
+				"Chromatically Tempered Sword", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Slicey Rogue", -- [2]
+				},
+			}, -- [26]
+			{
+				"Circle of Applied Force", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Metal Rogue", -- [2]
+					"Slicey Rogue", -- [3]
+					"Stabby Rogue", -- [4]
+					"Tank", -- [5]
+				},
+			}, -- [27]
+			{
+				"Claw of Chromaggus", -- [1]
+				300, -- [2]
+				"|cffa335ee|Hitem:19347|h[Claw of Chromaggus]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Warlock", -- [2]
+				},
+			}, -- [28]
+			{
+				"Claw of the Black Drake", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [29]
+			{
+				"Cloak of Draconic Might", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Metal Rogue", -- [2]
+				},
+			}, -- [30]
+			{
+				"Cloak of Firemaw", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19398|h[Cloak of Firemaw]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Slicey Rogue", -- [2]
+					"Stabby Rogue", -- [3]
+				},
+			}, -- [31]
+			{
+				"Cloak of the Brood Lord", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Priest (Shadow)", -- [2]
+					"Warlock", -- [3]
+				},
+			}, -- [32]
+			{
+				"Crul'shorukh, Edge of Chaos", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19363|h[Crul'shorukh, Edge of Chaos]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+				},
+			}, -- [33]
+			{
+				"Doom's Edge", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+					"Metal Rogue", -- [2]
+				},
+			}, -- [34]
+			{
+				"Draconic Avenger", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19354|h[Draconic Avenger]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [35]
+			{
+				"Draconic Maul", -- [1]
+				300, -- [2]
+				"|cffa335ee|Hitem:19358|h[Draconic Maul]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+				},
+			}, -- [36]
+			{
+				"Dragon's Touch", -- [1]
+				30, -- [2]
+				"|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Priest (Shadow)", -- [2]
+					"Warlock", -- [3]
+				},
+			}, -- [37]
+			{
+				"Dragonbreath Hand Cannon", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19368|h[Dragonbreath Hand Cannon]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+					"Stabby Rogue", -- [2]
+					"Tank", -- [3]
+				},
+			}, -- [38]
+			{
+				"Dragonfang Blade", -- [1]
+				70, -- [2]
+				"|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r", -- [3]
+				["notes"] = "Catch up Priority",
+				["priority"] = {
+					"Hunter", -- [1]
+					"Stabby Rogue", -- [2]
+					"Tank", -- [3]
+				},
+			}, -- [39]
+			{
+				"Dragonstalker's Belt", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [40]
+			{
+				"Dragonstalker's Bracers", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [41]
+			{
+				"Dragonstalker's Breastplate", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [42]
+			{
+				"Dragonstalker's Gauntlets", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [43]
+			{
+				"Dragonstalker's Greaves", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:16941|h[Dragonstalker's Greaves]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [44]
+			{
+				"Dragonstalker's Spaulders", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+				},
+			}, -- [45]
+			{
+				"Drake Fang Talisman", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r", -- [3]
+				["notes"] = "Feral Druid prio unlocks after 4 drops",
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Metal Rogue", -- [2]
+					"Slicey Rogue", -- [3]
+					"Stabby Rogue", -- [4]
+				},
+			}, -- [46]
+			{
+				"Drake Talon Cleaver", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19353|h[Drake Talon Cleaver]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [47]
+			{
+				"Drake Talon Pauldrons", -- [1]
+				250, -- [2]
+				"|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Tank", -- [2]
+				},
+			}, -- [48]
+			{
+				"Ebony Flame Gloves", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Shadow)", -- [1]
+					"Warlock", -- [2]
+				},
+			}, -- [49]
+			{
+				"Elementium Reinforced Bulwark", -- [1]
+				250, -- [2]
+				"|cffa335ee|Hitem:19349|h[Elementium Reinforced Bulwark]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [50]
+			{
+				"Elementium Threaded Cloak", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19386|h[Elementium Threaded Cloak]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Tank", -- [2]
+				},
+			}, -- [51]
+			{
+				"Emberweave Leggings", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r", -- [3]
+				["priority"] = {
+					"Progression", -- [1]
+				},
+			}, -- [52]
+			{
+				"Empowered Leggings", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+				},
+			}, -- [53]
+			{
+				"Essence Gatherer", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [54]
+			{
+				"Firemaw's Clutch", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Priest (Shadow)", -- [2]
+				},
+				["notes"] = "Shadow Priest Super Priority",
+			}, -- [55]
+			{
+				"Gauntlets of Wrath", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:16964|h[Gauntlets of Wrath]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [56]
+			{
+				"Girdle of the Fallen Crusader", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [57]
+			{
+				"Gloves of Rapid Evolution", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19369|h[Gloves of Rapid Evolution]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [58]
+			{
+				"Handguards of Transcendence", -- [1]
+				80, -- [2]
+				"|cffa335ee|Hitem:16920|h[Handguards of Transcendence]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [59]
+			{
+				"Head of Nefarian", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+					"KAT4FITE", -- [2]
+					"Metal Rogue", -- [3]
+					"Slicey Rogue", -- [4]
+					"Stabby Rogue", -- [5]
+					"Tank", -- [6]
+				},
+				["notes"] = "Casters with a BWL 1h also eligible",
+			}, -- [60]
+			{
+				"Heartstriker", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19350|h[Heartstriker]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Slicey Rogue", -- [2]
+					"Stabby Rogue", -- [3]
+					"Tank", -- [4]
+				},
+			}, -- [61]
+			{
+				"Helm of Endless Rage", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19372|h[Helm of Endless Rage]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [62]
+			{
+				"Herald of Woe", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19357|h[Herald of Woe]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [63]
+			{
+				"Interlaced Shadow Jerkin", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19439|h[Interlaced Shadow Jerkin]|h|r", -- [3]
+				["priority"] = {
+					"Progression", -- [1]
+				},
+			}, -- [64]
+			{
+				"Judgement Belt", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [65]
+			{
+				"Judgement Bindings", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [66]
+			{
+				"Judgement Breastplate", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [67]
+			{
+				"Judgement Gauntlets", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [68]
+			{
+				"Judgement Sabatons", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [69]
+			{
+				"Judgement Spaulders", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [70]
+			{
+				"Legguards of the Fallen Crusader", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r", -- [3]
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Tank", -- [2]
+				},
+			}, -- [71]
+			{
+				"Lifegiving Gem", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [72]
+			{
+				"Lok'amir il Romathis", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19360|h[Lok'amir il Romathis]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+				},
+			}, -- [73]
+			{
+				"Maladath, Runed Blade of the Black Flight", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r", -- [3]
+				["notes"] = "Non-Human Rogues also",
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Tank", -- [2]
+				},
+			}, -- [74]
+			{
+				"Malfurion's Blessed Bulwark", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+					"Metal Rogue", -- [2]
+				},
+				["notes"] = "Feral Druid Super Priority",
+			}, -- [75]
+			{
+				"Mantle of the Blackwing Cabal", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Priest (Shadow)", -- [2]
+				},
+				["notes"] = "Shadow Priest Super Priority",
+			}, -- [76]
+			{
+				"Mind Quickening Gem", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [77]
+			{
+				"Mish'undare, Circlet of the Mind Flayer", -- [1]
+				300, -- [2]
+				"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Warlock", -- [3]
+				},
+			}, -- [78]
+			{
+				"Neltharion's Tear", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Warlock", -- [2]
+				},
+				["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
+			}, -- [79]
+			{
+				"Nemesis Belt", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [80]
+			{
+				"Nemesis Boots", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [81]
+			{
+				"Nemesis Bracers", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [82]
+			{
+				"Nemesis Gloves", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16928|h[Nemesis Gloves]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [83]
+			{
+				"Nemesis Robes", -- [1]
+				175, -- [2]
+				"|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [84]
+			{
+				"Nemesis Spaulders", -- [1]
+				125, -- [2]
+				"|cffa335ee|Hitem:16932|h[Nemesis Spaulders]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [85]
+			{
+				"Netherwind Belt", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [86]
+			{
+				"Netherwind Bindings", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [87]
+			{
+				"Netherwind Boots", -- [1]
+				50, -- [2]
+				"|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [88]
+			{
+				"Netherwind Gloves", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16913|h[Netherwind Gloves]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [89]
+			{
+				"Netherwind Mantle", -- [1]
+				80, -- [2]
+				"|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [90]
+			{
+				"Netherwind Robes", -- [1]
+				175, -- [2]
+				"|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [91]
+			{
+				"Pauldrons of Transcendence", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [92]
+			{
+				"Pauldrons of Wrath", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [93]
+			{
+				"Pendant of the Fallen Dragon", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19371|h[Pendant of the Fallen Dragon]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+				},
+			}, -- [94]
+			{
+				"Prestor's Talisman of Connivery", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r", -- [3]
+				["priority"] = {
+					"Hunter", -- [1]
+					"KAT4FITE", -- [2]
+					"Slicey Rogue", -- [3]
+					"Stabby Rogue", -- [4]
+				},
+			}, -- [95]
+			{
+				"Primalist's Linked Legguards", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [96]
+			{
+				"Primalist's Linked Legguards", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [97]
+			{
+				"Pure Elementium Band", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+				},
+			}, -- [98]
+			{
+				"Red Dragonscale Protector", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [99]
+			{
+				"Rejuvenating Gem", -- [1]
+				400, -- [2]
+				"|cffa335ee|Hitem:19395|h[Rejuvenating Gem]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+				},
+			}, -- [100]
+			{
+				"Ring of Blackrock", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+					"Priest (Shadow)", -- [4]
+				},
+			}, -- [101]
+			{
+				"Ringo's Blizzard Boots", -- [1]
+				250, -- [2]
+				"|cffa335ee|Hitem:19438|h[Ringo's Blizzard Boots]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+				},
+			}, -- [102]
+			{
+				"Robes of Transcendence", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r", -- [3]
+				["priority"] = {
+					"Priest (Heal)", -- [1]
+				},
+			}, -- [103]
+			{
+				"Rune of Metamorphosis", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [104]
+			{
+				"Sabatons of Wrath", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [105]
+			{
+				"Scrolls of Blinding Light", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r", -- [3]
+				["priority"] = {
+					"Paladin (Holy)", -- [1]
+				},
+			}, -- [106]
+			{
+				"Shadow Wing Focus Staff", -- [1]
+				70, -- [2]
+				"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r", -- [3]
+				["notes"] = "Catch up Priority",
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Mage", -- [2]
+					"Warlock", -- [3]
+				},
+			}, -- [107]
+			{
+				"Shimmering Geta", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+				},
+			}, -- [108]
+			{
+				"Shroud of Pure Thought", -- [1]
+				200, -- [2]
+				"|cffa335ee|Hitem:19430|h[Shroud of Pure Thought]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+					"Priest (Heal)", -- [3]
+				},
+			}, -- [109]
+			{
+				"Spineshatter", -- [1]
+				70, -- [2]
+				"|cffa335ee|Hitem:19335|h[Spineshatter]|h|r", -- [3]
+				["notes"] = "Catch up Priority",
+				["priority"] = {
+					"Metal Rogue", -- [1]
+					"Slicey Rogue", -- [2]
+					"Stabby Rogue", -- [3]
+					"Tank", -- [4]
+				},
+			}, -- [110]
+			{
+				"Staff of the Shadow Flame", -- [1]
+				450, -- [2]
+				"|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r", -- [3]
+				["priority"] = {
+					"Mage", -- [1]
+					"Warlock", -- [2]
+				},
+			}, -- [111]
+			{
+				"Stormrage Belt", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [112]
+			{
+				"Stormrage Boots", -- [1]
+				50, -- [2]
+				"|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [113]
+			{
+				"Stormrage Bracers", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16904|h[Stormrage Bracers]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [114]
+			{
+				"Stormrage Chestguard", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16897|h[Stormrage Chestguard]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [115]
+			{
+				"Stormrage Handguards", -- [1]
+				150, -- [2]
+				"|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [116]
+			{
+				"Stormrage Pauldrons", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+				},
+			}, -- [117]
+			{
+				"Styleen's Impeding Scarab", -- [1]
+				325, -- [2]
+				"|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [118]
+			{
+				"Taut Dragonhide Belt", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19396|h[Taut Dragonhide Belt]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [119]
+			{
+				"Taut Dragonhide Gloves", -- [1]
+				80, -- [2]
+				"|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r", -- [3]
+				["priority"] = {
+					"Druid (Heal)", -- [1]
+					"Paladin (Holy)", -- [2]
+				},
+			}, -- [120]
+			{
+				"Taut Dragonhide Shoulderpads", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r", -- [3]
+				["priority"] = {
+					"KAT4FITE", -- [1]
+				},
+			}, -- [121]
+			{
+				"The Black Book", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19337|h[The Black Book]|h|r", -- [3]
+				["priority"] = {
+					"Warlock", -- [1]
+				},
+			}, -- [122]
+			{
+				"The Untamed Blade", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [123]
+			{
+				"Therazane's Link", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r", -- [3]
+				["priority"] = {
+					"Garbage", -- [1]
+				},
+			}, -- [124]
+			{
+				"Venomous Totem", -- [1]
+				0, -- [2]
+				"|cffa335ee|Hitem:19342|h[Venomous Totem]|h|r", -- [3]
+				["priority"] = {
+					"Slicey Rogue", -- [1]
+					"Stabby Rogue", -- [2]
+				},
+			}, -- [125]
+			{
+				"Waistband of Wrath", -- [1]
+				100, -- [2]
+				"|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r", -- [3]
+				["priority"] = {
+					"Tank", -- [1]
+				},
+			}, -- [126]
 		},
 		["epHistory"] = {
 		},
@@ -6591,7 +6480,7 @@ _G.ABGP_Data = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1582655064, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1583164378, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
