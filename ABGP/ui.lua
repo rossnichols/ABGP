@@ -378,6 +378,45 @@ local function DrawItemHistory(container, rebuild)
     end
 end
 
+local function DrawItems(container, rebuild)
+    local widths = { 120, 70, 50, 1.0 };
+    if rebuild then
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
+
+        local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetFullWidth(true);
+        scrollContainer:SetFullHeight(true);
+        scrollContainer:SetLayout("Flow");
+        container:AddChild(scrollContainer);
+
+        local columns = { "Item", "Cost", "Notes", "Priority", weights = { unpack(widths) } };
+        local header = AceGUI:Create("SimpleGroup");
+        header:SetFullWidth(true);
+        header:SetLayout("Table");
+        header:SetUserData("table", { columns = columns.weights });
+        scrollContainer:AddChild(header);
+
+        for i = 1, #columns do
+            local desc = AceGUI:Create("ABGP_Header");
+            desc:SetText(columns[i]);
+            header:AddChild(desc);
+        end
+
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetFullWidth(true);
+        scroll:SetFullHeight(true);
+        scroll:SetLayout("List");
+        scrollContainer:AddChild(scroll);
+        container:SetUserData("auditLog", scroll);
+    end
+end
+
 local function DrawAuditLog(container, rebuild)
     local widths = { 70, 60, 1.0 };
     if rebuild then
@@ -527,7 +566,7 @@ function ABGP:CreateMainWindow()
         { value = "priority", text = "Priority", draw = DrawPriority },
         -- { value = "ep", text = "Effort Points", draw = DrawEP },
         { value = "gp", text = "Item History", draw = DrawItemHistory },
-        -- { value = "items", text = "Items", draw = DrawItems },
+        { value = "items", text = "Items", draw = DrawItems },
     };
     if #_G.ABGP_ItemAuditLog[ABGP.Phases.p1] > 0 or #_G.ABGP_ItemAuditLog[ABGP.Phases.p3] > 0 then
         table.insert(tabs, { value = "audit", text = "Audit Log", draw = DrawAuditLog });

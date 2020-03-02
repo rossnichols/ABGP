@@ -436,8 +436,9 @@ do
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
-            self.text:SetText("");
+            self.dataCount = 0;
             self.page = 1;
+            self:CalculateRange(true);
         end,
 
         ["SetValues"] = function(self, dataCount, pageSize)
