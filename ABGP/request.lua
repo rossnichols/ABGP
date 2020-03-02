@@ -26,24 +26,10 @@ local staticPopups = {
     ABGP_LOOTDISTRIB_ROLL_FAVORITE = "ABGP_LOOTDISTRIB_ROLL_FAVORITE",
 };
 
-local function AtlasLootFaves()
-    if _G.AtlasLoot and _G.AtlasLoot.Addons and _G.AtlasLoot.Addons.GetAddon then
-        return _G.AtlasLoot.Addons:GetAddon("Favourites");
-    end
-end
-
 local function GetStaticPopupType(itemLink)
     if not activeItems[itemLink] then return; end
 
-    local favorited = false;
-    local faves = AtlasLootFaves();
-    if faves then
-        local itemId = ABGP:GetItemId(itemLink);
-        if faves:IsFavouriteItemID(itemId) then
-            favorited = true;
-        end
-    end
-
+    local favorited = ABGP:IsFavorited(itemLink);
     if activeItems[itemLink].requestType == ABGP.RequestTypes.ROLL then
         return (favorited)
             and staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE
@@ -391,12 +377,8 @@ function ABGP:RequestItem(itemLink, requestType, notes)
     end
 
     local faveInfo = "";
-    local faves = AtlasLootFaves();
-    if faves then
-        local itemId = ABGP:GetItemId(itemLink);
-        if not faves:IsFavouriteItemID(itemId) then
-            faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
-        end
+    if ABGP:CanFavoriteItems() and not ABGP:IsFavorited(itemLink) then
+        faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
     end
 
     if activeItems[itemLink].sentComms and activeItems[itemLink].sentRequest then
@@ -428,11 +410,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     local faveRemove = "";
     if removeFromFaves then
         faveRemove = " and removing from AtlasLoot favorites";
-        local faves = AtlasLootFaves();
-        if faves then
-            local itemId = ABGP:GetItemId(itemLink);
-            faves:RemoveItemID(itemId);
-        end
+        ABGP:SetFavorited(itemLink, false);
     end
 
     self:Notify("Passing on %s%s.", itemLink, faveRemove);

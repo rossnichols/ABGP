@@ -513,3 +513,41 @@ function ABGP:HideContextMenu()
         ToggleDropDownMenu(nil, nil, contextFrame);
     end
 end
+
+
+--
+-- AtlasLoot favorites integration
+--
+
+local function AtlasLootFaves()
+    if _G.AtlasLoot and _G.AtlasLoot.Addons and _G.AtlasLoot.Addons.GetAddon then
+        return _G.AtlasLoot.Addons:GetAddon("Favourites");
+    end
+end
+
+function ABGP:CanFavoriteItems()
+    return AtlasLootFaves() ~= nil;
+end
+
+function ABGP:IsFavorited(itemLink)
+    local faves = AtlasLootFaves();
+    if faves then
+        local itemId = self:GetItemId(itemLink);
+        if faves:IsFavouriteItemID(itemId) then
+            return true;
+        end
+    end
+    return false;
+end
+
+function ABGP:SetFavorited(itemLink, favorited)
+    local faves = AtlasLootFaves();
+    if faves then
+        local itemId = self:GetItemId(itemLink);
+        if favorited then
+            faves:AddItemID(itemId);
+        else
+            faves:RemoveItemID(itemId);
+        end
+    end
+end

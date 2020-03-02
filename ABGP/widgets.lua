@@ -7,6 +7,7 @@ local IsModifiedClick = IsModifiedClick;
 local pairs = pairs;
 local floor = floor;
 local min = min;
+local max = max;
 local mod = mod;
 local table = table;
 
@@ -18,7 +19,7 @@ local function CreateElement(frame, anchor, template)
     elt:SetHyperlinksEnabled(true);
     elt:SetScript("OnHyperlinkEnter", function(self, itemLink)
         _G.ShowUIPanel(_G.GameTooltip);
-        _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+        _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
         _G.GameTooltip:SetHyperlink(itemLink);
         _G.GameTooltip:Show();
         self:GetParent():RequestHighlight(true);
@@ -211,7 +212,6 @@ do
         notes.text:SetWordWrap(true);
         notes:SetScript("OnEnter", function(self)
             if self.text:IsTruncated() then
-                local text = self.text:GetText();
                 _G.ShowUIPanel(_G.GameTooltip);
                 _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
                 _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
@@ -430,6 +430,139 @@ do
 end
 
 do
+    local Type, Version = "ABGP_ItemValue", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.item.text:SetText("");
+            self.gp.text:SetText("");
+            self.notes.text:SetText("");
+            self.priority.text:SetText("");
+
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
+
+            self.background:Hide();
+        end,
+
+        ["SetData"] = function(self, data)
+            self.data = data;
+
+            self.item.text:SetText(data[3] or data[1]);
+            self.gp.text:SetText(data[2]);
+            self.notes.text:SetText(data.notes and "[Note]" or "");
+            self.priority.text:SetText(table.concat(data.priority, ", "));
+
+            local specialFont = (data[3] and ABGP:IsFavorited(data[3])) and "ABGPHighlight" or "GameFontNormal";
+            self.gp.text:SetFontObject(specialFont);
+            self.notes.text:SetFontObject(specialFont);
+            self.priority.text:SetFontObject(specialFont);
+        end,
+
+        ["SetWidths"] = function(self, widths)
+            self.item:SetWidth(widths[1] or 0);
+            self.gp:SetWidth(widths[2] or 0);
+            self.notes:SetWidth(widths[3] or 0);
+        end,
+
+        ["ShowBackground"] = function(self, show)
+            self.background[show and "Show" or "Hide"](self.background);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button");
+        frame:SetHeight(20);
+        frame:Hide();
+
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
+
+        local background = frame:CreateTexture(nil, "BACKGROUND");
+        background:SetAllPoints();
+        background:SetColorTexture(0, 0, 0, 0.5);
+
+        local item = CreateElement(frame);
+        item.text = CreateFontString(item);
+
+        local gp = CreateElement(frame, item);
+        gp.text = CreateFontString(gp);
+        gp.text:SetJustifyH("RIGHT");
+        gp.text:SetPoint("LEFT", gp, 2, 1);
+        gp.text:SetPoint("RIGHT", gp, -10, 1);
+
+        local notes = CreateElement(frame, gp);
+        notes.text = CreateFontString(notes);
+        notes:SetScript("OnEnter", function(self)
+            local notes = self:GetParent().obj.data.notes;
+            if notes then
+                _G.ShowUIPanel(_G.GameTooltip);
+                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
+                _G.GameTooltip:SetText(notes, 1, 1, 1, 1, true);
+                _G.GameTooltip:Show();
+            end
+            self:GetParent():RequestHighlight(true);
+        end);
+        notes:SetScript("OnLeave", function(self)
+            _G.GameTooltip:Hide();
+            self:GetParent():RequestHighlight(false);
+        end);
+
+        local priority = CreateElement(frame, notes);
+        priority.text = CreateFontString(priority);
+        priority:SetPoint("TOPRIGHT", frame);
+        priority:SetScript("OnEnter", function(self)
+            if self.text:IsTruncated() then
+                _G.ShowUIPanel(_G.GameTooltip);
+                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+                _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                _G.GameTooltip:Show();
+            end
+            self:GetParent():RequestHighlight(true);
+        end);
+        priority:SetScript("OnLeave", function(self)
+            _G.GameTooltip:Hide();
+            self:GetParent():RequestHighlight(false);
+        end);
+
+        -- create widget
+        local widget = {
+            item = item,
+            gp = gp,
+            notes = notes,
+            priority = priority,
+
+            background = background,
+
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
     local Type, Version = "ABGP_Paginator", 1;
 
     --[[-----------------------------------------------------------------------------
@@ -446,7 +579,7 @@ do
             self.dataCount = dataCount;
             self.pageSize = pageSize;
             self.pageCount = floor(self.dataCount / self.pageSize) + ((mod(self.dataCount, self.pageSize) == 0) and 0 or 1);
-            self.page = min(self.page, self.pageCount);
+            self.page = min(max(1, self.page), self.pageCount);
             self:CalculateRange(true);
         end,
 
@@ -804,7 +937,6 @@ do
         audit:SetPoint("TOPRIGHT", frame);
         audit:SetScript("OnEnter", function(self)
             if self.text:IsTruncated() then
-                local text = self.text:GetText();
                 _G.ShowUIPanel(_G.GameTooltip);
                 _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
                 _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);

@@ -106,7 +106,7 @@ local function DrawPriority(container, rebuild)
                 if button == "RightButton" then
                     ABGP:ShowContextMenu({
                         {
-                            text = "Show item history",
+                            text = "Show loot history",
                             func = function(self, data)
                                 if activeWindow then
                                     local container = activeWindow:GetUserData("container");
@@ -313,7 +313,7 @@ local function DrawItemHistory(container, rebuild)
 end
 
 local function DrawItems(container, rebuild)
-    local widths = { 200, 50, 50, 1.0 };
+    local widths = { 225, 50, 50, 1.0 };
     if rebuild then
         local priSelector = AceGUI:Create("ABGP_Filter");
         priSelector:SetWidth(125);
@@ -373,7 +373,7 @@ local function DrawItems(container, rebuild)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Item", "Cost", "Notes", "Priority", weights = { unpack(widths) } };
+        local columns = { "Item", "GP", "Notes", "Priority", weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -383,6 +383,10 @@ local function DrawItems(container, rebuild)
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
             desc:SetText(columns[i]);
+            if columns[i] == "GP" then
+                desc:SetJustifyH("RIGHT");
+                desc:SetPadding(2, -10);
+            end
             header:AddChild(desc);
         end
 
@@ -416,11 +420,48 @@ local function DrawItems(container, rebuild)
     pagination:SetValues(#filtered, 50);
     if #filtered > 0 then
         local first, last = pagination:GetRange();
+        local count = 0;
         for i = first, last do
+            count = count + 1;
             local data = filtered[i];
-            local elt = AceGUI:Create("ABGP_Header");
-            elt:SetText(data[1]);
+            local elt = AceGUI:Create("ABGP_ItemValue");
+            elt:SetData(data);
+            elt:SetWidths(widths);
             elt:SetFullWidth(true);
+            elt:ShowBackground((count % 2) == 0);
+            elt:SetCallback("OnClick", function(widget, event, button)
+                if button == "RightButton" then
+                    local context = {
+                        {
+                            text = "Show item history",
+                            func = function(self, data)
+                                if activeWindow then
+                                    local container = activeWindow:GetUserData("container");
+                                    container:SelectTab("gp");
+                                    container:GetUserData("search"):SetText(("\"%s\""):format(data[1]));
+                                    PopulateUI(false);
+                                end
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        },
+                        { text = "Cancel", notCheckable = true },
+                    };
+                    if data[3] and ABGP:CanFavoriteItems() then
+                        local faved = ABGP:IsFavorited(data[3]);
+                        table.insert(context, 1, {
+                            text = faved and "Remove favorite" or "Add favorite",
+                            func = function(self, data)
+                                ABGP:SetFavorited(data[3], not faved);
+                                elt:SetData(data);
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        });
+                    end
+                    ABGP:ShowContextMenu(context);
+                end
+            end);
             itemList:AddChild(elt);
         end
     end
