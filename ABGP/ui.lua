@@ -262,7 +262,7 @@ local function DrawItemHistory(container, rebuild)
                         end
                     end
 
-                    text = text .. ("%s;%s;%s;Exported from ABGP%s"):format(
+                    text = text .. ("%s;%s;%s%s"):format(
                         item, data.player, data.date, (i == 1 and "" or "\n"));
                 end
 
