@@ -567,23 +567,6 @@ do
     Methods
     -------------------------------------------------------------------------------]]
 
-    local function ShowingAll(filtered)
-        for _, state in pairs(filtered) do
-            if state then return false; end
-        end
-
-        return true;
-    end
-
-    local function ShowingNone(values, filtered)
-        local hasShownClass = false;
-        for value in pairs(values) do
-            if value ~= "ALL" and not filtered[value] then return false; end
-        end
-
-        return true;
-    end
-
     local methods = {
         ["OnAcquire"] = function(self)
             self:DropdownOnAcquire();
@@ -610,14 +593,14 @@ do
                 end
             else
                 if checked then
-                    if ShowingAll(self.filtered) then
+                    if self:ShowingAll() then
                         for value in pairs(self.values) do
                             if value ~= "ALL" then self.filtered[value] = true; end
                         end
                     end
                 end
                 self.filtered[value] = not checked;
-                if ShowingNone(self.values, self.filtered) then
+                if self:ShowingNone() then
                     table.wipe(self.filtered);
                 end
             end
@@ -629,7 +612,7 @@ do
         end,
 
         ["UpdateCheckboxes"] = function(self)
-            local all = ShowingAll(self.filtered);
+            local all = self:ShowingAll();
             for value in pairs(self.values) do
                 if value == "ALL" then
                     self:SetItemValue(value, all);
@@ -637,6 +620,23 @@ do
                     self:SetItemValue(value, not all and not self.filtered[value]);
                 end
             end
+        end,
+
+        ["ShowingAll"] = function(self)
+            for _, state in pairs(self.filtered) do
+                if state then return false; end
+            end
+    
+            return true;
+        end,
+    
+        ["ShowingNone"] = function(self)
+            local hasShownClass = false;
+            for value in pairs(self.values) do
+                if value ~= "ALL" and not self.filtered[value] then return false; end
+            end
+    
+            return true;
         end,
     }
 

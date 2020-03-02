@@ -13,7 +13,8 @@ local pairs = pairs;
 local unpack = unpack;
 
 local activeWindow;
-local ignoredClasses = {};
+local filteredClasses = {};
+local filteredPriorities = {};
 local selectedPhase = ABGP.CurrentPhase;
 
 local function PopulateUI(rebuild)
@@ -33,7 +34,7 @@ local function DrawPriority(container, rebuild)
     if rebuild then
         local classSelector = AceGUI:Create("ABGP_Filter");
         classSelector:SetWidth(110);
-        classSelector:SetValues(ignoredClasses, {
+        classSelector:SetValues(filteredClasses, {
             DRUID = "Druid",
             HUNTER = "Hunter",
             MAGE = "Mage",
@@ -90,7 +91,7 @@ local function DrawPriority(container, rebuild)
     local count = 0;
     local priority = ABGP.Priorities[selectedPhase];
     for i, data in ipairs(priority) do
-        if not ignoredClasses[data.class] then
+        if not filteredClasses[data.class] then
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Player");
             elt:SetFullWidth(true);
@@ -312,8 +313,52 @@ local function DrawItemHistory(container, rebuild)
 end
 
 local function DrawItems(container, rebuild)
-    local widths = { 120, 70, 50, 1.0 };
+    local widths = { 200, 50, 50, 1.0 };
     if rebuild then
+        local priSelector = AceGUI:Create("ABGP_Filter");
+        priSelector:SetWidth(125);
+        priSelector:SetValues(filteredPriorities, {
+            ["Druid (Heal)"] = "Druid (Heal)",
+            ["KAT4FITE"] = "KAT4FITE",
+            ["Hunter"] = "Hunter",
+            ["Mage"] = "Mage",
+            ["Paladin (Holy)"] = "Paladin (Holy)",
+            ["Paladin (Ret)"] = "Paladin (Ret)",
+            ["Priest (Heal)"] = "Priest (Heal)",
+            ["Priest (Shadow)"] = "Priest (Shadow)",
+            ["Rogue"] = "Rogue",
+            ["Slicey Rogue"] = "Slicey Rogue",
+            ["Stabby Rogue"] = "Stabby Rogue",
+            ["Warlock"] = "Warlock",
+            ["Tank"] = "Tank",
+            ["Metal Rogue"] = "Metal Rogue",
+            ["Progression"] = "Progression",
+            ["Garbage"] = "Garbage",
+        }, {
+            "Druid (Heal)",
+            "KAT4FITE",
+            "Hunter",
+            "Mage",
+            "Metal Rogue",
+            "Paladin (Holy)",
+            "Paladin (Ret)",
+            "Priest (Heal)",
+            "Priest (Shadow)",
+            "Rogue",
+            "Slicey Rogue",
+            "Stabby Rogue",
+            "Tank",
+            "Warlock",
+            "Progression",
+            "Garbage",
+        });
+        priSelector:SetCallback("OnFilterUpdated", function()
+            PopulateUI(false);
+        end);
+        priSelector:SetText("Priorities");
+        container:AddChild(priSelector);
+        container:SetUserData("priSelector", priSelector);
+
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
         pagination:SetCallback("OnRangeSet", function()
@@ -346,7 +391,38 @@ local function DrawItems(container, rebuild)
         scroll:SetFullHeight(true);
         scroll:SetLayout("List");
         scrollContainer:AddChild(scroll);
-        container:SetUserData("auditLog", scroll);
+        container:SetUserData("itemList", scroll);
+    end
+
+    local itemList = container:GetUserData("itemList");
+    itemList:ReleaseChildren();
+    local count = 0;
+    local items = _G.ABGP_Data[selectedPhase].itemValues;
+    local filtered = {};
+    local selector = container:GetUserData("priSelector");
+    if selector:ShowingAll() then
+        filtered = items;
+    else
+        for i, item in ipairs(items) do
+            for _, pri in ipairs(item.priority) do
+                if not filteredPriorities[pri] then
+                    table.insert(filtered, item);
+                end
+            end
+        end
+    end
+
+    local pagination = container:GetUserData("pagination");
+    pagination:SetValues(#filtered, 50);
+    if #filtered > 0 then
+        local first, last = pagination:GetRange();
+        for i = first, last do
+            local data = filtered[i];
+            local elt = AceGUI:Create("ABGP_Header");
+            elt:SetText(data[1]);
+            elt:SetFullWidth(true);
+            itemList:AddChild(elt);
+        end
     end
 end
 
