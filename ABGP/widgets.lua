@@ -106,6 +106,13 @@ do
             self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
             self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
 
+            local specialFont = data.important and "ABGPHighlight" or "GameFontNormal";
+            self.player.text:SetFontObject(specialFont);
+            self.rank.text:SetFontObject(specialFont);
+            self.ep.text:SetFontObject(specialFont);
+            self.gp.text:SetFontObject(specialFont);
+            self.priority.text:SetFontObject(specialFont);
+
             if data.equipped then
                 if #data.equipped == 2 then
                     self.equipped.textTop:SetText(data.equipped[1]);

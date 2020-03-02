@@ -95,13 +95,13 @@ local function DrawPriority(container, rebuild)
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Player");
             elt:SetFullWidth(true);
+            if data.player == UnitName("player") then
+                data.important = true;
+            end
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             elt:SetHeight(20);
-            if data.player == UnitName("player") then
-                elt.frame:RequestHighlight(true);
-            end
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
                     ABGP:ShowContextMenu({
