@@ -1,3 +1,11 @@
+local _G = _G;
+local ABGP = ABGP;
+
+local GetItemInfo = GetItemInfo;
+local print = print;
+local pairs = pairs;
+local ipairs = ipairs;
+
 ABGP.Debug = true;
 -- ABGP.Verbose = true;
 -- ABGP.PrivateComms = true;
@@ -5,42 +13,65 @@ ABGP.IgnoreSelfDistributed = true;
 ABGP.VersionDebug = "3.2.2";
 ABGP.VersionCmpDebug = "3.2.2";
 
-function ABGP:FixupHistory()
-    self.lookup = {};
-    local failed = false;
 
-    local mc = AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore.items;
-    local ony = AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia.items;
-    local wb = AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses.items;
-    local bwl = AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair.items;
+local lookup = {};
+
+local function BuildLookup()
+    local succeeded = true;
+
+    local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore.items;
+    local ony = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia.items;
+    local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses.items;
+    local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair.items;
     for _, collection in ipairs({ mc, ony, wb, bwl }) do
         for _, sub in ipairs(collection) do
             if sub[1] then
                 for _, item in ipairs(sub[1]) do
                     local name, link = GetItemInfo(item[2]);
                     if name then
-                        self.lookup[name] = self:ShortenLink(link);
+                        lookup[name] = ABGP:ShortenLink(link);
                     else
-                        failed = true;
+                        succeeded = false;
                     end
                 end
             end
         end
     end
 
-    if failed then
+    if not succeeded then
         print("Failed to query some items!");
-        return;
     end
 
-    local p1 = ABGP_Data.p1.gpHistory;
-    local p3 = ABGP_Data.p3.gpHistory;
+    return succeeded;
+end
+
+function ABGP:FixupItems()
+    if not BuildLookup() then return; end
+    
+    local p1 = _G.ABGP_Data.p1.itemValues;
+    local p3 = _G.ABGP_Data.p3.itemValues;
     for _, phase in ipairs({ p1, p3 }) do
         for _, entry in ipairs(phase) do
-            if self.lookup[entry.item] then
-                entry.itemLink = self.lookup[entry.item];
+            if lookup[entry[1]] then
+                entry[3] = lookup[entry[1]];
             else
-                for name, link in pairs(self.lookup) do
+                print(("FAILED TO FIND [%s]"):format(entry[1]));
+            end
+        end
+    end
+end
+
+function ABGP:FixupHistory()
+    if not BuildLookup() then return; end
+
+    local p1 = _G.ABGP_Data.p1.gpHistory;
+    local p3 = _G.ABGP_Data.p3.gpHistory;
+    for _, phase in ipairs({ p1, p3 }) do
+        for _, entry in ipairs(phase) do
+            if lookup[entry.item] then
+                entry.itemLink = lookup[entry.item];
+            else
+                for name, link in pairs(lookup) do
                     local lowered = entry.item:lower();
                     if lowered:find(name:lower(), 1, true) then
                         print(("Updating [%s] to [%s]"):format(entry.item, name));
