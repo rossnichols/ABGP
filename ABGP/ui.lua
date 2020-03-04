@@ -106,7 +106,7 @@ local function DrawPriority(container, rebuild)
                 if button == "RightButton" then
                     ABGP:ShowContextMenu({
                         {
-                            text = "Show loot history",
+                            text = "Show player history",
                             func = function(self, data)
                                 if activeWindow then
                                     local container = activeWindow:GetUserData("container");
@@ -264,7 +264,8 @@ local function DrawItemHistory(container, rebuild)
     history:ReleaseChildren();
 
     local pagination = container:GetUserData("pagination");
-    local searchText = container:GetUserData("search"):GetText():lower();
+    local search = container:GetUserData("search");
+    local searchText = search:GetText():lower();
     container:GetUserData("reset"):SetDisabled(searchText == "");
     local gpHistory = _G.ABGP_Data[selectedPhase].gpHistory;
     local filtered;
@@ -307,6 +308,47 @@ local function DrawItemHistory(container, rebuild)
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
+            elt:SetCallback("OnClick", function(widget, event, button)
+                if button == "RightButton" then
+                    local context = {
+                        {
+                            text = "Show player history",
+                            func = function(self, data)
+                                if activeWindow then
+                                    search:SetText(("\"%s\""):format(data.player));
+                                    PopulateUI(false);
+                                end
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        },
+                        {
+                            text = "Show item history",
+                            func = function(self, data)
+                                if activeWindow then
+                                    search:SetText(("\"%s\""):format(data.item));
+                                    PopulateUI(false);
+                                end
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        },
+                        { text = "Cancel", notCheckable = true },
+                    };
+                    if data.itemLink and ABGP:CanFavoriteItems() then
+                        local faved = ABGP:IsFavorited(data.itemLink);
+                        table.insert(context, 1, {
+                            text = faved and "Remove favorite" or "Add favorite",
+                            func = function(self, data)
+                                ABGP:SetFavorited(data.itemLink, not faved);
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        });
+                    end
+                    ABGP:ShowContextMenu(context);
+                end
+            end);
             history:AddChild(elt);
         end
     end
