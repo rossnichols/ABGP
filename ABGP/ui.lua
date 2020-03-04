@@ -29,7 +29,7 @@ local function PopulateUI(rebuild)
 end
 
 local function DrawPriority(container, rebuild)
-    local widths = { 120, 110, 75, 75, 75 };
+    local widths = { 35, 120, 110, 75, 75, 75 };
 
     if rebuild then
         local classSelector = AceGUI:Create("ABGP_Filter");
@@ -65,7 +65,7 @@ local function DrawPriority(container, rebuild)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Player", "Rank", "EP", "GP", "Priority", weights = { unpack(widths) } };
+        local columns = { "", "Player", "Rank", "EP", "GP", "Priority", weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -89,19 +89,25 @@ local function DrawPriority(container, rebuild)
     local priorities = container:GetUserData("priorities");
     priorities:ReleaseChildren();
     local count = 0;
+    local order = 0;
+    local lastPriority = -1;
     local priority = ABGP.Priorities[selectedPhase];
     for i, data in ipairs(priority) do
         if not filteredClasses[data.class] then
             count = count + 1;
-            local elt = AceGUI:Create("ABGP_Player");
+            local elt = AceGUI:Create("ABGP_Priority");
             elt:SetFullWidth(true);
             if data.player == UnitName("player") then
                 data.important = true;
             end
+            if data.priority ~= lastPriority then
+                lastPriority = data.priority;
+                order = count;
+            end
+            data.order = order;
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
-            elt:SetHeight(20);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
                     ABGP:ShowContextMenu({

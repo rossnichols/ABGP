@@ -106,13 +106,6 @@ do
             self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
             self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
 
-            local specialFont = data.important and "ABGPHighlight" or "GameFontNormal";
-            self.player.text:SetFontObject(specialFont);
-            self.rank.text:SetFontObject(specialFont);
-            self.ep.text:SetFontObject(specialFont);
-            self.gp.text:SetFontObject(specialFont);
-            self.priority.text:SetFontObject(specialFont);
-
             if data.equipped then
                 if #data.equipped == 2 then
                     self.equipped.textTop:SetText(data.equipped[1]);
@@ -242,6 +235,128 @@ do
             requestType = requestType,
             roll = roll,
             notes = notes,
+
+            background = background,
+
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_Priority", 1;
+
+    local mainSpecFont = CreateFont("ABGPHighlight");
+    mainSpecFont:CopyFontObject(GameFontHighlight);
+    mainSpecFont:SetTextColor(unpack(ABGP.ColorTable));
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self:SetHeight(20);
+
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
+
+            self.background:Hide();
+        end,
+
+        ["SetData"] = function(self, data)
+            self.data = data;
+
+            self.order.text:SetText(data.order or "");
+            self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
+            self.rank.text:SetText(data.rank or "");
+            self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");
+            self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
+            self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
+
+            local specialFont = data.important and "ABGPHighlight" or "GameFontNormal";
+            self.order.text:SetFontObject(specialFont);
+            self.player.text:SetFontObject(specialFont);
+            self.rank.text:SetFontObject(specialFont);
+            self.ep.text:SetFontObject(specialFont);
+            self.gp.text:SetFontObject(specialFont);
+            self.priority.text:SetFontObject(specialFont);
+        end,
+
+        ["SetWidths"] = function(self, widths)
+            self.order:SetWidth(widths[1] or 0);
+            self.player:SetWidth(widths[2] or 0);
+            self.rank:SetWidth(widths[3] or 0);
+            self.ep:SetWidth(widths[4] or 0);
+            self.gp:SetWidth(widths[5] or 0);
+            self.priority:SetWidth(widths[6] or 0);
+        end,
+
+        ["ShowBackground"] = function(self, show)
+            self.background[show and "Show" or "Hide"](self.background);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button");
+        frame:SetHeight(32);
+        frame:Hide();
+
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
+
+        local background = frame:CreateTexture(nil, "BACKGROUND");
+        background:SetAllPoints();
+        background:SetColorTexture(0, 0, 0, 0.5);
+
+        local order = CreateElement(frame);
+        order.text = CreateFontString(order);
+        order.text:SetJustifyH("RIGHT");
+        order.text:SetPoint("LEFT", order, 2, 1);
+        order.text:SetPoint("RIGHT", order, -10, 1);
+
+        local player = CreateElement(frame, order);
+        player.text = CreateFontString(player);
+
+        local rank = CreateElement(frame, player);
+        rank.text = CreateFontString(rank);
+
+        local ep = CreateElement(frame, rank);
+        ep.text = CreateFontString(ep);
+
+        local gp = CreateElement(frame, ep);
+        gp.text = CreateFontString(gp);
+
+        local priority = CreateElement(frame, gp);
+        priority.text = CreateFontString(priority);
+
+        -- create widget
+        local widget = {
+            order = order,
+            player = player,
+            rank = rank,
+            ep = ep,
+            gp = gp,
+            priority = priority,
 
             background = background,
 
@@ -766,16 +881,16 @@ do
             for _, state in pairs(self.filtered) do
                 if state then return false; end
             end
-    
+
             return true;
         end,
-    
+
         ["ShowingNone"] = function(self)
             local hasShownClass = false;
             for value in pairs(self.values) do
                 if value ~= "ALL" and not self.filtered[value] then return false; end
             end
-    
+
             return true;
         end,
     }
@@ -791,7 +906,7 @@ do
         for method, func in pairs(methods) do
             dropdown[method] = func;
         end
-    
+
         return dropdown;
     end
 
