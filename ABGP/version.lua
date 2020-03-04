@@ -101,6 +101,9 @@ function ABGP:OnVersionRequest(data, distribution, sender)
 end
 
 function ABGP:OnVersionResponse(data, distribution, sender)
+    if distribution == "GUILD" then
+        checkedGuild = true;
+    end
     CompareVersion(data.version, sender);
     if distribution ~= "GUILD" and versionCheckData and not versionCheckData.players[sender] then
         versionCheckData.players[sender] = data.version;
@@ -219,7 +222,6 @@ end
 
 function ABGP:VersionOnGuildRosterUpdate()
     if not checkedGuild then
-        checkedGuild = true;
         self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "GUILD");
     end
 end

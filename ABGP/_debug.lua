@@ -10,8 +10,8 @@ ABGP.Debug = true;
 -- ABGP.Verbose = true;
 -- ABGP.PrivateComms = true;
 ABGP.IgnoreSelfDistributed = true;
-ABGP.VersionDebug = "3.2.2";
-ABGP.VersionCmpDebug = "3.2.2";
+ABGP.VersionDebug = "3.3.0";
+ABGP.VersionCmpDebug = "3.3.0";
 
 
 local lookup = {};
@@ -47,7 +47,7 @@ end
 
 function ABGP:FixupItems()
     if not BuildLookup() then return; end
-    
+
     local p1 = _G.ABGP_Data.p1.itemValues;
     local p3 = _G.ABGP_Data.p3.itemValues;
     for _, phase in ipairs({ p1, p3 }) do
