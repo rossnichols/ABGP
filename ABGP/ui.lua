@@ -344,7 +344,7 @@ local function DrawItemHistory(container, rebuild)
                     if data.itemLink and ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsFavorited(data.itemLink);
                         table.insert(context, 1, {
-                            text = faved and "Remove favorite" or "Add favorite",
+                            text = faved and "Remove item favorite" or "Add item favorite",
                             func = function(self, data)
                                 ABGP:SetFavorited(data.itemLink, not faved);
                             end,
