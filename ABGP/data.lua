@@ -33,55 +33,57 @@ function ABGP:RefreshFromOfficerNotes()
 
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
-        local player = Ambiguate(name, "short");
-        local epgp = self:GetActivePlayer(player, true);
-        local p1New, p3New;
-		if self:IsTrial(rank) then
-			table.insert(p1, {
-				player = player,
-				rank = rank,
-				class = class,
-				ep = 0,
-				gp = 0,
-				priority = 0,
-				trial = true
-			});
-			table.insert(p3, {
-				player = player,
-				rank = rank,
-				class = class,
-				ep = 0,
-				gp = 0,
-				priority = 0,
-				trial = true
-			});
-        elseif note ~= "" then
-            local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
-            if p1ep then
-                p1ep = tonumber(p1ep) / 1000;
-                p1gp = tonumber(p1gp) / 1000;
-                p3ep = tonumber(p3ep) / 1000;
-                p3gp = tonumber(p3gp) / 1000;
+        if name then
+            local player = Ambiguate(name, "short");
+            local epgp = self:GetActivePlayer(player, true);
+            local p1New, p3New;
+            if self:IsTrial(rank) then
+                table.insert(p1, {
+                    player = player,
+                    rank = rank,
+                    class = class,
+                    ep = 0,
+                    gp = 0,
+                    priority = 0,
+                    trial = true
+                });
+                table.insert(p3, {
+                    player = player,
+                    rank = rank,
+                    class = class,
+                    ep = 0,
+                    gp = 0,
+                    priority = 0,
+                    trial = true
+                });
+            elseif note ~= "" then
+                local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
+                if p1ep then
+                    p1ep = tonumber(p1ep) / 1000;
+                    p1gp = tonumber(p1gp) / 1000;
+                    p3ep = tonumber(p3ep) / 1000;
+                    p3gp = tonumber(p3gp) / 1000;
 
-                if p1gp ~= 0 then
-                    table.insert(p1, {
-                        player = player,
-                        rank = rank,
-                        class = class,
-                        ep = p1ep,
-                        gp = p1gp,
-                        priority = p1ep * 10 / p1gp
-                    });
-                end
-                if p3gp ~= 0 then
-                    table.insert(p3, {
-                        player = player,
-                        rank = rank,
-                        class = class,
-                        ep = p3ep,
-                        gp = p3gp,
-                        priority = p3ep * 10 / p3gp
-                    });
+                    if p1gp ~= 0 then
+                        table.insert(p1, {
+                            player = player,
+                            rank = rank,
+                            class = class,
+                            ep = p1ep,
+                            gp = p1gp,
+                            priority = p1ep * 10 / p1gp
+                        });
+                    end
+                    if p3gp ~= 0 then
+                        table.insert(p3, {
+                            player = player,
+                            rank = rank,
+                            class = class,
+                            ep = p3ep,
+                            gp = p3gp,
+                            priority = p3ep * 10 / p3gp
+                        });
+                    end
                 end
             end
         end
@@ -98,9 +100,11 @@ function ABGP:RebuildOfficerNotes()
     local count = 0;
     for i = 1, GetNumGuildMembers() do
         local name = GetGuildRosterInfo(i);
-        local player = Ambiguate(name, "short");
-        if self:UpdateOfficerNote(player, i, true) then
-            count = count + 1;
+        if name then
+            local player = Ambiguate(name, "short");
+            if self:UpdateOfficerNote(player, i, true) then
+                count = count + 1;
+            end
         end
     end
 
@@ -120,7 +124,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
     if not guildIndex then
         for i = 1, GetNumGuildMembers() do
             local name = GetGuildRosterInfo(i);
-            if player == Ambiguate(name, "short") then
+            if name and player == Ambiguate(name, "short") then
                 guildIndex = i;
                 break;
             end

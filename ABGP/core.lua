@@ -240,9 +240,15 @@ function ABGP:RebuildGuildInfo()
     table.wipe(guildInfo);
     for i = 1, GetNumGuildMembers() do
         local data = { GetGuildRosterInfo(i) };
-        data.player = Ambiguate(data[1], "short");
-        data.index = i;
-        guildInfo[data.player] = data;
+        if data[1] then
+            data.player = Ambiguate(data[1], "short");
+            data.index = i;
+            guildInfo[data.player] = data;
+        else
+            -- Seen this API fail before. If that happens,
+            -- request another guild roster update.
+            GuildRoster();
+        end
     end
 end
 
