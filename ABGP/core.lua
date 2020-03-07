@@ -316,6 +316,24 @@ function ABGP:ShortenLink(itemLink)
     return itemLink:gsub("|H(item:%d+).-|h", "|H%1|h");
 end
 
+local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
+scanner:SetOwner(UIParent, "ANCHOR_NONE");
+function ABGP:IsUsable(itemLink)
+    scanner:ClearLines();
+    scanner:SetHyperlink(itemLink);
+    for i = 1, select("#", scanner:GetRegions()) do
+        local region = select(i, scanner:GetRegions());
+        if region and region:GetObjectType() == "FontString" and region:GetText() then
+            local r, g, b = region:GetTextColor();
+            if r >= .9 and g <= .2 and b <= .2 then
+                return false;
+            end
+        end
+    end
+
+    return true;
+end
+
 ABGP.RequestTypes = {
     MS_OS = "MS_OS",
     ROLL = "ROLL",

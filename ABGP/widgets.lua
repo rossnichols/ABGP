@@ -578,10 +578,17 @@ do
             self.notes.text:SetText(data.notes and "[Note]" or "");
             self.priority.text:SetText(table.concat(data.priority, ", "));
 
-            local specialFont = (data[3] and ABGP:IsFavorited(data[3])) and "ABGPHighlight" or "GameFontNormal";
-            self.gp.text:SetFontObject(specialFont);
-            self.notes.text:SetFontObject(specialFont);
-            self.priority.text:SetFontObject(specialFont);
+            local font = "GameFontNormal";
+            if data[3] then
+                if ABGP:IsFavorited(data[3]) then
+                    font = "ABGPHighlight";
+                elseif not ABGP:IsUsable(data[3]) then
+                    font = "GameFontDisable";
+                end
+            end
+            self.gp.text:SetFontObject(font);
+            self.notes.text:SetFontObject(font);
+            self.priority.text:SetFontObject(font);
         end,
 
         ["SetWidths"] = function(self, widths)
