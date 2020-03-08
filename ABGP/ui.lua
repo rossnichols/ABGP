@@ -15,6 +15,7 @@ local unpack = unpack;
 local activeWindow;
 local filteredClasses = {};
 local filteredPriorities = {};
+local onlyUsable = false;
 local selectedPhase = ABGP.CurrentPhase;
 
 local function PopulateUI(rebuild)
@@ -342,7 +343,7 @@ local function DrawItemHistory(container, rebuild)
                         { text = "Cancel", notCheckable = true },
                     };
                     if data.itemLink and ABGP:CanFavoriteItems() then
-                        local faved = ABGP:IsFavorited(data.itemLink);
+                        local faved = ABGP:IsItemFavorited(data.itemLink);
                         table.insert(context, 1, {
                             text = faved and "Remove item favorite" or "Add item favorite",
                             func = function(self, data)
@@ -361,7 +362,7 @@ local function DrawItemHistory(container, rebuild)
 end
 
 local function DrawItems(container, rebuild)
-    local widths = { 225, 50, 50, 1.0 };
+    local widths = { 200, 50, 50, 1.0 };
     if rebuild then
         local priSelector = AceGUI:Create("ABGP_Filter");
         priSelector:SetWidth(125);
@@ -406,6 +407,51 @@ local function DrawItems(container, rebuild)
         priSelector:SetText("Priorities");
         container:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
+
+        local search = AceGUI:Create("EditBox");
+        search:SetWidth(125);
+        search:SetCallback("OnEnterPressed", function(widget)
+            AceGUI:ClearFocus();
+            PopulateUI(false);
+        end);
+        search:SetCallback("OnEnter", function(widget)
+            _G.ShowUIPanel(_G.GameTooltip);
+            _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
+            _G.GameTooltip:ClearLines();
+            _G.GameTooltip:AddLine("Help");
+            _G.GameTooltip:AddLine("Search by item name. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
+            _G.GameTooltip:Show();
+        end);
+        search:SetCallback("OnLeave", function(widget)
+            _G.GameTooltip:Hide();
+        end);
+        container:AddChild(search);
+        container:SetUserData("search", search);
+
+        local desc = AceGUI:Create("Label");
+        desc:SetWidth(50);
+        desc:SetText(" Search");
+        container:AddChild(desc);
+
+        local reset = AceGUI:Create("Button");
+        reset:SetWidth(70);
+        reset:SetText("Reset");
+        reset:SetCallback("OnClick", function(widget)
+            container:GetUserData("search"):SetText("");
+            PopulateUI(false);
+        end);
+        container:AddChild(reset);
+        container:SetUserData("reset", reset);
+
+        local usable = AceGUI:Create("CheckBox");
+        usable:SetWidth(100);
+        usable:SetLabel("Only Usable");
+        usable:SetValue(onlyUsable);
+        usable:SetCallback("OnValueChanged", function(widget, event, value)
+            onlyUsable = value;
+            PopulateUI(false);
+        end);
+        container:AddChild(usable);
 
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
@@ -452,13 +498,27 @@ local function DrawItems(container, rebuild)
     local items = _G.ABGP_Data[selectedPhase].itemValues;
     local filtered = {};
     local selector = container:GetUserData("priSelector");
-    if selector:ShowingAll() then
+    local search = container:GetUserData("search");
+    local searchText = search:GetText():lower();
+    container:GetUserData("reset"):SetDisabled(searchText == "");
+
+
+    if selector:ShowingAll() and not onlyUsable and searchText == "" then
         filtered = items;
     else
+        local exact = searchText:match("^\"(.+)\"$");
+        exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
-            for _, pri in ipairs(item.priority) do
-                if not filteredPriorities[pri] then
-                    table.insert(filtered, item);
+            if not onlyUsable or ABGP:IsItemUsable(item[3]) then
+                if (searchText == "") or
+                   (exact and item[1]:lower() == exact) or
+                   (not exact and item[1]:lower():find(searchText, 1, true)) then
+                    for _, pri in ipairs(item.priority) do
+                        if not filteredPriorities[pri] then
+                            table.insert(filtered, item);
+                            break;
+                        end
+                    end
                 end
             end
         end
@@ -496,7 +556,7 @@ local function DrawItems(container, rebuild)
                         { text = "Cancel", notCheckable = true },
                     };
                     if data[3] and ABGP:CanFavoriteItems() then
-                        local faved = ABGP:IsFavorited(data[3]);
+                        local faved = ABGP:IsItemFavorited(data[3]);
                         table.insert(context, 1, {
                             text = faved and "Remove favorite" or "Add favorite",
                             func = function(self, data)
@@ -624,7 +684,7 @@ function ABGP:CreateMainWindow()
     self:BeginWindowManagement(window, "main", {
         version = 1,
         defaultWidth = 600,
-        minWidth = 550,
+        minWidth = 600,
         maxWidth = 750,
         defaultHeight = 500,
         minHeight = 300,
@@ -637,6 +697,12 @@ function ABGP:CreateMainWindow()
         AceGUI:Release(widget);
         activeWindow = nil;
     end);
+
+    local mainLine = AceGUI:Create("SimpleGroup");
+    mainLine:SetFullWidth(true);
+    mainLine:SetLayout("table");
+    mainLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
+    window:AddChild(mainLine);
 
     local phases = {
         [ABGP.Phases.p1] = "Phase 1/2",
@@ -658,7 +724,19 @@ function ABGP:CreateMainWindow()
         end
         PopulateUI(false);
     end);
-    window:AddChild(phaseSelector);
+    mainLine:AddChild(phaseSelector);
+
+    local spacer = AceGUI:Create("Label");
+    mainLine:AddChild(spacer);
+
+    local opts = AceGUI:Create("Button");
+    opts:SetWidth(100);
+    opts:SetText("Options");
+    opts:SetCallback("OnClick", function(widget)
+        window:Hide();
+        ABGP:ShowOptionsWindow();
+    end);
+    mainLine:AddChild(opts);
 
     local tabs = {
         { value = "priority", text = "Priority", draw = DrawPriority },

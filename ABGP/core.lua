@@ -46,6 +46,12 @@ function ABGP:OnInitialize()
             type = "execute",
             func = function() ABGP:ShowMainWindow(); end
         },
+        options = {
+            name = "Options",
+            desc = "opens the options window (alias: config/opt)",
+            type = "execute",
+            func = function() ABGP:ShowOptionsWindow(); end
+        },
         loot = {
             name = "Loot",
             desc = "shows the item request window",
@@ -69,6 +75,10 @@ function ABGP:OnInitialize()
             func = function() ABGP:PerformVersionCheck(); end
         },
     };
+    options.opt = { hidden = true };
+    for k, v in pairs(options.options) do options.opt[k] = v; end
+    options.config = { hidden = true };
+    for k, v in pairs(options.options) do options.config[k] = v; end
     options.vc = { hidden = true };
     for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
     options.vc.cmdHidden = nil;
@@ -79,9 +89,66 @@ function ABGP:OnInitialize()
     }, { "abgp" });
 
     local defaults = {
-
+        char = {
+            usePreferredPriority = false,
+            preferredPriorities = {},
+        }
     };
     self.db = _G.LibStub("AceDB-3.0"):New("ABGP_DB", defaults);
+
+    local guiOptions = {
+        show = {
+            name = "Show Window",
+            order = 1,
+            desc = "Show the main window",
+            type = "execute",
+            func = function()
+                _G.InterfaceOptionsFrame_Show(); -- it's really a toggle
+                ABGP:ShowMainWindow();
+            end
+        },
+        priorities = {
+            name = "Preferred Priorities",
+            order = 2,
+            desc = "If any priorites are chosen here, items not matching them will be deemphasized during distribution.",
+            type = "multiselect",
+            control = "Dropdown",
+            values = {
+                ["Druid (Heal)"] = "Druid (Heal)",
+                ["KAT4FITE"] = "KAT4FITE",
+                ["Hunter"] = "Hunter",
+                ["Mage"] = "Mage",
+                ["Paladin (Holy)"] = "Paladin (Holy)",
+                ["Paladin (Ret)"] = "Paladin (Ret)",
+                ["Priest (Heal)"] = "Priest (Heal)",
+                ["Priest (Shadow)"] = "Priest (Shadow)",
+                ["Rogue"] = "Rogue",
+                ["Slicey Rogue"] = "Slicey Rogue",
+                ["Stabby Rogue"] = "Stabby Rogue",
+                ["Warlock"] = "Warlock",
+                ["Tank"] = "Tank",
+                ["Metal Rogue"] = "Metal Rogue",
+                ["Progression"] = "Progression",
+                ["Garbage"] = "Garbage",
+            },
+            get = function(self, k) return ABGP.db.char.preferredPriorities[k]; end,
+            set = function(self, k, v)
+                ABGP.db.char.preferredPriorities[k] = v;
+                local usePriority = false;
+                for _, v in pairs(ABGP.db.char.preferredPriorities) do
+                    if v then usePriority = true; end
+                end
+                ABGP.db.char.usePreferredPriority = usePriority;
+            end,
+            cmdHidden = true,
+        },
+    };
+    AceConfig:RegisterOptionsTable("ABGP", {
+        name = ABGP:ColorizeText(addonText) .. " Options",
+        type = "group",
+        args = guiOptions,
+    });
+    self.OptionsFrame = _G.LibStub("AceConfigDialog-3.0"):AddToBlizOptions("ABGP");
 
     self:HookTooltips();
     self:AddItemHooks();
@@ -160,6 +227,15 @@ function ABGP:OnInitialize()
     if IsInGroup() then
         self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
     end
+end
+
+function ABGP:ShowOptionsWindow()
+    _G.InterfaceOptionsFrame_Show();
+    _G.InterfaceOptionsFrame_OpenToCategory(self.OptionsFrame);
+end
+
+function ABGP:Get(k)
+    return self.db.char[k];
 end
 
 local function GetSystemFrame()
@@ -295,6 +371,9 @@ function ABGP:RefreshItemValues()
                 notes = item.notes,
                 phase = phase
             };
+
+            -- Try to ensure info about the item is cached locally.
+            self:IsItemUsable(item[3]);
         end
     end
 end
@@ -318,20 +397,57 @@ end
 
 local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
 scanner:SetOwner(UIParent, "ANCHOR_NONE");
-function ABGP:IsUsable(itemLink)
+function ABGP:IsItemUsable(itemLink)
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
     for i = 1, select("#", scanner:GetRegions()) do
         local region = select(i, scanner:GetRegions());
         if region and region:GetObjectType() == "FontString" and region:GetText() then
+            if region:GetText() == "Retrieving item information" then
+                -- No info available: assume usable.
+                return true;
+            end
             local r, g, b = region:GetTextColor();
             if r >= .9 and g <= .2 and b <= .2 then
+                -- self:LogVerbose("%s is not usable: %s %.2f %.2f %.2f", itemLink, region:GetText(), r, g, b);
                 return false;
             end
         end
     end
 
     return true;
+end
+
+ABGP.ItemRanks = {
+    HIGH = 3,
+    NORMAL = 2,
+    LOW = 1,
+};
+
+function ABGP:GetItemRank(itemLink)
+    local rank = self.ItemRanks.NORMAL;
+    if itemLink then
+        if ABGP:IsItemFavorited(itemLink) then
+            rank = self.ItemRanks.HIGH;
+        elseif not ABGP:IsItemUsable(itemLink) then
+            rank = self.ItemRanks.LOW;
+        elseif self:Get("usePreferredPriority") then
+            local name = self:GetItemName(itemLink);
+            local value = self:GetItemValue(name);
+            if value then
+                rank = self.ItemRanks.LOW;
+                local preferred = self:Get("preferredPriorities");
+                for _, pri in ipairs(value.priority) do
+                    if preferred[pri] then
+                        rank = self.ItemRanks.NORMAL;
+                        break;
+                    end
+                end
+            end
+        end
+    end
+
+    return rank;
 end
 
 ABGP.RequestTypes = {
@@ -553,9 +669,9 @@ function ABGP:CanFavoriteItems()
     return AtlasLootFaves() ~= nil;
 end
 
-function ABGP:IsFavorited(itemLink)
+function ABGP:IsItemFavorited(itemLink)
     local faves = AtlasLootFaves();
-    if faves then
+    if faves and itemLink then
         local itemId = self:GetItemId(itemLink);
         if faves:IsFavouriteItemID(itemId) then
             return true;

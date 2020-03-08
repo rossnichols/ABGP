@@ -28,9 +28,11 @@ local function CreateElement(frame, anchor, template)
         _G.GameTooltip:Hide();
         self:GetParent():RequestHighlight(false);
     end);
-    elt:SetScript("OnHyperlinkClick", function(self, itemLink)
+    elt:SetScript("OnHyperlinkClick", function(self, itemLink, text, ...)
         if IsModifiedClick() then
             _G.HandleModifiedItemClick(itemLink);
+        else
+            self:GetParent().obj:Fire("OnClick", ...);
         end
     end);
     elt:SetScript("OnEnter", function(self)
@@ -391,7 +393,15 @@ do
         ["SetData"] = function(self, data)
             self.data = data;
 
-            self.itemLink.text:SetText(data.itemLink);
+            local fonts = {
+                [ABGP.ItemRanks.HIGH] = "ABGPHighlight",
+                [ABGP.ItemRanks.NORMAL] = "GameFontNormal",
+                [ABGP.ItemRanks.LOW] = "GameFontDisable",
+            };
+            local font = fonts[ABGP:GetItemRank(data.itemLink)];
+            self.itemLink.text:SetFontObject(font);
+
+            self.itemLink.text:SetText(data.itemLink:match("(|H.+|h)"));
         end,
 
         ["SetText"] = function(self, text)
@@ -578,14 +588,7 @@ do
             self.notes.text:SetText(data.notes and "[Note]" or "");
             self.priority.text:SetText(table.concat(data.priority, ", "));
 
-            local font = "GameFontNormal";
-            if data[3] then
-                if ABGP:IsFavorited(data[3]) then
-                    font = "ABGPHighlight";
-                elseif not ABGP:IsUsable(data[3]) then
-                    font = "GameFontDisable";
-                end
-            end
+            local font =ABGP:IsItemFavorited(data[3]) and "ABGPHighlight" or "GameFontNormal";
             self.gp.text:SetFontObject(font);
             self.notes.text:SetFontObject(font);
             self.priority.text:SetFontObject(font);

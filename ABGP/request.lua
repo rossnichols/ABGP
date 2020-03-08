@@ -29,7 +29,7 @@ local staticPopups = {
 local function GetStaticPopupType(itemLink)
     if not activeItems[itemLink] then return; end
 
-    local favorited = ABGP:IsFavorited(itemLink);
+    local favorited = ABGP:IsItemFavorited(itemLink);
     if activeItems[itemLink].requestType == ABGP.RequestTypes.ROLL then
         return (favorited)
             and staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE
@@ -103,9 +103,28 @@ local function PopulateUI()
         elt:SetFullWidth(true);
         elt:SetData(item);
         SetEltText(elt);
-        elt:SetCallback("OnClick", function(elt)
-            if not CloseStaticPopups(elt.data.itemLink) then
-                ShowStaticPopup(elt.data.itemLink);
+        elt:SetCallback("OnClick", function(elt, event, button)
+            if button == "RightButton" then
+                if item.itemLink and ABGP:CanFavoriteItems() then
+                    local faved = ABGP:IsItemFavorited(item.itemLink);
+                    local context = {
+                        {
+                            text = faved and "Remove favorite" or "Add favorite",
+                            func = function(self, data)
+                                ABGP:SetFavorited(item.itemLink, not faved);
+                                elt:SetData(data);
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        },
+                        { text = "Cancel", notCheckable = true },
+                    };
+                    ABGP:ShowContextMenu(context);
+                end
+            else
+                if not CloseStaticPopups(elt.data.itemLink) then
+                    ShowStaticPopup(elt.data.itemLink);
+                end
             end
         end);
 
@@ -171,10 +190,13 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     };
     table.insert(sortedItems, activeItems[itemLink]);
 
-    local msg = ("%s: %s is open for distribution!"):format(self:ColorizeText("ABGP"), itemLink);
-    _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, { r = 1, g = 1, b = 1 });
-    PlaySound(_G.SOUNDKIT.RAID_WARNING);
-    FlashClientIcon();
+    local rank = self:GetItemRank(itemLink);
+    if rank >= self.ItemRanks.NORMAL then
+        local msg = ("%s: %s is open for distribution!"):format(self:ColorizeText("ABGP"), itemLink);
+        _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, { r = 1, g = 1, b = 1 });
+        PlaySound(_G.SOUNDKIT.RAID_WARNING);
+        FlashClientIcon();
+    end
 
     local popup = GetStaticPopupType(itemLink);
     if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
@@ -196,8 +218,10 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     end
     self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
 
-    self:ShowItemRequests(true);
-    PopulateUI();
+    if rank >= self.ItemRanks.NORMAL then
+        self:ShowItemRequests(true);
+        PopulateUI();
+    end
 end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
@@ -277,7 +301,7 @@ end
 
 function ABGP:CreateRequestWindow()
     local window = AceGUI:Create("Window");
-    window:SetTitle(("%s Item Requests"):format(self:ColorizeText("ABGP")));
+    window:SetTitle(("%s Active Items"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "request", {
         version = 1,
@@ -377,7 +401,7 @@ function ABGP:RequestItem(itemLink, requestType, notes)
     end
 
     local faveInfo = "";
-    if ABGP:CanFavoriteItems() and not ABGP:IsFavorited(itemLink) then
+    if ABGP:CanFavoriteItems() and not ABGP:IsItemFavorited(itemLink) then
         faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
     end
 
@@ -418,6 +442,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     local elt = FindExistingElt(itemLink);
     if elt then
         SetEltText(elt);
+        elt:SetData(elt.data);
     end
 end
 

@@ -688,7 +688,7 @@ function ABGP:CreateDistribWindow()
     local multiple = AceGUI:Create("CheckBox");
     multiple:SetWidth(100);
     multiple:SetLabel("Multiple");
-    multiple:SetCallback("OnValueChanged", function(widget, value)
+    multiple:SetCallback("OnValueChanged", function(widget, event, value)
         local currentItem = window:GetUserData("currentItem");
         currentItem.multipleItems = value;
     end);
