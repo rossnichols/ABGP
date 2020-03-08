@@ -16,7 +16,11 @@ local UnitExists = UnitExists;
 local UnitIsFriend = UnitIsFriend;
 local UnitIsDead = UnitIsDead;
 local UnitGUID = UnitGUID;
+local GetServerTime = GetServerTime;
 local select = select;
+
+local bossKills = {};
+local lastBoss;
 
 local function ShouldDistributeLoot()
     return IsAltKeyDown() and ABGP:IsPrivileged();
@@ -81,7 +85,6 @@ function ABGP:AddItemHooks()
     self:RegisterModifiedItemClickFn(DistributeLoot);
 
     -- Create auto-announce frame
-    local lastAnnounced;
     local frame = CreateFrame("FRAME");
     frame:RegisterEvent("LOOT_OPENED");
     frame:SetScript("OnEvent", function(self, event, ...)
@@ -104,21 +107,30 @@ function ABGP:AddItemHooks()
         end
         if not announce then return; end
 
-        -- Check to see if the last announced target was this one.
-        local useTarget = UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target');
-        local targetGUID = useTarget and UnitGUID("target") or "<no target>";
-        if targetGUID == lastAnnounced then return; end
-        lastAnnounced = targetGUID;
+        -- Determine the source of the loot. Use current target if it seems appropriate,
+        -- otherwise use the last boss killed.
+        local source = lastBoss;
+        if UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target') then
+            source = UnitName("target");
+        end
 
-        -- Send messages for each item that meets announcement criteria.
-        SendAnnounceMessage(useTarget
-            and ("Items from %s:"):format(UnitName("target"))
-            or "Items from loot:");
-        for i = 1, GetNumLootItems() do
-            local item = loot[i];
-            if item and ItemShouldBeAutoAnnounced(item) then
-                SendAnnounceMessage(GetLootSlotLink(i));
+        -- Limit auto-announce to boss kills, and only announce once per boss.
+        if bossKills[source] and not bossKills[source].announced then
+            bossKills[source].announced = true;
+
+            -- Send messages for each item that meets announcement criteria.
+            SendAnnounceMessage(("Loot from %s:"):format(source));
+            for i = 1, GetNumLootItems() do
+                local item = loot[i];
+                if item and ItemShouldBeAutoAnnounced(item) then
+                    SendAnnounceMessage(GetLootSlotLink(i));
+                end
             end
         end
     end);
+end
+
+function ABGP:AnnounceOnBossKilled(id, name)
+    bossKills[name] = { time = GetServerTime(), announced = false };
+    lastBoss = name;
 end

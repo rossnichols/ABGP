@@ -453,6 +453,7 @@ f:RegisterEvent("GROUP_ROSTER_UPDATE");
 f:RegisterEvent("PLAYER_LEAVING_WORLD");
 f:RegisterEvent("LOADING_SCREEN_ENABLED");
 f:RegisterEvent("PLAYER_LOGOUT");
+f:RegisterEvent("BOSS_KILL");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:RebuildGuildInfo();
@@ -478,6 +479,8 @@ f:SetScript("OnEvent", function(self, event, ...)
         ABGP:DistribOnLoadingScreen();
     elseif event == "PLAYER_LOGOUT" then
         ABGP:DistribOnLogout();
+    elseif event == "BOSS_KILL" then
+        ABGP:AnnounceOnBossKilled(...);
     end
 end);
 
