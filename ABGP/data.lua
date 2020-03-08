@@ -220,7 +220,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         date = d,
     });
 
-    self:RefreshUI();
+    self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
 end
 
 

@@ -18,7 +18,7 @@ local filteredPriorities = {};
 local onlyUsable = false;
 local selectedPhase = ABGP.CurrentPhase;
 
-local function PopulateUI(rebuild)
+local function PopulateUI(rebuild, reason)
     if not activeWindow then return; end
     local container = activeWindow:GetUserData("container");
     if rebuild then
@@ -26,12 +26,13 @@ local function PopulateUI(rebuild)
     end
 
     local drawFunc = activeWindow:GetUserData("drawFunc");
-    drawFunc(container, rebuild);
+    drawFunc(container, rebuild, reason);
 end
 
-local function DrawPriority(container, rebuild)
-    local widths = { 35, 120, 110, 75, 75, 75 };
+local function DrawPriority(container, rebuild, reason)
+    if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
+    local widths = { 35, 120, 110, 75, 75, 75 };
     if rebuild then
         local classSelector = AceGUI:Create("ABGP_Filter");
         classSelector:SetWidth(110);
@@ -135,7 +136,9 @@ local function DrawPriority(container, rebuild)
     end
 end
 
-local function DrawItemHistory(container, rebuild)
+local function DrawItemHistory(container, rebuild, reason)
+    if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
+
     local widths = { 120, 70, 50, 1.0 };
     if rebuild then
         local mainLine = AceGUI:Create("SimpleGroup");
@@ -361,7 +364,9 @@ local function DrawItemHistory(container, rebuild)
     end
 end
 
-local function DrawItems(container, rebuild)
+local function DrawItems(container, rebuild, reason)
+    if not rebuild and reason then return; end
+
     local widths = { 225, 50, 50, 1.0 };
     if rebuild then
         local priSelector = AceGUI:Create("ABGP_Filter");
@@ -575,7 +580,9 @@ local function DrawItems(container, rebuild)
     end
 end
 
-local function DrawAuditLog(container, rebuild)
+local function DrawAuditLog(container, rebuild, reason)
+    if not rebuild and reason then return; end
+
     local widths = { 70, 60, 1.0 };
     if rebuild then
         local pagination = AceGUI:Create("ABGP_Paginator");
@@ -673,8 +680,12 @@ local function DrawAuditLog(container, rebuild)
     end
 end
 
-function ABGP:RefreshUI()
-    PopulateUI(false);
+ABGP.RefreshReasons = {
+    ACTIVE_PLAYERS_REFRESHED = "ACTIVE_PLAYERS_REFRESHED",
+    HISTORY_UPDATED = "HISTORY_UPDATED",
+};
+function ABGP:RefreshUI(reason)
+    PopulateUI(false, reason);
 end
 
 function ABGP:CreateMainWindow()

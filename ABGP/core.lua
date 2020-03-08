@@ -212,7 +212,7 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
-        self:RefreshUI();
+        self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
     end, self);
 
     -- Precreate frames to avoid issues generating them during combat.
