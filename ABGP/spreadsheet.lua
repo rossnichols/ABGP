@@ -287,12 +287,17 @@ local function DrawGP(container)
         ["promotion to raider"] = true,
         ["conversion to raider"] = true,
         ["week 9 decay"] = true,
+        ["trial end"] = true,
     };
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             row.gp = row.gp or 0;
             row.date = row.date or "";
             row.date = row.date:gsub("20(%d%d)", "%1");
+            local m, d, y = row.date:match("^(%d-)/(%d-)/(%d-)$");
+            if m ~= "" then
+                row.date = ("%02d/%02d/%02d"):format(m, d, y);
+            end
             return row.player and row.item and row.gp >= 0 and not banned[row.item:lower()] and ABGP:GetActivePlayer(row.player);
         end);
 

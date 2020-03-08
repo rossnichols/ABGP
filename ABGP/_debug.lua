@@ -74,7 +74,7 @@ function ABGP:FixupHistory()
                 for name, link in pairs(lookup) do
                     local lowered = entry.item:lower();
                     if lowered:find(name:lower(), 1, true) then
-                        print(("Updating [%s] to [%s]"):format(entry.item, name));
+                        -- print(("Updating [%s] to [%s]"):format(entry.item, name));
                         entry.item = name;
                         entry.itemLink = link;
                         break;

@@ -362,7 +362,7 @@ local function DrawItemHistory(container, rebuild)
 end
 
 local function DrawItems(container, rebuild)
-    local widths = { 200, 50, 50, 1.0 };
+    local widths = { 225, 50, 50, 1.0 };
     if rebuild then
         local priSelector = AceGUI:Create("ABGP_Filter");
         priSelector:SetWidth(125);
