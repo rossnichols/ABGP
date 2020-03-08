@@ -183,10 +183,8 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 		if not data.trial then
 			data.gp = data.gp + cost;
 			data.priority = data.ep * 10 / data.gp;
-			if self.Debug then
-				self:Notify("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-					value.phase, player, data.ep, data.gp, cost, data.priority);
-			end
+            self:Debug("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
+                value.phase, player, data.ep, data.gp, cost, data.priority);
             table.sort(self.Priorities[value.phase], PrioritySort);
 
             self:RefreshActivePlayers();

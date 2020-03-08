@@ -141,6 +141,12 @@ function ABGP:Notify(str, ...)
     GetSystemFrame():AddMessage(msg, 1, 1, 1);
 end
 
+function ABGP:Debug(str, ...)
+    if self.Debug then
+        self:Notify(str, ...);
+    end
+end
+
 function ABGP:LogVerbose(str, ...)
     if self.Verbose then
         self:Notify(str, ...);
@@ -235,6 +241,42 @@ for phase in pairs(ABGP.Phases) do
     ABGP.Priorities[phase] = {};
 end
 ABGP.CurrentPhase = ABGP.Phases.p3;
+
+ABGP.Bosses = {
+    [ABGP.Phases.p1] = {
+        [663] = "Lucifron",
+        [664] = "Magmadar",
+        [665] = "Gehennas",
+        [666] = "Garr",
+        [667] = "Shazzrah",
+        [668] = "Baron Geddon",
+        [669] = "Sulfuron Harbinger",
+        [670] = "Golemagg the Incinerator",
+        [671] = "Majordomo Executus",
+        [672] = "Ragnaros",
+        [1084] = "Onyxia",
+    },
+    [ABGP.Phases.p3] = {
+        [610] = "Razorgore the Untamed",
+        [611] = "Vaelastrasz the Corrupt",
+        [612] = "Broodlord Lashlayer",
+        [613] = "Firemaw",
+        [614] = "Ebonroc",
+        [615] = "Flamegor",
+        [616] = "Chromaggus",
+        [617] = "Nefarian",
+    },
+};
+
+ABGP.Instances = {
+    [ABGP.Phases.p1] = {
+        [409] = "Molten Core",
+        [249] = "Onyxia's Lair",
+    },
+    [ABGP.Phases.p3] = {
+        [469] = "Blackwing Lair",
+    },
+};
 
 
 --
@@ -480,7 +522,14 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif event == "PLAYER_LOGOUT" then
         ABGP:DistribOnLogout();
     elseif event == "BOSS_KILL" then
+        ABGP:EventOnBossKilled(...);
         ABGP:AnnounceOnBossKilled(...);
+    elseif event == "ZONE_CHANGED_NEW_AREA" then
+        -- Per DBM/MRT, GetInstanceInfo() can return stale data for a period of time
+        -- after this event is triggered. Workaround: wait 10 seconds. Amazing.
+        ABGP:ScheduleTimer(function()
+            ABGP:EventOnZoneChanged();
+        end, 10);
     end
 end);
 
