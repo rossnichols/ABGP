@@ -16,7 +16,6 @@ local activeWindow;
 local filteredClasses = {};
 local filteredPriorities = {};
 local onlyUsable = false;
-local selectedPhase = ABGP.CurrentPhase;
 
 local function PopulateUI(rebuild, reason)
     if not activeWindow then return; end
@@ -93,7 +92,7 @@ local function DrawPriority(container, rebuild, reason)
     local count = 0;
     local order = 0;
     local lastPriority = -1;
-    local priority = ABGP.Priorities[selectedPhase];
+    local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
         if not filteredClasses[data.class] then
             count = count + 1;
@@ -277,7 +276,7 @@ local function DrawItemHistory(container, rebuild, reason)
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
     container:GetUserData("reset"):SetDisabled(searchText == "");
-    local gpHistory = _G.ABGP_Data[selectedPhase].gpHistory;
+    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
     local filtered;
     if searchText == "" then
         filtered = gpHistory;
@@ -500,7 +499,7 @@ local function DrawItems(container, rebuild, reason)
     local itemList = container:GetUserData("itemList");
     itemList:ReleaseChildren();
     local count = 0;
-    local items = _G.ABGP_Data[selectedPhase].itemValues;
+    local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
     local filtered = {};
     local selector = container:GetUserData("priSelector");
     local search = container:GetUserData("search");
@@ -623,7 +622,7 @@ local function DrawAuditLog(container, rebuild, reason)
     local auditLog = container:GetUserData("auditLog");
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_ItemAuditLog[selectedPhase];
+    local entries = _G.ABGP_ItemAuditLog[ABGP.CurrentPhase];
     local pagination = container:GetUserData("pagination");
     pagination:SetValues(#entries, 100);
     if #entries > 0 then
@@ -722,9 +721,9 @@ function ABGP:CreateMainWindow()
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
     phaseSelector:SetList(phases, { ABGP.Phases.p1, ABGP.Phases.p3 });
-    phaseSelector:SetValue(selectedPhase);
+    phaseSelector:SetValue(ABGP.CurrentPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        selectedPhase = value;
+        ABGP.CurrentPhase = value;
 
         if activeWindow then
             local container = activeWindow:GetUserData("container");
