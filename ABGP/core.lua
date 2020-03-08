@@ -529,6 +529,7 @@ f:SetScript("OnEvent", function(self, event, ...)
         -- after this event is triggered. Workaround: wait 10 seconds. Amazing.
         ABGP:ScheduleTimer(function()
             ABGP:EventOnZoneChanged();
+            ABGP:AnnounceOnZoneChanged();
         end, 10);
     end
 end);

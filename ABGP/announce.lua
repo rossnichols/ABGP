@@ -115,7 +115,7 @@ function ABGP:AddItemHooks()
         end
 
         -- Limit auto-announce to boss kills, and only announce once per boss.
-        if bossKills[source] and not bossKills[source].announced then
+        if source and bossKills[source] and not bossKills[source].announced then
             bossKills[source].announced = true;
 
             -- Send messages for each item that meets announcement criteria.
@@ -133,4 +133,8 @@ end
 function ABGP:AnnounceOnBossKilled(id, name)
     bossKills[name] = { time = GetServerTime(), announced = false };
     lastBoss = name;
+end
+
+function ABGP:AnnounceOnZoneChanged()
+    lastBoss = nil;
 end
