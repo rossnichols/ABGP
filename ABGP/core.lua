@@ -33,123 +33,7 @@ _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
-    local AceConfig = _G.LibStub("AceConfig-3.0");
-    local addonText = "ABGP";
-    local version = self:GetVersion();
-    if self:ParseVersion(version) then
-        addonText = "ABGP-v" .. version;
-    end
-    local options = {
-        show = {
-            name = "Show",
-            desc = "shows the main window",
-            type = "execute",
-            func = function() ABGP:ShowMainWindow(); end
-        },
-        options = {
-            name = "Options",
-            desc = "opens the options window (alias: config/opt)",
-            type = "execute",
-            func = function() ABGP:ShowOptionsWindow(); end
-        },
-        loot = {
-            name = "Loot",
-            desc = "shows the item request window",
-            type = "execute",
-            func = function() ABGP:ShowItemRequests(); end
-        },
-        import = {
-            name = "Data Import",
-            desc = "shows the import window",
-            type = "execute",
-            cmdHidden = true,
-            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-            func = function() ABGP:ShowImportWindow(); end
-        },
-        versioncheck = {
-            name = "Version Check",
-            desc = "checks the raid for an outdated or missing addon versions (alias: vc)",
-            type = "execute",
-            cmdHidden = not ABGP:IsPrivileged(),
-            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-            func = function() ABGP:PerformVersionCheck(); end
-        },
-    };
-    options.opt = { hidden = true };
-    for k, v in pairs(options.options) do options.opt[k] = v; end
-    options.config = { hidden = true };
-    for k, v in pairs(options.options) do options.config[k] = v; end
-    options.vc = { hidden = true };
-    for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
-    options.vc.cmdHidden = nil;
-
-    AceConfig:RegisterOptionsTable(ABGP:ColorizeText(addonText), {
-        type = "group",
-        args = options,
-    }, { "abgp" });
-
-    local defaults = {
-        char = {
-            usePreferredPriority = false,
-            preferredPriorities = {},
-        }
-    };
-    self.db = _G.LibStub("AceDB-3.0"):New("ABGP_DB", defaults);
-
-    local guiOptions = {
-        show = {
-            name = "Show Window",
-            order = 1,
-            desc = "Show the main window",
-            type = "execute",
-            func = function()
-                _G.InterfaceOptionsFrame_Show(); -- it's really a toggle
-                ABGP:ShowMainWindow();
-            end
-        },
-        priorities = {
-            name = "Preferred Priorities",
-            order = 2,
-            desc = "If any priorites are chosen here, items not matching them will be deemphasized during distribution.",
-            type = "multiselect",
-            control = "Dropdown",
-            values = {
-                ["Druid (Heal)"] = "Druid (Heal)",
-                ["KAT4FITE"] = "KAT4FITE",
-                ["Hunter"] = "Hunter",
-                ["Mage"] = "Mage",
-                ["Paladin (Holy)"] = "Paladin (Holy)",
-                ["Paladin (Ret)"] = "Paladin (Ret)",
-                ["Priest (Heal)"] = "Priest (Heal)",
-                ["Priest (Shadow)"] = "Priest (Shadow)",
-                ["Rogue"] = "Rogue",
-                ["Slicey Rogue"] = "Slicey Rogue",
-                ["Stabby Rogue"] = "Stabby Rogue",
-                ["Warlock"] = "Warlock",
-                ["Tank"] = "Tank",
-                ["Metal Rogue"] = "Metal Rogue",
-                ["Progression"] = "Progression",
-                ["Garbage"] = "Garbage",
-            },
-            get = function(self, k) return ABGP.db.char.preferredPriorities[k]; end,
-            set = function(self, k, v)
-                ABGP.db.char.preferredPriorities[k] = v;
-                local usePriority = false;
-                for _, v in pairs(ABGP.db.char.preferredPriorities) do
-                    if v then usePriority = true; end
-                end
-                ABGP.db.char.usePreferredPriority = usePriority;
-            end,
-            cmdHidden = true,
-        },
-    };
-    AceConfig:RegisterOptionsTable("ABGP", {
-        name = ABGP:ColorizeText(addonText) .. " Options",
-        type = "group",
-        args = guiOptions,
-    });
-    self.OptionsFrame = _G.LibStub("AceConfigDialog-3.0"):AddToBlizOptions("ABGP");
-
+    self:InitOptions();
     self:HookTooltips();
     self:AddItemHooks();
     self:CheckHardcodedData();
@@ -229,14 +113,10 @@ function ABGP:OnInitialize()
     end
 end
 
-function ABGP:ShowOptionsWindow()
-    _G.InterfaceOptionsFrame_Show();
-    _G.InterfaceOptionsFrame_OpenToCategory(self.OptionsFrame);
-end
 
-function ABGP:Get(k)
-    return self.db.char[k];
-end
+--
+-- Helpers for chat messages and colorization
+--
 
 local function GetSystemFrame()
     for i = 1, _G.NUM_CHAT_WINDOWS do
@@ -297,7 +177,7 @@ end
 
 
 --
--- Checks for privilege to access certain features locked to guild officers.
+-- Helpers for privilege checks
 --
 
 function ABGP:IsPrivileged()
@@ -309,6 +189,11 @@ end
 function ABGP:CanEditOfficerNotes()
     return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
 end
+
+
+--
+-- Helpers for querying guild information
+--
 
 local guildInfo = {};
 
@@ -338,7 +223,7 @@ end
 
 
 --
--- Content phase tracking support
+-- Helpers for content phases
 --
 
 ABGP.Phases = {
@@ -353,7 +238,7 @@ ABGP.CurrentPhase = ABGP.Phases.p3;
 
 
 --
--- Converts the item value arrays to a table with name-based lookup.
+-- Helpers for item queries
 --
 
 local itemValues = {};
@@ -450,6 +335,11 @@ function ABGP:GetItemRank(itemLink)
     return rank;
 end
 
+
+--
+-- Helpers for item requests
+--
+
 ABGP.RequestTypes = {
     MS_OS = "MS_OS",
     ROLL = "ROLL",
@@ -459,8 +349,7 @@ ABGP.RequestTypes = {
 
 
 --
--- An "active player" is one with an assigned priority value on the ABP spreadsheet.
--- Importing EP/GP history is scoped to just active players to cut down on useless data.
+-- Helpers for active player tracking
 --
 
 local activePlayers = {};
@@ -490,10 +379,7 @@ end
 
 
 --
--- Override of HandleModifiedItemClick. This seems to be the easiest way to extend
--- [mod]+clicking on items in a way that works across different AddOns and doesn't
--- get in the way when trying to do something else with the action (e.g. insert
--- link into chat, view model, etc.).
+-- Hook for HandleModifiedItemClick to detect [mod]-clicks on items
 --
 
 local hmicFns = {};

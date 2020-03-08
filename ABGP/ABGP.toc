@@ -18,6 +18,7 @@ widgets.lua
 version.lua
 data.lua
 ui.lua
+options.lua
 
 bindings.xml
 internal.xml
