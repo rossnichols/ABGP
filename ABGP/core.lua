@@ -300,7 +300,9 @@ function ABGP:RefreshItemValues()
             };
 
             -- Try to ensure info about the item is cached locally.
-            self:IsItemUsable(item[3]);
+            if item[3] then
+                self:IsItemUsable(item[3]);
+            end
         end
     end
 end
