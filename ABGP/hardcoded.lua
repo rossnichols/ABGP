@@ -4,7 +4,7 @@ local ABGP = ABGP;
 local date = date;
 
 _G.ABGP_Data = {};
-_G.ABGP_DATA[ABGP.Phases.p1] = {
+_G.ABGP_Data[ABGP.Phases.p1] = {
 	["gpHistory"] = {
 		{
 			["player"] = "Saccrilege",
@@ -5074,7 +5074,7 @@ _G.ABGP_DATA[ABGP.Phases.p1] = {
 		}, -- [167]
 	},
 };
-_G.ABGP_DATA[ABGP.Phases.p3] = {
+_G.ABGP_Data[ABGP.Phases.p3] = {
 	["gpHistory"] = {
 		{
 			["player"] = "Oya",
