@@ -5200,7 +5200,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Netherwind Boots",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
-			["gp"] = 50,
+			["gp"] = 0,
 		}, -- [18]
 		{
 			["player"] = "Jezail",
@@ -5270,7 +5270,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
-			["gp"] = 200,
+			["gp"] = 0,
 		}, -- [28]
 		{
 			["player"] = "Azuj",
@@ -5319,7 +5319,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Dragon's Touch",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
-			["gp"] = 30,
+			["gp"] = 0,
 		}, -- [35]
 		{
 			["player"] = "Yoink",
@@ -5368,14 +5368,14 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Nemesis Boots",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
-			["gp"] = 100,
+			["gp"] = 0,
 		}, -- [42]
 		{
 			["player"] = "Friend",
 			["item"] = "Nemesis Boots",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
-			["gp"] = 100,
+			["gp"] = 0,
 		}, -- [43]
 		{
 			["player"] = "Coop",
@@ -5459,14 +5459,14 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Nemesis Robes",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
-			["gp"] = 175,
+			["gp"] = 0,
 		}, -- [55]
 		{
 			["player"] = "Xanido",
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
-			["gp"] = 200,
+			["gp"] = 0,
 		}, -- [56]
 		{
 			["player"] = "Jezail",
@@ -5613,7 +5613,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
-			["gp"] = 200,
+			["gp"] = 0,
 		}, -- [77]
 		{
 			["player"] = "Lago",
@@ -5676,7 +5676,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Ebony Flame Gloves",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
-			["gp"] = 150,
+			["gp"] = 200,
 		}, -- [86]
 		{
 			["player"] = "Coop",
@@ -5697,7 +5697,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["item"] = "Firemaw's Clutch",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
-			["gp"] = 100,
+			["gp"] = 200,
 		}, -- [89]
 		{
 			["player"] = "Friend",
@@ -5808,7 +5808,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [6]
 		{
 			"Band of Dark Dominion", -- [1]
-			150, -- [2]
+			200, -- [2]
 			"|cffa335ee|Hitem:19434|h[Band of Dark Dominion]|h|r", -- [3]
 			["priority"] = {
 				"Priest (Shadow)", -- [1]
@@ -6028,7 +6028,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [31]
 		{
 			"Cloak of the Brood Lord", -- [1]
-			200, -- [2]
+			0, -- [2]
 			"|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r", -- [3]
 			["priority"] = {
 				"Mage", -- [1]
@@ -6071,12 +6071,10 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [36]
 		{
 			"Dragon's Touch", -- [1]
-			30, -- [2]
+			0, -- [2]
 			"|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r", -- [3]
 			["priority"] = {
-				"Mage", -- [1]
-				"Priest (Shadow)", -- [2]
-				"Warlock", -- [3]
+				"Garbage", -- [1]
 			},
 		}, -- [37]
 		{
@@ -6093,12 +6091,12 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonfang Blade", -- [1]
 			70, -- [2]
 			"|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r", -- [3]
-			["notes"] = "Catch up Priority",
 			["priority"] = {
 				"Hunter", -- [1]
 				"Stabby Rogue", -- [2]
 				"Tank", -- [3]
 			},
+			["notes"] = "Catch up Priority",
 		}, -- [39]
 		{
 			"Dragonstalker's Belt", -- [1]
@@ -6152,13 +6150,13 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Drake Fang Talisman", -- [1]
 			400, -- [2]
 			"|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r", -- [3]
-			["notes"] = "Feral Druid prio unlocks after 4 drops",
 			["priority"] = {
 				"KAT4FITE", -- [1]
 				"Metal Rogue", -- [2]
 				"Slicey Rogue", -- [3]
 				"Stabby Rogue", -- [4]
 			},
+			["notes"] = "Feral Druid prio unlocks after 4 drops",
 		}, -- [46]
 		{
 			"Drake Talon Cleaver", -- [1]
@@ -6179,7 +6177,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [48]
 		{
 			"Ebony Flame Gloves", -- [1]
-			150, -- [2]
+			200, -- [2]
 			"|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r", -- [3]
 			["priority"] = {
 				"Priest (Shadow)", -- [1]
@@ -6230,13 +6228,13 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [54]
 		{
 			"Firemaw's Clutch", -- [1]
-			100, -- [2]
+			200, -- [2]
 			"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r", -- [3]
+			["notes"] = "Shadow Priest Super Priority",
 			["priority"] = {
 				"Mage", -- [1]
 				"Priest (Shadow)", -- [2]
 			},
-			["notes"] = "Shadow Priest Super Priority",
 		}, -- [55]
 		{
 			"Gauntlets of Wrath", -- [1]
@@ -6274,6 +6272,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Head of Nefarian", -- [1]
 			150, -- [2]
 			"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r", -- [3]
+			["notes"] = "Casters with a BWL 1h also eligible",
 			["priority"] = {
 				"Hunter", -- [1]
 				"KAT4FITE", -- [2]
@@ -6282,7 +6281,6 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [5]
 				"Tank", -- [6]
 			},
-			["notes"] = "Casters with a BWL 1h also eligible",
 		}, -- [60]
 		{
 			"Heartstriker", -- [1]
@@ -6397,31 +6395,32 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Maladath, Runed Blade of the Black Flight", -- [1]
 			200, -- [2]
 			"|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r", -- [3]
-			["notes"] = "Non-Human Rogues also",
 			["priority"] = {
 				"Metal Rogue", -- [1]
 				"Tank", -- [2]
 			},
+			["notes"] = "Non-Human Rogues also",
 		}, -- [74]
 		{
 			"Malfurion's Blessed Bulwark", -- [1]
 			150, -- [2]
 			"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r", -- [3]
+			["notes"] = "Feral Druid Super Priority",
 			["priority"] = {
 				"KAT4FITE", -- [1]
 				"Metal Rogue", -- [2]
 			},
-			["notes"] = "Feral Druid Super Priority",
 		}, -- [75]
 		{
 			"Mantle of the Blackwing Cabal", -- [1]
 			200, -- [2]
 			"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r", -- [3]
+			["notes"] = "Shadow Priest Super Priority",
 			["priority"] = {
 				"Mage", -- [1]
 				"Priest (Shadow)", -- [2]
+				"Warlock", -- [3]
 			},
-			["notes"] = "Shadow Priest Super Priority",
 		}, -- [76]
 		{
 			"Mind Quickening Gem", -- [1]
@@ -6445,11 +6444,11 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Neltharion's Tear", -- [1]
 			400, -- [2]
 			"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r", -- [3]
+			["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
 			["priority"] = {
 				"Mage", -- [1]
 				"Warlock", -- [2]
 			},
-			["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
 		}, -- [79]
 		{
 			"Nemesis Belt", -- [1]
@@ -6461,7 +6460,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [80]
 		{
 			"Nemesis Boots", -- [1]
-			100, -- [2]
+			0, -- [2]
 			"|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r", -- [3]
 			["priority"] = {
 				"Warlock", -- [1]
@@ -6485,7 +6484,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [83]
 		{
 			"Nemesis Robes", -- [1]
-			175, -- [2]
+			0, -- [2]
 			"|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r", -- [3]
 			["priority"] = {
 				"Warlock", -- [1]
@@ -6517,7 +6516,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [87]
 		{
 			"Netherwind Boots", -- [1]
-			50, -- [2]
+			0, -- [2]
 			"|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r", -- [3]
 			["priority"] = {
 				"Mage", -- [1]
@@ -6541,7 +6540,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		}, -- [90]
 		{
 			"Netherwind Robes", -- [1]
-			175, -- [2]
+			0, -- [2]
 			"|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r", -- [3]
 			["priority"] = {
 				"Mage", -- [1]
@@ -6683,12 +6682,12 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Shadow Wing Focus Staff", -- [1]
 			70, -- [2]
 			"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r", -- [3]
-			["notes"] = "Catch up Priority",
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 				"Mage", -- [2]
 				"Warlock", -- [3]
 			},
+			["notes"] = "Catch up Priority",
 		}, -- [107]
 		{
 			"Shimmering Geta", -- [1]
@@ -6714,13 +6713,13 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Spineshatter", -- [1]
 			70, -- [2]
 			"|cffa335ee|Hitem:19335|h[Spineshatter]|h|r", -- [3]
-			["notes"] = "Catch up Priority",
 			["priority"] = {
 				"Metal Rogue", -- [1]
 				"Slicey Rogue", -- [2]
 				"Stabby Rogue", -- [3]
 				"Tank", -- [4]
 			},
+			["notes"] = "Catch up Priority",
 		}, -- [110]
 		{
 			"Staff of the Shadow Flame", -- [1]
@@ -6860,7 +6859,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1583640491, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1583861057, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
