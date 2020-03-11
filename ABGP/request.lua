@@ -56,11 +56,11 @@ local function CloseStaticPopups(itemLink)
     return found;
 end
 
-local function ShowStaticPopup(itemLink, which)
+local function ShowStaticPopup(itemLink, value, which)
     which = which or GetStaticPopupType(itemLink);
     CloseStaticPopups(itemLink);
     if which then
-        local dialog = _G.StaticPopup_Show(which, itemLink, nil, { itemLink = itemLink });
+        local dialog = _G.StaticPopup_Show(which, itemLink, value and value.gp or 0, { itemLink = itemLink });
         if not dialog then
             ABGP:Error("Unable to open window for %s! Try closing other open ones.", itemLink);
         end
@@ -123,7 +123,7 @@ local function PopulateUI()
                 end
             else
                 if not CloseStaticPopups(elt.data.itemLink) then
-                    ShowStaticPopup(elt.data.itemLink);
+                    ShowStaticPopup(elt.data.itemLink, elt.data.value);
                 end
             end
         end);
@@ -186,7 +186,8 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     activeItems[itemLink] = {
         itemLink = itemLink,
         sender = sender,
-        requestType = data.requestType
+        requestType = data.requestType,
+        value = data.value,
     };
     table.insert(sortedItems, activeItems[itemLink]);
 
@@ -200,10 +201,10 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
 
     local popup = GetStaticPopupType(itemLink);
     if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
-        ShowStaticPopup(itemLink, popup);
+        ShowStaticPopup(itemLink, data.value, popup);
     end
 
-    local gpCost, priority, notes = "No GP cost", "", "";
+    local gpCost, priority, notes = "No GP cost (rolled)", "", "";
     local value = data.value;
     if value then
         if value.gp ~= 0 then
@@ -454,7 +455,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
-    text = "%s is being distributed! You may request it and provide an optional note.",
+    text = "%s is being distributed for %d GP! You may request it and provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",
