@@ -220,6 +220,8 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
 
     if rank >= self.ItemRanks.NORMAL then
         self:ShowItemRequests(true);
+    end
+    if activeWindow then
         PopulateUI();
     end
 end
