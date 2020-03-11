@@ -16,6 +16,7 @@ local activeWindow;
 local filteredClasses = {};
 local filteredPriorities = {};
 local onlyUsable = false;
+local onlyFaved = false;
 
 local function PopulateUI(rebuild, reason)
     if not activeWindow then return; end
@@ -413,7 +414,7 @@ local function DrawItems(container, rebuild, reason)
         container:SetUserData("priSelector", priSelector);
 
         local search = AceGUI:Create("EditBox");
-        search:SetWidth(125);
+        search:SetWidth(120);
         search:SetCallback("OnEnterPressed", function(widget)
             AceGUI:ClearFocus();
             PopulateUI(false);
@@ -448,14 +449,26 @@ local function DrawItems(container, rebuild, reason)
         container:SetUserData("reset", reset);
 
         local usable = AceGUI:Create("CheckBox");
-        usable:SetWidth(100);
-        usable:SetLabel("Only Usable");
+        usable:SetWidth(80);
+        usable:SetLabel("Usable");
         usable:SetValue(onlyUsable);
         usable:SetCallback("OnValueChanged", function(widget, event, value)
             onlyUsable = value;
             PopulateUI(false);
         end);
         container:AddChild(usable);
+
+        if ABGP:CanFavoriteItems() then
+            local faved = AceGUI:Create("CheckBox");
+            faved:SetWidth(80);
+            faved:SetLabel("Faved");
+            faved:SetValue(onlyFaved);
+            faved:SetCallback("OnValueChanged", function(widget, event, value)
+                onlyFaved = value;
+                PopulateUI(false);
+            end);
+            container:AddChild(faved);
+        end
 
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
@@ -507,20 +520,22 @@ local function DrawItems(container, rebuild, reason)
     container:GetUserData("reset"):SetDisabled(searchText == "");
 
 
-    if selector:ShowingAll() and not onlyUsable and searchText == "" then
+    if selector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
         filtered = items;
     else
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
             if not onlyUsable or ABGP:IsItemUsable(item[3]) then
-                if (searchText == "") or
-                   (exact and item[1]:lower() == exact) or
-                   (not exact and item[1]:lower():find(searchText, 1, true)) then
-                    for _, pri in ipairs(item.priority) do
-                        if not filteredPriorities[pri] then
-                            table.insert(filtered, item);
-                            break;
+                if not onlyFaved or ABGP:IsItemFavorited(item[3]) then
+                    if (searchText == "") or
+                    (exact and item[1]:lower() == exact) or
+                    (not exact and item[1]:lower():find(searchText, 1, true)) then
+                        for _, pri in ipairs(item.priority) do
+                            if not filteredPriorities[pri] then
+                                table.insert(filtered, item);
+                                break;
+                            end
                         end
                     end
                 end
