@@ -6,6 +6,7 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local UnitExists = UnitExists;
 local UnitClass = UnitClass;
 local UnitGUID = UnitGUID;
+local UnitName = UnitName;
 local GetClassColor = GetClassColor;
 local GuildRoster = GuildRoster;
 local GetChatWindowInfo = GetChatWindowInfo;
@@ -309,6 +310,20 @@ function ABGP:RefreshItemValues()
     end
 end
 
+function ABGP:HasReceivedItem(itemName)
+    local player = UnitName("player");
+    local value = self:GetItemValue(itemName);
+    if not value then return false; end
+
+    for _, item in ipairs(_G.ABGP_Data[value.phase].gpHistory) do
+        if item.item == itemName and item.player == player then
+            return true;
+        end
+    end
+
+    return false;
+end
+
 function ABGP:GetItemValue(itemName)
     if not itemName then return; end
     return itemValues[itemName];
@@ -358,9 +373,10 @@ ABGP.ItemRanks = {
 function ABGP:GetItemRank(itemLink)
     local rank = self.ItemRanks.NORMAL;
     if itemLink then
+        local itemName = self:GetItemName(itemLink);
         if ABGP:IsItemFavorited(itemLink) then
             rank = self.ItemRanks.HIGH;
-        elseif not ABGP:IsItemUsable(itemLink) then
+        elseif ABGP:HasReceivedItem(itemName) or not ABGP:IsItemUsable(itemLink) then
             rank = self.ItemRanks.LOW;
         elseif self:Get("usePreferredPriority") then
             local name = self:GetItemName(itemLink);
@@ -623,7 +639,7 @@ function ABGP:IsItemFavorited(itemLink)
     return false;
 end
 
-function ABGP:SetFavorited(itemLink, favorited)
+function ABGP:SetItemFavorited(itemLink, favorited)
     local faves = AtlasLootFaves();
     if faves then
         local itemId = self:GetItemId(itemLink);

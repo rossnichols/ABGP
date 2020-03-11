@@ -349,7 +349,7 @@ local function DrawItemHistory(container, rebuild, reason)
                         table.insert(context, 1, {
                             text = faved and "Remove item favorite" or "Add item favorite",
                             func = function(self, data)
-                                ABGP:SetFavorited(data.itemLink, not faved);
+                                ABGP:SetItemFavorited(data.itemLink, not faved);
                             end,
                             arg1 = elt.data,
                             notCheckable = true
@@ -564,7 +564,7 @@ local function DrawItems(container, rebuild, reason)
                         table.insert(context, 1, {
                             text = faved and "Remove favorite" or "Add favorite",
                             func = function(self, data)
-                                ABGP:SetFavorited(data[3], not faved);
+                                ABGP:SetItemFavorited(data[3], not faved);
                                 elt:SetData(data);
                             end,
                             arg1 = elt.data,

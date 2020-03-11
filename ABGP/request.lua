@@ -111,7 +111,7 @@ local function PopulateUI()
                         {
                             text = faved and "Remove favorite" or "Add favorite",
                             func = function(self, data)
-                                ABGP:SetFavorited(item.itemLink, not faved);
+                                ABGP:SetItemFavorited(item.itemLink, not faved);
                                 elt:SetData(data);
                             end,
                             arg1 = elt.data,
@@ -274,7 +274,12 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
         requestType = requestTypes[data.requestType]:format(override);
     end
     if player == UnitName("player") then
-        self:Notify("%s%s was awarded to you for %d GP%s!", itemLink, multiple, cost, requestType);
+        local unfaved = "";
+        if self:IsItemFavorited(itemLink) then
+            self:SetItemFavorited(itemLink, false);
+            unfaved = " Removed it from your AtlasLoot favorites.";
+        end
+        self:Notify("%s%s was awarded to you for %d GP%s!%s", itemLink, multiple, cost, requestType, unfaved);
     else
         local roll = "";
         if data.roll then
@@ -434,7 +439,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     local faveRemove = "";
     if removeFromFaves then
         faveRemove = " and removing from AtlasLoot favorites";
-        ABGP:SetFavorited(itemLink, false);
+        ABGP:SetItemFavorited(itemLink, false);
     end
 
     self:Notify("Passing on %s%s.", itemLink, faveRemove);
