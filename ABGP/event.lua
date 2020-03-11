@@ -25,10 +25,10 @@ local function FindBoss(bossId)
 end
 
 function ABGP:EventOnBossKilled(bossId, name)
-    self:Debug("%s defeated!", name);
+    self:LogDebug("%s defeated!", name);
     local phase = FindBoss(bossId);
     if phase then
-        self:Debug("This boss is associated with phase %s (%d => %s)",
+        self:LogDebug("This boss is associated with phase %s (%d => %s)",
             phase, bossId, self.Bosses[phase][bossId]);
     end
 end
@@ -37,7 +37,7 @@ function ABGP:EventOnZoneChanged()
     local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
     local phase = FindInstance(instanceId);
     if phase then
-        self:Debug("This instance is associated with phase %s (%d => %s)",
+        self:LogDebug("This instance is associated with phase %s (%d => %s)",
             phase, instanceId, self.Instances[phase][instanceId]);
         self.CurrentPhase = phase;
     end

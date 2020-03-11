@@ -39,6 +39,8 @@ function ABGP:OnInitialize()
     self:CheckHardcodedData();
     self:RefreshItemValues();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
+    self:EventOnZoneChanged();
+    self:AnnounceOnZoneChanged();
 
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
@@ -141,7 +143,7 @@ function ABGP:Notify(str, ...)
     GetSystemFrame():AddMessage(msg, 1, 1, 1);
 end
 
-function ABGP:Debug(str, ...)
+function ABGP:LogDebug(str, ...)
     if self.Debug then
         self:Notify(str, ...);
     end

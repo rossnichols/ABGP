@@ -10,8 +10,8 @@ ABGP.Debug = true;
 -- ABGP.Verbose = true;
 -- ABGP.PrivateComms = true;
 ABGP.IgnoreSelfDistributed = true;
-ABGP.VersionDebug = "3.3.0";
-ABGP.VersionCmpDebug = "3.3.0";
+ABGP.VersionDebug = "3.4.0";
+ABGP.VersionCmpDebug = "3.4.0";
 
 
 local lookup = {};
