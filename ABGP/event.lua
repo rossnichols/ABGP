@@ -35,6 +35,7 @@ end
 
 function ABGP:EventOnZoneChanged()
     local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
+    self:LogDebug("Zone changed to %s!", name);
     local phase = FindInstance(instanceId);
     if phase then
         self:LogDebug("This instance is associated with phase %s (%d => %s)",

@@ -40,8 +40,6 @@ function ABGP:OnInitialize()
     self:CheckHardcodedData();
     self:RefreshItemValues();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
-    self:EventOnZoneChanged();
-    self:AnnounceOnZoneChanged();
 
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
@@ -516,6 +514,7 @@ f:RegisterEvent("PLAYER_LEAVING_WORLD");
 f:RegisterEvent("LOADING_SCREEN_ENABLED");
 f:RegisterEvent("PLAYER_LOGOUT");
 f:RegisterEvent("BOSS_KILL");
+f:RegisterEvent("LOADING_SCREEN_DISABLED");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:RebuildGuildInfo();
@@ -544,13 +543,13 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif event == "BOSS_KILL" then
         ABGP:EventOnBossKilled(...);
         ABGP:AnnounceOnBossKilled(...);
-    elseif event == "ZONE_CHANGED_NEW_AREA" then
+    elseif event == "LOADING_SCREEN_DISABLED" then
         -- Per DBM/MRT, GetInstanceInfo() can return stale data for a period of time
         -- after this event is triggered. Workaround: wait 10 seconds. Amazing.
         ABGP:ScheduleTimer(function()
             ABGP:EventOnZoneChanged();
             ABGP:AnnounceOnZoneChanged();
-        end, 10);
+        end, 5);
     end
 end);
 
