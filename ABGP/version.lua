@@ -96,7 +96,11 @@ function ABGP:OnVersionRequest(data, distribution, sender)
         announcedVersion = nil;
     end
 
-    self:SendComm(self.CommTypes.VERSION_RESPONSE, {}, distribution);
+    -- Unless data.reset is set, only respond if we have a newer version.
+    -- data.reset indicates it's coming from a version check.
+    if data.reset or VersionIsNewer(self:GetCompareVersion(), data.version) then
+        self:SendComm(self.CommTypes.VERSION_RESPONSE, {}, distribution);
+    end
     CompareVersion(data.version, sender);
 end
 
