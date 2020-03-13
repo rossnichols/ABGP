@@ -544,12 +544,16 @@ f:SetScript("OnEvent", function(self, event, ...)
         ABGP:EventOnBossKilled(...);
         ABGP:AnnounceOnBossKilled(...);
     elseif event == "LOADING_SCREEN_DISABLED" then
-        -- Per DBM/MRT, GetInstanceInfo() can return stale data for a period of time
-        -- after this event is triggered. Workaround: wait 10 seconds. Amazing.
-        ABGP:ScheduleTimer(function()
+        -- Per DBM, GetInstanceInfo() can return stale data for a period of time
+        -- after this event is triggered. Workaround: wait a short period of time. Amazing.
+        -- Schedule two timers so we opportunistically process it quicker, with the
+        -- second one to ensure we end up in the right final state.
+        local onZoneChanged = function()
             ABGP:EventOnZoneChanged();
             ABGP:AnnounceOnZoneChanged();
-        end, 5);
+        end
+        ABGP:ScheduleTimer(onZoneChanged, 1);
+        ABGP:ScheduleTimer(onZoneChanged, 5);
     end
 end);
 
