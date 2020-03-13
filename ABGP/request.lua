@@ -217,14 +217,18 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
             notes = (". Notes: %s"):format(value.notes);
         end
     end
-    self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
 
+    local prompt = "";
     if rank >= self.ItemRanks.NORMAL then
         self:ShowItemRequests(true);
     end
     if activeWindow then
         PopulateUI();
+    else
+        local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "<unbound>";
+        prompt = ("Type '/abgp loot' or press your hotkey (%s) to open the request window."):format(keybinding);
     end
+    self:Notify("Item distribution opened for %s! %s%s%s. %s", itemLink, gpCost, priority, notes, prompt);
 end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
