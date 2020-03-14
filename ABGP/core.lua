@@ -19,6 +19,7 @@ local IsInGroup = IsInGroup;
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
 local Ambiguate = Ambiguate;
+local GetInstanceInfo = GetInstanceInfo;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -503,6 +504,7 @@ end
 local rollRegex = RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
 rollRegex = rollRegex:gsub("%%s", "(%%S+)");
 rollRegex = rollRegex:gsub("%%d", "(%%d+)");
+local lastZone;
 
 local f = CreateFrame("Frame");
 f:RegisterEvent("GUILD_ROSTER_UPDATE");
@@ -549,8 +551,12 @@ f:SetScript("OnEvent", function(self, event, ...)
         -- Schedule two timers so we opportunistically process it quicker, with the
         -- second one to ensure we end up in the right final state.
         local onZoneChanged = function()
-            ABGP:EventOnZoneChanged();
-            ABGP:AnnounceOnZoneChanged();
+            local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
+            if name and name ~= lastZone then
+                lastZone = name;
+                ABGP:EventOnZoneChanged(name, instanceId);
+                ABGP:AnnounceOnZoneChanged(name, instanceId);
+            end
         end
         ABGP:ScheduleTimer(onZoneChanged, 1);
         ABGP:ScheduleTimer(onZoneChanged, 5);

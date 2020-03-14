@@ -1,7 +1,6 @@
 local _G = _G;
 local ABGP = ABGP;
 
-local GetInstanceInfo = GetInstanceInfo;
 local pairs = pairs;
 
 local function FindInstance(instanceId)
@@ -33,8 +32,7 @@ function ABGP:EventOnBossKilled(bossId, name)
     end
 end
 
-function ABGP:EventOnZoneChanged()
-    local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
+function ABGP:EventOnZoneChanged(name, instanceId)
     self:LogDebug("Zone changed to %s!", name);
     local phase = FindInstance(instanceId);
     if phase then
