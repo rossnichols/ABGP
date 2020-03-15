@@ -244,42 +244,6 @@ for phase in pairs(ABGP.Phases) do
 end
 ABGP.CurrentPhase = ABGP.Phases.p3;
 
-ABGP.Bosses = {
-    [ABGP.Phases.p1] = {
-        [663] = "Lucifron",
-        [664] = "Magmadar",
-        [665] = "Gehennas",
-        [666] = "Garr",
-        [667] = "Shazzrah",
-        [668] = "Baron Geddon",
-        [669] = "Sulfuron Harbinger",
-        [670] = "Golemagg the Incinerator",
-        [671] = "Majordomo Executus",
-        [672] = "Ragnaros",
-        [1084] = "Onyxia",
-    },
-    [ABGP.Phases.p3] = {
-        [610] = "Razorgore the Untamed",
-        [611] = "Vaelastrasz the Corrupt",
-        [612] = "Broodlord Lashlayer",
-        [613] = "Firemaw",
-        [614] = "Ebonroc",
-        [615] = "Flamegor",
-        [616] = "Chromaggus",
-        [617] = "Nefarian",
-    },
-};
-
-ABGP.Instances = {
-    [ABGP.Phases.p1] = {
-        [409] = "Molten Core",
-        [249] = "Onyxia's Lair",
-    },
-    [ABGP.Phases.p3] = {
-        [469] = "Blackwing Lair",
-    },
-};
-
 
 --
 -- Helpers for item queries
