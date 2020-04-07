@@ -107,18 +107,27 @@ local function PopulateUI()
             if button == "RightButton" then
                 if item.itemLink and ABGP:CanFavoriteItems() then
                     local faved = ABGP:IsItemFavorited(item.itemLink);
-                    local context = {
-                        {
-                            text = faved and "Remove favorite" or "Add favorite",
+                    local context = {};
+                    table.insert(context, {
+                        text = faved and "Remove favorite" or "Add favorite",
+                        func = function(self, data)
+                            ABGP:SetItemFavorited(item.itemLink, not faved);
+                            elt:SetData(data);
+                        end,
+                        arg1 = elt.data,
+                        notCheckable = true
+                    });
+                    if elt.data.value then
+                        table.insert(context, {
+                            text = "Show item history",
                             func = function(self, data)
-                                ABGP:SetItemFavorited(item.itemLink, not faved);
-                                elt:SetData(data);
+                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemHistory, args = ABGP:GetItemName(data.itemLink), phase = data.value.phase })
                             end,
                             arg1 = elt.data,
                             notCheckable = true
-                        },
-                        { text = "Cancel", notCheckable = true },
-                    };
+                        });
+                    end
+                    table.insert(context, { text = "Cancel", notCheckable = true });
                     ABGP:ShowContextMenu(context);
                 end
             else

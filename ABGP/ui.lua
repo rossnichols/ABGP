@@ -18,7 +18,11 @@ local filteredPriorities = {};
 local onlyUsable = false;
 local onlyFaved = false;
 
-local function PopulateUI(rebuild, reason)
+ABGP.UICommands = {
+    ShowItemHistory = "ShowItemHistory",
+};
+
+local function PopulateUI(rebuild, reason, command)
     if not activeWindow then return; end
     local container = activeWindow:GetUserData("container");
     if rebuild then
@@ -26,7 +30,7 @@ local function PopulateUI(rebuild, reason)
     end
 
     local drawFunc = activeWindow:GetUserData("drawFunc");
-    drawFunc(container, rebuild, reason);
+    drawFunc(container, rebuild, reason, command);
 end
 
 local function DrawPriority(container, rebuild, reason)
@@ -136,7 +140,7 @@ local function DrawPriority(container, rebuild, reason)
     end
 end
 
-local function DrawItemHistory(container, rebuild, reason)
+local function DrawItemHistory(container, rebuild, reason, command)
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
     local widths = { 120, 70, 50, 1.0 };
@@ -268,6 +272,12 @@ local function DrawItemHistory(container, rebuild, reason)
         scroll:SetLayout("List");
         scrollContainer:AddChild(scroll);
         container:SetUserData("itemHistory", scroll);
+    end
+
+    if command then
+        if command.command == ABGP.UICommands.ShowItemHistory then
+            container:GetUserData("search"):SetText(command.args);
+        end
     end
 
     local history = container:GetUserData("itemHistory");
@@ -702,14 +712,14 @@ function ABGP:RefreshUI(reason)
     PopulateUI(false, reason);
 end
 
-function ABGP:CreateMainWindow()
+function ABGP:CreateMainWindow(command)
     local window = AceGUI:Create("Window");
     window:SetTitle(self:ColorizeText("ABGP"));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
         version = 1,
         defaultWidth = 600,
-        minWidth = 600,
+        minWidth = 625,
         maxWidth = 750,
         defaultHeight = 500,
         minHeight = 300,
@@ -736,7 +746,6 @@ function ABGP:CreateMainWindow()
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
     phaseSelector:SetList(phases, { ABGP.Phases.p1, ABGP.Phases.p3 });
-    phaseSelector:SetValue(ABGP.CurrentPhase);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
         ABGP.CurrentPhase = value;
 
@@ -750,6 +759,11 @@ function ABGP:CreateMainWindow()
         PopulateUI(false);
     end);
     mainLine:AddChild(phaseSelector);
+
+    if command then
+        ABGP.CurrentPhase = command.phase;
+    end
+    phaseSelector:SetValue(ABGP.CurrentPhase);
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);
@@ -788,14 +802,26 @@ function ABGP:CreateMainWindow()
     end);
     window:AddChild(tabGroup);
     window:SetUserData("container", tabGroup);
-    tabGroup:SelectTab(tabs[1].value);
+
+    local tab = 1;
+    if command then
+        if command.command == ABGP.UICommands.ShowItemHistory then
+            tab = 2;
+        end
+    end
+    tabGroup:SelectTab(tabs[tab].value);
 
     return window;
 end
 
-function ABGP:ShowMainWindow()
-    if activeWindow then return; end
+function ABGP:ShowMainWindow(command)
+    if activeWindow and not command then return; end
 
-    activeWindow = self:CreateMainWindow();
-    PopulateUI(true);
+    if activeWindow then
+        activeWindow:Hide();
+        activeWindow = nil;
+    end
+
+    activeWindow = self:CreateMainWindow(command);
+    PopulateUI(true, nil, command);
 end
