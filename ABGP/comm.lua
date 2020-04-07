@@ -101,7 +101,7 @@ function ABGP:SendComm(type, data, distribution, target)
     end
 
     if distribution then
-        self:SendCommMessage("ABGP", payload, distribution, target);
+        self:SendCommMessage("ABGP", payload, distribution, target, "ALERT");
     end
 end
 
