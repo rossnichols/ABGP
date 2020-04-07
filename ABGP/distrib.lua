@@ -664,7 +664,7 @@ function ABGP:CreateDistribWindow()
     mainLine:AddChild(distrib);
     window:SetUserData("distributeButton", distrib);
 
-    local cost = AceGUI:Create("EditBox");
+    local cost = AceGUI:Create("ABGP_EditBox");
     cost:SetWidth(75);
     cost:SetCallback("OnEnterPressed", function(widget)
         local currentItem = window:GetUserData("currentItem");

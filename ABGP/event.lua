@@ -2,8 +2,15 @@ local _G = _G;
 local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
+local GetAutoCompleteResults = GetAutoCompleteResults;
+local AutoCompleteEditBox_SetAutoCompleteSource = AutoCompleteEditBox_SetAutoCompleteSource;
+local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
+local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local pairs = pairs;
 local math = math;
+local ipairs = ipairs;
+local table = table;
+local strlen = strlen;
 
 local instanceIds = {
     MoltenCore    = 409,
@@ -95,9 +102,9 @@ function ABGP:StartRaid()
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raid", {
         version = math.random(),
-        defaultWidth = 150,
-        minWidth = 150,
-        maxWidth = 150,
+        defaultWidth = 200,
+        minWidth = 200,
+        maxWidth = 200,
         defaultHeight = 160,
         minHeight = 160,
         maxHeight = 160
@@ -109,12 +116,13 @@ function ABGP:StartRaid()
         AceGUI:Release(widget);
     end);
 
-    local name = AceGUI:Create("EditBox");
+    local name = AceGUI:Create("ABGP_EditBox");
     name:SetFullWidth(true);
+    name:SetMaxLetters(32);
     name:SetLabel("Name");
+    -- AutoCompleteEditBox_SetAutoCompleteSource(name.editbox, GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
     name:SetCallback("OnEnterPressed", function(widget)
         AceGUI:ClearFocus();
-        local text = widget:GetText();
     end);
     window:AddChild(name);
 
@@ -126,7 +134,7 @@ function ABGP:StartRaid()
         [custom] = "Custom",
     };
     local instanceSelector = AceGUI:Create("Dropdown");
-    instanceSelector:SetText("Instance");
+    instanceSelector:SetText("Select Instance");
     instanceSelector:SetFullWidth(true);
     instanceSelector:SetValue(custom);
     instanceSelector:SetList(instances, { instanceIds.MoltenCore, instanceIds.Onyxia, instanceIds.BlackwingLair, custom });

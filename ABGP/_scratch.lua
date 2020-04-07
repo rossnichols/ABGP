@@ -482,3 +482,25 @@ local function DrawGP(container)
     group:DoLayout();
     scroll:DoLayout();
 end
+
+name:SetCallback("OnEnterPressed", function(widget)
+    AceGUI:ClearFocus();
+    widget:SetText(widget:GetText():gsub("^%s*(.-)%s*$", "%1"));
+    widget.editbox:SetCursorPosition(strlen(widget:GetText()));
+
+    -- Workaround for a bug where, if the precursor-text is the same on a subsequent
+    -- press of tab, the contents of the editbox will be overwritten.
+    widget.editbox.at3_last_precursor = nil;
+end);
+name:SetCallback("OnRelease", function(widget)
+    AceTab:UnregisterTabCompletion("ABGP-InstanceNames");
+end);
+window:AddChild(name);
+AceTab:RegisterTabCompletion("ABGP-InstanceNames", nil, function(candidates, text)
+    if text:sub(strlen(text)) ~= " " then
+        for _, instance in pairs(instanceInfo) do
+            table.insert(candidates, instance.name);
+            table.insert(candidates, instance.name .. "2");
+        end
+    end
+end, false, name.editbox);
