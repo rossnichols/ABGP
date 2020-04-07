@@ -47,14 +47,14 @@ function ABGP:InitOptions()
             validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
             func = function() ABGP:PerformVersionCheck(); end
         },
-        raid = {
-            name = "Start Raid",
-            desc = "starts a raid (for EP tracking)",
-            type = "execute",
-            cmdHidden = not ABGP:IsPrivileged(),
-            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-            func = function() ABGP:StartRaid(); end
-        },
+        -- raid = {
+        --     name = "Start Raid",
+        --     desc = "starts a raid (for EP tracking)",
+        --     type = "execute",
+        --     cmdHidden = not ABGP:IsPrivileged(),
+        --     validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+        --     func = function() ABGP:StartRaid(); end
+        -- },
     };
 
     -- Set up aliases
