@@ -95,6 +95,7 @@ local priColumns = {
 };
 
 local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc)
+    spreadsheet = spreadsheet or {};
     container:SetLayout("Flow");
 
     if importFunc then
@@ -288,6 +289,7 @@ local function DrawGP(container)
         ["conversion to raider"] = true,
         ["week 9 decay"] = true,
         ["trial end"] = true,
+        ["trial"] = true,
     };
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
