@@ -228,6 +228,7 @@ for phase in pairs(ABGP.Phases) do
 end
 
 function ABGP:TrimAuditLog(threshold)
+    threshold = threshold or 0;
     local current = GetServerTime();
     for _, phaseLog in pairs(_G.ABGP_ItemAuditLog) do
         local i = 1;
