@@ -84,6 +84,14 @@ local function RebuildUI()
     local requestsContainer = window:GetUserData("requestsContainer");
     requestsContainer:ReleaseChildren();
 
+    if not currentItem.receivedComm then
+        local elt = AceGUI:Create("ABGP_Header");
+        elt:SetFullWidth(true);
+        elt:SetJustifyH("CENTER");
+        elt:SetText(ABGP:ColorizeText("Waiting for distribution confirmation..."));
+        requestsContainer:AddChild(elt);
+    end
+
     local requestTypes = {
         [ABGP.RequestTypes.MS] = 1,
         [ABGP.RequestTypes.OS] = 2,
@@ -343,6 +351,7 @@ local function AddActiveItem(data)
         distributions = {},
         rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
         data = data,
+        receivedComm = false,
     };
 
     activeItems[itemLink] = newItem;
@@ -573,11 +582,48 @@ function ABGP:ShowDistrib(itemLink)
         and self.RequestTypes.MS_OS
         or self.RequestTypes.ROLL;
 
-    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, {
+    if not activeDistributionWindow then
+        activeDistributionWindow = self:CreateDistribWindow();
+        _G.ItemRefTooltip:SetOwner(activeDistributionWindow.frame, "ANCHOR_NONE");
+    end
+
+    local data = {
         itemLink = itemLink,
         value = value,
         requestType = requestType,
-    }, "BROADCAST");
+    };
+    AddActiveItem(data);
+
+    if self.ShowTestDistrib then
+        local testBase = {
+            itemLink = itemLink,
+            rank = "Blue Lobster",
+            -- override = "trial",
+            notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
+            equipped = {
+                "|cffff8000|Hitem:19019::::::::60:::::|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
+                "|cffff8000|Hitem:17182::::::::60:::::|h[Sulfuras, Hand of Ragnaros]|h|r"
+            },
+        };
+        for i = 1, 9 do
+            local entry = {};
+            for k, v in pairs(testBase) do entry[k] = v; end
+            entry.player = "TestTestPlayer" .. i;
+            local rand = math.random();
+            if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
+            elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
+            else entry.requestType = ABGP.RequestTypes.ROLL;
+            end
+            if value then
+                entry.ep = math.random() * 2000;
+                entry.gp = math.random() * 2000;
+                entry.priority = entry.ep * 10 / entry.gp;
+            end
+            ProcessNewRequest(entry);
+        end
+    end
+
+    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, data, "BROADCAST");
 end
 
 function ABGP:CreateDistribWindow()
@@ -767,41 +813,13 @@ end
 
 function ABGP:DistribOnDistOpened(data, distribution, sender)
     if sender ~= UnitName("player") then return; end
+    if not activeDistributionWindow then return; end
 
-    if not activeDistributionWindow then
-        activeDistributionWindow = self:CreateDistribWindow();
-        _G.ItemRefTooltip:SetOwner(activeDistributionWindow.frame, "ANCHOR_NONE");
-    end
-
-    AddActiveItem(data);
-
-    if self.Debug then
-        local testBase = {
-            itemLink = data.itemLink,
-            rank = "Blue Lobster",
-            -- override = "trial",
-            notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
-            equipped = {
-                "|cffff8000|Hitem:19019::::::::60:::::|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
-                "|cffff8000|Hitem:17182::::::::60:::::|h[Sulfuras, Hand of Ragnaros]|h|r"
-            },
-        };
-        for i = 1, 9 do
-            local entry = {};
-            for k, v in pairs(testBase) do entry[k] = v; end
-            entry.player = "TestTestPlayer" .. i;
-            local rand = math.random();
-            if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
-            elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
-            else entry.requestType = ABGP.RequestTypes.ROLL;
-            end
-            if data.value then
-                entry.ep = math.random() * 2000;
-                entry.gp = math.random() * 2000;
-                entry.priority = entry.ep * 10 / entry.gp;
-            end
-            ProcessNewRequest(entry);
-        end
+    local window = activeDistributionWindow;
+    local activeItems = window:GetUserData("activeItems");
+    if activeItems[data.itemLink] then
+        activeItems[data.itemLink].receivedComm = true;
+        RebuildUI();
     end
 end
 

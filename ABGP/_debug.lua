@@ -9,6 +9,7 @@ local ipairs = ipairs;
 ABGP.Debug = true;
 -- ABGP.Verbose = true;
 -- ABGP.PrivateComms = true;
+-- ABGP.ShowTestDistrib = true;
 ABGP.IgnoreSelfDistributed = true;
 ABGP.VersionDebug = "3.4.1";
 ABGP.VersionCmpDebug = "3.4.1";
