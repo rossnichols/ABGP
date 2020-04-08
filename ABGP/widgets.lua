@@ -3,6 +3,7 @@ local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local CreateFrame = CreateFrame;
+local GetItemInfo = GetItemInfo;
 local IsModifiedClick = IsModifiedClick;
 local pairs = pairs;
 local floor = floor;
@@ -10,6 +11,7 @@ local min = min;
 local max = max;
 local mod = mod;
 local table = table;
+local select = select;
 
 local function CreateElement(frame, anchor, template)
     local elt = CreateFrame("Button", nil, frame, template);
@@ -30,7 +32,7 @@ local function CreateElement(frame, anchor, template)
     end);
     elt:SetScript("OnHyperlinkClick", function(self, itemLink, text, ...)
         if IsModifiedClick() then
-            _G.HandleModifiedItemClick(itemLink);
+            _G.HandleModifiedItemClick(select(2, GetItemInfo(itemLink)));
         else
             self:GetParent().obj:Fire("OnClick", ...);
         end
