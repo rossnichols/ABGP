@@ -75,6 +75,7 @@ function ABGP:InitOptions()
         char = {
             usePreferredPriority = false,
             preferredPriorities = {},
+            itemHistoryLimit = 3,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -123,6 +124,18 @@ function ABGP:InitOptions()
                 end
                 ABGP.db.char.usePreferredPriority = usePriority;
             end,
+            cmdHidden = true,
+        },
+        itemHistoryLimit = {
+            name = "Tooltip item history",
+            order = 3,
+            desc = "Controls the max number of item history entries to show in a tooltip when holding alt. Set to 0 to disable.",
+            type = "range",
+            min = 0,
+            max = 10,
+            step = 1,
+            get = function(self) return ABGP.db.char.itemHistoryLimit; end,
+            set = function(self, v) ABGP.db.char.itemHistoryLimit = v; end,
             cmdHidden = true,
         },
     };
