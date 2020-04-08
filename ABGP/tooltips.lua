@@ -12,11 +12,10 @@ function ABGP:HookTooltips()
             local itemName = self:GetItem();
             local value = ABGP:GetItemValue(itemName);
             if value then
-                local c = ABGP.ColorTable;
-                self:AddDoubleLine("ABP GP Value: ", value.gp, c[1], c[2], c[3], 1, 1, 1);
-                self:AddDoubleLine("ABP Priorities: ", table.concat(value.priority, ", "), c[1], c[2], c[3], 1, 1, 1);
+                self:AddDoubleLine(("%s Value:"):format(ABGP:ColorizeText("ABGP")), value.gp, 1, 1, 1, 1, 1, 1);
+                self:AddDoubleLine(("%s Priorities:"):format(ABGP:ColorizeText("ABGP")), table.concat(value.priority, ", "), 1, 1, 1, 1, 1, 1);
                 if value.notes then
-                    self:AddDoubleLine("ABP Notes: ", value.notes, c[1], c[2], c[3], 1, 1, 1);
+                    self:AddDoubleLine(("%s Notes:"):format(ABGP:ColorizeText("ABGP")), value.notes, 1, 1, 1, 1, 1, 1);
                 end
 
                 if IsAltKeyDown() then
@@ -36,7 +35,8 @@ function ABGP:HookTooltips()
                         if count > limit then
                             extra = (" (%d of %d)"):format(limit, count);
                         end
-                        self:AddLine(("Item History%s:"):format(extra), c[1], c[2], c[3]);
+                        self:AddLine(("%s Item History%s:"):format(
+                            ABGP:ColorizeText("ABGP"), extra), 1, 1, 1);
                         count = 0;
 
                         for _, data in ipairs(gpHistory) do
@@ -45,11 +45,15 @@ function ABGP:HookTooltips()
                                 if count > limit then
                                     break;
                                 end
-                                self:AddDoubleLine(ABGP:ColorizeName(data.player), data.date, 1, 1, 1, 1, 1, 1);
+                                self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player), data.date, 1, 1, 1, 1, 1, 1);
                             end
                         end
                     end
+                else
+                    self:AddLine(("%s Item History: (hold %s)"):format(
+                        ABGP:ColorizeText("ABGP"), ABGP:ColorizeText("alt")), 1, 1, 1);
                 end
+                self:AddLine(" ");
             end
         end);
     end
