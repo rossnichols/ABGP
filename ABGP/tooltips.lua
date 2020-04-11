@@ -49,6 +49,8 @@ function ABGP:HookTooltips()
                                     self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player), data.date, 1, 1, 1, 1, 1, 1);
                                 end
                             end
+                        else
+                            self:AddLine(("%s Item History: (none found)"):format(ABGP:ColorizeText("ABGP")), 1, 1, 1);
                         end
                     else
                         self:AddLine(("%s Item History: (hold %s)"):format(
