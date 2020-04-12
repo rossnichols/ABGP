@@ -17,6 +17,7 @@ local filteredClasses = {};
 local filteredPriorities = {};
 local onlyUsable = false;
 local onlyFaved = false;
+local currentRaidGroup;
 
 ABGP.UICommands = {
     ShowItemHistory = "ShowItemHistory",
@@ -99,7 +100,8 @@ local function DrawPriority(container, rebuild, reason)
     local lastPriority = -1;
     local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
-        if not filteredClasses[data.class] then
+        local inRaidGroup = not currentRaidGroup or ABGP:IsRankInRaidGroup(data.rank, currentRaidGroup);
+        if not filteredClasses[data.class] and inRaidGroup then
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Priority");
             elt:SetFullWidth(true);
@@ -288,29 +290,31 @@ local function DrawItemHistory(container, rebuild, reason, command)
     local searchText = search:GetText():lower();
     container:GetUserData("reset"):SetDisabled(searchText == "");
     local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
-    local filtered;
-    if searchText == "" then
-        filtered = gpHistory;
-    else
+    local filtered = gpHistory;
+    if searchText ~= "" or currentRaidGroup then
         filtered = {};
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
         for _, data in ipairs(gpHistory) do
-            local guildInfo = ABGP:GetGuildInfo(data.player);
-            local class = guildInfo and guildInfo[11] or "";
-            if exact then
-                if data.player:lower() == exact or
-                   data.item:lower() == exact or
-                   class:lower() == exact or
-                   data.date:lower() == exact then
-                    table.insert(filtered, data);
-                end
-            else
-                if data.player:lower():find(searchText, 1, true) or
-                   data.item:lower():find(searchText, 1, true) or
-                   class:lower():find(searchText, 1, true) or
-                   data.date:lower():find(searchText, 1, true) then
-                    table.insert(filtered, data);
+            local epgp = ABGP:GetActivePlayer(data.player);
+            if epgp then
+                if not currentRaidGroup or ABGP:IsRankInRaidGroup(epgp.rank, currentRaidGroup) then
+                    local class = epgp.class;
+                    if exact then
+                        if data.player:lower() == exact or
+                            data.item:lower() == exact or
+                            class:lower() == exact or
+                            data.date:lower() == exact then
+                            table.insert(filtered, data);
+                        end
+                    else
+                        if data.player:lower():find(searchText, 1, true) or
+                            data.item:lower():find(searchText, 1, true) or
+                            class:lower():find(searchText, 1, true) or
+                            data.date:lower():find(searchText, 1, true) then
+                            table.insert(filtered, data);
+                        end
+                    end
                 end
             end
         end
@@ -381,41 +385,7 @@ local function DrawItems(container, rebuild, reason)
     if rebuild then
         local priSelector = AceGUI:Create("ABGP_Filter");
         priSelector:SetWidth(125);
-        priSelector:SetValues(filteredPriorities, {
-            ["Druid (Heal)"] = "Druid (Heal)",
-            ["KAT4FITE"] = "KAT4FITE",
-            ["Hunter"] = "Hunter",
-            ["Mage"] = "Mage",
-            ["Paladin (Holy)"] = "Paladin (Holy)",
-            ["Paladin (Ret)"] = "Paladin (Ret)",
-            ["Priest (Heal)"] = "Priest (Heal)",
-            ["Priest (Shadow)"] = "Priest (Shadow)",
-            ["Rogue"] = "Rogue",
-            ["Slicey Rogue"] = "Slicey Rogue",
-            ["Stabby Rogue"] = "Stabby Rogue",
-            ["Warlock"] = "Warlock",
-            ["Tank"] = "Tank",
-            ["Metal Rogue"] = "Metal Rogue",
-            ["Progression"] = "Progression",
-            ["Garbage"] = "Garbage",
-        }, {
-            "Druid (Heal)",
-            "KAT4FITE",
-            "Hunter",
-            "Mage",
-            "Metal Rogue",
-            "Paladin (Holy)",
-            "Paladin (Ret)",
-            "Priest (Heal)",
-            "Priest (Shadow)",
-            "Rogue",
-            "Slicey Rogue",
-            "Stabby Rogue",
-            "Tank",
-            "Warlock",
-            "Progression",
-            "Garbage",
-        });
+        priSelector:SetValues(filteredPriorities, ABGP:GetItemPriorities());
         priSelector:SetCallback("OnFilterUpdated", function()
             PopulateUI(false);
         end);
@@ -736,7 +706,7 @@ function ABGP:CreateMainWindow(command)
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
     window:AddChild(mainLine);
 
     local phases = {
@@ -759,6 +729,30 @@ function ABGP:CreateMainWindow(command)
         PopulateUI(false);
     end);
     mainLine:AddChild(phaseSelector);
+
+    local raidGroups = {
+        [ABGP.RaidGroups.RED] = "Red",
+        [ABGP.RaidGroups.BLUE] = "Blue",
+        ["ALL"] = "All",
+    };
+    local groupSelector = AceGUI:Create("Dropdown");
+    groupSelector:SetWidth(110);
+    groupSelector:SetList(raidGroups, { ABGP.RaidGroups.RED, ABGP.RaidGroups.BLUE, "ALL" });
+    groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
+        currentRaidGroup = (value ~= "ALL") and value or nil;
+
+        if activeWindow then
+            local container = activeWindow:GetUserData("container");
+            local pagination = container:GetUserData("pagination");
+            if pagination then
+                pagination:SetPage(1);
+            end
+        end
+        PopulateUI(false);
+    end);
+    currentRaidGroup = ABGP:GetRaidGroup();
+    groupSelector:SetValue(currentRaidGroup);
+    mainLine:AddChild(groupSelector);
 
     if command then
         ABGP.CurrentPhase = command.phase;

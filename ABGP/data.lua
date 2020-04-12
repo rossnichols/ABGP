@@ -32,10 +32,16 @@ function ABGP:RefreshFromOfficerNotes()
     table.wipe(p3);
 
     for i = 1, GetNumGuildMembers() do
-        local name, rank, _, _, _, _, _, note, _, _, class = GetGuildRosterInfo(i);
+        local name, rank, _, _, _, _, publicNote, note, _, _, class = GetGuildRosterInfo(i);
         if name then
             local player = Ambiguate(name, "short");
-            local epgp = self:GetActivePlayer(player, true);
+            local proxy = self:CheckProxy(publicNote);
+            if proxy then
+                -- Treat the name extracted from the public note as the actual player name.
+                -- The name of the guild character is the proxy for holding their data.
+                player, proxy = proxy, player;
+            end
+            local epgp = self:GetActivePlayer(player);
             local p1New, p3New;
             if self:IsTrial(rank) then
                 table.insert(p1, {
@@ -67,6 +73,7 @@ function ABGP:RefreshFromOfficerNotes()
                     if p1gp ~= 0 then
                         table.insert(p1, {
                             player = player,
+                            proxy = proxy,
                             rank = rank,
                             class = class,
                             ep = p1ep,
@@ -77,6 +84,7 @@ function ABGP:RefreshFromOfficerNotes()
                     if p3gp ~= 0 then
                         table.insert(p3, {
                             player = player,
+                            proxy = proxy,
                             rank = rank,
                             class = class,
                             ep = p3ep,
@@ -119,7 +127,6 @@ end
 function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
     if not guildIndex and not self:IsPrivileged() then return; end
     if not self:CanEditOfficerNotes() then return; end
-    local epgp = self:GetActivePlayer(player, true);
 
     if not guildIndex then
         for i = 1, GetNumGuildMembers() do
@@ -135,9 +142,12 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         self:Error("Couldn't find %s in the guild!", self:ColorizeName(player));
     end
 
-    local _, rank, _, _, _, _, _, existingNote = GetGuildRosterInfo(guildIndex);
+    local _, rank, _, _, _, _, publicNote, existingNote = GetGuildRosterInfo(guildIndex);
+    player = self:CheckProxy(publicNote) or player;
+
+    local epgp = self:GetActivePlayer(player);
     local note = "";
-    if epgp and not self:IsTrial(rank) then
+    if epgp and not epgp.trial then
         local p1 = epgp[ABGP.Phases.p1];
         local p3 = epgp[ABGP.Phases.p3];
         local p1ep, p1gp, p3ep, p3gp = 0, 0, 0, 0;
@@ -150,8 +160,19 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
             p3gp = floor(p3.gp * 1000);
         end
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
-    elseif not existingNote:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$") then
-        note = existingNote;
+
+        -- Sanity check: all ranks here must be in a raid group.
+        local found = false;
+        for group in pairs(self.RaidGroups) do
+            if self:IsRankInRaidGroup(rank, group) then
+                found = true;
+                break;
+            end
+        end
+        if not found then
+            self:Error("%s is rank %s which is not part of a raid group!", player, rank);
+            note = "";
+        end
     end
 
     if note ~= existingNote then
@@ -190,8 +211,9 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
             self:RefreshActivePlayers();
 
             if sender == UnitName("player") and not self.IgnoreSelfDistributed then
-                -- Use player name from epgp table in case the player was an alt
-                self:UpdateOfficerNote(epgp.player);
+                -- UpdateOfficerNote expects the name of the guild member
+                -- that is being updated, which is the proxy if it's set.
+                self:UpdateOfficerNote(epgp.proxy or player);
             end
 		end
     end

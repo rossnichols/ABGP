@@ -23,10 +23,18 @@ function ABGP:HookTooltips()
                     if IsAltKeyDown() then
                         local gpHistory = _G.ABGP_Data[value.phase].gpHistory;
 
+                        local raidGroup = ABGP:GetRaidGroup();
+                        local function shouldShowEntry(entry)
+                            if entry.item ~= itemName then return false; end
+                            local epgp = ABGP:GetActivePlayer(entry.player);
+                            if not epgp then return false; end
+                            return ABGP:IsRankInRaidGroup(epgp.rank, raidGroup);
+                        end
+
                         -- First pass: count
                         local count = 0;
                         for _, data in ipairs(gpHistory) do
-                            if data.item == itemName then
+                            if shouldShowEntry(data) then
                                 count = count + 1;
                             end
                         end
@@ -41,12 +49,13 @@ function ABGP:HookTooltips()
                             count = 0;
 
                             for _, data in ipairs(gpHistory) do
-                                if data.item == itemName then
+                                if shouldShowEntry(data) then
                                     count = count + 1;
                                     if count > limit then
                                         break;
                                     end
-                                    self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player), data.date, 1, 1, 1, 1, 1, 1);
+                                    local epgp = ABGP:GetActivePlayer(data.player);
+                                    self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player, epgp.class), data.date, 1, 1, 1, 1, 1, 1);
                                 end
                             end
                         else

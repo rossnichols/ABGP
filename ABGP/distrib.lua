@@ -5,7 +5,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local BNGetFriendInfoByID = BNGetFriendInfoByID;
 local BNGetGameAccountInfo = BNGetGameAccountInfo;
 local UnitExists = UnitExists;
-local GetGuildInfo = GetGuildInfo;
 local UnitName = UnitName;
 local UnitIsInMyGuild = UnitIsInMyGuild;
 local GetItemInfo = GetItemInfo;
@@ -98,9 +97,12 @@ local function RebuildUI()
         [ABGP.RequestTypes.ROLL] = 3,
     };
 
+    local raidGroup = ABGP:GetRaidGroup();
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
+        elseif a.group ~= b.group then
+            return a.group and (not b.group or a.group == raidGroup);
         elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
@@ -115,29 +117,27 @@ local function RebuildUI()
     currentItem.selectedElt = nil;
     ProcessSelectedRequest();
 
-    local msHeading, osHeading, rollHeading;
+    local typeHeadings = {
+        [ABGP.RequestTypes.MS] = "Main Spec",
+        [ABGP.RequestTypes.OS] = "Off Spec",
+        [ABGP.RequestTypes.ROLL] = "Rolls",
+    };
+    local groupHeadings = {
+        [ABGP.RaidGroups.RED] = "Red",
+        [ABGP.RaidGroups.BLUE] = "Blue",
+    };
+
+    local currentHeading;
     local maxRolls = {};
     for i, request in ipairs(requests) do
-        if request.requestType == ABGP.RequestTypes.MS and not msHeading then
-            msHeading = true;
-            local mainspec = AceGUI:Create("Heading");
-            mainspec:SetFullWidth(true);
-            mainspec:SetText("Main Spec");
-            requestsContainer:AddChild(mainspec);
-        end
-        if request.requestType == ABGP.RequestTypes.OS and not osHeading then
-            osHeading = true;
-            local offspec = AceGUI:Create("Heading");
-            offspec:SetFullWidth(true);
-            offspec:SetText("Off Spec");
-            requestsContainer:AddChild(offspec);
-        end
-        if request.requestType == ABGP.RequestTypes.ROLL and not rollHeading then
-            rollHeading = true;
-            local roll = AceGUI:Create("Heading");
-            roll:SetFullWidth(true);
-            roll:SetText("Rolls");
-            requestsContainer:AddChild(roll);
+        local group = request.group and groupHeadings[request.group] or "Other";
+        local heading = ("%s (%s)"):format(typeHeadings[request.requestType], group);
+        if currentHeading ~= heading then
+            currentHeading = heading;
+            local elt = AceGUI:Create("Heading");
+            elt:SetFullWidth(true);
+            elt:SetText(heading);
+            requestsContainer:AddChild(elt);
         end
 
         request.currentMaxRoll = false;
@@ -417,20 +417,18 @@ end
 
 local function PopulateRequest(request, value)
     local override;
-    local rank;
-    local guildInfo = ABGP:GetGuildInfo(request.player);
-    if guildInfo then
-        rank = guildInfo[2];
-        if ABGP:IsTrial(rank) then
+    local rank, class;
+
+    local epgp = ABGP:GetActivePlayer(request.player);
+    if epgp then
+        rank = epgp.rank;
+        class = epgp.class;
+        if epgp.trial then
             override = "trial";
         end
-    else
-        rank = "Non-guildie";
-        override = "non-guildie";
     end
 
     local priority, ep, gp;
-    local epgp, alt = ABGP:GetActivePlayer(request.player);
     if value then
         priority, ep, gp = 0, 0, 0;
         if epgp and epgp[value.phase] then
@@ -442,8 +440,18 @@ local function PopulateRequest(request, value)
         end
     end
 
-    if alt then
-        rank = ("(%s)"):format(ABGP:ColorizeName(epgp.player));
+    local requestGroup;
+    if rank and not override then
+        local raidGroup = ABGP:GetRaidGroup();
+        if ABGP:IsRankInRaidGroup(rank, raidGroup) then
+            requestGroup = raidGroup;
+        else
+            for group in pairs(ABGP.RaidGroups) do
+                if ABGP:IsRankInRaidGroup(rank, group) then
+                    requestGroup = group;
+                end
+            end
+        end
     end
 
     local needsUpdate = false;
@@ -460,6 +468,7 @@ local function PopulateRequest(request, value)
     checkValue(request, "gp", gp);
     checkValue(request, "rank", rank);
     checkValue(request, "override", override);
+    checkValue(request, "group", requestGroup);
     return needsUpdate;
 end
 
@@ -515,6 +524,7 @@ end
 function ABGP:DistribOnActivePlayersRefreshed()
     if not activeDistributionWindow then return; end
     local activeItems = activeDistributionWindow:GetUserData("activeItems");
+    if self.ShowTestDistrib then return; end
 
     local needsUpdate = false;
     for itemLink, item in pairs(activeItems) do
@@ -595,9 +605,24 @@ function ABGP:ShowDistrib(itemLink)
     AddActiveItem(data);
 
     if self.ShowTestDistrib then
+        local ranks = {
+            "Guild Master",
+            "Officer",
+            "Closer",
+            "Red Lobster",
+            "Purple Lobster",
+            "Purple Lobster",
+            "Blue Lobster",
+            "Officer Alt",
+            "Lobster Alt",
+            "Fiddler Crab",
+            "Other rank 1",
+            "Other rank 2",
+            "Other rank 3",
+            "Other rank 4",
+        };
         local testBase = {
             itemLink = itemLink,
-            rank = "Blue Lobster",
             -- override = "trial",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
@@ -609,6 +634,7 @@ function ABGP:ShowDistrib(itemLink)
             local entry = {};
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
+            entry.rank = ranks[math.random(1, #ranks)];
             local rand = math.random();
             if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
             elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
@@ -619,6 +645,18 @@ function ABGP:ShowDistrib(itemLink)
                 entry.gp = math.random() * 2000;
                 entry.priority = entry.ep * 10 / entry.gp;
             end
+            local requestGroup;
+            local raidGroup = ABGP:GetRaidGroup();
+            if ABGP:IsRankInRaidGroup(entry.rank, raidGroup) then
+                requestGroup = raidGroup;
+            else
+                for group in pairs(ABGP.RaidGroups) do
+                    if ABGP:IsRankInRaidGroup(entry.rank, group) then
+                        requestGroup = group;
+                    end
+                end
+            end
+            entry.group = requestGroup;
             ProcessNewRequest(entry);
         end
     end

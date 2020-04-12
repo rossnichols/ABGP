@@ -76,9 +76,15 @@ function ABGP:InitOptions()
             usePreferredPriority = false,
             preferredPriorities = {},
             itemHistoryLimit = 3,
+            raidGroup = false,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
+
+    local raidGroups = {
+        [ABGP.RaidGroups.RED] = "Red",
+        [ABGP.RaidGroups.BLUE] = "Blue",
+    };
 
     local guiOptions = {
         show = {
@@ -97,24 +103,7 @@ function ABGP:InitOptions()
             desc = "If any priorites are chosen here, items not matching them will be deemphasized during distribution.",
             type = "multiselect",
             control = "Dropdown",
-            values = {
-                ["Druid (Heal)"] = "Druid (Heal)",
-                ["KAT4FITE"] = "KAT4FITE",
-                ["Hunter"] = "Hunter",
-                ["Mage"] = "Mage",
-                ["Paladin (Holy)"] = "Paladin (Holy)",
-                ["Paladin (Ret)"] = "Paladin (Ret)",
-                ["Priest (Heal)"] = "Priest (Heal)",
-                ["Priest (Shadow)"] = "Priest (Shadow)",
-                ["Rogue"] = "Rogue",
-                ["Slicey Rogue"] = "Slicey Rogue",
-                ["Stabby Rogue"] = "Stabby Rogue",
-                ["Warlock"] = "Warlock",
-                ["Tank"] = "Tank",
-                ["Metal Rogue"] = "Metal Rogue",
-                ["Progression"] = "Progression",
-                ["Garbage"] = "Garbage",
-            },
+            values = self:GetItemPriorities(),
             get = function(self, k) return ABGP.db.char.preferredPriorities[k]; end,
             set = function(self, k, v)
                 ABGP.db.char.preferredPriorities[k] = v;
@@ -138,6 +127,16 @@ function ABGP:InitOptions()
             set = function(self, v) ABGP.db.char.itemHistoryLimit = v; end,
             cmdHidden = true,
         },
+        raidGroup = {
+            name = "Raid Group",
+            order = 4,
+            desc = "Choose the raid group to prioritize in the UI",
+            type = "select",
+            control = "Dropdown",
+            values = raidGroups,
+            get = function(self) return ABGP:GetRaidGroup(); end,
+            set = function(self, v) ABGP.db.char.raidGroup = v; end,
+        },
     };
     AceConfig:RegisterOptionsTable("ABGP", {
         name = ABGP:ColorizeText(addonText) .. " Options",
@@ -154,4 +153,8 @@ end
 
 function ABGP:Get(k)
     return self.db.char[k];
+end
+
+function ABGP:Set(k, v)
+    self.db.char[k] = v;
 end

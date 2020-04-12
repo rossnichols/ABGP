@@ -16,9 +16,6 @@ local ToggleDropDownMenu = ToggleDropDownMenu;
 local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
 local IsInGroup = IsInGroup;
-local GetNumGuildMembers = GetNumGuildMembers;
-local GetGuildRosterInfo = GetGuildRosterInfo;
-local Ambiguate = Ambiguate;
 local GetInstanceInfo = GetInstanceInfo;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
@@ -173,6 +170,12 @@ function ABGP:ColorizeName(name, class)
         end
     end
     if not class then
+        local epgp = self:GetActivePlayer(name);
+        if epgp then
+            class = epgp.class;
+        end
+    end
+    if not class then
         local guildInfo = self:GetGuildInfo(name);
         if guildInfo then
             class = guildInfo[11];
@@ -196,37 +199,6 @@ end
 
 function ABGP:CanEditOfficerNotes()
     return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
-end
-
-
---
--- Helpers for querying guild information
---
-
-local guildInfo = {};
-
-function ABGP:RebuildGuildInfo()
-    table.wipe(guildInfo);
-    for i = 1, GetNumGuildMembers() do
-        local data = { GetGuildRosterInfo(i) };
-        if data[1] then
-            data.player = Ambiguate(data[1], "short");
-            data.index = i;
-            guildInfo[data.player] = data;
-        else
-            -- Seen this API fail before. If that happens,
-            -- request another guild roster update.
-            GuildRoster();
-        end
-    end
-end
-
-function ABGP:GetGuildInfo(player)
-    return guildInfo[player];
-end
-
-function ABGP:IsTrial(rank)
-    return (rank == "Trial");
 end
 
 
@@ -385,20 +357,16 @@ function ABGP:RefreshActivePlayers()
         for _, pri in ipairs(self.Priorities[phase]) do
             activePlayers[pri.player] = activePlayers[pri.player] or {};
             activePlayers[pri.player][phase] = pri;
-            activePlayers[pri.player].player = pri.player;
+            activePlayers[pri.player].proxy = pri.proxy;
+            activePlayers[pri.player].rank = pri.rank;
+            activePlayers[pri.player].class = pri.class;
         end
     end
 
     self:SendMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED);
 end
 
-function ABGP:GetActivePlayer(name, ignoreAlts)
-    if not activePlayers[name] and not ignoreAlts then
-        local guildInfo = self:GetGuildInfo(name);
-        if guildInfo and activePlayers[guildInfo[8]] then
-            return activePlayers[guildInfo[8]], true;
-        end
-    end
+function ABGP:GetActivePlayer(name)
     return activePlayers[name];
 end
 

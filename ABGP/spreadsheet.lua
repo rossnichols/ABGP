@@ -41,31 +41,14 @@ local gpColumns = {
     { value = "item", text = "Item" },
 };
 
-local itemClasses = {
-    ["druidH"] = "Druid (Heal)",
-    ["druidF"] = "KAT4FITE",
-    ["hunter"] = "Hunter",
-    ["mage"] = "Mage",
-    ["paladinH"] = "Paladin (Holy)",
-    ["paladinR"] = "Paladin (Ret)",
-    ["priestH"] = "Priest (Heal)",
-    ["priestS"] = "Priest (Shadow)",
-    ["rogue"] = "Rogue",
-    ["rogueSl"] = "Slicey Rogue",
-    ["rogueSt"] = "Stabby Rogue",
-    ["warlock"] = "Warlock",
-    ["warriorT"] = "Tank",
-    ["warriorD"] = "Metal Rogue",
-    ["progression"] = "Progression",
-    ["garbage"] = "Garbage",
-};
+local itemPriorities = ABGP:GetItemPriorities();
 local itemMapping = {
     ["Item"] = 1,
     ["GP Cost"] = 2,
     ["Notes"] = "notes",
     ["Boss"] = false,
 };
-for value, text in pairs(itemClasses) do
+for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;
 end
 local itemColumns = {
@@ -336,8 +319,8 @@ local function DrawItems(container)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
             row.priority = {};
             for k, v in pairs(row) do
-                if itemClasses[k] then
-                    table.insert(row.priority, itemClasses[k]);
+                if itemPriorities[k] then
+                    table.insert(row.priority, itemPriorities[k]);
                     row[k] = nil;
                 end
             end

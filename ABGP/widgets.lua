@@ -106,6 +106,8 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
+            local raidGroup = ABGP:GetRaidGroup();
+            self.rank.text:SetFontObject(data.group == raidGroup and "ABGPHighlight" or "GameFontNormal");
             self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");
             self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
             self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
