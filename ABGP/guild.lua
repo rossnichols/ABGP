@@ -32,7 +32,6 @@ local rankData = {
         ["Blue Lobster"] = true,
         ["Officer Alt"] = true,
         ["Lobster Alt"] = true,
-        ["Fiddler Crab"] = true,
     },
 };
 
