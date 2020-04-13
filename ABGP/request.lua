@@ -271,6 +271,8 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
 
     local player = data.player;
     local cost = data.cost;
+    local override = data.override;
+    if data.testItem then override = "test"; end
 
     local multiple = "";
     if data.count > 1 then
@@ -286,8 +288,10 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     };
     local requestType = "";
     if requestTypes[data.requestType] then
-        local override = data.override and ("%s, "):format(data.override) or "";
+        override = override and ("%s, "):format(override) or "";
         requestType = requestTypes[data.requestType]:format(override);
+    elseif override then
+        requestType = (" (%s)"):format(override);
     end
     if player == UnitName("player") then
         local unfaved = "";
@@ -309,6 +313,9 @@ end
 function ABGP:RequestOnItemTrashed(data, distribution, sender)
     local itemLink = data.itemLink;
 
+    local info = "";
+    if data.testItem then info = " (test)"; end
+
     local multiple = "";
     if data.count > 1 then
         multiple = (" #%d"):format(data.count);
@@ -317,7 +324,7 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
         activeItems[itemLink].notified = true;
     end
 
-    self:Notify("%s%s will be disenchanted.", itemLink, multiple);
+    self:Notify("%s%s will be disenchanted%s.", itemLink, multiple, info);
 end
 
 function ABGP:CreateRequestWindow()
