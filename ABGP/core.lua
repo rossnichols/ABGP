@@ -93,6 +93,14 @@ function ABGP:OnInitialize()
         self:RequestOnItemRolled(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.CommTypes.REQUEST_PRIORITY_SYNC, function(self, event, data, distribution, sender)
+        self:OnPrioritySyncRequested(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.PRIORITY_SYNC, function(self, event, data, distribution, sender)
+        self:OnPrioritySync(data, distribution, sender);
+    end, self);
+
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
@@ -370,6 +378,19 @@ function ABGP:GetActivePlayer(name)
     return activePlayers[name];
 end
 
+function ABGP:OnPrioritySyncRequested(data, distribution, sender)
+    self:SendComm(ABGP.CommTypes.PRIORITY_SYNC, {
+        commPriority = "BULK",
+        priorities = self.Priorities,
+    }, "WHISPER", sender);
+end
+
+function ABGP:OnPrioritySync(data, distribution, sender)
+    self:Notify("Received sync data from %s!", self:ColorizeName(sender));
+    self.Priorities = data.priorities;
+    self:RefreshActivePlayers();
+end
+
 
 --
 -- Hook for HandleModifiedItemClick to detect [mod]-clicks on items
@@ -464,6 +485,7 @@ f:SetScript("OnEvent", function(self, event, ...)
     elseif event == "GROUP_JOINED" then
         ABGP:VersionOnGroupJoined();
         ABGP:RequestOnGroupJoined();
+        ABGP:OutsiderOnGroupJoined();
     elseif event == "GROUP_LEFT" then
         ABGP:RequestOnGroupLeft();
     elseif event == "GROUP_ROSTER_UPDATE" then

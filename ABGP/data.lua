@@ -25,6 +25,8 @@ local function PrioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
+    if self:Get("outsider") then return; end
+
     local needsUpdate = false;
     local p1 = self.Priorities[self.Phases.p1];
     local p3 = self.Priorities[self.Phases.p3];

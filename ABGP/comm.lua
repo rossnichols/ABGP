@@ -81,6 +81,12 @@ ABGP.CommTypes = {
     OFFICER_NOTES_UPDATED = CV("ABGP_OFFICER_NOTES_UPDATED"),
     -- no payload
 
+    REQUEST_PRIORITY_SYNC = CV("ABGP_REQUEST_PRIORITY_SYNC"),
+    -- no payload
+
+    PRIORITY_SYNC = CV("ABGP_PRIORITY_SYNC"),
+    -- priorities: table
+
     -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = "ABGP_VERSION_REQUEST",
     -- reset: bool or nil
@@ -96,6 +102,9 @@ function ABGP:SendComm(type, data, distribution, target)
     data.type = type;
     data.version = self:GetVersion();
 
+    local priority = data.commPriority or "ALERT";
+    data.commPriority = nil;
+
     local serialized = AceSerializer:Serialize(data);
     local compressed = LibCompress:Compress(serialized);
     local payload = AddonEncodeTable:Encode(compressed);
@@ -105,7 +114,7 @@ function ABGP:SendComm(type, data, distribution, target)
     end
 
     if distribution then
-        self:SendCommMessage("ABGP", payload, distribution, target, "ALERT");
+        self:SendCommMessage("ABGP", payload, distribution, target, priority);
     end
 end
 

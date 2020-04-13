@@ -7,6 +7,9 @@ local GuildRoster = GuildRoster;
 local GetGuildInfo = GetGuildInfo;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
+local GetNumGroupMembers = GetNumGroupMembers;
+local IsInRaid = IsInRaid;
+local UnitIsGroupLeader = UnitIsGroupLeader;
 local table = table;
 local pairs = pairs;
 local next = next;
@@ -120,4 +123,25 @@ function ABGP:GetItemPriorities()
         "Progression",
         "Garbage",
     };
+end
+
+function ABGP:OutsiderOnGroupJoined()
+    if not self:Get("outsider") then return; end
+
+    local groupSize = GetNumGroupMembers();
+    for i = 1, groupSize do
+        local unit = "player";
+        if IsInRaid() then
+            unit = "raid" .. i;
+        elseif i ~= groupSize then
+            unit = "party" .. i;
+        end
+
+        if UnitIsGroupLeader(unit) then
+            local name = UnitName(unit);
+            self:Notify("Syncing with %s...", self:ColorizeName(name));
+            self:SendComm(ABGP.CommTypes.REQUEST_PRIORITY_SYNC, {}, "WHISPER", name);
+            break;
+        end
+    end
 end

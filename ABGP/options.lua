@@ -4,6 +4,7 @@ local AceConfig = _G.LibStub("AceConfig-3.0");
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0");
 local AceDB = _G.LibStub("AceDB-3.0");
 
+local IsInGroup = IsInGroup;
 local pairs = pairs;
 
 function ABGP:InitOptions()
@@ -77,6 +78,7 @@ function ABGP:InitOptions()
             preferredPriorities = {},
             itemHistoryLimit = 3,
             raidGroup = false,
+            outsider = false,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -130,12 +132,25 @@ function ABGP:InitOptions()
         raidGroup = {
             name = "Raid Group",
             order = 4,
-            desc = "Choose the raid group to prioritize in the UI",
+            desc = "Choose the raid group to prioritize in the UI.",
             type = "select",
             control = "Dropdown",
             values = raidGroups,
             get = function(self) return ABGP:GetRaidGroup(); end,
             set = function(self, v) ABGP.db.char.raidGroup = v; end,
+        },
+        outsider = {
+            name = "Outsider",
+            order = 5,
+            desc = "Select this option if your EPGP is tracked outside your guild.",
+            type = "toggle",
+            get = function(self) return ABGP.db.char.outsider; end,
+            set = function(self, v)
+                ABGP.db.char.outsider = v;
+                if v and IsInGroup() then
+                    ABGP:OutsiderOnGroupJoined();
+                end
+            end,
         },
     };
     AceConfig:RegisterOptionsTable("ABGP", {
