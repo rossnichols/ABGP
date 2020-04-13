@@ -30,6 +30,12 @@ local max = max;
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 
+local function OnGroupJoined()
+    ABGP:VersionOnGroupJoined();
+    ABGP:RequestOnGroupJoined();
+    ABGP:OutsiderOnGroupJoined();
+end
+
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
     self:InitOptions();
@@ -116,7 +122,7 @@ function ABGP:OnInitialize()
     end
 
     if IsInGroup() then
-        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
+        OnGroupJoined();
     end
 end
 
@@ -483,9 +489,7 @@ f:SetScript("OnEvent", function(self, event, ...)
             ABGP:DistribOnRoll(sender, roll);
         end
     elseif event == "GROUP_JOINED" then
-        ABGP:VersionOnGroupJoined();
-        ABGP:RequestOnGroupJoined();
-        ABGP:OutsiderOnGroupJoined();
+        OnGroupJoined();
     elseif event == "GROUP_LEFT" then
         ABGP:RequestOnGroupLeft();
     elseif event == "GROUP_ROSTER_UPDATE" then
