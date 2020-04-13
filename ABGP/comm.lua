@@ -59,6 +59,8 @@ ABGP.CommTypes = {
     -- count: number
     -- requestType: string from ABGP.RequestTypes
     -- override: string
+    -- count: number
+    -- testItem: bool
 
     ITEM_DISTRIBUTION_CHECK = CV("ABGP_ITEM_DISTRIBUTION_CHECK"),
     -- itemLink: optional item link string
@@ -69,6 +71,8 @@ ABGP.CommTypes = {
 
     ITEM_DISTRIBUTION_TRASHED = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"),
     -- itemLink: item link string
+    -- count: number
+    -- testItem: bool
 
     ITEM_ROLLED = CV("ABGP_ITEM_ROLLED"),
     -- itemLink: item link string

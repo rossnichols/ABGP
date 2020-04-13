@@ -291,7 +291,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     end
     if player == UnitName("player") then
         local unfaved = "";
-        if self:IsItemFavorited(itemLink) then
+        if self:IsItemFavorited(itemLink) and not data.testItem then
             self:SetItemFavorited(itemLink, false);
             unfaved = " Removed it from your AtlasLoot favorites.";
         end

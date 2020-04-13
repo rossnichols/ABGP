@@ -190,6 +190,7 @@ function ABGP:PriorityOnGuildRosterUpdate()
 end
 
 function ABGP:PriorityOnItemAwarded(data, distribution, sender)
+    if data.testItem then return; end
     local itemLink = data.itemLink;
     local player = data.player;
     local cost = data.cost;
@@ -220,9 +221,8 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
-    if sender == UnitName("player") and self.IgnoreSelfDistributed then
-        return;
-    end
+    if data.testItem then return; end
+    if sender == UnitName("player") and self.IgnoreSelfDistributed then return; end
 
     local itemLink = data.itemLink;
     local itemName = ABGP:GetItemName(itemLink);

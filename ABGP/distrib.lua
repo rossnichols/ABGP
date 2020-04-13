@@ -213,6 +213,9 @@ local function RebuildUI()
     multiple:SetValue(currentItem.multipleItems);
     multiple:SetDisabled(#currentItem.distributions > 0);
 
+    local test = window:GetUserData("testCheckbox");
+    test:SetValue(currentItem.testItem);
+
     local resetRolls = window:GetUserData("resetRollsButton");
     resetRolls:SetText(currentItem.rollsAllowed and "Reset Rolls" or "Allow Rolls");
 
@@ -352,6 +355,7 @@ local function AddActiveItem(data)
         rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
         data = data,
         receivedComm = false,
+        testItem = false,
     };
 
     activeItems[itemLink] = newItem;
@@ -396,7 +400,9 @@ local function RemoveActiveItem(itemLink, item)
         end
     end
 
-    ABGP:AuditItemDistribution(item);
+    if not item.testItem then
+        ABGP:AuditItemDistribution(item);
+    end
 end
 
 function ABGP:DistribOnCheck(data, distribution, sender)
@@ -720,11 +726,11 @@ function ABGP:CreateDistribWindow()
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0, 0 } });
     tabGroup:AddChild(mainLine);
 
     local disenchant = AceGUI:Create("Button");
-    disenchant:SetWidth(125);
+    disenchant:SetWidth(115);
     disenchant:SetText("Disenchant");
     disenchant:SetCallback("OnClick", function(widget)
         local currentItem = window:GetUserData("currentItem");
@@ -741,7 +747,7 @@ function ABGP:CreateDistribWindow()
     window:SetUserData("disenchantButton", disenchant);
 
     local distrib = AceGUI:Create("Button");
-    distrib:SetWidth(125);
+    distrib:SetWidth(115);
     distrib:SetText("Distribute");
     distrib:SetDisabled(true);
     distrib:SetCallback("OnClick", function() AwardItem(); end);
@@ -765,12 +771,12 @@ function ABGP:CreateDistribWindow()
     window:SetUserData("costEdit", cost);
 
     local desc = AceGUI:Create("Label");
-    desc:SetWidth(50);
+    desc:SetWidth(45);
     desc:SetText(" Cost");
     mainLine:AddChild(desc);
 
     local multiple = AceGUI:Create("CheckBox");
-    multiple:SetWidth(100);
+    multiple:SetWidth(95);
     multiple:SetLabel("Multiple");
     multiple:SetCallback("OnValueChanged", function(widget, event, value)
         local currentItem = window:GetUserData("currentItem");
@@ -780,7 +786,7 @@ function ABGP:CreateDistribWindow()
     window:SetUserData("multipleItemsCheckbox", multiple);
 
     local resetRolls = AceGUI:Create("Button");
-    resetRolls:SetWidth(125);
+    resetRolls:SetWidth(115);
     resetRolls:SetCallback("OnClick", function(widget)
         local currentItem = window:GetUserData("currentItem");
         if currentItem.rollsAllowed then
@@ -799,8 +805,18 @@ function ABGP:CreateDistribWindow()
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);
 
+    local test = AceGUI:Create("CheckBox");
+    test:SetWidth(60);
+    test:SetLabel("Test");
+    test:SetCallback("OnValueChanged", function(widget, event, value)
+        local currentItem = window:GetUserData("currentItem");
+        currentItem.testItem = value;
+    end);
+    mainLine:AddChild(test);
+    window:SetUserData("testCheckbox", test);
+
     local done = AceGUI:Create("Button");
-    done:SetWidth(80);
+    done:SetWidth(75);
     done:SetText("Done");
     done:SetCallback("OnClick", function(widget)
         local currentItem = window:GetUserData("currentItem");
@@ -899,7 +915,8 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
             roll = data.roll,
             requestType = data.requestType,
             override = data.override,
-            count = #currentItem.distributions
+            count = #currentItem.distributions,
+            testItem = currentItem.testItem,
         }, "BROADCAST");
 
         currentItem.closeConfirmed = true;
@@ -931,7 +948,8 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
 
         ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_TRASHED, {
             itemLink = data.itemLink,
-            count = #currentItem.distributions
+            count = #currentItem.distributions,
+            testItem = currentItem.testItem
         }, "BROADCAST");
 
         currentItem.closeConfirmed = true;
