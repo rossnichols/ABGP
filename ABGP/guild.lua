@@ -124,6 +124,14 @@ function ABGP:GetItemPriorities()
     };
 end
 
+function ABGP:OutsiderOnOfficerNotesUpdated()
+    self:OutsiderOnGroupJoined();
+end
+
+function ABGP:OutsiderOnPartyLeaderChanged()
+    self:OutsiderOnGroupJoined();
+end
+
 function ABGP:OutsiderOnGroupJoined()
     if not self:Get("outsider") then return; end
 

@@ -123,6 +123,10 @@ function ABGP:RebuildOfficerNotes()
     else
         self:Notify("Updated %d officer notes with the latest priority data!", count);
         self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+
+        -- Only send to BROADCAST when rebuilding the officer notes. This is for outsider support.
+        -- Normal in-raid updates can be handled directly by the outsider without needing resync.
+        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
     end
 end
 
@@ -206,9 +210,10 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 		local data = epgp[value.phase];
 		if not data.trial then
 			data.gp = data.gp + cost;
-			data.priority = data.ep * 10 / data.gp;
-            self:LogDebug("EPGP[%s] for %s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-                value.phase, player, data.ep, data.gp, cost, data.priority);
+            data.priority = data.ep * 10 / data.gp;
+            local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
+            self:LogDebug("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
+                value.phase, player, proxy, data.ep, data.gp, cost, data.priority);
             table.sort(self.Priorities[value.phase], PrioritySort);
 
             self:RefreshActivePlayers();

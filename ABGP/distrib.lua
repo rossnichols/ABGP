@@ -401,7 +401,7 @@ local function RemoveActiveItem(itemLink, item)
         end
     end
 
-    if not item.testItem then
+    if not (item.testItem or ABGP.IgnoreSelfDistributed) then
         ABGP:AuditItemDistribution(item);
     end
 end

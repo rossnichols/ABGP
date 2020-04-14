@@ -93,6 +93,7 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED, function(self, event, data, distribution, sender)
         GuildRoster();
+        self:OutsiderOnOfficerNotesUpdated();
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_ROLLED, function(self, event, data, distribution, sender)
@@ -182,15 +183,15 @@ end
 
 function ABGP:ColorizeName(name, class)
     if not class then
-        if UnitExists(name) then
-            local _, className = UnitClass(name);
-            class = className;
-        end
-    end
-    if not class then
         local epgp = self:GetActivePlayer(name);
         if epgp then
             class = epgp.class;
+        end
+    end
+    if not class then
+        if UnitExists(name) then
+            local _, className = UnitClass(name);
+            class = className;
         end
     end
     if not class then
@@ -481,6 +482,7 @@ f:RegisterEvent("PLAYER_LOGOUT");
 f:RegisterEvent("BOSS_KILL");
 f:RegisterEvent("LOADING_SCREEN_DISABLED");
 f:RegisterEvent("LOOT_OPENED");
+f:RegisterEvent("PARTY_LEADER_CHANGED");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:RebuildGuildInfo();
@@ -525,6 +527,8 @@ f:SetScript("OnEvent", function(self, event, ...)
         ABGP:ScheduleTimer(onZoneChanged, 5);
     elseif event == "LOOT_OPENED" then
         ABGP:AnnounceOnLootOpened();
+    elseif event == "PARTY_LEADER_CHANGED" then
+        ABGP:OutsiderOnPartyLeaderChanged();
     end
 end);
 
