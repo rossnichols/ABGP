@@ -4,12 +4,12 @@ local ABGP = ABGP;
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
 local GuildRoster = GuildRoster;
-local GetGuildInfo = GetGuildInfo;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitIsGroupLeader = UnitIsGroupLeader;
+local UnitIsUnit = UnitIsUnit;
 local table = table;
 local pairs = pairs;
 local next = next;
@@ -43,7 +43,8 @@ function ABGP:GetRaidGroup()
     local group = self:Get("raidGroup");
     if group then return group; end
 
-    local _, rank = GetGuildInfo("player");
+    local epgp = self:GetActivePlayer(UnitName("player"));
+    local rank = epgp and epgp.rank;
     if not rank then return next(rankData); end
 
     for group in pairs(rankData) do
@@ -124,31 +125,58 @@ function ABGP:GetItemPriorities()
     };
 end
 
-function ABGP:OutsiderOnOfficerNotesUpdated()
-    self:OutsiderOnGroupJoined();
-end
+local lastSyncTarget;
 
-function ABGP:OutsiderOnPartyLeaderChanged()
-    self:OutsiderOnGroupJoined();
-end
-
-function ABGP:OutsiderOnGroupJoined()
-    if not self:Get("outsider") then return; end
+local function GetSyncTarget()
+    if not IsInRaid() then return; end
 
     local groupSize = GetNumGroupMembers();
     for i = 1, groupSize do
-        local unit = "player";
-        if IsInRaid() then
-            unit = "raid" .. i;
-        elseif i ~= groupSize then
-            unit = "party" .. i;
-        end
+        local unit = "raid" .. i;
 
-        if UnitIsGroupLeader(unit) then
-            local name = UnitName(unit);
-            self:Notify("Syncing with %s...", self:ColorizeName(name));
-            self:SendComm(ABGP.CommTypes.REQUEST_PRIORITY_SYNC, {}, "WHISPER", name);
-            break;
+        if UnitIsGroupLeader(unit) and not UnitIsUnit(unit, "player") then
+            return UnitName(unit);
         end
     end
+end
+
+local function CheckSync(force)
+    if not ABGP:Get("outsider") then return; end
+
+    local target = GetSyncTarget();
+    ABGP:LogDebug("Sync target: %s", target or "<none>");
+    if not target then
+        lastSyncTarget = nil;
+        for phase, data in pairs(ABGP.Priorities) do
+            table.wipe(data);
+        end
+        ABGP:RefreshActivePlayers();
+        return;
+    end
+
+    if force or (lastSyncTarget ~= target) then
+        lastSyncTarget = target;
+        ABGP:LogDebug("Syncing with %s...", ABGP:ColorizeName(target));
+        ABGP:SendComm(ABGP.CommTypes.REQUEST_PRIORITY_SYNC, {}, "WHISPER", target);
+    end
+end
+
+function ABGP:OutsiderOnOfficerNotesUpdated()
+    CheckSync(true);
+end
+
+function ABGP:OutsiderOnPartyLeaderChanged()
+    CheckSync(false);
+end
+
+function ABGP:OutsiderOnGroupLeft()
+    CheckSync(false);
+end
+
+function ABGP:OutsiderOnGroupUpdate()
+    CheckSync(false);
+end
+
+function ABGP:OutsiderOnGroupJoined()
+    CheckSync(true);
 end

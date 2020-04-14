@@ -147,9 +147,7 @@ function ABGP:InitOptions()
             get = function(self) return ABGP.db.char.outsider; end,
             set = function(self, v)
                 ABGP.db.char.outsider = v;
-                if v and IsInGroup() then
-                    ABGP:OutsiderOnGroupJoined();
-                end
+                ABGP:SendMessage(ABGP.CommTypes.OFFICER_NOTES_UPDATED);
             end,
         },
     };

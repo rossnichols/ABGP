@@ -36,11 +36,18 @@ local function OnGroupJoined()
     ABGP:OutsiderOnGroupJoined();
 end
 
+local function OnGuildRosterUpdate()
+    ABGP:RebuildGuildInfo();
+    ABGP:VersionOnGuildRosterUpdate();
+    ABGP:PriorityOnGuildRosterUpdate();
+end
+
 function ABGP:OnInitialize()
     self:RegisterComm("ABGP");
     self:InitOptions();
     self:HookTooltips();
     self:AddItemHooks();
+    self:AddDataHooks();
     self:CheckHardcodedData();
     self:RefreshItemValues();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
@@ -92,8 +99,12 @@ function ABGP:OnInitialize()
     end, self);
 
     self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED, function(self, event, data, distribution, sender)
-        GuildRoster();
-        self:OutsiderOnOfficerNotesUpdated();
+        if self:Get("outsider") then
+            self:OutsiderOnOfficerNotesUpdated();
+        else
+            GuildRoster();
+            OnGuildRosterUpdate();
+        end
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_ROLLED, function(self, event, data, distribution, sender)
@@ -213,11 +224,12 @@ end
 function ABGP:IsPrivileged()
     -- Check officer status by looking for the privilege to speak in officer chat.
     local isOfficer = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[4];
-    return isOfficer or ABGP.Debug;
+    return (isOfficer and not self:Get("outsider")) or ABGP.Debug;
 end
 
 function ABGP:CanEditOfficerNotes()
-    return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
+    local canEdit = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
+    return canEdit and not self:Get("outsider");
 end
 
 
@@ -485,9 +497,9 @@ f:RegisterEvent("LOOT_OPENED");
 f:RegisterEvent("PARTY_LEADER_CHANGED");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
-        ABGP:RebuildGuildInfo();
-        ABGP:VersionOnGuildRosterUpdate();
-        ABGP:PriorityOnGuildRosterUpdate();
+        if not ABGP:Get("outsider") then
+            OnGuildRosterUpdate();
+        end
     elseif event == "CHAT_MSG_SYSTEM" then
         local text = ...;
         local sender, roll, minRoll, maxRoll = text:match(rollRegex);
@@ -499,8 +511,10 @@ f:SetScript("OnEvent", function(self, event, ...)
         OnGroupJoined();
     elseif event == "GROUP_LEFT" then
         ABGP:RequestOnGroupLeft();
+        ABGP:OutsiderOnGroupLeft();
     elseif event == "GROUP_ROSTER_UPDATE" then
         ABGP:RequestOnGroupUpdate();
+        ABGP:OutsiderOnGroupUpdate();
     elseif event == "PLAYER_LEAVING_WORLD" then
         ABGP:DistribOnLeavingWorld();
     elseif event == "LOADING_SCREEN_ENABLED" then

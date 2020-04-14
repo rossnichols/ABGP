@@ -4,7 +4,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
-local GuildRosterSetOfficerNote = GuildRosterSetOfficerNote;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
@@ -15,6 +14,20 @@ local floor = floor;
 local tonumber = tonumber;
 local select = select;
 local pairs = pairs;
+local hooksecurefunc = hooksecurefunc;
+
+local updatingNotes = false;
+
+function ABGP:AddDataHooks()
+    local onSetNote = function()
+        if not updatingNotes then
+            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
+        end
+    end;
+    hooksecurefunc("GuildRosterSetPublicNote", onSetNote);
+    hooksecurefunc("GuildRosterSetOfficerNote", onSetNote);
+end
 
 local function PrioritySort(a, b)
     if a.priority ~= b.priority then
@@ -25,8 +38,6 @@ local function PrioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
-    if self:Get("outsider") then return; end
-
     local needsUpdate = false;
     local p1 = self.Priorities[self.Phases.p1];
     local p3 = self.Priorities[self.Phases.p3];
@@ -123,9 +134,6 @@ function ABGP:RebuildOfficerNotes()
     else
         self:Notify("Updated %d officer notes with the latest priority data!", count);
         self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
-
-        -- Only send to BROADCAST when rebuilding the officer notes. This is for outsider support.
-        -- Normal in-raid updates can be handled directly by the outsider without needing resync.
         self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
     end
 end
@@ -182,9 +190,14 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
     end
 
     if note ~= existingNote then
-        GuildRosterSetOfficerNote(guildIndex, note);
+        updatingNotes = true;
+        _G.GuildRosterSetOfficerNote(guildIndex, note);
+        updatingNotes = false;
+
         if not suppressComms then
             self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+            -- Do not send to BROADCAST - the addon will take care of updating
+            -- its priority list itself, without requiring a resync.
         end
     end
 
