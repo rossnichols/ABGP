@@ -8,6 +8,7 @@ local UnitExists = UnitExists;
 local UnitName = UnitName;
 local UnitIsInMyGuild = UnitIsInMyGuild;
 local GetItemInfo = GetItemInfo;
+local IsAltKeyDown = IsAltKeyDown;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -875,6 +876,22 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
         activeItems[data.itemLink].receivedComm = true;
         RebuildUI();
     end
+end
+
+local function ShouldDistributeLoot()
+    return IsAltKeyDown() and ABGP:IsPrivileged();
+end
+
+local function DistributeLoot(itemLink)
+    if not (itemLink and ShouldDistributeLoot()) then
+        return false;
+    end
+    ABGP:ShowDistrib(itemLink);
+    return true;
+end
+
+function ABGP:AddItemHooks()
+    self:RegisterModifiedItemClickFn(DistributeLoot);
 end
 
 StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {

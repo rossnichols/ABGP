@@ -107,6 +107,10 @@ function ABGP:OnInitialize()
         self:OnPrioritySync(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.CommTypes.BOSS_LOOT, function(self, event, data, distribution, sender)
+        self:AnnounceOnBossLoot(data, distribution, sender);
+    end, self);
+
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
@@ -476,6 +480,7 @@ f:RegisterEvent("LOADING_SCREEN_ENABLED");
 f:RegisterEvent("PLAYER_LOGOUT");
 f:RegisterEvent("BOSS_KILL");
 f:RegisterEvent("LOADING_SCREEN_DISABLED");
+f:RegisterEvent("LOOT_OPENED");
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "GUILD_ROSTER_UPDATE" then
         ABGP:RebuildGuildInfo();
@@ -518,6 +523,8 @@ f:SetScript("OnEvent", function(self, event, ...)
         end
         ABGP:ScheduleTimer(onZoneChanged, 1);
         ABGP:ScheduleTimer(onZoneChanged, 5);
+    elseif event == "LOOT_OPENED" then
+        ABGP:AnnounceOnLootOpened();
     end
 end);
 

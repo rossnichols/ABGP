@@ -87,6 +87,10 @@ ABGP.CommTypes = {
     PRIORITY_SYNC = CV("ABGP_PRIORITY_SYNC"),
     -- priorities: table
 
+    BOSS_LOOT = CV("ABGP_BOSS_LOOT"),
+    -- source: string
+    -- items: table
+
     -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = "ABGP_VERSION_REQUEST",
     -- reset: bool or nil
