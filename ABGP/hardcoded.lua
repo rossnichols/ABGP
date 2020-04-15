@@ -98,7 +98,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["player"] = "Jezail",
 		}, -- [13]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Choker of Enlightenment",
 			["date"] = "04/09/20",
 			["itemLink"] = "|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
@@ -224,7 +224,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["gp"] = 0,
 		}, -- [31]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Snowblind Shoes",
 			["date"] = "04/01/20",
 			["itemLink"] = "|cffa335ee|Hitem:19131|h[Snowblind Shoes]|h|r",
@@ -343,7 +343,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["player"] = "Klue",
 		}, -- [48]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Sapphiron Drape",
 			["date"] = "03/19/20",
 			["itemLink"] = "|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
@@ -567,7 +567,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["gp"] = 150,
 		}, -- [80]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Felheart Pants",
 			["date"] = "03/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16810|h[Felheart Pants]|h|r",
@@ -1513,9 +1513,9 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 		}, -- [215]
 		{
 			["gp"] = 0,
-			["item"] = "Core Leather",
+			["item"] = "Aged Core Leather Gloves",
 			["date"] = "01/07/20",
-			["itemLink"] = "|cffffffff|Hitem:17012|h[Core Leather]|h|r",
+			["itemLink"] = "|cffa335ee|Hitem:18823|h[Aged Core Leather Gloves]|h|r",
 			["player"] = "Gyda",
 		}, -- [216]
 		{
@@ -4212,7 +4212,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Band of Accuria", -- [1]
 			300, -- [2]
 			"|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r", -- [3]
-			["notes"] = "Tank Super Prio",
+			["notes"] = "Tank Super Prio, Red Reserved",
 			["priority"] = {
 				"KAT4FITE", -- [1]
 				"Rogue", -- [2]
@@ -4408,6 +4408,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Choker of the Fire Lord", -- [1]
 			250, -- [2]
 			"|cffa335ee|Hitem:18814|h[Choker of the Fire Lord]|h|r", -- [3]
+			["notes"] = "Red Reserved",
 			["priority"] = {
 				"Mage", -- [1]
 				"Priest (Shadow)", -- [2]
@@ -5190,6 +5191,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Onslaught Girdle", -- [1]
 			300, -- [2]
 			"|cffa335ee|Hitem:19137|h[Onslaught Girdle]|h|r", -- [3]
+			["notes"] = "Red Reserved",
 			["priority"] = {
 				"Metal Rogue", -- [1]
 				"Paladin (Ret)", -- [2]
@@ -5234,6 +5236,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Quick Strike Ring", -- [1]
 			200, -- [2]
 			"|cffa335ee|Hitem:18821|h[Quick Strike Ring]|h|r", -- [3]
+			["notes"] = "Red Reserved",
 			["priority"] = {
 				"Metal Rogue", -- [1]
 			},
@@ -5366,12 +5369,12 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Snowblind Shoes", -- [1]
 			150, -- [2]
 			"|cffa335ee|Hitem:19131|h[Snowblind Shoes]|h|r", -- [3]
+			["notes"] = "Shadow Priest Super Prio",
 			["priority"] = {
 				"Mage", -- [1]
 				"Priest (Shadow)", -- [2]
 				"Warlock", -- [3]
 			},
-			["notes"] = "Shadow Priest Super Prio",
 		}, -- [152]
 		{
 			"Sorcerous Dagger", -- [1]
@@ -5460,6 +5463,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"Progression", -- [1]
 			},
+			["notes"] = "Red Reserved",
 		}, -- [162]
 		{
 			"Vambraces of Prophecy", -- [1]
@@ -5509,1421 +5513,1598 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 _G.ABGP_Data[ABGP.Phases.p3] = {
 	["gpHistory"] = {
 		{
+			["player"] = "Lunamar",
+			["item"] = "Staff of the Shadow Flame",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
+			["gp"] = 450,
+		}, -- [1]
+		{
+			["player"] = "Cleaves",
+			["item"] = "Head of Nefarian",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+			["gp"] = 150,
+		}, -- [2]
+		{
+			["player"] = "Quellia",
+			["item"] = "Prestor's Talisman of Connivery",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
+			["gp"] = 200,
+		}, -- [3]
+		{
+			["player"] = "Ezekkiel",
+			["item"] = "Netherwind Robes",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
+			["gp"] = 0,
+		}, -- [4]
+		{
+			["player"] = "Clem",
+			["item"] = "Netherwind Robes",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
+			["gp"] = 0,
+		}, -- [5]
+		{
+			["player"] = "Huntingkabu",
+			["item"] = "Ashjre'thul, Crossbow of Smiting",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
+			["gp"] = 400,
+		}, -- [6]
+		{
+			["gp"] = 0,
+			["item"] = "Taut Dragonhide Shoulderpads",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
+			["player"] = "Azuj",
+		}, -- [7]
+		{
+			["player"] = "Xane",
+			["item"] = "Netherwind Mantle",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
+			["gp"] = 80,
+		}, -- [8]
+		{
+			["player"] = "Basherslice",
+			["item"] = "Dragonstalker's Spaulders",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
+			["gp"] = 200,
+		}, -- [9]
+		{
+			["player"] = "Xane",
+			["item"] = "Ringo's Blizzard Boots",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19438|h[Ringo's Blizzard Boots]|h|r",
+			["gp"] = 250,
+		}, -- [10]
+		{
+			["player"] = "Cleaves",
+			["item"] = "Drake Talon Pauldrons",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
+			["gp"] = 250,
+		}, -- [11]
+		{
+			["player"] = "Coop",
+			["item"] = "Drake Fang Talisman",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
+			["gp"] = 400,
+		}, -- [12]
+		{
+			["player"] = "Oya",
+			["item"] = "Doom's Edge",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
+			["gp"] = 100,
+		}, -- [13]
+		{
+			["player"] = "Darknéss",
+			["item"] = "Scrolls of Blinding Light",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r",
+			["gp"] = 0,
+		}, -- [14]
+		{
+			["player"] = "Jearom",
+			["item"] = "Drake Talon Pauldrons",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
+			["gp"] = 250,
+		}, -- [15]
+		{
+			["player"] = "Jezail",
+			["item"] = "Maladath, Runed Blade of the Black Flight",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
+			["gp"] = 200,
+		}, -- [16]
+		{
+			["gp"] = 0,
+			["item"] = "Sabatons of Wrath",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
+			["player"] = "Jearom",
+		}, -- [17]
+		{
+			["player"] = "Clem",
+			["item"] = "Netherwind Boots",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
+			["gp"] = 0,
+		}, -- [18]
+		{
+			["player"] = "Sausage",
+			["item"] = "Belt of Transcendence",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
+			["gp"] = 100,
+		}, -- [19]
+		{
+			["player"] = "Klue",
+			["item"] = "Nemesis Belt",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
+			["gp"] = 0,
+		}, -- [20]
+		{
+			["player"] = "Jearom",
+			["item"] = "The Untamed Blade",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
+			["gp"] = 0,
+		}, -- [21]
+		{
+			["player"] = "Huntingkabu",
+			["item"] = "Dragonstalker's Bracers",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
+			["gp"] = 100,
+		}, -- [22]
+		{
+			["player"] = "Basherslice",
+			["item"] = "Dragonstalker's Bracers",
+			["date"] = "04/14/20",
+			["itemLink"] = "|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
+			["gp"] = 100,
+		}, -- [23]
+		{
 			["player"] = "Oya",
 			["item"] = "Crul'shorukh, Edge of Chaos",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19363|h[Crul'shorukh, Edge of Chaos]|h|r",
 			["gp"] = 400,
-		}, -- [1]
+		}, -- [24]
 		{
 			["player"] = "Gyda",
 			["item"] = "Boots of the Shadow Flame",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19381|h[Boots of the Shadow Flame]|h|r",
 			["gp"] = 200,
-		}, -- [2]
+		}, -- [25]
 		{
 			["player"] = "Huntingkabu",
 			["item"] = "Head of Nefarian",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [3]
+		}, -- [26]
 		{
 			["player"] = "Tracer",
 			["item"] = "Breastplate of Wrath",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r",
 			["gp"] = 200,
-		}, -- [4]
+		}, -- [27]
 		{
 			["player"] = "Darknéss",
 			["item"] = "Judgement Breastplate",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
 			["gp"] = 0,
-		}, -- [5]
+		}, -- [28]
 		{
 			["player"] = "Groggy",
 			["item"] = "Taut Dragonhide Gloves",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r",
 			["gp"] = 80,
-		}, -- [6]
+		}, -- [29]
 		{
 			["player"] = "Tracer",
 			["item"] = "Elementium Reinforced Bulwark",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19349|h[Elementium Reinforced Bulwark]|h|r",
 			["gp"] = 250,
-		}, -- [7]
+		}, -- [30]
 		{
 			["player"] = "Klue",
 			["item"] = "Nemesis Spaulders",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16932|h[Nemesis Spaulders]|h|r",
 			["gp"] = 125,
-		}, -- [8]
+		}, -- [31]
 		{
 			["player"] = "Ezekkiel",
 			["item"] = "Netherwind Mantle",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
 			["gp"] = 80,
-		}, -- [9]
+		}, -- [32]
 		{
 			["gp"] = 0,
 			["item"] = "Styleen's Impeding Scarab",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
 			["player"] = "Cleaves",
-		}, -- [10]
+		}, -- [33]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Nemesis Gloves",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16928|h[Nemesis Gloves]|h|r",
 			["gp"] = 100,
-		}, -- [11]
+		}, -- [34]
 		{
 			["player"] = "Basherslice",
 			["item"] = "Dragonstalker's Gauntlets",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
 			["gp"] = 150,
-		}, -- [12]
+		}, -- [35]
 		{
 			["player"] = "Ezekkiel",
 			["item"] = "Band of Forced Concentration",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r",
 			["gp"] = 250,
-		}, -- [13]
+		}, -- [36]
 		{
 			["player"] = "Esconar",
 			["item"] = "Draconic Avenger",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19354|h[Draconic Avenger]|h|r",
 			["gp"] = 0,
-		}, -- [14]
+		}, -- [37]
 		{
 			["player"] = "Oya",
 			["item"] = "Legguards of the Fallen Crusader",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
 			["gp"] = 100,
-		}, -- [15]
+		}, -- [38]
 		{
 			["player"] = "Groggy",
 			["item"] = "Rejuvenating Gem",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19395|h[Rejuvenating Gem]|h|r",
 			["gp"] = 400,
-		}, -- [16]
+		}, -- [39]
 		{
 			["player"] = "Klisk",
 			["item"] = "Lifegiving Gem",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r",
 			["gp"] = 200,
-		}, -- [17]
+		}, -- [40]
 		{
 			["gp"] = 0,
 			["item"] = "Sabatons of Wrath",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
 			["player"] = "Esconar",
-		}, -- [18]
+		}, -- [41]
 		{
 			["gp"] = 0,
 			["item"] = "Bloodfang Boots",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
 			["player"] = "Yoink",
-		}, -- [19]
+		}, -- [42]
 		{
 			["player"] = "Klisk",
 			["item"] = "Waistband of Wrath",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r",
 			["gp"] = 100,
-		}, -- [20]
+		}, -- [43]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Dragonstalker's Belt",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r",
 			["gp"] = 100,
-		}, -- [21]
+		}, -- [44]
 		{
 			["player"] = "Xanido",
 			["item"] = "Netherwind Bindings",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
 			["gp"] = 100,
-		}, -- [22]
+		}, -- [45]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Arcane Infused Gem",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:19336|h[Arcane Infused Gem]|h|r",
 			["gp"] = 0,
-		}, -- [23]
+		}, -- [46]
 		{
 			["player"] = "Soggybottom",
 			["item"] = "Bindings of Transcendence",
 			["date"] = "04/07/20",
 			["itemLink"] = "|cffa335ee|Hitem:16926|h[Bindings of Transcendence]|h|r",
 			["gp"] = 100,
-		}, -- [24]
+		}, -- [47]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Head of Nefarian",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [25]
+		}, -- [48]
 		{
 			["player"] = "Wardrust",
 			["item"] = "Therazane's Link",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
 			["gp"] = 0,
-		}, -- [26]
+		}, -- [49]
 		{
 			["player"] = "Lunamar",
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
 			["gp"] = 0,
-		}, -- [27]
+		}, -- [50]
 		{
 			["player"] = "Starlight",
 			["item"] = "Stormrage Chestguard",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16897|h[Stormrage Chestguard]|h|r",
 			["gp"] = 0,
-		}, -- [28]
+		}, -- [51]
 		{
 			["player"] = "Azuj",
 			["item"] = "Chromatically Tempered Sword",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
 			["gp"] = 400,
-		}, -- [29]
+		}, -- [52]
 		{
 			["player"] = "Quellia",
 			["item"] = "Stormrage Pauldrons",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r",
 			["gp"] = 0,
-		}, -- [30]
+		}, -- [53]
 		{
 			["player"] = "Covenus",
 			["item"] = "Dragonstalker's Spaulders",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
 			["gp"] = 200,
-		}, -- [31]
+		}, -- [54]
 		{
 			["player"] = "Clem",
 			["item"] = "Claw of Chromaggus",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19347|h[Claw of Chromaggus]|h|r",
 			["gp"] = 300,
-		}, -- [32]
+		}, -- [55]
 		{
 			["player"] = "Huntingkabu",
 			["item"] = "Emberweave Leggings",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r",
 			["gp"] = 0,
-		}, -- [33]
+		}, -- [56]
 		{
 			["gp"] = 0,
 			["item"] = "Bloodfang Gloves",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
 			["player"] = "Gyda",
-		}, -- [34]
+		}, -- [57]
 		{
 			["gp"] = 0,
 			["item"] = "Malfurion's Blessed Bulwark",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
 			["player"] = "Starlight",
-		}, -- [35]
+		}, -- [58]
 		{
 			["player"] = "Oya",
 			["item"] = "Drake Talon Pauldrons",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
 			["gp"] = 250,
-		}, -- [36]
+		}, -- [59]
 		{
 			["player"] = "Priestpimp",
 			["item"] = "Essence Gatherer",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r",
 			["gp"] = 100,
-		}, -- [37]
+		}, -- [60]
 		{
 			["player"] = "Huntingkabu",
 			["item"] = "Dragonstalker's Gauntlets",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
 			["gp"] = 150,
-		}, -- [38]
+		}, -- [61]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Bracers of Arcane Accuracy",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
 			["gp"] = 200,
-		}, -- [39]
+		}, -- [62]
 		{
 			["player"] = "Xanido",
 			["item"] = "Netherwind Boots",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
 			["gp"] = 0,
-		}, -- [40]
+		}, -- [63]
 		{
 			["player"] = "Xanido",
 			["item"] = "Mind Quickening Gem",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
 			["gp"] = 100,
-		}, -- [41]
+		}, -- [64]
 		{
 			["player"] = "Cmdk",
 			["item"] = "Netherwind Belt",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
 			["gp"] = 0,
-		}, -- [42]
+		}, -- [65]
 		{
 			["player"] = "Suzukagozen",
 			["item"] = "Bloodfang Belt",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
 			["gp"] = 100,
-		}, -- [43]
+		}, -- [66]
 		{
 			["player"] = "Jezail",
 			["item"] = "The Untamed Blade",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
 			["gp"] = 0,
-		}, -- [44]
+		}, -- [67]
 		{
 			["player"] = "Suzukagozen",
 			["item"] = "Bloodfang Bracers",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
 			["gp"] = 100,
-		}, -- [45]
+		}, -- [68]
 		{
 			["player"] = "Saccrilege",
 			["item"] = "Nemesis Bracers",
 			["date"] = "03/31/20",
 			["itemLink"] = "|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
 			["gp"] = 100,
-		}, -- [46]
+		}, -- [69]
 		{
 			["player"] = "Quellia",
 			["item"] = "Head of Nefarian",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [47]
+		}, -- [70]
 		{
 			["player"] = "Sausage",
 			["item"] = "Pure Elementium Band",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
 			["gp"] = 200,
-		}, -- [48]
+		}, -- [71]
 		{
 			["player"] = "Righteous",
 			["item"] = "Lok'amir il Romathis",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19360|h[Lok'amir il Romathis]|h|r",
 			["gp"] = 400,
-		}, -- [49]
+		}, -- [72]
 		{
 			["player"] = "Nadrell",
 			["item"] = "Judgement Breastplate",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
 			["gp"] = 0,
-		}, -- [50]
+		}, -- [73]
 		{
 			["gp"] = 0,
 			["item"] = "Pauldrons of Wrath",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
 			["player"] = "Jezail",
-		}, -- [51]
+		}, -- [74]
 		{
 			["player"] = "Klisk",
 			["item"] = "Pauldrons of Wrath",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
 			["gp"] = 200,
-		}, -- [52]
+		}, -- [75]
 		{
 			["player"] = "Quellia",
 			["item"] = "Herald of Woe",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19357|h[Herald of Woe]|h|r",
 			["gp"] = 0,
-		}, -- [53]
+		}, -- [76]
 		{
 			["player"] = "Righteous",
 			["item"] = "Judgement Gauntlets",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
 			["gp"] = 0,
-		}, -- [54]
+		}, -- [77]
 		{
 			["player"] = "Yoink",
 			["item"] = "Drake Fang Talisman",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
 			["gp"] = 400,
-		}, -- [55]
+		}, -- [78]
 		{
 			["player"] = "Cleaves",
 			["item"] = "Legguards of the Fallen Crusader",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
 			["gp"] = 100,
-		}, -- [56]
+		}, -- [79]
 		{
 			["player"] = "Priestpimp",
 			["item"] = "Boots of Transcendence",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16919|h[Boots of Transcendence]|h|r",
 			["gp"] = 50,
-		}, -- [57]
+		}, -- [80]
 		{
 			["gp"] = 0,
 			["item"] = "Stormrage Boots",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
 			["player"] = "Quellia",
-		}, -- [58]
+		}, -- [81]
 		{
 			["player"] = "Friend",
 			["item"] = "Nemesis Belt",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
 			["gp"] = 0,
-		}, -- [59]
+		}, -- [82]
 		{
 			["player"] = "Cmdk",
 			["item"] = "Mind Quickening Gem",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
 			["gp"] = 100,
-		}, -- [60]
+		}, -- [83]
 		{
 			["player"] = "Xane",
 			["item"] = "Mantle of the Blackwing Cabal",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
 			["gp"] = 200,
-		}, -- [61]
+		}, -- [84]
 		{
 			["player"] = "Groggy",
 			["item"] = "Judgement Bindings",
 			["date"] = "03/24/20",
 			["itemLink"] = "|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r",
 			["gp"] = 0,
-		}, -- [62]
+		}, -- [85]
 		{
 			["player"] = "Saccrilege",
 			["item"] = "Staff of the Shadow Flame",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
 			["gp"] = 450,
-		}, -- [63]
+		}, -- [86]
 		{
 			["player"] = "Gyda",
 			["item"] = "Head of Nefarian",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [64]
+		}, -- [87]
 		{
 			["player"] = "Quellia",
 			["item"] = "Archimtiros' Ring of Reckoning",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r",
 			["gp"] = 125,
-		}, -- [65]
+		}, -- [88]
 		{
 			["player"] = "Basherslice",
 			["item"] = "Dragonstalker's Breastplate",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
 			["gp"] = 200,
-		}, -- [66]
+		}, -- [89]
 		{
 			["player"] = "Saccrilege",
 			["item"] = "Nemesis Robes",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
 			["gp"] = 0,
-		}, -- [67]
+		}, -- [90]
 		{
 			["player"] = "Nadrell",
 			["item"] = "Empowered Leggings",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r",
 			["gp"] = 200,
-		}, -- [68]
+		}, -- [91]
 		{
 			["player"] = "Soggybottom",
 			["item"] = "Shimmering Geta",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
 			["gp"] = 100,
-		}, -- [69]
+		}, -- [92]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Dragonstalker's Spaulders",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
 			["gp"] = 200,
-		}, -- [70]
+		}, -- [93]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Emberweave Leggings",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r",
 			["gp"] = 0,
-		}, -- [71]
+		}, -- [94]
 		{
 			["player"] = "Xane",
 			["item"] = "Netherwind Gloves",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16913|h[Netherwind Gloves]|h|r",
 			["gp"] = 100,
-		}, -- [72]
+		}, -- [95]
 		{
 			["player"] = "Klue",
 			["item"] = "Ebony Flame Gloves",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
 			["gp"] = 200,
-		}, -- [73]
+		}, -- [96]
 		{
 			["player"] = "Esconar",
 			["item"] = "Drake Talon Pauldrons",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
 			["gp"] = 250,
-		}, -- [74]
+		}, -- [97]
 		{
 			["player"] = "Suzukagozen",
 			["item"] = "Claw of the Black Drake",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r",
 			["gp"] = 0,
-		}, -- [75]
+		}, -- [98]
 		{
 			["player"] = "Klisk",
 			["item"] = "Gauntlets of Wrath",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16964|h[Gauntlets of Wrath]|h|r",
 			["gp"] = 150,
-		}, -- [76]
+		}, -- [99]
 		{
 			["player"] = "Tikki",
 			["item"] = "Maladath, Runed Blade of the Black Flight",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
 			["gp"] = 200,
-		}, -- [77]
+		}, -- [100]
 		{
 			["player"] = "Tikki",
 			["item"] = "Sabatons of Wrath",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
 			["gp"] = 150,
-		}, -- [78]
+		}, -- [101]
 		{
 			["player"] = "Groggy",
 			["item"] = "Judgement Sabatons",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
 			["gp"] = 0,
-		}, -- [79]
+		}, -- [102]
 		{
 			["player"] = "Groggy",
 			["item"] = "Judgement Belt",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
 			["gp"] = 0,
-		}, -- [80]
+		}, -- [103]
 		{
 			["player"] = "Tikki",
 			["item"] = "Helm of Endless Rage",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19372|h[Helm of Endless Rage]|h|r",
 			["gp"] = 150,
-		}, -- [81]
+		}, -- [104]
 		{
 			["player"] = "Starlight",
 			["item"] = "Stormrage Belt",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r",
 			["gp"] = 0,
-		}, -- [82]
+		}, -- [105]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "The Black Book",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
 			["gp"] = 0,
-		}, -- [83]
+		}, -- [106]
 		{
 			["player"] = "Starlight",
 			["item"] = "Stormrage Bracers",
 			["date"] = "03/17/20",
 			["itemLink"] = "|cffa335ee|Hitem:16904|h[Stormrage Bracers]|h|r",
 			["gp"] = 100,
-		}, -- [84]
+		}, -- [107]
 		{
 			["player"] = "Basherslice",
 			["item"] = "Head of Nefarian",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [85]
+		}, -- [108]
 		{
 			["player"] = "Righteous",
 			["item"] = "Mish'undare, Circlet of the Mind Flayer",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
 			["gp"] = 300,
-		}, -- [86]
+		}, -- [109]
 		{
 			["player"] = "Basherslice",
 			["item"] = "Therazane's Link",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
 			["gp"] = 0,
-		}, -- [87]
+		}, -- [110]
 		{
 			["player"] = "Klisk",
 			["item"] = "Breastplate of Wrath",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r",
 			["gp"] = 200,
-		}, -- [88]
+		}, -- [111]
 		{
 			["player"] = "Xanido",
 			["item"] = "Netherwind Robes",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
 			["gp"] = 0,
-		}, -- [89]
+		}, -- [112]
 		{
 			["player"] = "Bakedpancake",
 			["item"] = "Pauldrons of Transcendence",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
 			["gp"] = 150,
-		}, -- [90]
+		}, -- [113]
 		{
 			["player"] = "Nadrell",
 			["item"] = "Taut Dragonhide Gloves",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r",
 			["gp"] = 80,
-		}, -- [91]
+		}, -- [114]
 		{
 			["player"] = "Wardrust",
 			["item"] = "Chromatic Boots",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
 			["gp"] = 250,
-		}, -- [92]
+		}, -- [115]
 		{
 			["player"] = "Clem",
 			["item"] = "Netherwind Mantle",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
 			["gp"] = 80,
-		}, -- [93]
+		}, -- [116]
 		{
 			["player"] = "Cleaves",
 			["item"] = "Circle of Applied Force",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r",
 			["gp"] = 100,
-		}, -- [94]
+		}, -- [117]
 		{
 			["player"] = "Coop",
 			["item"] = "Drake Talon Pauldrons",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
 			["gp"] = 250,
-		}, -- [95]
+		}, -- [118]
 		{
 			["gp"] = 0,
 			["item"] = "Ring of Blackrock",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
 			["player"] = "Quellia",
-		}, -- [96]
+		}, -- [119]
 		{
 			["player"] = "Jearom",
 			["item"] = "Drake Fang Talisman",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
 			["gp"] = 400,
-		}, -- [97]
+		}, -- [120]
 		{
 			["gp"] = 0,
 			["item"] = "Firemaw's Clutch",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
 			["player"] = "Sausage",
-		}, -- [98]
+		}, -- [121]
 		{
 			["player"] = "Starlight",
 			["item"] = "Stormrage Boots",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
 			["gp"] = 50,
-		}, -- [99]
+		}, -- [122]
 		{
 			["player"] = "Cmdk",
 			["item"] = "Netherwind Boots",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
 			["gp"] = 0,
-		}, -- [100]
+		}, -- [123]
 		{
 			["player"] = "Wardrust",
 			["item"] = "Cloak of Draconic Might",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
 			["gp"] = 150,
-		}, -- [101]
+		}, -- [124]
 		{
 			["player"] = "Huntingkabu",
 			["item"] = "Dragonstalker's Belt",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r",
 			["gp"] = 100,
-		}, -- [102]
+		}, -- [125]
 		{
 			["player"] = "Xane",
 			["item"] = "Mind Quickening Gem",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
 			["gp"] = 100,
-		}, -- [103]
+		}, -- [126]
 		{
 			["player"] = "Xanido",
 			["item"] = "Netherwind Belt",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
 			["gp"] = 0,
-		}, -- [104]
+		}, -- [127]
 		{
 			["player"] = "Tikki",
 			["item"] = "Bracelets of Wrath",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
 			["gp"] = 100,
-		}, -- [105]
+		}, -- [128]
 		{
 			["player"] = "Righteous",
 			["item"] = "Judgement Bindings",
 			["date"] = "03/10/20",
 			["itemLink"] = "|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r",
 			["gp"] = 0,
-		}, -- [106]
+		}, -- [129]
 		{
 			["player"] = "Oya",
 			["item"] = "Head of Nefarian",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [107]
+		}, -- [130]
 		{
 			["player"] = "Klisk",
 			["item"] = "Archimtiros' Ring of Reckoning",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r",
 			["gp"] = 125,
-		}, -- [108]
+		}, -- [131]
 		{
 			["player"] = "Darknéss",
 			["item"] = "Pure Elementium Band",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
 			["gp"] = 200,
-		}, -- [109]
+		}, -- [132]
 		{
 			["player"] = "Groggy",
 			["item"] = "Judgement Breastplate",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
 			["gp"] = 0,
-		}, -- [110]
+		}, -- [133]
 		{
 			["player"] = "Covenus",
 			["item"] = "Dragonstalker's Breastplate",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
 			["gp"] = 200,
-		}, -- [111]
+		}, -- [134]
 		{
 			["player"] = "Krustytop",
 			["item"] = "Claw of Chromaggus",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19347|h[Claw of Chromaggus]|h|r",
 			["gp"] = 300,
-		}, -- [112]
+		}, -- [135]
 		{
 			["player"] = "Lunamar",
 			["item"] = "Netherwind Mantle",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
 			["gp"] = 80,
-		}, -- [113]
+		}, -- [136]
 		{
 			["gp"] = 0,
 			["item"] = "Taut Dragonhide Shoulderpads",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
 			["player"] = "Suzukagozen",
-		}, -- [114]
+		}, -- [137]
 		{
 			["player"] = "Lago",
 			["item"] = "Pauldrons of Transcendence",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
 			["gp"] = 150,
-		}, -- [115]
+		}, -- [138]
 		{
 			["player"] = "Tikki",
 			["item"] = "Styleen's Impeding Scarab",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
 			["gp"] = 325,
-		}, -- [116]
+		}, -- [139]
 		{
 			["gp"] = 0,
 			["item"] = "Stormrage Handguards",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r",
 			["player"] = "Quellia",
-		}, -- [117]
+		}, -- [140]
 		{
 			["player"] = "Friend",
 			["item"] = "Band of Forced Concentration",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r",
 			["gp"] = 250,
-		}, -- [118]
+		}, -- [141]
 		{
 			["player"] = "Quellia",
 			["item"] = "Taut Dragonhide Belt",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19396|h[Taut Dragonhide Belt]|h|r",
 			["gp"] = 0,
-		}, -- [119]
+		}, -- [142]
 		{
 			["player"] = "Esconar",
 			["item"] = "Legguards of the Fallen Crusader",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
 			["gp"] = 100,
-		}, -- [120]
+		}, -- [143]
 		{
 			["player"] = "Starlight",
 			["item"] = "Stormrage Handguards",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r",
 			["gp"] = 150,
-		}, -- [121]
+		}, -- [144]
 		{
 			["player"] = "Tikki",
 			["item"] = "Lifegiving Gem",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r",
 			["gp"] = 200,
-		}, -- [122]
+		}, -- [145]
 		{
 			["player"] = "Bakedpancake",
 			["item"] = "Boots of Transcendence",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16919|h[Boots of Transcendence]|h|r",
 			["gp"] = 50,
-		}, -- [123]
+		}, -- [146]
 		{
 			["player"] = "Ezekkiel",
 			["item"] = "Netherwind Boots",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
 			["gp"] = 0,
-		}, -- [124]
+		}, -- [147]
 		{
 			["player"] = "Jezail",
 			["item"] = "Cloak of Draconic Might",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
 			["gp"] = 150,
-		}, -- [125]
+		}, -- [148]
 		{
 			["player"] = "Quellia",
 			["item"] = "Draconic Maul",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19358|h[Draconic Maul]|h|r",
 			["gp"] = 300,
-		}, -- [126]
+		}, -- [149]
 		{
 			["player"] = "Soggybottom",
 			["item"] = "Pendant of the Fallen Dragon",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:19371|h[Pendant of the Fallen Dragon]|h|r",
 			["gp"] = 100,
-		}, -- [127]
+		}, -- [150]
 		{
 			["player"] = "Tracer",
 			["item"] = "Waistband of Wrath",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r",
 			["gp"] = 100,
-		}, -- [128]
+		}, -- [151]
 		{
 			["player"] = "Yoink",
 			["item"] = "Bloodfang Belt",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
 			["gp"] = 100,
-		}, -- [129]
+		}, -- [152]
 		{
 			["player"] = "Lago",
 			["item"] = "Bindings of Transcendence",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16926|h[Bindings of Transcendence]|h|r",
 			["gp"] = 100,
-		}, -- [130]
+		}, -- [153]
 		{
 			["player"] = "Klue",
 			["item"] = "Nemesis Bracers",
 			["date"] = "03/03/20",
 			["itemLink"] = "|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
 			["gp"] = 100,
-		}, -- [131]
+		}, -- [154]
 		{
 			["player"] = "Tracer",
 			["item"] = "Head of Nefarian",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [132]
+		}, -- [155]
 		{
 			["player"] = "Ezekkiel",
 			["item"] = "Staff of the Shadow Flame",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
 			["gp"] = 450,
-		}, -- [133]
+		}, -- [156]
 		{
 			["player"] = "Clem",
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
 			["gp"] = 0,
-		}, -- [134]
+		}, -- [157]
 		{
 			["player"] = "Azuj",
 			["item"] = "Bloodfang Chestpiece",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r",
 			["gp"] = 200,
-		}, -- [135]
+		}, -- [158]
 		{
 			["player"] = "Huntingkabu",
 			["item"] = "Dragonstalker's Breastplate",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
 			["gp"] = 200,
-		}, -- [136]
+		}, -- [159]
 		{
 			["player"] = "Starlight",
 			["item"] = "Shimmering Geta",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
 			["gp"] = 100,
-		}, -- [137]
+		}, -- [160]
 		{
 			["player"] = "Cleaves",
 			["item"] = "Chromatic Boots",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
 			["gp"] = 250,
-		}, -- [138]
+		}, -- [161]
 		{
 			["player"] = "Soggybottom",
 			["item"] = "Pauldrons of Transcendence",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
 			["gp"] = 150,
-		}, -- [139]
+		}, -- [162]
 		{
 			["player"] = "Sausage",
 			["item"] = "Pauldrons of Transcendence",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
 			["gp"] = 150,
-		}, -- [140]
+		}, -- [163]
 		{
 			["player"] = "Soggybottom",
 			["item"] = "Dragon's Touch",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
 			["gp"] = 0,
-		}, -- [141]
+		}, -- [164]
 		{
 			["player"] = "Yoink",
 			["item"] = "Bloodfang Gloves",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
 			["gp"] = 0,
-		}, -- [142]
+		}, -- [165]
 		{
 			["gp"] = 0,
 			["item"] = "Bloodfang Gloves",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
 			["player"] = "Suzukagozen",
-		}, -- [143]
+		}, -- [166]
 		{
 			["player"] = "Sausage",
 			["item"] = "Aegis of Preservation",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r",
 			["gp"] = 0,
-		}, -- [144]
+		}, -- [167]
 		{
 			["gp"] = 0,
 			["item"] = "Doom's Edge",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
 			["player"] = "Tracer",
-		}, -- [145]
+		}, -- [168]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Dragonstalker's Gauntlets",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
 			["gp"] = 150,
-		}, -- [146]
+		}, -- [169]
 		{
 			["player"] = "Friend",
 			["item"] = "Black Ash Robe",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r",
 			["gp"] = 0,
-		}, -- [147]
+		}, -- [170]
 		{
 			["player"] = "Marizol",
 			["item"] = "Nemesis Boots",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
 			["gp"] = 0,
-		}, -- [148]
+		}, -- [171]
 		{
 			["player"] = "Friend",
 			["item"] = "Nemesis Boots",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
 			["gp"] = 0,
-		}, -- [149]
+		}, -- [172]
 		{
 			["player"] = "Coop",
 			["item"] = "Cloak of Draconic Might",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
 			["gp"] = 150,
-		}, -- [150]
+		}, -- [173]
 		{
 			["player"] = "Oya",
 			["item"] = "Cloak of Draconic Might",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
 			["gp"] = 150,
-		}, -- [151]
+		}, -- [174]
 		{
 			["player"] = "Righteous",
 			["item"] = "Judgement Belt",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
 			["gp"] = 0,
-		}, -- [152]
+		}, -- [175]
 		{
 			["player"] = "Nadrell",
 			["item"] = "Judgement Belt",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
 			["gp"] = 0,
-		}, -- [153]
+		}, -- [176]
 		{
 			["player"] = "Quellia",
 			["item"] = "Rune of Metamorphosis",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r",
 			["gp"] = 0,
-		}, -- [154]
+		}, -- [177]
 		{
 			["gp"] = 0,
 			["item"] = "Bracelets of Wrath",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
 			["player"] = "Cleaves",
-		}, -- [155]
+		}, -- [178]
 		{
 			["gp"] = 0,
 			["item"] = "Nemesis Bracers",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
-			["player"] = "Knutbag",
-		}, -- [156]
+			["player"] = "Deconstruct",
+		}, -- [179]
 		{
 			["player"] = "Xan",
 			["item"] = "Mantle of the Blackwing Cabal",
 			["date"] = "02/25/20",
 			["itemLink"] = "|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
 			["gp"] = 200,
-		}, -- [157]
+		}, -- [180]
 		{
 			["player"] = "Yoink",
 			["item"] = "Head of Nefarian",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 			["gp"] = 150,
-		}, -- [158]
+		}, -- [181]
 		{
 			["player"] = "Righteous",
 			["item"] = "Judgement Breastplate",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
 			["gp"] = 0,
-		}, -- [159]
+		}, -- [182]
 		{
 			["player"] = "Tikki",
 			["item"] = "Therazane's Link",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
 			["gp"] = 0,
-		}, -- [160]
+		}, -- [183]
 		{
 			["player"] = "Krustytop",
 			["item"] = "Nemesis Robes",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
 			["gp"] = 0,
-		}, -- [161]
+		}, -- [184]
 		{
 			["player"] = "Xanido",
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
 			["gp"] = 0,
-		}, -- [162]
+		}, -- [185]
 		{
 			["player"] = "Jezail",
 			["item"] = "Chromatic Boots",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
 			["gp"] = 250,
-		}, -- [163]
+		}, -- [186]
 		{
 			["player"] = "Priestpimp",
 			["item"] = "Pauldrons of Transcendence",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
 			["gp"] = 150,
-		}, -- [164]
+		}, -- [187]
 		{
 			["player"] = "Xanido",
 			["item"] = "Netherwind Mantle",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
 			["gp"] = 80,
-		}, -- [165]
+		}, -- [188]
 		{
 			["player"] = "Klisk",
 			["item"] = "Styleen's Impeding Scarab",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
 			["gp"] = 325,
-		}, -- [166]
+		}, -- [189]
 		{
 			["player"] = "Groggy",
 			["item"] = "Judgement Gauntlets",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
 			["gp"] = 0,
-		}, -- [167]
+		}, -- [190]
 		{
 			["player"] = "Quellia",
 			["item"] = "Malfurion's Blessed Bulwark",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
 			["gp"] = 150,
-		}, -- [168]
+		}, -- [191]
 		{
 			["player"] = "Juicetea",
 			["item"] = "Bloodfang Gloves",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
 			["gp"] = 50,
-		}, -- [169]
+		}, -- [192]
 		{
 			["gp"] = 0,
 			["item"] = "Firemaw's Clutch",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
 			["player"] = "Lago",
-		}, -- [170]
+		}, -- [193]
 		{
 			["player"] = "Xanido",
 			["item"] = "Shadow Wing Focus Staff",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r",
 			["gp"] = 70,
-		}, -- [171]
+		}, -- [194]
 		{
 			["player"] = "Wardrust",
 			["item"] = "Maladath, Runed Blade of the Black Flight",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
 			["gp"] = 200,
-		}, -- [172]
+		}, -- [195]
 		{
 			["gp"] = 0,
 			["item"] = "Sabatons of Wrath",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
 			["player"] = "Cleaves",
-		}, -- [173]
+		}, -- [196]
 		{
 			["player"] = "Juicetea",
 			["item"] = "Bloodfang Boots",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
 			["gp"] = 50,
-		}, -- [174]
+		}, -- [197]
 		{
 			["player"] = "Gyda",
 			["item"] = "Dragonfang Blade",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
 			["gp"] = 70,
-		}, -- [175]
+		}, -- [198]
 		{
 			["player"] = "Bakedpancake",
 			["item"] = "Belt of Transcendence",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
 			["gp"] = 100,
-		}, -- [176]
+		}, -- [199]
 		{
 			["player"] = "Juicetea",
 			["item"] = "Bloodfang Belt",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
 			["gp"] = 100,
-		}, -- [177]
+		}, -- [200]
 		{
 			["player"] = "Friend",
 			["item"] = "The Black Book",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
 			["gp"] = 0,
-		}, -- [178]
+		}, -- [201]
 		{
 			["player"] = "Gyda",
 			["item"] = "Bloodfang Bracers",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
 			["gp"] = 100,
-		}, -- [179]
+		}, -- [202]
 		{
 			["player"] = "Clem",
 			["item"] = "Netherwind Bindings",
 			["date"] = "02/18/20",
 			["itemLink"] = "|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
 			["gp"] = 100,
-		}, -- [180]
+		}, -- [203]
 		{
 			["player"] = "Lunamar",
 			["item"] = "Neltharion's Tear",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r",
 			["gp"] = 400,
-		}, -- [181]
+		}, -- [204]
 		{
 			["player"] = "Krustytop",
 			["item"] = "Cloak of the Brood Lord",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
 			["gp"] = 0,
-		}, -- [182]
+		}, -- [205]
 		{
 			["player"] = "Lago",
 			["item"] = "Robes of Transcendence",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r",
 			["gp"] = 200,
-		}, -- [183]
+		}, -- [206]
 		{
 			["player"] = "Frostishot",
 			["item"] = "Dragonstalker's Breastplate",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
 			["gp"] = 200,
-		}, -- [184]
+		}, -- [207]
 		{
 			["player"] = "Quellia",
 			["item"] = "Taut Dragonhide Shoulderpads",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
 			["gp"] = 100,
-		}, -- [185]
+		}, -- [208]
 		{
 			["player"] = "Basherslice",
 			["item"] = "Ashjre'thul, Crossbow of Smiting",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
 			["gp"] = 400,
-		}, -- [186]
+		}, -- [209]
 		{
 			["player"] = "Groggy",
 			["item"] = "Judgement Spaulders",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
 			["gp"] = 0,
-		}, -- [187]
+		}, -- [210]
 		{
 			["player"] = "Tracer",
 			["item"] = "Pauldrons of Wrath",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
 			["gp"] = 200,
-		}, -- [188]
+		}, -- [211]
 		{
 			["player"] = "Tikki",
 			["item"] = "Drake Talon Pauldrons",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
 			["gp"] = 250,
-		}, -- [189]
+		}, -- [212]
 		{
 			["player"] = "Nadrell",
 			["item"] = "Judgement Gauntlets",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
 			["gp"] = 0,
-		}, -- [190]
+		}, -- [213]
 		{
 			["player"] = "Marizol",
 			["item"] = "Ebony Flame Gloves",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
 			["gp"] = 200,
-		}, -- [191]
+		}, -- [214]
 		{
 			["player"] = "Coop",
 			["item"] = "Doom's Edge",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
 			["gp"] = 100,
-		}, -- [192]
+		}, -- [215]
 		{
 			["player"] = "Xan",
 			["item"] = "Ring of Blackrock",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
 			["gp"] = 100,
-		}, -- [193]
+		}, -- [216]
 		{
 			["player"] = "Xan",
 			["item"] = "Firemaw's Clutch",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
 			["gp"] = 200,
-		}, -- [194]
+		}, -- [217]
 		{
 			["player"] = "Friend",
 			["item"] = "Bracers of Arcane Accuracy",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
 			["gp"] = 200,
-		}, -- [195]
+		}, -- [218]
 		{
 			["player"] = "Righteous",
 			["item"] = "Judgement Sabatons",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
 			["gp"] = 0,
-		}, -- [196]
+		}, -- [219]
 		{
 			["player"] = "Klisk",
 			["item"] = "Sabatons of Wrath",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
 			["gp"] = 150,
-		}, -- [197]
+		}, -- [220]
 		{
 			["player"] = "Groggy",
 			["item"] = "Red Dragonscale Protector",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r",
 			["gp"] = 0,
-		}, -- [198]
+		}, -- [221]
 		{
 			["player"] = "Krustytop",
 			["item"] = "Nemesis Belt",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
 			["gp"] = 0,
-		}, -- [199]
+		}, -- [222]
 		{
-			["player"] = "Knutbag",
+			["player"] = "Deconstruct",
 			["item"] = "Nemesis Belt",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
 			["gp"] = 0,
-		}, -- [200]
+		}, -- [223]
 		{
 			["player"] = "Azuj",
 			["item"] = "Bloodfang Bracers",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
 			["gp"] = 100,
-		}, -- [201]
+		}, -- [224]
 		{
 			["player"] = "Klisk",
 			["item"] = "Bracelets of Wrath",
 			["date"] = "02/12/20",
 			["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
 			["gp"] = 100,
-		}, -- [202]
+		}, -- [225]
 	},
 	["itemValues"] = {
+		{
+			"Acid Inscribed Greaves", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20619|h[Acid Inscribed Greaves]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [1]
+		{
+			"Acid Inscribed Pauldrons", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20637|h[Acid Inscribed Pauldrons]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [2]
 		{
 			"Aegis of Preservation", -- [1]
 			0, -- [2]
@@ -6931,7 +7112,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [1]
+		}, -- [3]
+		{
+			"Ancient Corroded Leggings", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20617|h[Ancient Corroded Leggings]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [4]
 		{
 			"Angelista's Grasp", -- [1]
 			0, -- [2]
@@ -6939,7 +7128,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [2]
+		}, -- [5]
 		{
 			"Arcane Infused Gem", -- [1]
 			0, -- [2]
@@ -6947,7 +7136,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [3]
+		}, -- [6]
 		{
 			"Archimtiros' Ring of Reckoning", -- [1]
 			125, -- [2]
@@ -6956,7 +7145,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"KAT4FITE", -- [1]
 				"Tank", -- [2]
 			},
-		}, -- [4]
+		}, -- [7]
 		{
 			"Ashjre'thul, Crossbow of Smiting", -- [1]
 			400, -- [2]
@@ -6964,7 +7153,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [5]
+		}, -- [8]
 		{
 			"Ashkandi, Greatsword of the Brotherhood", -- [1]
 			0, -- [2]
@@ -6972,7 +7161,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [6]
+		}, -- [9]
 		{
 			"Band of Dark Dominion", -- [1]
 			200, -- [2]
@@ -6981,7 +7170,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Priest (Shadow)", -- [1]
 				"Warlock", -- [2]
 			},
-		}, -- [7]
+		}, -- [10]
 		{
 			"Band of Forced Concentration", -- [1]
 			250, -- [2]
@@ -6991,7 +7180,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Priest (Shadow)", -- [2]
 				"Warlock", -- [3]
 			},
-		}, -- [8]
+		}, -- [11]
 		{
 			"Belt of Transcendence", -- [1]
 			100, -- [2]
@@ -6999,7 +7188,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [9]
+		}, -- [12]
+		{
+			"Belt of the Dark Bog", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20625|h[Belt of the Dark Bog]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [13]
 		{
 			"Bindings of Transcendence", -- [1]
 			100, -- [2]
@@ -7007,7 +7204,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [10]
+		}, -- [14]
 		{
 			"Black Ash Robe", -- [1]
 			0, -- [2]
@@ -7015,7 +7212,17 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Progression", -- [1]
 			},
-		}, -- [11]
+		}, -- [15]
+		{
+			"Black Bark Wristbands", -- [1]
+			100, -- [2]
+			"|cffa335ee|Hitem:20626|h[Black Bark Wristbands]|h|r", -- [3]
+			["priority"] = {
+				"Mage", -- [1]
+				"Priest (Shadow)", -- [2]
+				"Warlock", -- [3]
+			},
+		}, -- [16]
 		{
 			"Black Brood Pauldrons", -- [1]
 			0, -- [2]
@@ -7023,7 +7230,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [12]
+		}, -- [17]
 		{
 			"Bloodfang Belt", -- [1]
 			100, -- [2]
@@ -7032,7 +7239,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [1]
 				"Stabby Rogue", -- [2]
 			},
-		}, -- [13]
+		}, -- [18]
 		{
 			"Bloodfang Boots", -- [1]
 			50, -- [2]
@@ -7040,7 +7247,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Slicey Rogue", -- [1]
 			},
-		}, -- [14]
+		}, -- [19]
 		{
 			"Bloodfang Bracers", -- [1]
 			100, -- [2]
@@ -7049,7 +7256,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [1]
 				"Stabby Rogue", -- [2]
 			},
-		}, -- [15]
+		}, -- [20]
 		{
 			"Bloodfang Chestpiece", -- [1]
 			200, -- [2]
@@ -7058,7 +7265,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [1]
 				"Stabby Rogue", -- [2]
 			},
-		}, -- [16]
+		}, -- [21]
 		{
 			"Bloodfang Gloves", -- [1]
 			50, -- [2]
@@ -7066,7 +7273,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Slicey Rogue", -- [1]
 			},
-		}, -- [17]
+		}, -- [22]
 		{
 			"Bloodfang Spaulders", -- [1]
 			50, -- [2]
@@ -7074,7 +7281,16 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Slicey Rogue", -- [1]
 			},
-		}, -- [18]
+		}, -- [23]
+		{
+			"Boots of Fright", -- [1]
+			80, -- [2]
+			"|cffa335ee|Hitem:20634|h[Boots of Fright]|h|r", -- [3]
+			["priority"] = {
+				"Druid (Heal)", -- [1]
+				"Paladin (Holy)", -- [2]
+			},
+		}, -- [24]
 		{
 			"Boots of Pure Thought", -- [1]
 			200, -- [2]
@@ -7084,7 +7300,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Priest (Heal)", -- [3]
 			},
-		}, -- [19]
+		}, -- [25]
 		{
 			"Boots of Transcendence", -- [1]
 			50, -- [2]
@@ -7092,7 +7308,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [20]
+		}, -- [26]
+		{
+			"Boots of the Endless Moor", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20621|h[Boots of the Endless Moor]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [27]
 		{
 			"Boots of the Shadow Flame", -- [1]
 			200, -- [2]
@@ -7101,7 +7325,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"KAT4FITE", -- [1]
 				"Stabby Rogue", -- [2]
 			},
-		}, -- [21]
+		}, -- [28]
 		{
 			"Bracelets of Wrath", -- [1]
 			100, -- [2]
@@ -7109,7 +7333,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [22]
+		}, -- [29]
 		{
 			"Bracers of Arcane Accuracy", -- [1]
 			200, -- [2]
@@ -7119,7 +7343,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Priest (Shadow)", -- [2]
 				"Warlock", -- [3]
 			},
-		}, -- [23]
+		}, -- [30]
 		{
 			"Breastplate of Wrath", -- [1]
 			200, -- [2]
@@ -7127,7 +7351,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [24]
+		}, -- [31]
 		{
 			"Chromatic Boots", -- [1]
 			250, -- [2]
@@ -7135,7 +7359,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Metal Rogue", -- [1]
 			},
-		}, -- [25]
+		}, -- [32]
 		{
 			"Chromatically Tempered Sword", -- [1]
 			400, -- [2]
@@ -7144,7 +7368,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Metal Rogue", -- [1]
 				"Slicey Rogue", -- [2]
 			},
-		}, -- [26]
+		}, -- [33]
 		{
 			"Circle of Applied Force", -- [1]
 			100, -- [2]
@@ -7156,7 +7380,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [4]
 				"Tank", -- [5]
 			},
-		}, -- [27]
+		}, -- [34]
+		{
+			"Circlet of Restless Dreams", -- [1]
+			150, -- [2]
+			"|cffa335ee|Hitem:20623|h[Circlet of Restless Dreams]|h|r", -- [3]
+			["priority"] = {
+				"Stabby Rogue", -- [1]
+			},
+		}, -- [35]
 		{
 			"Claw of Chromaggus", -- [1]
 			300, -- [2]
@@ -7165,7 +7397,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Mage", -- [1]
 				"Warlock", -- [2]
 			},
-		}, -- [28]
+		}, -- [36]
 		{
 			"Claw of the Black Drake", -- [1]
 			0, -- [2]
@@ -7173,7 +7405,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [29]
+		}, -- [37]
 		{
 			"Cloak of Draconic Might", -- [1]
 			150, -- [2]
@@ -7182,7 +7414,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"KAT4FITE", -- [1]
 				"Metal Rogue", -- [2]
 			},
-		}, -- [30]
+		}, -- [38]
 		{
 			"Cloak of Firemaw", -- [1]
 			150, -- [2]
@@ -7192,7 +7424,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [2]
 				"Stabby Rogue", -- [3]
 			},
-		}, -- [31]
+		}, -- [39]
 		{
 			"Cloak of the Brood Lord", -- [1]
 			0, -- [2]
@@ -7202,7 +7434,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Priest (Shadow)", -- [2]
 				"Warlock", -- [3]
 			},
-		}, -- [32]
+		}, -- [40]
 		{
 			"Crul'shorukh, Edge of Chaos", -- [1]
 			400, -- [2]
@@ -7210,7 +7442,25 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Metal Rogue", -- [1]
 			},
-		}, -- [33]
+		}, -- [41]
+		{
+			"Dark Heart Pants", -- [1]
+			150, -- [2]
+			"|cffa335ee|Hitem:20627|h[Dark Heart Pants]|h|r", -- [3]
+			["priority"] = {
+				"KAT4FITE", -- [1]
+				"Metal Rogue", -- [2]
+			},
+		}, -- [42]
+		{
+			"Deviate Growth Cap", -- [1]
+			300, -- [2]
+			"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r", -- [3]
+			["priority"] = {
+				"Druid (Heal)", -- [1]
+				"Paladin (Holy)", -- [2]
+			},
+		}, -- [43]
 		{
 			"Doom's Edge", -- [1]
 			100, -- [2]
@@ -7219,7 +7469,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Hunter", -- [1]
 				"Metal Rogue", -- [2]
 			},
-		}, -- [34]
+		}, -- [44]
 		{
 			"Draconic Avenger", -- [1]
 			0, -- [2]
@@ -7227,7 +7477,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [35]
+		}, -- [45]
 		{
 			"Draconic Maul", -- [1]
 			300, -- [2]
@@ -7235,7 +7485,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"KAT4FITE", -- [1]
 			},
-		}, -- [36]
+		}, -- [46]
 		{
 			"Dragon's Touch", -- [1]
 			0, -- [2]
@@ -7243,7 +7493,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [37]
+		}, -- [47]
+		{
+			"Dragonbone Wristguards", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20616|h[Dragonbone Wristguards]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [48]
 		{
 			"Dragonbreath Hand Cannon", -- [1]
 			100, -- [2]
@@ -7253,7 +7511,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [2]
 				"Tank", -- [3]
 			},
-		}, -- [38]
+		}, -- [49]
 		{
 			"Dragonfang Blade", -- [1]
 			70, -- [2]
@@ -7264,7 +7522,23 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [2]
 				"Tank", -- [3]
 			},
-		}, -- [39]
+		}, -- [50]
+		{
+			"Dragonheart Necklace", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20622|h[Dragonheart Necklace]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [51]
+		{
+			"Dragonspur Wraps", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20615|h[Dragonspur Wraps]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [52]
 		{
 			"Dragonstalker's Belt", -- [1]
 			100, -- [2]
@@ -7272,7 +7546,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [40]
+		}, -- [53]
 		{
 			"Dragonstalker's Bracers", -- [1]
 			100, -- [2]
@@ -7280,7 +7554,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [41]
+		}, -- [54]
 		{
 			"Dragonstalker's Breastplate", -- [1]
 			200, -- [2]
@@ -7288,7 +7562,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [42]
+		}, -- [55]
 		{
 			"Dragonstalker's Gauntlets", -- [1]
 			150, -- [2]
@@ -7296,7 +7570,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [43]
+		}, -- [56]
 		{
 			"Dragonstalker's Greaves", -- [1]
 			150, -- [2]
@@ -7304,7 +7578,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [44]
+		}, -- [57]
 		{
 			"Dragonstalker's Spaulders", -- [1]
 			200, -- [2]
@@ -7312,7 +7586,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Hunter", -- [1]
 			},
-		}, -- [45]
+		}, -- [58]
 		{
 			"Drake Fang Talisman", -- [1]
 			400, -- [2]
@@ -7324,7 +7598,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [3]
 				"Stabby Rogue", -- [4]
 			},
-		}, -- [46]
+		}, -- [59]
 		{
 			"Drake Talon Cleaver", -- [1]
 			0, -- [2]
@@ -7332,7 +7606,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [47]
+		}, -- [60]
 		{
 			"Drake Talon Pauldrons", -- [1]
 			250, -- [2]
@@ -7341,7 +7615,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Metal Rogue", -- [1]
 				"Tank", -- [2]
 			},
-		}, -- [48]
+		}, -- [61]
 		{
 			"Ebony Flame Gloves", -- [1]
 			200, -- [2]
@@ -7350,7 +7624,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Priest (Shadow)", -- [1]
 				"Warlock", -- [2]
 			},
-		}, -- [49]
+		}, -- [62]
 		{
 			"Elementium Reinforced Bulwark", -- [1]
 			250, -- [2]
@@ -7358,7 +7632,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [50]
+		}, -- [63]
 		{
 			"Elementium Threaded Cloak", -- [1]
 			150, -- [2]
@@ -7367,7 +7641,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"KAT4FITE", -- [1]
 				"Tank", -- [2]
 			},
-		}, -- [51]
+		}, -- [64]
 		{
 			"Emberweave Leggings", -- [1]
 			0, -- [2]
@@ -7375,7 +7649,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Progression", -- [1]
 			},
-		}, -- [52]
+		}, -- [65]
+		{
+			"Emerald Dragonfang", -- [1]
+			100, -- [2]
+			"|cffa335ee|Hitem:20578|h[Emerald Dragonfang]|h|r", -- [3]
+			["priority"] = {
+				"Stabby Rogue", -- [1]
+			},
+		}, -- [66]
 		{
 			"Empowered Leggings", -- [1]
 			200, -- [2]
@@ -7384,7 +7666,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Druid (Heal)", -- [1]
 				"Paladin (Holy)", -- [2]
 			},
-		}, -- [53]
+		}, -- [67]
 		{
 			"Essence Gatherer", -- [1]
 			100, -- [2]
@@ -7392,17 +7674,17 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [54]
+		}, -- [68]
 		{
 			"Firemaw's Clutch", -- [1]
 			200, -- [2]
 			"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r", -- [3]
+			["notes"] = "Shadow Priest Super Priority",
 			["priority"] = {
 				"Mage", -- [1]
 				"Priest (Shadow)", -- [2]
 			},
-			["notes"] = "Shadow Priest Super Priority",
-		}, -- [55]
+		}, -- [69]
 		{
 			"Gauntlets of Wrath", -- [1]
 			150, -- [2]
@@ -7410,7 +7692,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [56]
+		}, -- [70]
+		{
+			"Gauntlets of the Shining Light", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20630|h[Gauntlets of the Shining Light]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [71]
 		{
 			"Girdle of the Fallen Crusader", -- [1]
 			0, -- [2]
@@ -7418,7 +7708,17 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [57]
+		}, -- [72]
+		{
+			"Gloves of Delusional Power", -- [1]
+			150, -- [2]
+			"|cffa335ee|Hitem:20618|h[Gloves of Delusional Power]|h|r", -- [3]
+			["priority"] = {
+				"Mage", -- [1]
+				"Priest (Shadow)", -- [2]
+				"Warlock", -- [3]
+			},
+		}, -- [73]
 		{
 			"Gloves of Rapid Evolution", -- [1]
 			0, -- [2]
@@ -7426,7 +7726,23 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [58]
+		}, -- [74]
+		{
+			"Green Dragonskin Cloak", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20579|h[Green Dragonskin Cloak]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [75]
+		{
+			"Hammer of Bestial Fury", -- [1]
+			250, -- [2]
+			"|cffa335ee|Hitem:20580|h[Hammer of Bestial Fury]|h|r", -- [3]
+			["priority"] = {
+				"KAT4FITE", -- [1]
+			},
+		}, -- [76]
 		{
 			"Handguards of Transcendence", -- [1]
 			80, -- [2]
@@ -7434,11 +7750,12 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [59]
+		}, -- [77]
 		{
 			"Head of Nefarian", -- [1]
 			150, -- [2]
 			"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r", -- [3]
+			["notes"] = "Casters with a BWL 1h also eligible",
 			["priority"] = {
 				"Hunter", -- [1]
 				"KAT4FITE", -- [2]
@@ -7447,8 +7764,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [5]
 				"Tank", -- [6]
 			},
-			["notes"] = "Casters with a BWL 1h also eligible",
-		}, -- [60]
+		}, -- [78]
 		{
 			"Heartstriker", -- [1]
 			100, -- [2]
@@ -7459,7 +7775,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [3]
 				"Tank", -- [4]
 			},
-		}, -- [61]
+		}, -- [79]
 		{
 			"Helm of Endless Rage", -- [1]
 			150, -- [2]
@@ -7467,7 +7783,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [62]
+		}, -- [80]
 		{
 			"Herald of Woe", -- [1]
 			0, -- [2]
@@ -7475,7 +7791,17 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [63]
+		}, -- [81]
+		{
+			"Hibernation Crystal", -- [1]
+			150, -- [2]
+			"|cffa335ee|Hitem:20636|h[Hibernation Crystal]|h|r", -- [3]
+			["priority"] = {
+				"Druid (Heal)", -- [1]
+				"Paladin (Holy)", -- [2]
+				"Priest (Heal)", -- [3]
+			},
+		}, -- [82]
 		{
 			"Interlaced Shadow Jerkin", -- [1]
 			0, -- [2]
@@ -7483,7 +7809,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Progression", -- [1]
 			},
-		}, -- [64]
+		}, -- [83]
+		{
+			"Jade Inlaid Vestments", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20635|h[Jade Inlaid Vestments]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [84]
 		{
 			"Judgement Belt", -- [1]
 			0, -- [2]
@@ -7491,7 +7825,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [65]
+		}, -- [85]
 		{
 			"Judgement Bindings", -- [1]
 			0, -- [2]
@@ -7499,7 +7833,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [66]
+		}, -- [86]
 		{
 			"Judgement Breastplate", -- [1]
 			0, -- [2]
@@ -7507,7 +7841,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [67]
+		}, -- [87]
 		{
 			"Judgement Gauntlets", -- [1]
 			0, -- [2]
@@ -7515,7 +7849,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [68]
+		}, -- [88]
 		{
 			"Judgement Sabatons", -- [1]
 			0, -- [2]
@@ -7523,7 +7857,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [69]
+		}, -- [89]
 		{
 			"Judgement Spaulders", -- [1]
 			0, -- [2]
@@ -7531,7 +7865,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [70]
+		}, -- [90]
+		{
+			"Leggings of the Demented Mind", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20638|h[Leggings of the Demented Mind]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [91]
 		{
 			"Legguards of the Fallen Crusader", -- [1]
 			100, -- [2]
@@ -7540,7 +7882,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Metal Rogue", -- [1]
 				"Tank", -- [2]
 			},
-		}, -- [71]
+		}, -- [92]
 		{
 			"Lifegiving Gem", -- [1]
 			200, -- [2]
@@ -7548,7 +7890,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [72]
+		}, -- [93]
 		{
 			"Lok'amir il Romathis", -- [1]
 			400, -- [2]
@@ -7557,7 +7899,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Druid (Heal)", -- [1]
 				"Paladin (Holy)", -- [2]
 			},
-		}, -- [73]
+		}, -- [94]
 		{
 			"Maladath, Runed Blade of the Black Flight", -- [1]
 			200, -- [2]
@@ -7567,28 +7909,54 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Metal Rogue", -- [1]
 				"Tank", -- [2]
 			},
-		}, -- [74]
+		}, -- [95]
 		{
 			"Malfurion's Blessed Bulwark", -- [1]
 			150, -- [2]
 			"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r", -- [3]
+			["notes"] = "Feral Druid Super Priority",
 			["priority"] = {
 				"KAT4FITE", -- [1]
 				"Metal Rogue", -- [2]
 			},
-			["notes"] = "Feral Druid Super Priority",
-		}, -- [75]
+		}, -- [96]
+		{
+			"Malfurion's Signet Ring", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20600|h[Malfurion's Signet Ring]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [97]
+		{
+			"Malignant Footguards", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20629|h[Malignant Footguards]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [98]
 		{
 			"Mantle of the Blackwing Cabal", -- [1]
 			200, -- [2]
 			"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r", -- [3]
+			["notes"] = "Shadow Priest Super Priority",
 			["priority"] = {
 				"Mage", -- [1]
 				"Priest (Shadow)", -- [2]
 				"Warlock", -- [3]
 			},
-			["notes"] = "Shadow Priest Super Priority",
-		}, -- [76]
+		}, -- [99]
+		{
+			"Mendicant's Slippers", -- [1]
+			80, -- [2]
+			"|cffa335ee|Hitem:20631|h[Mendicant's Slippers]|h|r", -- [3]
+			["priority"] = {
+				"Druid (Heal)", -- [1]
+				"Paladin (Holy)", -- [2]
+				"Priest (Heal)", -- [3]
+			},
+		}, -- [100]
 		{
 			"Mind Quickening Gem", -- [1]
 			100, -- [2]
@@ -7596,7 +7964,16 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [77]
+		}, -- [101]
+		{
+			"Mindtear Band", -- [1]
+			250, -- [2]
+			"|cffa335ee|Hitem:20632|h[Mindtear Band]|h|r", -- [3]
+			["priority"] = {
+				"Mage", -- [1]
+				"Warlock", -- [2]
+			},
+		}, -- [102]
 		{
 			"Mish'undare, Circlet of the Mind Flayer", -- [1]
 			300, -- [2]
@@ -7606,17 +7983,17 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Warlock", -- [3]
 			},
-		}, -- [78]
+		}, -- [103]
 		{
 			"Neltharion's Tear", -- [1]
 			400, -- [2]
 			"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r", -- [3]
+			["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
 			["priority"] = {
 				"Mage", -- [1]
 				"Warlock", -- [2]
 			},
-			["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
-		}, -- [79]
+		}, -- [104]
 		{
 			"Nemesis Belt", -- [1]
 			0, -- [2]
@@ -7624,7 +8001,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [80]
+		}, -- [105]
 		{
 			"Nemesis Boots", -- [1]
 			0, -- [2]
@@ -7632,7 +8009,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [81]
+		}, -- [106]
 		{
 			"Nemesis Bracers", -- [1]
 			100, -- [2]
@@ -7640,7 +8017,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [82]
+		}, -- [107]
 		{
 			"Nemesis Gloves", -- [1]
 			100, -- [2]
@@ -7648,7 +8025,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [83]
+		}, -- [108]
 		{
 			"Nemesis Robes", -- [1]
 			0, -- [2]
@@ -7656,7 +8033,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [84]
+		}, -- [109]
 		{
 			"Nemesis Spaulders", -- [1]
 			125, -- [2]
@@ -7664,7 +8041,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [85]
+		}, -- [110]
 		{
 			"Netherwind Belt", -- [1]
 			0, -- [2]
@@ -7672,7 +8049,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [86]
+		}, -- [111]
 		{
 			"Netherwind Bindings", -- [1]
 			100, -- [2]
@@ -7680,7 +8057,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [87]
+		}, -- [112]
 		{
 			"Netherwind Boots", -- [1]
 			0, -- [2]
@@ -7688,7 +8065,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [88]
+		}, -- [113]
 		{
 			"Netherwind Gloves", -- [1]
 			100, -- [2]
@@ -7696,7 +8073,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [89]
+		}, -- [114]
 		{
 			"Netherwind Mantle", -- [1]
 			80, -- [2]
@@ -7704,7 +8081,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [90]
+		}, -- [115]
 		{
 			"Netherwind Robes", -- [1]
 			0, -- [2]
@@ -7712,7 +8089,17 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [91]
+		}, -- [116]
+		{
+			"Nightmare Blade", -- [1]
+			150, -- [2]
+			"|cffa335ee|Hitem:20577|h[Nightmare Blade]|h|r", -- [3]
+			["priority"] = {
+				"Metal Rogue", -- [1]
+				"Slicey Rogue", -- [2]
+				"Tank", -- [3]
+			},
+		}, -- [117]
 		{
 			"Pauldrons of Transcendence", -- [1]
 			150, -- [2]
@@ -7720,7 +8107,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [92]
+		}, -- [118]
 		{
 			"Pauldrons of Wrath", -- [1]
 			200, -- [2]
@@ -7728,7 +8115,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [93]
+		}, -- [119]
 		{
 			"Pendant of the Fallen Dragon", -- [1]
 			100, -- [2]
@@ -7738,7 +8125,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Priest (Heal)", -- [3]
 			},
-		}, -- [94]
+		}, -- [120]
+		{
+			"Polished Ironwood Crossbow", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20599|h[Polished Ironwood Crossbow]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [121]
 		{
 			"Prestor's Talisman of Connivery", -- [1]
 			200, -- [2]
@@ -7749,7 +8144,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [3]
 				"Stabby Rogue", -- [4]
 			},
-		}, -- [95]
+		}, -- [122]
 		{
 			"Primalist's Linked Legguards", -- [1]
 			0, -- [2]
@@ -7757,7 +8152,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [96]
+		}, -- [123]
 		{
 			"Primalist's Linked Legguards", -- [1]
 			0, -- [2]
@@ -7765,7 +8160,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [97]
+		}, -- [124]
 		{
 			"Pure Elementium Band", -- [1]
 			200, -- [2]
@@ -7775,7 +8170,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Priest (Heal)", -- [3]
 			},
-		}, -- [98]
+		}, -- [125]
 		{
 			"Red Dragonscale Protector", -- [1]
 			0, -- [2]
@@ -7783,7 +8178,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [99]
+		}, -- [126]
 		{
 			"Rejuvenating Gem", -- [1]
 			400, -- [2]
@@ -7793,7 +8188,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Priest (Heal)", -- [3]
 			},
-		}, -- [100]
+		}, -- [127]
 		{
 			"Ring of Blackrock", -- [1]
 			100, -- [2]
@@ -7804,7 +8199,18 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Priest (Heal)", -- [3]
 				"Priest (Shadow)", -- [4]
 			},
-		}, -- [101]
+		}, -- [128]
+		{
+			"Ring of the Unliving", -- [1]
+			80, -- [2]
+			"|cffa335ee|Hitem:20624|h[Ring of the Unliving]|h|r", -- [3]
+			["priority"] = {
+				"Hunter", -- [1]
+				"KAT4FITE", -- [2]
+				"Slicey Rogue", -- [3]
+				"Stabby Rogue", -- [4]
+			},
+		}, -- [129]
 		{
 			"Ringo's Blizzard Boots", -- [1]
 			250, -- [2]
@@ -7812,7 +8218,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Mage", -- [1]
 			},
-		}, -- [102]
+		}, -- [130]
 		{
 			"Robes of Transcendence", -- [1]
 			200, -- [2]
@@ -7820,7 +8226,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Priest (Heal)", -- [1]
 			},
-		}, -- [103]
+		}, -- [131]
 		{
 			"Rune of Metamorphosis", -- [1]
 			0, -- [2]
@@ -7828,7 +8234,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [104]
+		}, -- [132]
 		{
 			"Sabatons of Wrath", -- [1]
 			150, -- [2]
@@ -7836,7 +8242,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [105]
+		}, -- [133]
 		{
 			"Scrolls of Blinding Light", -- [1]
 			0, -- [2]
@@ -7844,18 +8250,18 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Paladin (Holy)", -- [1]
 			},
-		}, -- [106]
+		}, -- [134]
 		{
 			"Shadow Wing Focus Staff", -- [1]
 			70, -- [2]
 			"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r", -- [3]
-			["notes"] = "Catch up Priority",
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 				"Mage", -- [2]
 				"Warlock", -- [3]
 			},
-		}, -- [107]
+			["notes"] = "Catch up Priority",
+		}, -- [135]
 		{
 			"Shimmering Geta", -- [1]
 			100, -- [2]
@@ -7865,7 +8271,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Priest (Heal)", -- [3]
 			},
-		}, -- [108]
+		}, -- [136]
 		{
 			"Shroud of Pure Thought", -- [1]
 			200, -- [2]
@@ -7875,7 +8281,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Paladin (Holy)", -- [2]
 				"Priest (Heal)", -- [3]
 			},
-		}, -- [109]
+		}, -- [137]
 		{
 			"Spineshatter", -- [1]
 			70, -- [2]
@@ -7887,7 +8293,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue", -- [3]
 				"Tank", -- [4]
 			},
-		}, -- [110]
+		}, -- [138]
+		{
+			"Staff of Rampant Growth", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20581|h[Staff of Rampant Growth]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [139]
 		{
 			"Staff of the Shadow Flame", -- [1]
 			450, -- [2]
@@ -7896,7 +8310,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Mage", -- [1]
 				"Warlock", -- [2]
 			},
-		}, -- [111]
+		}, -- [140]
 		{
 			"Stormrage Belt", -- [1]
 			0, -- [2]
@@ -7904,7 +8318,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [112]
+		}, -- [141]
 		{
 			"Stormrage Boots", -- [1]
 			50, -- [2]
@@ -7912,7 +8326,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [113]
+		}, -- [142]
 		{
 			"Stormrage Bracers", -- [1]
 			100, -- [2]
@@ -7920,7 +8334,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [114]
+		}, -- [143]
 		{
 			"Stormrage Chestguard", -- [1]
 			0, -- [2]
@@ -7928,7 +8342,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [115]
+		}, -- [144]
 		{
 			"Stormrage Handguards", -- [1]
 			150, -- [2]
@@ -7936,7 +8350,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [116]
+		}, -- [145]
 		{
 			"Stormrage Pauldrons", -- [1]
 			0, -- [2]
@@ -7944,7 +8358,15 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Druid (Heal)", -- [1]
 			},
-		}, -- [117]
+		}, -- [146]
+		{
+			"Strangely Glyphed Legplates", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20639|h[Strangely Glyphed Legplates]|h|r", -- [3]
+			["priority"] = {
+				"Garbage", -- [1]
+			},
+		}, -- [147]
 		{
 			"Styleen's Impeding Scarab", -- [1]
 			325, -- [2]
@@ -7952,7 +8374,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [118]
+		}, -- [148]
 		{
 			"Taut Dragonhide Belt", -- [1]
 			0, -- [2]
@@ -7960,7 +8382,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [119]
+		}, -- [149]
 		{
 			"Taut Dragonhide Gloves", -- [1]
 			80, -- [2]
@@ -7969,7 +8391,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Druid (Heal)", -- [1]
 				"Paladin (Holy)", -- [2]
 			},
-		}, -- [120]
+		}, -- [150]
 		{
 			"Taut Dragonhide Shoulderpads", -- [1]
 			100, -- [2]
@@ -7977,7 +8399,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"KAT4FITE", -- [1]
 			},
-		}, -- [121]
+		}, -- [151]
 		{
 			"The Black Book", -- [1]
 			0, -- [2]
@@ -7985,7 +8407,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Warlock", -- [1]
 			},
-		}, -- [122]
+		}, -- [152]
 		{
 			"The Untamed Blade", -- [1]
 			0, -- [2]
@@ -7993,7 +8415,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [123]
+		}, -- [153]
 		{
 			"Therazane's Link", -- [1]
 			0, -- [2]
@@ -8001,7 +8423,26 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Garbage", -- [1]
 			},
-		}, -- [124]
+		}, -- [154]
+		{
+			"Trance Stone", -- [1]
+			80, -- [2]
+			"|cffa335ee|Hitem:20582|h[Trance Stone]|h|r", -- [3]
+			["priority"] = {
+				"Druid (Heal)", -- [1]
+				"Mage", -- [2]
+				"Priest (Shadow)", -- [3]
+				"Warlock", -- [4]
+			},
+		}, -- [155]
+		{
+			"Unnatural Leather Spaulders", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20633|h[Unnatural Leather Spaulders]|h|r", -- [3]
+			["priority"] = {
+				"Progression", -- [1]
+			},
+		}, -- [156]
 		{
 			"Venomous Totem", -- [1]
 			0, -- [2]
@@ -8010,7 +8451,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Slicey Rogue", -- [1]
 				"Stabby Rogue", -- [2]
 			},
-		}, -- [125]
+		}, -- [157]
 		{
 			"Waistband of Wrath", -- [1]
 			100, -- [2]
@@ -8018,7 +8459,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			["priority"] = {
 				"Tank", -- [1]
 			},
-		}, -- [126]
+		}, -- [158]
 	},
 }
 
@@ -8026,7 +8467,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1586883390, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1586986689, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
