@@ -228,7 +228,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     end
 
     local prompt = "";
-    if rank >= self.ItemRanks.NORMAL then
+    if self:Get("alwaysOpenWindow") or rank >= self.ItemRanks.NORMAL then
         self:ShowItemRequests(true);
     end
     if activeWindow then

@@ -79,6 +79,7 @@ function ABGP:InitOptions()
             itemHistoryLimit = 3,
             raidGroup = false,
             outsider = false,
+            alwaysOpenWindow = true,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -89,66 +90,86 @@ function ABGP:InitOptions()
     };
 
     local guiOptions = {
-        show = {
-            name = "Show Window",
-            order = 1,
-            desc = "Show the main window",
-            type = "execute",
-            func = function()
-                _G.InterfaceOptionsFrame_Show(); -- it's really a toggle, calling this to hide the frame.
-                ABGP:ShowMainWindow();
-            end
+        b = {
+            name = "General",
+            type = "group",
+            args = {
+                show = {
+                    name = "Show Window",
+                    order = 1,
+                    desc = "Show the main window",
+                    type = "execute",
+                    func = function()
+                        _G.InterfaceOptionsFrame_Show(); -- it's really a toggle, calling this to hide the frame.
+                        ABGP:ShowMainWindow();
+                    end
+                },
+                priorities = {
+                    name = "Preferred Priorities",
+                    order = 2,
+                    desc = "If any priorites are chosen here, items not matching them will be deemphasized during distribution.",
+                    type = "multiselect",
+                    control = "Dropdown",
+                    values = self:GetItemPriorities(),
+                    get = function(self, k) return ABGP.db.char.preferredPriorities[k]; end,
+                    set = function(self, k, v)
+                        ABGP.db.char.preferredPriorities[k] = v;
+                        local usePriority = false;
+                        for _, v in pairs(ABGP.db.char.preferredPriorities) do
+                            if v then usePriority = true; end
+                        end
+                        ABGP.db.char.usePreferredPriority = usePriority;
+                    end,
+                    cmdHidden = true,
+                },
+                itemHistoryLimit = {
+                    name = "Tooltip item history",
+                    order = 3,
+                    desc = "Controls the max number of item history entries to show in a tooltip when holding alt. Set to 0 to disable.",
+                    type = "range",
+                    min = 0,
+                    max = 10,
+                    step = 1,
+                    get = function(self) return ABGP.db.char.itemHistoryLimit; end,
+                    set = function(self, v) ABGP.db.char.itemHistoryLimit = v; end,
+                    cmdHidden = true,
+                },
+                alwaysOpenWindow = {
+                    name = "Always open loot UI",
+                    order = 4,
+                    desc = "If this is set, the loot window item will always open when loot is opened for distribution, instead of skipping some (like ones you can't use).",
+                    type = "toggle",
+                    get = function(self) return ABGP.db.char.alwaysOpenWindow; end,
+                    set = function(self, v) ABGP.db.char.alwaysOpenWindow = v; end,
+                },
+            },
         },
-        priorities = {
-            name = "Preferred Priorities",
-            order = 2,
-            desc = "If any priorites are chosen here, items not matching them will be deemphasized during distribution.",
-            type = "multiselect",
-            control = "Dropdown",
-            values = self:GetItemPriorities(),
-            get = function(self, k) return ABGP.db.char.preferredPriorities[k]; end,
-            set = function(self, k, v)
-                ABGP.db.char.preferredPriorities[k] = v;
-                local usePriority = false;
-                for _, v in pairs(ABGP.db.char.preferredPriorities) do
-                    if v then usePriority = true; end
-                end
-                ABGP.db.char.usePreferredPriority = usePriority;
-            end,
-            cmdHidden = true,
-        },
-        itemHistoryLimit = {
-            name = "Tooltip item history",
-            order = 3,
-            desc = "Controls the max number of item history entries to show in a tooltip when holding alt. Set to 0 to disable.",
-            type = "range",
-            min = 0,
-            max = 10,
-            step = 1,
-            get = function(self) return ABGP.db.char.itemHistoryLimit; end,
-            set = function(self, v) ABGP.db.char.itemHistoryLimit = v; end,
-            cmdHidden = true,
-        },
-        raidGroup = {
-            name = "Raid Group",
-            order = 4,
-            desc = "Choose the raid group to prioritize in the UI.",
-            type = "select",
-            control = "Dropdown",
-            values = raidGroups,
-            get = function(self) return ABGP:GetRaidGroup(); end,
-            set = function(self, v) ABGP.db.char.raidGroup = v; end,
-        },
-        outsider = {
-            name = "Outsider",
-            order = 5,
-            desc = "Select this option if your EPGP is tracked outside your guild.",
-            type = "toggle",
-            get = function(self) return ABGP.db.char.outsider; end,
-            set = function(self, v)
-                ABGP.db.char.outsider = v;
-                ABGP:SendMessage(ABGP.CommTypes.OFFICER_NOTES_UPDATED);
-            end,
+        c = {
+            name = "Raid Groups",
+            type = "group",
+            args = {
+                raidGroup = {
+                    name = "Raid Group",
+                    order = 1,
+                    desc = "Choose the raid group to prioritize in the UI.",
+                    type = "select",
+                    control = "Dropdown",
+                    values = raidGroups,
+                    get = function(self) return ABGP:GetRaidGroup(); end,
+                    set = function(self, v) ABGP.db.char.raidGroup = v; end,
+                },
+                outsider = {
+                    name = "Outsider",
+                    order = 2,
+                    desc = "Select this option if your EPGP is tracked outside your guild.",
+                    type = "toggle",
+                    get = function(self) return ABGP.db.char.outsider; end,
+                    set = function(self, v)
+                        ABGP.db.char.outsider = v;
+                        ABGP:SendMessage(ABGP.CommTypes.OFFICER_NOTES_UPDATED);
+                    end,
+                },
+            },
         },
     };
     AceConfig:RegisterOptionsTable("ABGP", {

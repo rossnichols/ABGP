@@ -225,7 +225,7 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 			data.gp = data.gp + cost;
             data.priority = data.ep * 10 / data.gp;
             local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
-            self:LogDebug("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
+            self:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
                 value.phase, player, proxy, data.ep, data.gp, cost, data.priority);
             table.sort(self.Priorities[value.phase], PrioritySort);
 
