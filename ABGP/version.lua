@@ -12,8 +12,8 @@ local CreateFrame = CreateFrame;
 local GetAddOnMetadata = GetAddOnMetadata;
 local tonumber = tonumber;
 
-local announcedVersion;
 local versionCheckData;
+local showedNagPopup = false;
 local checkedGuild = false;
 
 function ABGP:GetVersion()
@@ -72,8 +72,8 @@ local function VersionIsNewer(versionCmp, version, allowPrerelease)
 end
 
 local function CompareVersion(versionCmp, sender)
-    -- See if we've already told the user about this version
-    if versionCmp == announcedVersion then return; end
+    -- See if we've already told the user to upgrade
+    if showedNagPopup then return; end
 
     -- See if we're already running this version
     local version = ABGP:GetCompareVersion();
@@ -86,14 +86,14 @@ local function CompareVersion(versionCmp, sender)
         _G.StaticPopup_Show("ABGP_OUTDATED_VERSION",
             ("%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade so you can request loot!"):format(
             ABGP:ColorizeText("ABGP"), ABGP:ColorizeText(versionCmp), ABGP:ColorizeName(sender), ABGP:ColorizeText(version)));
-        announcedVersion = versionCmp;
+        showedNagPopup = true;
     end
 end
 
 function ABGP:OnVersionRequest(data, distribution, sender)
     -- Reset the announced version if the sender requested so that the message will print again.
     if data.reset then
-        announcedVersion = nil;
+        showedNagPopup = false;
     end
 
     -- Unless data.reset is set, only respond if we have a newer version.
@@ -159,8 +159,8 @@ function ABGP:PerformVersionCheck()
         self:Notify("You're using a prerelease version! This check will likely find a lot of 'outdated' versions.");
     end
 
-    -- Reset announcedVersion in case the version check reveals a newer version.
-    announcedVersion = nil;
+    -- Reset showedNagPopup in case the version check reveals a newer version.
+    showedNagPopup = false;
 
     versionCheckData = {
         total = GetNumOnlineGroupMembers(),
