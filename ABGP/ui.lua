@@ -577,7 +577,7 @@ end
 local function DrawAuditLog(container, rebuild, reason)
     if not rebuild and reason then return; end
 
-    local widths = { 70, 60, 1.0 };
+    local widths = { 70, 70, 1.0 };
     if rebuild then
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
@@ -636,6 +636,9 @@ local function DrawAuditLog(container, rebuild, reason)
                     audit = ("%s was disenchanted"):format(data.itemLink);
                 else
                     local requestType = requestTypes[distrib.requestType];
+                    if distrib.roll then
+                        requestType = ("%s:%d"):format(requestType, distrib.roll);
+                    end
                     local override = distrib.override
                         and (",%s"):format(distrib.override)
                         or "";
@@ -656,6 +659,9 @@ local function DrawAuditLog(container, rebuild, reason)
             elseif data.request then
                 local request = data.request;
                 local requestType = requestTypes[request.requestType];
+                if request.roll then
+                    requestType = ("%s:%d"):format(requestType, request.roll);
+                end
                 local epgp = ("ep=%.2f gp=%.2f pri=%.2f"):format(request.ep, request.gp, request.priority);
                 local audit = ("%s by %s (%s): %s"):format(
                     data.itemLink, request.player, requestType, epgp);

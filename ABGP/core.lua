@@ -17,6 +17,7 @@ local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
 local IsInGroup = IsInGroup;
 local GetInstanceInfo = GetInstanceInfo;
+local IsInGuild = IsInGuild;
 local C_GuildInfo = C_GuildInfo;
 local select = select;
 local pairs = pairs;
@@ -55,71 +56,71 @@ function ABGP:OnInitialize()
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
 
-    self:RegisterMessage(self.CommTypes.ITEM_REQUEST, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_REQUEST.name, function(self, event, data, distribution, sender)
         self:DistribOnItemRequest(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_PASS, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_PASS.name, function(self, event, data, distribution, sender)
         self:DistribOnItemPass(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistClosed(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemAwarded(data, distribution, sender);
         self:PriorityOnItemAwarded(data, distribution, sender);
         self:HistoryOnItemAwarded(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemTrashed(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK.name, function(self, event, data, distribution, sender)
         self:DistribOnCheck(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE.name, function(self, event, data, distribution, sender)
         self:RequestOnCheckResponse(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.VERSION_REQUEST, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.VERSION_REQUEST.name, function(self, event, data, distribution, sender)
         self:OnVersionRequest(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.VERSION_RESPONSE, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.VERSION_RESPONSE.name, function(self, event, data, distribution, sender)
         self:OnVersionResponse(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
         if self:Get("outsider") then
             self:OutsiderOnOfficerNotesUpdated();
-        else
+        elseif IsInGuild() then
             GuildRoster();
             OnGuildRosterUpdate();
         end
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_ROLLED, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.ITEM_ROLLED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemRolled(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.REQUEST_PRIORITY_SYNC, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.REQUEST_PRIORITY_SYNC.name, function(self, event, data, distribution, sender)
         self:OnPrioritySyncRequested(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.PRIORITY_SYNC, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.PRIORITY_SYNC.name, function(self, event, data, distribution, sender)
         self:OnPrioritySync(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.BOSS_LOOT, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.BOSS_LOOT.name, function(self, event, data, distribution, sender)
         self:AnnounceOnBossLoot(data, distribution, sender);
     end, self);
 
@@ -373,7 +374,7 @@ function ABGP:GetItemId(itemLink)
 end
 
 function ABGP:ShortenLink(itemLink)
-    return itemLink:gsub("|H(item:%d+).-|h", "|H%1|h");
+    return (itemLink:gsub("|H(item:%d+).-|h", "|H%1|h"));
 end
 
 local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
@@ -472,7 +473,6 @@ end
 
 function ABGP:OnPrioritySyncRequested(data, distribution, sender)
     self:SendComm(ABGP.CommTypes.PRIORITY_SYNC, {
-        commPriority = "BULK",
         priorities = self.Priorities,
     }, "WHISPER", sender);
 end

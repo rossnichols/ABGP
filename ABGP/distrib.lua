@@ -265,9 +265,11 @@ local function ProcessNewRequest(request)
     local item = activeItems[request.itemLink];
     local requests = item.requests;
     local currentItem = window:GetUserData("currentItem");
+    local oldRequest;
 
     for i, existing in ipairs(requests) do
         if existing.player == request.player then
+            oldRequest = existing;
             request.notes = CombineNotes(existing.notes, request.notes);
             table.remove(requests, i);
             break;
@@ -292,6 +294,15 @@ local function ProcessNewRequest(request)
 
     -- Persist the roll
     item.rolls[request.player] = request.roll;
+
+    if not oldRequest or oldRequest.requestType ~= request.requestType then
+        local requestTypes = {
+            [ABGP.RequestTypes.MS] = "for main spec",
+            [ABGP.RequestTypes.OS] = "for off spec",
+            [ABGP.RequestTypes.ROLL] = "by rolling",
+        };
+        ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(request.player), request.itemLink, requestTypes[request.requestType]);
+    end
 
     table.insert(requests, request);
 
@@ -369,10 +380,6 @@ local function AddActiveItem(data)
 end
 
 local function RemoveActiveItem(itemLink, item)
-    ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED, {
-        itemLink = itemLink
-    }, "BROADCAST");
-
     if activeDistributionWindow then
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
@@ -400,6 +407,11 @@ local function RemoveActiveItem(itemLink, item)
             end
         end
     end
+
+    ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_CLOSED, {
+        itemLink = itemLink,
+        count = #item.distributions
+    }, "BROADCAST");
 
     if not (item.testItem or ABGP.IgnoreSelfDistributed) then
         ABGP:AuditItemDistribution(item);
@@ -492,13 +504,6 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         ABGP:Error("%s requested %s but it's not being distributed!", ABGP:ColorizeName(sender), itemLink);
         return;
     end
-
-    local requestTypes = {
-        [ABGP.RequestTypes.MS] = "for main spec",
-        [ABGP.RequestTypes.OS] = "for off spec",
-        [ABGP.RequestTypes.ROLL] = "by rolling",
-    };
-    ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(sender), itemLink, requestTypes[data.requestType]);
 
     local request = {
         itemLink = itemLink,
@@ -633,8 +638,8 @@ function ABGP:ShowDistrib(itemLink)
             -- override = "trial",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
-                "|cffff8000|Hitem:19019::::::::60:::::|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
-                "|cffff8000|Hitem:17182::::::::60:::::|h[Sulfuras, Hand of Ragnaros]|h|r"
+                "|cffff8000|Hitem:19019|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
+                "|cffff8000|Hitem:17182|h[Sulfuras, Hand of Ragnaros]|h|r"
             },
         };
         for i = 1, 9 do

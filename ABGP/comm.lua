@@ -2,6 +2,7 @@ local AceSerializer = LibStub("AceSerializer-3.0");
 local LibCompress = LibStub("LibCompress");
 local AddonEncodeTable = LibCompress:GetAddonEncodeTable();
 
+local _G = _G;
 local ABGP = ABGP;
 local IsInGroup = IsInGroup;
 local GetNumGroupMembers = GetNumGroupMembers;
@@ -12,6 +13,7 @@ local pairs = pairs;
 local type = type;
 local table = table;
 local tostring = tostring;
+local strlen = strlen;
 
 local function GetBroadcastChannel()
     if ABGP.PrivateComms then return "WHISPER", UnitName("player"); end
@@ -34,24 +36,25 @@ local function CV(str)
 end
 
 ABGP.CommTypes = {
-    ITEM_REQUEST = CV("ABGP_ITEM_REQUEST"),
+    ITEM_REQUEST = { name = CV("ABGP_ITEM_REQUEST"), priority = "INSTANT" },
     -- itemLink: item link string
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
-    -- equipped: array of item link strings
+    -- equipped: array of item link strings or nil
 
-    ITEM_PASS = CV("ABGP_ITEM_PASS"),
+    ITEM_PASS = { name = CV("ABGP_ITEM_PASS"), priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_OPENED = CV("ABGP_ITEM_DISTRIBUTION_OPENED"),
+    ITEM_DISTRIBUTION_OPENED = { name = CV("ABGP_ITEM_DISTRIBUTION_OPENED"), priority = "INSTANT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
 
-    ITEM_DISTRIBUTION_CLOSED = CV("ABGP_ITEM_DISTRIBUTION_CLOSED"),
+    ITEM_DISTRIBUTION_CLOSED = { name = CV("ABGP_ITEM_DISTRIBUTION_CLOSED"), priority = "INSTANT" },
     -- itemLink: item link string
+    -- count: number
 
-    ITEM_DISTRIBUTION_AWARDED = CV("ABGP_ITEM_DISTRIBUTION_AWARDED"),
+    ITEM_DISTRIBUTION_AWARDED = { name = CV("ABGP_ITEM_DISTRIBUTION_AWARDED"), priority = "ALERT" },
     -- itemLink: item link string
     -- player: string
     -- cost: number
@@ -62,39 +65,39 @@ ABGP.CommTypes = {
     -- count: number
     -- testItem: bool
 
-    ITEM_DISTRIBUTION_CHECK = CV("ABGP_ITEM_DISTRIBUTION_CHECK"),
-    -- itemLink: optional item link string
-
-    ITEM_DISTRIBUTION_CHECK_RESPONSE = CV("ABGP_ITEM_DISTRIBUTION_CHECK_RESPONSE"),
-    -- itemLink: item link string
-    -- valid: bool
-
-    ITEM_DISTRIBUTION_TRASHED = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"),
+    ITEM_DISTRIBUTION_TRASHED = { name = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"), priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
 
-    ITEM_ROLLED = CV("ABGP_ITEM_ROLLED"),
+    ITEM_DISTRIBUTION_CHECK = { name = CV("ABGP_ITEM_DISTRIBUTION_CHECK"), priority = "ALERT" },
+    -- itemLink: optional item link string
+
+    ITEM_DISTRIBUTION_CHECK_RESPONSE = { name = CV("ABGP_ITEM_DISTRIBUTION_CHECK_RESPONSE"), priority = "ALERT" },
+    -- itemLink: item link string
+    -- valid: bool
+
+    ITEM_ROLLED = { name = CV("ABGP_ITEM_ROLLED"), priority = "ALERT" },
     -- itemLink: item link string
     -- roll: number
 
-    OFFICER_NOTES_UPDATED = CV("ABGP_OFFICER_NOTES_UPDATED"),
+    OFFICER_NOTES_UPDATED = { name = CV("ABGP_OFFICER_NOTES_UPDATED"), priority = "NORMAL" },
     -- no payload
 
-    REQUEST_PRIORITY_SYNC = CV("ABGP_REQUEST_PRIORITY_SYNC"),
+    REQUEST_PRIORITY_SYNC = { name = CV("ABGP_REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },
     -- no payload
 
-    PRIORITY_SYNC = CV("ABGP_PRIORITY_SYNC"),
+    PRIORITY_SYNC = { name = CV("ABGP_PRIORITY_SYNC"), priority = "NORMAL" },
     -- priorities: table
 
-    BOSS_LOOT = CV("ABGP_BOSS_LOOT"),
+    BOSS_LOOT = { name = CV("ABGP_BOSS_LOOT"), priority = "ALERT" },
     -- source: string
     -- items: table
 
     -- NOTE: these aren't versioned so they can continue to function across major changes.
-    VERSION_REQUEST = "ABGP_VERSION_REQUEST",
+    VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL" },
     -- reset: bool or nil
-    VERSION_RESPONSE = "ABGP_VERSION_RESPONSE",
+    VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "NORMAL" },
     -- no payload
 };
 
@@ -103,10 +106,9 @@ ABGP.InternalEvents = {
 };
 
 function ABGP:SendComm(type, data, distribution, target)
-    data.type = type;
-    data.version = self:GetVersion();
+    data.type = type.name;
 
-    local priority = data.commPriority or "ALERT";
+    local priority = data.commPriority or type.priority;
     data.commPriority = nil;
 
     local serialized = AceSerializer:Serialize(data);
@@ -116,8 +118,18 @@ function ABGP:SendComm(type, data, distribution, target)
     if distribution == "BROADCAST" then
         distribution, target = GetBroadcastChannel();
     end
+    if not distribution then return; end
 
-    if distribution then
+    if priority == "INSTANT" and strlen(payload) > 250 then
+        priority = "ALERT";
+    end
+    self:LogVerbose("Sending comm (len:%d, priority:%s): %s", strlen(payload), priority, payload);
+
+    if priority == "INSTANT" then
+        -- The \004 prefix is AceComm's "escape" control. Prepend it so that the
+        -- payload is properly interpreted when received.
+        _G.C_ChatInfo.SendAddonMessage("ABGP", "\004" .. payload, distribution, target);
+    else
         self:SendCommMessage("ABGP", payload, distribution, target, priority);
     end
 end

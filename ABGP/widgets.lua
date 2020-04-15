@@ -434,7 +434,7 @@ do
         highlight:SetTexCoord(0, 1, 0, 0.578125);
 
         local button = CreateElement(frame, nil, "UIPanelButtonTemplate");
-        button:SetWidth(75);
+        button:SetWidth(85);
         button:ClearAllPoints();
         button:SetPoint("TOPRIGHT", frame, -1, -1);
         button:SetPoint("BOTTOMRIGHT", frame, -1, 3);

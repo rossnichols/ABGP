@@ -99,15 +99,16 @@ function ABGP:OnVersionRequest(data, distribution, sender)
     -- Unless data.reset is set, only respond if we have a newer version.
     -- data.reset indicates it's coming from a version check.
     if data.reset or VersionIsNewer(self:GetCompareVersion(), data.version) then
-        self:SendComm(self.CommTypes.VERSION_RESPONSE, {}, distribution);
+        local priority = data.reset and "INSTANT" or nil;
+        self:SendComm(self.CommTypes.VERSION_RESPONSE, {
+            commPriority = priority,
+            version = self:GetVersion()
+        }, distribution);
     end
     CompareVersion(data.version, sender);
 end
 
 function ABGP:OnVersionResponse(data, distribution, sender)
-    if distribution == "GUILD" then
-        checkedGuild = true;
-    end
     CompareVersion(data.version, sender);
     if distribution ~= "GUILD" and versionCheckData and not versionCheckData.players[sender] then
         versionCheckData.players[sender] = data.version;
@@ -170,6 +171,7 @@ function ABGP:PerformVersionCheck()
     self:Notify("Performing version check...");
     self:SendComm(self.CommTypes.VERSION_REQUEST, {
         reset = true,
+        version = self:GetVersion()
     }, "BROADCAST");
     versionCheckData.timer = self:ScheduleTimer("VersionCheckCallback", 5);
 end
@@ -221,12 +223,17 @@ function ABGP:VersionCheckCallback()
 end
 
 function ABGP:VersionOnGroupJoined()
-    self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "BROADCAST");
+    self:SendComm(self.CommTypes.VERSION_REQUEST, {
+        version = self:GetVersion()
+    }, "BROADCAST");
 end
 
 function ABGP:VersionOnGuildRosterUpdate()
     if not checkedGuild then
-        self:SendComm(self.CommTypes.VERSION_REQUEST, {}, "GUILD");
+        checkedGuild = true;
+        self:SendComm(self.CommTypes.VERSION_REQUEST, {
+            version = self:GetVersion()
+        }, "GUILD");
     end
 end
 

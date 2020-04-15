@@ -82,9 +82,9 @@ end
 local function SetEltText(elt)
     local item = activeItems[elt.data.itemLink];
     if item then
-        local text = "Show";
+        local text = "Request";
         if item.dialogShown then
-            text = "Hide";
+            text = "Cancel";
         elseif item.sentComms then
             text = "Update";
         end
@@ -243,7 +243,7 @@ end
 function ABGP:RequestOnDistClosed(data, distribution, sender)
     local itemLink = data.itemLink;
     if activeItems[itemLink] then
-        if not activeItems[itemLink].notified then
+        if data.count == 0 then
             self:Notify("Item distribution closed for %s.", itemLink);
         end
 
@@ -277,9 +277,6 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local multiple = "";
     if data.count > 1 then
         multiple = (" #%d"):format(data.count);
-    end
-    if activeItems[itemLink] then
-        activeItems[itemLink].notified = true;
     end
 
     local requestTypes = {
@@ -319,9 +316,6 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
     local multiple = "";
     if data.count > 1 then
         multiple = (" #%d"):format(data.count);
-    end
-    if activeItems[itemLink] then
-        activeItems[itemLink].notified = true;
     end
 
     self:Notify("%s%s will be disenchanted%s.", itemLink, multiple, info);
@@ -384,8 +378,6 @@ function ABGP:RequestItem(itemLink, requestType, notes)
     local data = {
         itemLink = itemLink,
         requestType = requestType,
-        notes = (notes ~= "") and notes or nil,
-        equipped = {},
     };
     local requestTypes = {
         [ABGP.RequestTypes.MS] = "for main spec",
@@ -420,13 +412,6 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         INVTYPE_RANGEDRIGHT = { _G.INVSLOT_RANGED },
         INVTYPE_RELIC = { _G.INVSLOT_RANGED },
     };
-    local equipLoc = select(9, GetItemInfo(itemLink));
-    if equipLoc and itemMaps[equipLoc] then
-        local current1 = itemMaps[equipLoc][1] and GetInventoryItemLink("player", itemMaps[equipLoc][1]) or nil;
-        local current2 = itemMaps[equipLoc][2] and GetInventoryItemLink("player", itemMaps[equipLoc][2]) or nil;
-        if current1 then table.insert(data.equipped, current1); end
-        if current2 then table.insert(data.equipped, current2); end
-    end
 
     local faveInfo = "";
     if ABGP:CanFavoriteItems() and not ABGP:IsItemFavorited(itemLink) then
@@ -439,7 +424,23 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         self:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
     end
 
+    -- Send an initial message with minimal additional payload,
+    -- to ensure that the data will fit into a single message.
     self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
+
+    -- Fill in the rest of the payload: notes and equipped items.
+    data.notes = (notes ~= "") and notes or nil;
+    data.equipped = {};
+    local equipLoc = select(9, GetItemInfo(itemLink));
+    if equipLoc and itemMaps[equipLoc] then
+        local current1 = itemMaps[equipLoc][1] and GetInventoryItemLink("player", itemMaps[equipLoc][1]) or nil;
+        local current2 = itemMaps[equipLoc][2] and GetInventoryItemLink("player", itemMaps[equipLoc][2]) or nil;
+        if current1 then table.insert(data.equipped, self:ShortenLink(current1)); end
+        if current2 then table.insert(data.equipped, self:ShortenLink(current2)); end
+    end
+
+    self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
+
     activeItems[itemLink].sentComms = true;
     activeItems[itemLink].sentRequest = true;
     local elt = FindExistingElt(itemLink);
