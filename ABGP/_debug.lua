@@ -11,8 +11,8 @@ ABGP.Debug = true;
 -- ABGP.PrivateComms = true;
 -- ABGP.ShowTestDistrib = true;
 ABGP.IgnoreSelfDistributed = true;
-ABGP.VersionDebug = "3.5.1";
-ABGP.VersionCmpDebug = "3.5.1";
+ABGP.VersionDebug = "3.5.2";
+ABGP.VersionCmpDebug = "3.5.2";
 
 
 local lookup = {};
