@@ -19,14 +19,22 @@ local hooksecurefunc = hooksecurefunc;
 local updatingNotes = false;
 
 function ABGP:AddDataHooks()
-    local onSetNote = function()
-        if not updatingNotes then
-            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
-            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
-        end
+    local onSetNote = function(index, note, name, canEdit, existing)
+        if updatingNotes or not name or not canEdit or note == existing then return; end
+
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "BROADCAST");
     end;
-    hooksecurefunc("GuildRosterSetPublicNote", onSetNote);
-    hooksecurefunc("GuildRosterSetOfficerNote", onSetNote);
+    local onSetPublicNote = function(index, note)
+        local name, _, _, _, _, _, existing = GetGuildRosterInfo(index);
+        return onSetNote(index, note, name, self:CanEditPublicNotes(), existing);
+    end;
+    local onSetOfficerNote = function(index, note)
+        local name, _, _, _, _, _, _, existing = GetGuildRosterInfo(index);
+        return onSetNote(index, note, name, self:CanEditOfficerNotes(), existing);
+    end;
+    hooksecurefunc("GuildRosterSetPublicNote", onSetPublicNote);
+    hooksecurefunc("GuildRosterSetOfficerNote", onSetOfficerNote);
 end
 
 local function PrioritySort(a, b)
@@ -133,8 +141,8 @@ function ABGP:RebuildOfficerNotes()
         self:Notify("Everything already up to date!");
     else
         self:Notify("Updated %d officer notes with the latest priority data!", count);
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "BROADCAST");
     end
 end
 
@@ -195,7 +203,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         updatingNotes = false;
 
         if not suppressComms then
-            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
+            self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
             -- Do not send to BROADCAST - the addon will take care of updating
             -- its priority list itself, without requiring a resync.
         end

@@ -99,7 +99,7 @@ function ABGP:OnInitialize()
         self:OnVersionResponse(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.GUILD_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
         if self:Get("outsider") then
             self:OutsiderOnOfficerNotesUpdated();
         elseif IsInGuild() then
@@ -297,9 +297,14 @@ function ABGP:IsPrivileged()
     return (isOfficer and not self:Get("outsider")) or ABGP.Debug;
 end
 
+function ABGP:CanEditPublicNotes()
+    if self:Get("outsider") then return false; end
+    return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[10];
+end
+
 function ABGP:CanEditOfficerNotes()
-    local canEdit = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
-    return canEdit and not self:Get("outsider");
+    if self:Get("outsider") then return false; end
+    return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
 end
 
 

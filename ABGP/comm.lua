@@ -81,7 +81,7 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- roll: number
 
-    OFFICER_NOTES_UPDATED = { name = CV("ABGP_OFFICER_NOTES_UPDATED"), priority = "NORMAL" },
+    GUILD_NOTES_UPDATED = { name = CV("ABGP_GUILD_NOTES_UPDATED"), priority = "NORMAL" },
     -- no payload
 
     REQUEST_PRIORITY_SYNC = { name = CV("ABGP_REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },
@@ -105,6 +105,10 @@ ABGP.InternalEvents = {
     ACTIVE_PLAYERS_REFRESHED = "ABGP_ACTIVE_PLAYERS_REFRESHED",
 };
 
+function ABGP:CommCallback(sent, total)
+    self:LogDebug("COMM-CB: sent=%d total=%d", sent, total);
+end
+
 function ABGP:SendComm(type, data, distribution, target)
     data.type = type.name;
 
@@ -123,14 +127,19 @@ function ABGP:SendComm(type, data, distribution, target)
     if priority == "INSTANT" and strlen(payload) > 250 then
         priority = "ALERT";
     end
-    self:LogVerbose("Sending comm (len:%d, priority:%s): %s", strlen(payload), priority, payload);
+
+    self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
+        type.name,
+        priority,
+        target and ("%s:%s"):format(distribution, target) or distribution,
+        strlen(payload));
 
     if priority == "INSTANT" then
         -- The \004 prefix is AceComm's "escape" control. Prepend it so that the
         -- payload is properly interpreted when received.
         _G.C_ChatInfo.SendAddonMessage("ABGP", "\004" .. payload, distribution, target);
     else
-        self:SendCommMessage("ABGP", payload, distribution, target, priority);
+        self:SendCommMessage("ABGP", payload, distribution, target, priority, self.CommCallback, self);
     end
 end
 
@@ -147,6 +156,8 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
             self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
+    else
+        self:LogDebug("COMM-RECV: %s dist=%s sender=%s", data.type, distribution, sender);
     end
 
     self:SendMessage(data.type, data, distribution, sender);
