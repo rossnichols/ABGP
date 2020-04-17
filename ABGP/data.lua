@@ -19,7 +19,7 @@ local hooksecurefunc = hooksecurefunc;
 local updatingNotes = false;
 
 function ABGP:AddDataHooks()
-    local onSetNote = function(index, note, name, canEdit, existing)
+    local onSetNote = function(note, name, canEdit, existing)
         if updatingNotes or not name or not canEdit or note == existing then return; end
 
         self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
@@ -27,14 +27,25 @@ function ABGP:AddDataHooks()
     end;
     local onSetPublicNote = function(index, note)
         local name, _, _, _, _, _, existing = GetGuildRosterInfo(index);
-        return onSetNote(index, note, name, self:CanEditPublicNotes(), existing);
+        onSetNote(note, name, self:CanEditPublicNotes(), existing);
     end;
     local onSetOfficerNote = function(index, note)
         local name, _, _, _, _, _, _, existing = GetGuildRosterInfo(index);
-        return onSetNote(index, note, name, self:CanEditOfficerNotes(), existing);
+        onSetNote(note, name, self:CanEditOfficerNotes(), existing);
+    end;
+    local onSetNote = function(guid, note, isPublic)
+        for _, info in pairs(self:GetGuildInfo()) do
+            if info[17] == guid then
+                local canEdit = self[isPublic and "CanEditPublicNotes" or "CanEditOfficerNotes"](self);
+                local existing = info[isPublic and 7 or 8];
+                onSetNote(note, info[1], canEdit, existing);
+                break;
+            end
+        end
     end;
     hooksecurefunc("GuildRosterSetPublicNote", onSetPublicNote);
     hooksecurefunc("GuildRosterSetOfficerNote", onSetOfficerNote);
+    hooksecurefunc(_G.C_GuildInfo, "SetNote", onSetNote);
 end
 
 local function PrioritySort(a, b)

@@ -84,7 +84,8 @@ function ABGP:RebuildGuildInfo()
 end
 
 function ABGP:GetGuildInfo(player)
-    return guildInfo[player];
+    if player then return guildInfo[player]; end
+    return guildInfo;
 end
 
 function ABGP:GetItemPriorities()
