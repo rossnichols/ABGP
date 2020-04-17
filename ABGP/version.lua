@@ -36,7 +36,7 @@ local contextFns = {
             context = self.context
         }, self.distrib);
     end,
-    
+
     SendResponse = function(self)
         ABGP:SendComm(ABGP.CommTypes.VERSION_RESPONSE, {
             version = ABGP:GetVersion(),
@@ -53,11 +53,7 @@ local contextFns = {
             self.timer = ABGP:ScheduleTimer(self.CheckConsistency, self, 5);
         end
 
-        local version = ABGP:GetCompareVersion();
-        local same = (data.version == version);
-        local newer = ABGP:VersionIsNewer(data.version, version);
-
-        if not self.leaders[sender] and (same or newer) then
+        if not self.leaders[sender] and self:IsSameOrNewer(data.version) then
             self:InsertLeader(sender, data.version);
         end
     end,
@@ -70,16 +66,13 @@ local contextFns = {
             self.timer = nil;
         end
 
-        local version = ABGP:GetCompareVersion();
-        local newer = ABGP:VersionIsNewer(data.version, version);
-
-        if not self.leaders[sender] and newer then
+        if not self.leaders[sender] and self:IsSameOrNewer(data.version) then
             self:InsertLeader(sender, data.version);
         end
     end,
 
     CheckConsistency = function(self)
-        self:LogDebug("Context=%s consistency failure! %s", self.context, self.Leaders());
+        ABGP:LogDebug("Context=%s consistency failure! %s", self.context, self:Leaders());
         self.timer = nil;
         self:Reset();
         self:SendRequest();
@@ -97,9 +90,7 @@ local contextFns = {
         else
             for i = #self.leaders, 1, -1 do
                 local leader = self.leaders[i];
-                local same = (leader.version == version);
-                local newer = ABGP:VersionIsNewer(version, leader.version);
-                if same or newer then
+                if self:IsSameOrNewer(version, leader.version) then
                     insertIndex = i + 1;
                     break;
                 end
@@ -116,7 +107,7 @@ local contextFns = {
                 end
             end);
             self.leaders[player] = true;
-            ABGP:LogDebug("Leaders for context=%s: %s", self.context, self.Leaders());
+            -- ABGP:LogDebug("Leaders for context=%s: %s", self.context, self:Leaders());
         end
     end,
 
@@ -132,15 +123,28 @@ local contextFns = {
         end
 
         if removed then
-            ABGP:LogDebug("Leaders for context=%s: %s", self.context, self.Leaders());
+            -- ABGP:LogDebug("Leaders for context=%s: %s", self.context, self:Leaders());
+
+            if #self.leaders == 0 then
+                ABGP:LogDebug("Leader context=%s removed all leaders! Shouldn't ever happen.", self.context);
+                self:Reset();
+            end
+
             if self:IsLeader() then self:SendRequest(); end
         end
+    end,
+
+    IsSameOrNewer = function(self, version, versionCmp)
+        versionCmp = versionCmp or ABGP:GetCompareVersion();
+        local same = (version == versionCmp);
+        local newer = ABGP:VersionIsNewer(version, versionCmp);
+        return same or newer;
     end,
 
     Leaders = function(self)
         local str = "";
         for i, leader in ipairs(self.leaders) do
-            str = ("%s%s%s:%d"):format(str, i == 1 and "" or ",", leader.player, leader.version);
+            str = ("%s%s%s:%s"):format(str, i == 1 and "" or ",", leader.player, leader.version);
         end
         return str;
     end,
@@ -379,6 +383,7 @@ end
 function ABGP:VersionOnGuildRosterUpdate()
     if checkedGuild then
         self.LeaderContexts.guild:CheckLeaders(function(player)
+            if player == UnitName("player") then return true; end
             local guildInfo = ABGP:GetGuildInfo(player);
             return guildInfo and guildInfo[9];
         end);
