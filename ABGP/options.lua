@@ -8,6 +8,18 @@ local IsInGroup = IsInGroup;
 local pairs = pairs;
 
 function ABGP:InitOptions()
+    local defaults = {
+        char = {
+            usePreferredPriority = false,
+            preferredPriorities = {},
+            itemHistoryLimit = 3,
+            raidGroup = false,
+            outsider = false,
+            alwaysOpenWindow = true,
+        }
+    };
+    self.db = AceDB:New("ABGP_DB", defaults);
+
     local addonText = "ABGP";
     local version = self:GetVersion();
     if self:ParseVersion(version) then
@@ -71,18 +83,6 @@ function ABGP:InitOptions()
         type = "group",
         args = options,
     }, { "abgp" });
-
-    local defaults = {
-        char = {
-            usePreferredPriority = false,
-            preferredPriorities = {},
-            itemHistoryLimit = 3,
-            raidGroup = false,
-            outsider = false,
-            alwaysOpenWindow = true,
-        }
-    };
-    self.db = AceDB:New("ABGP_DB", defaults);
 
     local raidGroups = {
         [ABGP.RaidGroups.RED] = "Red",
