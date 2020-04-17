@@ -156,7 +156,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
             self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
-    else
+    elseif sender ~= UnitName("player") then
         self:LogDebug("COMM-RECV: %s dist=%s sender=%s", data.type, distribution, sender);
     end
 
