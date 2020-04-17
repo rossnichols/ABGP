@@ -27,7 +27,10 @@ ABGP.LeaderContexts = {
 local contextFns = {
     Reset = function(self)
         for k in pairs(self.leaders) do self.leaders[k] = nil; end
-        self:InsertLeader(UnitName("player"), ABGP:GetCompareVersion());
+        local version = ABGP:GetCompareVersion();
+        if self:IsRelease(version) then
+            self:InsertLeader(UnitName("player"), version);
+        end
     end,
 
     SendRequest = function(self)
@@ -45,7 +48,7 @@ local contextFns = {
     end,
 
     OnRequest = function(self, data, distribution, sender)
-        if sender == UnitName("player") then return; end
+        if sender == UnitName("player") or not self:IsRelease(data.version) then return; end
 
         if self:IsLeader() then
             self:SendResponse();
@@ -59,7 +62,7 @@ local contextFns = {
     end,
 
     OnResponse = function(self, data, distribution, sender)
-        if sender == UnitName("player") then return; end
+        if sender == UnitName("player") or not self:IsRelease(data.version) then return; end
 
         if self.timer then
             ABGP:CancelTimer(self.timer);
@@ -75,11 +78,15 @@ local contextFns = {
         ABGP:LogDebug("Context=%s consistency failure! %s", self.context, self:Leaders());
         self.timer = nil;
         self:Reset();
-        self:SendRequest();
     end,
 
     IsLeader = function(self)
-        return self.leaders[#self.leaders].player == UnitName("player");
+        return #self.leaders > 0 and self.leaders[#self.leaders].player == UnitName("player");
+    end,
+
+    IsRelease = function(self, version)
+        local major, minor, patch, prerelType, prerelVersion = ABGP:ParseVersion(version);
+        return major and not prerelType;
     end,
 
     InsertLeader = function(self, player, version)
@@ -124,11 +131,6 @@ local contextFns = {
 
         if removed then
             -- ABGP:LogDebug("Leaders for context=%s: %s", self.context, self:Leaders());
-
-            if #self.leaders == 0 then
-                ABGP:LogDebug("Leader context=%s removed all leaders! Shouldn't ever happen.", self.context);
-                self:Reset();
-            end
 
             if self:IsLeader() then self:SendRequest(); end
         end
