@@ -164,6 +164,7 @@ function ABGP:OnInitialize()
         elseif event == "GROUP_LEFT" then
             ABGP:RequestOnGroupLeft();
             ABGP:OutsiderOnGroupLeft();
+            ABGP:VersionOnGroupLeft();
         elseif event == "GROUP_ROSTER_UPDATE" then
             ABGP:RequestOnGroupUpdate();
             ABGP:OutsiderOnGroupUpdate();

@@ -10,11 +10,146 @@ local UnitIsConnected = UnitIsConnected;
 local SendChatMessage = SendChatMessage;
 local CreateFrame = CreateFrame;
 local GetAddOnMetadata = GetAddOnMetadata;
+local UnitExists = UnitExists;
 local tonumber = tonumber;
+local table = table;
+local pairs = pairs;
+local ipairs = ipairs;
 
 local versionCheckData;
 local showedNagPopup = false;
 local checkedGuild = false;
+
+ABGP.LeaderContexts = {
+    group = { leaders = {}, distrib = "BROADCAST", context = "group" },
+    guild = { leaders = {},  distrib = "GUILD", context = "guild" },
+};
+local contextFns = {
+    Reset = function(self)
+        for k in pairs(self.leaders) do self.leaders[k] = nil; end
+        self:InsertLeader(UnitName("player"), ABGP:GetCompareVersion());
+    end,
+
+    SendRequest = function(self)
+        ABGP:SendComm(ABGP.CommTypes.VERSION_REQUEST, {
+            version = ABGP:GetVersion(),
+            context = self.context
+        }, self.distrib);
+    end,
+    
+    SendResponse = function(self)
+        ABGP:SendComm(ABGP.CommTypes.VERSION_RESPONSE, {
+            version = ABGP:GetVersion(),
+            context = self.context
+        }, self.distrib);
+    end,
+
+    OnRequest = function(self, data, distribution, sender)
+        if sender == UnitName("player") then return; end
+
+        if self:IsLeader() then
+            self:SendResponse();
+        else
+            self.timer = ABGP:ScheduleTimer(self.CheckConsistency, self, 5);
+        end
+
+        local version = ABGP:GetCompareVersion();
+        local same = (data.version == version);
+        local newer = ABGP:VersionIsNewer(data.version, version);
+
+        if not self.leaders[sender] and (same or newer) then
+            self:InsertLeader(sender, data.version);
+        end
+    end,
+
+    OnResponse = function(self, data, distribution, sender)
+        if sender == UnitName("player") then return; end
+
+        if self.timer then
+            ABGP:CancelTimer(self.timer);
+            self.timer = nil;
+        end
+
+        local version = ABGP:GetCompareVersion();
+        local newer = ABGP:VersionIsNewer(data.version, version);
+
+        if not self.leaders[sender] and newer then
+            self:InsertLeader(sender, data.version);
+        end
+    end,
+
+    CheckConsistency = function(self)
+        self:LogDebug("Context=%s consistency failure! %s", self.context, self.Leaders());
+        self.timer = nil;
+        self:Reset();
+        self:SendRequest();
+    end,
+
+    IsLeader = function(self)
+        return self.leaders[#self.leaders].player == UnitName("player");
+    end,
+
+    InsertLeader = function(self, player, version)
+        local insertIndex;
+
+        if #self.leaders == 0 then
+            insertIndex = 1;
+        else
+            for i = #self.leaders, 1, -1 do
+                local leader = self.leaders[i];
+                local same = (leader.version == version);
+                local newer = ABGP:VersionIsNewer(version, leader.version);
+                if same or newer then
+                    insertIndex = i + 1;
+                    break;
+                end
+            end
+        end
+
+        if insertIndex then
+            table.insert(self.leaders, insertIndex, { player = player, version = version });
+            table.sort(self.leaders, function(a, b)
+                if a.version ~= b.version then
+                    return ABGP:VersionIsNewer(b.version, a.version);
+                else
+                    return a.player < b.player;
+                end
+            end);
+            self.leaders[player] = true;
+            ABGP:LogDebug("Leaders for context=%s: %s", self.context, self.Leaders());
+        end
+    end,
+
+    CheckLeaders = function(self, checkFn)
+        local removed = false;
+        for i = #self.leaders, 1, -1 do
+            local leader = self.leaders[i];
+            if not checkFn(leader.player) then
+                table.remove(self.leaders, i);
+                self.leaders[leader.player] = nil;
+                removed = true;
+            end
+        end
+
+        if removed then
+            ABGP:LogDebug("Leaders for context=%s: %s", self.context, self.Leaders());
+            if self:IsLeader() then self:SendRequest(); end
+        end
+    end,
+
+    Leaders = function(self)
+        local str = "";
+        for i, leader in ipairs(self.leaders) do
+            str = ("%s%s%s:%d"):format(str, i == 1 and "" or ",", leader.player, leader.version);
+        end
+        return str;
+    end,
+};
+for _, context in pairs(ABGP.LeaderContexts) do
+    for name, fn in pairs(contextFns) do
+        context[name] = fn;
+    end
+end
 
 function ABGP:GetVersion()
     if ABGP.VersionDebug then
@@ -41,7 +176,7 @@ function ABGP:ParseVersion(version)
     return tonumber(major), tonumber(minor), tonumber(patch), prerelType, tonumber(prerelVersion);
 end
 
-local function VersionIsNewer(versionCmp, version, allowPrerelease)
+function ABGP:VersionIsNewer(versionCmp, version, allowPrerelease)
     if versionCmp == version then return false; end
 
     local major, minor, patch, prerelType, prerelVersion = ABGP:ParseVersion(version);
@@ -82,7 +217,7 @@ local function CompareVersion(versionCmp, sender)
     -- Make sure the version strings are valid
     if not (ABGP:ParseVersion(version) and ABGP:ParseVersion(versionCmp)) then return; end
 
-    if VersionIsNewer(versionCmp, version) then
+    if ABGP:VersionIsNewer(versionCmp, version) then
         _G.StaticPopup_Show("ABGP_OUTDATED_VERSION",
             ("%s: You're running an outdated addon version! Newer version %s discovered from %s, yours is %s. Please upgrade so you can request loot!"):format(
             ABGP:ColorizeText("ABGP"), ABGP:ColorizeText(versionCmp), ABGP:ColorizeName(sender), ABGP:ColorizeText(version)));
@@ -91,26 +226,28 @@ local function CompareVersion(versionCmp, sender)
 end
 
 function ABGP:OnVersionRequest(data, distribution, sender)
-    -- Reset the announced version if the sender requested so that the message will print again.
     if data.reset then
+        -- Reset the announced version if the sender requested so that the message will print again.
         showedNagPopup = false;
-    end
-
-    -- Unless data.reset is set, only respond if we have a newer version.
-    -- data.reset indicates it's coming from a version check.
-    if data.reset or VersionIsNewer(self:GetCompareVersion(), data.version) then
-        local priority = data.reset and "INSTANT" or nil;
         self:SendComm(self.CommTypes.VERSION_RESPONSE, {
-            commPriority = priority,
+            commPriority = "INSTANT",
+            version = self:GetVersion()
+        }, distribution);
+    elseif data.context then
+        self.LeaderContexts[data.context]:OnRequest(data, distribution, sender);
+    elseif self:VersionIsNewer(self:GetCompareVersion(), data.version) then
+        self:SendComm(self.CommTypes.VERSION_RESPONSE, {
             version = self:GetVersion()
         }, distribution);
     end
+
     CompareVersion(data.version, sender);
 end
 
 function ABGP:OnVersionResponse(data, distribution, sender)
-    CompareVersion(data.version, sender);
-    if distribution ~= "GUILD" and versionCheckData and not versionCheckData.players[sender] then
+    if data.context then
+        self.LeaderContexts[data.context]:OnResponse(data, distribution, sender);
+    elseif versionCheckData and not versionCheckData.players[sender] then
         versionCheckData.players[sender] = data.version;
         versionCheckData.received = versionCheckData.received + 1;
 
@@ -120,6 +257,8 @@ function ABGP:OnVersionResponse(data, distribution, sender)
             self:VersionCheckCallback();
         end
     end
+
+    CompareVersion(data.version, sender);
 end
 
 local function GetNumOnlineGroupMembers()
@@ -194,7 +333,7 @@ function ABGP:VersionCheckCallback()
             if UnitIsConnected(unit) then
                 local versionCmp = versionCheckData.players[player];
                 if versionCmp then
-                    if VersionIsNewer(version, versionCmp, true) then
+                    if self:VersionIsNewer(version, versionCmp, true) then
                         self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
                         SendChatMessage(
                             ("You don't have the latest ABGP version installed! Please update it from Curse/Twitch so you can request loot. The latest version is %s."):format(version),
@@ -223,17 +362,30 @@ function ABGP:VersionCheckCallback()
 end
 
 function ABGP:VersionOnGroupJoined()
-    self:SendComm(self.CommTypes.VERSION_REQUEST, {
-        version = self:GetVersion()
-    }, "BROADCAST");
+    self.LeaderContexts.group:Reset();
+    self.LeaderContexts.group:SendRequest();
+end
+
+function ABGP:VersionOnGroupLeft()
+    self.LeaderContexts.group:Reset();
+end
+
+function ABGP:VersionOnGroupUpdate()
+    self.LeaderContexts.group:CheckLeaders(function(player)
+        return UnitExists(player);
+    end);
 end
 
 function ABGP:VersionOnGuildRosterUpdate()
-    if not checkedGuild then
+    if checkedGuild then
+        self.LeaderContexts.guild:CheckLeaders(function(player)
+            local guildInfo = ABGP:GetGuildInfo(player);
+            return guildInfo and guildInfo[9];
+        end);
+    else
         checkedGuild = true;
-        self:SendComm(self.CommTypes.VERSION_REQUEST, {
-            version = self:GetVersion()
-        }, "GUILD");
+        self.LeaderContexts.guild:Reset();
+        self.LeaderContexts.guild:SendRequest();
     end
 end
 
