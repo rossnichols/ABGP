@@ -298,7 +298,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         for _, data in ipairs(gpHistory) do
             local epgp = ABGP:GetActivePlayer(data.player);
             if epgp then
-                if not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup then
+                if not currentRaidGroup or ABGP:GetRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
                     local class = epgp.class;
                     if exact then
                         if data.player:lower() == exact or
