@@ -100,7 +100,7 @@ local function DrawPriority(container, rebuild, reason)
     local lastPriority = -1;
     local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
-        local inRaidGroup = not currentRaidGroup or ABGP:IsRankInRaidGroup(data.rank, currentRaidGroup);
+        local inRaidGroup = not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
         if not filteredClasses[data.class] and inRaidGroup then
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Priority");
@@ -298,7 +298,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         for _, data in ipairs(gpHistory) do
             local epgp = ABGP:GetActivePlayer(data.player);
             if epgp then
-                if not currentRaidGroup or ABGP:IsRankInRaidGroup(epgp.rank, currentRaidGroup) then
+                if not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup then
                     local class = epgp.class;
                     if exact then
                         if data.player:lower() == exact or
@@ -755,7 +755,7 @@ function ABGP:CreateMainWindow(command)
         end
         PopulateUI(false);
     end);
-    currentRaidGroup = ABGP:GetRaidGroup();
+    currentRaidGroup = ABGP:GetPreferredRaidGroup();
     groupSelector:SetValue(currentRaidGroup);
     mainLine:AddChild(groupSelector);
 

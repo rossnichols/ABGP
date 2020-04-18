@@ -127,8 +127,13 @@ local function RebuildUI()
     local currentHeading;
     local maxRolls = {};
     for i, request in ipairs(requests) do
-        local group = request.group and ABGP.RaidGroupNames[request.group] or "Other";
-        local heading = ("%s (%s)"):format(typeHeadings[request.requestType], group);
+        local heading;
+        if currentItem.data.value then
+            local group = request.group and ABGP.RaidGroupNames[request.group] or "Other";
+            heading = ("%s (%s)"):format(typeHeadings[request.requestType], group);
+        else
+            heading = typeHeadings[request.requestType];
+        end
         if currentHeading ~= heading then
             currentHeading = heading;
             local elt = AceGUI:Create("Heading");
@@ -466,16 +471,8 @@ local function PopulateRequest(request, value)
         end
     end
 
-    if rank and not override then
-        if ABGP:IsRankInRaidGroup(rank, preferredGroup) then
-            requestGroup = preferredGroup;
-        else
-            for group in pairs(ABGP.RaidGroups) do
-                if ABGP:IsRankInRaidGroup(rank, group) then
-                    requestGroup = group;
-                end
-            end
-        end
+    if rank and value and not override then
+        requestGroup = ABGP:GetRaidGroup(rank, value.phase);
     end
 
     local needsUpdate = false;
@@ -665,19 +662,7 @@ function ABGP:ShowDistrib(itemLink)
                 entry.gp = math.random() * 2000;
                 entry.priority = entry.ep * 10 / entry.gp;
             end
-            local requestGroup;
-            local raidGroup = activeDistributionWindow:GetUserData("raidGroup");
-            if ABGP:IsRankInRaidGroup(entry.rank, raidGroup) then
-                requestGroup = raidGroup;
-            else
-                for group in pairs(ABGP.RaidGroups) do
-                    if ABGP:IsRankInRaidGroup(entry.rank, group) then
-                        requestGroup = group;
-                    end
-                end
-            end
-            entry.group = requestGroup;
-            PopulateRequest(entry);
+            PopulateRequest(entry, value);
             ProcessNewRequest(entry);
         end
     end
@@ -739,7 +724,7 @@ function ABGP:CreateDistribWindow()
         RepopulateRequests();
         RebuildUI();
     end);
-    window:SetUserData("raidGroup", ABGP:GetRaidGroup());
+    window:SetUserData("raidGroup", ABGP:GetPreferredRaidGroup());
     groupSelector:SetValue(window:GetUserData("raidGroup"));
     window:AddChild(groupSelector);
 

@@ -23,12 +23,12 @@ function ABGP:HookTooltips()
                     if IsAltKeyDown() then
                         local gpHistory = _G.ABGP_Data[value.phase].gpHistory;
 
-                        local raidGroup = ABGP:GetRaidGroup();
+                        local raidGroup = ABGP:GetPreferredRaidGroup();
                         local function shouldShowEntry(entry)
                             if entry.item ~= itemName then return false; end
                             local epgp = ABGP:GetActivePlayer(entry.player);
                             if not epgp then return false; end
-                            return ABGP:IsRankInRaidGroup(epgp.rank, raidGroup);
+                            return ABGP:GetRaidGroup(epgp.rank, value.phase) == raidGroup;
                         end
 
                         -- First pass: count

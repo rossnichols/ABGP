@@ -14,34 +14,6 @@ local table = table;
 local pairs = pairs;
 local next = next;
 
-ABGP.RaidGroups = {
-    RED = "RED",
-    BLUE = "BLUE",
-};
-ABGP.RaidGroupNames = {
-    [ABGP.RaidGroups.RED] = "Weekday",
-    [ABGP.RaidGroups.BLUE] = "Weekend",
-};
-ABGP.RaidGroupsSorted = {
-    ABGP.RaidGroups.RED,
-    ABGP.RaidGroups.BLUE
-};
-local rankData = {
-    [ABGP.RaidGroups.RED] = {
-        ["Guild Master"] = true,
-        ["Officer"] = true,
-        ["Closer"] = true,
-        ["Red Lobster"] = true,
-        ["Purple Lobster"] = true,
-    },
-    [ABGP.RaidGroups.BLUE] = {
-        ["Purple Lobster"] = true,
-        ["Blue Lobster"] = true,
-        ["Officer Alt"] = true,
-        ["Lobster Alt"] = true,
-    },
-};
-
 ABGP.Phases = {
     p1 = "p1",
     p3 = "p3",
@@ -60,26 +32,49 @@ for phase in pairs(ABGP.Phases) do
 end
 ABGP.CurrentPhase = ABGP.Phases.p3;
 
-function ABGP:IsRankInRaidGroup(rank, group)
-    return rank and rankData[group][rank];
+ABGP.RaidGroups = {
+    RED = "RED",
+    BLUE = "BLUE",
+};
+ABGP.RaidGroupNames = {
+    [ABGP.RaidGroups.RED] = "Weekday",
+    [ABGP.RaidGroups.BLUE] = "Weekend",
+};
+ABGP.RaidGroupsSorted = {
+    ABGP.RaidGroups.RED,
+    ABGP.RaidGroups.BLUE
+};
+local rankData = {
+    ["Guild Master"] =   { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED },
+    ["Officer"] =        { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED },
+    ["Closer"] =         { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED },
+    ["Red Lobster"] =    { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED },
+    ["Purple Lobster"] = { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE },
+    ["Blue Lobster"] =   { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE },
+    ["Officer Alt"] =    { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE },
+    ["Lobster Alt"] =    { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE },
+    ["Fiddler Crab"] =   { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE },
+};
+
+function ABGP:GetRaidGroup(rank, phase)
+    return rank and rankData[rank] and rankData[rank][phase];
 end
 
-function ABGP:GetRaidGroup()
+function ABGP:GetPreferredRaidGroup()
     local group = self:Get("raidGroup");
     if group then return group; end
 
     local epgp = self:GetActivePlayer(UnitName("player"));
     local rank = epgp and epgp.rank;
-    if not rank then return next(rankData); end
+    if not rank then return self.RaidGroupsSorted[1]; end
 
-    for group in pairs(rankData) do
-        if self:IsRankInRaidGroup(rank, group) then
-            self:Set("raidGroup", group);
-            return group;
-        end
+    local group = self:GetRaidGroup(rank, self.Phases.p3);
+    if group then
+        self:Set("raidGroup", group);
+        return group;
     end
 
-    return next(rankData);
+    return self.RaidGroupsSorted[1];
 end
 
 function ABGP:IsTrial(rank)

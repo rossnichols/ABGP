@@ -153,7 +153,7 @@ function ABGP:InitOptions()
                     type = "select",
                     control = "Dropdown",
                     values = raidGroupNames,
-                    get = function(self) return ABGP:GetRaidGroup(); end,
+                    get = function(self) return ABGP:GetPreferredRaidGroup(); end,
                     set = function(self, v) ABGP.db.char.raidGroup = v; end,
                 },
                 outsider = {

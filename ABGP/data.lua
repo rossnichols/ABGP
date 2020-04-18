@@ -14,6 +14,7 @@ local floor = floor;
 local tonumber = tonumber;
 local select = select;
 local pairs = pairs;
+local next = next;
 local hooksecurefunc = hooksecurefunc;
 
 local updatingNotes = false;
@@ -195,14 +196,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
 
         -- Sanity check: all ranks here must be in a raid group.
-        local found = false;
-        for group in pairs(self.RaidGroups) do
-            if self:IsRankInRaidGroup(rank, group) then
-                found = true;
-                break;
-            end
-        end
-        if not found then
+        if not self:GetRaidGroup(rank, next(self.Phases)) then
             self:Error("%s is rank %s which is not part of a raid group!", player, rank);
             note = "";
         end
