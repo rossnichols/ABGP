@@ -53,7 +53,7 @@ local contextFns = {
         if self:IsLeader() then
             self:SendResponse();
         else
-            self.timer = ABGP:ScheduleTimer(self.CheckConsistency, self, 5);
+            self.timer = ABGP:ScheduleTimer(self.CheckConsistency, 5, self);
         end
 
         if not self.leaders[sender] and self:IsSameOrNewer(data.version) then
