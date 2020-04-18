@@ -593,7 +593,7 @@ end
 
 function ABGP:ShowDistrib(itemLink)
     local _, fullLink = GetItemInfo(itemLink);
-    itemLink = self:ShortenLink(fullLink or itemLink);
+    itemLink = fullLink or itemLink;
 
     if activeDistributionWindow then
         local window = activeDistributionWindow;

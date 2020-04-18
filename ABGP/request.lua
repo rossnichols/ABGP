@@ -435,8 +435,8 @@ function ABGP:RequestItem(itemLink, requestType, notes)
     if equipLoc and itemMaps[equipLoc] then
         local current1 = itemMaps[equipLoc][1] and GetInventoryItemLink("player", itemMaps[equipLoc][1]) or nil;
         local current2 = itemMaps[equipLoc][2] and GetInventoryItemLink("player", itemMaps[equipLoc][2]) or nil;
-        if current1 then table.insert(data.equipped, self:ShortenLink(current1)); end
-        if current2 then table.insert(data.equipped, self:ShortenLink(current2)); end
+        if current1 then table.insert(data.equipped, current1); end
+        if current2 then table.insert(data.equipped, current2); end
     end
 
     self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
