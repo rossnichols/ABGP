@@ -84,10 +84,8 @@ function ABGP:InitOptions()
         args = options,
     }, { "abgp" });
 
-    local raidGroups = {
-        [ABGP.RaidGroups.RED] = "Red",
-        [ABGP.RaidGroups.BLUE] = "Blue",
-    };
+    local raidGroupNames = {};
+    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
 
     local guiOptions = {
         b = {
@@ -154,7 +152,7 @@ function ABGP:InitOptions()
                     desc = "Choose the raid group to prioritize in the UI.",
                     type = "select",
                     control = "Dropdown",
-                    values = raidGroups,
+                    values = raidGroupNames,
                     get = function(self) return ABGP:GetRaidGroup(); end,
                     set = function(self, v) ABGP.db.char.raidGroup = v; end,
                 },

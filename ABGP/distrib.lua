@@ -123,15 +123,11 @@ local function RebuildUI()
         [ABGP.RequestTypes.OS] = "Off Spec",
         [ABGP.RequestTypes.ROLL] = "Rolls",
     };
-    local groupHeadings = {
-        [ABGP.RaidGroups.RED] = "Red",
-        [ABGP.RaidGroups.BLUE] = "Blue",
-    };
 
     local currentHeading;
     local maxRolls = {};
     for i, request in ipairs(requests) do
-        local group = request.group and groupHeadings[request.group] or "Other";
+        local group = request.group and ABGP.RaidGroupNames[request.group] or "Other";
         local heading = ("%s (%s)"):format(typeHeadings[request.requestType], group);
         if currentHeading ~= heading then
             currentHeading = heading;
@@ -732,13 +728,12 @@ function ABGP:CreateDistribWindow()
         end
     end);
 
-    local raidGroups = {
-        [ABGP.RaidGroups.RED] = "Red",
-        [ABGP.RaidGroups.BLUE] = "Blue",
-    };
+    local raidGroups, raidGroupNames = {}, {};
+    for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
+    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
     local groupSelector = AceGUI:Create("Dropdown");
     groupSelector:SetWidth(110);
-    groupSelector:SetList(raidGroups, { ABGP.RaidGroups.RED, ABGP.RaidGroups.BLUE });
+    groupSelector:SetList(raidGroupNames, raidGroups);
     groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
         window:SetUserData("raidGroup", value);
         RepopulateRequests();

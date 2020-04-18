@@ -7,8 +7,8 @@
 
 embeds.xml
 core.lua
-hardcoded.lua
 guild.lua
+hardcoded.lua
 announce.lua
 tooltips.lua
 spreadsheet.lua

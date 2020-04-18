@@ -308,21 +308,6 @@ end
 
 
 --
--- Helpers for content phases
---
-
-ABGP.Phases = {
-    p1 = "p1",
-    p3 = "p3",
-};
-ABGP.Priorities = {};
-for phase in pairs(ABGP.Phases) do
-    ABGP.Priorities[phase] = {};
-end
-ABGP.CurrentPhase = ABGP.Phases.p3;
-
-
---
 -- Helpers for item queries
 --
 

@@ -715,13 +715,12 @@ function ABGP:CreateMainWindow(command)
     mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
     window:AddChild(mainLine);
 
-    local phases = {
-        [ABGP.Phases.p1] = "Phase 1/2",
-        [ABGP.Phases.p3] = "Phase 3",
-    };
+    local phases, phaseNames = {}, {};
+    for i, v in ipairs(ABGP.PhasesSorted) do phases[i] = v; end
+    for k, v in pairs(ABGP.PhaseNames) do phaseNames[k] = v; end
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
-    phaseSelector:SetList(phases, { ABGP.Phases.p1, ABGP.Phases.p3 });
+    phaseSelector:SetList(phaseNames, phases);
     phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
         ABGP.CurrentPhase = value;
 
@@ -736,14 +735,14 @@ function ABGP:CreateMainWindow(command)
     end);
     mainLine:AddChild(phaseSelector);
 
-    local raidGroups = {
-        [ABGP.RaidGroups.RED] = "Red",
-        [ABGP.RaidGroups.BLUE] = "Blue",
-        ["ALL"] = "All",
-    };
+    local raidGroups, raidGroupNames = {}, {};
+    for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
+    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
+    table.insert(raidGroups, "ALL");
+    raidGroupNames.ALL = "All";
     local groupSelector = AceGUI:Create("Dropdown");
     groupSelector:SetWidth(110);
-    groupSelector:SetList(raidGroups, { ABGP.RaidGroups.RED, ABGP.RaidGroups.BLUE, "ALL" });
+    groupSelector:SetList(raidGroupNames, raidGroups);
     groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
         currentRaidGroup = (value ~= "ALL") and value or nil;
 
@@ -783,7 +782,14 @@ function ABGP:CreateMainWindow(command)
         { value = "gp", text = "Item History", draw = DrawItemHistory },
         { value = "items", text = "Items", draw = DrawItems },
     };
-    if #_G.ABGP_ItemAuditLog[ABGP.Phases.p1] > 0 or #_G.ABGP_ItemAuditLog[ABGP.Phases.p3] > 0 then
+    local hasAuditLog = false;
+    for _, log in pairs(_G.ABGP_ItemAuditLog) do
+        if #log > 0 then
+            hasAuditLog = true;
+            break;
+        end
+    end
+    if hasAuditLog then
         table.insert(tabs, { value = "audit", text = "Audit Log", draw = DrawAuditLog });
     end
     local tabGroup = AceGUI:Create("TabGroup");

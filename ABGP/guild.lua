@@ -18,7 +18,14 @@ ABGP.RaidGroups = {
     RED = "RED",
     BLUE = "BLUE",
 };
-
+ABGP.RaidGroupNames = {
+    [ABGP.RaidGroups.RED] = "Weekday",
+    [ABGP.RaidGroups.BLUE] = "Weekend",
+};
+ABGP.RaidGroupsSorted = {
+    ABGP.RaidGroups.RED,
+    ABGP.RaidGroups.BLUE
+};
 local rankData = {
     [ABGP.RaidGroups.RED] = {
         ["Guild Master"] = true,
@@ -34,6 +41,24 @@ local rankData = {
         ["Lobster Alt"] = true,
     },
 };
+
+ABGP.Phases = {
+    p1 = "p1",
+    p3 = "p3",
+};
+ABGP.PhaseNames = {
+    [ABGP.Phases.p1] = "Phase 1/2",
+    [ABGP.Phases.p3] = "Phase 3/4",
+};
+ABGP.PhasesSorted = {
+    ABGP.Phases.p1,
+    ABGP.Phases.p3
+};
+ABGP.Priorities = {};
+for phase in pairs(ABGP.Phases) do
+    ABGP.Priorities[phase] = {};
+end
+ABGP.CurrentPhase = ABGP.Phases.p3;
 
 function ABGP:IsRankInRaidGroup(rank, group)
     return rank and rankData[group][rank];
