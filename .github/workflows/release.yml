@@ -21,7 +21,7 @@ jobs:
       with:
         tokenPrefix: '${'
         tokenSuffix: '}'
-        files: '["ABGP/ABGP.toc"]'
+        files: '["ABGP/ABGP.toc", "ABGP/core.lua"]'
       env:
         ADDON_VERSION: ${{ steps.get_version.outputs.ADDON_VERSION }}
       
