@@ -231,6 +231,12 @@ local function CompareVersion(versionCmp, sender)
     end
 end
 
+function ABGP:NotifyVersionMismatch()
+    _G.StaticPopup_Show("ABGP_OUTDATED_VERSION",
+        ("%s: You've installed a new version! All functionality is disabled until you restart your game client."):format(
+        ABGP:ColorizeText("ABGP")));
+end
+
 function ABGP:OnVersionRequest(data, distribution, sender)
     if data.reset then
         -- Reset the announced version if the sender requested so that the message will print again.

@@ -19,6 +19,7 @@ local IsInGroup = IsInGroup;
 local GetInstanceInfo = GetInstanceInfo;
 local IsInGuild = IsInGuild;
 local C_GuildInfo = C_GuildInfo;
+local GetAddOnMetadata = GetAddOnMetadata;
 local select = select;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -44,6 +45,11 @@ local function OnGuildRosterUpdate()
 end
 
 function ABGP:OnInitialize()
+    if GetAddOnMetadata("ABGP", "Version") ~= "${ADDON_VERSION}" then
+        self:NotifyVersionMismatch();
+        return;
+    end
+
     self:RegisterComm("ABGP");
     self:InitOptions();
     self:HookTooltips();
