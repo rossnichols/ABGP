@@ -135,14 +135,17 @@ function ABGP:OnInitialize()
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
     end, self);
 
-    local rollRegex = _G.RANDOM_ROLL_RESULT:gsub("([()-])", "%%%1");
-    rollRegex = rollRegex:gsub("%%s", "(%%S+)");
-    rollRegex = rollRegex:gsub("%%d", "(%%d+)");
+    local rollRegex = self:ConvertChatString(_G.RANDOM_ROLL_RESULT);
+    local lootMultipleRegex = self:ConvertChatString(_G.LOOT_ITEM_MULTIPLE);
+    local lootRegex = self:ConvertChatString(_G.LOOT_ITEM);
+    local lootMultipleSelfRegex = self:ConvertChatString(_G.LOOT_ITEM_SELF_MULTIPLE);
+    local lootSelfRegex = self:ConvertChatString(_G.LOOT_ITEM_SELF);
     local lastZone;
 
     local f = CreateFrame("Frame");
     f:RegisterEvent("GUILD_ROSTER_UPDATE");
     f:RegisterEvent("CHAT_MSG_SYSTEM");
+    f:RegisterEvent("CHAT_MSG_LOOT");
     f:RegisterEvent("GROUP_JOINED");
     f:RegisterEvent("GROUP_LEFT");
     f:RegisterEvent("GROUP_ROSTER_UPDATE");
@@ -164,6 +167,22 @@ function ABGP:OnInitialize()
             if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
                 roll = tonumber(roll);
                 ABGP:DistribOnRoll(sender, roll);
+            end
+        elseif event == "CHAT_MSG_LOOT" then
+            local text, _, _, _, player = ...;
+            if not UnitExists(player) then return; end
+            local _, item = text:match(lootMultipleRegex);
+            if not item then
+                _, item = text:match(lootRegex);
+            end
+            if not item then
+                item = text:match(lootMultipleSelfRegex);
+            end
+            if not item then
+                item = text:match(lootSelfRegex);
+            end
+            if item then
+                ABGP:LogDebug("%s looted %s.", player, item);
             end
         elseif event == "GROUP_JOINED" then
             OnGroupJoined();
@@ -426,6 +445,13 @@ function ABGP:GetItemRank(itemLink)
     end
 
     return rank;
+end
+
+function ABGP:ConvertChatString(chatString)
+    chatString = chatString:gsub("([()-.%[%]])", "%%%1");
+    chatString = chatString:gsub("%%s", "(.-)");
+    chatString = chatString:gsub("%%d", "(%%d+)");
+    return chatString;
 end
 
 
