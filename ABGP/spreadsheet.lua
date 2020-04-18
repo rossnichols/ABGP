@@ -273,6 +273,7 @@ local function DrawGP(container)
         ["week 9 decay"] = true,
         ["trial end"] = true,
         ["trial"] = true,
+        ["carryover gp from previous bwl"] = true,
     };
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
