@@ -98,7 +98,7 @@ local function RebuildUI()
         [ABGP.RequestTypes.ROLL] = 3,
     };
 
-    local raidGroup = ABGP:GetRaidGroup();
+    local raidGroup = window:GetUserData("raidGroup");
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
@@ -437,33 +437,42 @@ end
 local function PopulateRequest(request, value)
     local override;
     local rank, class;
-
-    local epgp = ABGP:GetActivePlayer(request.player);
-    if epgp then
-        rank = epgp.rank;
-        class = epgp.class;
-        if epgp.trial then
-            override = "trial";
-        end
-    end
-
     local priority, ep, gp;
-    if value then
-        priority, ep, gp = 0, 0, 0;
-        if epgp and epgp[value.phase] then
-            priority = epgp[value.phase].priority;
-            ep = epgp[value.phase].ep;
-            gp = epgp[value.phase].gp;
-        elseif not override then
-            override = "non-raider";
+    local requestGroup;
+    local preferredGroup = activeDistributionWindow:GetUserData("raidGroup");
+
+    if request.testContent then
+        priority = request.priority;
+        ep = request.ep;
+        gp = request.gp;
+        rank = request.rank;
+        class = request.class;
+        override = request.override;
+    else
+        local epgp = ABGP:GetActivePlayer(request.player);
+        if epgp then
+            rank = epgp.rank;
+            class = epgp.class;
+            if epgp.trial then
+                override = "trial";
+            end
+        end
+
+        if value then
+            priority, ep, gp = 0, 0, 0;
+            if epgp and epgp[value.phase] then
+                priority = epgp[value.phase].priority;
+                ep = epgp[value.phase].ep;
+                gp = epgp[value.phase].gp;
+            elseif not override then
+                override = "non-raider";
+            end
         end
     end
 
-    local requestGroup;
     if rank and not override then
-        local raidGroup = ABGP:GetRaidGroup();
-        if ABGP:IsRankInRaidGroup(rank, raidGroup) then
-            requestGroup = raidGroup;
+        if ABGP:IsRankInRaidGroup(rank, preferredGroup) then
+            requestGroup = preferredGroup;
         else
             for group in pairs(ABGP.RaidGroups) do
                 if ABGP:IsRankInRaidGroup(rank, group) then
@@ -486,8 +495,29 @@ local function PopulateRequest(request, value)
     checkValue(request, "ep", ep);
     checkValue(request, "gp", gp);
     checkValue(request, "rank", rank);
+    checkValue(request, "class", class);
     checkValue(request, "override", override);
     checkValue(request, "group", requestGroup);
+    checkValue(request, "preferredGroup", preferredGroup);
+    return needsUpdate;
+end
+
+local function RepopulateRequests()
+    if not activeDistributionWindow then return false; end
+    local activeItems = activeDistributionWindow:GetUserData("activeItems");
+
+    local needsUpdate = false;
+    for itemLink, item in pairs(activeItems) do
+        local value = item.data.value;
+        if value then
+            for _, request in ipairs(item.requests) do
+                if PopulateRequest(request, value) then
+                    needsUpdate = true;
+                end
+            end
+        end
+    end
+
     return needsUpdate;
 end
 
@@ -534,23 +564,7 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
 end
 
 function ABGP:DistribOnActivePlayersRefreshed()
-    if not activeDistributionWindow then return; end
-    local activeItems = activeDistributionWindow:GetUserData("activeItems");
-    if self.ShowTestDistrib then return; end
-
-    local needsUpdate = false;
-    for itemLink, item in pairs(activeItems) do
-        local value = item.data.value;
-        if value then
-            for _, request in ipairs(item.requests) do
-                if PopulateRequest(request, value) then
-                    needsUpdate = true;
-                end
-            end
-        end
-    end
-
-    if needsUpdate then
+    if RepopulateRequests() then
         RebuildUI();
     end
 end
@@ -628,13 +642,11 @@ function ABGP:ShowDistrib(itemLink)
             "Officer Alt",
             "Lobster Alt",
             "Fiddler Crab",
-            "Other rank 1",
-            "Other rank 2",
-            "Other rank 3",
-            "Other rank 4",
+            "Other rank",
         };
         local testBase = {
             itemLink = itemLink,
+            testContent = true,
             -- override = "trial",
             notes = "This is a custom note. It is very long. Why would someone leave a note this long? It's a mystery for sure. But people can, so here it is.",
             equipped = {
@@ -658,7 +670,7 @@ function ABGP:ShowDistrib(itemLink)
                 entry.priority = entry.ep * 10 / entry.gp;
             end
             local requestGroup;
-            local raidGroup = ABGP:GetRaidGroup();
+            local raidGroup = activeDistributionWindow:GetUserData("raidGroup");
             if ABGP:IsRankInRaidGroup(entry.rank, raidGroup) then
                 requestGroup = raidGroup;
             else
@@ -669,6 +681,7 @@ function ABGP:ShowDistrib(itemLink)
                 end
             end
             entry.group = requestGroup;
+            PopulateRequest(entry);
             ProcessNewRequest(entry);
         end
     end
@@ -678,7 +691,7 @@ end
 
 function ABGP:CreateDistribWindow()
     local window = AceGUI:Create("Window");
-    window:SetLayout("Fill");
+    window:SetLayout("Flow");
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "distrib", {
         version = 1,
@@ -719,7 +732,25 @@ function ABGP:CreateDistribWindow()
         end
     end);
 
+    local raidGroups = {
+        [ABGP.RaidGroups.RED] = "Red",
+        [ABGP.RaidGroups.BLUE] = "Blue",
+    };
+    local groupSelector = AceGUI:Create("Dropdown");
+    groupSelector:SetWidth(110);
+    groupSelector:SetList(raidGroups, { ABGP.RaidGroups.RED, ABGP.RaidGroups.BLUE });
+    groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
+        window:SetUserData("raidGroup", value);
+        RepopulateRequests();
+        RebuildUI();
+    end);
+    window:SetUserData("raidGroup", ABGP:GetRaidGroup());
+    groupSelector:SetValue(window:GetUserData("raidGroup"));
+    window:AddChild(groupSelector);
+
     local tabGroup = AceGUI:Create("TabGroup");
+    tabGroup:SetFullWidth(true);
+    tabGroup:SetFullHeight(true);
     tabGroup:SetLayout("Flow");
     tabGroup:SetCallback("OnGroupSelected", function(container, event, itemLink)
         local activeItems = window:GetUserData("activeItems");
