@@ -254,9 +254,7 @@ function ABGP:LogVerbose(str, ...)
 end
 
 function ABGP:Error(str, ...)
-    if self.Debug then
-        self:Notify("|cffff0000ERROR:|r " .. str, ...);
-    end
+    self:Notify("|cffff0000ERROR:|r " .. str, ...);
 end
 
 function ABGP:ColorizeText(text)
