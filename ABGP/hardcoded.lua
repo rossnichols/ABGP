@@ -5513,6 +5513,160 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 _G.ABGP_Data[ABGP.Phases.p3] = {
 	["gpHistory"] = {
 		{
+			["player"] = "Mjagsten",
+			["item"] = "Head of Nefarian",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+			["gp"] = 150,
+		},
+		{
+			["player"] = "Sageleaf",
+			["item"] = "Prestor's Talisman of Connivery",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
+			["gp"] = 200,
+		},
+		{
+			["player"] = "Hyacinth",
+			["item"] = "Staff of the Shadow Flame",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
+			["gp"] = 450,
+		},
+		{
+			["player"] = "Rplix",
+			["item"] = "Judgement Breastplate",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Megumín",
+			["item"] = "Netherwind Robes",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Megumín",
+			["item"] = "Angelista's Grasp",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19388|h[Angelista's Grasp]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Miracle",
+			["item"] = "Pauldrons of Transcendence",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
+			["gp"] = 150,
+		},
+		{
+			["player"] = "Uhtred",
+			["item"] = "Girdle of the Fallen Crusader",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Kylan",
+			["item"] = "Stormrage Pauldrons",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Odonn",
+			["item"] = "Circle of Applied Force",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r",
+			["gp"] = 100,
+		},
+		{
+			["player"] = "Willïam",
+			["item"] = "Bloodfang Gloves",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
+			["gp"] = 50,
+		},
+		{
+			["player"] = "Fiorlyn",
+			["item"] = "Dragonstalker's Gauntlets",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
+			["gp"] = 150,
+		},
+		{
+			["player"] = "Asrathi",
+			["item"] = "Dragonbreath Hand Cannon",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19368|h[Dragonbreath Hand Cannon]|h|r",
+			["gp"] = 100,
+		},
+		{
+			["player"] = "Odonn",
+			["item"] = "Scrolls of Blinding Light",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Maroo",
+			["item"] = "Bracers of Arcane Accuracy",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
+			["gp"] = 200,
+		},
+		{
+			["player"] = "Kylan",
+			["item"] = "Stormrage Boots",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
+			["gp"] = 50,
+		},
+		{
+			["player"] = "Xyrenity",
+			["item"] = "Bloodfang Boots",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
+			["gp"] = 50,
+		},
+		{
+			["player"] = "Exune",
+			["item"] = "Netherwind Belt",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Magivagi",
+			["item"] = "Mind Quickening Gem",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
+			["gp"] = 100,
+		},
+		{
+			["gp"] = 0,
+			["item"] = "Bracelets of Wrath",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
+			["player"] = "Krustyop",
+		},
+		{
+			["player"] = "Megumín",
+			["item"] = "Netherwind Bindings",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
+			["gp"] = 100,
+		},
+		{
+			["player"] = "Uhtred",
+			["item"] = "The Untamed Blade",
+			["date"] = "04/18/20",
+			["itemLink"] = "|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
+			["gp"] = 0,
+		},
+		{
 			["player"] = "Lunamar",
 			["item"] = "Staff of the Shadow Flame",
 			["date"] = "04/14/20",
@@ -9363,7 +9517,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1587244653, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1587255637, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
