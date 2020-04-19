@@ -56,7 +56,7 @@ local contextFns = {
             self.timer = ABGP:ScheduleTimer(self.CheckConsistency, 5, self);
         end
 
-        if not self.leaders[sender] and self:IsSameOrNewer(data.version) then
+        if self:IsSameOrNewer(data.version) then
             self:InsertLeader(sender, data.version);
         end
     end,
@@ -69,7 +69,7 @@ local contextFns = {
             self.timer = nil;
         end
 
-        if not self.leaders[sender] and self:IsSameOrNewer(data.version) then
+        if self:IsSameOrNewer(data.version) then
             self:InsertLeader(sender, data.version);
         end
     end,
@@ -90,22 +90,23 @@ local contextFns = {
     end,
 
     InsertLeader = function(self, player, version)
-        local insertIndex;
+        self:RemoveLeader(player);
 
+        local shouldInsert = false;
         if #self.leaders == 0 then
-            insertIndex = 1;
+            shouldInsert = true;
         else
             for i = #self.leaders, 1, -1 do
                 local leader = self.leaders[i];
                 if self:IsSameOrNewer(version, leader.version) then
-                    insertIndex = i + 1;
+                    shouldInsert = true;
                     break;
                 end
             end
         end
 
-        if insertIndex then
-            table.insert(self.leaders, insertIndex, { player = player, version = version });
+        if shouldInsert then
+            table.insert(self.leaders, { player = player, version = version });
             table.sort(self.leaders, function(a, b)
                 if a.version ~= b.version then
                     return ABGP:VersionIsNewer(b.version, a.version);
@@ -118,13 +119,25 @@ local contextFns = {
         end
     end,
 
+    RemoveLeader = function(self, player)
+        if self.leaders[player] then
+            for i, v in ipairs(self.leaders) do
+                if v.player == player then
+                    table.remove(self.leaders, i);
+                    self.leaders[player] = nil;
+                    break;
+                end
+            end
+        end
+    end,
+
+
     CheckLeaders = function(self, checkFn)
         local removed = false;
         for i = #self.leaders, 1, -1 do
             local leader = self.leaders[i];
             if not checkFn(leader.player) then
-                table.remove(self.leaders, i);
-                self.leaders[leader.player] = nil;
+                self:RemoveLeader(leader.player);
                 removed = true;
             end
         end
