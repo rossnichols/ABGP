@@ -30,43 +30,43 @@ function ABGP:InitOptions()
             name = "Show",
             desc = "shows the main window",
             type = "execute",
-            func = function() ABGP:ShowMainWindow(); end
+            func = function() self:ShowMainWindow(); end
         },
         options = {
             name = "Options",
             desc = "opens the options window (alias: config/opt)",
             type = "execute",
-            func = function() ABGP:ShowOptionsWindow(); end
+            func = function() self:ShowOptionsWindow(); end
         },
         loot = {
             name = "Loot",
             desc = "shows the item request window",
             type = "execute",
-            func = function() ABGP:ShowItemRequests(); end
+            func = function() self:ShowItemRequests(); end
         },
         import = {
             name = "Data Import",
             desc = "shows the import window",
             type = "execute",
             cmdHidden = true,
-            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-            func = function() ABGP:ShowImportWindow(); end
+            validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+            func = function() self:ShowImportWindow(); end
         },
         versioncheck = {
             name = "Version Check",
             desc = "checks the raid for an outdated or missing addon versions (alias: vc)",
             type = "execute",
-            cmdHidden = not ABGP:IsPrivileged(),
-            validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-            func = function() ABGP:PerformVersionCheck(); end
+            cmdHidden = not self:IsPrivileged(),
+            validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+            func = function() self:PerformVersionCheck(); end
         },
         -- raid = {
         --     name = "Start Raid",
         --     desc = "starts a raid (for EP tracking)",
         --     type = "execute",
-        --     cmdHidden = not ABGP:IsPrivileged(),
-        --     validate = function() if not ABGP:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-        --     func = function() ABGP:StartRaid(); end
+        --     cmdHidden = not self:IsPrivileged(),
+        --     validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+        --     func = function() self:StartRaid(); end
         -- },
     };
 
@@ -79,13 +79,13 @@ function ABGP:InitOptions()
     for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
     options.vc.cmdHidden = nil;
 
-    AceConfig:RegisterOptionsTable(ABGP:ColorizeText(addonText), {
+    AceConfig:RegisterOptionsTable(self:ColorizeText(addonText), {
         type = "group",
         args = options,
     }, { "abgp" });
 
     local raidGroupNames = {};
-    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
+    for k, v in pairs(self.RaidGroupNames) do raidGroupNames[k] = v; end
 
     local guiOptions = {
         b = {
@@ -99,7 +99,7 @@ function ABGP:InitOptions()
                     type = "execute",
                     func = function()
                         _G.InterfaceOptionsFrame_Show(); -- it's really a toggle, calling this to hide the frame.
-                        ABGP:ShowMainWindow();
+                        self:ShowMainWindow();
                     end
                 },
                 priorities = {
@@ -109,14 +109,14 @@ function ABGP:InitOptions()
                     type = "multiselect",
                     control = "Dropdown",
                     values = self:GetItemPriorities(),
-                    get = function(self, k) return ABGP.db.char.preferredPriorities[k]; end,
-                    set = function(self, k, v)
-                        ABGP.db.char.preferredPriorities[k] = v;
+                    get = function(info, k) return self.db.char.preferredPriorities[k]; end,
+                    set = function(info, k, v)
+                        self.db.char.preferredPriorities[k] = v;
                         local usePriority = false;
-                        for _, v in pairs(ABGP.db.char.preferredPriorities) do
+                        for _, v in pairs(self.db.char.preferredPriorities) do
                             if v then usePriority = true; end
                         end
-                        ABGP.db.char.usePreferredPriority = usePriority;
+                        self.db.char.usePreferredPriority = usePriority;
                     end,
                     cmdHidden = true,
                 },
@@ -128,8 +128,8 @@ function ABGP:InitOptions()
                     min = 0,
                     max = 10,
                     step = 1,
-                    get = function(self) return ABGP.db.char.itemHistoryLimit; end,
-                    set = function(self, v) ABGP.db.char.itemHistoryLimit = v; end,
+                    get = function(info) return self.db.char.itemHistoryLimit; end,
+                    set = function(info, v) self.db.char.itemHistoryLimit = v; end,
                     cmdHidden = true,
                 },
                 alwaysOpenWindow = {
@@ -137,8 +137,8 @@ function ABGP:InitOptions()
                     order = 4,
                     desc = "If this is set, the loot window item will always open when loot is opened for distribution, instead of skipping some (like ones you can't use).",
                     type = "toggle",
-                    get = function(self) return ABGP.db.char.alwaysOpenWindow; end,
-                    set = function(self, v) ABGP.db.char.alwaysOpenWindow = v; end,
+                    get = function(info) return self.db.char.alwaysOpenWindow; end,
+                    set = function(info, v) self.db.char.alwaysOpenWindow = v; end,
                 },
             },
         },
@@ -153,25 +153,25 @@ function ABGP:InitOptions()
                     type = "select",
                     control = "Dropdown",
                     values = raidGroupNames,
-                    get = function(self) return ABGP:GetPreferredRaidGroup(); end,
-                    set = function(self, v) ABGP.db.char.raidGroup = v; end,
+                    get = function(info) return self:GetPreferredRaidGroup(); end,
+                    set = function(info, v) self.db.char.raidGroup = v; end,
                 },
                 outsider = {
                     name = "Outsider",
                     order = 2,
                     desc = "Select this option if your EPGP is tracked outside your guild.",
                     type = "toggle",
-                    get = function(self) return ABGP.db.char.outsider; end,
-                    set = function(self, v)
-                        ABGP.db.char.outsider = v;
-                        ABGP:SendMessage(ABGP.CommTypes.GUILD_NOTES_UPDATED);
+                    get = function(info) return self.db.char.outsider; end,
+                    set = function(info, v)
+                        self.db.char.outsider = v;
+                        self:SendMessage(self.CommTypes.GUILD_NOTES_UPDATED);
                     end,
                 },
             },
         },
     };
     AceConfig:RegisterOptionsTable("ABGP", {
-        name = ABGP:ColorizeText(addonText) .. " Options",
+        name = self:ColorizeText(addonText) .. " Options",
         type = "group",
         args = guiOptions,
     });

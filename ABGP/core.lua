@@ -182,7 +182,7 @@ function ABGP:OnInitialize()
                 item = text:match(lootSelfRegex);
             end
             if item then
-                ABGP:LogDebug("%s looted %s.", player, item);
+                -- ABGP:LogDebug("%s looted %s.", player, item);
             end
         elseif event == "GROUP_JOINED" then
             OnGroupJoined();
