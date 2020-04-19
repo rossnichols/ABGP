@@ -20,6 +20,7 @@ local type = type;
 local max = max;
 
 local activeDistributionWindow;
+local currentRaidGroup;
 local widths = { 110, 100, 70, 70, 70, 180, 60, 40, 1.0 };
 
 local function CalculateCost(request)
@@ -98,12 +99,11 @@ local function RebuildUI()
         [ABGP.RequestTypes.ROLL] = 3,
     };
 
-    local raidGroup = window:GetUserData("raidGroup");
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
         elseif a.group ~= b.group then
-            return a.group and (not b.group or a.group == raidGroup);
+            return a.group and (not b.group or a.group == currentRaidGroup);
         elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
@@ -440,7 +440,7 @@ local function PopulateRequest(request, value)
     local rank, class;
     local priority, ep, gp;
     local requestGroup;
-    local preferredGroup = activeDistributionWindow:GetUserData("raidGroup");
+    local preferredGroup = currentRaidGroup;
 
     if request.testContent then
         priority = request.priority;
@@ -720,12 +720,14 @@ function ABGP:CreateDistribWindow()
     groupSelector:SetWidth(110);
     groupSelector:SetList(raidGroupNames, raidGroups);
     groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        window:SetUserData("raidGroup", value);
+        currentRaidGroup = value;
         RepopulateRequests();
         RebuildUI();
     end);
-    window:SetUserData("raidGroup", ABGP:GetPreferredRaidGroup());
-    groupSelector:SetValue(window:GetUserData("raidGroup"));
+    if not currentRaidGroup then
+        currentRaidGroup = ABGP:GetPreferredRaidGroup();
+    end
+    groupSelector:SetValue(currentRaidGroup);
     window:AddChild(groupSelector);
 
     local tabGroup = AceGUI:Create("TabGroup");
