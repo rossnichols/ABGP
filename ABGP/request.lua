@@ -105,18 +105,20 @@ local function PopulateUI()
         SetEltText(elt);
         elt:SetCallback("OnClick", function(elt, event, button)
             if button == "RightButton" then
-                if item.itemLink and ABGP:CanFavoriteItems() then
-                    local faved = ABGP:IsItemFavorited(item.itemLink);
+                if item.itemLink then
                     local context = {};
-                    table.insert(context, {
-                        text = faved and "Remove favorite" or "Add favorite",
-                        func = function(self, data)
-                            ABGP:SetItemFavorited(item.itemLink, not faved);
-                            elt:SetData(data);
-                        end,
-                        arg1 = elt.data,
-                        notCheckable = true
-                    });
+                    if ABGP:CanFavoriteItems() then
+                        local faved = ABGP:IsItemFavorited(item.itemLink);
+                        table.insert(context, {
+                            text = faved and "Remove favorite" or "Add favorite",
+                            func = function(self, data)
+                                ABGP:SetItemFavorited(item.itemLink, not faved);
+                                elt:SetData(data);
+                            end,
+                            arg1 = elt.data,
+                            notCheckable = true
+                        });
+                    end
                     if elt.data.value then
                         table.insert(context, {
                             text = "Show item history",
