@@ -1274,7 +1274,7 @@ do
     -------------------------------------------------------------------------------]]
     local function Constructor()
         local frame, button;
-        if _G.ElvUI and _G.ElvUI[1].private.general.lootRoll then
+        if ABGP:Get("lootElvUI") and _G.ElvUI and _G.ElvUI[1].private.general.lootRoll then
             frame = _G.ElvUI[1]:GetModule("Misc"):CreateRollFrame();
             frame.elvui = true;
 

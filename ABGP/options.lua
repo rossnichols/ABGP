@@ -19,6 +19,7 @@ function ABGP:InitOptions()
             showLootFrames = true,
             lootDirection = "up",
             lootDuration = 15,
+            lootElvUI = true,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -137,9 +138,9 @@ function ABGP:InitOptions()
                     cmdHidden = true,
                 },
                 alwaysOpenWindow = {
-                    name = "Always open loot UI",
+                    name = "Always show distrib",
                     order = 4,
-                    desc = "If this is set, the loot window item will always open when loot is opened for distribution, instead of skipping some (like ones you can't use).",
+                    desc = "If this is set, the request window will always open when loot is opened for distribution, instead of skipping some (like ones you can't use).",
                     type = "toggle",
                     get = function(info) return self.db.char.alwaysOpenWindow; end,
                     set = function(info, v) self.db.char.alwaysOpenWindow = v; end,
@@ -187,9 +188,18 @@ function ABGP:InitOptions()
                     get = function(info) return self.db.char.showLootFrames; end,
                     set = function(info, v) self.db.char.showLootFrames = v; end,
                 },
+                theme = {
+                    name = "Use ElvUI theme",
+                    order = 2,
+                    desc = "Make the loot item UI match ElvUI.",
+                    type = "toggle",
+                    hidden = function() return (_G.ElvUI == nil); end,
+                    get = function(info) return self.db.char.lootElvUI; end,
+                    set = function(info, v) self.db.char.lootElvUI = v; end,
+                },
                 direction = {
                     name = "Direction",
-                    order = 2,
+                    order = 3,
                     desc = "Choose which direction new loot items are added.",
                     type = "select",
                     control = "Dropdown",
@@ -199,7 +209,7 @@ function ABGP:InitOptions()
                 },
                 duration = {
                     name = "Item duration",
-                    order = 3,
+                    order = 4,
                     desc = "Sets how long the items will be shown.",
                     type = "range",
                     min = 5,
