@@ -16,7 +16,9 @@ function ABGP:InitOptions()
             raidGroup = false,
             outsider = false,
             alwaysOpenWindow = true,
+            showLootFrames = true,
             lootDirection = "up",
+            lootDuration = 15,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -177,15 +179,35 @@ function ABGP:InitOptions()
             type = "group",
             order = 3,
             args = {
+                show = {
+                    name = "Show loot",
+                    order = 1,
+                    desc = "Show loot items when a boss is killed.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.showLootFrames; end,
+                    set = function(info, v) self.db.char.showLootFrames = v; end,
+                },
                 direction = {
                     name = "Direction",
-                    order = 1,
+                    order = 2,
                     desc = "Choose which direction new loot items are added.",
                     type = "select",
                     control = "Dropdown",
                     values = { up = "Up", down = "Down" },
                     get = function(info) return self.db.char.lootDirection; end,
                     set = function(info, v) self.db.char.lootDirection = v; self:RefreshLootFrames(); end,
+                },
+                duration = {
+                    name = "Item duration",
+                    order = 3,
+                    desc = "Sets how long the items will be shown.",
+                    type = "range",
+                    min = 5,
+                    max = 30,
+                    step = 1,
+                    get = function(info) return self.db.char.lootDuration; end,
+                    set = function(info, v) self.db.char.lootDuration = v; end,
+                    cmdHidden = true,
                 },
             },
         },

@@ -114,9 +114,10 @@ function ABGP:RefreshLootFrames()
 end
 
 function ABGP:ShowLootFrame(itemLink)
+    if not self:Get("showLootFrames") then return; end
     local elt = AceGUI:Create("ABGP_LootFrame");
     elt:SetItem(itemLink);
-    elt:SetDuration(15);
+    elt:SetDuration(self:Get("lootDuration"));
 
     -- Determine the first free slot for the frame.
     local i = 1;
