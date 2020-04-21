@@ -6,6 +6,9 @@ local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
 local GetItemIcon = GetItemIcon;
 local IsModifiedClick = IsModifiedClick;
+local GetItemQualityColor = GetItemQualityColor;
+local MouseIsOver = MouseIsOver;
+local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
 local pairs = pairs;
 local floor = floor;
 local min = min;
@@ -13,6 +16,7 @@ local max = max;
 local mod = mod;
 local table = table;
 local select = select;
+local math = math;
 
 local function CreateElement(frame, anchor, template)
     local elt = CreateFrame("Button", nil, frame, template);
@@ -1109,14 +1113,30 @@ end
 do
     local Type, Version = "ABGP_LootFrame", 1;
 
+    local function Frame_OnEvent(frame, event)
+        local self = frame.obj;
+        self:SetItem(self:GetItem());
+    end
+
     local function Frame_OnUpdate(frame, elapsed)
         local self = frame.obj;
         self.elapsed = self.elapsed + elapsed;
-        if not self.duration or self.elapsed <= self.duration then return; end
+        if self.duration and MouseIsOver(frame) then
+            self.elapsed = math.min(self.elapsed, self.duration - 1);
+        end
 
-        if self.elapsed >= self.duration + self.fadeOut then
+        if self.elapsed <= self.fadeIn then
+            -- Fade in
+            local alpha = self.elapsed / self.fadeIn;
+            frame:SetAlpha(alpha);
+        elseif not self.duration or self.elapsed <= self.duration then
+            -- Normal state
+            frame:SetAlpha(1);
+        elseif self.elapsed >= self.duration + self.fadeOut then
+            -- Completed
             frame:Hide();
         else
+            -- Fade out
             local alpha = 1 - (self.elapsed - self.duration) / self.fadeOut;
             frame:SetAlpha(alpha);
         end
@@ -1133,13 +1153,18 @@ do
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
-            self.frame:SetAlpha(1);
+            self.frame:SetAlpha(0);
             self.frame:Show();
 
             self.itemLink = nil;
             self.elapsed = 0;
+            self.fadeIn = 0.2;
             self.duration = nil;
             self.fadeOut = nil;
+        end,
+
+        ["OnRelease"] = function(self)
+            self.frame:UnregisterEvent("GET_ITEM_INFO_RECEIVED");
         end,
 
         ["GetItem"] = function(self)
@@ -1150,12 +1175,19 @@ do
             self.itemLink = itemLink;
 
             local frame = self.frame;
-            local itemName, _, rarity = GetItemInfo(itemLink);
+            local itemName = ABGP:GetItemName(itemLink);
+            local _, _, rarity = GetItemInfo(itemLink);
+
+            if rarity then
+                frame:UnregisterEvent("GET_ITEM_INFO_RECEIVED");
+            else
+                rarity = LE_ITEM_QUALITY_COMMON;
+                frame:RegisterEvent("GET_ITEM_INFO_RECEIVED");
+            end
 
             frame.IconFrame.Icon:SetTexture(GetItemIcon(itemLink));
 
-            local color = _G.ITEM_QUALITY_COLORS[rarity];
-            frame.Name:SetVertexColor(color.r, color.g, color.b);
+            frame.Name:SetVertexColor(GetItemQualityColor(rarity));
             frame.Name:SetText(itemName);
 
             local value = ABGP:GetItemValue(itemName);
@@ -1191,7 +1223,7 @@ do
         ["SetDuration"] = function(self, duration, fadeOut)
             self.elapsed = 0;
             self.duration = duration;
-            self.fadeOut = fadeOut or 0.5;
+            self.fadeOut = fadeOut or 1;
         end,
     }
 
@@ -1201,6 +1233,7 @@ do
     local function Constructor()
         frameCount = frameCount + 1;
         local frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
+        frame:SetScript("OnEvent", Frame_OnEvent);
         frame:SetScript("OnUpdate", Frame_OnUpdate);
         frame:SetScript("OnHide", Frame_OnHide);
 

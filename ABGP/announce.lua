@@ -167,5 +167,10 @@ function ABGP:ShowLootFrame(itemLink)
         -- Free up the slot, preserving the indices of other frames.
         activeLootFrames[activeLootFrames[widget]] = nil;
         activeLootFrames[widget] = nil;
+        AceGUI:Release(widget);
     end);
+end
+
+function ABGP:ShowTestLoot()
+    self:ShowLootFrame("|cffff8000|Hitem:19019|h[Thunderfury, Blessed Blade of the Windseeker]|h|r");
 end
