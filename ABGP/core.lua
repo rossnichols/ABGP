@@ -105,7 +105,7 @@ function ABGP:OnInitialize()
         self:OnVersionResponse(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.GUILD_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
+    self:RegisterMessage(self.CommTypes.OFFICER_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
         if self:Get("outsider") then
             self:OutsiderOnOfficerNotesUpdated();
         elseif IsInGuild() then

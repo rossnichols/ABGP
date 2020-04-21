@@ -81,7 +81,7 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- roll: number
 
-    GUILD_NOTES_UPDATED = { name = CV("ABGP_GUILD_NOTES_UPDATED"), priority = "NORMAL" },
+    OFFICER_NOTES_UPDATED = { name = CV("ABGP_OFFICER_NOTES_UPDATED"), priority = "NORMAL" },
     -- no payload
 
     REQUEST_PRIORITY_SYNC = { name = CV("ABGP_REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },

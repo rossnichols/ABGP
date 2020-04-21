@@ -167,7 +167,7 @@ function ABGP:InitOptions()
                     get = function(info) return self.db.char.outsider; end,
                     set = function(info, v)
                         self.db.char.outsider = v;
-                        self:SendMessage(self.CommTypes.GUILD_NOTES_UPDATED);
+                        self:SendMessage(self.CommTypes.OFFICER_NOTES_UPDATED);
                     end,
                 },
             },
