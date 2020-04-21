@@ -129,8 +129,10 @@ local function PopulateUI()
                             notCheckable = true
                         });
                     end
-                    table.insert(context, { text = "Cancel", notCheckable = true });
-                    ABGP:ShowContextMenu(context);
+                    if #context > 0 then
+                        table.insert(context, { text = "Cancel", notCheckable = true });
+                        ABGP:ShowContextMenu(context);
+                    end
                 end
             else
                 if not CloseStaticPopups(elt.data.itemLink) then
