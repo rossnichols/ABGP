@@ -29,6 +29,8 @@ local tostring = tostring;
 local min = min;
 local max = max;
 
+local version = "${ADDON_VERSION}";
+
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 
@@ -45,7 +47,7 @@ local function OnGuildRosterUpdate()
 end
 
 function ABGP:OnInitialize()
-    if GetAddOnMetadata("ABGP", "Version") ~= "${ADDON_VERSION}" then
+    if GetAddOnMetadata("ABGP", "Version") ~= version then
         self:NotifyVersionMismatch();
         return;
     end
