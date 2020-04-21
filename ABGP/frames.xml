@@ -23,7 +23,7 @@
             </Anchor>
         </Anchors>
     </Frame>
-    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" enableMouse="true" clampedToScreen="true" virtual="true">
+    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" clampedToScreen="true" virtual="true">
         <Size x="250" y="84"/>
         <Layers>
             <Layer level="ARTWORK">
@@ -137,10 +137,6 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-                    <OnLoad>
-                        self.hasItem = true;
-                        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-                    </OnLoad>
                     <OnEnter>
                         local itemLink = self:GetParent().obj.itemLink;
                         if itemLink then
@@ -160,15 +156,6 @@
                             CursorUpdate(self);
                         end
                     </OnUpdate>
-                    <OnClick>
-                        local itemLink = self:GetParent().obj.itemLink;
-                        if not itemLink then return; end
-                        if IsModifiedClick() then
-                            HandleModifiedItemClick(itemLink);
-                        else
-                            self:GetParent().obj:Fire("OnClick", button, down);
-                        end
-                    </OnClick>
                 </Scripts>
             </Button>
             <Button parentKey="CloseButton" inherits="UIPanelCloseButton" id="0">
@@ -189,13 +176,5 @@
                 </Scripts>
             </Button>
         </Frames>
-        <Scripts>
-            <OnMouseDown>
-                self.obj:Fire("OnMouseDown");
-            </OnMouseDown>
-            <OnMouseUp>
-                self.obj:Fire("OnMouseUp");
-            </OnMouseUp>
-        </Scripts>
     </Frame>
 </Ui>

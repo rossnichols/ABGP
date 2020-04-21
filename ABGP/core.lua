@@ -618,8 +618,12 @@ function ABGP:ShowContextMenu(context)
     EasyMenu(context, contextFrame, "cursor", 3, -3, "MENU");
 end
 
+function ABGP:IsContextMenuOpen()
+    return (_G.UIDROPDOWNMENU_OPEN_MENU == contextFrame);
+end
+
 function ABGP:HideContextMenu()
-    if _G.UIDROPDOWNMENU_OPEN_MENU == contextFrame then
+    if self:IsContextMenuOpen() then
         ToggleDropDownMenu(nil, nil, contextFrame);
     end
 end

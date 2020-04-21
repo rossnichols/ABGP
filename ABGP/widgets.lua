@@ -9,6 +9,7 @@ local IsModifiedClick = IsModifiedClick;
 local GetItemQualityColor = GetItemQualityColor;
 local MouseIsOver = MouseIsOver;
 local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
+local LE_ITEM_QUALITY_ARTIFACT = LE_ITEM_QUALITY_ARTIFACT;
 local pairs = pairs;
 local floor = floor;
 local min = min;
@@ -1121,7 +1122,7 @@ do
     local function Frame_OnUpdate(frame, elapsed)
         local self = frame.obj;
         self.elapsed = self.elapsed + elapsed;
-        if self.duration and MouseIsOver(frame) then
+        if self.duration and (MouseIsOver(frame) or ABGP:IsContextMenuOpen()) then
             self.elapsed = math.min(self.elapsed, self.duration - 1);
         end
 
@@ -1142,8 +1143,28 @@ do
         end
     end
 
+    local function Frame_OnMouseDown(frame)
+        frame.obj:Fire("OnMouseDown");
+    end
+
+    local function Frame_OnMouseUp(frame)
+        frame.obj:Fire("OnMouseUp");
+    end
+
     local function Frame_OnHide(frame)
         frame.obj:Fire("OnHide");
+    end
+
+    local function Button_OnClick(frame, button, down)
+        local self = frame:GetParent().obj;
+        local itemLink = self.itemLink;
+        if not itemLink then return; end
+
+        if IsModifiedClick() then
+            _G.HandleModifiedItemClick(itemLink);
+        else
+            self:Fire("OnClick", button, down);
+        end
     end
 
     local frameCount = 0;
@@ -1176,6 +1197,7 @@ do
 
             local frame = self.frame;
             local itemName = ABGP:GetItemName(itemLink);
+            local value = ABGP:GetItemValue(itemName);
             local _, _, rarity = GetItemInfo(itemLink);
 
             if rarity then
@@ -1184,39 +1206,59 @@ do
                 rarity = LE_ITEM_QUALITY_COMMON;
                 frame:RegisterEvent("GET_ITEM_INFO_RECEIVED");
             end
+            local r, g, b = GetItemQualityColor(rarity);
 
-            frame.IconFrame.Icon:SetTexture(GetItemIcon(itemLink));
+            if frame.elvui then
+                if ABGP:IsItemFavorited(itemLink) then
+                    rarity = LE_ITEM_QUALITY_ARTIFACT;
+                    r, g, b = GetItemQualityColor(rarity);
+                end
 
-            frame.Name:SetVertexColor(GetItemQualityColor(rarity));
-            frame.Name:SetText(itemName);
+                frame.button.icon:SetTexture(GetItemIcon(itemLink));
+                frame.button.link = itemLink;
 
-            local value = ABGP:GetItemValue(itemName);
-            local valueText = (value and value.gp ~= 0) and ("GP cost: %s%d|r"):format(ABGP.Color, value.gp) or "No GP Cost";
-            frame.Cost:SetVertexColor(1, 1, 1);
-            frame.Cost:SetText(valueText);
+                frame.fsloot:SetText(itemName);
 
-            if ABGP:IsItemFavorited(itemLink) then
-                frame:SetBackdrop({
-                    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-                    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-                    tile = true,
-                    tileSize = 32,
-                    edgeSize = 32,
-                    insets = { left = 11, right = 12, top = 12, bottom = 11 }
-                });
-                _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Corner");
-                _G[frame:GetName().."Decoration"]:Show();
+                frame.status:SetStatusBarColor(r, g, b, .7);
+                frame.status.bg:SetColorTexture(r, g, b);
+
+                local color = ABGP.ColorTable;
+                local valueText = (value and value.gp ~= 0) and value.gp or "--";
+                frame.fsbind:SetText(valueText);
+                frame.fsbind:SetVertexColor(color.r, color.g, color.b);
             else
-                frame:SetBackdrop({
-                    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-                    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-                    tile = true,
-                    tileSize = 32,
-                    edgeSize = 32,
-                    insets = { left = 11, right = 12, top = 12, bottom = 11 }
-                });
-                _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Corner");
-                _G[frame:GetName().."Decoration"]:Hide();
+                frame.IconFrame.Icon:SetTexture(GetItemIcon(itemLink));
+
+                frame.Name:SetVertexColor(r, g, b);
+                frame.Name:SetText(itemName);
+
+                local valueText = (value and value.gp ~= 0) and ("GP cost: %s%d|r"):format(ABGP.Color, value.gp) or "No GP Cost";
+                frame.Cost:SetVertexColor(1, 1, 1);
+                frame.Cost:SetText(valueText);
+
+                if ABGP:IsItemFavorited(itemLink) then
+                    frame:SetBackdrop({
+                        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+                        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+                        tile = true,
+                        tileSize = 32,
+                        edgeSize = 32,
+                        insets = { left = 11, right = 12, top = 12, bottom = 11 }
+                    });
+                    _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Corner");
+                    _G[frame:GetName().."Decoration"]:Show();
+                else
+                    frame:SetBackdrop({
+                        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+                        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+                        tile = true,
+                        tileSize = 32,
+                        edgeSize = 32,
+                        insets = { left = 11, right = 12, top = 12, bottom = 11 }
+                    });
+                    _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Corner");
+                    _G[frame:GetName().."Decoration"]:Hide();
+                end
             end
         end,
 
@@ -1231,11 +1273,45 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        frameCount = frameCount + 1;
-        local frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
+        local frame, button;
+        if _G.ElvUI and _G.ElvUI[1].private.general.lootRoll then
+            frame = _G.ElvUI[1]:GetModule("Misc"):CreateRollFrame();
+            frame.elvui = true;
+
+            -- Change default width
+            frame:SetWidth(260);
+            frame.fsbind:SetWidth(30);
+
+            -- "Hide" need/greed/pass buttons
+            frame.needbutt:SetAlpha(0);
+            frame.needbutt:EnableMouse(false);
+            frame.needbutt:SetWidth(1);
+            frame.greedbutt:SetAlpha(0);
+            frame.greedbutt:EnableMouse(false);
+            frame.greedbutt:SetWidth(1);
+            frame.pass:GetParent():SetAlpha(0);
+            frame.pass:GetParent():EnableMouse(false);
+            frame.pass:GetParent():SetWidth(1);
+
+            button = frame.button;
+        else
+            frameCount = frameCount + 1;
+            frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
+            button = frame.IconFrame;
+        end
+
         frame:SetScript("OnEvent", Frame_OnEvent);
         frame:SetScript("OnUpdate", Frame_OnUpdate);
         frame:SetScript("OnHide", Frame_OnHide);
+
+        frame:EnableMouse(true);
+        frame:SetClampedToScreen(true);
+        frame:SetScript("OnMouseDown", Frame_OnMouseDown);
+        frame:SetScript("OnMouseUp", Frame_OnMouseUp);
+
+        button.hasItem = true;
+        button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+        button:SetScript("OnClick", Button_OnClick);
 
         -- create widget
         local widget = {
