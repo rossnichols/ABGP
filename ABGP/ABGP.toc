@@ -21,6 +21,7 @@ data.lua
 ui.lua
 options.lua
 event.lua
-
+frames.xml
 bindings.xml
+
 internal.xml

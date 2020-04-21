@@ -904,7 +904,11 @@ local function DistributeLoot(itemLink)
     if not (itemLink and ShouldDistributeLoot()) then
         return false;
     end
-    ABGP:ShowDistrib(itemLink);
+    if ABGP.TestLootFrame then
+        ABGP:ShowLootFrame(itemLink);
+    else
+        ABGP:ShowDistrib(itemLink);
+    end
     return true;
 end
 

@@ -16,6 +16,7 @@ function ABGP:InitOptions()
             raidGroup = false,
             outsider = false,
             alwaysOpenWindow = true,
+            lootDirection = "up",
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -88,9 +89,10 @@ function ABGP:InitOptions()
     for k, v in pairs(self.RaidGroupNames) do raidGroupNames[k] = v; end
 
     local guiOptions = {
-        b = {
+        general = {
             name = "General",
             type = "group",
+            order = 1,
             args = {
                 show = {
                     name = "Show Window",
@@ -142,9 +144,10 @@ function ABGP:InitOptions()
                 },
             },
         },
-        c = {
+        raidGroups = {
             name = "Raid Groups",
             type = "group",
+            order = 2,
             args = {
                 raidGroup = {
                     name = "Raid Group",
@@ -166,6 +169,23 @@ function ABGP:InitOptions()
                         self.db.char.outsider = v;
                         self:SendMessage(self.CommTypes.GUILD_NOTES_UPDATED);
                     end,
+                },
+            },
+        },
+        loot = {
+            name = "Loot",
+            type = "group",
+            order = 3,
+            args = {
+                direction = {
+                    name = "Direction",
+                    order = 1,
+                    desc = "Choose which direction new loot items are added.",
+                    type = "select",
+                    control = "Dropdown",
+                    values = { up = "Up", down = "Down" },
+                    get = function(info) return self.db.char.lootDirection; end,
+                    set = function(info, v) self.db.char.lootDirection = v; self:RefreshLootFrames(); end,
                 },
             },
         },

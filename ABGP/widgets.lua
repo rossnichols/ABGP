@@ -4,6 +4,7 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
+local GetItemIcon = GetItemIcon;
 local IsModifiedClick = IsModifiedClick;
 local pairs = pairs;
 local floor = floor;
@@ -1092,6 +1093,119 @@ do
 
             background = background,
 
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_LootFrame", 1;
+
+    local function Frame_OnUpdate(frame, elapsed)
+        local self = frame.obj;
+        self.elapsed = self.elapsed + elapsed;
+        if not self.duration or self.elapsed <= self.duration then return; end
+
+        if self.elapsed >= self.duration + self.fadeOut then
+            frame:Hide();
+        else
+            local alpha = 1 - (self.elapsed - self.duration) / self.fadeOut;
+            frame:SetAlpha(alpha);
+        end
+    end
+
+    local function Frame_OnHide(frame)
+        frame.obj:Fire("OnHide");
+    end
+
+    local frameCount = 0;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.frame:SetAlpha(1);
+            self.frame:Show();
+
+            self.itemLink = nil;
+            self.elapsed = 0;
+            self.duration = nil;
+            self.fadeOut = nil;
+        end,
+
+        ["GetItem"] = function(self)
+            return self.itemLink;
+        end,
+
+        ["SetItem"] = function(self, itemLink)
+            self.itemLink = itemLink;
+
+            local frame = self.frame;
+            local itemName, _, rarity = GetItemInfo(itemLink);
+
+            frame.IconFrame.Icon:SetTexture(GetItemIcon(itemLink));
+
+            local color = _G.ITEM_QUALITY_COLORS[rarity];
+            frame.Name:SetVertexColor(color.r, color.g, color.b);
+            frame.Name:SetText(itemName);
+
+            local value = ABGP:GetItemValue(itemName);
+            local valueText = (value and value.gp ~= 0) and ("GP cost: %s%d|r"):format(ABGP.Color, value.gp) or "No GP Cost";
+            frame.Cost:SetVertexColor(1, 1, 1);
+            frame.Cost:SetText(valueText);
+
+            if ABGP:IsItemFavorited(itemLink) then
+                frame:SetBackdrop({
+                    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+                    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+                    tile = true,
+                    tileSize = 32,
+                    edgeSize = 32,
+                    insets = { left = 11, right = 12, top = 12, bottom = 11 }
+                });
+                _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Corner");
+                _G[frame:GetName().."Decoration"]:Show();
+            else
+                frame:SetBackdrop({
+                    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+                    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+                    tile = true,
+                    tileSize = 32,
+                    edgeSize = 32,
+                    insets = { left = 11, right = 12, top = 12, bottom = 11 }
+                });
+                _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Corner");
+                _G[frame:GetName().."Decoration"]:Hide();
+            end
+        end,
+
+        ["SetDuration"] = function(self, duration, fadeOut)
+            self.elapsed = 0;
+            self.duration = duration;
+            self.fadeOut = fadeOut or 0.5;
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        frameCount = frameCount + 1;
+        local frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
+        frame:SetScript("OnUpdate", Frame_OnUpdate);
+        frame:SetScript("OnHide", Frame_OnHide);
+
+        -- create widget
+        local widget = {
             frame = frame,
             type  = Type
         }

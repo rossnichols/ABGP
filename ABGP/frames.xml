@@ -1,0 +1,201 @@
+<Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Frame name="ABGPLootAnchorDown" movable="true">
+        <Size>
+            <AbsDimension x="1" y="1"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOP" relativeTo="UIParent" relativePoint="TOP">
+                <Offset>
+                    <AbsDimension x="0" y="-200"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+    </Frame>
+    <Frame name="ABGPLootAnchorUp" movable="true">
+        <Size>
+            <AbsDimension x="1" y="1"/>
+        </Size>
+        <Anchors>
+            <Anchor point="BOTTOM" relativeTo="UIParent" relativePoint="BOTTOM">
+                <Offset>
+                    <AbsDimension x="0" y="200"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+    </Frame>
+    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" enableMouse="true" clampedToScreen="true" virtual="true">
+        <Size x="250" y="84"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture name="$parentSlotTexture" file="Interface\Buttons\UI-EmptySlot">
+                    <Size>
+                        <AbsDimension x="80" y="80"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="3" y="-3"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentNameFrame" file="Interface\MerchantFrame\UI-Merchant-LabelSlots">
+                    <Size>
+                        <AbsDimension x="170" y="80"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentSlotTexture" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-9" y="-14"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <FontString parentKey="Name" name="$parentName" inherits="GameFontNormal" text="Item Name" justifyH="LEFT" justifyV="TOP">
+                    <Size>
+                        <AbsDimension y="30"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeTo="$parentNameFrame" relativePoint="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="5" y="-5"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="TOPRIGHT" relativeTo="$parentNameFrame" relativePoint="TOPRIGHT">
+                            <Offset>
+                                <AbsDimension x="-30" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="Cost" name="$parentCost" inherits="GameFontNormal" text="GP Cost" justifyH="LEFT" justifyV="BOTTOM">
+                    <Size>
+                        <AbsDimension y="15"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" relativeTo="$parentNameFrame" relativePoint="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="5" y="35"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativeTo="$parentNameFrame" relativePoint="BOTTOMRIGHT">
+                            <Offset>
+                                <AbsDimension x="-30" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture name="$parentDecoration" file="Interface\DialogFrame\UI-DialogBox-Gold-Dragon" hidden="true">
+                    <Size>
+                        <AbsDimension x="120" y="120"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="-30" y="15"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCorner" file="Interface\DialogFrame\UI-DialogBox-Corner">
+                    <Size>
+                        <AbsDimension x="32" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT">
+                            <Offset>
+                                <AbsDimension x="-6" y="-7"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button parentKey="IconFrame" enableMouse="true">
+                <Size x="49" y="49"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentSlotTexture" x="15" y="-15"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture parentKey="Icon">
+                            <Size x="49" y="49"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="Count" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
+                            <Anchors>
+                                <Anchor point="BOTTOMRIGHT" x="-5" y="2"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad>
+                        self.hasItem = true;
+                        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+                    </OnLoad>
+                    <OnEnter>
+                        local itemLink = self:GetParent().obj.itemLink;
+                        if itemLink then
+                            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                            GameTooltip:SetHyperlink(itemLink);
+                            CursorUpdate(self);
+                        end
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide();
+				        ResetCursor();
+                    </OnLeave>
+                    <OnUpdate>
+                        if GameTooltip:IsOwned(self) then
+                            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                            GameTooltip:SetHyperlink(self:GetParent().obj.itemLink);
+                            CursorUpdate(self);
+                        end
+                    </OnUpdate>
+                    <OnClick>
+                        local itemLink = self:GetParent().obj.itemLink;
+                        if not itemLink then return; end
+                        if IsModifiedClick() then
+                            HandleModifiedItemClick(itemLink);
+                        else
+                            self:GetParent().obj:Fire("OnClick", button, down);
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button parentKey="CloseButton" inherits="UIPanelCloseButton" id="0">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentCorner" relativePoint="TOPRIGHT" x="5" y="5"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        self:GetParent():Hide();
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                        GameTooltip:SetText(CLOSE);
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide();
+                    </OnLeave>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnMouseDown>
+                self.obj:Fire("OnMouseDown");
+            </OnMouseDown>
+            <OnMouseUp>
+                self.obj:Fire("OnMouseUp");
+            </OnMouseUp>
+        </Scripts>
+    </Frame>
+</Ui>
