@@ -452,6 +452,9 @@ do
         highlight:SetTexCoord(0, 1, 0, 0.578125);
 
         local button = CreateElement(frame, nil, "UIPanelButtonTemplate");
+        if _G.ElvUI then
+            _G.ElvUI[1]:GetModule("Skins"):HandleButton(button);
+        end
         button:SetWidth(85);
         button:ClearAllPoints();
         button:SetPoint("TOPRIGHT", frame, -1, -1);
