@@ -483,7 +483,7 @@ local function DistributeItem(data)
         override = data.override,
     });
 
-    ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
+    local commData = {
         itemLink = data.itemLink,
         player = data.player,
         cost = data.cost,
@@ -492,7 +492,10 @@ local function DistributeItem(data)
         override = data.override,
         count = #currentItem.distributions,
         testItem = currentItem.testItem,
-    }, "BROADCAST");
+    };
+    ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    ABGP:PriorityOnItemAwarded(commData, nil, UnitName("player"));
+    ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));
 
     currentItem.closeConfirmed = true;
     if currentItem.multipleItems then

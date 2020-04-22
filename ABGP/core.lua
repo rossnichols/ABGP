@@ -83,8 +83,11 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemAwarded(data, distribution, sender);
-        self:PriorityOnItemAwarded(data, distribution, sender);
-        self:HistoryOnItemAwarded(data, distribution, sender);
+
+        if sender ~= UnitName("player") then
+            self:PriorityOnItemAwarded(data, distribution, sender);
+            self:HistoryOnItemAwarded(data, distribution, sender);
+        end
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED.name, function(self, event, data, distribution, sender)
