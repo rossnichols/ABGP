@@ -16,6 +16,7 @@ local table = table;
 local tostring = tostring;
 local strlen = strlen;
 
+local startTime = GetTime();
 local alertedSlowComms = false;
 local synchronousCheck = false;
 
@@ -149,14 +150,15 @@ function ABGP:SendComm(type, data, distribution, target)
     else
         synchronousCheck = false;
         local time = GetTime();
-        local commCallback = function(sent, total)
+        local commCallback = function(self, sent, total)
             self:CommCallback(sent, total);
-            if not alertedSlowComms and GetTime() - time > 5 then
+            local now = GetTime();
+            if not alertedSlowComms and now - time > 5 and now - startTime > 60 then
                 alertedSlowComms = true;
                 _G.StaticPopup_Show("ABGP_SLOW_COMMS");
             end
         end
-        self:SendCommMessage("ABGP", payload, distribution, target, priority, commCallback);
+        self:SendCommMessage("ABGP", payload, distribution, target, priority, commCallback, self);
     end
 
     return synchronousCheck;
