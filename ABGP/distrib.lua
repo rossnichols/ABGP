@@ -293,6 +293,11 @@ local function ProcessNewRequest(request)
         end
     end
 
+    -- Persist the equipped items (for requests that come in without them)
+    if oldRequest and oldRequest.equipped then
+        request.equipped = oldRequest.equipped;
+    end
+
     -- Persist the roll
     item.rolls[request.player] = request.roll;
 

@@ -428,11 +428,6 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         self:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
     end
 
-    -- Send an initial message with minimal additional payload,
-    -- to ensure that the data will fit into a single message.
-    self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
-
-    -- Fill in the rest of the payload: notes and equipped items.
     data.notes = (notes ~= "") and notes or nil;
     data.equipped = {};
     local equipLoc = select(9, GetItemInfo(itemLink));
@@ -443,7 +438,13 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         if current2 then table.insert(data.equipped, current2); end
     end
 
-    self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
+    local synchronous = self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
+    if not synchronous then
+        -- The request wasn't completed synchronously. Send another one with a reduced payload.
+        data.notes = nil;
+        data.equipped = nil;
+        self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
+    end
 
     activeItems[itemLink].sentComms = true;
     activeItems[itemLink].sentRequest = true;

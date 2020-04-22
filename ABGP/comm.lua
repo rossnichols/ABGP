@@ -15,6 +15,8 @@ local table = table;
 local tostring = tostring;
 local strlen = strlen;
 
+local synchronousCheck = false;
+
 local function GetBroadcastChannel()
     if ABGP.PrivateComms then return "WHISPER", UnitName("player"); end
 
@@ -107,6 +109,9 @@ ABGP.InternalEvents = {
 
 function ABGP:CommCallback(sent, total)
     self:LogDebug("COMM-CB: sent=%d total=%d", sent, total);
+    if sent == total then
+        synchronousCheck = true;
+    end
 end
 
 function ABGP:SendComm(type, data, distribution, target)
@@ -138,9 +143,13 @@ function ABGP:SendComm(type, data, distribution, target)
         -- The \004 prefix is AceComm's "escape" control. Prepend it so that the
         -- payload is properly interpreted when received.
         _G.C_ChatInfo.SendAddonMessage("ABGP", "\004" .. payload, distribution, target);
+        synchronousCheck = true;
     else
+        synchronousCheck = false;
         self:SendCommMessage("ABGP", payload, distribution, target, priority, self.CommCallback, self);
     end
+
+    return synchronousCheck;
 end
 
 function ABGP:OnCommReceived(prefix, payload, distribution, sender)
