@@ -7,7 +7,9 @@ local GetItemInfo = GetItemInfo;
 local GetItemIcon = GetItemIcon;
 local IsModifiedClick = IsModifiedClick;
 local GetItemQualityColor = GetItemQualityColor;
+local ResetCursor = ResetCursor;
 local MouseIsOver = MouseIsOver;
+local CursorUpdate = CursorUpdate;
 local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
 local LE_ITEM_QUALITY_ARTIFACT = LE_ITEM_QUALITY_ARTIFACT;
 local pairs = pairs;
@@ -31,10 +33,14 @@ local function CreateElement(frame, anchor, template)
         _G.GameTooltip:SetHyperlink(itemLink);
         _G.GameTooltip:Show();
         self:GetParent():RequestHighlight(true);
+        self.hasItem = itemLink;
+        CursorUpdate(self);
     end);
     elt:SetScript("OnHyperlinkLeave", function(self)
         _G.GameTooltip:Hide();
         self:GetParent():RequestHighlight(false);
+        self.hasItem = nil;
+        ResetCursor();
     end);
     elt:SetScript("OnHyperlinkClick", function(self, itemLink, text, ...)
         if IsModifiedClick() then
@@ -51,6 +57,13 @@ local function CreateElement(frame, anchor, template)
     end);
     elt:SetScript("OnClick", function(self, ...)
         self:GetParent().obj:Fire("OnClick", ...)
+    end);
+    elt:SetScript("OnUpdate", function(self)
+        if _G.GameTooltip:IsOwned(self) and self.hasItem then
+            _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
+            _G.GameTooltip:SetHyperlink(self.hasItem);
+            CursorUpdate(self);
+        end
     end);
 
     if anchor then
