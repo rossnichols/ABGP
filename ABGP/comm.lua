@@ -8,6 +8,7 @@ local IsInGroup = IsInGroup;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
+local GetTime = GetTime;
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE;
 local pairs = pairs;
 local type = type;
@@ -15,6 +16,7 @@ local table = table;
 local tostring = tostring;
 local strlen = strlen;
 
+local alertedSlowComms = false;
 local synchronousCheck = false;
 
 local function GetBroadcastChannel()
@@ -146,7 +148,15 @@ function ABGP:SendComm(type, data, distribution, target)
         synchronousCheck = true;
     else
         synchronousCheck = false;
-        self:SendCommMessage("ABGP", payload, distribution, target, priority, self.CommCallback, self);
+        local time = GetTime();
+        local commCallback = function(sent, total)
+            self:CommCallback(sent, total);
+            if not alertedSlowComms and GetTime() - time > 5 then
+                alertedSlowComms = true;
+                _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+            end
+        end
+        self:SendCommMessage("ABGP", payload, distribution, target, priority, commCallback);
     end
 
     return synchronousCheck;
@@ -171,3 +181,15 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
 
     self:SendMessage(data.type, data, distribution, sender);
 end
+
+StaticPopupDialogs["ABGP_SLOW_COMMS"] = {
+    text = ("%s: your addon communication is delayed! Consider reloading your UI."):format(ABGP:ColorizeText("ABGP")),
+    button1 = "Reload",
+    button2 = "Close",
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = false,
+    exclusive = true,
+    showAlert = true,
+    OnAccept = ReloadUI,
+};
