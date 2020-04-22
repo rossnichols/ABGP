@@ -53,7 +53,7 @@ local contextFns = {
         if self:IsLeader() then
             self:SendResponse();
         else
-            self.timer = ABGP:ScheduleTimer(self.CheckConsistency, 5, self);
+            self.timer = ABGP:ScheduleTimer(self.CheckConsistency, 5, self, sender);
         end
 
         if self:IsSameOrNewer(data.version) then
@@ -74,14 +74,16 @@ local contextFns = {
         end
     end,
 
-    CheckConsistency = function(self)
-        ABGP:LogDebug("Context=%s consistency failure! %s", self.context, self:Leaders());
+    CheckConsistency = function(self, sender)
         self.timer = nil;
-        self:Reset();
+        if not self:IsLeader(sender) then
+            ABGP:LogDebug("Context=%s consistency failure! %s", self.context, self:Leaders());
+            self:Reset();
+        end
     end,
 
-    IsLeader = function(self)
-        return #self.leaders > 0 and self.leaders[#self.leaders].player == UnitName("player");
+    IsLeader = function(self, sender)
+        return #self.leaders > 0 and self.leaders[#self.leaders].player == (sender or UnitName("player"));
     end,
 
     IsRelease = function(self, version)
@@ -131,12 +133,12 @@ local contextFns = {
         end
     end,
 
-
     CheckLeaders = function(self, checkFn)
         local removed = false;
         for i = #self.leaders, 1, -1 do
             local leader = self.leaders[i];
             if not checkFn(leader.player) then
+                ABGP:LogDebug("REMOVING LEADER[%s]: %s", self.context, leader.player);
                 self:RemoveLeader(leader.player);
                 removed = true;
             end
@@ -159,7 +161,7 @@ local contextFns = {
     Leaders = function(self)
         local str = "";
         for i, leader in ipairs(self.leaders) do
-            str = ("%s%s%s:%s"):format(str, i == 1 and "" or ",", leader.player, leader.version);
+            str = ("%s%s%s:%s"):format(str, i == 1 and "" or ", ", leader.player, leader.version);
         end
         return str;
     end,
@@ -270,6 +272,10 @@ function ABGP:OnVersionRequest(data, distribution, sender)
 end
 
 function ABGP:OnVersionResponse(data, distribution, sender)
+    if distribution == "GUILD" then
+        checkedGuild = true;
+    end
+
     if data.context then
         self.LeaderContexts[data.context]:OnResponse(data, distribution, sender);
     elseif versionCheckData and not versionCheckData.players[sender] then
@@ -409,7 +415,6 @@ function ABGP:VersionOnGuildRosterUpdate()
             return guildInfo and guildInfo[9];
         end);
     else
-        checkedGuild = true;
         self.LeaderContexts.guild:Reset();
         self.LeaderContexts.guild:SendRequest();
     end
