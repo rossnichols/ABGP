@@ -5,6 +5,8 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local IsInGuild = IsInGuild;
 local CreateFrame = CreateFrame;
 local UnitName = UnitName;
+local UnitExists = UnitExists;
+local IsInGroup = IsInGroup;
 local date = date;
 local time = time;
 local table = table;
@@ -17,6 +19,7 @@ local filteredClasses = {};
 local filteredPriorities = {};
 local onlyUsable = false;
 local onlyFaved = false;
+local onlyGrouped = false;
 local currentRaidGroup;
 
 ABGP.UICommands = {
@@ -66,6 +69,20 @@ local function DrawPriority(container, rebuild, reason)
         classSelector:SetText("Classes");
         container:AddChild(classSelector);
 
+        if IsInGroup() then
+            local grouped = AceGUI:Create("CheckBox");
+            grouped:SetWidth(80);
+            grouped:SetLabel("Grouped");
+            grouped:SetValue(onlyGrouped);
+            grouped:SetCallback("OnValueChanged", function(widget, event, value)
+                onlyGrouped = value;
+                PopulateUI(false);
+            end);
+            container:AddChild(grouped);
+        else
+            onlyGrouped = false;
+        end
+
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
@@ -101,7 +118,8 @@ local function DrawPriority(container, rebuild, reason)
     local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
         local inRaidGroup = not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
-        if not filteredClasses[data.class] and inRaidGroup then
+        local isGrouped = not onlyGrouped or UnitExists(data.player);
+        if not filteredClasses[data.class] and inRaidGroup and isGrouped then
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Priority");
             elt:SetFullWidth(true);
