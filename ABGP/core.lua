@@ -147,87 +147,83 @@ function ABGP:OnInitialize()
     local lootSelfRegex = self:ConvertChatString(_G.LOOT_ITEM_SELF);
     local lastZone;
 
-    local f = CreateFrame("Frame");
-    f:RegisterEvent("GUILD_ROSTER_UPDATE");
-    f:RegisterEvent("CHAT_MSG_SYSTEM");
-    f:RegisterEvent("CHAT_MSG_LOOT");
-    f:RegisterEvent("GROUP_JOINED");
-    f:RegisterEvent("GROUP_LEFT");
-    f:RegisterEvent("GROUP_ROSTER_UPDATE");
-    f:RegisterEvent("PLAYER_LEAVING_WORLD");
-    f:RegisterEvent("LOADING_SCREEN_ENABLED");
-    f:RegisterEvent("PLAYER_LOGOUT");
-    f:RegisterEvent("BOSS_KILL");
-    f:RegisterEvent("LOADING_SCREEN_DISABLED");
-    f:RegisterEvent("LOOT_OPENED");
-    f:RegisterEvent("PARTY_LEADER_CHANGED");
-    f:SetScript("OnEvent", function(self, event, ...)
-        if event == "GUILD_ROSTER_UPDATE" then
-            if not ABGP:Get("outsider") then
-                OnGuildRosterUpdate();
-            end
-        elseif event == "CHAT_MSG_SYSTEM" then
-            local text = ...;
-            local sender, roll, minRoll, maxRoll = text:match(rollRegex);
-            if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
-                roll = tonumber(roll);
-                ABGP:DistribOnRoll(sender, roll);
-            end
-        elseif event == "CHAT_MSG_LOOT" then
-            local text, _, _, _, player = ...;
-            if not UnitExists(player) then return; end
-            local _, item = text:match(lootMultipleRegex);
-            if not item then
-                _, item = text:match(lootRegex);
-            end
-            if not item then
-                item = text:match(lootMultipleSelfRegex);
-            end
-            if not item then
-                item = text:match(lootSelfRegex);
-            end
-            if item then
-                -- ABGP:LogDebug("%s looted %s.", player, item);
-            end
-        elseif event == "GROUP_JOINED" then
-            OnGroupJoined();
-        elseif event == "GROUP_LEFT" then
-            ABGP:RequestOnGroupLeft();
-            ABGP:OutsiderOnGroupLeft();
-            ABGP:VersionOnGroupLeft();
-        elseif event == "GROUP_ROSTER_UPDATE" then
-            ABGP:RequestOnGroupUpdate();
-            ABGP:OutsiderOnGroupUpdate();
-        elseif event == "PLAYER_LEAVING_WORLD" then
-            ABGP:DistribOnLeavingWorld();
-        elseif event == "LOADING_SCREEN_ENABLED" then
-            ABGP:DistribOnLoadingScreen();
-        elseif event == "PLAYER_LOGOUT" then
-            ABGP:DistribOnLogout();
-        elseif event == "BOSS_KILL" then
-            ABGP:EventOnBossKilled(...);
-            ABGP:AnnounceOnBossKilled(...);
-        elseif event == "LOADING_SCREEN_DISABLED" then
-            -- Per DBM, GetInstanceInfo() can return stale data for a period of time
-            -- after this event is triggered. Workaround: wait a short period of time. Amazing.
-            -- Schedule two timers so we opportunistically process it quicker, with the
-            -- second one to ensure we end up in the right final state.
-            local onZoneChanged = function()
-                local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
-                if name and name ~= lastZone then
-                    lastZone = name;
-                    ABGP:EventOnZoneChanged(name, instanceId);
-                    ABGP:AnnounceOnZoneChanged(name, instanceId);
-                end
-            end
-            ABGP:ScheduleTimer(onZoneChanged, 1);
-            ABGP:ScheduleTimer(onZoneChanged, 5);
-        elseif event == "LOOT_OPENED" then
-            ABGP:AnnounceOnLootOpened();
-        elseif event == "PARTY_LEADER_CHANGED" then
-            ABGP:OutsiderOnPartyLeaderChanged();
+    self:RegisterEvent("GUILD_ROSTER_UPDATE", function(self, event, ...)
+        if not self:Get("outsider") then
+            OnGuildRosterUpdate();
         end
-    end);
+    end, self);
+    self:RegisterEvent("CHAT_MSG_SYSTEM", function(self, event, ...)
+        local text = ...;
+        local sender, roll, minRoll, maxRoll = text:match(rollRegex);
+        if minRoll == "1" and maxRoll == "100" and sender and UnitExists(sender) then
+            roll = tonumber(roll);
+            self:DistribOnRoll(sender, roll);
+        end
+    end, self);
+    self:RegisterEvent("CHAT_MSG_LOOT", function(self, event, ...)
+        local text, _, _, _, player = ...;
+        if not UnitExists(player) then return; end
+        local _, item = text:match(lootMultipleRegex);
+        if not item then
+            _, item = text:match(lootRegex);
+        end
+        if not item then
+            item = text:match(lootMultipleSelfRegex);
+        end
+        if not item then
+            item = text:match(lootSelfRegex);
+        end
+        if item then
+            -- self:LogDebug("%s looted %s.", player, item);
+        end
+    end, self);
+    self:RegisterEvent("GROUP_JOINED", function(self, event, ...)
+        OnGroupJoined();
+    end, self);
+    self:RegisterEvent("GROUP_LEFT", function(self, event, ...)
+        self:RequestOnGroupLeft();
+        self:OutsiderOnGroupLeft();
+        self:VersionOnGroupLeft();
+    end, self);
+    self:RegisterEvent("GROUP_ROSTER_UPDATE", function(self, event, ...)
+        self:RequestOnGroupUpdate();
+        self:OutsiderOnGroupUpdate();
+    end, self);
+    self:RegisterEvent("PLAYER_LEAVING_WORLD", function(self, event, ...)
+        self:DistribOnLeavingWorld();
+    end, self);
+    self:RegisterEvent("LOADING_SCREEN_ENABLED", function(self, event, ...)
+        self:DistribOnLoadingScreen();
+    end, self);
+    self:RegisterEvent("PLAYER_LOGOUT", function(self, event, ...)
+        self:DistribOnLogout();
+    end, self);
+    self:RegisterEvent("BOSS_KILL", function(self, event, ...)
+        self:EventOnBossKilled(...);
+        self:AnnounceOnBossKilled(...);
+    end, self);
+    self:RegisterEvent("LOADING_SCREEN_DISABLED", function(self, event, ...)
+        -- Per DBM, GetInstanceInfo() can return stale data for a period of time
+        -- after this event is triggered. Workaround: wait a short period of time. Amazing.
+        -- Schedule two timers so we opportunistically process it quicker, with the
+        -- second one to ensure we end up in the right final state.
+        local onZoneChanged = function()
+            local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
+            if name and name ~= lastZone then
+                lastZone = name;
+                self:EventOnZoneChanged(name, instanceId);
+                self:AnnounceOnZoneChanged(name, instanceId);
+            end
+        end
+        self:ScheduleTimer(onZoneChanged, 1);
+        self:ScheduleTimer(onZoneChanged, 5);
+    end, self);
+    self:RegisterEvent("LOOT_OPENED", function(self, event, ...)
+        self:AnnounceOnLootOpened();
+    end, self);
+    self:RegisterEvent("PARTY_LEADER_CHANGED", function(self, event, ...)
+        self:OutsiderOnPartyLeaderChanged();
+    end, self);
 
     -- Precreate frames to avoid issues generating them during combat.
     if not UnitAffectingCombat("player") then
