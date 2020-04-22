@@ -231,8 +231,11 @@ function ABGP:OnInitialize()
         AceGUI:Release(self:CreateMainWindow());
         AceGUI:Release(self:CreateDistribWindow());
         AceGUI:Release(self:CreateRequestWindow());
-        for i = 1, 10 do AceGUI:Release(AceGUI:Create("ABGP_Item")); end
-        for i = 1, 50 do AceGUI:Release(AceGUI:Create("ABGP_Player")); end
+        local frames = {};
+        for i = 1, 10 do frames[AceGUI:Create("ABGP_Item")] = true; end
+        for i = 1, 50 do frames[AceGUI:Create("ABGP_Player")] = true; end
+        for i = 1, 10 do frames[AceGUI:Create("ABGP_LootFrame")] = true; end
+        for frame in pairs(frames) do AceGUI:Release(frame); end
     end
 
     if IsInGroup() then

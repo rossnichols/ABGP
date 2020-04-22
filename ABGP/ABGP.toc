@@ -3,6 +3,7 @@
 ## Notes: EPGP AddOn for <Always Be Pulling>
 ## Author: Xanido
 ## Version: ${ADDON_VERSION}
+## OptionalDeps: ElvUI
 ## SavedVariables: ABGP_DataTimestamp, ABGP_Data, ABGP_DB, ABGP_WindowManagement, ABGP_ItemAuditLog
 
 embeds.xml
