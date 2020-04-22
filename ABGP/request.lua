@@ -158,10 +158,7 @@ end
 
 local function VerifyItemRequests()
     for itemLink, item in pairs(activeItems) do
-        if UnitExists(item.sender) then
-            -- Ask the sender if the item is still being distributed.
-            ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_CHECK, { itemLink = itemLink }, "WHISPER", item.sender);
-        else
+        if not UnitExists(item.sender) then
             -- The sender is gone, close the item.
             ABGP:RequestOnDistClosed({ itemLink = itemLink });
         end
