@@ -1159,12 +1159,18 @@ do
         end
     end
 
-    local function Frame_OnMouseDown(frame)
-        frame.obj:Fire("OnMouseDown");
+    local function Frame_OnMouseDown(frame, button)
+        if button == "LeftButton" then
+            frame.obj:Fire("OnMouseDown");
+        end
     end
 
-    local function Frame_OnMouseUp(frame)
-        frame.obj:Fire("OnMouseUp");
+    local function Frame_OnMouseUp(frame, button)
+        if button == "LeftButton" then
+            frame.obj:Fire("OnMouseUp");
+        elseif button == "RightButton" then
+            frame.obj:Fire("OnClick", button, false);
+        end
     end
 
     local function Frame_OnHide(frame)
