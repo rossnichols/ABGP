@@ -143,7 +143,7 @@ function ABGP:RebuildOfficerNotes()
         local name = GetGuildRosterInfo(i);
         if name then
             local player = Ambiguate(name, "short");
-            if self:UpdateOfficerNote(player, i, true) then
+            if self:UpdateOfficerNote(player, i) then
                 count = count + 1;
             end
         end
@@ -158,7 +158,7 @@ function ABGP:RebuildOfficerNotes()
     end
 end
 
-function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
+function ABGP:UpdateOfficerNote(player, guildIndex)
     if not guildIndex and not self:IsPrivileged() then return; end
     if not self:CanEditOfficerNotes() then return; end
 
@@ -206,12 +206,6 @@ function ABGP:UpdateOfficerNote(player, guildIndex, suppressComms)
         updatingNotes = true;
         _G.GuildRosterSetOfficerNote(guildIndex, note);
         updatingNotes = false;
-
-        if not suppressComms then
-            self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
-            -- Do not send to BROADCAST - the addon will take care of updating
-            -- its priority list itself, without requiring a resync.
-        end
     end
 
     return (note ~= existingNote);
