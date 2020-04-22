@@ -424,6 +424,84 @@ local function RemoveActiveItem(itemLink, item)
     end
 end
 
+local function ChooseRecipient()
+    if not activeDistributionWindow then return; end
+    local window = activeDistributionWindow;
+    local currentItem = window:GetUserData("currentItem");
+    local cost = CalculateCost();
+
+    local itemLink = currentItem.itemLink;
+    if currentItem.multipleItems then
+        local count = #currentItem.distributions;
+        itemLink = ("%s #%d"):format(itemLink, count + 1);
+    end
+
+    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", itemLink, cost, {
+        itemLink = currentItem.itemLink,
+        cost = cost,
+        value = currentItem.data.value,
+        requestType = ABGP.RequestTypes.MANUAL
+    });
+end
+
+local function ValidateRecipient(player, cost, value)
+    player = UnitExists(player) and UnitName(player);
+    if not player then return false; end
+
+    local epgp = ABGP:GetActivePlayer(player);
+    if cost ~= 0 and not (epgp and epgp[value.phase]) then
+        return false;
+    end
+
+    return player;
+end
+
+local function DistributeItem(data)
+    if not activeDistributionWindow then return; end
+    local window = activeDistributionWindow;
+    local activeItems = window:GetUserData("activeItems");
+
+    local currentItem = activeItems[data.itemLink];
+    local ep, gp, priority = 0, 0, 0;
+    local value = currentItem.data.value;
+    if value then
+        local epgp = ABGP:GetActivePlayer(data.player);
+        if epgp and epgp[value.phase] then
+            ep = epgp[value.phase].ep;
+            gp = epgp[value.phase].gp;
+            priority = epgp[value.phase].priority;
+        end
+    end
+    table.insert(currentItem.distributions, {
+        player = data.player,
+        ep = ep,
+        gp = gp,
+        priority = priority,
+        cost = data.cost,
+        roll = data.roll,
+        requestType = data.requestType,
+        override = data.override,
+    });
+
+    ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
+        itemLink = data.itemLink,
+        player = data.player,
+        cost = data.cost,
+        roll = data.roll,
+        requestType = data.requestType,
+        override = data.override,
+        count = #currentItem.distributions,
+        testItem = currentItem.testItem,
+    }, "BROADCAST");
+
+    currentItem.closeConfirmed = true;
+    if currentItem.multipleItems then
+        window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
+    else
+        RemoveActiveItem(data.itemLink);
+    end
+end
+
 function ABGP:DistribOnCheck(data, distribution, sender)
     local window = activeDistributionWindow;
     local activeItems = window and window:GetUserData("activeItems") or {};
@@ -687,8 +765,8 @@ function ABGP:CreateDistribWindow()
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "distrib", {
         version = 1,
-        defaultWidth = 950,
-        minWidth = 800,
+        defaultWidth = 1000,
+        minWidth = 900,
         maxWidth = 1100,
         defaultHeight = 500,
         minHeight = 300,
@@ -756,7 +834,7 @@ function ABGP:CreateDistribWindow()
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 0, 1.0, 0, 0 } });
     tabGroup:AddChild(mainLine);
 
     local disenchant = AceGUI:Create("Button");
@@ -777,7 +855,7 @@ function ABGP:CreateDistribWindow()
     window:SetUserData("disenchantButton", disenchant);
 
     local distrib = AceGUI:Create("Button");
-    distrib:SetWidth(115);
+    distrib:SetWidth(105);
     distrib:SetText("Distribute");
     distrib:SetDisabled(true);
     distrib:SetCallback("OnClick", function() AwardItem(); end);
@@ -806,7 +884,7 @@ function ABGP:CreateDistribWindow()
     mainLine:AddChild(desc);
 
     local multiple = AceGUI:Create("CheckBox");
-    multiple:SetWidth(95);
+    multiple:SetWidth(100);
     multiple:SetLabel("Multiple");
     multiple:SetCallback("OnValueChanged", function(widget, event, value)
         local currentItem = window:GetUserData("currentItem");
@@ -816,7 +894,7 @@ function ABGP:CreateDistribWindow()
     window:SetUserData("multipleItemsCheckbox", multiple);
 
     local resetRolls = AceGUI:Create("Button");
-    resetRolls:SetWidth(115);
+    resetRolls:SetWidth(110);
     resetRolls:SetCallback("OnClick", function(widget)
         local currentItem = window:GetUserData("currentItem");
         if currentItem.rollsAllowed then
@@ -831,6 +909,12 @@ function ABGP:CreateDistribWindow()
     end);
     mainLine:AddChild(resetRolls);
     window:SetUserData("resetRollsButton", resetRolls);
+
+    local choose = AceGUI:Create("Button");
+    choose:SetWidth(125);
+    choose:SetText("Choose Player");
+    choose:SetCallback("OnClick", function() ChooseRecipient(); end);
+    mainLine:AddChild(choose);
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);
@@ -932,49 +1016,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
     button1 = "Yes",
     button2 = "No",
     OnAccept = function(self, data)
-        if not activeDistributionWindow then return; end
-        local window = activeDistributionWindow;
-        local activeItems = window:GetUserData("activeItems");
-
-        local currentItem = activeItems[data.itemLink];
-        local ep, gp, priority = 0, 0, 0;
-        local value = currentItem.data.value;
-        if value then
-            local epgp = ABGP:GetActivePlayer(data.player);
-            if epgp and epgp[value.phase] then
-                ep = epgp[value.phase].ep;
-                gp = epgp[value.phase].gp;
-                priority = epgp[value.phase].priority;
-            end
-        end
-        table.insert(currentItem.distributions, {
-            player = data.player,
-            ep = ep,
-            gp = gp,
-            priority = priority,
-            cost = data.cost,
-            roll = data.roll,
-            requestType = data.requestType,
-            override = data.override,
-        });
-
-        ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, {
-            itemLink = data.itemLink,
-            player = data.player,
-            cost = data.cost,
-            roll = data.roll,
-            requestType = data.requestType,
-            override = data.override,
-            count = #currentItem.distributions,
-            testItem = currentItem.testItem,
-        }, "BROADCAST");
-
-        currentItem.closeConfirmed = true;
-        if currentItem.multipleItems then
-            window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
-        else
-            RemoveActiveItem(data.itemLink);
-        end
+        DistributeItem(data);
     end,
     timeout = 0,
     whileDead = true,
@@ -1041,6 +1083,57 @@ StaticPopupDialogs["ABGP_CONFIRM_DONE"] = {
     button2 = "No",
     OnAccept = function(self, data)
         RemoveActiveItem(data.itemLink);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = {
+    text = "Choose the recipient of %s for %d GP:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	autoCompleteSource = GetAutoCompleteResults,
+	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+	maxLetters = 31,
+    OnAccept = function(self, data)
+        local text = self.editBox:GetText();
+        local player = ValidateRecipient(text, data.cost, data.value);
+        if player then
+            data.player = player;
+            DistributeItem(data);
+        end
+    end,
+    OnShow = function(self, data)
+        self.editBox:SetAutoFocus(false);
+        self.button1:Disable();
+    end,
+    EditBoxOnTextChanged = function(self, data)
+        local parent = self:GetParent();
+        local text = parent.editBox:GetText();
+        local player = ValidateRecipient(text, data.cost, data.value);
+        if player then
+            parent.button1:Enable();
+        else
+            parent.button1:Disable();
+        end
+    end,
+    EditBoxOnEnterPressed = function(self, data)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        else
+            local errorCost = (data.cost ~= 0) and " and have EPGP for this phase" or "";
+            ABGP:Error("Invalid recipient! The player must be in your group%s.", errorCost);
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
     end,
     timeout = 0,
     whileDead = true,

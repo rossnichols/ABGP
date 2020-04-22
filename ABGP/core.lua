@@ -469,7 +469,8 @@ ABGP.RequestTypes = {
     MS_OS = "MS_OS",
     ROLL = "ROLL",
     MS = "MS",
-    OS = "OS"
+    OS = "OS",
+    MANUAL = "MANUAL",
 };
 
 

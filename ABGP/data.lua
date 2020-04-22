@@ -223,6 +223,8 @@ end
 
 function ABGP:PriorityOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
+    if sender == UnitName("player") and self.IgnoreSelfDistributed then return; end
+
     local itemLink = data.itemLink;
     local player = data.player;
     local cost = data.cost;
@@ -244,7 +246,7 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
 
             self:RefreshActivePlayers();
 
-            if sender == UnitName("player") and not self.IgnoreSelfDistributed then
+            if sender == UnitName("player") then
                 -- UpdateOfficerNote expects the name of the guild member
                 -- that is being updated, which is the proxy if it's set.
                 self:UpdateOfficerNote(epgp.proxy or player);

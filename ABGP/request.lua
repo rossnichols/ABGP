@@ -283,6 +283,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local requestTypes = {
         [ABGP.RequestTypes.MS] = " (%smain spec)",
         [ABGP.RequestTypes.OS] = " (%soff spec)",
+        [ABGP.RequestTypes.MANUAL] = " (%smanual)",
     };
     local requestType = "";
     if requestTypes[data.requestType] then

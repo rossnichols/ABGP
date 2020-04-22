@@ -644,6 +644,7 @@ local function DrawAuditLog(container, rebuild, reason)
             [ABGP.RequestTypes.MS] = "ms",
             [ABGP.RequestTypes.OS] = "os",
             [ABGP.RequestTypes.ROLL] = "roll",
+            [ABGP.RequestTypes.MANUAL] = "manual",
         };
         for i = first, last do
             local data = entries[i];
