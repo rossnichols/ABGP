@@ -219,6 +219,12 @@ function ABGP:InitOptions()
                     set = function(info, v) self.db.char.lootDuration = v; end,
                     cmdHidden = true,
                 },
+                test = {
+                    name = "Test",
+                    desc = "Show test items.",
+                    type = "execute",
+                    func = function() self:ShowTestLoot(); end
+                },
             },
         },
     };

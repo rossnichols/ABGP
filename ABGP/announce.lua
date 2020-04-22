@@ -176,4 +176,6 @@ end
 function ABGP:ShowTestLoot()
     self:ShowLootFrame("|cffff8000|Hitem:19019|h[Thunderfury, Blessed Blade of the Windseeker]|h|r");
     self:ShowLootFrame("|cffa335ee|Hitem:19375::::::::60:::::|h[Mish'undare, Circlet of the Mind Flayer]|h|r");
+    self:ShowLootFrame("|cffa335ee|Hitem:19406::::::::60:::::|h[Drake Fang Talisman]|h|r");
+    self:ShowLootFrame("|cff0070dd|Hitem:18259::::::::60:::::|h[Formula: Enchant Weapon - Spell Power]|h|r");
 end
