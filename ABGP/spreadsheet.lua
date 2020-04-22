@@ -274,6 +274,7 @@ local function DrawGP(container)
         ["trial end"] = true,
         ["trial"] = true,
         ["carryover gp from previous bwl"] = true,
+        ["split start gp"] = true,
     };
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
