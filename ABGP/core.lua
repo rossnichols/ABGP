@@ -183,7 +183,6 @@ function ABGP:OnInitialize()
     self:RegisterEvent("GROUP_LEFT", function(self, event, ...)
         self:RequestOnGroupLeft();
         self:OutsiderOnGroupLeft();
-        self:VersionOnGroupLeft();
     end, self);
     self:RegisterEvent("GROUP_ROSTER_UPDATE", function(self, event, ...)
         self:RequestOnGroupUpdate();
