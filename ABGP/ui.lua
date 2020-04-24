@@ -235,6 +235,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                 end
 
                 local window = AceGUI:Create("Window");
+                window.frame:SetFrameStrata("DIALOG");
                 window:SetTitle("Export");
                 window:SetLayout("Fill");
                 window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
@@ -361,7 +362,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                                     PopulateUI(false);
                                 end
                             end,
-                            arg1 = elt.data,
+                            arg1 = data,
                             notCheckable = true
                         },
                         {
@@ -372,10 +373,9 @@ local function DrawItemHistory(container, rebuild, reason, command)
                                     PopulateUI(false);
                                 end
                             end,
-                            arg1 = elt.data,
+                            arg1 = data,
                             notCheckable = true
                         },
-                        { text = "Cancel", notCheckable = true },
                     };
                     if data.itemLink and ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsItemFavorited(data.itemLink);
@@ -384,10 +384,41 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             func = function(self, data)
                                 ABGP:SetItemFavorited(data.itemLink, not faved);
                             end,
-                            arg1 = elt.data,
+                            arg1 = data,
                             notCheckable = true
                         });
                     end
+                    if data.editId and data.sender == UnitName("player") then
+                        table.insert(context, {
+                            text = "Edit cost",
+                            func = function(self, data)
+                                data.value = ABGP:GetItemValue(data.item);
+                                _G.StaticPopup_Show("ABGP_UPDATE_COST", data.itemLink, ABGP:ColorizeName(data.player), data);
+                            end,
+                            arg1 = data,
+                            notCheckable = true
+                        });
+                        table.insert(context, {
+                            text = "Edit player",
+                            func = function(self, data)
+                                data.value = ABGP:GetItemValue(data.item);
+                                _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", data.itemLink, data.gp, data);
+                            end,
+                            arg1 = data,
+                            notCheckable = true
+                        });
+                        table.insert(context, {
+                            text = "Delete entry",
+                            func = function(self, data)
+                                data.value = ABGP:GetItemValue(data.item);
+                                local award = ("%s for %d GP"):format(ABGP:ColorizeName(data.player), data.gp);
+                                _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", data.itemLink, award, data);
+                            end,
+                            arg1 = data,
+                            notCheckable = true
+                        });
+                    end
+                    table.insert(context, { text = "Cancel", notCheckable = true });
                     ABGP:ShowContextMenu(context);
                 end
             end);
@@ -694,6 +725,24 @@ local function DrawAuditLog(container, rebuild, reason)
                 });
                 elt:SetWidths(widths);
                 auditLog:AddChild(elt);
+            elseif data.update then
+                local update = data.update;
+                local audit = "";
+                if update.oldPlayer then
+                    audit = ("%s recipient new=%s old=%s cost=%d"):format(update.itemLink, update.player or "none", update.oldPlayer, update.cost);
+                elseif update.oldCost then
+                    audit = ("%s cost new=%d old=%d player=%s"):format(update.itemLink, update.cost, update.oldCost, update.player);
+                end
+                local elt = AceGUI:Create("ABGP_AuditLog");
+                elt:SetFullWidth(true);
+                elt:SetData({
+                    date = date("%m/%d/%y", data.time),
+                    type = "Update",
+                    audit = audit,
+                    important = false,
+                });
+                elt:SetWidths(widths);
+                auditLog:AddChild(elt);
             end
         end
     end
@@ -709,6 +758,7 @@ end
 
 function ABGP:CreateMainWindow(command)
     local window = AceGUI:Create("Window");
+    window.frame:SetFrameStrata("DIALOG");
     window:SetTitle(self:ColorizeText("ABGP"));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
@@ -850,3 +900,112 @@ function ABGP:ShowMainWindow(command)
     activeWindow = self:CreateMainWindow(command);
     PopulateUI(true, nil, command);
 end
+
+StaticPopupDialogs["ABGP_UPDATE_COST"] = {
+    text = "Update the cost of %s to %s:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	autoCompleteSource = GetAutoCompleteResults,
+	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+	maxLetters = 31,
+    OnAccept = function(self, data)
+        local cost = ABGP:DistribValidateCost(self.editBox:GetText(), data.player, data.value);
+        if cost then
+            ABGP:HistoryUpdateCost(data, cost);
+        end
+    end,
+    OnShow = function(self, data)
+        self.editBox:SetAutoFocus(false);
+        self.button1:Disable();
+    end,
+    EditBoxOnTextChanged = function(self, data)
+        local parent = self:GetParent();
+        local cost = ABGP:DistribValidateCost(parent.editBox:GetText(), data.player, data.value);
+        if cost then
+            parent.button1:Enable();
+        else
+            parent.button1:Disable();
+        end
+    end,
+    EditBoxOnEnterPressed = function(self, data)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        else
+            local _, errorText = ABGP:DistribValidateCost(parent.editBox:GetText(), data.player, data.value);
+            ABGP:Error("Invalid cost! %s.", errorText);
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_UPDATE_PLAYER"] = {
+    text = "Update the recipient of %s for %d GP:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	autoCompleteSource = GetAutoCompleteResults,
+	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+	maxLetters = 31,
+    OnAccept = function(self, data)
+        local player = ABGP:DistribValidateRecipient(self.editBox:GetText(), data.gp, data.value);
+        if player then
+            ABGP:HistoryUpdatePlayer(data, player);
+        end
+    end,
+    OnShow = function(self, data)
+        self.editBox:SetAutoFocus(false);
+        self.button1:Disable();
+    end,
+    EditBoxOnTextChanged = function(self, data)
+        local parent = self:GetParent();
+        local player = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.gp, data.value);
+        if player then
+            parent.button1:Enable();
+        else
+            parent.button1:Disable();
+        end
+    end,
+    EditBoxOnEnterPressed = function(self, data)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        else
+            local _, errorText = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.gp, data.value);
+            ABGP:Error("Invalid recipient! %s.", errorText);
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = {
+    text = "Remove award of %s to %s?",
+    button1 = "Yes",
+    button2 = "No",
+    OnAccept = function(self, data)
+        ABGP:HistoryDelete(data);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};

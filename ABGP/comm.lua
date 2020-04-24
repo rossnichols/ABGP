@@ -35,7 +35,7 @@ local function GetBroadcastChannel()
 end
 
 -- The commVersion can be revved to create a backwards-incompatible version.
-local commVersion = ":2";
+local commVersion = ":3";
 local function CV(str)
     return str .. commVersion;
 end
@@ -108,6 +108,7 @@ ABGP.CommTypes = {
 
 ABGP.InternalEvents = {
     ACTIVE_PLAYERS_REFRESHED = "ABGP_ACTIVE_PLAYERS_REFRESHED",
+    ITEM_DISTRIBUTION_UNAWARDED = "ABGP_ITEM_DISTRIBUTION_UNAWARDED",
 };
 
 function ABGP:CommCallback(sent, total)

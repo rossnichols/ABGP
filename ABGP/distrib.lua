@@ -9,6 +9,7 @@ local UnitName = UnitName;
 local UnitIsInMyGuild = UnitIsInMyGuild;
 local GetItemInfo = GetItemInfo;
 local IsAltKeyDown = IsAltKeyDown;
+local GetServerTime = GetServerTime;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -19,6 +20,7 @@ local math = math;
 local type = type;
 local max = max;
 
+local lastEditId = 0;
 local activeDistributionWindow;
 local currentRaidGroup;
 local widths = { 110, 100, 70, 70, 70, 180, 60, 40, 1.0 };
@@ -444,16 +446,30 @@ local function ChooseRecipient()
     });
 end
 
-local function ValidateRecipient(player, cost, value)
+function ABGP:DistribValidateRecipient(player, cost, value)
     player = UnitExists(player) and UnitName(player);
-    if not player then return false; end
+    if not player then return false, "The player must be in your group"; end
 
-    local epgp = ABGP:GetActivePlayer(player);
+    local epgp = self:GetActivePlayer(player);
     if cost ~= 0 and not (epgp and epgp[value.phase]) then
-        return false;
+        return false, "The player must have EPGP for this phase";
     end
 
     return player;
+end
+
+function ABGP:DistribValidateCost(cost, player, value)
+    cost = tonumber(cost);
+    if type(cost) ~= "number" then return false, "Not a number"; end
+    if cost < 0 then return false, "Can't be negative"; end
+    if math.floor(cost) ~= cost then return false, "Must be a whole number;" end
+
+    local epgp = self:GetActivePlayer(player);
+    if cost ~= 0 and not (epgp and epgp[value.phase]) then
+        return false, "The player doesn't have EPGP for this phase";
+    end
+
+    return cost;
 end
 
 local function DistributeItem(data)
@@ -492,10 +508,11 @@ local function DistributeItem(data)
         override = data.override,
         count = #currentItem.distributions,
         testItem = currentItem.testItem,
+        editId = ABGP:GetEditId(),
     };
     ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
-    ABGP:PriorityOnItemAwarded(commData, nil, UnitName("player"));
     ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));
+    ABGP:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
     currentItem.closeConfirmed = true;
     if currentItem.multipleItems then
@@ -604,6 +621,13 @@ local function RepopulateRequests()
     end
 
     return needsUpdate;
+end
+
+function ABGP:GetEditId()
+    local nextId = GetServerTime();
+    while nextId == lastEditId do nextId = nextId + 1; end
+    lastEditId = nextId;
+    return nextId;
 end
 
 function ABGP:DistribOnItemRequest(data, distribution, sender)
@@ -764,6 +788,7 @@ end
 
 function ABGP:CreateDistribWindow()
     local window = AceGUI:Create("Window");
+    window.frame:SetFrameStrata("DIALOG");
     window:SetLayout("Flow");
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "distrib", {
@@ -1102,8 +1127,7 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = {
 	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
 	maxLetters = 31,
     OnAccept = function(self, data)
-        local text = self.editBox:GetText();
-        local player = ValidateRecipient(text, data.cost, data.value);
+        local player = ABGP:DistribValidateRecipient(self.editBox:GetText(), data.cost, data.value);
         if player then
             data.player = player;
             DistributeItem(data);
@@ -1115,8 +1139,7 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = {
     end,
     EditBoxOnTextChanged = function(self, data)
         local parent = self:GetParent();
-        local text = parent.editBox:GetText();
-        local player = ValidateRecipient(text, data.cost, data.value);
+        local player = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.cost, data.value);
         if player then
             parent.button1:Enable();
         else
@@ -1128,8 +1151,8 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = {
         if parent.button1:IsEnabled() then
             parent.button1:Click();
         else
-            local errorCost = (data.cost ~= 0) and " and have EPGP for this phase" or "";
-            ABGP:Error("Invalid recipient! The player must be in your group%s.", errorCost);
+            local _, errorText = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.cost, data.value);
+            ABGP:Error("Invalid recipient! %s.", errorText);
         end
     end,
     EditBoxOnEscapePressed = function(self)

@@ -97,6 +97,7 @@ end
 
 function ABGP:StartRaid()
     local window = AceGUI:Create("Window");
+    window.frame:SetFrameStrata("DIALOG");
     window:SetLayout("Flow");
     window:SetTitle(("%s Raid"):format(self:ColorizeText("ABGP")));
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire

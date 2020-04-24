@@ -159,7 +159,7 @@ function ABGP:RebuildOfficerNotes()
 end
 
 function ABGP:UpdateOfficerNote(player, guildIndex)
-    if not guildIndex and not self:IsPrivileged() then return; end
+    if not self:IsPrivileged() then return; end
     if not self:CanEditOfficerNotes() then return; end
 
     if not guildIndex then
@@ -205,6 +205,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
     if note ~= existingNote then
         updatingNotes = true;
         _G.GuildRosterSetOfficerNote(guildIndex, note);
+        self:LogVerbose("Officer note for %s: %s", player, note);
         updatingNotes = false;
     end
 
@@ -215,38 +216,43 @@ function ABGP:PriorityOnGuildRosterUpdate()
     self:RefreshFromOfficerNotes();
 end
 
-function ABGP:PriorityOnItemAwarded(data, distribution, sender)
-    if data.testItem then return; end
-    if sender == UnitName("player") and self.IgnoreSelfDistributed then return; end
-
-    local itemLink = data.itemLink;
-    local player = data.player;
-    local cost = data.cost;
-
-    local itemName = self:GetItemName(itemLink);
-    local value = self:GetItemValue(itemName);
+local function UpdateEPGP(itemLink, player, cost, sender, skipOfficerNote)
+    local itemName = ABGP:GetItemName(itemLink);
+    local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
-    local epgp = self:GetActivePlayer(player);
+    local epgp = ABGP:GetActivePlayer(player);
     if epgp and epgp[value.phase] then
-		local data = epgp[value.phase];
-		if not data.trial then
-			data.gp = data.gp + cost;
-            data.priority = data.ep * 10 / data.gp;
+		local phaseEPGP = epgp[value.phase];
+		if not epgp.trial then
+			phaseEPGP.gp = phaseEPGP.gp + cost;
+            phaseEPGP.priority = phaseEPGP.ep * 10 / phaseEPGP.gp;
             local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
-            self:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-                value.phase, player, proxy, data.ep, data.gp, cost, data.priority);
-            table.sort(self.Priorities[value.phase], PrioritySort);
+            ABGP:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
+                value.phase, player, proxy, phaseEPGP.ep, phaseEPGP.gp, cost, phaseEPGP.priority);
+            table.sort(ABGP.Priorities[value.phase], PrioritySort);
 
-            self:RefreshActivePlayers();
+            ABGP:RefreshActivePlayers();
 
-            if sender == UnitName("player") then
+            if sender == UnitName("player") and not ABGP.IgnoreSelfDistributed and not skipOfficerNote then
                 -- UpdateOfficerNote expects the name of the guild member
                 -- that is being updated, which is the proxy if it's set.
-                self:UpdateOfficerNote(epgp.proxy or player);
+                ABGP:UpdateOfficerNote(epgp.proxy or player);
             end
 		end
     end
+end
+
+function ABGP:PriorityOnItemAwarded(data, distribution, sender)
+    if data.testItem then return; end
+    if not data.player then return; end
+
+    UpdateEPGP(data.itemLink, data.player, data.cost, sender);
+end
+
+function ABGP:PriorityOnItemUnawarded(data)
+    local cost = -data.gp; -- negative because we're undoing the GP adjustment
+    UpdateEPGP(data.itemLink, data.player, cost, data.sender, data.skipOfficerNote);
 end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
@@ -259,17 +265,80 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if not value then return; end
 
     local d = date("%m/%d/%y", GetServerTime()); -- https://strftime.org/
-
     local history = _G.ABGP_Data[value.phase].gpHistory;
-    table.insert(history, 1, {
-        itemLink = itemLink,
-        player = data.player,
-        item = itemName,
-        gp = data.cost,
-        date = d,
-    });
+
+    for i, entry in ipairs(history) do
+        if not entry.editId then break; end
+        if entry.editId == data.editId then
+            table.remove(history, i);
+            entry.skipOfficerNote = (entry.player == data.player);
+            self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, entry);
+            break;
+        end
+    end
+
+    if data.player then
+        table.insert(history, 1, {
+            itemLink = itemLink,
+            player = data.player,
+            item = itemName,
+            gp = data.cost,
+            date = d,
+            sender = sender,
+            editId = data.editId,
+        });
+    end
 
     self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
+end
+
+function ABGP:HistoryUpdateCost(data, cost)
+    local commData = {
+        itemLink = data.itemLink,
+        player = data.player,
+        cost = cost,
+        oldCost = data.gp,
+        requestType = self.RequestTypes.MANUAL,
+        editId = data.editId,
+    };
+    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
+    self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
+
+    commData.value = data.value;
+    ABGP:AuditItemUpdate(commData);
+end
+
+function ABGP:HistoryUpdatePlayer(data, player)
+    local commData = {
+        itemLink = data.itemLink,
+        player = player,
+        oldPlayer = data.player,
+        cost = data.gp,
+        requestType = self.RequestTypes.MANUAL,
+        editId = data.editId,
+    };
+    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
+    self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
+
+    commData.value = data.value;
+    ABGP:AuditItemUpdate(commData);
+end
+
+function ABGP:HistoryDelete(data)
+    local commData = {
+        itemLink = data.itemLink,
+        oldPlayer = data.player,
+        cost = data.gp,
+        editId = data.editId,
+    };
+    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
+    self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
+
+    commData.value = data.value;
+    ABGP:AuditItemUpdate(commData);
 end
 
 
@@ -321,4 +390,14 @@ function ABGP:AuditItemDistribution(item)
             });
         end
     end
+end
+
+function ABGP:AuditItemUpdate(update)
+    local time = GetServerTime();
+    local value = update.value;
+    table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
+        itemLink = update.itemLink,
+        time = time,
+        update = update,
+    });
 end

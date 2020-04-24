@@ -274,16 +274,17 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local cost = data.cost;
     local override = data.override;
     if data.testItem then override = "test"; end
+    if not player then return; end
 
     local multiple = "";
-    if data.count > 1 then
+    if data.count and data.count > 1 then
         multiple = (" #%d"):format(data.count);
     end
 
     local requestTypes = {
-        [ABGP.RequestTypes.MS] = " (%smain spec)",
-        [ABGP.RequestTypes.OS] = " (%soff spec)",
-        [ABGP.RequestTypes.MANUAL] = " (%smanual)",
+        [self.RequestTypes.MS] = " (%smain spec)",
+        [self.RequestTypes.OS] = " (%soff spec)",
+        [self.RequestTypes.MANUAL] = " (%smanual)",
     };
     local requestType = "";
     if requestTypes[data.requestType] then
@@ -305,8 +306,14 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
             roll = (" with a roll of %d"):format(data.roll);
         end
         self:Notify("%s%s was awarded to %s for %d GP%s%s.",
-            itemLink, multiple, ABGP:ColorizeName(player), cost, requestType, roll);
+            itemLink, multiple, self:ColorizeName(player), cost, requestType, roll);
     end
+end
+
+function ABGP:RequestOnItemUnawarded(data)
+    local player = (data.player == UnitName("player")) and "you" or  self:ColorizeName(data.player);
+    self:Notify("Award of %s to %s for %d GP was removed.",
+        data.itemLink, player, data.gp);
 end
 
 function ABGP:RequestOnItemTrashed(data, distribution, sender)
@@ -325,6 +332,7 @@ end
 
 function ABGP:CreateRequestWindow()
     local window = AceGUI:Create("Window");
+    window.frame:SetFrameStrata("DIALOG");
     window:SetTitle(("%s Active Items"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "request", {

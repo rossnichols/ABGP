@@ -82,12 +82,12 @@ function ABGP:OnInitialize()
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
-        self:RequestOnItemAwarded(data, distribution, sender);
-
         if sender ~= UnitName("player") then
-            self:PriorityOnItemAwarded(data, distribution, sender);
             self:HistoryOnItemAwarded(data, distribution, sender);
+            self:PriorityOnItemAwarded(data, distribution, sender);
         end
+
+        self:RequestOnItemAwarded(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED.name, function(self, event, data, distribution, sender)
@@ -138,6 +138,10 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
+    end, self);
+    self:RegisterMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, function(self, event, data)
+        self:PriorityOnItemUnawarded(data);
+        self:RequestOnItemUnawarded(data);
     end, self);
 
     local rollRegex = self:ConvertChatString(_G.RANDOM_ROLL_RESULT);
@@ -487,6 +491,7 @@ function ABGP:RefreshActivePlayers()
             activePlayers[pri.player].proxy = pri.proxy;
             activePlayers[pri.player].rank = pri.rank;
             activePlayers[pri.player].class = pri.class;
+            activePlayers[pri.player].trial = pri.trial;
         end
     end
 
