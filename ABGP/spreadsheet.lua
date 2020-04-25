@@ -31,7 +31,7 @@ local gpMapping = {
     ["Item"] = "item",
     ["Character"] = "player",
     ["Date Won"] = "date",
-    ["Boss"] = false,
+    ["Boss"] = "boss",
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
@@ -45,8 +45,9 @@ local itemPriorities = ABGP:GetItemPriorities();
 local itemMapping = {
     ["Item"] = 1,
     ["GP Cost"] = 2,
-    ["Notes"] = "notes",
-    ["Boss"] = false,
+    -- item link is 3 (populated elsewhere)
+    ["Notes"] = 4,
+    ["Boss"] = 5,
 };
 for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;
