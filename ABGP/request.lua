@@ -344,10 +344,8 @@ function ABGP:CreateRequestWindow()
         minHeight = 100,
         maxHeight = 300
     });
-    self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
         ABGP:EndWindowManagement(window);
-        ABGP:CloseWindow(widget);
         AceGUI:Release(widget);
         activeWindow = nil;
     end);
