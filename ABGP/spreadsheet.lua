@@ -31,7 +31,7 @@ local gpMapping = {
     ["Item"] = "item",
     ["Character"] = "player",
     ["Date Won"] = "date",
-    ["Boss"] = "boss",
+    ["Boss"] = false,
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
