@@ -220,7 +220,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                         end
                     end
 
-                    text = text .. ("%s;%s;%s%s"):format(
+                    text = text .. ("%s\t%s\t%s%s"):format(
                         item, data.player, data.date, (i == 1 and "" or "\n"));
                 end
 
@@ -232,7 +232,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                 ABGP:OpenWindow(window);
 
                 local edit = AceGUI:Create("MultiLineEditBox");
-                edit:SetLabel("In the spreadsheet, paste into the 'Item' column, then choose Data > Split Text to Columns and use semicolon as the separator.");
+                edit:SetLabel("In the spreadsheet, paste into the 'Item' colum.");
                 edit:SetText(text);
                 edit.button:Enable();
                 window:AddChild(edit);
@@ -497,9 +497,17 @@ local function DrawItems(container, rebuild, reason)
             export:SetCallback("OnClick", function(widget, event)
                 local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
                 local text = "";
-                for i, data in ipairs(items) do
-                    text = text .. ("%s%s"):format(
-                        data[1], (i == 1 and "" or "\n"));
+                local _, sortedPriorities = ABGP:GetItemPriorities();
+                local text = ("Boss\tItem\t%s\tGP Cost\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
+                for i, item in ipairs(items) do
+                    local itemPriorities = {};
+                    for _, pri in ipairs(item.priority) do itemPriorities[pri] = true; end
+                    local priorities = {};
+                    for _, pri in ipairs(sortedPriorities) do
+                        table.insert(priorities, itemPriorities[pri] and "TRUE" or "");
+                    end
+                    text = text .. ("%s\t%s\t%s\t%s\t%s%s"):format(
+                        item[4] or "", item[1], table.concat(priorities, "\t"), item[2], item[5] or "", (i == #items and "" or "\n"));
                 end
 
                 local window = AceGUI:Create("Window");
@@ -510,7 +518,7 @@ local function DrawItems(container, rebuild, reason)
                 ABGP:OpenWindow(window);
 
                 local edit = AceGUI:Create("MultiLineEditBox");
-                edit:SetLabel("...");
+                edit:SetLabel("In the spreadsheet, select all, press <delete>, select A1, then paste.");
                 edit:SetText(text);
                 edit.button:Enable();
                 window:AddChild(edit);
@@ -573,7 +581,9 @@ local function DrawItems(container, rebuild, reason)
     local searchText = search:GetText():lower();
 
     if selector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
-        filtered = items;
+        for i, item in ipairs(items) do
+            table.insert(filtered, item)
+        end
     else
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
@@ -594,6 +604,10 @@ local function DrawItems(container, rebuild, reason)
             end
         end
     end
+
+    table.sort(filtered, function(a, b)
+        return a[1] < b[1];
+    end);
 
     local pagination = container:GetUserData("pagination");
     pagination:SetValues(#filtered, 50);

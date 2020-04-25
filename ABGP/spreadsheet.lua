@@ -331,10 +331,6 @@ local function DrawItems(container)
             return true;
         end);
 
-        table.sort(_G.ABGP_Data[ABGP.CurrentPhase].itemValues, function(a, b)
-            return a[1] < b[1];
-        end);
-
         ABGP:RefreshItemValues();
 
         widget:GetUserData("window"):Hide();

@@ -4405,7 +4405,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -4538,7 +4539,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Tank Super Prio, Red Reserved",
 			["priority"] = {
 				"KAT4FITE",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -4576,7 +4578,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Golemagg",
 			["priority"] = {
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -4595,7 +4598,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16908|h[Bloodfang Hood]|h|r",
 			"Tier 2 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -4604,7 +4608,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r",
 			"Tier 2 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -4652,7 +4657,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"Hunter",
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -4778,7 +4784,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"Hunter",
 				"KAT4FITE",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -4807,7 +4814,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Majordomo Executus",
 			["priority"] = {
 				"Hunter",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -4865,7 +4873,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -4951,7 +4960,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Azuregos",
 			["priority"] = {
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -4963,7 +4973,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -5257,7 +5268,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:17071|h[Gutgore Ripper]|h|r",
 			"Garr",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5278,7 +5290,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 				"Hunter",
 				"KAT4FITE",
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 				"Tank",
 			},
 		},
@@ -5302,21 +5315,21 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			},
 		},
 		{
-			"Helm of Wrath",
-			250,
-			"|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
-			"Tier 2 Sets",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
 			"Helm of the Lifegiver",
 			30,
 			"|cffa335ee|Hitem:18870|h[Helm of the Lifegiver]|h|r",
 			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Paladin (Holy)",
+			},
+		},
+		{
+			"Helm of Wrath",
+			250,
+			"|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
+			"Tier 2 Sets",
+			["priority"] = {
+				"Tank",
 			},
 		},
 		{
@@ -5551,7 +5564,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16827|h[Nightslayer Belt]|h|r",
 			"Tier 1 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5560,7 +5574,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16824|h[Nightslayer Boots]|h|r",
 			"Tier 1 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5578,7 +5593,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16820|h[Nightslayer Chestpiece]|h|r",
 			"Tier 1 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5596,7 +5612,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16826|h[Nightslayer Gloves]|h|r",
 			"Tier 1 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5614,7 +5631,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"|cffa335ee|Hitem:16823|h[Nightslayer Shoulder Pads]|h|r",
 			"Tier 1 Sets",
 			["priority"] = {
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5662,7 +5680,17 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Ragnaros",
 			["priority"] = {
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Shard of the Flame",
+			0,
+			"|cffa335ee|Hitem:17082|h[Shard of the Flame]|h|r",
+			"Ragnaros",
+			["priority"] = {
+				"Garbage",
 			},
 		},
 		{
@@ -5673,7 +5701,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5805,15 +5834,6 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			},
 		},
 		{
-			"Shard of the Flame",
-			0,
-			"|cffa335ee|Hitem:17082|h[Shard of the Flame]|h|r",
-			"Ragnaros",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
 			"Shard of the Scale",
 			200,
 			"|cffa335ee|Hitem:17064|h[Shard of the Scale]|h|r",
@@ -5892,7 +5912,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Magmadar",
 			["priority"] = {
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -5951,7 +5972,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Onyxia",
 			["priority"] = {
 				"Metal Rogue",
-				"Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
 			},
 		},
 		{
@@ -8769,127 +8791,6 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 	},
 	["itemValues"] = {
 		{
-			"Acid Inscribed Greaves",
-			0,
-			"|cffa335ee|Hitem:20619|h[Acid Inscribed Greaves]|h|r",
-			"Green Dragons (Shared)",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Acid Inscribed Pauldrons",
-			0,
-			"|cffa335ee|Hitem:20637|h[Acid Inscribed Pauldrons]|h|r",
-			"Ysondre",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Aegis of Preservation",
-			0,
-			"|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r",
-			"Ebonroc",
-			["priority"] = {
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Ancient Corroded Leggings",
-			0,
-			"|cffa335ee|Hitem:20617|h[Ancient Corroded Leggings]|h|r",
-			"Green Dragons (Shared)",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Angelista's Grasp",
-			0,
-			"|cffa335ee|Hitem:19388|h[Angelista's Grasp]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Arcane Infused Gem",
-			0,
-			"|cffa335ee|Hitem:19336|h[Arcane Infused Gem]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Archimtiros' Ring of Reckoning",
-			125,
-			"|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"KAT4FITE",
-				"Tank",
-			},
-		},
-		{
-			"Ashjre'thul, Crossbow of Smiting",
-			400,
-			"|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Ashkandi, Greatsword of the Brotherhood",
-			0,
-			"|cffa335ee|Hitem:19364|h[Ashkandi, Greatsword of the Brotherhood]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Band of Dark Dominion",
-			200,
-			"|cffa335ee|Hitem:19434|h[Band of Dark Dominion]|h|r",
-			"Trash",
-			["priority"] = {
-				"Priest (Shadow)",
-				"Warlock",
-			},
-		},
-		{
-			"Band of Forced Concentration",
-			250,
-			"|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r",
-			"Ebonroc",
-			["priority"] = {
-				"Mage",
-				"Priest (Shadow)",
-				"Warlock",
-			},
-		},
-		{
-			"Belt of Transcendence",
-			100,
-			"|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Belt of the Dark Bog",
-			0,
-			"|cffa335ee|Hitem:20625|h[Belt of the Dark Bog]|h|r",
-			"Lethon",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
 			"Bindings of Transcendence",
 			100,
 			"|cffa335ee|Hitem:16926|h[Bindings of Transcendence]|h|r",
@@ -8899,51 +8800,21 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Black Ash Robe",
-			0,
-			"|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r",
-			"Firemaw",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Black Bark Wristbands",
+			"Netherwind Bindings",
 			100,
-			"|cffa335ee|Hitem:20626|h[Black Bark Wristbands]|h|r",
-			"Lethon",
+			"|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Mage",
-				"Priest (Shadow)",
-				"Warlock",
 			},
 		},
 		{
-			"Black Brood Pauldrons",
-			0,
-			"|cffa335ee|Hitem:19373|h[Black Brood Pauldrons]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Bloodfang Belt",
+			"Nemesis Bracers",
 			100,
-			"|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
-			"Vaelastraz the Corrupt",
+			"|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
-				"Slicey Rogue",
-				"Stabby Rogue",
-			},
-		},
-		{
-			"Bloodfang Boots",
-			50,
-			"|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Slicey Rogue",
+				"Warlock",
 			},
 		},
 		{
@@ -8957,52 +8828,232 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Bloodfang Chestpiece",
+			"Stormrage Bracers",
+			100,
+			"|cffa335ee|Hitem:16904|h[Stormrage Bracers]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Druid (Heal)",
+			},
+		},
+		{
+			"Dragonstalker's Bracers",
+			100,
+			"|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Judgement Bindings",
+			0,
+			"|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Bracelets of Wrath",
+			100,
+			"|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Arcane Infused Gem",
+			0,
+			"|cffa335ee|Hitem:19336|h[Arcane Infused Gem]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"The Black Book",
+			0,
+			"|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Warlock",
+			},
+		},
+		{
+			"Mantle of the Blackwing Cabal",
 			200,
-			"|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r",
-			"Nefarian",
+			"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
+			"Razorgore the Untamed",
+			"Shadow Priest Super Priority",
+			["priority"] = {
+				"Mage",
+				"Priest (Shadow)",
+				"Warlock",
+			},
+		},
+		{
+			"Gloves of Rapid Evolution",
+			0,
+			"|cffa335ee|Hitem:19369|h[Gloves of Rapid Evolution]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Spineshatter",
+			70,
+			"|cffa335ee|Hitem:19335|h[Spineshatter]|h|r",
+			"Razorgore the Untamed",
+			"Catch up Priority",
+			["priority"] = {
+				"Metal Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
+				"Tank",
+			},
+		},
+		{
+			"The Untamed Blade",
+			0,
+			"|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
+			"Razorgore the Untamed",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Belt of Transcendence",
+			100,
+			"|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Netherwind Belt",
+			0,
+			"|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Mage",
+			},
+		},
+		{
+			"Nemesis Belt",
+			0,
+			"|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Warlock",
+			},
+		},
+		{
+			"Bloodfang Belt",
+			100,
+			"|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Slicey Rogue",
 				"Stabby Rogue",
 			},
 		},
 		{
-			"Bloodfang Gloves",
-			50,
-			"|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Slicey Rogue",
-			},
-		},
-		{
-			"Bloodfang Spaulders",
-			50,
-			"|cffa335ee|Hitem:16832|h[Bloodfang Spaulders]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Slicey Rogue",
-			},
-		},
-		{
-			"Boots of Fright",
-			80,
-			"|cffa335ee|Hitem:20634|h[Boots of Fright]|h|r",
-			"Taerar",
+			"Stormrage Belt",
+			0,
+			"|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Druid (Heal)",
+			},
+		},
+		{
+			"Dragonstalker's Belt",
+			100,
+			"|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Judgement Belt",
+			0,
+			"|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
 				"Paladin (Holy)",
 			},
 		},
 		{
-			"Boots of Pure Thought",
-			200,
-			"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r",
-			"Trash",
+			"Waistband of Wrath",
+			100,
+			"|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Mind Quickening Gem",
+			100,
+			"|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Mage",
+			},
+		},
+		{
+			"Rune of Metamorphosis",
+			0,
+			"|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Druid (Heal)",
+			},
+		},
+		{
+			"Helm of Endless Rage",
+			150,
+			"|cffa335ee|Hitem:19372|h[Helm of Endless Rage]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Pendant of the Fallen Dragon",
+			100,
+			"|cffa335ee|Hitem:19371|h[Pendant of the Fallen Dragon]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
 				"Priest (Heal)",
+			},
+		},
+		{
+			"Red Dragonscale Protector",
+			0,
+			"|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r",
+			"Vaelastraz the Corrupt",
+			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Dragonfang Blade",
+			70,
+			"|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
+			"Vaelastraz the Corrupt",
+			"Catch up Priority",
+			["priority"] = {
+				"Hunter",
+				"Stabby Rogue",
+				"Tank",
 			},
 		},
 		{
@@ -9015,31 +9066,94 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Boots of the Endless Moor",
+			"Nemesis Boots",
 			0,
-			"|cffa335ee|Hitem:20621|h[Boots of the Endless Moor]|h|r",
-			"Emeriss",
+			"|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
-				"Progression",
+				"Warlock",
 			},
 		},
 		{
-			"Boots of the Shadow Flame",
-			200,
-			"|cffa335ee|Hitem:19381|h[Boots of the Shadow Flame]|h|r",
-			"Nefarian",
+			"Netherwind Boots",
+			0,
+			"|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
-				"KAT4FITE",
+				"Mage",
+			},
+		},
+		{
+			"Bloodfang Boots",
+			50,
+			"|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Slicey Rogue",
+			},
+		},
+		{
+			"Stormrage Boots",
+			50,
+			"|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Druid (Heal)",
+			},
+		},
+		{
+			"Dragonstalker's Greaves",
+			150,
+			"|cffa335ee|Hitem:16941|h[Dragonstalker's Greaves]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Judgement Sabatons",
+			0,
+			"|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Sabatons of Wrath",
+			150,
+			"|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Lifegiving Gem",
+			200,
+			"|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Venomous Totem",
+			0,
+			"|cffa335ee|Hitem:19342|h[Venomous Totem]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Slicey Rogue",
 				"Stabby Rogue",
 			},
 		},
 		{
-			"Bracelets of Wrath",
-			100,
-			"|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
-			"Razorgore the Untamed",
+			"Black Brood Pauldrons",
+			0,
+			"|cffa335ee|Hitem:19373|h[Black Brood Pauldrons]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
-				"Tank",
+				"Garbage",
 			},
 		},
 		{
@@ -9054,31 +9168,332 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Breastplate of Wrath",
+			"Heartstriker",
+			100,
+			"|cffa335ee|Hitem:19350|h[Heartstriker]|h|r",
+			"Broodlord Lashlayer",
+			["priority"] = {
+				"Metal Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Maladath, Runed Blade of the Black Flight",
 			200,
-			"|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r",
-			"Nefarian",
+			"|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
+			"Broodlord Lashlayer",
+			"Non-Human Rogues also",
+			["priority"] = {
+				"Metal Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Handguards of Transcendence",
+			80,
+			"|cffa335ee|Hitem:16920|h[Handguards of Transcendence]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Netherwind Gloves",
+			0,
+			"|cffa335ee|Hitem:16913|h[Netherwind Gloves]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Mage",
+			},
+		},
+		{
+			"Nemesis Gloves",
+			0,
+			"|cffa335ee|Hitem:16928|h[Nemesis Gloves]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Warlock",
+			},
+		},
+		{
+			"Bloodfang Gloves",
+			50,
+			"|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Slicey Rogue",
+			},
+		},
+		{
+			"Stormrage Handguards",
+			150,
+			"|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Druid (Heal)",
+			},
+		},
+		{
+			"Dragonstalker's Gauntlets",
+			150,
+			"|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Judgement Gauntlets",
+			0,
+			"|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Gauntlets of Wrath",
+			150,
+			"|cffa335ee|Hitem:16964|h[Gauntlets of Wrath]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Tank",
 			},
 		},
 		{
-			"Chromatic Boots",
-			250,
-			"|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
-			"Chromaggus",
+			"Scrolls of Blinding Light",
+			0,
+			"|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r",
+			"Firemaw",
 			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Drake Talon Pauldrons",
+			250,
+			"|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Metal Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Cloak of Firemaw",
+			150,
+			"|cffa335ee|Hitem:19398|h[Cloak of Firemaw]|h|r",
+			"Firemaw",
+			["priority"] = {
+				"Metal Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Black Ash Robe",
+			0,
+			"|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r",
+			"Firemaw",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Firemaw's Clutch",
+			200,
+			"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
+			"Firemaw",
+			"Shadow Priest Super Priority",
+			["priority"] = {
+				"Mage",
+				"Priest (Shadow)",
+			},
+		},
+		{
+			"Taut Dragonhide Belt",
+			0,
+			"|cffa335ee|Hitem:19396|h[Taut Dragonhide Belt]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Primalist's Linked Legguards",
+			0,
+			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
+			"Firemaw",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Legguards of the Fallen Crusader",
+			100,
+			"|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
+			"Firemaw",
+			["priority"] = {
+				"Metal Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Claw of the Black Drake",
+			0,
+			"|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r",
+			"Firemaw",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Drake Talon Cleaver",
+			0,
+			"|cffa335ee|Hitem:19353|h[Drake Talon Cleaver]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Shadow Wing Focus Staff",
+			70,
+			"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			"Catch up Priority",
+			["priority"] = {
+				"Druid (Heal)",
+				"Mage",
+				"Warlock",
+			},
+		},
+		{
+			"Ring of Blackrock",
+			100,
+			"|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+				"Priest (Heal)",
+				"Priest (Shadow)",
+			},
+		},
+		{
+			"Rejuvenating Gem",
+			400,
+			"|cffa335ee|Hitem:19395|h[Rejuvenating Gem]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Ebony Flame Gloves",
+			200,
+			"|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
+			"Ebonroc",
+			["priority"] = {
+				"Priest (Shadow)",
+				"Warlock",
+			},
+		},
+		{
+			"Malfurion's Blessed Bulwark",
+			150,
+			"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
+			"Ebonroc",
+			"Feral Druid Super Priority",
+			["priority"] = {
+				"KAT4FITE",
 				"Metal Rogue",
 			},
 		},
 		{
-			"Chromatically Tempered Sword",
-			400,
-			"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
-			"Chromaggus",
+			"Dragonbreath Hand Cannon",
+			100,
+			"|cffa335ee|Hitem:19368|h[Dragonbreath Hand Cannon]|h|r",
+			"Ebonroc",
 			["priority"] = {
+				"Slicey Rogue",
+				"Stabby Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Band of Forced Concentration",
+			250,
+			"|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r",
+			"Ebonroc",
+			["priority"] = {
+				"Mage",
+				"Priest (Shadow)",
+				"Warlock",
+			},
+		},
+		{
+			"Aegis of Preservation",
+			0,
+			"|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r",
+			"Ebonroc",
+			["priority"] = {
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Drake Fang Talisman",
+			400,
+			"|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
+			"Ebonroc",
+			"Feral Druid prio unlocks after 4 drops",
+			["priority"] = {
+				"KAT4FITE",
 				"Metal Rogue",
 				"Slicey Rogue",
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Shroud of Pure Thought",
+			200,
+			"|cffa335ee|Hitem:19430|h[Shroud of Pure Thought]|h|r",
+			"Flamegor",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Emberweave Leggings",
+			0,
+			"|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r",
+			"Flamegor",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Dragon's Touch",
+			0,
+			"|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
+			"Flamegor",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Herald of Woe",
+			0,
+			"|cffa335ee|Hitem:19357|h[Herald of Woe]|h|r",
+			"Flamegor",
+			["priority"] = {
+				"Garbage",
 			},
 		},
 		{
@@ -9095,12 +9510,188 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Circlet of Restless Dreams",
-			150,
-			"|cffa335ee|Hitem:20623|h[Circlet of Restless Dreams]|h|r",
-			"Emeriss",
+			"Styleen's Impeding Scarab",
+			325,
+			"|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
+			"Flamegor",
 			["priority"] = {
-				"Stabby Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Pauldrons of Transcendence",
+			150,
+			"|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Netherwind Mantle",
+			80,
+			"|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Mage",
+			},
+		},
+		{
+			"Nemesis Spaulders",
+			125,
+			"|cffa335ee|Hitem:16932|h[Nemesis Spaulders]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Warlock",
+			},
+		},
+		{
+			"Bloodfang Spaulders",
+			50,
+			"|cffa335ee|Hitem:16832|h[Bloodfang Spaulders]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Slicey Rogue",
+			},
+		},
+		{
+			"Stormrage Pauldrons",
+			0,
+			"|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Druid (Heal)",
+			},
+		},
+		{
+			"Dragonstalker's Spaulders",
+			200,
+			"|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Judgement Spaulders",
+			0,
+			"|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Pauldrons of Wrath",
+			200,
+			"|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Taut Dragonhide Shoulderpads",
+			100,
+			"|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"KAT4FITE",
+			},
+		},
+		{
+			"Elementium Threaded Cloak",
+			150,
+			"|cffa335ee|Hitem:19386|h[Elementium Threaded Cloak]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"KAT4FITE",
+				"Tank",
+			},
+		},
+		{
+			"Taut Dragonhide Gloves",
+			80,
+			"|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Angelista's Grasp",
+			0,
+			"|cffa335ee|Hitem:19388|h[Angelista's Grasp]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Primalist's Linked Legguards",
+			0,
+			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Girdle of the Fallen Crusader",
+			0,
+			"|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Empowered Leggings",
+			200,
+			"|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Shimmering Geta",
+			100,
+			"|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Chromatic Boots",
+			250,
+			"|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Metal Rogue",
+			},
+		},
+		{
+			"Ashjre'thul, Crossbow of Smiting",
+			400,
+			"|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Elementium Reinforced Bulwark",
+			250,
+			"|cffa335ee|Hitem:19349|h[Elementium Reinforced Bulwark]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Tank",
 			},
 		},
 		{
@@ -9114,31 +9705,160 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Claw of the Black Drake",
+			"Chromatically Tempered Sword",
+			400,
+			"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
+			"Chromaggus",
+			["priority"] = {
+				"Metal Rogue",
+				"Slicey Rogue",
+			},
+		},
+		{
+			"Robes of Transcendence",
+			200,
+			"|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Netherwind Robes",
 			0,
-			"|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r",
-			"Firemaw",
+			"|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Mage",
+			},
+		},
+		{
+			"Nemesis Robes",
+			0,
+			"|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Warlock",
+			},
+		},
+		{
+			"Bloodfang Chestpiece",
+			200,
+			"|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Slicey Rogue",
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Stormrage Chestguard",
+			0,
+			"|cffa335ee|Hitem:16897|h[Stormrage Chestguard]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Druid (Heal)",
+			},
+		},
+		{
+			"Dragonstalker's Breastplate",
+			200,
+			"|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Hunter",
+			},
+		},
+		{
+			"Judgement Breastplate",
+			0,
+			"|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Breastplate of Wrath",
+			200,
+			"|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Tank",
+			},
+		},
+		{
+			"Head of Nefarian",
+			150,
+			"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+			"Nefarian",
+			"Casters with a BWL 1h also eligible",
+			["priority"] = {
+				"Hunter",
+				"KAT4FITE",
+				"Metal Rogue",
+				"Slicey Rogue",
+				"Stabby Rogue",
+				"Tank",
+			},
+		},
+		{
+			"Lok'amir il Romathis",
+			400,
+			"|cffa335ee|Hitem:19360|h[Lok'amir il Romathis]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Crul'shorukh, Edge of Chaos",
+			400,
+			"|cffa335ee|Hitem:19363|h[Crul'shorukh, Edge of Chaos]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Metal Rogue",
+			},
+		},
+		{
+			"Ashkandi, Greatsword of the Brotherhood",
+			0,
+			"|cffa335ee|Hitem:19364|h[Ashkandi, Greatsword of the Brotherhood]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Garbage",
 			},
 		},
 		{
-			"Cloak of Draconic Might",
-			150,
-			"|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
-			"Trash",
+			"Staff of the Shadow Flame",
+			450,
+			"|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
+			"Nefarian",
 			["priority"] = {
-				"KAT4FITE",
-				"Metal Rogue",
+				"Mage",
+				"Warlock",
 			},
 		},
 		{
-			"Cloak of Firemaw",
-			150,
-			"|cffa335ee|Hitem:19398|h[Cloak of Firemaw]|h|r",
-			"Firemaw",
+			"Mish'undare, Circlet of the Mind Flayer",
+			300,
+			"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
+			"Nefarian",
 			["priority"] = {
-				"Metal Rogue",
+				"Mage",
+				"Paladin (Holy)",
+				"Warlock",
+			},
+		},
+		{
+			"Prestor's Talisman of Connivery",
+			200,
+			"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Hunter",
+				"KAT4FITE",
 				"Slicey Rogue",
 				"Stabby Rogue",
 			},
@@ -9155,32 +9875,112 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Crul'shorukh, Edge of Chaos",
-			400,
-			"|cffa335ee|Hitem:19363|h[Crul'shorukh, Edge of Chaos]|h|r",
+			"Therazane's Link",
+			0,
+			"|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
 			"Nefarian",
 			["priority"] = {
-				"Metal Rogue",
+				"Garbage",
 			},
 		},
 		{
-			"Dark Heart Pants",
+			"Boots of the Shadow Flame",
+			200,
+			"|cffa335ee|Hitem:19381|h[Boots of the Shadow Flame]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"KAT4FITE",
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Archimtiros' Ring of Reckoning",
+			125,
+			"|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"KAT4FITE",
+				"Tank",
+			},
+		},
+		{
+			"Pure Elementium Band",
+			200,
+			"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
+			"Nefarian",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Neltharion's Tear",
+			400,
+			"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r",
+			"Nefarian",
+			"Shadow Priest Prio Unlocks after 4 drops",
+			["priority"] = {
+				"Mage",
+				"Warlock",
+			},
+		},
+		{
+			"Cloak of Draconic Might",
 			150,
-			"|cffa335ee|Hitem:20627|h[Dark Heart Pants]|h|r",
-			"Lethon",
+			"|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
+			"Trash",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
 			},
 		},
 		{
-			"Deviate Growth Cap",
-			300,
-			"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r",
-			"Lethon",
+			"Interlaced Shadow Jerkin",
+			0,
+			"|cffa335ee|Hitem:19439|h[Interlaced Shadow Jerkin]|h|r",
+			"Trash",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Boots of Pure Thought",
+			200,
+			"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r",
+			"Trash",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
+				"Priest (Heal)",
+			},
+		},
+		{
+			"Ringo's Blizzard Boots",
+			250,
+			"|cffa335ee|Hitem:19438|h[Ringo's Blizzard Boots]|h|r",
+			"Trash",
+			["priority"] = {
+				"Mage",
+			},
+		},
+		{
+			"Band of Dark Dominion",
+			200,
+			"|cffa335ee|Hitem:19434|h[Band of Dark Dominion]|h|r",
+			"Trash",
+			["priority"] = {
+				"Priest (Shadow)",
+				"Warlock",
+			},
+		},
+		{
+			"Essence Gatherer",
+			100,
+			"|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r",
+			"Trash",
+			["priority"] = {
+				"Priest (Heal)",
 			},
 		},
 		{
@@ -9212,53 +10012,12 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Dragon's Touch",
+			"Green Dragonskin Cloak",
 			0,
-			"|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
-			"Flamegor",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Dragonbone Wristguards",
-			0,
-			"|cffa335ee|Hitem:20616|h[Dragonbone Wristguards]|h|r",
+			"|cffa335ee|Hitem:20579|h[Green Dragonskin Cloak]|h|r",
 			"Green Dragons (Shared)",
 			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Dragonbreath Hand Cannon",
-			100,
-			"|cffa335ee|Hitem:19368|h[Dragonbreath Hand Cannon]|h|r",
-			"Ebonroc",
-			["priority"] = {
-				"Slicey Rogue",
-				"Stabby Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Dragonfang Blade",
-			70,
-			"|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
-			"Vaelastraz the Corrupt",
-			"Catch up Priority",
-			["priority"] = {
-				"Hunter",
-				"Stabby Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Dragonheart Necklace",
-			0,
-			"|cffa335ee|Hitem:20622|h[Dragonheart Necklace]|h|r",
-			"Emeriss",
-			["priority"] = {
-				"Garbage",
+				"Progression",
 			},
 		},
 		{
@@ -9271,191 +10030,10 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Dragonstalker's Belt",
-			100,
-			"|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Dragonstalker's Bracers",
-			100,
-			"|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Dragonstalker's Breastplate",
-			200,
-			"|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Dragonstalker's Gauntlets",
-			150,
-			"|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Dragonstalker's Greaves",
-			150,
-			"|cffa335ee|Hitem:16941|h[Dragonstalker's Greaves]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Dragonstalker's Spaulders",
-			200,
-			"|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Hunter",
-			},
-		},
-		{
-			"Drake Fang Talisman",
-			400,
-			"|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
-			"Ebonroc",
-			"Feral Druid prio unlocks after 4 drops",
-			["priority"] = {
-				"KAT4FITE",
-				"Metal Rogue",
-				"Slicey Rogue",
-				"Stabby Rogue",
-			},
-		},
-		{
-			"Drake Talon Cleaver",
+			"Dragonbone Wristguards",
 			0,
-			"|cffa335ee|Hitem:19353|h[Drake Talon Cleaver]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Drake Talon Pauldrons",
-			250,
-			"|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Metal Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Ebony Flame Gloves",
-			200,
-			"|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
-			"Ebonroc",
-			["priority"] = {
-				"Priest (Shadow)",
-				"Warlock",
-			},
-		},
-		{
-			"Elementium Reinforced Bulwark",
-			250,
-			"|cffa335ee|Hitem:19349|h[Elementium Reinforced Bulwark]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Elementium Threaded Cloak",
-			150,
-			"|cffa335ee|Hitem:19386|h[Elementium Threaded Cloak]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"KAT4FITE",
-				"Tank",
-			},
-		},
-		{
-			"Emberweave Leggings",
-			0,
-			"|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r",
-			"Flamegor",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Emerald Dragonfang",
-			100,
-			"|cffa335ee|Hitem:20578|h[Emerald Dragonfang]|h|r",
-			"Ysondre",
-			["priority"] = {
-				"Stabby Rogue",
-			},
-		},
-		{
-			"Empowered Leggings",
-			200,
-			"|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Essence Gatherer",
-			100,
-			"|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r",
-			"Trash",
-			["priority"] = {
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Firemaw's Clutch",
-			200,
-			"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
-			"Firemaw",
-			"Shadow Priest Super Priority",
-			["priority"] = {
-				"Mage",
-				"Priest (Shadow)",
-			},
-		},
-		{
-			"Gauntlets of Wrath",
-			150,
-			"|cffa335ee|Hitem:16964|h[Gauntlets of Wrath]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Gauntlets of the Shining Light",
-			0,
-			"|cffa335ee|Hitem:20630|h[Gauntlets of the Shining Light]|h|r",
-			"Lethon",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Girdle of the Fallen Crusader",
-			0,
-			"|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r",
-			"Chromaggus",
+			"|cffa335ee|Hitem:20616|h[Dragonbone Wristguards]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9470,21 +10048,33 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Gloves of Rapid Evolution",
+			"Ancient Corroded Leggings",
 			0,
-			"|cffa335ee|Hitem:19369|h[Gloves of Rapid Evolution]|h|r",
-			"Razorgore the Untamed",
+			"|cffa335ee|Hitem:20617|h[Ancient Corroded Leggings]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Garbage",
 			},
 		},
 		{
-			"Green Dragonskin Cloak",
+			"Acid Inscribed Greaves",
 			0,
-			"|cffa335ee|Hitem:20579|h[Green Dragonskin Cloak]|h|r",
+			"|cffa335ee|Hitem:20619|h[Acid Inscribed Greaves]|h|r",
 			"Green Dragons (Shared)",
 			["priority"] = {
 				"Progression",
+			},
+		},
+		{
+			"Trance Stone",
+			80,
+			"|cffa335ee|Hitem:20582|h[Trance Stone]|h|r",
+			"Green Dragons (Shared)",
+			["priority"] = {
+				"Druid (Heal)",
+				"Mage",
+				"Priest (Shadow)",
+				"Warlock",
 			},
 		},
 		{
@@ -9497,55 +10087,212 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Handguards of Transcendence",
-			80,
-			"|cffa335ee|Hitem:16920|h[Handguards of Transcendence]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
+			"Staff of Rampant Growth",
+			0,
+			"|cffa335ee|Hitem:20581|h[Staff of Rampant Growth]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Malfurion's Signet Ring",
+			0,
+			"|cffa335ee|Hitem:20600|h[Malfurion's Signet Ring]|h|r",
+			"Green Dragons (Shared)",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Deviate Growth Cap",
+			300,
+			"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r",
+			"Lethon",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Black Bark Wristbands",
+			100,
+			"|cffa335ee|Hitem:20626|h[Black Bark Wristbands]|h|r",
+			"Lethon",
+			["priority"] = {
+				"Mage",
+				"Priest (Shadow)",
+				"Warlock",
+			},
+		},
+		{
+			"Gauntlets of the Shining Light",
+			0,
+			"|cffa335ee|Hitem:20630|h[Gauntlets of the Shining Light]|h|r",
+			"Lethon",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Belt of the Dark Bog",
+			0,
+			"|cffa335ee|Hitem:20625|h[Belt of the Dark Bog]|h|r",
+			"Lethon",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Dark Heart Pants",
+			150,
+			"|cffa335ee|Hitem:20627|h[Dark Heart Pants]|h|r",
+			"Lethon",
+			["priority"] = {
+				"KAT4FITE",
+				"Metal Rogue",
+			},
+		},
+		{
+			"Malignant Footguards",
+			0,
+			"|cffa335ee|Hitem:20629|h[Malignant Footguards]|h|r",
+			"Lethon",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Circlet of Restless Dreams",
+			150,
+			"|cffa335ee|Hitem:20623|h[Circlet of Restless Dreams]|h|r",
+			"Emeriss",
+			["priority"] = {
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Dragonheart Necklace",
+			0,
+			"|cffa335ee|Hitem:20622|h[Dragonheart Necklace]|h|r",
+			"Emeriss",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Ring of the Unliving",
+			80,
+			"|cffa335ee|Hitem:20624|h[Ring of the Unliving]|h|r",
+			"Emeriss",
+			["priority"] = {
+				"Hunter",
+				"KAT4FITE",
+				"Slicey Rogue",
+				"Stabby Rogue",
+			},
+		},
+		{
+			"Boots of the Endless Moor",
+			0,
+			"|cffa335ee|Hitem:20621|h[Boots of the Endless Moor]|h|r",
+			"Emeriss",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Polished Ironwood Crossbow",
+			0,
+			"|cffa335ee|Hitem:20599|h[Polished Ironwood Crossbow]|h|r",
+			"Emeriss",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Unnatural Leather Spaulders",
+			0,
+			"|cffa335ee|Hitem:20633|h[Unnatural Leather Spaulders]|h|r",
+			"Taerar",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Mendicant's Slippers",
+			80,
+			"|cffa335ee|Hitem:20631|h[Mendicant's Slippers]|h|r",
+			"Taerar",
+			["priority"] = {
+				"Druid (Heal)",
+				"Paladin (Holy)",
 				"Priest (Heal)",
 			},
 		},
 		{
-			"Head of Nefarian",
-			150,
-			"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
-			"Nefarian",
-			"Casters with a BWL 1h also eligible",
+			"Boots of Fright",
+			80,
+			"|cffa335ee|Hitem:20634|h[Boots of Fright]|h|r",
+			"Taerar",
 			["priority"] = {
-				"Hunter",
-				"KAT4FITE",
+				"Druid (Heal)",
+				"Paladin (Holy)",
+			},
+		},
+		{
+			"Mindtear Band",
+			250,
+			"|cffa335ee|Hitem:20632|h[Mindtear Band]|h|r",
+			"Taerar",
+			["priority"] = {
+				"Mage",
+				"Warlock",
+			},
+		},
+		{
+			"Nightmare Blade",
+			150,
+			"|cffa335ee|Hitem:20577|h[Nightmare Blade]|h|r",
+			"Taerar",
+			["priority"] = {
 				"Metal Rogue",
 				"Slicey Rogue",
-				"Stabby Rogue",
 				"Tank",
 			},
 		},
 		{
-			"Heartstriker",
-			100,
-			"|cffa335ee|Hitem:19350|h[Heartstriker]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Metal Rogue",
-				"Slicey Rogue",
-				"Stabby Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Helm of Endless Rage",
-			150,
-			"|cffa335ee|Hitem:19372|h[Helm of Endless Rage]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Herald of Woe",
+			"Acid Inscribed Pauldrons",
 			0,
-			"|cffa335ee|Hitem:19357|h[Herald of Woe]|h|r",
-			"Flamegor",
+			"|cffa335ee|Hitem:20637|h[Acid Inscribed Pauldrons]|h|r",
+			"Ysondre",
+			["priority"] = {
+				"Progression",
+			},
+		},
+		{
+			"Jade Inlaid Vestments",
+			0,
+			"|cffa335ee|Hitem:20635|h[Jade Inlaid Vestments]|h|r",
+			"Ysondre",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Leggings of the Demented Mind",
+			0,
+			"|cffa335ee|Hitem:20638|h[Leggings of the Demented Mind]|h|r",
+			"Ysondre",
+			["priority"] = {
+				"Garbage",
+			},
+		},
+		{
+			"Strangely Glyphed Legplates",
+			0,
+			"|cffa335ee|Hitem:20639|h[Strangely Glyphed Legplates]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9562,737 +10309,12 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Interlaced Shadow Jerkin",
-			0,
-			"|cffa335ee|Hitem:19439|h[Interlaced Shadow Jerkin]|h|r",
-			"Trash",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Jade Inlaid Vestments",
-			0,
-			"|cffa335ee|Hitem:20635|h[Jade Inlaid Vestments]|h|r",
+			"Emerald Dragonfang",
+			100,
+			"|cffa335ee|Hitem:20578|h[Emerald Dragonfang]|h|r",
 			"Ysondre",
 			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Judgement Belt",
-			0,
-			"|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Judgement Bindings",
-			0,
-			"|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Judgement Breastplate",
-			0,
-			"|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Judgement Gauntlets",
-			0,
-			"|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Judgement Sabatons",
-			0,
-			"|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Judgement Spaulders",
-			0,
-			"|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Leggings of the Demented Mind",
-			0,
-			"|cffa335ee|Hitem:20638|h[Leggings of the Demented Mind]|h|r",
-			"Ysondre",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Legguards of the Fallen Crusader",
-			100,
-			"|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
-			"Firemaw",
-			["priority"] = {
-				"Metal Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Lifegiving Gem",
-			200,
-			"|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Lok'amir il Romathis",
-			400,
-			"|cffa335ee|Hitem:19360|h[Lok'amir il Romathis]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Maladath, Runed Blade of the Black Flight",
-			200,
-			"|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
-			"Broodlord Lashlayer",
-			"Non-Human Rogues also",
-			["priority"] = {
-				"Metal Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Malfurion's Blessed Bulwark",
-			150,
-			"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
-			"Ebonroc",
-			"Feral Druid Super Priority",
-			["priority"] = {
-				"KAT4FITE",
-				"Metal Rogue",
-			},
-		},
-		{
-			"Malfurion's Signet Ring",
-			0,
-			"|cffa335ee|Hitem:20600|h[Malfurion's Signet Ring]|h|r",
-			"Green Dragons (Shared)",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Malignant Footguards",
-			0,
-			"|cffa335ee|Hitem:20629|h[Malignant Footguards]|h|r",
-			"Lethon",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Mantle of the Blackwing Cabal",
-			200,
-			"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
-			"Razorgore the Untamed",
-			"Shadow Priest Super Priority",
-			["priority"] = {
-				"Mage",
-				"Priest (Shadow)",
-				"Warlock",
-			},
-		},
-		{
-			"Mendicant's Slippers",
-			80,
-			"|cffa335ee|Hitem:20631|h[Mendicant's Slippers]|h|r",
-			"Taerar",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Mind Quickening Gem",
-			100,
-			"|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Mindtear Band",
-			250,
-			"|cffa335ee|Hitem:20632|h[Mindtear Band]|h|r",
-			"Taerar",
-			["priority"] = {
-				"Mage",
-				"Warlock",
-			},
-		},
-		{
-			"Mish'undare, Circlet of the Mind Flayer",
-			300,
-			"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Mage",
-				"Paladin (Holy)",
-				"Warlock",
-			},
-		},
-		{
-			"Neltharion's Tear",
-			400,
-			"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r",
-			"Nefarian",
-			"Shadow Priest Prio Unlocks after 4 drops",
-			["priority"] = {
-				"Mage",
-				"Warlock",
-			},
-		},
-		{
-			"Nemesis Belt",
-			0,
-			"|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"Nemesis Boots",
-			0,
-			"|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"Nemesis Bracers",
-			100,
-			"|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"Nemesis Gloves",
-			0,
-			"|cffa335ee|Hitem:16928|h[Nemesis Gloves]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"Nemesis Robes",
-			0,
-			"|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"Nemesis Spaulders",
-			125,
-			"|cffa335ee|Hitem:16932|h[Nemesis Spaulders]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"Netherwind Belt",
-			0,
-			"|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Netherwind Bindings",
-			100,
-			"|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Netherwind Boots",
-			0,
-			"|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Netherwind Gloves",
-			0,
-			"|cffa335ee|Hitem:16913|h[Netherwind Gloves]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Netherwind Mantle",
-			80,
-			"|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Netherwind Robes",
-			0,
-			"|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Nightmare Blade",
-			150,
-			"|cffa335ee|Hitem:20577|h[Nightmare Blade]|h|r",
-			"Taerar",
-			["priority"] = {
-				"Metal Rogue",
-				"Slicey Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Pauldrons of Transcendence",
-			150,
-			"|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Pauldrons of Wrath",
-			200,
-			"|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Pendant of the Fallen Dragon",
-			100,
-			"|cffa335ee|Hitem:19371|h[Pendant of the Fallen Dragon]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Polished Ironwood Crossbow",
-			0,
-			"|cffa335ee|Hitem:20599|h[Polished Ironwood Crossbow]|h|r",
-			"Emeriss",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Prestor's Talisman of Connivery",
-			200,
-			"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Hunter",
-				"KAT4FITE",
-				"Slicey Rogue",
 				"Stabby Rogue",
-			},
-		},
-		{
-			"Primalist's Linked Legguards",
-			0,
-			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Primalist's Linked Legguards",
-			0,
-			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
-			"Firemaw",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Pure Elementium Band",
-			200,
-			"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Red Dragonscale Protector",
-			0,
-			"|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Rejuvenating Gem",
-			400,
-			"|cffa335ee|Hitem:19395|h[Rejuvenating Gem]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Ring of Blackrock",
-			100,
-			"|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-				"Priest (Shadow)",
-			},
-		},
-		{
-			"Ring of the Unliving",
-			80,
-			"|cffa335ee|Hitem:20624|h[Ring of the Unliving]|h|r",
-			"Emeriss",
-			["priority"] = {
-				"Hunter",
-				"KAT4FITE",
-				"Slicey Rogue",
-				"Stabby Rogue",
-			},
-		},
-		{
-			"Ringo's Blizzard Boots",
-			250,
-			"|cffa335ee|Hitem:19438|h[Ringo's Blizzard Boots]|h|r",
-			"Trash",
-			["priority"] = {
-				"Mage",
-			},
-		},
-		{
-			"Robes of Transcendence",
-			200,
-			"|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Rune of Metamorphosis",
-			0,
-			"|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Sabatons of Wrath",
-			150,
-			"|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Scrolls of Blinding Light",
-			0,
-			"|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r",
-			"Firemaw",
-			["priority"] = {
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Shadow Wing Focus Staff",
-			70,
-			"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			"Catch up Priority",
-			["priority"] = {
-				"Druid (Heal)",
-				"Mage",
-				"Warlock",
-			},
-		},
-		{
-			"Shimmering Geta",
-			100,
-			"|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Shroud of Pure Thought",
-			200,
-			"|cffa335ee|Hitem:19430|h[Shroud of Pure Thought]|h|r",
-			"Flamegor",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-				"Priest (Heal)",
-			},
-		},
-		{
-			"Spineshatter",
-			70,
-			"|cffa335ee|Hitem:19335|h[Spineshatter]|h|r",
-			"Razorgore the Untamed",
-			"Catch up Priority",
-			["priority"] = {
-				"Metal Rogue",
-				"Slicey Rogue",
-				"Stabby Rogue",
-				"Tank",
-			},
-		},
-		{
-			"Staff of Rampant Growth",
-			0,
-			"|cffa335ee|Hitem:20581|h[Staff of Rampant Growth]|h|r",
-			"Green Dragons (Shared)",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Staff of the Shadow Flame",
-			450,
-			"|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Mage",
-				"Warlock",
-			},
-		},
-		{
-			"Stormrage Belt",
-			0,
-			"|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Stormrage Boots",
-			50,
-			"|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Stormrage Bracers",
-			100,
-			"|cffa335ee|Hitem:16904|h[Stormrage Bracers]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Stormrage Chestguard",
-			0,
-			"|cffa335ee|Hitem:16897|h[Stormrage Chestguard]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Stormrage Handguards",
-			150,
-			"|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Stormrage Pauldrons",
-			0,
-			"|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Druid (Heal)",
-			},
-		},
-		{
-			"Strangely Glyphed Legplates",
-			0,
-			"|cffa335ee|Hitem:20639|h[Strangely Glyphed Legplates]|h|r",
-			"Ysondre",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Styleen's Impeding Scarab",
-			325,
-			"|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
-			"Flamegor",
-			["priority"] = {
-				"Tank",
-			},
-		},
-		{
-			"Taut Dragonhide Belt",
-			0,
-			"|cffa335ee|Hitem:19396|h[Taut Dragonhide Belt]|h|r",
-			"Firemaw, Ebonroc, Flamegor",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Taut Dragonhide Gloves",
-			80,
-			"|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Druid (Heal)",
-				"Paladin (Holy)",
-			},
-		},
-		{
-			"Taut Dragonhide Shoulderpads",
-			100,
-			"|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"KAT4FITE",
-			},
-		},
-		{
-			"The Black Book",
-			0,
-			"|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Warlock",
-			},
-		},
-		{
-			"The Untamed Blade",
-			0,
-			"|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
-			"Razorgore the Untamed",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Therazane's Link",
-			0,
-			"|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
-			"Nefarian",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
-			"Trance Stone",
-			80,
-			"|cffa335ee|Hitem:20582|h[Trance Stone]|h|r",
-			"Green Dragons (Shared)",
-			["priority"] = {
-				"Druid (Heal)",
-				"Mage",
-				"Priest (Shadow)",
-				"Warlock",
-			},
-		},
-		{
-			"Unnatural Leather Spaulders",
-			0,
-			"|cffa335ee|Hitem:20633|h[Unnatural Leather Spaulders]|h|r",
-			"Taerar",
-			["priority"] = {
-				"Progression",
-			},
-		},
-		{
-			"Venomous Totem",
-			0,
-			"|cffa335ee|Hitem:19342|h[Venomous Totem]|h|r",
-			"Broodlord Lashlayer",
-			["priority"] = {
-				"Slicey Rogue",
-				"Stabby Rogue",
-			},
-		},
-		{
-			"Waistband of Wrath",
-			100,
-			"|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r",
-			"Vaelastraz the Corrupt",
-			["priority"] = {
-				"Tank",
 			},
 		},
 	},
@@ -10302,7 +10324,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1587531114, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1587531115, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
