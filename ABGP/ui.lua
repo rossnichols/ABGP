@@ -15,8 +15,17 @@ local pairs = pairs;
 local unpack = unpack;
 
 local activeWindow;
-local filteredClasses = {};
-local filteredPriorities = {};
+local allowedClasses = {
+    DRUID = "Druid",
+    HUNTER = "Hunter",
+    MAGE = "Mage",
+    PALADIN = "Paladin",
+    PRIEST = "Priest",
+    ROGUE = "Rogue",
+    WARLOCK = "Warlock",
+    WARRIOR = "Warrior",
+};
+local allowedPriorities = ABGP:GetItemPriorities();
 local onlyUsable = false;
 local onlyFaved = false;
 local onlyGrouped = false;
@@ -44,7 +53,7 @@ local function DrawPriority(container, rebuild, reason)
     if rebuild then
         local classSelector = AceGUI:Create("ABGP_Filter");
         classSelector:SetWidth(110);
-        classSelector:SetValues(filteredClasses, {
+        classSelector:SetValues(allowedClasses, true, {
             DRUID = "Druid",
             HUNTER = "Hunter",
             MAGE = "Mage",
@@ -119,7 +128,7 @@ local function DrawPriority(container, rebuild, reason)
     for i, data in ipairs(priority) do
         local inRaidGroup = not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
         local isGrouped = not onlyGrouped or UnitExists(data.player);
-        if not filteredClasses[data.class] and inRaidGroup and isGrouped then
+        if allowedClasses[data.class] and inRaidGroup and isGrouped then
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Priority");
             elt:SetFullWidth(true);
@@ -429,7 +438,7 @@ local function DrawItems(container, rebuild, reason)
 
         local priSelector = AceGUI:Create("ABGP_Filter");
         priSelector:SetWidth(125);
-        priSelector:SetValues(filteredPriorities, ABGP:GetItemPriorities());
+        priSelector:SetValues(allowedPriorities, true, ABGP:GetItemPriorities());
         priSelector:SetCallback("OnFilterUpdated", function()
             PopulateUI(false);
         end);
@@ -594,7 +603,7 @@ local function DrawItems(container, rebuild, reason)
                     (exact and item[1]:lower() == exact) or
                     (not exact and item[1]:lower():find(searchText, 1, true)) then
                         for _, pri in ipairs(item.priority) do
-                            if not filteredPriorities[pri] then
+                            if allowedPriorities[pri] then
                                 table.insert(filtered, item);
                                 break;
                             end
@@ -635,10 +644,9 @@ local function DrawItems(container, rebuild, reason)
                                     PopulateUI(false);
                                 end
                             end,
-                            arg1 = elt.data,
+                            arg1 = data,
                             notCheckable = true
                         },
-                        { text = "Cancel", notCheckable = true },
                     };
                     if data[3] and ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsItemFavorited(data[3]);
@@ -648,12 +656,42 @@ local function DrawItems(container, rebuild, reason)
                                 ABGP:SetItemFavorited(data[3], not faved);
                                 elt:SetData(data);
                             end,
-                            arg1 = elt.data,
+                            arg1 = data,
                             notCheckable = true
                         });
                     end
+                    if ABGP:IsPrivileged() then
+                        table.insert(context, {
+                            text = "Edit GP",
+                            func = function(self, widget)
+                                _G.StaticPopup_Show("ABGP_UPDATE_GP", widget.data[3], nil, widget);
+                            end,
+                            arg1 = widget,
+                            notCheckable = true
+                        });
+                        table.insert(context, {
+                            text = "Edit notes",
+                            func = function(self, widget)
+                                _G.StaticPopup_Show("ABGP_UPDATE_NOTES", widget.data[3], nil, widget);
+                            end,
+                            arg1 = widget,
+                            notCheckable = true
+                        });
+                        table.insert(context, {
+                            text = "Edit priority",
+                            func = function(self, widget)
+                                widget:EditPriorities();
+                            end,
+                            arg1 = widget,
+                            notCheckable = true
+                        });
+                    end
+                    table.insert(context, { text = "Cancel", notCheckable = true });
                     ABGP:ShowContextMenu(context);
                 end
+            end);
+            elt:SetCallback("OnPrioritiesUpdated", function(widget, event)
+                ABGP:Notify("Priorities for %s: %s.", widget.data[3], table.concat(widget.data.priority, ", "));
             end);
             itemList:AddChild(elt);
         end
@@ -943,8 +981,6 @@ StaticPopupDialogs["ABGP_UPDATE_COST"] = {
     button1 = "Done",
     button2 = "Cancel",
 	hasEditBox = 1,
-	autoCompleteSource = GetAutoCompleteResults,
-	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
 	maxLetters = 31,
     OnAccept = function(self, data)
         local cost = ABGP:DistribValidateCost(self.editBox:GetText(), data.player, data.value);
@@ -1040,6 +1076,89 @@ StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = {
     button2 = "No",
     OnAccept = function(self, data)
         ABGP:HistoryDelete(data);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_UPDATE_GP"] = {
+    text = "Update the cost of %s:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	maxLetters = 31,
+    OnAccept = function(self, widget)
+        local cost = ABGP:DistribValidateCost(self.editBox:GetText());
+        if cost then
+            ABGP:Notify("Cost of %s is now %d.", widget.data[3], cost);
+            widget.data[2] = cost;
+            widget:SetData(widget.data);
+        end
+    end,
+    OnShow = function(self)
+        self.editBox:SetAutoFocus(false);
+        self.button1:Disable();
+    end,
+    EditBoxOnTextChanged = function(self)
+        local parent = self:GetParent();
+        local cost = ABGP:DistribValidateCost(parent.editBox:GetText());
+        if cost then
+            parent.button1:Enable();
+        else
+            parent.button1:Disable();
+        end
+    end,
+    EditBoxOnEnterPressed = function(self)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        else
+            local _, errorText = ABGP:DistribValidateCost(parent.editBox:GetText());
+            ABGP:Error("Invalid cost! %s.", errorText);
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_UPDATE_NOTES"] = {
+    text = "Update the notes for %s:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	maxLetters = 31,
+    OnAccept = function(self, widget)
+        local text = self.editBox:GetText();
+        if text == "" then
+            ABGP:Notify("Cleared note for %s.", widget.data[3]);
+            text = nil;
+        else
+            ABGP:Notify("Notes for %s is now '%s'.", widget.data[3], text);
+        end
+        widget.data[5] = text
+        widget:SetData(widget.data);
+    end,
+    OnShow = function(self)
+        self.editBox:SetAutoFocus(false);
+    end,
+    EditBoxOnEnterPressed = function(self)
+        self:GetParent().button1:Click();
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self)
+        self.editBox:SetAutoFocus(true);
     end,
     timeout = 0,
     whileDead = true,

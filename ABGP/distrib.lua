@@ -462,11 +462,13 @@ function ABGP:DistribValidateCost(cost, player, value)
     cost = tonumber(cost);
     if type(cost) ~= "number" then return false, "Not a number"; end
     if cost < 0 then return false, "Can't be negative"; end
-    if math.floor(cost) ~= cost then return false, "Must be a whole number;" end
+    if math.floor(cost) ~= cost then return false, "Must be a whole number"; end
 
-    local epgp = self:GetActivePlayer(player);
-    if cost ~= 0 and not (epgp and epgp[value.phase]) then
-        return false, "The player doesn't have EPGP for this phase";
+    if player then
+        local epgp = self:GetActivePlayer(player);
+        if cost ~= 0 and not (epgp and epgp[value.phase]) then
+            return false, "The player doesn't have EPGP for this phase";
+        end
     end
 
     return cost;

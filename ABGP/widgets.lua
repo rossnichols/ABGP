@@ -13,6 +13,7 @@ local CursorUpdate = CursorUpdate;
 local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
 local LE_ITEM_QUALITY_ARTIFACT = LE_ITEM_QUALITY_ARTIFACT;
 local pairs = pairs;
+local ipairs = ipairs;
 local floor = floor;
 local min = min;
 local max = max;
@@ -628,6 +629,42 @@ do
         ["ShowBackground"] = function(self, show)
             self.background[show and "Show" or "Hide"](self.background);
         end,
+
+        ["EditPriorities"] = function(self)
+            self.frame:SetHeight(30);
+            if not self.priorityEditor then
+                local priorityEditor = AceGUI:Create("ABGP_Filter");
+                priorityEditor.frame:ClearAllPoints();
+                priorityEditor.frame:SetPoint("TOPLEFT", self.notes, "TOPRIGHT");
+                priorityEditor.frame:SetPoint("TOPRIGHT", self.frame);
+                priorityEditor.frame:SetParent(self.frame);
+
+                self.currentPriorities = {};
+                for _, pri in ipairs(self.data.priority) do self.currentPriorities[pri] = true; end
+
+                priorityEditor:SetValues(self.currentPriorities, false, ABGP:GetItemPriorities());
+                priorityEditor:SetCallback("OnClosed", function()
+                    self.frame:SetHeight(20);
+                    self.priority:Show();
+                    self.priorityEditor.frame:Hide();
+
+                    self.data.priority = {};
+                    for pri, value in pairs(self.currentPriorities) do
+                        if value then table.insert(self.data.priority, pri); end
+                    end
+                    table.sort(self.data.priority);
+
+                    self:SetData(self.data);
+                    self:Fire("OnPrioritiesUpdated");
+                end);
+                priorityEditor:SetText(table.concat(self.data.priority, ", "));
+                self.priorityEditor = priorityEditor;
+            end
+
+            self.priority:Hide();
+            self.priorityEditor.frame:Show();
+            self.priorityEditor.button:Click();
+        end,
     }
 
     --[[-----------------------------------------------------------------------------
@@ -863,12 +900,16 @@ do
             self:SetMultiselect(true);
         end,
 
-        ["SetValues"] = function(self, filtered, values, sorted)
-            self.filtered = filtered;
+        ["SetValues"] = function(self, allowed, showAllButton, values, sorted)
+            self.allowed = allowed;
             self.values = values;
+            self.showAllButton = showAllButton;
 
-            values.ALL = "All";
-            table.insert(sorted, "ALL");
+            if showAllButton then
+                values.ALL = "All";
+                table.insert(sorted, "ALL");
+            end
+
             self:SetList(values, sorted);
 
             self:SetCallback("OnValueChanged", nil);
@@ -879,19 +920,21 @@ do
         ["ValueChangedCallback"] = function(self, event, value, checked)
             if value == "ALL" then
                 if checked then
-                    table.wipe(self.filtered);
+                    for value in pairs(self.values) do
+                        if value ~= "ALL" then self.allowed[value] = true; end
+                    end
                 end
             else
                 if checked then
                     if self:ShowingAll() then
-                        for value in pairs(self.values) do
-                            if value ~= "ALL" then self.filtered[value] = true; end
-                        end
+                        table.wipe(self.allowed);
                     end
                 end
-                self.filtered[value] = not checked;
-                if self:ShowingNone() then
-                    table.wipe(self.filtered);
+                self.allowed[value] = checked;
+                if self:ShowingNone() and self.showAllButton then
+                    for value in pairs(self.values) do
+                        if value ~= "ALL" then self.allowed[value] = true; end
+                    end
                 end
             end
 
@@ -907,23 +950,22 @@ do
                 if value == "ALL" then
                     self:SetItemValue(value, all);
                 else
-                    self:SetItemValue(value, not all and not self.filtered[value]);
+                    self:SetItemValue(value, (not all or not self.showAllButton) and self.allowed[value]);
                 end
             end
         end,
 
         ["ShowingAll"] = function(self)
-            for _, state in pairs(self.filtered) do
-                if state then return false; end
+            for value in pairs(self.values) do
+                if value ~= "ALL" and not self.allowed[value] then return false; end
             end
 
             return true;
         end,
 
         ["ShowingNone"] = function(self)
-            local hasShownClass = false;
-            for value in pairs(self.values) do
-                if value ~= "ALL" and not self.filtered[value] then return false; end
+            for _, state in pairs(self.allowed) do
+                if state then return false; end
             end
 
             return true;
