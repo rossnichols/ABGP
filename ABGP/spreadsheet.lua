@@ -46,8 +46,8 @@ local itemMapping = {
     ["Item"] = 1,
     ["GP Cost"] = 2,
     -- item link is 3 (populated elsewhere)
-    ["Notes"] = 4,
-    ["Boss"] = 5,
+    ["Boss"] = 4,
+    ["Notes"] = 5,
 };
 for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;

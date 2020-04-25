@@ -4401,6 +4401,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Aged Core Leather Gloves",
 			200,
 			"|cffa335ee|Hitem:18823|h[Aged Core Leather Gloves]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -4412,6 +4413,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Amberseal Keeper",
 			150,
 			"|cffa335ee|Hitem:17113|h[Amberseal Keeper]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Druid (Heal)",
 				"Mage",
@@ -4422,6 +4424,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Ancient Cornerstone Grimoire",
 			0,
 			"|cffa335ee|Hitem:17067|h[Ancient Cornerstone Grimoire]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4430,6 +4433,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Ancient Petrified Leaf",
 			300,
 			"|cffa335ee|Hitem:18703|h[Ancient Petrified Leaf]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Hunter",
 			},
@@ -4438,6 +4442,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Belt",
 			0,
 			"|cffa335ee|Hitem:16802|h[Arcanist Belt]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4446,6 +4451,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Bindings",
 			60,
 			"|cffa335ee|Hitem:16799|h[Arcanist Bindings]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Mage",
 			},
@@ -4454,6 +4460,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Boots",
 			150,
 			"|cffa335ee|Hitem:16800|h[Arcanist Boots]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Mage",
 			},
@@ -4462,6 +4469,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Crown",
 			200,
 			"|cffa335ee|Hitem:16795|h[Arcanist Crown]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Mage",
 			},
@@ -4470,6 +4478,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Gloves",
 			0,
 			"|cffa335ee|Hitem:16801|h[Arcanist Gloves]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4478,6 +4487,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Leggings",
 			80,
 			"|cffa335ee|Hitem:16796|h[Arcanist Leggings]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Mage",
 			},
@@ -4486,6 +4496,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Mantle",
 			0,
 			"|cffa335ee|Hitem:16797|h[Arcanist Mantle]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4494,6 +4505,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Arcanist Robes",
 			0,
 			"|cffa335ee|Hitem:16798|h[Arcanist Robes]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4502,6 +4514,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Aurastone Hammer",
 			50,
 			"|cffa335ee|Hitem:17105|h[Aurastone Hammer]|h|r",
+			"Garr",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -4511,6 +4524,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Azuresong Mageblade",
 			300,
 			"|cffa335ee|Hitem:17103|h[Azuresong Mageblade]|h|r",
+			"Golemagg",
 			["priority"] = {
 				"Mage",
 				"Warlock",
@@ -4520,7 +4534,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Band of Accuria",
 			300,
 			"|cffa335ee|Hitem:17063|h[Band of Accuria]|h|r",
-			["notes"] = "Tank Super Prio, Red Reserved",
+			"Ragnaros",
+			"Tank Super Prio, Red Reserved",
 			["priority"] = {
 				"KAT4FITE",
 				"Rogue",
@@ -4531,6 +4546,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Band of Sulfuras",
 			0,
 			"|cffa335ee|Hitem:19138|h[Band of Sulfuras]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4539,6 +4555,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Belt of Might",
 			80,
 			"|cffa335ee|Hitem:16864|h[Belt of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -4547,6 +4564,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Blacklight Bracer",
 			0,
 			"|cffa335ee|Hitem:19135|h[Blacklight Bracer]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4555,6 +4573,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Blastershot Launcher",
 			100,
 			"|cffa335ee|Hitem:17072|h[Blastershot Launcher]|h|r",
+			"Golemagg",
 			["priority"] = {
 				"Metal Rogue",
 				"Rogue",
@@ -4565,6 +4584,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Blazefury Medallion",
 			0,
 			"|cffa335ee|Hitem:17111|h[Blazefury Medallion]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4573,6 +4593,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Bloodfang Hood",
 			200,
 			"|cffa335ee|Hitem:16908|h[Bloodfang Hood]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -4581,6 +4602,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Bloodfang Pants",
 			200,
 			"|cffa335ee|Hitem:16909|h[Bloodfang Pants]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -4589,6 +4611,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Bonereaver's Edge",
 			300,
 			"|cffa335ee|Hitem:17076|h[Bonereaver's Edge]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Metal Rogue",
 				"Paladin (Ret)",
@@ -4598,6 +4621,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Boots of Prophecy",
 			0,
 			"|cffa335ee|Hitem:16811|h[Boots of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4606,6 +4630,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Bracers of Might",
 			60,
 			"|cffa335ee|Hitem:16861|h[Bracers of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -4614,6 +4639,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Breastplate of Might",
 			150,
 			"|cffa335ee|Hitem:16865|h[Breastplate of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -4622,6 +4648,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Brutality Blade",
 			300,
 			"|cffa335ee|Hitem:18832|h[Brutality Blade]|h|r",
+			"Garr",
 			["priority"] = {
 				"Hunter",
 				"Metal Rogue",
@@ -4632,6 +4659,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cauterizing Band",
 			250,
 			"|cffa335ee|Hitem:19140|h[Cauterizing Band]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -4642,6 +4670,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Belt",
 			0,
 			"|cffa335ee|Hitem:16828|h[Cenarion Belt]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4650,6 +4679,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Boots",
 			125,
 			"|cffa335ee|Hitem:16829|h[Cenarion Boots]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -4658,6 +4688,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Bracers",
 			0,
 			"|cffa335ee|Hitem:16830|h[Cenarion Bracers]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4666,6 +4697,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Gloves",
 			0,
 			"|cffa335ee|Hitem:16831|h[Cenarion Gloves]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4674,6 +4706,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Helm",
 			0,
 			"|cffa335ee|Hitem:16834|h[Cenarion Helm]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4682,6 +4715,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Leggings",
 			0,
 			"|cffa335ee|Hitem:16835|h[Cenarion Leggings]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4690,6 +4724,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Spaulders",
 			0,
 			"|cffa335ee|Hitem:16836|h[Cenarion Spaulders]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4698,6 +4733,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cenarion Vestments",
 			0,
 			"|cffa335ee|Hitem:16833|h[Cenarion Vestments]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4706,6 +4742,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Choker of Enlightenment",
 			60,
 			"|cffa335ee|Hitem:17109|h[Choker of Enlightenment]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -4716,7 +4753,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Choker of the Fire Lord",
 			250,
 			"|cffa335ee|Hitem:18814|h[Choker of the Fire Lord]|h|r",
-			["notes"] = "Red Reserved",
+			"Ragnaros",
+			"Red Reserved",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -4727,6 +4765,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Circlet of Prophecy",
 			0,
 			"|cffa335ee|Hitem:16813|h[Circlet of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4735,6 +4774,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cloak of the Shrouded Mists",
 			100,
 			"|cffa335ee|Hitem:17102|h[Cloak of the Shrouded Mists]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Hunter",
 				"KAT4FITE",
@@ -4746,6 +4786,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Cold Snap",
 			100,
 			"|cffa335ee|Hitem:19130|h[Cold Snap]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Mage",
 			},
@@ -4754,6 +4795,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Core Forged Greaves",
 			0,
 			"|cffa335ee|Hitem:18806|h[Core Forged Greaves]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Progression",
 			},
@@ -4762,6 +4804,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Core Hound Tooth",
 			250,
 			"|cffa335ee|Hitem:18805|h[Core Hound Tooth]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Hunter",
 				"Rogue",
@@ -4771,6 +4814,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Crimson Shocker",
 			0,
 			"|cffa335ee|Hitem:17077|h[Crimson Shocker]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Progression",
 			},
@@ -4779,6 +4823,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Crown of Destruction",
 			0,
 			"|cffa335ee|Hitem:18817|h[Crown of Destruction]|h|r",
+			"s",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4787,6 +4832,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Crystal Adorned Crown",
 			300,
 			"|cffa335ee|Hitem:19132|h[Crystal Adorned Crown]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -4797,6 +4843,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Deathbringer",
 			200,
 			"|cffa335ee|Hitem:17068|h[Deathbringer]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Metal Rogue",
 			},
@@ -4805,6 +4852,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Deep Earth Spaulders",
 			0,
 			"|cffa335ee|Hitem:18829|h[Deep Earth Spaulders]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4813,6 +4861,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Doomhide Gauntlets",
 			75,
 			"|cffa335ee|Hitem:18544|h[Doomhide Gauntlets]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -4823,6 +4872,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Dragon's Blood Cape",
 			100,
 			"|cffa335ee|Hitem:17107|h[Dragon's Blood Cape]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"KAT4FITE",
 				"Tank",
@@ -4832,6 +4882,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Dragonstalker's Helm",
 			250,
 			"|cffa335ee|Hitem:16939|h[Dragonstalker's Helm]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -4840,6 +4891,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Dragonstalker's Legguards",
 			250,
 			"|cffa335ee|Hitem:16938|h[Dragonstalker's Legguards]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -4848,6 +4900,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Drape of Benediction",
 			50,
 			"|cffa335ee|Hitem:18208|h[Drape of Benediction]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -4858,6 +4911,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Drillborer Disk",
 			100,
 			"|cffa335ee|Hitem:17066|h[Drillborer Disk]|h|r",
+			"Garr",
 			["priority"] = {
 				"Tank",
 			},
@@ -4866,6 +4920,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Earthshaker",
 			0,
 			"|cffa335ee|Hitem:17073|h[Earthshaker]|h|r",
+			"Magmadar",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4874,6 +4929,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Empyrean Demolisher",
 			300,
 			"|cffa335ee|Hitem:17112|h[Empyrean Demolisher]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Metal Rogue",
 			},
@@ -4882,6 +4938,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Eskhandar's Collar",
 			30,
 			"|cffa335ee|Hitem:18205|h[Eskhandar's Collar]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"KAT4FITE",
 				"Tank",
@@ -4891,6 +4948,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Eskhandar's Left Claw",
 			50,
 			"|cffa335ee|Hitem:18202|h[Eskhandar's Left Claw]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Metal Rogue",
 				"Rogue",
@@ -4901,6 +4959,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Eskhandar's Pelt",
 			0,
 			"|cffa335ee|Hitem:18204|h[Eskhandar's Pelt]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -4912,6 +4971,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Eskhandar's Right Claw",
 			100,
 			"|cffa335ee|Hitem:18203|h[Eskhandar's Right Claw]|h|r",
+			"Magmadar",
 			["priority"] = {
 				"Tank",
 			},
@@ -4920,6 +4980,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Essence of the Pure Flame",
 			0,
 			"|cffa335ee|Hitem:18815|h[Essence of the Pure Flame]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4928,6 +4989,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Fang of the Mystics",
 			320,
 			"|cffa335ee|Hitem:17070|h[Fang of the Mystics]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Mage",
 				"Warlock",
@@ -4937,6 +4999,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Fel Infused Leggings",
 			300,
 			"|cffa335ee|Hitem:19133|h[Fel Infused Leggings]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Priest (Shadow)",
 				"Warlock",
@@ -4946,6 +5009,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Belt",
 			0,
 			"|cffa335ee|Hitem:16806|h[Felheart Belt]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4954,6 +5018,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Bracers",
 			60,
 			"|cffa335ee|Hitem:16804|h[Felheart Bracers]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Warlock",
 			},
@@ -4962,6 +5027,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Gloves",
 			0,
 			"|cffa335ee|Hitem:16805|h[Felheart Gloves]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4970,6 +5036,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Horns",
 			0,
 			"|cffa335ee|Hitem:16808|h[Felheart Horns]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4978,6 +5045,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Pants",
 			0,
 			"|cffa335ee|Hitem:16810|h[Felheart Pants]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4986,6 +5054,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Robes",
 			0,
 			"|cffa335ee|Hitem:16809|h[Felheart Robes]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -4994,6 +5063,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Shoulder Pads",
 			0,
 			"|cffa335ee|Hitem:16807|h[Felheart Shoulder Pads]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5002,6 +5072,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Felheart Slippers",
 			0,
 			"|cffa335ee|Hitem:16803|h[Felheart Slippers]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5010,6 +5081,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Finkle's Lava Dredger",
 			0,
 			"|cffa335ee|Hitem:18803|h[Finkle's Lava Dredger]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Progression",
 			},
@@ -5018,6 +5090,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Fire Runed Grimoire",
 			0,
 			"|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5026,6 +5099,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Fireguard Shoulders",
 			0,
 			"|cffa335ee|Hitem:19139|h[Fireguard Shoulders]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"KAT4FITE",
 				"Progression",
@@ -5035,6 +5109,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Fireproof Cloak",
 			0,
 			"|cffa335ee|Hitem:18811|h[Fireproof Cloak]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Progression",
 			},
@@ -5043,6 +5118,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Flameguard Gauntlets",
 			100,
 			"|cffa335ee|Hitem:19143|h[Flameguard Gauntlets]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Metal Rogue",
 				"Paladin (Ret)",
@@ -5052,6 +5128,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Flamewaker Legplates",
 			0,
 			"|cffa335ee|Hitem:18861|h[Flamewaker Legplates]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Progression",
 			},
@@ -5060,6 +5137,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Flayed Doomguard Belt",
 			30,
 			"|cffa335ee|Hitem:19134|h[Flayed Doomguard Belt]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -5069,6 +5147,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Gauntlets of Might",
 			100,
 			"|cffa335ee|Hitem:16863|h[Gauntlets of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -5077,6 +5156,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Belt",
 			80,
 			"|cffa335ee|Hitem:16851|h[Giantstalker's Belt]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5085,6 +5165,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Boots",
 			150,
 			"|cffa335ee|Hitem:16849|h[Giantstalker's Boots]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5093,6 +5174,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Bracers",
 			60,
 			"|cffa335ee|Hitem:16850|h[Giantstalker's Bracers]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5101,6 +5183,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Breastplate",
 			150,
 			"|cffa335ee|Hitem:16845|h[Giantstalker's Breastplate]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5109,6 +5192,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Epaulets",
 			150,
 			"|cffa335ee|Hitem:16848|h[Giantstalker's Epaulets]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5117,6 +5201,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Gloves",
 			100,
 			"|cffa335ee|Hitem:16852|h[Giantstalker's Gloves]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5125,6 +5210,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Helmet",
 			150,
 			"|cffa335ee|Hitem:16846|h[Giantstalker's Helmet]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5133,6 +5219,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Giantstalker's Leggings",
 			150,
 			"|cffa335ee|Hitem:16847|h[Giantstalker's Leggings]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Hunter",
 			},
@@ -5141,6 +5228,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Girdle of Prophecy",
 			0,
 			"|cffa335ee|Hitem:16817|h[Girdle of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5149,6 +5237,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Gloves of Prophecy",
 			50,
 			"|cffa335ee|Hitem:16812|h[Gloves of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -5157,6 +5246,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Gloves of the Hypnotic Flame",
 			0,
 			"|cffa335ee|Hitem:18808|h[Gloves of the Hypnotic Flame]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5165,6 +5255,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Gutgore Ripper",
 			70,
 			"|cffa335ee|Hitem:17071|h[Gutgore Ripper]|h|r",
+			"Garr",
 			["priority"] = {
 				"Rogue",
 			},
@@ -5173,6 +5264,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Halo of Transcendence",
 			250,
 			"|cffa335ee|Hitem:16921|h[Halo of Transcendence]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -5181,6 +5273,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Head of Onyxia",
 			75,
 			"|cffa335ee|Hitem:18423|h[Head of Onyxia]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Hunter",
 				"KAT4FITE",
@@ -5193,6 +5286,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Heavy Dark Iron Ring",
 			100,
 			"|cffa335ee|Hitem:18879|h[Heavy Dark Iron Ring]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"KAT4FITE",
 				"Tank",
@@ -5202,6 +5296,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Helm of Might",
 			0,
 			"|cffa335ee|Hitem:16866|h[Helm of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Progression",
 			},
@@ -5210,6 +5305,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Helm of Wrath",
 			250,
 			"|cffa335ee|Hitem:16963|h[Helm of Wrath]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -5218,6 +5314,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Helm of the Lifegiver",
 			30,
 			"|cffa335ee|Hitem:18870|h[Helm of the Lifegiver]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -5226,6 +5323,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Infernal Headcage",
 			0,
 			"|cffa335ee|Hitem:18546|h[Infernal Headcage]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -5234,6 +5332,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Judgement Crown",
 			0,
 			"|cffa335ee|Hitem:16955|h[Judgement Crown]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Progression",
 			},
@@ -5242,6 +5341,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Judgement Legplates",
 			0,
 			"|cffa335ee|Hitem:16954|h[Judgement Legplates]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Progression",
 			},
@@ -5250,6 +5350,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Belt",
 			0,
 			"|cffa335ee|Hitem:16858|h[Lawbringer Belt]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5258,6 +5359,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Boots",
 			30,
 			"|cffa335ee|Hitem:16859|h[Lawbringer Boots]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -5266,6 +5368,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Bracers",
 			0,
 			"|cffa335ee|Hitem:16857|h[Lawbringer Bracers]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5274,6 +5377,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Chestguard",
 			0,
 			"|cffa335ee|Hitem:16853|h[Lawbringer Chestguard]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5282,6 +5386,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Gauntlets",
 			0,
 			"|cffa335ee|Hitem:16860|h[Lawbringer Gauntlets]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5290,6 +5395,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Helm",
 			0,
 			"|cffa335ee|Hitem:16854|h[Lawbringer Helm]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5298,6 +5404,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Legplates",
 			0,
 			"|cffa335ee|Hitem:16855|h[Lawbringer Legplates]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5306,6 +5413,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Lawbringer Spaulders",
 			0,
 			"|cffa335ee|Hitem:16856|h[Lawbringer Spaulders]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5314,6 +5422,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Leggings of Arcane Supremacy",
 			0,
 			"|cffa335ee|Hitem:18545|h[Leggings of Arcane Supremacy]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Mage",
 			},
@@ -5322,6 +5431,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Leggings of Transcendence",
 			200,
 			"|cffa335ee|Hitem:16922|h[Leggings of Transcendence]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -5330,6 +5440,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Legplates of Might",
 			130,
 			"|cffa335ee|Hitem:16867|h[Legplates of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -5338,6 +5449,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Legplates of Wrath",
 			250,
 			"|cffa335ee|Hitem:16962|h[Legplates of Wrath]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -5346,6 +5458,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Magma Tempered Boots",
 			0,
 			"|cffa335ee|Hitem:18824|h[Magma Tempered Boots]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Progression",
 			},
@@ -5354,6 +5467,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Malistar's Defender",
 			30,
 			"|cffa335ee|Hitem:17106|h[Malistar's Defender]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -5362,6 +5476,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Mana Igniting Cord",
 			250,
 			"|cffa335ee|Hitem:19136|h[Mana Igniting Cord]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Mage",
 			},
@@ -5370,6 +5485,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Manastorm Leggings",
 			0,
 			"|cffa335ee|Hitem:18872|h[Manastorm Leggings]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5378,6 +5494,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Mantle of Prophecy",
 			0,
 			"|cffa335ee|Hitem:16816|h[Mantle of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5386,6 +5503,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Medallion of Steadfast Might",
 			150,
 			"|cffa335ee|Hitem:17065|h[Medallion of Steadfast Might]|h|r",
+			"Magmadar",
 			["priority"] = {
 				"KAT4FITE",
 				"Tank",
@@ -5395,6 +5513,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nemesis Leggings",
 			250,
 			"|cffa335ee|Hitem:16930|h[Nemesis Leggings]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Warlock",
 			},
@@ -5403,6 +5522,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nemesis Skullcap",
 			250,
 			"|cffa335ee|Hitem:16929|h[Nemesis Skullcap]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Warlock",
 			},
@@ -5411,6 +5531,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Netherwind Crown",
 			80,
 			"|cffa335ee|Hitem:16914|h[Netherwind Crown]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Mage",
 			},
@@ -5419,6 +5540,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Netherwind Pants",
 			250,
 			"|cffa335ee|Hitem:16915|h[Netherwind Pants]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Mage",
 			},
@@ -5427,6 +5549,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Belt",
 			80,
 			"|cffa335ee|Hitem:16827|h[Nightslayer Belt]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -5435,6 +5558,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Boots",
 			100,
 			"|cffa335ee|Hitem:16824|h[Nightslayer Boots]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -5443,6 +5567,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Bracelets",
 			0,
 			"|cffa335ee|Hitem:16825|h[Nightslayer Bracelets]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5451,6 +5576,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Chestpiece",
 			100,
 			"|cffa335ee|Hitem:16820|h[Nightslayer Chestpiece]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -5459,6 +5585,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Cover",
 			0,
 			"|cffa335ee|Hitem:16821|h[Nightslayer Cover]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5467,6 +5594,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Gloves",
 			0,
 			"|cffa335ee|Hitem:16826|h[Nightslayer Gloves]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -5475,6 +5603,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Pants",
 			0,
 			"|cffa335ee|Hitem:16822|h[Nightslayer Pants]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5483,6 +5612,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Nightslayer Shoulder Pads",
 			100,
 			"|cffa335ee|Hitem:16823|h[Nightslayer Shoulder Pads]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Rogue",
 			},
@@ -5491,6 +5621,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Obsidian Edged Blade",
 			0,
 			"|cffa335ee|Hitem:18822|h[Obsidian Edged Blade]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5499,7 +5630,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Onslaught Girdle",
 			300,
 			"|cffa335ee|Hitem:19137|h[Onslaught Girdle]|h|r",
-			["notes"] = "Red Reserved",
+			"Ragnaros",
+			"Red Reserved",
 			["priority"] = {
 				"Metal Rogue",
 				"Paladin (Ret)",
@@ -5509,6 +5641,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Pants of Prophecy",
 			0,
 			"|cffa335ee|Hitem:16814|h[Pants of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -5517,6 +5650,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Pauldrons of Might",
 			150,
 			"|cffa335ee|Hitem:16868|h[Pauldrons of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -5525,6 +5659,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Perdition's Blade",
 			300,
 			"|cffa335ee|Hitem:18816|h[Perdition's Blade]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Metal Rogue",
 				"Rogue",
@@ -5534,6 +5669,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Puissant Cape",
 			150,
 			"|cffa335ee|Hitem:18541|h[Puissant Cape]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -5544,7 +5680,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Quick Strike Ring",
 			200,
 			"|cffa335ee|Hitem:18821|h[Quick Strike Ring]|h|r",
-			["notes"] = "Red Reserved",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
+			"Red Reserved",
 			["priority"] = {
 				"Metal Rogue",
 			},
@@ -5553,6 +5690,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Ring of Binding",
 			0,
 			"|cffa335ee|Hitem:18813|h[Ring of Binding]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Progression",
 			},
@@ -5561,6 +5699,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Ring of Entropy",
 			0,
 			"|cffa335ee|Hitem:18543|h[Ring of Entropy]|h|r",
+			"Kazzak",
 			["priority"] = {
 				"Mage",
 				"Paladin (Holy)",
@@ -5571,6 +5710,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Ring of Spell Power",
 			250,
 			"|cffa335ee|Hitem:19147|h[Ring of Spell Power]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -5581,6 +5721,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Robe of Volatile Power",
 			300,
 			"|cffa335ee|Hitem:19145|h[Robe of Volatile Power]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Mage",
 				"Paladin (Holy)",
@@ -5591,6 +5732,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Robes of Prophecy",
 			0,
 			"|cffa335ee|Hitem:16815|h[Robes of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5599,6 +5741,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Sabatons of Might",
 			150,
 			"|cffa335ee|Hitem:16862|h[Sabatons of Might]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Tank",
 			},
@@ -5607,6 +5750,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Sabatons of the Flamewalker",
 			0,
 			"|cffa335ee|Hitem:19144|h[Sabatons of the Flamewalker]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5615,6 +5759,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Salamander Scale Pants",
 			100,
 			"|cffa335ee|Hitem:18875|h[Salamander Scale Pants]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -5624,6 +5769,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Sapphiron Drape",
 			80,
 			"|cffa335ee|Hitem:17078|h[Sapphiron Drape]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -5634,6 +5780,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Sash of Whispered Secrets",
 			200,
 			"|cffa335ee|Hitem:18809|h[Sash of Whispered Secrets]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Priest (Shadow)",
 				"Warlock",
@@ -5643,6 +5790,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Seal of the Archmagus",
 			0,
 			"|cffa335ee|Hitem:17110|h[Seal of the Archmagus]|h|r",
+			"Baron Geddon",
 			["priority"] = {
 				"Progression",
 			},
@@ -5651,6 +5799,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Shadowstrike",
 			0,
 			"|cffa335ee|Hitem:17074|h[Shadowstrike]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5659,6 +5808,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Shard of the Flame",
 			0,
 			"|cffa335ee|Hitem:17082|h[Shard of the Flame]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5667,6 +5817,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Shard of the Scale",
 			200,
 			"|cffa335ee|Hitem:17064|h[Shard of the Scale]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -5677,7 +5828,8 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Snowblind Shoes",
 			150,
 			"|cffa335ee|Hitem:19131|h[Snowblind Shoes]|h|r",
-			["notes"] = "Shadow Priest Super Prio",
+			"Azuregos",
+			"Shadow Priest Super Prio",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -5688,6 +5840,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Sorcerous Dagger",
 			30,
 			"|cffa335ee|Hitem:18878|h[Sorcerous Dagger]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"Mage",
 				"Warlock",
@@ -5697,6 +5850,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Spinal Reaper",
 			110,
 			"|cffa335ee|Hitem:17104|h[Spinal Reaper]|h|r",
+			"Ragnaros",
 			["priority"] = {
 				"Metal Rogue",
 				"Paladin (Ret)",
@@ -5706,6 +5860,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Staff of Dominance",
 			300,
 			"|cffa335ee|Hitem:18842|h[Staff of Dominance]|h|r",
+			"Golemagg",
 			["priority"] = {
 				"Druid (Heal)",
 				"Mage",
@@ -5716,6 +5871,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Stormrage Cover",
 			125,
 			"|cffa335ee|Hitem:16900|h[Stormrage Cover]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -5724,6 +5880,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Stormrage Legguards",
 			75,
 			"|cffa335ee|Hitem:16901|h[Stormrage Legguards]|h|r",
+			"Tier 2 Sets",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -5732,6 +5889,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Striker's Mark",
 			100,
 			"|cffa335ee|Hitem:17069|h[Striker's Mark]|h|r",
+			"Magmadar",
 			["priority"] = {
 				"Metal Rogue",
 				"Rogue",
@@ -5741,6 +5899,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Talisman of Ephemeral Power",
 			300,
 			"|cffa335ee|Hitem:18820|h[Talisman of Ephemeral Power]|h|r",
+			"Magmadar, Garr, Baron Geddon, Golemagg",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -5751,6 +5910,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"The Eye of Divinity",
 			300,
 			"|cffa335ee|Hitem:18646|h[The Eye of Divinity]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Priest (Heal)",
 				"Priest (Shadow)",
@@ -5760,6 +5920,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Typhoon",
 			0,
 			"|cffa335ee|Hitem:18542|h[Typhoon]|h|r",
+			"Azuregos",
 			["priority"] = {
 				"Garbage",
 			},
@@ -5768,15 +5929,17 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Unmelting Ice Girdle",
 			0,
 			"|cffa335ee|Hitem:18547|h[Unmelting Ice Girdle]|h|r",
+			"Azuregos",
+			"Red Reserved",
 			["priority"] = {
 				"Progression",
 			},
-			["notes"] = "Red Reserved",
 		},
 		{
 			"Vambraces of Prophecy",
 			100,
 			"|cffa335ee|Hitem:16819|h[Vambraces of Prophecy]|h|r",
+			"Tier 1 Sets",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -5785,6 +5948,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Vis'kag the Bloodletter",
 			300,
 			"|cffa335ee|Hitem:17075|h[Vis'kag the Bloodletter]|h|r",
+			"Onyxia",
 			["priority"] = {
 				"Metal Rogue",
 				"Rogue",
@@ -5794,6 +5958,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Wild Growth Spaulders",
 			300,
 			"|cffa335ee|Hitem:18810|h[Wild Growth Spaulders]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -5803,6 +5968,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Wristguards of Stability",
 			150,
 			"|cffa335ee|Hitem:19146|h[Wristguards of Stability]|h|r",
+			"Lucifron, Gehennas, Shazzrah, Sulfuron",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -5812,6 +5978,7 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			"Wristguards of True Flight",
 			30,
 			"|cffa335ee|Hitem:18812|h[Wristguards of True Flight]|h|r",
+			"Majordomo Executus",
 			["priority"] = {
 				"Tank",
 			},
@@ -8605,6 +8772,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Acid Inscribed Greaves",
 			0,
 			"|cffa335ee|Hitem:20619|h[Acid Inscribed Greaves]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Progression",
 			},
@@ -8613,6 +8781,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Acid Inscribed Pauldrons",
 			0,
 			"|cffa335ee|Hitem:20637|h[Acid Inscribed Pauldrons]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Progression",
 			},
@@ -8621,6 +8790,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Aegis of Preservation",
 			0,
 			"|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r",
+			"Ebonroc",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -8629,6 +8799,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ancient Corroded Leggings",
 			0,
 			"|cffa335ee|Hitem:20617|h[Ancient Corroded Leggings]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Garbage",
 			},
@@ -8637,6 +8808,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Angelista's Grasp",
 			0,
 			"|cffa335ee|Hitem:19388|h[Angelista's Grasp]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Garbage",
 			},
@@ -8645,6 +8817,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Arcane Infused Gem",
 			0,
 			"|cffa335ee|Hitem:19336|h[Arcane Infused Gem]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Hunter",
 			},
@@ -8653,6 +8826,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Archimtiros' Ring of Reckoning",
 			125,
 			"|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"KAT4FITE",
 				"Tank",
@@ -8662,6 +8836,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ashjre'thul, Crossbow of Smiting",
 			400,
 			"|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Hunter",
 			},
@@ -8670,6 +8845,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ashkandi, Greatsword of the Brotherhood",
 			0,
 			"|cffa335ee|Hitem:19364|h[Ashkandi, Greatsword of the Brotherhood]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Garbage",
 			},
@@ -8678,6 +8854,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Band of Dark Dominion",
 			200,
 			"|cffa335ee|Hitem:19434|h[Band of Dark Dominion]|h|r",
+			"Trash",
 			["priority"] = {
 				"Priest (Shadow)",
 				"Warlock",
@@ -8687,6 +8864,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Band of Forced Concentration",
 			250,
 			"|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r",
+			"Ebonroc",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -8697,6 +8875,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Belt of Transcendence",
 			100,
 			"|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -8705,6 +8884,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Belt of the Dark Bog",
 			0,
 			"|cffa335ee|Hitem:20625|h[Belt of the Dark Bog]|h|r",
+			"Lethon",
 			["priority"] = {
 				"Progression",
 			},
@@ -8713,6 +8893,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bindings of Transcendence",
 			100,
 			"|cffa335ee|Hitem:16926|h[Bindings of Transcendence]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -8721,6 +8902,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Black Ash Robe",
 			0,
 			"|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r",
+			"Firemaw",
 			["priority"] = {
 				"Progression",
 			},
@@ -8729,6 +8911,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Black Bark Wristbands",
 			100,
 			"|cffa335ee|Hitem:20626|h[Black Bark Wristbands]|h|r",
+			"Lethon",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -8739,6 +8922,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Black Brood Pauldrons",
 			0,
 			"|cffa335ee|Hitem:19373|h[Black Brood Pauldrons]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Garbage",
 			},
@@ -8747,6 +8931,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bloodfang Belt",
 			100,
 			"|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Slicey Rogue",
 				"Stabby Rogue",
@@ -8756,6 +8941,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bloodfang Boots",
 			50,
 			"|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Slicey Rogue",
 			},
@@ -8764,6 +8950,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bloodfang Bracers",
 			100,
 			"|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Slicey Rogue",
 				"Stabby Rogue",
@@ -8773,6 +8960,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bloodfang Chestpiece",
 			200,
 			"|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Slicey Rogue",
 				"Stabby Rogue",
@@ -8782,6 +8970,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bloodfang Gloves",
 			50,
 			"|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Slicey Rogue",
 			},
@@ -8790,6 +8979,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bloodfang Spaulders",
 			50,
 			"|cffa335ee|Hitem:16832|h[Bloodfang Spaulders]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Slicey Rogue",
 			},
@@ -8798,6 +8988,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Boots of Fright",
 			80,
 			"|cffa335ee|Hitem:20634|h[Boots of Fright]|h|r",
+			"Taerar",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -8807,6 +8998,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Boots of Pure Thought",
 			200,
 			"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r",
+			"Trash",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -8817,6 +9009,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Boots of Transcendence",
 			50,
 			"|cffa335ee|Hitem:16919|h[Boots of Transcendence]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -8825,6 +9018,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Boots of the Endless Moor",
 			0,
 			"|cffa335ee|Hitem:20621|h[Boots of the Endless Moor]|h|r",
+			"Emeriss",
 			["priority"] = {
 				"Progression",
 			},
@@ -8833,6 +9027,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Boots of the Shadow Flame",
 			200,
 			"|cffa335ee|Hitem:19381|h[Boots of the Shadow Flame]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"KAT4FITE",
 				"Stabby Rogue",
@@ -8842,6 +9037,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bracelets of Wrath",
 			100,
 			"|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Tank",
 			},
@@ -8850,6 +9046,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Bracers of Arcane Accuracy",
 			200,
 			"|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -8860,6 +9057,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Breastplate of Wrath",
 			200,
 			"|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Tank",
 			},
@@ -8868,6 +9066,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Chromatic Boots",
 			250,
 			"|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Metal Rogue",
 			},
@@ -8876,6 +9075,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Chromatically Tempered Sword",
 			400,
 			"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Metal Rogue",
 				"Slicey Rogue",
@@ -8885,6 +9085,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Circle of Applied Force",
 			100,
 			"|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r",
+			"Flamegor",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -8897,6 +9098,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Circlet of Restless Dreams",
 			150,
 			"|cffa335ee|Hitem:20623|h[Circlet of Restless Dreams]|h|r",
+			"Emeriss",
 			["priority"] = {
 				"Stabby Rogue",
 			},
@@ -8905,6 +9107,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Claw of Chromaggus",
 			300,
 			"|cffa335ee|Hitem:19347|h[Claw of Chromaggus]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Mage",
 				"Warlock",
@@ -8914,6 +9117,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Claw of the Black Drake",
 			0,
 			"|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r",
+			"Firemaw",
 			["priority"] = {
 				"Garbage",
 			},
@@ -8922,6 +9126,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Cloak of Draconic Might",
 			150,
 			"|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
+			"Trash",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -8931,6 +9136,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Cloak of Firemaw",
 			150,
 			"|cffa335ee|Hitem:19398|h[Cloak of Firemaw]|h|r",
+			"Firemaw",
 			["priority"] = {
 				"Metal Rogue",
 				"Slicey Rogue",
@@ -8941,6 +9147,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Cloak of the Brood Lord",
 			0,
 			"|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
@@ -8951,6 +9158,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Crul'shorukh, Edge of Chaos",
 			400,
 			"|cffa335ee|Hitem:19363|h[Crul'shorukh, Edge of Chaos]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Metal Rogue",
 			},
@@ -8959,6 +9167,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dark Heart Pants",
 			150,
 			"|cffa335ee|Hitem:20627|h[Dark Heart Pants]|h|r",
+			"Lethon",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
@@ -8968,6 +9177,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Deviate Growth Cap",
 			300,
 			"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r",
+			"Lethon",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -8977,6 +9187,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Doom's Edge",
 			100,
 			"|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
+			"Trash",
 			["priority"] = {
 				"Hunter",
 				"Metal Rogue",
@@ -8986,6 +9197,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Draconic Avenger",
 			0,
 			"|cffa335ee|Hitem:19354|h[Draconic Avenger]|h|r",
+			"Trash",
 			["priority"] = {
 				"Garbage",
 			},
@@ -8994,6 +9206,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Draconic Maul",
 			300,
 			"|cffa335ee|Hitem:19358|h[Draconic Maul]|h|r",
+			"Trash",
 			["priority"] = {
 				"KAT4FITE",
 			},
@@ -9002,6 +9215,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragon's Touch",
 			0,
 			"|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
+			"Flamegor",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9010,6 +9224,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonbone Wristguards",
 			0,
 			"|cffa335ee|Hitem:20616|h[Dragonbone Wristguards]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9018,6 +9233,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonbreath Hand Cannon",
 			100,
 			"|cffa335ee|Hitem:19368|h[Dragonbreath Hand Cannon]|h|r",
+			"Ebonroc",
 			["priority"] = {
 				"Slicey Rogue",
 				"Stabby Rogue",
@@ -9028,17 +9244,19 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonfang Blade",
 			70,
 			"|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
+			"Vaelastraz the Corrupt",
+			"Catch up Priority",
 			["priority"] = {
 				"Hunter",
 				"Stabby Rogue",
 				"Tank",
 			},
-			["notes"] = "Catch up Priority",
 		},
 		{
 			"Dragonheart Necklace",
 			0,
 			"|cffa335ee|Hitem:20622|h[Dragonheart Necklace]|h|r",
+			"Emeriss",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9047,6 +9265,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonspur Wraps",
 			0,
 			"|cffa335ee|Hitem:20615|h[Dragonspur Wraps]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Progression",
 			},
@@ -9055,6 +9274,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonstalker's Belt",
 			100,
 			"|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Hunter",
 			},
@@ -9063,6 +9283,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonstalker's Bracers",
 			100,
 			"|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Hunter",
 			},
@@ -9071,6 +9292,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonstalker's Breastplate",
 			200,
 			"|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Hunter",
 			},
@@ -9079,6 +9301,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonstalker's Gauntlets",
 			150,
 			"|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Hunter",
 			},
@@ -9087,6 +9310,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonstalker's Greaves",
 			150,
 			"|cffa335ee|Hitem:16941|h[Dragonstalker's Greaves]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Hunter",
 			},
@@ -9095,6 +9319,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Dragonstalker's Spaulders",
 			200,
 			"|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Hunter",
 			},
@@ -9103,18 +9328,20 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Drake Fang Talisman",
 			400,
 			"|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
+			"Ebonroc",
+			"Feral Druid prio unlocks after 4 drops",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
 				"Slicey Rogue",
 				"Stabby Rogue",
 			},
-			["notes"] = "Feral Druid prio unlocks after 4 drops",
 		},
 		{
 			"Drake Talon Cleaver",
 			0,
 			"|cffa335ee|Hitem:19353|h[Drake Talon Cleaver]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9123,6 +9350,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Drake Talon Pauldrons",
 			250,
 			"|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Metal Rogue",
 				"Tank",
@@ -9132,6 +9360,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ebony Flame Gloves",
 			200,
 			"|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
+			"Ebonroc",
 			["priority"] = {
 				"Priest (Shadow)",
 				"Warlock",
@@ -9141,6 +9370,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Elementium Reinforced Bulwark",
 			250,
 			"|cffa335ee|Hitem:19349|h[Elementium Reinforced Bulwark]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Tank",
 			},
@@ -9149,6 +9379,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Elementium Threaded Cloak",
 			150,
 			"|cffa335ee|Hitem:19386|h[Elementium Threaded Cloak]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"KAT4FITE",
 				"Tank",
@@ -9158,6 +9389,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Emberweave Leggings",
 			0,
 			"|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r",
+			"Flamegor",
 			["priority"] = {
 				"Progression",
 			},
@@ -9166,6 +9398,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Emerald Dragonfang",
 			100,
 			"|cffa335ee|Hitem:20578|h[Emerald Dragonfang]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Stabby Rogue",
 			},
@@ -9174,6 +9407,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Empowered Leggings",
 			200,
 			"|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9183,6 +9417,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Essence Gatherer",
 			100,
 			"|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r",
+			"Trash",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -9191,16 +9426,18 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Firemaw's Clutch",
 			200,
 			"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
+			"Firemaw",
+			"Shadow Priest Super Priority",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
 			},
-			["notes"] = "Shadow Priest Super Priority",
 		},
 		{
 			"Gauntlets of Wrath",
 			150,
 			"|cffa335ee|Hitem:16964|h[Gauntlets of Wrath]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Tank",
 			},
@@ -9209,6 +9446,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Gauntlets of the Shining Light",
 			0,
 			"|cffa335ee|Hitem:20630|h[Gauntlets of the Shining Light]|h|r",
+			"Lethon",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9217,6 +9455,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Girdle of the Fallen Crusader",
 			0,
 			"|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9225,6 +9464,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Gloves of Delusional Power",
 			0,
 			"|cffa335ee|Hitem:20618|h[Gloves of Delusional Power]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9233,6 +9473,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Gloves of Rapid Evolution",
 			0,
 			"|cffa335ee|Hitem:19369|h[Gloves of Rapid Evolution]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9241,6 +9482,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Green Dragonskin Cloak",
 			0,
 			"|cffa335ee|Hitem:20579|h[Green Dragonskin Cloak]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Progression",
 			},
@@ -9249,6 +9491,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Hammer of Bestial Fury",
 			250,
 			"|cffa335ee|Hitem:20580|h[Hammer of Bestial Fury]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"KAT4FITE",
 			},
@@ -9257,6 +9500,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Handguards of Transcendence",
 			80,
 			"|cffa335ee|Hitem:16920|h[Handguards of Transcendence]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -9265,6 +9509,8 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Head of Nefarian",
 			150,
 			"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+			"Nefarian",
+			"Casters with a BWL 1h also eligible",
 			["priority"] = {
 				"Hunter",
 				"KAT4FITE",
@@ -9273,12 +9519,12 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 				"Stabby Rogue",
 				"Tank",
 			},
-			["notes"] = "Casters with a BWL 1h also eligible",
 		},
 		{
 			"Heartstriker",
 			100,
 			"|cffa335ee|Hitem:19350|h[Heartstriker]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Metal Rogue",
 				"Slicey Rogue",
@@ -9290,6 +9536,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Helm of Endless Rage",
 			150,
 			"|cffa335ee|Hitem:19372|h[Helm of Endless Rage]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Tank",
 			},
@@ -9298,6 +9545,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Herald of Woe",
 			0,
 			"|cffa335ee|Hitem:19357|h[Herald of Woe]|h|r",
+			"Flamegor",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9306,6 +9554,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Hibernation Crystal",
 			150,
 			"|cffa335ee|Hitem:20636|h[Hibernation Crystal]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9316,6 +9565,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Interlaced Shadow Jerkin",
 			0,
 			"|cffa335ee|Hitem:19439|h[Interlaced Shadow Jerkin]|h|r",
+			"Trash",
 			["priority"] = {
 				"Progression",
 			},
@@ -9324,6 +9574,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Jade Inlaid Vestments",
 			0,
 			"|cffa335ee|Hitem:20635|h[Jade Inlaid Vestments]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9332,6 +9583,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Judgement Belt",
 			0,
 			"|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9340,6 +9592,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Judgement Bindings",
 			0,
 			"|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9348,6 +9601,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Judgement Breastplate",
 			0,
 			"|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9356,6 +9610,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Judgement Gauntlets",
 			0,
 			"|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9364,6 +9619,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Judgement Sabatons",
 			0,
 			"|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9372,6 +9628,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Judgement Spaulders",
 			0,
 			"|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9380,6 +9637,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Leggings of the Demented Mind",
 			0,
 			"|cffa335ee|Hitem:20638|h[Leggings of the Demented Mind]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9388,6 +9646,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Legguards of the Fallen Crusader",
 			100,
 			"|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
+			"Firemaw",
 			["priority"] = {
 				"Metal Rogue",
 				"Tank",
@@ -9397,6 +9656,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Lifegiving Gem",
 			200,
 			"|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Tank",
 			},
@@ -9405,6 +9665,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Lok'amir il Romathis",
 			400,
 			"|cffa335ee|Hitem:19360|h[Lok'amir il Romathis]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9414,26 +9675,29 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Maladath, Runed Blade of the Black Flight",
 			200,
 			"|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
+			"Broodlord Lashlayer",
+			"Non-Human Rogues also",
 			["priority"] = {
 				"Metal Rogue",
 				"Tank",
 			},
-			["notes"] = "Non-Human Rogues also",
 		},
 		{
 			"Malfurion's Blessed Bulwark",
 			150,
 			"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
+			"Ebonroc",
+			"Feral Druid Super Priority",
 			["priority"] = {
 				"KAT4FITE",
 				"Metal Rogue",
 			},
-			["notes"] = "Feral Druid Super Priority",
 		},
 		{
 			"Malfurion's Signet Ring",
 			0,
 			"|cffa335ee|Hitem:20600|h[Malfurion's Signet Ring]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Progression",
 			},
@@ -9442,6 +9706,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Malignant Footguards",
 			0,
 			"|cffa335ee|Hitem:20629|h[Malignant Footguards]|h|r",
+			"Lethon",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9450,17 +9715,19 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Mantle of the Blackwing Cabal",
 			200,
 			"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
+			"Razorgore the Untamed",
+			"Shadow Priest Super Priority",
 			["priority"] = {
 				"Mage",
 				"Priest (Shadow)",
 				"Warlock",
 			},
-			["notes"] = "Shadow Priest Super Priority",
 		},
 		{
 			"Mendicant's Slippers",
 			80,
 			"|cffa335ee|Hitem:20631|h[Mendicant's Slippers]|h|r",
+			"Taerar",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9471,6 +9738,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Mind Quickening Gem",
 			100,
 			"|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Mage",
 			},
@@ -9479,6 +9747,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Mindtear Band",
 			250,
 			"|cffa335ee|Hitem:20632|h[Mindtear Band]|h|r",
+			"Taerar",
 			["priority"] = {
 				"Mage",
 				"Warlock",
@@ -9488,6 +9757,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Mish'undare, Circlet of the Mind Flayer",
 			300,
 			"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Mage",
 				"Paladin (Holy)",
@@ -9498,16 +9768,18 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Neltharion's Tear",
 			400,
 			"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r",
+			"Nefarian",
+			"Shadow Priest Prio Unlocks after 4 drops",
 			["priority"] = {
 				"Mage",
 				"Warlock",
 			},
-			["notes"] = "Shadow Priest Prio Unlocks after 4 drops",
 		},
 		{
 			"Nemesis Belt",
 			0,
 			"|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9516,6 +9788,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Nemesis Boots",
 			0,
 			"|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9524,6 +9797,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Nemesis Bracers",
 			100,
 			"|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9532,6 +9806,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Nemesis Gloves",
 			0,
 			"|cffa335ee|Hitem:16928|h[Nemesis Gloves]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9540,6 +9815,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Nemesis Robes",
 			0,
 			"|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9548,6 +9824,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Nemesis Spaulders",
 			125,
 			"|cffa335ee|Hitem:16932|h[Nemesis Spaulders]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9556,6 +9833,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Netherwind Belt",
 			0,
 			"|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Mage",
 			},
@@ -9564,6 +9842,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Netherwind Bindings",
 			100,
 			"|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Mage",
 			},
@@ -9572,6 +9851,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Netherwind Boots",
 			0,
 			"|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Mage",
 			},
@@ -9580,6 +9860,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Netherwind Gloves",
 			0,
 			"|cffa335ee|Hitem:16913|h[Netherwind Gloves]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Mage",
 			},
@@ -9588,6 +9869,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Netherwind Mantle",
 			80,
 			"|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Mage",
 			},
@@ -9596,6 +9878,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Netherwind Robes",
 			0,
 			"|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Mage",
 			},
@@ -9604,6 +9887,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Nightmare Blade",
 			150,
 			"|cffa335ee|Hitem:20577|h[Nightmare Blade]|h|r",
+			"Taerar",
 			["priority"] = {
 				"Metal Rogue",
 				"Slicey Rogue",
@@ -9614,6 +9898,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Pauldrons of Transcendence",
 			150,
 			"|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -9622,6 +9907,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Pauldrons of Wrath",
 			200,
 			"|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Tank",
 			},
@@ -9630,6 +9916,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Pendant of the Fallen Dragon",
 			100,
 			"|cffa335ee|Hitem:19371|h[Pendant of the Fallen Dragon]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9640,6 +9927,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Polished Ironwood Crossbow",
 			0,
 			"|cffa335ee|Hitem:20599|h[Polished Ironwood Crossbow]|h|r",
+			"Emeriss",
 			["priority"] = {
 				"Progression",
 			},
@@ -9648,6 +9936,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Prestor's Talisman of Connivery",
 			200,
 			"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Hunter",
 				"KAT4FITE",
@@ -9659,6 +9948,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Primalist's Linked Legguards",
 			0,
 			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9667,6 +9957,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Primalist's Linked Legguards",
 			0,
 			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
+			"Firemaw",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9675,6 +9966,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Pure Elementium Band",
 			200,
 			"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9685,6 +9977,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Red Dragonscale Protector",
 			0,
 			"|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9693,6 +9986,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Rejuvenating Gem",
 			400,
 			"|cffa335ee|Hitem:19395|h[Rejuvenating Gem]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9703,6 +9997,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ring of Blackrock",
 			100,
 			"|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9714,6 +10009,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ring of the Unliving",
 			80,
 			"|cffa335ee|Hitem:20624|h[Ring of the Unliving]|h|r",
+			"Emeriss",
 			["priority"] = {
 				"Hunter",
 				"KAT4FITE",
@@ -9725,6 +10021,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Ringo's Blizzard Boots",
 			250,
 			"|cffa335ee|Hitem:19438|h[Ringo's Blizzard Boots]|h|r",
+			"Trash",
 			["priority"] = {
 				"Mage",
 			},
@@ -9733,6 +10030,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Robes of Transcendence",
 			200,
 			"|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Priest (Heal)",
 			},
@@ -9741,6 +10039,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Rune of Metamorphosis",
 			0,
 			"|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9749,6 +10048,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Sabatons of Wrath",
 			150,
 			"|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Tank",
 			},
@@ -9757,6 +10057,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Scrolls of Blinding Light",
 			0,
 			"|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r",
+			"Firemaw",
 			["priority"] = {
 				"Paladin (Holy)",
 			},
@@ -9765,7 +10066,8 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Shadow Wing Focus Staff",
 			70,
 			"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r",
-			["notes"] = "Catch up Priority",
+			"Firemaw, Ebonroc, Flamegor",
+			"Catch up Priority",
 			["priority"] = {
 				"Druid (Heal)",
 				"Mage",
@@ -9776,6 +10078,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Shimmering Geta",
 			100,
 			"|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9786,6 +10089,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Shroud of Pure Thought",
 			200,
 			"|cffa335ee|Hitem:19430|h[Shroud of Pure Thought]|h|r",
+			"Flamegor",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9796,18 +10100,20 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Spineshatter",
 			70,
 			"|cffa335ee|Hitem:19335|h[Spineshatter]|h|r",
+			"Razorgore the Untamed",
+			"Catch up Priority",
 			["priority"] = {
 				"Metal Rogue",
 				"Slicey Rogue",
 				"Stabby Rogue",
 				"Tank",
 			},
-			["notes"] = "Catch up Priority",
 		},
 		{
 			"Staff of Rampant Growth",
 			0,
 			"|cffa335ee|Hitem:20581|h[Staff of Rampant Growth]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Progression",
 			},
@@ -9816,6 +10122,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Staff of the Shadow Flame",
 			450,
 			"|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Mage",
 				"Warlock",
@@ -9825,6 +10132,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Stormrage Belt",
 			0,
 			"|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9833,6 +10141,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Stormrage Boots",
 			50,
 			"|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9841,6 +10150,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Stormrage Bracers",
 			100,
 			"|cffa335ee|Hitem:16904|h[Stormrage Bracers]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9849,6 +10159,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Stormrage Chestguard",
 			0,
 			"|cffa335ee|Hitem:16897|h[Stormrage Chestguard]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9857,6 +10168,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Stormrage Handguards",
 			150,
 			"|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9865,6 +10177,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Stormrage Pauldrons",
 			0,
 			"|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Druid (Heal)",
 			},
@@ -9873,6 +10186,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Strangely Glyphed Legplates",
 			0,
 			"|cffa335ee|Hitem:20639|h[Strangely Glyphed Legplates]|h|r",
+			"Ysondre",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9881,6 +10195,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Styleen's Impeding Scarab",
 			325,
 			"|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
+			"Flamegor",
 			["priority"] = {
 				"Tank",
 			},
@@ -9889,6 +10204,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Taut Dragonhide Belt",
 			0,
 			"|cffa335ee|Hitem:19396|h[Taut Dragonhide Belt]|h|r",
+			"Firemaw, Ebonroc, Flamegor",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9897,6 +10213,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Taut Dragonhide Gloves",
 			80,
 			"|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"Druid (Heal)",
 				"Paladin (Holy)",
@@ -9906,6 +10223,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Taut Dragonhide Shoulderpads",
 			100,
 			"|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
+			"Chromaggus",
 			["priority"] = {
 				"KAT4FITE",
 			},
@@ -9914,6 +10232,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"The Black Book",
 			0,
 			"|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Warlock",
 			},
@@ -9922,6 +10241,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"The Untamed Blade",
 			0,
 			"|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
+			"Razorgore the Untamed",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9930,6 +10250,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Therazane's Link",
 			0,
 			"|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
+			"Nefarian",
 			["priority"] = {
 				"Garbage",
 			},
@@ -9938,6 +10259,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Trance Stone",
 			80,
 			"|cffa335ee|Hitem:20582|h[Trance Stone]|h|r",
+			"Green Dragons (Shared)",
 			["priority"] = {
 				"Druid (Heal)",
 				"Mage",
@@ -9949,6 +10271,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Unnatural Leather Spaulders",
 			0,
 			"|cffa335ee|Hitem:20633|h[Unnatural Leather Spaulders]|h|r",
+			"Taerar",
 			["priority"] = {
 				"Progression",
 			},
@@ -9957,6 +10280,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Venomous Totem",
 			0,
 			"|cffa335ee|Hitem:19342|h[Venomous Totem]|h|r",
+			"Broodlord Lashlayer",
 			["priority"] = {
 				"Slicey Rogue",
 				"Stabby Rogue",
@@ -9966,6 +10290,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			"Waistband of Wrath",
 			100,
 			"|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r",
+			"Vaelastraz the Corrupt",
 			["priority"] = {
 				"Tank",
 			},
@@ -9977,7 +10302,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1587531113, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1587531114, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 

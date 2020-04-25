@@ -351,8 +351,8 @@ function ABGP:RefreshItemValues()
         for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
             local name = item.item or item[1];
             local gp = item.gp or item[2];
-            local notes = item.notes or item[4];
-            local boss = item.boss or item[5];
+            local boss = item.boss or item[4];
+            local notes = item.notes or item[5];
             itemValues[name] = {
                 gp = gp,
                 item = name,
