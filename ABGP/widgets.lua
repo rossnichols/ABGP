@@ -610,7 +610,7 @@ do
 
             self.item.text:SetText(data[3] or data[1]);
             self.gp.text:SetText(data[2]);
-            self.notes.text:SetText(data.notes and "[Note]" or "");
+            self.notes.text:SetText(data[5] and "[Note]" or "");
             self.priority.text:SetText(table.concat(data.priority, ", "));
 
             local font =ABGP:IsItemFavorited(data[3]) and "ABGPHighlight" or "GameFontNormal";
@@ -666,7 +666,7 @@ do
         local notes = CreateElement(frame, gp);
         notes.text = CreateFontString(notes);
         notes:SetScript("OnEnter", function(self)
-            local notes = self:GetParent().obj.data.notes;
+            local notes = self:GetParent().obj.data[5];
             if notes then
                 _G.ShowUIPanel(_G.GameTooltip);
                 _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
