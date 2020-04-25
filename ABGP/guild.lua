@@ -32,6 +32,22 @@ for phase in pairs(ABGP.Phases) do
 end
 ABGP.CurrentPhase = ABGP.Phases.p3;
 
+ABGP.PhasesAll = {
+    p1 = "p1",
+    p3 = "p3",
+    p5 = "p5",
+};
+ABGP.PhaseNamesAll = {
+    [ABGP.PhasesAll.p1] = "Phase 1/2",
+    [ABGP.PhasesAll.p3] = "Phase 3/4",
+    [ABGP.PhasesAll.p5] = "Phase 5",
+};
+ABGP.PhasesSortedAll = {
+    ABGP.PhasesAll.p1,
+    ABGP.PhasesAll.p3,
+    ABGP.PhasesAll.p5,
+};
+
 ABGP.RaidGroups = {
     RED = "RED",
     BLUE = "BLUE",

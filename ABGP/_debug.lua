@@ -5,6 +5,7 @@ local GetItemInfo = GetItemInfo;
 local print = print;
 local pairs = pairs;
 local ipairs = ipairs;
+local type = type;
 
 ABGP.Debug = true;
 -- ABGP.Verbose = true;
@@ -26,16 +27,18 @@ local function BuildLookup()
     local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses.items;
     local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair.items;
     -- local aq20 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheRuinsofAhnQiraj.items;
-    -- local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj.items;
-    for _, collection in ipairs({ mc, ony, wb, bwl }) do
+    local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj.items;
+    for _, collection in ipairs({ mc, ony, wb, bwl, aq40 }) do
         for _, sub in ipairs(collection) do
             if sub[1] then
                 for _, item in ipairs(sub[1]) do
-                    local name, link = GetItemInfo(item[2]);
-                    if name then
-                        lookup[name] = ABGP:ShortenLink(link);
-                    else
-                        succeeded = false;
+                    if type(item[2]) == "number" then
+                        local name, link = GetItemInfo(item[2]);
+                        if name then
+                            lookup[name] = ABGP:ShortenLink(link);
+                        else
+                            succeeded = false;
+                        end
                     end
                 end
             end

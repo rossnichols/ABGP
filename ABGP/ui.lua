@@ -124,7 +124,7 @@ local function DrawPriority(container, rebuild, reason)
     local count = 0;
     local order = 0;
     local lastPriority = -1;
-    local priority = ABGP.Priorities[ABGP.CurrentPhase];
+    local priority = ABGP.Priorities[ABGP.CurrentPhase] or {};
     for i, data in ipairs(priority) do
         local inRaidGroup = not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
         local isGrouped = not onlyGrouped or UnitExists(data.player);
@@ -306,7 +306,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
+    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory or {};
     local filtered = gpHistory;
     if searchText ~= "" or currentRaidGroup then
         filtered = {};
@@ -457,7 +457,7 @@ local function DrawItems(container, rebuild, reason)
             _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
             _G.GameTooltip:ClearLines();
             _G.GameTooltip:AddLine("Help");
-            _G.GameTooltip:AddLine("Search by item name. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
+            _G.GameTooltip:AddLine("Search by item name or source. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
             _G.GameTooltip:Show();
         end);
         search:SetCallback("OnLeave", function(widget)
@@ -599,14 +599,29 @@ local function DrawItems(container, rebuild, reason)
         for i, item in ipairs(items) do
             if not onlyUsable or ABGP:IsItemUsable(item[3]) then
                 if not onlyFaved or ABGP:IsItemFavorited(item[3]) then
-                    if (searchText == "") or
-                    (exact and item[1]:lower() == exact) or
-                    (not exact and item[1]:lower():find(searchText, 1, true)) then
-                        for _, pri in ipairs(item.priority) do
-                            if allowedPriorities[pri] then
-                                table.insert(filtered, item);
-                                break;
+                    local matchesSearch = false;
+                    if exact then
+                        if item[1]:lower() == exact or
+                            item[4]:lower() == exact then
+                            matchesSearch = true;
+                        end
+                    else
+                        if item[1]:lower():find(searchText, 1, true) or
+                            item[4]:lower():find(searchText, 1, true) then
+                            matchesSearch = true;
+                        end
+                    end
+
+                    if matchesSearch then
+                        if #item.priority > 0 then
+                            for _, pri in ipairs(item.priority) do
+                                if allowedPriorities[pri] then
+                                    table.insert(filtered, item);
+                                    break;
+                                end
                             end
+                        else
+                            table.insert(filtered, item);
                         end
                     end
                 end
@@ -741,7 +756,7 @@ local function DrawAuditLog(container, rebuild, reason)
     local auditLog = container:GetUserData("auditLog");
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_ItemAuditLog[ABGP.CurrentPhase];
+    local entries = _G.ABGP_ItemAuditLog[ABGP.CurrentPhase] or {};
     local pagination = container:GetUserData("pagination");
     pagination:SetValues(#entries, 100);
     if #entries > 0 then
@@ -860,8 +875,8 @@ function ABGP:CreateMainWindow(command)
     window:AddChild(mainLine);
 
     local phases, phaseNames = {}, {};
-    for i, v in ipairs(ABGP.PhasesSorted) do phases[i] = v; end
-    for k, v in pairs(ABGP.PhaseNames) do phaseNames[k] = v; end
+    for i, v in ipairs(ABGP:IsPrivileged() and ABGP.PhasesSortedAll or ABGP.PhasesSorted) do phases[i] = v; end
+    for k, v in pairs(ABGP:IsPrivileged() and ABGP.PhaseNamesAll or ABGP.PhaseNames) do phaseNames[k] = v; end
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
     phaseSelector:SetList(phaseNames, phases);

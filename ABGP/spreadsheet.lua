@@ -359,8 +359,8 @@ function ABGP:ShowImportWindow()
     local selectedTab = tabs[1].value;
 
     local phases, phaseNames = {}, {};
-    for i, v in ipairs(ABGP.PhasesSorted) do phases[i] = v; end
-    for k, v in pairs(ABGP.PhaseNames) do phaseNames[k] = v; end
+    for i, v in ipairs(ABGP:IsPrivileged() and ABGP.PhasesSortedAll or ABGP.PhasesSorted) do phases[i] = v; end
+    for k, v in pairs(ABGP:IsPrivileged() and ABGP.PhaseNamesAll or ABGP.PhaseNames) do phaseNames[k] = v; end
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
     phaseSelector:SetList(phaseNames, phases);

@@ -2,6 +2,7 @@ local _G = _G;
 local ABGP = ABGP;
 
 local date = date;
+local pairs = pairs;
 
 _G.ABGP_Data = {};
 _G.ABGP_Data[ABGP.Phases.p1] = {
@@ -10319,18 +10320,995 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 		},
 	},
 }
+_G.ABGP_Data[ABGP.PhasesAll.p5] = {
+	["itemValues"] = {
+		{
+			"Barrage Shoulders", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21699::::::::60:::::::|h[Barrage Shoulders]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [1]
+		{
+			"Breastplate of Annihilation", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21814::::::::60:::::::|h[Breastplate of Annihilation]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [2]
+		{
+			"Beetle Scaled Wristguards", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21708::::::::60:::::::|h[Beetle Scaled Wristguards]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [3]
+		{
+			"Leggings of Immersion", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21698::::::::60:::::::|h[Leggings of Immersion]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [4]
+		{
+			"Boots of the Fallen Prophet", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21705::::::::60:::::::|h[Boots of the Fallen Prophet]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [5]
+		{
+			"Boots of the Redeemed Prophecy", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21704::::::::60:::::::|h[Boots of the Redeemed Prophecy]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [6]
+		{
+			"Boots of the Unwavering Will", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21706::::::::60:::::::|h[Boots of the Unwavering Will]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [7]
+		{
+			"Amulet of Foul Warding", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21702::::::::60:::::::|h[Amulet of Foul Warding]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [8]
+		{
+			"Pendant of the Qiraji Guardian", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21700::::::::60:::::::|h[Pendant of the Qiraji Guardian]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [9]
+		{
+			"Cloak of Concentrated Hatred", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21701::::::::60:::::::|h[Cloak of Concentrated Hatred]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [10]
+		{
+			"Ring of Swarming Thought", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21707::::::::60:::::::|h[Ring of Swarming Thought]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [11]
+		{
+			"Hammer of Ji'zhi", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21703::::::::60:::::::|h[Hammer of Ji'zhi]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [12]
+		{
+			"Staff of the Qiraji Prophets", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21128::::::::60:::::::|h[Staff of the Qiraji Prophets]|h|r", -- [3]
+			"The Prophet Skeram", -- [4]
+			["priority"] = {
+			},
+		}, -- [13]
+		{
+			"Guise of the Devourer", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21693::::::::60:::::::|h[Guise of the Devourer]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [17]
+		{
+			"Ternary Mantle", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21694::::::::60:::::::|h[Ternary Mantle]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [18]
+		{
+			"Cape of the Trinity", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21697::::::::60:::::::|h[Cape of the Trinity]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [19]
+		{
+			"Robes of the Triumvirate", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21696::::::::60:::::::|h[Robes of the Triumvirate]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [20]
+		{
+			"Triad Girdle", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21692::::::::60:::::::|h[Triad Girdle]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [21]
+		{
+			"Angelista's Touch", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21695::::::::60:::::::|h[Angelista's Touch]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [22]
+		{
+			"Vest of Swift Execution", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21680::::::::60:::::::|h[Vest of Swift Execution]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [25]
+		{
+			"Ring of the Devoured", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21681::::::::60:::::::|h[Ring of the Devoured]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [26]
+		{
+			"Petrified Scarab", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21685::::::::60:::::::|h[Petrified Scarab]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [27]
+		{
+			"Wand of Qiraji Nobility", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21603::::::::60:::::::|h[Wand of Qiraji Nobility]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [28]
+		{
+			"Angelista's Charm", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21690::::::::60:::::::|h[Angelista's Charm]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [29]
+		{
+			"Gloves of Ebru", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21689::::::::60:::::::|h[Gloves of Ebru]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [30]
+		{
+			"Ooze-ridden Gauntlets", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21691::::::::60:::::::|h[Ooze-ridden Gauntlets]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [31]
+		{
+			"Boots of the Fallen Hero", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21688::::::::60:::::::|h[Boots of the Fallen Hero]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [32]
+		{
+			"Mantle of Phrenic Power", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21686::::::::60:::::::|h[Mantle of Phrenic Power]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [33]
+		{
+			"Mantle of the Desert's Fury", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21684::::::::60:::::::|h[Mantle of the Desert's Fury]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [34]
+		{
+			"Mantle of the Desert Crusade", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21683::::::::60:::::::|h[Mantle of the Desert Crusade]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [35]
+		{
+			"Bile-Covered Gauntlets", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21682::::::::60:::::::|h[Bile-Covered Gauntlets]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [36]
+		{
+			"Ukko's Ring of Darkness", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21687::::::::60:::::::|h[Ukko's Ring of Darkness]|h|r", -- [3]
+			"Bug Trio", -- [4]
+			["priority"] = {
+			},
+		}, -- [37]
+		{
+			"Creeping Vine Helm", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21669::::::::60:::::::|h[Creeping Vine Helm]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [38]
+		{
+			"Necklace of Purity", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21678::::::::60:::::::|h[Necklace of Purity]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [39]
+		{
+			"Robes of the Battleguard", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21671::::::::60:::::::|h[Robes of the Battleguard]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [40]
+		{
+			"Gloves of Enforcement", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21672::::::::60:::::::|h[Gloves of Enforcement]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [41]
+		{
+			"Gauntlets of Steadfast Determination", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21674::::::::60:::::::|h[Gauntlets of Steadfast Determination]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [42]
+		{
+			"Thick Qirajihide Belt", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21675::::::::60:::::::|h[Thick Qirajihide Belt]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [43]
+		{
+			"Leggings of the Festering Swarm", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21676::::::::60:::::::|h[Leggings of the Festering Swarm]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [44]
+		{
+			"Scaled Leggings of Qiraji Fury", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21668::::::::60:::::::|h[Scaled Leggings of Qiraji Fury]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [45]
+		{
+			"Legplates of Blazing Light", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21667::::::::60:::::::|h[Legplates of Blazing Light]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [46]
+		{
+			"Recomposed Boots", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21648::::::::60:::::::|h[Recomposed Boots]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [47]
+		{
+			"Badge of the Swarmguard", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21670::::::::60:::::::|h[Badge of the Swarmguard]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [48]
+		{
+			"Sartura's Might", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21666::::::::60:::::::|h[Sartura's Might]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [49]
+		{
+			"Silithid Claw", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21673::::::::60:::::::|h[Silithid Claw]|h|r", -- [3]
+			"Battleguard Sartura", -- [4]
+			["priority"] = {
+			},
+		}, -- [50]
+		{
+			"Mantle of Wicked Revenge", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21665::::::::60:::::::|h[Mantle of Wicked Revenge]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [53]
+		{
+			"Pauldrons of the Unrelenting", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21639::::::::60:::::::|h[Pauldrons of the Unrelenting]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [54]
+		{
+			"Cloak of Untold Secrets", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21627::::::::60:::::::|h[Cloak of Untold Secrets]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [55]
+		{
+			"Robes of the Guardian Saint", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21663::::::::60:::::::|h[Robes of the Guardian Saint]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [56]
+		{
+			"Silithid Carapace Chestguard", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21652::::::::60:::::::|h[Silithid Carapace Chestguard]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [57]
+		{
+			"Scaled Sand Reaver Leggings", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21651::::::::60:::::::|h[Scaled Sand Reaver Leggings]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [58]
+		{
+			"Hive Tunneler's Boots", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21645::::::::60:::::::|h[Hive Tunneler's Boots]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [59]
+		{
+			"Ancient Qiraji Ripper", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21650::::::::60:::::::|h[Ancient Qiraji Ripper]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [60]
+		{
+			"Barb of the Sand Reaver", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21635::::::::60:::::::|h[Barb of the Sand Reaver]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [61]
+		{
+			"Barbed Choker", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21664::::::::60:::::::|h[Barbed Choker]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [62]
+		{
+			"Fetish of the Sand Reaver", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21647::::::::60:::::::|h[Fetish of the Sand Reaver]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [63]
+		{
+			"Libram of Grace", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:22402::::::::60:::::::|h[Libram of Grace]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [64]
+		{
+			"Totem of Life", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:22396::::::::60:::::::|h[Totem of Life]|h|r", -- [3]
+			"Fankriss the Unyielding", -- [4]
+			["priority"] = {
+			},
+		}, -- [65]
+		{
+			"Gauntlets of Kalimdor", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21624::::::::60:::::::|h[Gauntlets of Kalimdor]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [68]
+		{
+			"Gauntlets of the Righteous Champion", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21623::::::::60:::::::|h[Gauntlets of the Righteous Champion]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [69]
+		{
+			"Slime-coated Leggings", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21626::::::::60:::::::|h[Slime-coated Leggings]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [70]
+		{
+			"Sharpened Silithid Femur", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21622::::::::60:::::::|h[Sharpened Silithid Femur]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [71]
+		{
+			"Ring of the Qiraji Fury", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21677::::::::60:::::::|h[Ring of the Qiraji Fury]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [72]
+		{
+			"Scarab Brooch", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21625::::::::60:::::::|h[Scarab Brooch]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [73]
+		{
+			"Idol of Health", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:22399::::::::60:::::::|h[Idol of Health]|h|r", -- [3]
+			"Viscidus", -- [4]
+			["priority"] = {
+			},
+		}, -- [74]
+		{
+			"Qiraji Bindings of Command", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20928::::::::60:::::::|h[Qiraji Bindings of Command]|h|r", -- [3]
+			"Viscidus, Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [77]
+		{
+			"Qiraji Bindings of Dominance", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20932::::::::60:::::::|h[Qiraji Bindings of Dominance]|h|r", -- [3]
+			"Viscidus, Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [78]
+		{
+			"Cloak of the Golden Hive", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21621::::::::60:::::::|h[Cloak of the Golden Hive]|h|r", -- [3]
+			"Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [79]
+		{
+			"Hive Defiler Wristguards", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21618::::::::60:::::::|h[Hive Defiler Wristguards]|h|r", -- [3]
+			"Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [80]
+		{
+			"Gloves of the Messiah", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21619::::::::60:::::::|h[Gloves of the Messiah]|h|r", -- [3]
+			"Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [81]
+		{
+			"Wasphide Gauntlets", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21617::::::::60:::::::|h[Wasphide Gauntlets]|h|r", -- [3]
+			"Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [82]
+		{
+			"Ring of the Martyr", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21620::::::::60:::::::|h[Ring of the Martyr]|h|r", -- [3]
+			"Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [83]
+		{
+			"Huhuran's Stinger", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21616::::::::60:::::::|h[Huhuran's Stinger]|h|r", -- [3]
+			"Princess Huhuran", -- [4]
+			["priority"] = {
+			},
+		}, -- [84]
+		{
+			"Vek'lor's Diadem", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20930::::::::60:::::::|h[Vek'lor's Diadem]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [89]
+		{
+			"Qiraji Execution Bracers", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21602::::::::60:::::::|h[Qiraji Execution Bracers]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [90]
+		{
+			"Vek'lor's Gloves of Devastation", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21599::::::::60:::::::|h[Vek'lor's Gloves of Devastation]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [91]
+		{
+			"Royal Qiraji Belt", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21598::::::::60:::::::|h[Royal Qiraji Belt]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [92]
+		{
+			"Boots of Epiphany", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21600::::::::60:::::::|h[Boots of Epiphany]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [93]
+		{
+			"Ring of Emperor Vek'lor", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21601::::::::60:::::::|h[Ring of Emperor Vek'lor]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [94]
+		{
+			"Royal Scepter of Vek'lor", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21597::::::::60:::::::|h[Royal Scepter of Vek'lor]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [95]
+		{
+			"Vek'nilash's Circlet", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20926::::::::60:::::::|h[Vek'nilash's Circlet]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [98]
+		{
+			"Amulet of Vek'nilash", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21608::::::::60:::::::|h[Amulet of Vek'nilash]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [99]
+		{
+			"Bracelets of Royal Redemption", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21604::::::::60:::::::|h[Bracelets of Royal Redemption]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [100]
+		{
+			"Gloves of the Hidden Temple", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21605::::::::60:::::::|h[Gloves of the Hidden Temple]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [101]
+		{
+			"Regenerating Belt of Vek'nilash", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21609::::::::60:::::::|h[Regenerating Belt of Vek'nilash]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [102]
+		{
+			"Grasp of the Fallen Emperor", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21607::::::::60:::::::|h[Grasp of the Fallen Emperor]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [103]
+		{
+			"Belt of the Fallen Emperor", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21606::::::::60:::::::|h[Belt of the Fallen Emperor]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [104]
+		{
+			"Kalimdor's Revenge", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21679::::::::60:::::::|h[Kalimdor's Revenge]|h|r", -- [3]
+			"Twin Emperors", -- [4]
+			["priority"] = {
+			},
+		}, -- [105]
+		{
+			"Don Rigoberto's Lost Hat", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21615::::::::60:::::::|h[Don Rigoberto's Lost Hat]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [108]
+		{
+			"Burrower Bracers", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21611::::::::60:::::::|h[Burrower Bracers]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [109]
+		{
+			"The Burrower's Shell", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:23558::::::::60:::::::|h[The Burrower's Shell]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [110]
+		{
+			"Jom Gabbar", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:23570::::::::60:::::::|h[Jom Gabbar]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [111]
+		{
+			"Wormscale Blocker", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21610::::::::60:::::::|h[Wormscale Blocker]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [112]
+		{
+			"Larvae of the Great Worm", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:23557::::::::60:::::::|h[Larvae of the Great Worm]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [113]
+		{
+			"Ouro's Intact Hide", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20927::::::::60:::::::|h[Ouro's Intact Hide]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [116]
+		{
+			"Skin of the Great Sandworm", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20931::::::::60:::::::|h[Skin of the Great Sandworm]|h|r", -- [3]
+			"Ouro", -- [4]
+			["priority"] = {
+			},
+		}, -- [117]
+		{
+			"Mark of C'Thun", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:22732::::::::60:::::::|h[Mark of C'Thun]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [118]
+		{
+			"Cloak of Clarity", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21583::::::::60:::::::|h[Cloak of Clarity]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [119]
+		{
+			"Cloak of the Devoured", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:22731::::::::60:::::::|h[Cloak of the Devoured]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [120]
+		{
+			"Eyestalk Waist Cord", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:22730::::::::60:::::::|h[Eyestalk Waist Cord]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [121]
+		{
+			"Grasp of the Old God", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21582::::::::60:::::::|h[Grasp of the Old God]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [122]
+		{
+			"Belt of Never-ending Agony", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21586::::::::60:::::::|h[Belt of Never-ending Agony]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [123]
+		{
+			"Dark Storm Gauntlets", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21585::::::::60:::::::|h[Dark Storm Gauntlets]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [124]
+		{
+			"Gauntlets of Annihilation", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21581::::::::60:::::::|h[Gauntlets of Annihilation]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [125]
+		{
+			"Ring of the Godslayer", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21596::::::::60:::::::|h[Ring of the Godslayer]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [126]
+		{
+			"Vanquished Tentacle of C'Thun", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21579::::::::60:::::::|h[Vanquished Tentacle of C'Thun]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [127]
+		{
+			"Scepter of the False Prophet", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21839::::::::60:::::::|h[Scepter of the False Prophet]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [128]
+		{
+			"Death's Sting", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21126::::::::60:::::::|h[Death's Sting]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [129]
+		{
+			"Dark Edge of Insanity", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21134::::::::60:::::::|h[Dark Edge of Insanity]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [130]
+		{
+			"Carapace of the Old God", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20929::::::::60:::::::|h[Carapace of the Old God]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [131]
+		{
+			"Husk of the Old God", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:20933::::::::60:::::::|h[Husk of the Old God]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [132]
+		{
+			"Eye of C'Thun", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21221::::::::60:::::::|h[Eye of C'Thun]|h|r", -- [3]
+			"C'Thun", -- [4]
+			["priority"] = {
+			},
+		}, -- [133]
+		{
+			"Garb of Royal Ascension", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21838::::::::60:::::::|h[Garb of Royal Ascension]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [135]
+		{
+			"Gloves of the Immortal", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21888::::::::60:::::::|h[Gloves of the Immortal]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [136]
+		{
+			"Gloves of the Redeemed Prophecy", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21889::::::::60:::::::|h[Gloves of the Redeemed Prophecy]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [137]
+		{
+			"Neretzek, The Blood Drinker", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21856::::::::60:::::::|h[Neretzek, The Blood Drinker]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [138]
+		{
+			"Anubisath Warhammer", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21837::::::::60:::::::|h[Anubisath Warhammer]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [139]
+		{
+			"Ritssyn's Ring of Chaos", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21836::::::::60:::::::|h[Ritssyn's Ring of Chaos]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [140]
+		{
+			"Shard of the Fallen Star", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21891::::::::60:::::::|h[Shard of the Fallen Star]|h|r", -- [3]
+			"Trash", -- [4]
+			["priority"] = {
+			},
+		}, -- [141]
+		{
+			"Imperial Qiraji Regalia", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21237::::::::60:::::::|h[Imperial Qiraji Regalia]|h|r", -- [3]
+			"Shared", -- [4]
+			["priority"] = {
+			},
+		}, -- [14]
+		{
+			"Imperial Qiraji Armaments", -- [1]
+			0, -- [2]
+			"|cffa335ee|Hitem:21232::::::::60:::::::|h[Imperial Qiraji Armaments]|h|r", -- [3]
+			"Shared", -- [4]
+			["priority"] = {
+			},
+		}, -- [15]
+	},
+}
 
 --
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1587531115, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1587531121, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
 function ABGP:CheckHardcodedData()
     if _G.ABGP_DataTimestamp == nil or _G.ABGP_DataTimestamp < initialData.timestamp then
-        _G.ABGP_DataTimestamp = initialData.timestamp;
-        _G.ABGP_Data = initialData.ABGP_Data;
+		_G.ABGP_DataTimestamp = initialData.timestamp;
+		for phase in pairs(ABGP.Phases) do
+			_G.ABGP_Data[phase] = initialData.ABGP_Data[phase];
+		end
     end
+	if not _G.ABGP_Data[ABGP.PhasesAll.p5] then
+		_G.ABGP_Data[ABGP.PhasesAll.p5] = initialData.ABGP_Data[ABGP.PhasesAll.p5];
+	end
 end
