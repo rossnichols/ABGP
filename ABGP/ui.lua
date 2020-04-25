@@ -168,7 +168,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 0, 1.0, 0 } });
+        mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
         container:AddChild(mainLine);
 
         local search = AceGUI:Create("ABGP_EditBox");
@@ -195,16 +195,6 @@ local function DrawItemHistory(container, rebuild, reason, command)
         desc:SetWidth(50);
         desc:SetText(" Search");
         mainLine:AddChild(desc);
-
-        local reset = AceGUI:Create("Button");
-        reset:SetWidth(70);
-        reset:SetText("Reset");
-        reset:SetCallback("OnClick", function(widget)
-            container:GetUserData("search"):SetText("");
-            PopulateUI(false);
-        end);
-        mainLine:AddChild(reset);
-        container:SetUserData("reset", reset);
 
         if ABGP:IsPrivileged() then
             local spacer = AceGUI:Create("Label");
@@ -307,7 +297,6 @@ local function DrawItemHistory(container, rebuild, reason, command)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    container:GetUserData("reset"):SetDisabled(searchText == "");
     local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
     local filtered = gpHistory;
     if searchText ~= "" or currentRaidGroup then
@@ -432,6 +421,12 @@ local function DrawItems(container, rebuild, reason)
 
     local widths = { 225, 50, 50, 1.0 };
     if rebuild then
+        local mainLine = AceGUI:Create("SimpleGroup");
+        mainLine:SetFullWidth(true);
+        mainLine:SetLayout("table");
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0 } });
+        container:AddChild(mainLine);
+
         local priSelector = AceGUI:Create("ABGP_Filter");
         priSelector:SetWidth(125);
         priSelector:SetValues(filteredPriorities, ABGP:GetItemPriorities());
@@ -439,7 +434,7 @@ local function DrawItems(container, rebuild, reason)
             PopulateUI(false);
         end);
         priSelector:SetText("Priorities");
-        container:AddChild(priSelector);
+        mainLine:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
 
         local search = AceGUI:Create("ABGP_EditBox");
@@ -459,23 +454,13 @@ local function DrawItems(container, rebuild, reason)
         search:SetCallback("OnLeave", function(widget)
             _G.GameTooltip:Hide();
         end);
-        container:AddChild(search);
+        mainLine:AddChild(search);
         container:SetUserData("search", search);
 
         local desc = AceGUI:Create("Label");
         desc:SetWidth(50);
         desc:SetText(" Search");
-        container:AddChild(desc);
-
-        local reset = AceGUI:Create("Button");
-        reset:SetWidth(70);
-        reset:SetText("Reset");
-        reset:SetCallback("OnClick", function(widget)
-            container:GetUserData("search"):SetText("");
-            PopulateUI(false);
-        end);
-        container:AddChild(reset);
-        container:SetUserData("reset", reset);
+        mainLine:AddChild(desc);
 
         local usable = AceGUI:Create("CheckBox");
         usable:SetWidth(80);
@@ -485,7 +470,7 @@ local function DrawItems(container, rebuild, reason)
             onlyUsable = value;
             PopulateUI(false);
         end);
-        container:AddChild(usable);
+        mainLine:AddChild(usable);
 
         if ABGP:CanFavoriteItems() then
             local faved = AceGUI:Create("CheckBox");
@@ -496,7 +481,47 @@ local function DrawItems(container, rebuild, reason)
                 onlyFaved = value;
                 PopulateUI(false);
             end);
-            container:AddChild(faved);
+            mainLine:AddChild(faved);
+        else
+            local spacer = AceGUI:Create("Label");
+            mainLine:AddChild(spacer);
+        end
+
+        if ABGP:IsPrivileged() then
+            local spacer = AceGUI:Create("Label");
+            mainLine:AddChild(spacer);
+
+            local export = AceGUI:Create("Button");
+            export:SetWidth(100);
+            export:SetText("Export");
+            export:SetCallback("OnClick", function(widget, event)
+                local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
+                local text = "";
+                for i, data in ipairs(items) do
+                    text = text .. ("%s%s"):format(
+                        data[1], (i == 1 and "" or "\n"));
+                end
+
+                local window = AceGUI:Create("Window");
+                window.frame:SetFrameStrata("DIALOG");
+                window:SetTitle("Export");
+                window:SetLayout("Fill");
+                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+                ABGP:OpenWindow(window);
+
+                local edit = AceGUI:Create("MultiLineEditBox");
+                edit:SetLabel("...");
+                edit:SetText(text);
+                edit.button:Enable();
+                window:AddChild(edit);
+                window.frame:Raise();
+                edit:SetFocus();
+                edit:HighlightText();
+                edit:SetCallback("OnEnterPressed", function()
+                    window:Hide();
+                end);
+            end);
+            mainLine:AddChild(export);
         end
 
         local pagination = AceGUI:Create("ABGP_Paginator");
@@ -546,8 +571,6 @@ local function DrawItems(container, rebuild, reason)
     local selector = container:GetUserData("priSelector");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    container:GetUserData("reset"):SetDisabled(searchText == "");
-
 
     if selector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
         filtered = items;
