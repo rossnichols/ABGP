@@ -360,10 +360,7 @@ function ABGP:RefreshItemValues()
             };
 
             -- Try to ensure info about the item is cached locally.
-            if item[3] then
-                GetItemInfo(item[3]);
-                self:IsItemUsable(item[3]);
-            end
+            if item[3] then GetItemInfo(item[3]); end
         end
     end
 end
@@ -404,17 +401,21 @@ scanner:SetOwner(UIParent, "ANCHOR_NONE");
 function ABGP:IsItemUsable(itemLink)
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
+    -- self:LogVerbose("%s:%d", itemLink, select("#", scanner:GetRegions()));
     for i = 1, select("#", scanner:GetRegions()) do
         local region = select(i, scanner:GetRegions());
-        if region and region:GetObjectType() == "FontString" and region:GetText() then
+        if region and region:GetObjectType() == "FontString" then
             if region:GetText() == "Retrieving item information" then
                 -- No info available: assume usable.
+                -- self:LogVerbose("no item info available");
                 return true;
             end
             local r, g, b = region:GetTextColor();
             if r >= .9 and g <= .2 and b <= .2 then
-                -- self:LogVerbose("%s is not usable: %s %.2f %.2f %.2f", itemLink, region:GetText(), r, g, b);
+                -- self:LogVerbose("%s is not usable: %s %.2f %.2f %.2f", itemLink, region:GetText() or "<none>", r, g, b);
                 return false;
+            else
+                -- self:LogVerbose("%s %.2f %.2f %.2f", region:GetText() or "<none>", r, g, b);
             end
         end
     end
