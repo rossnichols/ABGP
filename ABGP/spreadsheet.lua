@@ -302,6 +302,10 @@ local function DrawGP(container)
         widget:GetUserData("window"):Hide();
         container:ReleaseChildren();
         DrawGP(container);
+
+        if not ABGP:FixupHistory() then
+            ABGP:ScheduleTimer("FixupHistory", 5);
+        end
     end
 
     local exportFunc = function()
@@ -336,12 +340,26 @@ local function DrawItems(container)
         widget:GetUserData("window"):Hide();
         container:ReleaseChildren();
         DrawItems(container);
+
+        if not ABGP:FixupItems() then
+            ABGP:ScheduleTimer("FixupItems", 5);
+        end
     end
 
     DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
 end
 
 function ABGP:ShowImportWindow()
+    if not (_G.AtlasLoot and
+            _G.AtlasLoot.ItemDB and
+            _G.AtlasLoot.ItemDB.Storage and
+            _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids) then
+        self:Error("You must have AtlasLoot installed to show this window!");
+        return;
+    end
+
+    self:BuildItemLookup();
+
     local window = AceGUI:Create("Window");
     window:SetTitle(("ABGP (data updated %s)"):format(date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp))); -- https://strftime.org/
     window:SetWidth(650);

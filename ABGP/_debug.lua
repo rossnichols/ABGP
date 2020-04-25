@@ -16,10 +16,13 @@ ABGP.IgnoreSelfDistributed = true;
 ABGP.VersionDebug = "3.5.2";
 ABGP.VersionCmpDebug = "3.5.2";
 
+local blacklist = {
+    [17012] = true, -- Core Leather
+};
 
 local lookup = {};
 
-local function BuildLookup()
+function ABGP:BuildItemLookup(shouldPrint)
     local succeeded = true;
 
     local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore.items;
@@ -32,7 +35,7 @@ local function BuildLookup()
         for _, sub in ipairs(collection) do
             if sub[1] then
                 for _, item in ipairs(sub[1]) do
-                    if type(item[2]) == "number" then
+                    if type(item[2]) == "number" and not blacklist[item[2]] then
                         local name, link = GetItemInfo(item[2]);
                         if name then
                             lookup[name] = ABGP:ShortenLink(link);
@@ -45,7 +48,7 @@ local function BuildLookup()
         end
     end
 
-    if not succeeded then
+    if not succeeded and shouldPrint then
         print("Failed to query some items!");
     end
 
@@ -53,11 +56,12 @@ local function BuildLookup()
 end
 
 function ABGP:FixupItems()
-    if not BuildLookup() then return; end
+    if not self:BuildItemLookup(true) then return false; end
 
     local p1 = _G.ABGP_Data.p1.itemValues;
     local p3 = _G.ABGP_Data.p3.itemValues;
-    for _, phase in ipairs({ p1, p3 }) do
+    local p5 = _G.ABGP_Data.p5.itemValues;
+    for _, phase in ipairs({ p1, p3, p5 }) do
         for _, entry in ipairs(phase) do
             if lookup[entry[1]] then
                 entry[3] = lookup[entry[1]];
@@ -66,10 +70,13 @@ function ABGP:FixupItems()
             end
         end
     end
+
+    print("Done fixing up items!");
+    return true;
 end
 
 function ABGP:FixupHistory()
-    if not BuildLookup() then return; end
+    if not self:BuildItemLookup(true) then return false; end
 
     local p1 = _G.ABGP_Data.p1.gpHistory;
     local p3 = _G.ABGP_Data.p3.gpHistory;
@@ -93,4 +100,7 @@ function ABGP:FixupHistory()
             end
         end
     end
+
+    print("Done fixing up history!");
+    return true;
 end
