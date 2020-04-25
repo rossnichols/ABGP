@@ -6123,6 +6123,160 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 _G.ABGP_Data[ABGP.Phases.p3] = {
 	["gpHistory"] = {
 		{
+			["player"] = "Uhtred",
+			["item"] = "Head of Nefarian",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
+			["gp"] = 150,
+		},
+		{
+			["player"] = "Olinthia",
+			["item"] = "Pure Elementium Band",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
+			["gp"] = 200,
+		},
+		{
+			["player"] = "Megumín",
+			["item"] = "Cloak of the Brood Lord",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Sageleaf",
+			["item"] = "Dragonstalker's Breastplate",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
+			["gp"] = 200,
+		},
+		{
+			["player"] = "Orren",
+			["item"] = "Judgement Breastplate",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Révy",
+			["item"] = "Bloodfang Spaulders",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16832|h[Bloodfang Spaulders]|h|r",
+			["gp"] = 50,
+		},
+		{
+			["player"] = "Shlephanie",
+			["item"] = "Empowered Leggings",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r",
+			["gp"] = 200,
+		},
+		{
+			["player"] = "Shlephanie",
+			["item"] = "Judgement Spaulders",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Arkadas",
+			["item"] = "Elementium Threaded Cloak",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19386|h[Elementium Threaded Cloak]|h|r",
+			["gp"] = 150,
+		},
+		{
+			["gp"] = 0,
+			["item"] = "Styleen's Impeding Scarab",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
+			["player"] = "Krustyop",
+		},
+		{
+			["player"] = "Bees",
+			["item"] = "Drake Fang Talisman",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
+			["gp"] = 400,
+		},
+		{
+			["player"] = "Tallulahz",
+			["item"] = "Handguards of Transcendence",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16920|h[Handguards of Transcendence]|h|r",
+			["gp"] = 80,
+		},
+		{
+			["player"] = "Bees",
+			["item"] = "Claw of the Black Drake",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Megumín",
+			["item"] = "Bracers of Arcane Accuracy",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
+			["gp"] = 200,
+		},
+		{
+			["player"] = "Hyacinth",
+			["item"] = "Nemesis Boots",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Consuela",
+			["item"] = "Boots of Transcendence",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16919|h[Boots of Transcendence]|h|r",
+			["gp"] = 50,
+		},
+		{
+			["player"] = "Fiorlyn",
+			["item"] = "Dragonfang Blade",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
+			["gp"] = 70,
+		},
+		{
+			["player"] = "Olinthia",
+			["item"] = "Stormrage Belt",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Sturmm",
+			["item"] = "Judgement Belt",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
+			["gp"] = 0,
+		},
+		{
+			["player"] = "Pleb",
+			["item"] = "Spineshatter",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:19335|h[Spineshatter]|h|r",
+			["gp"] = 70,
+		},
+		{
+			["gp"] = 0,
+			["item"] = "Bracelets of Wrath",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
+			["player"] = "Pleb",
+		},
+		{
+			["player"] = "Fiorlyn",
+			["item"] = "Dragonstalker's Bracers",
+			["date"] = "04/25/20",
+			["itemLink"] = "|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
+			["gp"] = 100,
+		},
+		{
 			["player"] = "Marizol",
 			["item"] = "Neltharion's Tear",
 			["date"] = "04/21/20",
@@ -11409,7 +11563,7 @@ _G.ABGP_Data[ABGP.PhasesAll.p5] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1587844949, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1587848886, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
