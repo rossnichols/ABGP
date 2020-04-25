@@ -457,7 +457,7 @@ local function DrawItems(container, rebuild, reason)
             _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
             _G.GameTooltip:ClearLines();
             _G.GameTooltip:AddLine("Help");
-            _G.GameTooltip:AddLine("Search by item name or source. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
+            _G.GameTooltip:AddLine("Search by item name, source, or notes. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
             _G.GameTooltip:Show();
         end);
         search:SetCallback("OnLeave", function(widget)
@@ -602,12 +602,14 @@ local function DrawItems(container, rebuild, reason)
                     local matchesSearch = false;
                     if exact then
                         if item[1]:lower() == exact or
-                            item[4]:lower() == exact then
+                            item[4]:lower() == exact or
+                            (item[5] or ""):lower() == exact then
                             matchesSearch = true;
                         end
                     else
                         if item[1]:lower():find(searchText, 1, true) or
-                            item[4]:lower():find(searchText, 1, true) then
+                            item[4]:lower():find(searchText, 1, true) or
+                            (item[5] or ""):lower():find(searchText, 1, true) then
                             matchesSearch = true;
                         end
                     end
