@@ -332,7 +332,7 @@ local function DrawItems(container)
                 end
             end
             table.sort(row.priority);
-            ABGP:BroadcastUpdatedItem(row, ABGP.CurrentPhase);
+            ABGP:CheckIfItemUpdated(row, ABGP.CurrentPhase);
             return true;
         end);
 

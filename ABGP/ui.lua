@@ -709,7 +709,7 @@ local function DrawItems(container, rebuild, reason)
             end);
             elt:SetCallback("OnPrioritiesUpdated", function(widget, event)
                 ABGP:Notify("Priorities for %s: %s.", widget.data[3], table.concat(widget.data.priority, ", "));
-                ABGP:BroadcastUpdatedItem(widget.data, ABGP.CurrentPhase);
+                ABGP:CheckIfItemUpdated(widget.data, ABGP.CurrentPhase);
                 ABGP:RefreshItemValues();
             end);
             itemList:AddChild(elt);
@@ -1115,7 +1115,7 @@ StaticPopupDialogs["ABGP_UPDATE_GP"] = {
             widget:SetData(widget.data);
 
             ABGP:Notify("Cost of %s is now %d.", widget.data[3], cost);
-            ABGP:BroadcastUpdatedItem(widget.data, ABGP.CurrentPhase);
+            ABGP:CheckIfItemUpdated(widget.data, ABGP.CurrentPhase);
             ABGP:RefreshItemValues();
         end
     end,
@@ -1170,7 +1170,7 @@ StaticPopupDialogs["ABGP_UPDATE_NOTES"] = {
         widget.data[5] = text
         widget:SetData(widget.data);
 
-        ABGP:BroadcastUpdatedItem(widget.data, ABGP.CurrentPhase);
+        ABGP:CheckIfItemUpdated(widget.data, ABGP.CurrentPhase);
         ABGP:RefreshItemValues();
     end,
     OnShow = function(self)

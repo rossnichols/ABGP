@@ -20,6 +20,7 @@ local GetInstanceInfo = GetInstanceInfo;
 local IsInGuild = IsInGuild;
 local C_GuildInfo = C_GuildInfo;
 local GetAddOnMetadata = GetAddOnMetadata;
+local GetServerTime = GetServerTime;
 local select = select;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -357,6 +358,7 @@ local function ValueFromItem(item, phase)
         boss = item[4],
         notes = item[5],
         priority = item.priority,
+        editTime = item.editTime,
         phase = phase
     };
 end
@@ -366,17 +368,7 @@ function ABGP:RefreshItemValues()
     for phase in pairs(self.PhasesAll) do
         for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
             local name = item[1];
-            local gp = item[2];
-            local boss = item[4];
-            local notes = item[5];
-            itemValues[name] = {
-                gp = gp,
-                item = name,
-                priority = item.priority,
-                notes = notes,
-                boss = boss,
-                phase = phase
-            };
+            itemValues[name] = ValueFromItem(item, phase);
 
             -- Try to ensure info about the item is cached locally.
             if item[3] then GetItemInfo(item[3]); end
@@ -384,74 +376,54 @@ function ABGP:RefreshItemValues()
     end
 end
 
-local function IsItemUpdated(name, gp, boss, notes, priority, phase)
+local function IsValueUpdated(value)
     local isUpdated = true;
-    local oldValue = ABGP:GetItemValue(name);
+    local oldValue = ABGP:GetItemValue(value.item);
     if oldValue then
         isUpdated =
-            oldValue.gp ~= gp or
-            oldValue.boss ~= boss or
-            oldValue.notes ~= notes or
-            oldValue.phase ~= phase or
-            #oldValue.priority ~= #priority;
+            oldValue.gp ~= value.gp or
+            oldValue.boss ~= value.boss or
+            oldValue.notes ~= value.notes or
+            oldValue.phase ~= value.phase or
+            #oldValue.priority ~= #value.priority;
 
         if not isUpdated then
             for i, oldPri in ipairs(oldValue.priority) do
-                if priority[i] ~= oldPri then
+                if value.priority[i] ~= oldPri then
                     isUpdated = true;
                     break;
                 end
             end
+        end
+
+        -- If both versions were edited, reject the incoming
+        if value.editTime and oldValue.editTime and oldValue.editTime > value.editTime then
+            isUpdated = false;
         end
     end
 
     return isUpdated;
 end
 
-function ABGP:BroadcastUpdatedItem(item, phase)
-    local name = item[1];
-    local gp = item[2];
-    local boss = item[4];
-    local notes = item[5];
+function ABGP:CheckIfItemUpdated(item, phase)
+    local value = ValueFromItem(item, phase);
 
-    if IsItemUpdated(name, gp, boss, notes, item.priority, phase) then
-        self:SendComm(ABGP.CommTypes.UPDATED_ITEM_VALUE, {
-            item = item,
-            phase = phase
-        }, "GUILD");
-        self:SendComm(ABGP.CommTypes.UPDATED_ITEM_VALUE, {
-            item = item,
-            phase = phase
-        }, "BROADCAST");
+    if IsValueUpdated(value) then
+        item.editTime = GetServerTime();
     end
 end
 
 function ABGP:OnItemValueUpdated(data, distribution, sender)
-    -- Since we don't reliably have itemLinks from BroadcastUpdatedItem,
-    -- we'll only accept item value updates with this event. If it's a
-    -- new item, or it moved between phases, we'll pick it up when it
-    -- gets distributed via CheckUpdatedItem.
-    local items = _G.ABGP_Data[data.phase].itemValues;
-    for i, item in ipairs(items) do
-        if item[1] == data.item[1] then
-            local name = data.item[1];
-            local gp = data.item[2];
-            local boss = data.item[4];
-            local notes = data.item[5];
-            if IsItemUpdated(name, gp, boss, notes, data.item.priority, data.phase) then
-                item[2] = gp;
-                item[4] = boss;
-                item[5] = notes;
-                item.priority = data.item.priority;
-                self:RefreshItemValues();
-            end
-            break;
-        end
+    -- When BroadcastUpdatedItem is called, the item may not have an item link.
+    local existingValue = self:GetItemValue(data.item[1]);
+    if existingValue then
+        local newValue = ValueFromItem(data.item, data.phase);
+        self:CheckUpdatedItem(existingValue.itemLink, newValue);
     end
 end
 
 function ABGP:CheckUpdatedItem(itemLink, value)
-    if IsItemUpdated(value.item, value.gp, value.boss, value.notes, value.priority, value.phase) then
+    if IsValueUpdated(value) then
         local found = false;
         local items = _G.ABGP_Data[value.phase].itemValues;
         for i, item in ipairs(items) do
@@ -460,6 +432,7 @@ function ABGP:CheckUpdatedItem(itemLink, value)
                 item[4] = value.boss;
                 item[5] = value.notes;
                 item.priority = value.priority;
+                item.editTime = value.editTime;
                 found = true;
                 self:Notify("%s's EPGP data was updated!", itemLink);
                 break;
@@ -485,7 +458,8 @@ function ABGP:CheckUpdatedItem(itemLink, value)
                 self:ShortenLink(itemLink),
                 value.boss,
                 value.notes,
-                priority = value.priority
+                priority = value.priority,
+                editTime = value.editTime
             });
             self:Notify("%s's EPGP data has been added to %s!", itemLink, self.PhaseNamesAll[value.phase]);
         end
