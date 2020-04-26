@@ -21,6 +21,8 @@ local IsInGuild = IsInGuild;
 local C_GuildInfo = C_GuildInfo;
 local GetAddOnMetadata = GetAddOnMetadata;
 local GetServerTime = GetServerTime;
+local UnitIsGroupLeader = UnitIsGroupLeader;
+local GetTime = GetTime;
 local select = select;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -35,9 +37,14 @@ local version = "${ADDON_VERSION}";
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
 
+local itemDataRequestToken = 0;
+
 local function OnGroupJoined()
+    ABGP:SendComm(ABGP.CommTypes.STATE_SYNC, {
+        token = GetTime(),
+        itemDataTime = _G.ABGP_DataTimestamp,
+    }, "BROADCAST");
     ABGP:VersionOnGroupJoined();
-    ABGP:RequestOnGroupJoined();
     ABGP:OutsiderOnGroupJoined();
 end
 
@@ -95,12 +102,9 @@ function ABGP:OnInitialize()
         self:RequestOnItemTrashed(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK.name, function(self, event, data, distribution, sender)
-        self:DistribOnCheck(data, distribution, sender);
-    end, self);
-
-    self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE.name, function(self, event, data, distribution, sender)
-        self:RequestOnCheckResponse(data, distribution, sender);
+    self:RegisterMessage(self.CommTypes.STATE_SYNC.name, function(self, event, data, distribution, sender)
+        self:DistribOnStateSync(data, distribution, sender);
+        self:ItemOnStateSync(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.VERSION_REQUEST.name, function(self, event, data, distribution, sender)
@@ -136,9 +140,13 @@ function ABGP:OnInitialize()
         self:AnnounceOnBossLoot(data, distribution, sender);
     end, self);
 
-    self:RegisterMessage(self.CommTypes.UPDATED_ITEM_VALUE.name, function(self, event, data, distribution, sender)
-        self:OnItemValueUpdated(data, distribution, sender);
-    end, self)
+    self:RegisterMessage(self.CommTypes.REQUEST_ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender)
+        self:ItemOnRequestDataSync(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender)
+        self:ItemOnDataSync(data, distribution, sender);
+    end, self);
 
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
@@ -358,7 +366,6 @@ local function ValueFromItem(item, phase)
         boss = item[4],
         notes = item[5],
         priority = item.priority,
-        editTime = item.editTime,
         phase = phase
     };
 end
@@ -395,30 +402,62 @@ local function IsValueUpdated(value)
                 end
             end
         end
-
-        -- If both versions were edited, reject the incoming
-        if value.editTime and oldValue.editTime and oldValue.editTime > value.editTime then
-            isUpdated = false;
-        end
     end
 
     return isUpdated;
 end
 
-function ABGP:CheckIfItemUpdated(item, phase)
-    local value = ValueFromItem(item, phase);
-
-    if IsValueUpdated(value) then
-        item.editTime = GetServerTime();
+function ABGP:ItemOnStateSync(data, distribution, sender)
+    local incomingTime = data.itemDataTime;
+    if incomingTime > _G.ABGP_DataTimestamp then
+        -- This person has newer item data. Request a sync.
+        self:SendComm(self.CommTypes.REQUEST_ITEM_DATA_SYNC, {
+            token = data.token,
+        }, "WHISPER", sender);
+    elseif incomingTime < _G.ABGP_DataTimestamp and UnitIsGroupLeader("player") then
+        -- This person has older item data. Send them the latest.
+        self:BroadcastItemData(sender);
     end
 end
 
-function ABGP:OnItemValueUpdated(data, distribution, sender)
-    -- When BroadcastUpdatedItem is called, the item may not have an item link.
-    local existingValue = self:GetItemValue(data.item[1]);
-    if existingValue then
-        local newValue = ValueFromItem(data.item, data.phase);
-        self:CheckUpdatedItem(existingValue.itemLink, newValue);
+function ABGP:ItemOnRequestDataSync(data, distribution, sender)
+    if data.token ~= itemDataRequestToken then
+        itemDataRequestToken = data.token;
+        self:BroadcastItemData();
+    end
+end
+
+function ABGP:ItemOnDataSync(data, distribution, sender)
+    -- Ignore data syncs that don't have a newer timestamp.
+    if data.itemDataTime <= _G.ABGP_DataTimestamp then return; end
+
+    _G.ABGP_DataTimestamp = data.itemDataTime;
+    for phase in pairs(ABGP.PhasesAll) do
+        _G.ABGP_Data[phase].itemValues = data.itemValues[phase];
+    end
+
+    self:RefreshItemValues();
+    self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
+end
+
+function ABGP:CommitItemData()
+    _G.ABGP_DataTimestamp = GetServerTime();
+    self:BroadcastItemData();
+end
+
+function ABGP:BroadcastItemData(target)
+    local payload = {
+        itemDataTime = _G.ABGP_DataTimestamp,
+        itemValues = {},
+    };
+    for phase in pairs(ABGP.PhasesAll) do
+        payload.itemValues[phase] = _G.ABGP_Data[phase].itemValues;
+    end
+
+    if target then
+        self:SendComm(self.CommTypes.ITEM_DATA_SYNC, payload, "WHISPER", target);
+    elseif IsInGroup() then
+        self:SendComm(self.CommTypes.ITEM_DATA_SYNC, payload, "BROADCAST");
     end
 end
 

@@ -332,7 +332,6 @@ local function DrawItems(container)
                 end
             end
             table.sort(row.priority);
-            ABGP:CheckIfItemUpdated(row, ABGP.CurrentPhase);
             return true;
         end);
 
@@ -342,8 +341,10 @@ local function DrawItems(container)
         container:ReleaseChildren();
         DrawItems(container);
 
-        if not ABGP:FixupItems() then
-            ABGP:ScheduleTimer("FixupItems", 5);
+        if ABGP:FixupItems() then
+            ABGP:CommitItemData();
+        else
+            ABGP:Error("Couldn't find item links for some items! Unable to commit these updates.");
         end
     end
 

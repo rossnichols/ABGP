@@ -524,25 +524,12 @@ local function DistributeItem(data)
     end
 end
 
-function ABGP:DistribOnCheck(data, distribution, sender)
+function ABGP:DistribOnStateSync(data, distribution, sender)
     local window = activeDistributionWindow;
     local activeItems = window and window:GetUserData("activeItems") or {};
 
-    -- Earlier versions sent this message via whisper on group updates,
-    -- but that was too spammy and only added to try to avoid getting
-    -- "stuck" items. Since it's pretty spammy and not needed, just
-    -- ignore the messages.
-    if distribution == "WHISPER" then return; end
-
-    if data.itemLink then
-        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK_RESPONSE, {
-            itemLink = data.itemLink,
-            valid = (activeItems[data.itemLink] ~= nil),
-        }, "WHISPER", sender);
-    else
-        for _, item in pairs(activeItems) do
-            self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, item.data, "WHISPER", sender);
-        end
+    for _, item in pairs(activeItems) do
+        self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_OPENED, item.data, "WHISPER", sender);
     end
 end
 

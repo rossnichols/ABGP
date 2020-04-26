@@ -149,13 +149,6 @@ function ABGP:GetActiveItem(itemLink)
     return activeItems[itemLink];
 end
 
-function ABGP:RequestOnGroupJoined()
-    -- Check if any items are being actively distributed.
-    -- Depending on the circumstances, the player may not
-    -- be eligible for them, but it's still better to see.
-    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_CHECK, {}, "BROADCAST");
-end
-
 local function VerifyItemRequests()
     for itemLink, item in pairs(activeItems) do
         if not UnitExists(item.sender) then
@@ -171,12 +164,6 @@ end
 
 function ABGP:RequestOnGroupUpdate()
     VerifyItemRequests();
-end
-
-function ABGP:RequestOnCheckResponse(data, distribution, sender)
-    if not data.valid then
-        self:RequestOnDistClosed({ itemLink = data.itemLink });
-    end
 end
 
 function ABGP:RequestOnItemRolled(data, distribution, sender)

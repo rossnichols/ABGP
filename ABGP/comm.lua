@@ -37,29 +37,29 @@ end
 -- The commVersion can be revved to create a backwards-incompatible version.
 local commVersion = ":3";
 local function CV(str)
-    return str .. commVersion;
+    return ("ABGP_%s%s"):format(str, commVersion);
 end
 
 ABGP.CommTypes = {
-    ITEM_REQUEST = { name = CV("ABGP_ITEM_REQUEST"), priority = "INSTANT" },
+    ITEM_REQUEST = { name = CV("ITEM_REQUEST"), priority = "INSTANT" },
     -- itemLink: item link string
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings or nil
 
-    ITEM_PASS = { name = CV("ABGP_ITEM_PASS"), priority = "INSTANT" },
+    ITEM_PASS = { name = CV("ITEM_PASS"), priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_OPENED = { name = CV("ABGP_ITEM_DISTRIBUTION_OPENED"), priority = "INSTANT" },
+    ITEM_DISTRIBUTION_OPENED = { name = CV("ITEM_DISTRIBUTION_OPENED"), priority = "INSTANT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
 
-    ITEM_DISTRIBUTION_CLOSED = { name = CV("ABGP_ITEM_DISTRIBUTION_CLOSED"), priority = "INSTANT" },
+    ITEM_DISTRIBUTION_CLOSED = { name = CV("ITEM_DISTRIBUTION_CLOSED"), priority = "INSTANT" },
     -- itemLink: item link string
     -- count: number
 
-    ITEM_DISTRIBUTION_AWARDED = { name = CV("ABGP_ITEM_DISTRIBUTION_AWARDED"), priority = "ALERT" },
+    ITEM_DISTRIBUTION_AWARDED = { name = CV("ITEM_DISTRIBUTION_AWARDED"), priority = "ALERT" },
     -- itemLink: item link string
     -- player: string
     -- cost: number
@@ -70,38 +70,38 @@ ABGP.CommTypes = {
     -- count: number
     -- testItem: bool
 
-    ITEM_DISTRIBUTION_TRASHED = { name = CV("ABGP_ITEM_DISTRIBUTION_TRASHED"), priority = "ALERT" },
+    ITEM_DISTRIBUTION_TRASHED = { name = CV("ITEM_DISTRIBUTION_TRASHED"), priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
 
-    ITEM_DISTRIBUTION_CHECK = { name = CV("ABGP_ITEM_DISTRIBUTION_CHECK"), priority = "ALERT" },
-    -- itemLink: optional item link string
+    STATE_SYNC = { name = CV("STATE_SYNC"), priority = "ALERT" },
+    -- token: unique token for the message
+    -- itemDataTime: number
 
-    ITEM_DISTRIBUTION_CHECK_RESPONSE = { name = CV("ABGP_ITEM_DISTRIBUTION_CHECK_RESPONSE"), priority = "ALERT" },
-    -- itemLink: item link string
-    -- valid: bool
-
-    ITEM_ROLLED = { name = CV("ABGP_ITEM_ROLLED"), priority = "ALERT" },
+    ITEM_ROLLED = { name = CV("ITEM_ROLLED"), priority = "ALERT" },
     -- itemLink: item link string
     -- roll: number
 
-    OFFICER_NOTES_UPDATED = { name = CV("ABGP_OFFICER_NOTES_UPDATED"), priority = "NORMAL" },
+    OFFICER_NOTES_UPDATED = { name = CV("OFFICER_NOTES_UPDATED"), priority = "NORMAL" },
     -- no payload
 
-    REQUEST_PRIORITY_SYNC = { name = CV("ABGP_REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },
+    REQUEST_PRIORITY_SYNC = { name = CV("REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },
     -- no payload
 
-    PRIORITY_SYNC = { name = CV("ABGP_PRIORITY_SYNC"), priority = "NORMAL" },
+    PRIORITY_SYNC = { name = CV("PRIORITY_SYNC"), priority = "BULK" },
     -- priorities: table
 
-    BOSS_LOOT = { name = CV("ABGP_BOSS_LOOT"), priority = "ALERT" },
+    BOSS_LOOT = { name = CV("BOSS_LOOT"), priority = "ALERT" },
     -- source: string
     -- items: table
 
-    UPDATED_ITEM_VALUE = { name = CV("ABGP_UPDATED_ITEM_VALUE"), priority = "NORMAL" },
-    -- item: table
-    -- phase: string from ABGP.PhasesAll
+    REQUEST_ITEM_DATA_SYNC = { name = CV("REQUEST_ITEM_DATA_SYNC"), priority = "NORMAL" },
+    -- token: value from STATE_SYNC
+
+    ITEM_DATA_SYNC = { name = CV("ITEM_DATA_SYNC"), priority = "BULK" },
+    -- itemDataTime: number
+    -- itemValues: table
 
     -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL" },
@@ -162,6 +162,9 @@ function ABGP:SendComm(type, data, distribution, target)
                 alertedSlowComms = true;
                 _G.StaticPopup_Show("ABGP_SLOW_COMMS");
             end
+
+            -- for multipart messages, reset the initial time when each callback is received.
+            time = now;
         end
         self:SendCommMessage("ABGP", payload, distribution, target, priority, commCallback, self);
     end
