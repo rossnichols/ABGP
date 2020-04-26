@@ -99,6 +99,10 @@ ABGP.CommTypes = {
     -- source: string
     -- items: table
 
+    UPDATED_ITEM_VALUE = { name = CV("ABGP_UPDATED_ITEM_VALUE"), priority = "NORMAL" },
+    -- item: table
+    -- phase: string from ABGP.PhasesAll
+
     -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL" },
     -- reset: bool or nil

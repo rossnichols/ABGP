@@ -217,6 +217,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     local gpCost, priority, notes = "No GP cost (rolled)", "", "";
     local value = data.value;
     if value then
+        self:CheckUpdatedItem(itemLink, value);
         if value.gp ~= 0 then
             gpCost = ("GP cost: %d"):format(value.gp);
         end
