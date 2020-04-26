@@ -603,20 +603,20 @@ local function DrawItems(container, rebuild, reason)
                     if exact then
                         if item[1]:lower() == exact or
                             item[4]:lower() == exact or
-                            (item[5] or ""):lower() == exact then
+                            (item[6] or ""):lower() == exact then
                             matchesSearch = true;
                         end
                     else
                         if item[1]:lower():find(searchText, 1, true) or
                             item[4]:lower():find(searchText, 1, true) or
-                            (item[5] or ""):lower():find(searchText, 1, true) then
+                            (item[6] or ""):lower():find(searchText, 1, true) then
                             matchesSearch = true;
                         end
                     end
 
                     if matchesSearch then
-                        if #item.priority > 0 then
-                            for _, pri in ipairs(item.priority) do
+                        if #item[5] > 0 then
+                            for _, pri in ipairs(item[5]) do
                                 if allowedPriorities[pri] then
                                     table.insert(filtered, item);
                                     break;

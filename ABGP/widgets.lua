@@ -611,8 +611,8 @@ do
 
             self.item.text:SetText(data[3] or data[1]);
             self.gp.text:SetText(data[2]);
-            self.notes.text:SetText(data[5] and "[Note]" or "");
-            self.priority.text:SetText(table.concat(data.priority, ", "));
+            self.notes.text:SetText(data[6] and "[Note]" or "");
+            self.priority.text:SetText(table.concat(data[5], ", "));
 
             local font =ABGP:IsItemFavorited(data[3]) and "ABGPHighlight" or "GameFontNormal";
             self.gp.text:SetFontObject(font);
@@ -640,7 +640,7 @@ do
                 priorityEditor.frame:SetParent(self.frame);
 
                 self.currentPriorities = {};
-                for _, pri in ipairs(self.data.priority) do self.currentPriorities[pri] = true; end
+                for _, pri in ipairs(self.data[5]) do self.currentPriorities[pri] = true; end
 
                 priorityEditor:SetValues(self.currentPriorities, false, ABGP:GetItemPriorities());
                 priorityEditor:SetCallback("OnClosed", function()
@@ -648,16 +648,16 @@ do
                     self.priority:Show();
                     self.priorityEditor.frame:Hide();
 
-                    self.data.priority = {};
+                    self.data[5] = {};
                     for pri, value in pairs(self.currentPriorities) do
-                        if value then table.insert(self.data.priority, pri); end
+                        if value then table.insert(self.data[5], pri); end
                     end
-                    table.sort(self.data.priority);
+                    table.sort(self.data[5]);
 
                     self:SetData(self.data);
                     self:Fire("OnPrioritiesUpdated");
                 end);
-                priorityEditor:SetText(table.concat(self.data.priority, ", "));
+                priorityEditor:SetText(table.concat(self.data[5], ", "));
                 self.priorityEditor = priorityEditor;
             end
 

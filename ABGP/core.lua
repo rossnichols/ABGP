@@ -31,6 +31,7 @@ local table = table;
 local tostring = tostring;
 local min = min;
 local max = max;
+local date = date;
 
 local version = "${ADDON_VERSION}";
 
@@ -364,8 +365,8 @@ local function ValueFromItem(item, phase)
         item = item[1],
         gp = item[2],
         boss = item[4],
-        notes = item[5],
-        priority = item.priority,
+        priority = item[5],
+        notes = item[6],
         phase = phase
     };
 end
@@ -383,9 +384,21 @@ function ABGP:RefreshItemValues()
     end
 end
 
-local function IsValueUpdated(value)
+function ABGP:BuildDefaultItemValues()
+    local itemValues = {};
+    for phase in pairs(self.PhasesAll) do
+        for _, item in ipairs(self.initialData.ABGP_Data[phase].itemValues) do
+            local name = item[1];
+            itemValues[name] = ValueFromItem(item, phase);
+        end
+    end
+
+    return itemValues;
+end
+
+local function IsValueUpdated(value, oldValue)
     local isUpdated = true;
-    local oldValue = ABGP:GetItemValue(value.item);
+    local oldValue = oldValue or ABGP:GetItemValue(value.item);
     if oldValue then
         isUpdated =
             oldValue.gp ~= value.gp or
@@ -432,12 +445,14 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     if data.itemDataTime <= _G.ABGP_DataTimestamp then return; end
 
     _G.ABGP_DataTimestamp = data.itemDataTime;
-    for phase in pairs(ABGP.PhasesAll) do
-        _G.ABGP_Data[phase].itemValues = data.itemValues[phase];
+    for phase, values in pairs(data.itemValues) do
+        _G.ABGP_Data[phase].itemValues = values;
     end
 
     self:RefreshItemValues();
+
     self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
+    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp)); -- https://strftime.org/
 end
 
 function ABGP:CommitItemData()
@@ -450,13 +465,13 @@ function ABGP:BroadcastItemData(target)
         itemDataTime = _G.ABGP_DataTimestamp,
         itemValues = {},
     };
-    for phase in pairs(ABGP.PhasesAll) do
+    for phase in pairs(ABGP.Phases) do
         payload.itemValues[phase] = _G.ABGP_Data[phase].itemValues;
     end
 
     if target then
         self:SendComm(self.CommTypes.ITEM_DATA_SYNC, payload, "WHISPER", target);
-    elseif IsInGroup() then
+    else
         self:SendComm(self.CommTypes.ITEM_DATA_SYNC, payload, "BROADCAST");
     end
 end

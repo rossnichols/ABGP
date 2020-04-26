@@ -47,7 +47,8 @@ local itemMapping = {
     ["GP Cost"] = 2,
     -- item link is 3 (populated elsewhere)
     ["Boss"] = 4,
-    ["Notes"] = 5,
+    -- priority is 5 (populated elsewhere)
+    ["Notes"] = 6,
 };
 for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;
@@ -324,14 +325,14 @@ end
 local function DrawItems(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
-            row.priority = {};
+            row[5] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
-                    table.insert(row.priority, itemPriorities[k]);
+                    table.insert(row[5], itemPriorities[k]);
                     row[k] = nil;
                 end
             end
-            table.sort(row.priority);
+            table.sort(row[5]);
             return true;
         end);
 
