@@ -9896,15 +9896,6 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 			},
 		},
 		{
-			"Primalist's Linked Legguards",
-			0,
-			"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
-			"Chromaggus",
-			["priority"] = {
-				"Garbage",
-			},
-		},
-		{
 			"Girdle of the Fallen Crusader",
 			0,
 			"|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r",
@@ -11564,7 +11555,7 @@ _G.ABGP_Data[ABGP.PhasesAll.p5] = {
 -- END copy from SavedVariables
 --
 local initialData = {
-    timestamp = 1587848886, -- https://www.epochconverter.com/ or GetServerTime() ingame
+    timestamp = 1587848887, -- https://www.epochconverter.com/ or GetServerTime() ingame
     ABGP_Data = ABGP_Data,
 };
 
