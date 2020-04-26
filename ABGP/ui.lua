@@ -124,7 +124,7 @@ local function DrawPriority(container, rebuild, reason)
     local count = 0;
     local order = 0;
     local lastPriority = -1;
-    local priority = ABGP.Priorities[ABGP.CurrentPhase] or {};
+    local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
         local inRaidGroup = not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
         local isGrouped = not onlyGrouped or UnitExists(data.player);
@@ -306,7 +306,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory or {};
+    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
     local filtered = gpHistory;
     if searchText ~= "" or currentRaidGroup then
         filtered = {};
@@ -758,7 +758,7 @@ local function DrawAuditLog(container, rebuild, reason)
     local auditLog = container:GetUserData("auditLog");
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_ItemAuditLog[ABGP.CurrentPhase] or {};
+    local entries = _G.ABGP_ItemAuditLog[ABGP.CurrentPhase];
     local pagination = container:GetUserData("pagination");
     pagination:SetValues(#entries, 100);
     if #entries > 0 then

@@ -347,7 +347,7 @@ local itemValues = {};
 
 function ABGP:RefreshItemValues()
     itemValues = {};
-    for phase in pairs(self.Phases) do
+    for phase in pairs(self.PhasesAll) do
         for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
             local name = item.item or item[1];
             local gp = item.gp or item[2];

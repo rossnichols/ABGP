@@ -26,15 +26,9 @@ ABGP.PhasesSorted = {
     ABGP.Phases.p1,
     ABGP.Phases.p3
 };
-ABGP.Priorities = {};
-for phase in pairs(ABGP.Phases) do
-    ABGP.Priorities[phase] = {};
-end
-ABGP.CurrentPhase = ABGP.Phases.p3;
-
 ABGP.PhasesAll = {
-    p1 = "p1",
-    p3 = "p3",
+    [ABGP.Phases.p1] = ABGP.Phases.p1,
+    [ABGP.Phases.p3] = ABGP.Phases.p3,
     p5 = "p5",
 };
 ABGP.PhaseNamesAll = {
@@ -47,6 +41,11 @@ ABGP.PhasesSortedAll = {
     ABGP.PhasesAll.p3,
     ABGP.PhasesAll.p5,
 };
+ABGP.CurrentPhase = ABGP.Phases.p3;
+ABGP.Priorities = {};
+for phase in pairs(ABGP.PhasesAll) do
+    ABGP.Priorities[phase] = {};
+end
 
 ABGP.RaidGroups = {
     RED = "RED",

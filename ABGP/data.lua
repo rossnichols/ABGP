@@ -341,14 +341,14 @@ function ABGP:HistoryDelete(data)
     ABGP:AuditItemUpdate(commData);
 end
 
-
-_G.ABGP_ItemAuditLog = {};
-for phase in pairs(ABGP.Phases) do
-    _G.ABGP_ItemAuditLog[phase] = {};
-end
-
 function ABGP:TrimAuditLog(threshold)
     threshold = threshold or 0;
+
+    _G.ABGP_ItemAuditLog = _G.ABGP_ItemAuditLog or {};
+    for phase in pairs(ABGP.PhasesAll) do
+        _G.ABGP_ItemAuditLog[phase] = _G.ABGP_ItemAuditLog[phase] or {};
+    end
+
     local current = GetServerTime();
     for _, phaseLog in pairs(_G.ABGP_ItemAuditLog) do
         local i = 1;

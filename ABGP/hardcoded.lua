@@ -10587,6 +10587,7 @@ _G.ABGP_Data[ABGP.Phases.p3] = {
 	},
 }
 _G.ABGP_Data[ABGP.PhasesAll.p5] = {
+	["gpHistory"] = {},
 	["itemValues"] = {
 		{
 			"Barrage Shoulders",
