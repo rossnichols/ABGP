@@ -362,7 +362,7 @@ function ABGP:ShowImportWindow()
     self:BuildItemLookup();
 
     local window = AceGUI:Create("Window");
-    window:SetTitle(("ABGP (data updated %s)"):format(date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp))); -- https://strftime.org/
+    window:SetTitle(("%s Spreadsheet Interop"):format(self:ColorizeText("ABGP")));
     window:SetWidth(650);
     window:SetHeight(400);
     window:SetLayout("Flow");

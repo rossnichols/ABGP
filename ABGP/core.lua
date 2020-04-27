@@ -44,7 +44,8 @@ local itemDataRequestToken = 0;
 local function OnGroupJoined()
     ABGP:SendComm(ABGP.CommTypes.STATE_SYNC, {
         token = GetTime(),
-        itemDataTime = _G.ABGP_DataTimestamp,
+        itemDataTime = _G.ABGP_DataTimestamp.itemValues,
+        itemDataBaseline = ABGP.initialData.itemValues.timestamp,
     }, "BROADCAST");
     ABGP:VersionOnGroupJoined();
     ABGP:OutsiderOnGroupJoined();
@@ -395,7 +396,7 @@ end
 function ABGP:BuildDefaultItemValues()
     local itemValues = {};
     for phase in pairs(self.PhasesAll) do
-        for _, item in ipairs(self.initialData.ABGP_Data[phase].itemValues) do
+        for _, item in ipairs(self.initialData.itemValues[phase]) do
             itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item, phase);
         end
     end
@@ -428,13 +429,15 @@ local function IsValueUpdated(value, oldValue)
 end
 
 function ABGP:ItemOnStateSync(data, distribution, sender)
-    local incomingTime = data.itemDataTime;
-    if incomingTime > _G.ABGP_DataTimestamp then
+    -- Ignore state syncs with a mismatched baseline.
+    if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
+
+    if data.itemDataTime > _G.ABGP_DataTimestamp.itemValues then
         -- This person has newer item data. Request a sync.
         self:SendComm(self.CommTypes.REQUEST_ITEM_DATA_SYNC, {
             token = data.token,
         }, "WHISPER", sender);
-    elseif incomingTime < _G.ABGP_DataTimestamp and UnitIsGroupLeader("player") then
+    elseif data.itemDataTime < _G.ABGP_DataTimestamp.itemValues and UnitIsGroupLeader("player") then
         -- This person has older item data. Send them the latest.
         self:BroadcastItemData(sender);
     end
@@ -448,16 +451,17 @@ function ABGP:ItemOnRequestDataSync(data, distribution, sender)
 end
 
 function ABGP:ItemOnDataSync(data, distribution, sender)
-    -- Ignore data syncs that don't have a newer timestamp.
-    if data.itemDataTime <= _G.ABGP_DataTimestamp then return; end
+    -- Ignore data syncs that don't have a newer timestamp or have a mismatched baseline.
+    if data.itemDataTime < _G.ABGP_DataTimestamp.itemValues then return; end
+    if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
+    _G.ABGP_DataTimestamp.itemValues = data.itemDataTime;
     self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
-    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp)); -- https://strftime.org/
+    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp.itemValues)); -- https://strftime.org/
 
     -- Reset to defaults, since we're given a diff from them.
-    _G.ABGP_DataTimestamp = data.itemDataTime;
     for phase in pairs(ABGP.PhasesAll) do
-        _G.ABGP_Data[phase] = self.initialData.ABGP_Data[phase];
+        _G.ABGP_Data[phase].itemValues = self.initialData.itemValues[phase];
     end
     self:RefreshItemValues();
 
@@ -471,14 +475,17 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
 end
 
 function ABGP:CommitItemData()
-    _G.ABGP_DataTimestamp = GetServerTime();
-    ABGP:RefreshItemValues();
-    self:BroadcastItemData();
+    if not self.IgnoreItemUpdates then
+        _G.ABGP_DataTimestamp.itemValues = GetServerTime();
+        ABGP:RefreshItemValues();
+        self:BroadcastItemData();
+    end
 end
 
 function ABGP:BroadcastItemData(target)
     local payload = {
-        itemDataTime = _G.ABGP_DataTimestamp,
+        itemDataTime = _G.ABGP_DataTimestamp.itemValues,
+        itemDataBaseline = self.initialData.itemValues.timestamp,
         itemValues = {},
     };
 
