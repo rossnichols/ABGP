@@ -599,7 +599,7 @@ function ABGP:IsItemUsable(itemLink)
     -- self:LogVerbose("%s:%d", itemLink, select("#", scanner:GetRegions()));
     for i = 1, select("#", scanner:GetRegions()) do
         local region = select(i, scanner:GetRegions());
-        if region and region:GetObjectType() == "FontString" then
+        if region and region:GetObjectType() == "FontString" and region:GetText() then
             if region:GetText() == "Retrieving item information" then
                 -- No info available: assume usable.
                 -- self:LogVerbose("no item info available");
