@@ -451,18 +451,18 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     -- Ignore data syncs that don't have a newer timestamp.
     if data.itemDataTime <= _G.ABGP_DataTimestamp then return; end
 
+    self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
+    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp)); -- https://strftime.org/
+
     _G.ABGP_DataTimestamp = data.itemDataTime;
     for phase, items in pairs(data.itemValues) do
         -- _G.ABGP_Data[phase].itemValues = values;
         for i, item in ipairs(items) do
-            self:LogDebug("Received info about %s in %s.", item[self.ItemDataIndex.NAME], phase);
+            self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item, phase));
         end
     end
 
     self:RefreshItemValues();
-
-    self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
-    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp)); -- https://strftime.org/
 end
 
 function ABGP:CommitItemData()
