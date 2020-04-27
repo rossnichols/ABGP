@@ -454,11 +454,16 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
     self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp)); -- https://strftime.org/
 
+    -- Reset to defaults, since we're given a diff from them.
     _G.ABGP_DataTimestamp = data.itemDataTime;
+    for phase in pairs(ABGP.PhasesAll) do
+        _G.ABGP_Data[phase] = self.initialData.ABGP_Data[phase];
+    end
+    self:RefreshItemValues();
+
     for phase, items in pairs(data.itemValues) do
-        -- _G.ABGP_Data[phase].itemValues = values;
         for i, item in ipairs(items) do
-            self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item, phase));
+            self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item, phase), true);
         end
     end
 
@@ -478,7 +483,7 @@ function ABGP:BroadcastItemData(target)
     };
 
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.Phases) do
+    for phase in pairs(ABGP.PhasesAll) do
         payload.itemValues[phase] = {};
         for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
             local name = item[self.ItemDataIndex.NAME];
@@ -498,7 +503,7 @@ function ABGP:BroadcastItemData(target)
     end
 end
 
-function ABGP:CheckUpdatedItem(itemLink, value)
+function ABGP:CheckUpdatedItem(itemLink, value, bulk)
     if IsValueUpdated(value) then
         local found = false;
         local items = _G.ABGP_Data[value.phase].itemValues;
@@ -509,7 +514,9 @@ function ABGP:CheckUpdatedItem(itemLink, value)
                 item[ABGP.ItemDataIndex.NOTES] = value.notes;
                 item[ABGP.ItemDataIndex.PRIORITY] = value.priority;
                 found = true;
-                self:Notify("%s's EPGP data was updated!", itemLink);
+                if not bulk then
+                    self:Notify("%s's EPGP data was updated!", itemLink);
+                end
                 break;
             end
         end
@@ -521,7 +528,9 @@ function ABGP:CheckUpdatedItem(itemLink, value)
                 for i, item in ipairs(items) do
                     if item[ABGP.ItemDataIndex.NAME] == value.item then
                         table.remove(items, i);
-                        self:Notify("%s's EPGP data was removed from %s!", itemLink, self.PhaseNamesAll[oldValue.phase]);
+                        if not bulk then
+                            self:Notify("%s's EPGP data was removed from %s!", itemLink, self.PhaseNamesAll[oldValue.phase]);
+                        end
                         break;
                     end
                 end
@@ -535,10 +544,12 @@ function ABGP:CheckUpdatedItem(itemLink, value)
                 [ABGP.ItemDataIndex.PRIORITY] = value.priority,
                 [ABGP.ItemDataIndex.NOTES] = value.notes,
             });
-            self:Notify("%s's EPGP data has been added to %s!", itemLink, self.PhaseNamesAll[value.phase]);
+            if not bulk then
+                self:Notify("%s's EPGP data has been added to %s!", itemLink, self.PhaseNamesAll[value.phase]);
+            end
         end
 
-        self:RefreshItemValues();
+        if not bulk then self:RefreshItemValues(); end
     end
 end
 
