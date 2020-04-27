@@ -8,5 +8,5 @@ ABGP.Debug = true;
 -- ABGP.TestLootFrame = true;
 ABGP.IgnoreSelfDistributed = true;
 ABGP.IgnoreItemUpdates = true;
-ABGP.VersionDebug = "4.0.1";
-ABGP.VersionCmpDebug = "4.0.1";
+ABGP.VersionDebug = "4.0.2";
+ABGP.VersionCmpDebug = "4.0.2";
