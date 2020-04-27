@@ -6,12 +6,10 @@ local pairs = pairs;
 local type = type;
 
 _G.ABGP_Data = {};
-_G.ABGP_Data[ABGP.Phases.p1] = {};
-_G.ABGP_Data[ABGP.Phases.p3] = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1587944769, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1587944770, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				"Aged Core Leather Gloves",
@@ -4114,7 +4112,7 @@ ABGP.initialData = {
 		},
 	},
 	gpHistory = {
-		timestamp = 1587944769, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1587944770, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				["player"] = "Darknéss",
@@ -11566,9 +11564,16 @@ function ABGP:CheckHardcodedData()
 	end
 
 	for key, initialData in pairs(self.initialData) do
+		local updateBaseline = false;
 		if _G.ABGP_DataTimestamp[key] < initialData.timestamp then
 			_G.ABGP_DataTimestamp[key] = initialData.timestamp;
-			for phase in pairs(ABGP.PhasesAll) do
+			updateBaseline = true;
+		end
+
+		for phase in pairs(ABGP.PhasesAll) do
+			_G.ABGP_Data[phase] = _G.ABGP_Data[phase] or {};
+			_G.ABGP_Data[phase][key] = _G.ABGP_Data[phase][key] or {};
+			if updateBaseline then
 				_G.ABGP_Data[phase][key] = initialData[phase];
 			end
 		end
