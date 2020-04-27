@@ -44,12 +44,11 @@ local gpColumns = {
 
 local itemPriorities = ABGP:GetItemPriorities();
 local itemMapping = {
-    ["Item"] = 1,
-    ["GP Cost"] = 2,
-    -- item link is 3 (populated elsewhere)
-    ["Boss"] = 4,
-    -- priority is 5 (populated elsewhere)
-    ["Notes"] = 6,
+    ["Item"] = ABGP.ItemDataIndex.NAME,
+    ["GP Cost"] = ABGP.ItemDataIndex.GP,
+    ["Boss"] = ABGP.ItemDataIndex.BOSS,
+    ["Notes"] = ABGP.ItemDataIndex.NOTES,
+    -- ABGP.ItemDataIndex.ITEMLINK and ABGP.ItemDataIndex.PRIORITY populated elsewhere
 };
 for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;
@@ -458,7 +457,7 @@ function ABGP:FixupItems()
     local p5 = _G.ABGP_Data.p5.itemValues;
     for _, phase in ipairs({ p1, p3, p5 }) do
         for _, entry in ipairs(phase) do
-            if lookup[entry[1]] then
+            if lookup[entry[ABGP.ItemDataIndex.NAME]] then
                 entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
             else
                 self:Notify(("FAILED TO FIND [%s]"):format(entry[ABGP.ItemDataIndex.NAME]));
