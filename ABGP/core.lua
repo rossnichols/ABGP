@@ -32,6 +32,7 @@ local tostring = tostring;
 local min = min;
 local max = max;
 local date = date;
+local unpack = unpack;
 
 local version = "${ADDON_VERSION}";
 
@@ -359,14 +360,22 @@ end
 --
 
 local itemValues = {};
+ABGP.ItemDataIndex = {
+    NAME = 1,
+    GP = 2,
+    ITEMLINK = 3,
+    BOSS = 4,
+    PRIORITY = 5,
+    NOTES = 6,
+};
 
 local function ValueFromItem(item, phase)
     return {
-        item = item[1],
-        gp = item[2],
-        boss = item[4],
-        priority = item[5],
-        notes = item[6],
+        item = item[ABGP.ItemDataIndex.NAME],
+        gp = item[ABGP.ItemDataIndex.GP],
+        boss = item[ABGP.ItemDataIndex.BOSS],
+        priority = item[ABGP.ItemDataIndex.PRIORITY],
+        notes = item[ABGP.ItemDataIndex.NOTES],
         phase = phase
     };
 end
@@ -375,11 +384,10 @@ function ABGP:RefreshItemValues()
     itemValues = {};
     for phase in pairs(self.PhasesAll) do
         for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
-            local name = item[1];
-            itemValues[name] = ValueFromItem(item, phase);
+            itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item, phase);
 
             -- Try to ensure info about the item is cached locally.
-            if item[3] then GetItemInfo(item[3]); end
+            if item[ABGP.ItemDataIndex.ITEMLINK] then GetItemInfo(item[ABGP.ItemDataIndex.ITEMLINK]); end
         end
     end
 end
@@ -388,8 +396,7 @@ function ABGP:BuildDefaultItemValues()
     local itemValues = {};
     for phase in pairs(self.PhasesAll) do
         for _, item in ipairs(self.initialData.ABGP_Data[phase].itemValues) do
-            local name = item[1];
-            itemValues[name] = ValueFromItem(item, phase);
+            itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item, phase);
         end
     end
 
@@ -465,8 +472,19 @@ function ABGP:BroadcastItemData(target)
         itemDataTime = _G.ABGP_DataTimestamp,
         itemValues = {},
     };
+
+    -- local defaultValues = self:BuildDefaultItemValues();
     for phase in pairs(ABGP.Phases) do
         payload.itemValues[phase] = _G.ABGP_Data[phase].itemValues;
+
+        -- payload.itemValues[phase] = {};
+        -- for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
+        --     local copy = { unpack(item) };
+        --     if defaultValues[copy[self.ItemDataIndex.NAME]] then
+        --         copy[ABGP.ItemDataIndex.BOSS] = "";
+        --     end
+        --     table.insert(payload.itemValues[phase], copy);
+        -- end
     end
 
     if target then
@@ -481,12 +499,11 @@ function ABGP:CheckUpdatedItem(itemLink, value)
         local found = false;
         local items = _G.ABGP_Data[value.phase].itemValues;
         for i, item in ipairs(items) do
-            if item[1] == value.item then
-                item[2] = value.gp;
-                item[4] = value.boss;
-                item[5] = value.notes;
-                item.priority = value.priority;
-                item.editTime = value.editTime;
+            if item[ABGP.ItemDataIndex.NAME] == value.item then
+                item[ABGP.ItemDataIndex.GP] = value.gp;
+                item[ABGP.ItemDataIndex.BOSS] = value.boss;
+                item[ABGP.ItemDataIndex.NOTES] = value.notes;
+                item[ABGP.ItemDataIndex.PRIORITY] = value.priority;
                 found = true;
                 self:Notify("%s's EPGP data was updated!", itemLink);
                 break;
@@ -498,7 +515,7 @@ function ABGP:CheckUpdatedItem(itemLink, value)
             if oldValue then
                 local items = _G.ABGP_Data[oldValue.phase].itemValues;
                 for i, item in ipairs(items) do
-                    if item[1] == value.item then
+                    if item[ABGP.ItemDataIndex.NAME] == value.item then
                         table.remove(items, i);
                         self:Notify("%s's EPGP data was removed from %s!", itemLink, self.PhaseNamesAll[oldValue.phase]);
                         break;
@@ -507,13 +524,12 @@ function ABGP:CheckUpdatedItem(itemLink, value)
             end
 
             table.insert(items, {
-                value.item,
-                value.gp,
-                self:ShortenLink(itemLink),
-                value.boss,
-                value.notes,
-                priority = value.priority,
-                editTime = value.editTime
+                [ABGP.ItemDataIndex.NAME] = value.item,
+                [ABGP.ItemDataIndex.GP] = value.gp,
+                [ABGP.ItemDataIndex.ITEMLINK] = self:ShortenLink(itemLink),
+                [ABGP.ItemDataIndex.BOSS] = value.boss,
+                [ABGP.ItemDataIndex.PRIORITY] = value.priority,
+                [ABGP.ItemDataIndex.NOTES] = value.notes,
             });
             self:Notify("%s's EPGP data has been added to %s!", itemLink, self.PhaseNamesAll[value.phase]);
         end

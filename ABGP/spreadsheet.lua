@@ -325,14 +325,14 @@ end
 local function DrawItems(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
-            row[5] = {};
+            row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
-                    table.insert(row[5], itemPriorities[k]);
+                    table.insert(row[ABGP.ItemDataIndex.PRIORITY], itemPriorities[k]);
                     row[k] = nil;
                 end
             end
-            table.sort(row[5]);
+            table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
             return true;
         end);
 

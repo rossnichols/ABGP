@@ -510,13 +510,13 @@ local function DrawItems(container, rebuild, reason)
                 local text = ("Boss\tItem\t%s\tGP Cost\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
                 for i, item in ipairs(items) do
                     local itemPriorities = {};
-                    for _, pri in ipairs(item.priority) do itemPriorities[pri] = true; end
+                    for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do itemPriorities[pri] = true; end
                     local priorities = {};
                     for _, pri in ipairs(sortedPriorities) do
                         table.insert(priorities, itemPriorities[pri] and "TRUE" or "");
                     end
                     text = text .. ("%s\t%s\t%s\t%s\t%s%s"):format(
-                        item[4] or "", item[1], table.concat(priorities, "\t"), item[2], item[5] or "", (i == #items and "" or "\n"));
+                        item[ABGP.ItemDataIndex.BOSS] or "", item[ABGP.ItemDataIndex.NAME], table.concat(priorities, "\t"), item[ABGP.ItemDataIndex.GP], item[ABGP.ItemDataIndex.NOTES] or "", (i == #items and "" or "\n"));
                 end
 
                 local window = AceGUI:Create("Window");
@@ -597,26 +597,26 @@ local function DrawItems(container, rebuild, reason)
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
-            if not onlyUsable or ABGP:IsItemUsable(item[3]) then
-                if not onlyFaved or ABGP:IsItemFavorited(item[3]) then
+            if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
+                if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
                     local matchesSearch = false;
                     if exact then
-                        if item[1]:lower() == exact or
-                            item[4]:lower() == exact or
-                            (item[6] or ""):lower() == exact then
+                        if item[ABGP.ItemDataIndex.NAME]:lower() == exact or
+                            item[ABGP.ItemDataIndex.BOSS]:lower() == exact or
+                            (item[ABGP.ItemDataIndex.NOTES] or ""):lower() == exact then
                             matchesSearch = true;
                         end
                     else
-                        if item[1]:lower():find(searchText, 1, true) or
-                            item[4]:lower():find(searchText, 1, true) or
-                            (item[6] or ""):lower():find(searchText, 1, true) then
+                        if item[ABGP.ItemDataIndex.NAME]:lower():find(searchText, 1, true) or
+                            item[ABGP.ItemDataIndex.BOSS]:lower():find(searchText, 1, true) or
+                            (item[ABGP.ItemDataIndex.NOTES] or ""):lower():find(searchText, 1, true) then
                             matchesSearch = true;
                         end
                     end
 
                     if matchesSearch then
-                        if #item[5] > 0 then
-                            for _, pri in ipairs(item[5]) do
+                        if #item[ABGP.ItemDataIndex.PRIORITY] > 0 then
+                            for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do
                                 if allowedPriorities[pri] then
                                     table.insert(filtered, item);
                                     break;
@@ -632,7 +632,7 @@ local function DrawItems(container, rebuild, reason)
     end
 
     table.sort(filtered, function(a, b)
-        return a[1] < b[1];
+        return a[ABGP.ItemDataIndex.NAME] < b[ABGP.ItemDataIndex.NAME];
     end);
 
     local pagination = container:GetUserData("pagination");
@@ -657,7 +657,7 @@ local function DrawItems(container, rebuild, reason)
                                 if activeWindow then
                                     local container = activeWindow:GetUserData("container");
                                     container:SelectTab("gp");
-                                    container:GetUserData("search"):SetText(("\"%s\""):format(data[1]));
+                                    container:GetUserData("search"):SetText(("\"%s\""):format(data[ABGP.ItemDataIndex.NAME]));
                                     PopulateUI(false);
                                 end
                             end,
@@ -665,12 +665,12 @@ local function DrawItems(container, rebuild, reason)
                             notCheckable = true
                         },
                     };
-                    if data[3] and ABGP:CanFavoriteItems() then
-                        local faved = ABGP:IsItemFavorited(data[3]);
+                    if data[ABGP.ItemDataIndex.ITEMLINK] and ABGP:CanFavoriteItems() then
+                        local faved = ABGP:IsItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK]);
                         table.insert(context, 1, {
                             text = faved and "Remove favorite" or "Add favorite",
                             func = function(self, data)
-                                ABGP:SetItemFavorited(data[3], not faved);
+                                ABGP:SetItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK], not faved);
                                 elt:SetData(data);
                             end,
                             arg1 = data,
@@ -681,7 +681,7 @@ local function DrawItems(container, rebuild, reason)
                         table.insert(context, {
                             text = "Edit GP",
                             func = function(self, widget)
-                                _G.StaticPopup_Show("ABGP_UPDATE_GP", widget.data[3], nil, widget);
+                                _G.StaticPopup_Show("ABGP_UPDATE_GP", widget.data[ABGP.ItemDataIndex.ITEMLINK], nil, widget);
                             end,
                             arg1 = widget,
                             notCheckable = true
@@ -689,7 +689,7 @@ local function DrawItems(container, rebuild, reason)
                         table.insert(context, {
                             text = "Edit notes",
                             func = function(self, widget)
-                                _G.StaticPopup_Show("ABGP_UPDATE_NOTES", widget.data[3], nil, widget);
+                                _G.StaticPopup_Show("ABGP_UPDATE_NOTES", widget.data[ABGP.ItemDataIndex.ITEMLINK], nil, widget);
                             end,
                             arg1 = widget,
                             notCheckable = true
@@ -708,7 +708,7 @@ local function DrawItems(container, rebuild, reason)
                 end
             end);
             elt:SetCallback("OnPrioritiesUpdated", function(widget, event)
-                ABGP:Notify("Priorities for %s: %s.", widget.data[3], table.concat(widget.data.priority, ", "));
+                ABGP:Notify("Priorities for %s: %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK], table.concat(widget.data[ABGP.ItemDataIndex.PRIORITY], ", "));
                 ABGP:CommitItemData();
                 ABGP:RefreshItemValues();
             end);
@@ -1111,10 +1111,10 @@ StaticPopupDialogs["ABGP_UPDATE_GP"] = {
     OnAccept = function(self, widget)
         local cost = ABGP:DistribValidateCost(self.editBox:GetText());
         if cost then
-            widget.data[2] = cost;
+            widget.data[ABGP.ItemDataIndex.GP] = cost;
             widget:SetData(widget.data);
 
-            ABGP:Notify("Cost of %s is now %d.", widget.data[3], cost);
+            ABGP:Notify("Cost of %s is now %d.", widget.data[ABGP.ItemDataIndex.ITEMLINK], cost);
             ABGP:CommitItemData();
             ABGP:RefreshItemValues();
         end
@@ -1162,12 +1162,12 @@ StaticPopupDialogs["ABGP_UPDATE_NOTES"] = {
     OnAccept = function(self, widget)
         local text = self.editBox:GetText();
         if text == "" then
-            ABGP:Notify("Cleared note for %s.", widget.data[3]);
+            ABGP:Notify("Cleared note for %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK]);
             text = nil;
         else
-            ABGP:Notify("Notes for %s is now '%s'.", widget.data[3], text);
+            ABGP:Notify("Notes for %s is now '%s'.", widget.data[ABGP.ItemDataIndex.ITEMLINK], text);
         end
-        widget.data[5] = text
+        widget.data[ABGP.ItemDataIndex.NOTES] = text
         widget:SetData(widget.data);
 
         ABGP:CommitItemData();

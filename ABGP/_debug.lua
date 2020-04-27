@@ -64,9 +64,9 @@ function ABGP:FixupItems()
     for _, phase in ipairs({ p1, p3, p5 }) do
         for _, entry in ipairs(phase) do
             if lookup[entry[1]] then
-                entry[3] = lookup[entry[1]];
+                entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
             else
-                print(("FAILED TO FIND [%s]"):format(entry[1]));
+                print(("FAILED TO FIND [%s]"):format(entry[ABGP.ItemDataIndex.NAME]));
             end
         end
     end
