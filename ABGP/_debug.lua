@@ -13,8 +13,8 @@ ABGP.Debug = true;
 -- ABGP.ShowTestDistrib = true;
 -- ABGP.TestLootFrame = true;
 ABGP.IgnoreSelfDistributed = true;
-ABGP.VersionDebug = "3.5.2";
-ABGP.VersionCmpDebug = "3.5.2";
+ABGP.VersionDebug = "4.0.0";
+ABGP.VersionCmpDebug = "4.0.0";
 
 local blacklist = {
     [17012] = true, -- Core Leather
