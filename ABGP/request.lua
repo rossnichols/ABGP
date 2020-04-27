@@ -180,6 +180,9 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         return;
     end
 
+    -- Ensure item info is cached locally.
+    GetItemInfo(itemLink);
+
     activeItems[itemLink] = {
         itemLink = itemLink,
         sender = sender,
@@ -283,9 +286,20 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     end
     if player == UnitName("player") then
         local unfaved = "";
-        if self:IsItemFavorited(itemLink) and not data.testItem then
-            self:SetItemFavorited(itemLink, false);
-            unfaved = " Removed it from your AtlasLoot favorites.";
+        if not data.testItem then
+            if self:IsItemFavorited(itemLink) then
+                self:SetItemFavorited(itemLink, false);
+                unfaved = " Removed it from your AtlasLoot favorites.";
+            end
+            if self:Get("lootShowToasts") then
+                local rollType, rollValue;
+                if data.roll then
+                    rollType = _G.LOOT_ROLL_TYPE_NEED;
+                    rollValue = data.roll;
+                end
+                local lessAwesome = (data.cost == 0);
+                _G.LootAlertSystem:AddAlert(itemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
+            end
         end
         self:Notify("%s%s was awarded to you for %d GP%s!%s", itemLink, multiple, cost, requestType, unfaved);
     else
