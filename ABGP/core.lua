@@ -456,7 +456,7 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
     _G.ABGP_DataTimestamp.itemValues = data.itemDataTime;
-    self:Notify("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
+    self:LogDebug("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
     self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp.itemValues)); -- https://strftime.org/
 
     -- Reset to defaults, since we're given a diff from them.
