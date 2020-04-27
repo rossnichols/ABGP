@@ -703,7 +703,7 @@ do
         local notes = CreateElement(frame, gp);
         notes.text = CreateFontString(notes);
         notes:SetScript("OnEnter", function(self)
-            local notes = self:GetParent().obj.data[5];
+            local notes = self:GetParent().obj.data[ABGP.ItemDataIndex.NOTES];
             if notes then
                 _G.ShowUIPanel(_G.GameTooltip);
                 _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
