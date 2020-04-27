@@ -64,11 +64,11 @@ function ABGP:OnInitialize()
     end
 
     self:RegisterComm("ABGP");
+    self:CheckHardcodedData();
     self:InitOptions();
     self:HookTooltips();
     self:AddItemHooks();
     self:AddDataHooks();
-    self:CheckHardcodedData();
     self:RefreshItemValues();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
 
