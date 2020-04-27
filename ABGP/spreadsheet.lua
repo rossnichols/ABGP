@@ -336,8 +336,6 @@ local function DrawItems(container)
             return true;
         end);
 
-        ABGP:RefreshItemValues();
-
         widget:GetUserData("window"):Hide();
         container:ReleaseChildren();
         DrawItems(container);

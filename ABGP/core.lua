@@ -452,8 +452,11 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     if data.itemDataTime <= _G.ABGP_DataTimestamp then return; end
 
     _G.ABGP_DataTimestamp = data.itemDataTime;
-    for phase, values in pairs(data.itemValues) do
-        _G.ABGP_Data[phase].itemValues = values;
+    for phase, items in pairs(data.itemValues) do
+        -- _G.ABGP_Data[phase].itemValues = values;
+        for i, item in ipairs(items) do
+            self:LogDebug("Received info about %s in %s.", item[self.ItemDataIndex.NAME], phase);
+        end
     end
 
     self:RefreshItemValues();
@@ -464,6 +467,7 @@ end
 
 function ABGP:CommitItemData()
     _G.ABGP_DataTimestamp = GetServerTime();
+    ABGP:RefreshItemValues();
     self:BroadcastItemData();
 end
 
@@ -473,18 +477,18 @@ function ABGP:BroadcastItemData(target)
         itemValues = {},
     };
 
-    -- local defaultValues = self:BuildDefaultItemValues();
+    local defaultValues = self:BuildDefaultItemValues();
     for phase in pairs(ABGP.Phases) do
-        payload.itemValues[phase] = _G.ABGP_Data[phase].itemValues;
+        payload.itemValues[phase] = {};
+        for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
+            local name = item[self.ItemDataIndex.NAME];
+            local defaultValue = defaultValues[name];
+            local currentValue = self:GetItemValue(name);
 
-        -- payload.itemValues[phase] = {};
-        -- for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
-        --     local copy = { unpack(item) };
-        --     if defaultValues[copy[self.ItemDataIndex.NAME]] then
-        --         copy[ABGP.ItemDataIndex.BOSS] = "";
-        --     end
-        --     table.insert(payload.itemValues[phase], copy);
-        -- end
+            if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
+                table.insert(payload.itemValues[phase], item);
+            end
+        end
     end
 
     if target then

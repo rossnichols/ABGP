@@ -5962,12 +5962,12 @@ _G.ABGP_Data[ABGP.Phases.p1] = {
 			150,
 			"|cffa335ee|Hitem:19131|h[Snowblind Shoes]|h|r",
 			"Azuregos",
-			"Shadow Priest Super Prio",
 			{
 				"Mage",
 				"Priest (Shadow)",
 				"Warlock",
 			},
+			"Shadow Priest Super Prio",
 		},
 		{
 			"Sorcerous Dagger",
