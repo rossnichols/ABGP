@@ -115,8 +115,10 @@ ABGP.InternalEvents = {
     ITEM_DISTRIBUTION_UNAWARDED = "ABGP_ITEM_DISTRIBUTION_UNAWARDED",
 };
 
-function ABGP:CommCallback(sent, total)
-    self:LogDebug("COMM-CB: sent=%d total=%d", sent, total);
+function ABGP:CommCallback(sent, total, logInCallback)
+    if logInCallback then
+        self:LogDebug("COMM-CB: sent=%d total=%d", sent, total);
+    end
     if sent == total then
         synchronousCheck = true;
     end
@@ -141,7 +143,9 @@ function ABGP:SendComm(type, data, distribution, target)
         priority = "ALERT";
     end
 
+    local logInCallback = false;
     if not type.name:find("VERSION") then
+        logInCallback = true;
         self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
             type.name,
             priority,
@@ -158,7 +162,7 @@ function ABGP:SendComm(type, data, distribution, target)
         synchronousCheck = false;
         local time = GetTime();
         local commCallback = function(self, sent, total)
-            self:CommCallback(sent, total);
+            self:CommCallback(sent, total, logInCallback);
             local now = GetTime();
             if not alertedSlowComms and now - time > 5 and now - startTime > 60 then
                 alertedSlowComms = true;
