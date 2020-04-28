@@ -1263,9 +1263,11 @@ do
             local itemName = ABGP:GetItemName(itemLink);
             local value = ABGP:GetItemValue(itemName);
             local _, _, rarity = GetItemInfo(itemLink);
+            local usable = true;
 
             if rarity then
                 frame:UnregisterEvent("GET_ITEM_INFO_RECEIVED");
+                usable = ABGP:IsItemUsable(itemLink);
             else
                 rarity = LE_ITEM_QUALITY_COMMON;
                 frame:RegisterEvent("GET_ITEM_INFO_RECEIVED");
@@ -1279,6 +1281,11 @@ do
                 end
 
                 frame.button.icon:SetTexture(GetItemIcon(itemLink));
+                if usable then
+                    frame.button.icon:SetVertexColor(1, 1, 1);
+                else
+                    frame.button.icon:SetVertexColor(0.9, 0, 0);
+                end
                 frame.button.link = itemLink;
 
                 frame.fsloot:SetText(itemName);
@@ -1292,6 +1299,11 @@ do
                 frame.fsbind:SetVertexColor(color.r, color.g, color.b);
             else
                 frame.IconFrame.Icon:SetTexture(GetItemIcon(itemLink));
+                if usable then
+                    frame.IconFrame.Icon:SetVertexColor(1, 1, 1);
+                else
+                    frame.IconFrame.Icon:SetVertexColor(0.9, 0, 0);
+                end
 
                 frame.Name:SetVertexColor(r, g, b);
                 frame.Name:SetText(itemName);
