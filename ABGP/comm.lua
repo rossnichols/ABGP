@@ -141,11 +141,13 @@ function ABGP:SendComm(type, data, distribution, target)
         priority = "ALERT";
     end
 
-    self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
-        type.name,
-        priority,
-        target and ("%s:%s"):format(distribution, target) or distribution,
-        strlen(payload));
+    if not type.name:find("VERSION") then
+        self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
+            type.name,
+            priority,
+            target and ("%s:%s"):format(distribution, target) or distribution,
+            strlen(payload));
+    end
 
     if priority == "INSTANT" then
         -- The \004 prefix is AceComm's "escape" control. Prepend it so that the
