@@ -510,6 +510,21 @@ function ABGP:BroadcastItemData(target)
     end
 end
 
+function ABGP:DumpItemDiffs()
+    local defaultValues = self:BuildDefaultItemValues();
+    for phase in pairs(ABGP.PhasesAll) do
+        for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
+            local name = item[self.ItemDataIndex.NAME];
+            local defaultValue = defaultValues[name];
+            local currentValue = self:GetItemValue(name);
+
+            if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
+                self:LogDebug("%s:%s", phase, name);
+            end
+        end
+    end
+end
+
 function ABGP:CheckUpdatedItem(itemLink, value, bulk)
     if IsValueUpdated(value) then
         local found = false;
