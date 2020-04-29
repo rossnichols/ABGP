@@ -116,7 +116,7 @@ ABGP.InternalEvents = {
 };
 
 function ABGP:CommCallback(sent, total, logInCallback)
-    if logInCallback then
+    if logInCallback and self.DebugComms then
         self:LogDebug("COMM-CB: sent=%d total=%d", sent, total);
     end
     if sent == total then
@@ -144,7 +144,7 @@ function ABGP:SendComm(type, data, distribution, target)
     end
 
     local logInCallback = false;
-    if not type.name:find("VERSION") then
+    if not type.name:find("VERSION") and self.DebugComms then
         logInCallback = true;
         self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
             type.name,
@@ -191,7 +191,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
             self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
-    elseif sender ~= UnitName("player") and not data.type:find("VERSION") then
+    elseif sender ~= UnitName("player") and not data.type:find("VERSION") and self.DebugComms then
         self:LogDebug("COMM-RECV: %s dist=%s sender=%s", data.type, distribution, sender);
     end
 

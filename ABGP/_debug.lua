@@ -6,6 +6,7 @@ ABGP.Debug = true;
 -- ABGP.PrivateComms = true;
 -- ABGP.ShowTestDistrib = true;
 -- ABGP.TestLootFrame = true;
+-- ABGP.DebugComms = true;
 ABGP.IgnoreSelfDistributed = true;
 ABGP.IgnoreItemUpdates = true;
 ABGP.VersionDebug = "4.0.3";
