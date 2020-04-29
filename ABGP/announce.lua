@@ -10,15 +10,16 @@ local GetLootSlotLink = GetLootSlotLink;
 local UnitExists = UnitExists;
 local UnitIsFriend = UnitIsFriend;
 local UnitIsDead = UnitIsDead;
-local GetServerTime = GetServerTime;
 local GetLootMethod = GetLootMethod;
 local CreateFrame = CreateFrame;
+local UnitGUID = UnitGUID;
 local select = select;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
 
 local bossKills = {};
+local lootAnnouncements = {};
 local lastBoss;
 local activeLootFrames = {};
 
@@ -30,49 +31,62 @@ end
 function ABGP:AnnounceOnLootOpened()
     if GetLootMethod() ~= "master" then return; end
     local loot = GetLootInfo();
-    local announce = false;
 
-    -- Check for an item that will trigger auto-announce.
+    -- Determine the items that meet announcement criteria.
+    local announceItems = {};
     for i = 1, GetNumLootItems() do
         local item = loot[i];
         if item then
             item.link = GetLootSlotLink(i);
             if ItemShouldBeAutoAnnounced(item) then
-                announce = true;
+                table.insert(announceItems, item.link);
             end
         end
     end
-    if not announce then return; end
+    if #announceItems == 0 then return; end
 
     -- Determine the source of the loot. Use current target if it seems appropriate,
     -- otherwise use the last boss killed.
-    local source = lastBoss;
+    local source, name = lastBoss, lastBoss;
     if UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target') then
-        source = UnitName("target");
+        source, name = UnitGUID("target"), UnitName("target");
     end
+    if not source then return; end
 
-    -- Limit auto-announce to boss kills, and only announce once per boss.
-    if source and bossKills[source] and not bossKills[source].announced then
-        -- Send messages for each item that meets announcement criteria.
-        local announceItems = {};
-        for i = 1, GetNumLootItems() do
-            local item = loot[i];
-            if item and ItemShouldBeAutoAnnounced(item) then
-                table.insert(announceItems, GetLootSlotLink(i));
+    -- Only use the target GUID as the source if it's not a boss kill.
+    if bossKills[name] then source = name; end
+
+    -- Loot from boss kills should always be announced.
+    -- If not from a boss, check if any of the items have an item value.
+    local shouldAnnounce = bossKills[name];
+    if not shouldAnnounce then
+        for _, itemLink in ipairs(announceItems) do
+            if self:GetItemValue(self:GetItemName(itemLink)) then
+                shouldAnnounce = true;
+                break;
             end
         end
-
-        local data = { source = source, items = announceItems };
-        self:SendComm(self.CommTypes.BOSS_LOOT, data, "BROADCAST");
-        self:AnnounceOnBossLoot(data);
     end
+    if not shouldAnnounce then return; end
+
+    -- Only announce once per source.
+    lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
+    if lootAnnouncements[source].announced then return; end
+
+    local data = { source = source, name = name, items = announceItems };
+    self:SendComm(self.CommTypes.BOSS_LOOT, data, "BROADCAST");
+    self:AnnounceOnBossLoot(data);
 end
 
 function ABGP:AnnounceOnBossLoot(data)
-    if bossKills[data.source] and not bossKills[data.source].announced then
-        bossKills[data.source].announced = true;
+    local source = data.source;
+    local name = data.name or source;
+    lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
 
-        self:Notify("Loot from %s:", self:ColorizeText(data.source));
+    if not lootAnnouncements[source].announced then
+        lootAnnouncements[source].announced = true;
+
+        self:Notify("Loot from %s:", self:ColorizeText(name));
         for _, itemLink in ipairs(data.items) do
             self:Notify(itemLink);
             self:ShowLootFrame(itemLink);
@@ -81,7 +95,7 @@ function ABGP:AnnounceOnBossLoot(data)
 end
 
 function ABGP:AnnounceOnBossKilled(id, name)
-    bossKills[name] = { time = GetServerTime(), announced = false };
+    bossKills[name] = true;
     lastBoss = name;
 end
 
