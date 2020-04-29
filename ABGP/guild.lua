@@ -93,7 +93,7 @@ function ABGP:GetPreferredRaidGroup()
 end
 
 function ABGP:IsTrial(rank)
-    return rank == "Trial" or rank == "Trial Lobster";
+    return rank == "Trial" or rank == "Trial Lobster" or rank == "Lobster Trial";
 end
 
 function ABGP:CheckProxy(publicNote)
