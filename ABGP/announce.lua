@@ -114,17 +114,15 @@ local function PositionLootFrame(elt)
 
     elt.frame:ClearAllPoints();
     if direction == "up" then
-        elt.frame:SetPoint("BOTTOM", GetLootAnchor(), "BOTTOM", 0, (index - 1) * (elt.frame:GetHeight() + 6));
+        elt.frame:SetPoint("BOTTOM", GetLootAnchor(), "BOTTOM", 0, (index - 1) * (elt.frame:GetHeight() + 4));
     else
-        elt.frame:SetPoint("TOP", GetLootAnchor(), "TOP", 0, -1 * (index - 1) * (elt.frame:GetHeight() + 6));
+        elt.frame:SetPoint("TOP", GetLootAnchor(), "TOP", 0, -1 * (index - 1) * (elt.frame:GetHeight() + 4));
     end
 end
 
 local function GetLootFrame(itemLink)
-    local itemId = ABGP:GetItemId(itemLink);
     for _, elt in pairs(activeLootFrames) do
-        if type(elt) == "table" and ABGP:GetItemId(elt:GetItem()) == itemId then
-            elt:SetItem(itemLink); -- in case the item link is slightly different
+        if type(elt) == "table" and elt:GetItem() == itemLink and not elt:GetUserData("blockReuse") then
             return elt;
         end
     end
@@ -132,6 +130,9 @@ end
 
 function ABGP:ShowLootFrame(itemLink)
     if not self:Get("showLootFrames") then return; end
+
+    local _, fullLink = GetItemInfo(itemLink);
+    itemLink = fullLink or itemLink;
 
     local elt = GetLootFrame(itemLink);
     if elt then
@@ -180,7 +181,7 @@ function ABGP:ShowLootFrame(itemLink)
                 table.insert(context, {
                     text = "Show item history",
                     func = function(self)
-                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemHistory, args = itemName, phase = value.phase })
+                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemHistory, args = itemName, phase = value.phase });
                     end,
                     notCheckable = true
                 });
@@ -212,10 +213,9 @@ function ABGP:ShowLootFrame(itemLink)
 end
 
 function ABGP:AnnounceOnDistOpened(data, distribution, sender)
-    if not self:Get("showLootFrames") then return; end
+    local elt = GetLootFrame(data.itemLink) or self:ShowLootFrame(data.itemLink);
+    if not elt then return; end
 
-    local itemLink = data.itemLink;
-    local elt = GetLootFrame(itemLink) or self:ShowLootFrame(itemLink);
     elt:EnableRequests(true);
     elt:SetDuration(nil);
 end
@@ -226,6 +226,7 @@ function ABGP:AnnounceOnDistClosed(data, distribution, sender)
 
     elt:EnableRequests(false, "Item distribution has closed");
     elt:SetDuration(3);
+    elt:SetUserData("blockReuse", true);
 
     local awards = elt:GetUserData("awards");
     if awards then
@@ -256,8 +257,11 @@ function ABGP:AnnounceOnItemRolled(data, distribution, sender)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    elt:SetUserData("roll", data.roll);
-    elt:SetSecondaryText(("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, data.roll), data.roll);
+    local roll = data.roll
+    elt:SetUserData("roll", roll);
+    local rollText = ("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll);
+    local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
+    elt:SetSecondaryText(rollText, rollTextCompact);
 end
 
 function ABGP:AnnounceOnItemRequested(data)
@@ -266,7 +270,9 @@ function ABGP:AnnounceOnItemRequested(data)
 
     local roll = elt:GetUserData("roll");
     if roll then
-        elt:SetSecondaryText(("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll), roll);
+        local rollText = ("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll);
+        local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
+        elt:SetSecondaryText(rollText, rollTextCompact);
     else
         local requestTypesPre = {
             [ABGP.RequestTypes.MS] = "for",
