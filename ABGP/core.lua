@@ -86,10 +86,12 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);
+        self:AnnounceOnDistOpened(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistClosed(data, distribution, sender);
+        self:AnnounceOnDistClosed(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
@@ -99,10 +101,12 @@ function ABGP:OnInitialize()
         end
 
         self:RequestOnItemAwarded(data, distribution, sender);
+        self:AnnounceOnItemAwarded(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_TRASHED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemTrashed(data, distribution, sender);
+        self:AnnounceOnItemTrashed(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.STATE_SYNC.name, function(self, event, data, distribution, sender)
@@ -129,6 +133,7 @@ function ABGP:OnInitialize()
 
     self:RegisterMessage(self.CommTypes.ITEM_ROLLED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemRolled(data, distribution, sender);
+        self:AnnounceOnItemRolled(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.REQUEST_PRIORITY_SYNC.name, function(self, event, data, distribution, sender)
@@ -159,6 +164,14 @@ function ABGP:OnInitialize()
     self:RegisterMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, function(self, event, data)
         self:PriorityOnItemUnawarded(data);
         self:RequestOnItemUnawarded(data);
+    end, self);
+
+    self:RegisterMessage(self.InternalEvents.ITEM_REQUESTED, function(self, event, data)
+        self:AnnounceOnItemRequested(data);
+    end, self);
+
+    self:RegisterMessage(self.InternalEvents.ITEM_PASSED, function(self, event, data)
+        self:AnnounceOnItemPassed(data);
     end, self);
 
     local rollRegex = self:ConvertChatString(_G.RANDOM_ROLL_RESULT);

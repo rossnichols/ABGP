@@ -10,6 +10,7 @@ local UnitIsInMyGuild = UnitIsInMyGuild;
 local GetItemInfo = GetItemInfo;
 local IsAltKeyDown = IsAltKeyDown;
 local GetServerTime = GetServerTime;
+local IsInGroup = IsInGroup;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -375,7 +376,7 @@ local function AddActiveItem(data)
         rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
         data = data,
         receivedComm = false,
-        testItem = false,
+        testItem = not IsInGroup(),
     };
 
     activeItems[itemLink] = newItem;
@@ -777,7 +778,6 @@ end
 
 function ABGP:CreateDistribWindow()
     local window = AceGUI:Create("Window");
-    window.frame:SetFrameStrata("DIALOG");
     window:SetLayout("Flow");
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "distrib", {

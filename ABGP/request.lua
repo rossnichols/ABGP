@@ -149,6 +149,10 @@ function ABGP:GetActiveItem(itemLink)
     return activeItems[itemLink];
 end
 
+function ABGP:ShowRequestPopup(itemLink)
+    ShowStaticPopup(itemLink, self:GetItemValue(self:GetItemName(itemLink)));
+end
+
 local function VerifyItemRequests()
     for itemLink, item in pairs(activeItems) do
         if not UnitExists(item.sender) then
@@ -219,13 +223,14 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         end
     end
 
+    local lootIntegration = self:Get("showLootFrames");
     local prompt = "";
-    if self:Get("alwaysOpenWindow") or rank >= self.ItemRanks.NORMAL then
+    if not lootIntegration and (self:Get("alwaysOpenWindow") or rank >= self.ItemRanks.NORMAL) then
         self:ShowItemRequests(true);
     end
     if activeWindow then
         PopulateUI();
-    else
+    elseif not lootIntegration then
         local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "<unbound>";
         prompt = ("Type '/abgp loot' or press your hotkey (%s) to open the request window."):format(keybinding);
     end
@@ -262,7 +267,6 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
 
     local player = data.player;
-    local cost = data.cost;
     local override = data.override;
     if data.testItem then override = "test"; end
     if not player then return; end
@@ -270,6 +274,11 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local multiple = "";
     if data.count and data.count > 1 then
         multiple = (" #%d"):format(data.count);
+    end
+
+    local cost = "";
+    if self:GetItemValue(self:GetItemName(itemLink)) then
+        cost = (" for %d GP"):format(cost);
     end
 
     local requestTypes = {
@@ -291,23 +300,23 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
                 self:SetItemFavorited(itemLink, false);
                 unfaved = " Removed it from your AtlasLoot favorites.";
             end
-            if self:Get("lootShowToasts") then
-                local rollType, rollValue;
-                if data.roll then
-                    rollType = _G.LOOT_ROLL_TYPE_NEED;
-                    rollValue = data.roll;
-                end
-                local lessAwesome = (data.cost == 0);
-                _G.LootAlertSystem:AddAlert(itemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
-            end
         end
-        self:Notify("%s%s was awarded to you for %d GP%s!%s", itemLink, multiple, cost, requestType, unfaved);
+        if self:Get("lootShowToasts") then
+            local rollType, rollValue;
+            if data.roll then
+                rollType = _G.LOOT_ROLL_TYPE_NEED;
+                rollValue = data.roll;
+            end
+            local lessAwesome = (data.cost == 0);
+            _G.LootAlertSystem:AddAlert(itemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
+        end
+        self:Notify("%s%s was awarded to you%s%s!%s", itemLink, multiple, cost, requestType, unfaved);
     else
         local roll = "";
         if data.roll then
             roll = (" with a roll of %d"):format(data.roll);
         end
-        self:Notify("%s%s was awarded to %s for %d GP%s%s.",
+        self:Notify("%s%s was awarded to %s%s%s%s.",
             itemLink, multiple, self:ColorizeName(player), cost, requestType, roll);
     end
 end
@@ -334,7 +343,7 @@ end
 
 function ABGP:CreateRequestWindow()
     local window = AceGUI:Create("Window");
-    window.frame:SetFrameStrata("DIALOG");
+    window.frame:SetFrameStrata("MEDIUM");
     window:SetTitle(("%s Active Items"):format(self:ColorizeText("ABGP")));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "request", {
@@ -444,6 +453,8 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         if current2 then table.insert(data.equipped, current2); end
     end
 
+    self:SendMessage(self.InternalEvents.ITEM_REQUESTED, data);
+
     local synchronous = self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
     if not synchronous then
         -- The request wasn't completed synchronously. Send another one with a reduced payload.
@@ -467,9 +478,12 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     end
     local sender = activeItems[itemLink].sender;
 
-    self:SendComm(self.CommTypes.ITEM_PASS, {
+    local data = {
         itemLink = itemLink,
-    }, "WHISPER", sender);
+    };
+
+    self:SendMessage(self.InternalEvents.ITEM_PASSED, data);
+    self:SendComm(self.CommTypes.ITEM_PASS, data, "WHISPER", sender);
 
     local faveRemove = "";
     if removeFromFaves then

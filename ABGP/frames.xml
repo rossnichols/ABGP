@@ -23,13 +23,13 @@
             </Anchor>
         </Anchors>
     </Frame>
-    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" clampedToScreen="true" virtual="true">
-        <Size x="250" y="84"/>
+    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" clampedToScreen="true" virtual="true" scale="1.0">
+        <Size x="320" y="60"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture name="$parentSlotTexture" file="Interface\Buttons\UI-EmptySlot">
                     <Size>
-                        <AbsDimension x="80" y="80"/>
+                        <AbsDimension x="55" y="55"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -41,46 +41,46 @@
                 </Texture>
                 <Texture name="$parentNameFrame" file="Interface\MerchantFrame\UI-Merchant-LabelSlots">
                     <Size>
-                        <AbsDimension x="170" y="80"/>
+                        <AbsDimension x="265" y="56"/>
                     </Size>
                     <Anchors>
                         <Anchor point="LEFT" relativeTo="$parentSlotTexture" relativePoint="RIGHT">
                             <Offset>
-                                <AbsDimension x="-9" y="-14"/>
+                                <AbsDimension x="-8" y="-10"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
                 </Texture>
                 <FontString parentKey="Name" name="$parentName" inherits="GameFontNormal" text="Item Name" justifyH="LEFT" justifyV="TOP">
                     <Size>
-                        <AbsDimension y="30"/>
+                        <AbsDimension y="12"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeTo="$parentNameFrame" relativePoint="TOPLEFT">
                             <Offset>
-                                <AbsDimension x="5" y="-5"/>
+                                <AbsDimension x="5" y="-4"/>
                             </Offset>
                         </Anchor>
                         <Anchor point="TOPRIGHT" relativeTo="$parentNameFrame" relativePoint="TOPRIGHT">
                             <Offset>
-                                <AbsDimension x="-30" y="0"/>
+                                <AbsDimension x="-44" y="0"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
                 </FontString>
                 <FontString parentKey="Cost" name="$parentCost" inherits="GameFontNormal" text="GP Cost" justifyH="LEFT" justifyV="BOTTOM">
                     <Size>
-                        <AbsDimension y="15"/>
+                        <AbsDimension y="12"/>
                     </Size>
                     <Anchors>
                         <Anchor point="BOTTOMLEFT" relativeTo="$parentNameFrame" relativePoint="BOTTOMLEFT">
                             <Offset>
-                                <AbsDimension x="5" y="35"/>
+                                <AbsDimension x="5" y="24"/>
                             </Offset>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativeTo="$parentNameFrame" relativePoint="BOTTOMRIGHT">
                             <Offset>
-                                <AbsDimension x="-30" y="0"/>
+                                <AbsDimension x="-44" y="0"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -89,24 +89,12 @@
             <Layer level="OVERLAY">
                 <Texture name="$parentDecoration" file="Interface\DialogFrame\UI-DialogBox-Gold-Dragon" hidden="true">
                     <Size>
-                        <AbsDimension x="120" y="120"/>
+                        <AbsDimension x="85" y="85"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
-                                <AbsDimension x="-30" y="15"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
-                <Texture name="$parentCorner" file="Interface\DialogFrame\UI-DialogBox-Corner">
-                    <Size>
-                        <AbsDimension x="32" y="32"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPRIGHT">
-                            <Offset>
-                                <AbsDimension x="-6" y="-7"/>
+                                <AbsDimension x="-16" y="10"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -115,21 +103,21 @@
         </Layers>
         <Frames>
             <Button parentKey="IconFrame" enableMouse="true">
-                <Size x="49" y="49"/>
+                <Size x="37" y="37"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentSlotTexture" x="15" y="-15"/>
+                    <Anchor point="TOPLEFT" relativeTo="$parentSlotTexture" x="8" y="-9"/>
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK">
                         <Texture parentKey="Icon">
-                            <Size x="49" y="49"/>
+                            <Size x="37" y="37"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT"/>
                             </Anchors>
                         </Texture>
                     </Layer>
                     <Layer level="OVERLAY">
-                        <FontString parentKey="Count" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
+                        <FontString parentKey="Count" inherits="NumberFontNormalLarge" justifyH="RIGHT" hidden="true">
                             <Anchors>
                                 <Anchor point="BOTTOMRIGHT" x="-5" y="2"/>
                             </Anchors>
@@ -158,23 +146,15 @@
                     </OnUpdate>
                 </Scripts>
             </Button>
-            <Button parentKey="CloseButton" inherits="UIPanelCloseButton" id="0">
-                <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentCorner" relativePoint="TOPRIGHT" x="5" y="5"/>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                        self:GetParent():Hide();
-                    </OnClick>
-                    <OnEnter>
-                        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-                        GameTooltip:SetText(CLOSE);
-                    </OnEnter>
-                    <OnLeave>
-                        GameTooltip:Hide();
-                    </OnLeave>
-                </Scripts>
-            </Button>
+			<Button parentKey="NeedButton" inherits="LootRollButtonTemplate">
+                <Size x="32" y="32"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-12" y="-3"/>
+				</Anchors>
+				<NormalTexture file="Interface\Buttons\UI-GroupLoot-Dice-Up"/>
+				<HighlightTexture file="Interface\Buttons\UI-GroupLoot-Dice-Highlight" alphaMode="ADD"/>
+				<PushedTexture file="Interface\Buttons\UI-GroupLoot-Dice-Down"/>
+			</Button>
         </Frames>
     </Frame>
 </Ui>

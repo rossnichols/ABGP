@@ -12,6 +12,7 @@ local MouseIsOver = MouseIsOver;
 local CursorUpdate = CursorUpdate;
 local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
 local LE_ITEM_QUALITY_ARTIFACT = LE_ITEM_QUALITY_ARTIFACT;
+local RED_FONT_COLOR = RED_FONT_COLOR;
 local pairs = pairs;
 local ipairs = ipairs;
 local floor = floor;
@@ -1231,6 +1232,24 @@ do
         end
     end
 
+    local function Need_OnClick(frame, button, down)
+        local self = frame:GetParent().obj;
+        self:Fire("OnRequest");
+    end
+
+    local function Need_OnEnter(frame)
+        _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
+        _G.GameTooltip:SetText(frame.tooltipText);
+        if not frame:IsEnabled() then
+            _G.GameTooltip:AddLine(frame.reason, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, true);
+            _G.GameTooltip:Show();
+        end
+    end
+
+    local function Need_OnLeave(frame)
+        _G.GameTooltip:Hide();
+    end
+
     local frameCount = 0;
 
     --[[-----------------------------------------------------------------------------
@@ -1241,7 +1260,9 @@ do
             self.frame:SetAlpha(0);
             self.frame:Show();
 
-            self.itemLink = nil;
+            self:SetItem(nil);
+            self:SetCount(1);
+
             self.elapsed = 0;
             self.fadeIn = 0.2;
             self.duration = nil;
@@ -1249,7 +1270,7 @@ do
         end,
 
         ["OnRelease"] = function(self)
-            self.frame:UnregisterEvent("GET_ITEM_INFO_RECEIVED");
+            self.frame:UnregisterAllEvents();
         end,
 
         ["GetItem"] = function(self)
@@ -1258,6 +1279,7 @@ do
 
         ["SetItem"] = function(self, itemLink)
             self.itemLink = itemLink;
+            if not self.itemLink then return; end
 
             local frame = self.frame;
             local itemName = ABGP:GetItemName(itemLink);
@@ -1294,8 +1316,6 @@ do
                 frame.status.bg:SetColorTexture(r, g, b);
 
                 local color = ABGP.ColorTable;
-                local valueText = (value and value.gp ~= 0) and value.gp or "--";
-                frame.fsbind:SetText(valueText);
                 frame.fsbind:SetVertexColor(color.r, color.g, color.b);
             else
                 frame.IconFrame.Icon:SetTexture(GetItemIcon(itemLink));
@@ -1308,9 +1328,7 @@ do
                 frame.Name:SetVertexColor(r, g, b);
                 frame.Name:SetText(itemName);
 
-                local valueText = (value and value.gp ~= 0) and ("GP cost: %s%d|r"):format(ABGP.Color, value.gp) or "No GP Cost";
                 frame.Cost:SetVertexColor(1, 1, 1);
-                frame.Cost:SetText(valueText);
 
                 if ABGP:IsItemFavorited(itemLink) then
                     frame:SetBackdrop({
@@ -1321,7 +1339,6 @@ do
                         edgeSize = 32,
                         insets = { left = 11, right = 12, top = 12, bottom = 11 }
                     });
-                    _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Corner");
                     _G[frame:GetName().."Decoration"]:Show();
                 else
                     frame:SetBackdrop({
@@ -1332,16 +1349,57 @@ do
                         edgeSize = 32,
                         insets = { left = 11, right = 12, top = 12, bottom = 11 }
                     });
-                    _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Corner");
                     _G[frame:GetName().."Decoration"]:Hide();
                 end
             end
         end,
 
+        ["SetSecondaryText"] = function(self, text, compact)
+            local frame = self.frame;
+            if frame.elvui then
+                if compact then
+                    frame.fsloot:SetText(ABGP:GetItemName(self.itemLink));
+                    frame.fsbind:SetText(compact);
+                else
+                    frame.fsloot:SetText(text);
+                    frame.fsbind:SetText("");
+                end
+            else
+                frame.Cost:SetText(text);
+            end
+        end,
+
         ["SetDuration"] = function(self, duration, fadeOut)
-            self.elapsed = 0;
+            self.elapsed = math.min(self.elapsed, self.fadeIn);
             self.duration = duration;
             self.fadeOut = fadeOut or 1;
+        end,
+
+        ["EnableRequests"] = function(self, enabled, reason)
+            local frame = self.frame;
+            local need = frame.elvui and frame.needbutt or frame.NeedButton;
+            if enabled then
+                _G.GroupLootFrame_EnableLootButton(need);
+            else
+                _G.GroupLootFrame_DisableLootButton(need);
+                need.reason = reason;
+            end
+        end,
+
+        ["SetCount"] = function(self, count)
+            self.count = count;
+            local frame = self.frame;
+            if frame.elvui then
+                frame.countstr[self.count == 1 and "Hide" or "Show"](frame.countstr);
+                frame.countstr:SetText(self.count == 1 and "" or self.count);
+            else
+                frame.IconFrame.Count[self.count == 1 and "Hide" or "Show"](frame.IconFrame.Count);
+                frame.IconFrame.Count:SetText(self.count == 1 and "" or self.count);
+            end
+        end,
+
+        ["GetCount"] = function(self)
+            return self.count;
         end,
     }
 
@@ -1349,19 +1407,17 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame, button;
+        local frame, button, need;
         if ABGP:Get("lootElvUI") and _G.ElvUI and _G.ElvUI[1].private.general.lootRoll then
             frame = _G.ElvUI[1]:GetModule("Misc"):CreateRollFrame();
             frame.elvui = true;
+            frame:UnregisterAllEvents();
 
             -- Change default width
             frame:SetWidth(260);
             frame.fsbind:SetWidth(30);
 
-            -- "Hide" need/greed/pass buttons
-            frame.needbutt:SetAlpha(0);
-            frame.needbutt:EnableMouse(false);
-            frame.needbutt:SetWidth(1);
+            -- "Hide" greed/pass buttons
             frame.greedbutt:SetAlpha(0);
             frame.greedbutt:EnableMouse(false);
             frame.greedbutt:SetWidth(1);
@@ -1369,11 +1425,20 @@ do
             frame.pass:GetParent():EnableMouse(false);
             frame.pass:GetParent():SetWidth(1);
 
+            -- Add count fontstring
+            local count = frame.button:CreateFontString(nil, 'OVERLAY');
+            count:SetJustifyH("RIGHT");
+            count:Point("BOTTOMRIGHT", frame.button, -2, 2);
+            count:FontTemplate(nil, nil, "OUTLINE");
+            frame.countstr = count;
+
             button = frame.button;
+            need = frame.needbutt;
         else
             frameCount = frameCount + 1;
             frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
             button = frame.IconFrame;
+            need = frame.NeedButton;
         end
 
         frame:SetScript("OnEvent", Frame_OnEvent);
@@ -1388,6 +1453,11 @@ do
         button.hasItem = true;
         button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
         button:SetScript("OnClick", Button_OnClick);
+
+        need:SetScript("OnClick", Need_OnClick);
+        need:SetScript("OnEnter", Need_OnEnter);
+        need:SetScript("OnLeave", Need_OnLeave);
+        need.tooltipText = "Request";
 
         -- create widget
         local widget = {

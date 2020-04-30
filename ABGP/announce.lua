@@ -17,6 +17,7 @@ local select = select;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
+local type = type;
 
 local bossKills = {};
 local lootAnnouncements = {};
@@ -113,25 +114,42 @@ local function PositionLootFrame(elt)
 
     elt.frame:ClearAllPoints();
     if direction == "up" then
-        elt.frame:SetPoint("BOTTOM", GetLootAnchor(), "BOTTOM", 0, (index - 1) * (elt.frame:GetHeight() + 10));
+        elt.frame:SetPoint("BOTTOM", GetLootAnchor(), "BOTTOM", 0, (index - 1) * (elt.frame:GetHeight() + 6));
     else
-        elt.frame:SetPoint("TOP", GetLootAnchor(), "TOP", 0, -1 * (index - 1) * (elt.frame:GetHeight() + 10));
+        elt.frame:SetPoint("TOP", GetLootAnchor(), "TOP", 0, -1 * (index - 1) * (elt.frame:GetHeight() + 6));
     end
 end
 
-function ABGP:RefreshLootFrames()
-    local i = 1;
-    while activeLootFrames[i] do
-        PositionLootFrame(activeLootFrames[i]);
-        i = i + 1;
+local function GetLootFrame(itemLink)
+    local itemId = ABGP:GetItemId(itemLink);
+    for _, elt in pairs(activeLootFrames) do
+        if type(elt) == "table" and ABGP:GetItemId(elt:GetItem()) == itemId then
+            elt:SetItem(itemLink); -- in case the item link is slightly different
+            return elt;
+        end
     end
 end
 
 function ABGP:ShowLootFrame(itemLink)
     if not self:Get("showLootFrames") then return; end
-    local elt = AceGUI:Create("ABGP_LootFrame");
+
+    local elt = GetLootFrame(itemLink);
+    if elt then
+        elt:SetCount(elt:GetCount() + 1);
+        elt:SetDuration(self:Get("lootDuration"));
+        return elt;
+    end
+
+    elt = AceGUI:Create("ABGP_LootFrame");
     elt:SetItem(itemLink);
     elt:SetDuration(self:Get("lootDuration"));
+    elt:EnableRequests(false, "Item not open for distribution");
+
+    local itemName = ABGP:GetItemName(itemLink);
+    local value = ABGP:GetItemValue(itemName);
+    local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(self:ColorizeText(value.gp)) or "No GP Cost";
+    local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
+    elt:SetSecondaryText(valueText, valueTextCompact);
 
     -- Determine the first free slot for the frame.
     local i = 1;
@@ -173,6 +191,10 @@ function ABGP:ShowLootFrame(itemLink)
             end
         end
     end);
+    elt:SetCallback("OnRequest", function(widget)
+        local itemLink = widget:GetItem();
+        ABGP:ShowRequestPopup(itemLink);
+    end);
     elt:SetCallback("OnMouseDown", function(widget)
         GetLootAnchor():StartMoving();
     end);
@@ -185,11 +207,101 @@ function ABGP:ShowLootFrame(itemLink)
         activeLootFrames[widget] = nil;
         AceGUI:Release(widget);
     end);
+
+    return elt;
+end
+
+function ABGP:AnnounceOnDistOpened(data, distribution, sender)
+    if not self:Get("showLootFrames") then return; end
+
+    local itemLink = data.itemLink;
+    local elt = GetLootFrame(itemLink) or self:ShowLootFrame(itemLink);
+    elt:EnableRequests(true);
+    elt:SetDuration(nil);
+end
+
+function ABGP:AnnounceOnDistClosed(data, distribution, sender)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    elt:EnableRequests(false, "Item distribution has closed");
+    elt:SetDuration(3);
+
+    local awards = elt:GetUserData("awards");
+    if awards then
+        elt:SetSecondaryText(("Awarded to %s"):format(table.concat(awards, ", ")));
+    elseif elt:GetUserData("trashed") then
+        elt:SetSecondaryText(self:ColorizeText("Disenchanted"));
+    else
+        elt:SetSecondaryText("Distribution closed");
+    end
+end
+
+function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    elt:SetUserData("awards", elt:GetUserData("awards") or {});
+    table.insert(elt:GetUserData("awards"), self:ColorizeName(data.player));
+end
+
+function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    elt:SetUserData("trashed", true);
+end
+
+function ABGP:AnnounceOnItemRolled(data, distribution, sender)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    elt:SetUserData("roll", data.roll);
+    elt:SetSecondaryText(("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, data.roll), data.roll);
+end
+
+function ABGP:AnnounceOnItemRequested(data)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    local roll = elt:GetUserData("roll");
+    if roll then
+        elt:SetSecondaryText(("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll), roll);
+    else
+        local requestTypesPre = {
+            [ABGP.RequestTypes.MS] = "for",
+            [ABGP.RequestTypes.OS] = "for",
+            [ABGP.RequestTypes.ROLL] = "by",
+        };
+        local requestTypes = {
+            [ABGP.RequestTypes.MS] = "main spec",
+            [ABGP.RequestTypes.OS] = "off spec",
+            [ABGP.RequestTypes.ROLL] = "rolling",
+        };
+        local requestTypesCompact = {
+            [ABGP.RequestTypes.MS] = "MS",
+            [ABGP.RequestTypes.OS] = "OS",
+            [ABGP.RequestTypes.ROLL] = "Roll",
+        };
+        local text = ("Requested %s %s"):format(requestTypesPre[data.requestType], self:ColorizeText(requestTypes[data.requestType]));
+        elt:SetSecondaryText(text, requestTypesCompact[data.requestType]);
+    end
+end
+
+function ABGP:AnnounceOnItemPassed(data)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    local itemName = ABGP:GetItemName(data.itemLink);
+    local value = ABGP:GetItemValue(itemName);
+    local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(self:ColorizeText(value.gp)) or "No GP Cost";
+    local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
+    elt:SetSecondaryText(valueText, valueTextCompact);
 end
 
 function ABGP:ShowTestLoot()
     self:ShowLootFrame("|cffff8000|Hitem:19019|h[Thunderfury, Blessed Blade of the Windseeker]|h|r");
-    self:ShowLootFrame("|cffa335ee|Hitem:19375::::::::60:::::|h[Mish'undare, Circlet of the Mind Flayer]|h|r");
-    self:ShowLootFrame("|cffa335ee|Hitem:19406::::::::60:::::|h[Drake Fang Talisman]|h|r");
-    self:ShowLootFrame("|cff0070dd|Hitem:18259::::::::60:::::|h[Formula: Enchant Weapon - Spell Power]|h|r");
+    self:ShowLootFrame("|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r");
+    self:ShowLootFrame("|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r");
+    self:ShowLootFrame("|cff0070dd|Hitem:18259|h[Formula: Enchant Weapon - Spell Power]|h|r");
 end
