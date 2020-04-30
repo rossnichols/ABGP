@@ -953,9 +953,17 @@ function ABGP:CreateDistribWindow()
         local currentItem = window:GetUserData("currentItem");
         local itemLink = currentItem.itemLink;
 
-        _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, nil, {
-            itemLink = itemLink,
-        });
+        if currentItem.closeConfirmed then
+            RemoveActiveItem(itemLink);
+        else
+            local extra = "";
+            if #currentItem.distributions == 0 then
+                extra = "You haven't distributed it to anyone yet!";
+            end
+            _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, extra, {
+                itemLink = itemLink,
+            });
+        end
     end);
     mainLine:AddChild(done);
 
@@ -1075,7 +1083,7 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
 };
 
 StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
-    text = "Are you sure you want to stop distribution?",
+    text = "Stop distribution of all items?",
     button1 = "Yes",
     button2 = "No",
     OnAccept = function(self, data)
@@ -1095,7 +1103,7 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
 };
 
 StaticPopupDialogs["ABGP_CONFIRM_DONE"] = {
-    text = "Done distributing %s?",
+    text = "Done with %s? %s",
     button1 = "Yes",
     button2 = "No",
     OnAccept = function(self, data)
