@@ -21,6 +21,7 @@ function ABGP:InitOptions()
             lootDuration = 15,
             lootElvUI = true,
             lootShowToasts = true,
+            lootIntegration = true,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -197,10 +198,18 @@ function ABGP:InitOptions()
                     get = function(info) return self.db.char.lootShowToasts; end,
                     set = function(info, v) self.db.char.lootShowToasts = v; end,
                 },
+                integration = {
+                    name = "Request integration",
+                    order = 3,
+                    desc = "Request items directly from the loot item frame.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.lootIntegration; end,
+                    set = function(info, v) self.db.char.lootIntegration = v; end,
+                },
                 theme = {
                     name = "Use ElvUI theme",
-                    order = 3,
-                    desc = "Make the boss loot item UI match ElvUI.",
+                    order = 4,
+                    desc = "Make the boss loot item UI match ElvUI. You must reload your UI after changing this setting.",
                     type = "toggle",
                     hidden = function() return (_G.ElvUI == nil); end,
                     get = function(info) return self.db.char.lootElvUI; end,
@@ -208,7 +217,7 @@ function ABGP:InitOptions()
                 },
                 direction = {
                     name = "Direction",
-                    order = 4,
+                    order = 5,
                     desc = "Choose which direction new boss loot items are added.",
                     type = "select",
                     control = "Dropdown",
@@ -218,7 +227,7 @@ function ABGP:InitOptions()
                 },
                 duration = {
                     name = "Item duration",
-                    order = 5,
+                    order = 6,
                     desc = "Sets how long the boss loot items will be shown.",
                     type = "range",
                     min = 5,
@@ -230,6 +239,7 @@ function ABGP:InitOptions()
                 },
                 test = {
                     name = "Test",
+                    order = 7,
                     desc = "Show test boss loot items.",
                     type = "execute",
                     func = function() self:ShowTestLoot(); end

@@ -144,7 +144,7 @@ function ABGP:ShowLootFrame(itemLink)
     elt = AceGUI:Create("ABGP_LootFrame");
     elt:SetItem(itemLink);
     elt:SetDuration(self:Get("lootDuration"));
-    elt:EnableRequests(false, "Item not open for distribution");
+    elt:EnableRequests(false, self:Get("lootIntegration") and "Item not open for distribution." or "Request integration is disabled.");
 
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
@@ -213,6 +213,7 @@ function ABGP:ShowLootFrame(itemLink)
 end
 
 function ABGP:AnnounceOnDistOpened(data, distribution, sender)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink) or self:ShowLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -221,11 +222,12 @@ function ABGP:AnnounceOnDistOpened(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnDistClosed(data, distribution, sender)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    elt:EnableRequests(false, "Item distribution has closed");
-    elt:SetDuration(3);
+    elt:EnableRequests(false, "Item distribution has closed.");
+    elt:SetDuration(5);
     elt:SetUserData("blockReuse", true);
 
     local awards = elt:GetUserData("awards");
@@ -239,6 +241,7 @@ function ABGP:AnnounceOnDistClosed(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -247,6 +250,7 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -254,6 +258,7 @@ function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemRolled(data, distribution, sender)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -265,6 +270,7 @@ function ABGP:AnnounceOnItemRolled(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemRequested(data)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -295,6 +301,7 @@ function ABGP:AnnounceOnItemRequested(data)
 end
 
 function ABGP:AnnounceOnItemPassed(data)
+    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 

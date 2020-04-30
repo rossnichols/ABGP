@@ -195,7 +195,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     };
     table.insert(sortedItems, activeItems[itemLink]);
 
-    local lootIntegration = self:Get("showLootFrames");
+    local lootIntegration = self:Get("lootIntegration");
     local rank = self:GetItemRank(itemLink);
     if rank >= self.ItemRanks.NORMAL then
         if not lootIntegration then
@@ -206,9 +206,11 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         FlashClientIcon();
     end
 
-    local popup = GetStaticPopupType(itemLink);
-    if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
-        ShowStaticPopup(itemLink, data.value, popup);
+    if not lootIntegration then
+        local popup = GetStaticPopupType(itemLink);
+        if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
+            ShowStaticPopup(itemLink, data.value, popup);
+        end
     end
 
     local gpCost, priority, notes = "No GP cost (rolled)", "", "";
