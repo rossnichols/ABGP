@@ -29,7 +29,7 @@ local function GetBroadcastChannel()
         return "RAID";
     elseif IsInGroup() then
         return "PARTY";
-    elseif ABGP.Debug then
+    else
         return "WHISPER", UnitName("player");
     end
 end
