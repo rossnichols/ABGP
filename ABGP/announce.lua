@@ -144,7 +144,12 @@ function ABGP:ShowLootFrame(itemLink)
     elt = AceGUI:Create("ABGP_LootFrame");
     elt:SetItem(itemLink);
     elt:SetDuration(self:Get("lootDuration"));
-    elt:EnableRequests(false, self:Get("lootIntegration") and "Item not open for distribution." or "Request integration is disabled.");
+
+    local reason;
+    if self:Get("lootIntegration") then
+        reason = "Item not open for distribution.";
+    end
+    elt:EnableRequests(false, reason);
 
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
@@ -226,7 +231,7 @@ function ABGP:AnnounceOnDistClosed(data, distribution, sender)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    elt:EnableRequests(false, "Item distribution has closed.");
+    elt:EnableRequests(false);
     elt:SetDuration(5);
     elt:SetUserData("blockReuse", true);
 

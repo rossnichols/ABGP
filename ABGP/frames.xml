@@ -24,7 +24,7 @@
         </Anchors>
     </Frame>
     <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" clampedToScreen="true" virtual="true" scale="1.0">
-        <Size x="320" y="60"/>
+        <Size x="275" y="60"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture name="$parentSlotTexture" file="Interface\Buttons\UI-EmptySlot">
@@ -41,12 +41,17 @@
                 </Texture>
                 <Texture name="$parentNameFrame" file="Interface\MerchantFrame\UI-Merchant-LabelSlots">
                     <Size>
-                        <AbsDimension x="265" y="56"/>
+                        <AbsDimension y="56"/>
                     </Size>
                     <Anchors>
                         <Anchor point="LEFT" relativeTo="$parentSlotTexture" relativePoint="RIGHT">
                             <Offset>
                                 <AbsDimension x="-8" y="-10"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
+                            <Offset>
+                                <AbsDimension x="28" y="-13"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -58,12 +63,12 @@
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeTo="$parentNameFrame" relativePoint="TOPLEFT">
                             <Offset>
-                                <AbsDimension x="5" y="-4"/>
+                                <AbsDimension x="3" y="-4"/>
                             </Offset>
                         </Anchor>
                         <Anchor point="TOPRIGHT" relativeTo="$parentNameFrame" relativePoint="TOPRIGHT">
                             <Offset>
-                                <AbsDimension x="-44" y="0"/>
+                                <AbsDimension x="-72" y="0"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -75,12 +80,12 @@
                     <Anchors>
                         <Anchor point="BOTTOMLEFT" relativeTo="$parentNameFrame" relativePoint="BOTTOMLEFT">
                             <Offset>
-                                <AbsDimension x="5" y="24"/>
+                                <AbsDimension x="3" y="24"/>
                             </Offset>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativeTo="$parentNameFrame" relativePoint="BOTTOMRIGHT">
                             <Offset>
-                                <AbsDimension x="-44" y="0"/>
+                                <AbsDimension x="-72" y="0"/>
                             </Offset>
                         </Anchor>
                     </Anchors>

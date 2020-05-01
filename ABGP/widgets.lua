@@ -1380,9 +1380,15 @@ do
             local need = frame.elvui and frame.needbutt or frame.NeedButton;
             if enabled then
                 _G.GroupLootFrame_EnableLootButton(need);
-            else
+                need:SetWidth(need.baseWidth);
+            elseif reason then
                 _G.GroupLootFrame_DisableLootButton(need);
                 need.reason = reason;
+                need:SetWidth(need.baseWidth);
+            else
+                need:Disable();
+                need:SetAlpha(0);
+                need:SetWidth(1);
             end
         end,
 
@@ -1419,10 +1425,10 @@ do
 
             -- "Hide" greed/pass buttons
             frame.greedbutt:SetAlpha(0);
-            frame.greedbutt:EnableMouse(false);
+            frame.greedbutt:Disable();
             frame.greedbutt:SetWidth(1);
             frame.pass:GetParent():SetAlpha(0);
-            frame.pass:GetParent():EnableMouse(false);
+            frame.pass:GetParent():Disable();
             frame.pass:GetParent():SetWidth(1);
 
             -- Add count fontstring
@@ -1457,7 +1463,8 @@ do
         need:SetScript("OnClick", Need_OnClick);
         need:SetScript("OnEnter", Need_OnEnter);
         need:SetScript("OnLeave", Need_OnLeave);
-        need.tooltipText = "Request";
+        need.tooltipText = "Request this item";
+        need.baseWidth = need:GetWidth();
 
         -- create widget
         local widget = {
