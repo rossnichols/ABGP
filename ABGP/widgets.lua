@@ -1181,7 +1181,7 @@ do
     local function Frame_OnUpdate(frame, elapsed)
         local self = frame.obj;
         self.elapsed = self.elapsed + elapsed;
-        if self.duration and (MouseIsOver(frame) or ABGP:IsContextMenuOpen()) then
+        if self.duration and (MouseIsOver(frame) or (frame.button and MouseIsOver(frame.button)) or ABGP:IsContextMenuOpen()) then
             self.elapsed = math.min(self.elapsed, self.duration - 1);
         end
 
@@ -1237,7 +1237,7 @@ do
         self:Fire("OnRequest");
     end
 
-    local function Need_OnEnter(frame)
+    local function ShowTooltip_OnEnter(frame)
         _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
         _G.GameTooltip:SetText(frame.tooltipText);
         if not frame:IsEnabled() then
@@ -1246,8 +1246,12 @@ do
         end
     end
 
-    local function Need_OnLeave(frame)
+    local function ShowTooltip_OnLeave(frame)
         _G.GameTooltip:Hide();
+    end
+
+    local function Close_OnClick(frame)
+        frame:GetParent():Hide();
     end
 
     local frameCount = 0;
@@ -1300,6 +1304,9 @@ do
                 if ABGP:IsItemFavorited(itemLink) then
                     rarity = LE_ITEM_QUALITY_ARTIFACT;
                     r, g, b = GetItemQualityColor(rarity);
+                    -- frame.dragon:Show();
+                -- else
+                    -- frame.dragon:Hide();
                 end
 
                 frame.button.icon:SetTexture(GetItemIcon(itemLink));
@@ -1339,6 +1346,7 @@ do
                         edgeSize = 32,
                         insets = { left = 11, right = 12, top = 12, bottom = 11 }
                     });
+                    _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Corner");
                     _G[frame:GetName().."Decoration"]:Show();
                 else
                     frame:SetBackdrop({
@@ -1349,6 +1357,7 @@ do
                         edgeSize = 32,
                         insets = { left = 11, right = 12, top = 12, bottom = 11 }
                     });
+                    _G[frame:GetName().."Corner"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Corner");
                     _G[frame:GetName().."Decoration"]:Hide();
                 end
             end
@@ -1413,15 +1422,17 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame, button, need;
+        local frame, button, need, close;
         if ABGP:Get("lootElvUI") and _G.ElvUI then
             frame = _G.ElvUI[1]:GetModule("Misc"):CreateRollFrame();
             frame.elvui = true;
             frame:UnregisterAllEvents();
+            frame:SetScale(1.0);
 
             -- Change default width
             frame:SetWidth(260);
             frame.fsbind:SetWidth(30);
+            frame.fsloot:SetPoint("RIGHT", frame, "RIGHT", -20, 0);
 
             -- "Hide" greed/pass buttons
             frame.greedbutt:SetAlpha(0);
@@ -1438,13 +1449,28 @@ do
             count:FontTemplate(nil, nil, "OUTLINE");
             frame.countstr = count;
 
+            -- Add close button
+            frame.closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton");
+            frame.closeButton:Point("RIGHT", 2, 0);
+            frame.closeButton:SetAlpha(0.5);
+            frame.closeButton:SetScale(0.8);
+
+            -- -- Dragon!
+            -- local dragon = frame.button:CreateTexture(nil, "OVERLAY", nil, 1);
+            -- dragon:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Dragon");
+            -- dragon:SetSize(47, 47);
+            -- dragon:SetPoint("TOPLEFT", -13, 9);
+            -- frame.dragon = dragon;
+
             button = frame.button;
             need = frame.needbutt;
+            close = frame.closeButton;
         else
             frameCount = frameCount + 1;
             frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
             button = frame.IconFrame;
             need = frame.NeedButton;
+            close = frame.CloseButton;
         end
 
         frame:SetScript("OnEvent", Frame_OnEvent);
@@ -1461,10 +1487,19 @@ do
         button:SetScript("OnClick", Button_OnClick);
 
         need:SetScript("OnClick", Need_OnClick);
-        need:SetScript("OnEnter", Need_OnEnter);
-        need:SetScript("OnLeave", Need_OnLeave);
+        need:SetScript("OnEnter", ShowTooltip_OnEnter);
+        need:SetScript("OnLeave", ShowTooltip_OnLeave);
         need.tooltipText = "Request this item";
         need.baseWidth = need:GetWidth();
+
+        close:SetScript("OnClick", Close_OnClick);
+        close:SetScript("OnEnter", ShowTooltip_OnEnter);
+        close:SetScript("OnLeave", ShowTooltip_OnLeave);
+        close.tooltipText = "Close";
+        if frame.elvui then
+            -- Must be run after scripts are set.
+            _G.ElvUI[1]:GetModule("Skins"):HandleCloseButton(close);
+        end
 
         -- create widget
         local widget = {

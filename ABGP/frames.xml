@@ -24,7 +24,7 @@
         </Anchors>
     </Frame>
     <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" clampedToScreen="true" virtual="true" scale="1.0">
-        <Size x="275" y="60"/>
+        <Size x="300" y="60"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture name="$parentSlotTexture" file="Interface\Buttons\UI-EmptySlot">
@@ -51,7 +51,7 @@
                         </Anchor>
                         <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
                             <Offset>
-                                <AbsDimension x="28" y="-13"/>
+                                <AbsDimension x="9" y="-13"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -100,6 +100,18 @@
                         <Anchor point="TOPLEFT">
                             <Offset>
                                 <AbsDimension x="-16" y="10"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCorner" file="Interface\DialogFrame\UI-DialogBox-Corner">
+                    <Size>
+                        <AbsDimension x="32" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT">
+                            <Offset>
+                                <AbsDimension x="-6" y="-7"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -154,12 +166,17 @@
 			<Button parentKey="NeedButton" inherits="LootRollButtonTemplate">
                 <Size x="32" y="32"/>
 				<Anchors>
-					<Anchor point="RIGHT" x="-12" y="-3"/>
+					<Anchor point="RIGHT" x="-33" y="-3"/>
 				</Anchors>
 				<NormalTexture file="Interface\Buttons\UI-GroupLoot-Dice-Up"/>
 				<HighlightTexture file="Interface\Buttons\UI-GroupLoot-Dice-Highlight" alphaMode="ADD"/>
 				<PushedTexture file="Interface\Buttons\UI-GroupLoot-Dice-Down"/>
 			</Button>
+            <Button parentKey="CloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentCorner" relativePoint="TOPRIGHT" x="5" y="5"/>
+                </Anchors>
+            </Button>
         </Frames>
     </Frame>
 </Ui>
