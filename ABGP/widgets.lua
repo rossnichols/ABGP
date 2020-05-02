@@ -899,6 +899,7 @@ do
         ["OnAcquire"] = function(self)
             self:DropdownOnAcquire();
             self:SetMultiselect(true);
+            self:SetCallback("OnOpened", self.UpdateCheckboxes);
         end,
 
         ["SetValues"] = function(self, allowed, showAllButton, values, sorted)
@@ -912,10 +913,7 @@ do
             end
 
             self:SetList(values, sorted);
-
-            self:SetCallback("OnValueChanged", nil);
             self:UpdateCheckboxes();
-            self:SetCallback("OnValueChanged", self.ValueChangedCallback);
         end,
 
         ["ValueChangedCallback"] = function(self, event, value, checked)
@@ -939,13 +937,12 @@ do
                 end
             end
 
-            self:SetCallback("OnValueChanged", nil);
             self:UpdateCheckboxes();
-            self:SetCallback("OnValueChanged", self.ValueChangedCallback);
             self:Fire("OnFilterUpdated");
         end,
 
         ["UpdateCheckboxes"] = function(self)
+            self:SetCallback("OnValueChanged", nil);
             local all = self:ShowingAll();
             for value in pairs(self.values) do
                 if value == "ALL" then
@@ -954,6 +951,7 @@ do
                     self:SetItemValue(value, (not all or not self.showAllButton) and self.allowed[value]);
                 end
             end
+            self:SetCallback("OnValueChanged", self.ValueChangedCallback);
         end,
 
         ["ShowingAll"] = function(self)

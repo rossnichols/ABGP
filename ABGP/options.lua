@@ -75,14 +75,14 @@ function ABGP:InitOptions()
             hidden = function() return not self:Get("commMonitoringEnabled"); end,
             func = function() self:DumpCommMonitor(); end
         },
-        -- raid = {
-        --     name = "Start Raid",
-        --     desc = "starts a raid (for EP tracking)",
-        --     type = "execute",
-        --     cmdHidden = not self:IsPrivileged(),
-        --     validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-        --     func = function() self:StartRaid(); end
-        -- },
+        raid = {
+            name = "Start Raid",
+            desc = "starts or updates a raid (for EP tracking)",
+            type = "execute",
+            cmdHidden = not self:IsPrivileged(),
+            validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
+            func = function() self:ShowRaidWindow(); end
+        },
     };
 
     -- Set up aliases

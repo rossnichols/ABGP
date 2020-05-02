@@ -72,6 +72,7 @@ function ABGP:OnInitialize()
     self:RefreshItemValues();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
     self:SetupCommMonitor();
+    self.checkRaidTimer = self:ScheduleTimer("CheckRaidState", 10);
 
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();

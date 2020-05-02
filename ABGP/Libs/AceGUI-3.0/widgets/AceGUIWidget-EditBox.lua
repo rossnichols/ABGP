@@ -1,7 +1,7 @@
 --[[-----------------------------------------------------------------------------
 EditBox Widget
 -------------------------------------------------------------------------------]]
-local Type, Version = "ABGP_EditBox", 28
+local Type, Version = "EditBox", 28
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -130,7 +130,6 @@ local methods = {
 		self:SetText()
 		self:DisableButton(false)
 		self:SetMaxLetters(0)
-		AutoCompleteEditBox_SetAutoCompleteSource(self.editbox, nil)
 	end,
 
 	["OnRelease"] = function(self)
@@ -214,17 +213,17 @@ local function Constructor()
 	local frame = CreateFrame("Frame", nil, UIParent)
 	frame:Hide()
 
-	local editbox = CreateFrame("EditBox", "ABGP_AceGUI-3.0EditBox"..num, frame, "AutoCompleteEditBoxTemplate, InputBoxTemplate")
+	local editbox = CreateFrame("EditBox", "AceGUI-3.0EditBox"..num, frame, "InputBoxTemplate")
 	editbox:SetAutoFocus(false)
 	editbox:SetFontObject(ChatFontNormal)
-	editbox:HookScript("OnEnter", Control_OnEnter)
-	editbox:HookScript("OnLeave", Control_OnLeave)
-	editbox:HookScript("OnEscapePressed", EditBox_OnEscapePressed)
-	editbox:HookScript("OnEnterPressed", EditBox_OnEnterPressed)
-	editbox:HookScript("OnTextChanged", EditBox_OnTextChanged)
-	editbox:HookScript("OnReceiveDrag", EditBox_OnReceiveDrag)
-	editbox:HookScript("OnMouseDown", EditBox_OnReceiveDrag)
-	editbox:HookScript("OnEditFocusGained", EditBox_OnFocusGained)
+	editbox:SetScript("OnEnter", Control_OnEnter)
+	editbox:SetScript("OnLeave", Control_OnLeave)
+	editbox:SetScript("OnEscapePressed", EditBox_OnEscapePressed)
+	editbox:SetScript("OnEnterPressed", EditBox_OnEnterPressed)
+	editbox:SetScript("OnTextChanged", EditBox_OnTextChanged)
+	editbox:SetScript("OnReceiveDrag", EditBox_OnReceiveDrag)
+	editbox:SetScript("OnMouseDown", EditBox_OnReceiveDrag)
+	editbox:SetScript("OnEditFocusGained", EditBox_OnFocusGained)
 	editbox:SetTextInsets(0, 0, 3, 3)
 	editbox:SetMaxLetters(256)
 	editbox:SetPoint("BOTTOMLEFT", 6, 0)

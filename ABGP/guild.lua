@@ -22,6 +22,10 @@ ABGP.PhaseNames = {
     [ABGP.Phases.p1] = "Phase 1/2",
     [ABGP.Phases.p3] = "Phase 3/4",
 };
+ABGP.PhaseNamesShort = {
+    [ABGP.Phases.p1] = "P 1/2",
+    [ABGP.Phases.p3] = "P 3/4",
+};
 ABGP.PhasesSorted = {
     ABGP.Phases.p1,
     ABGP.Phases.p3

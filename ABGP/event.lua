@@ -2,7 +2,11 @@ local _G = _G;
 local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
+local GetServerTime = GetServerTime;
 local GetAutoCompleteResults = GetAutoCompleteResults;
+local GetNumGroupMembers = GetNumGroupMembers;
+local IsInRaid = IsInRaid;
+local UnitName = UnitName;
 local AutoCompleteEditBox_SetAutoCompleteSource = AutoCompleteEditBox_SetAutoCompleteSource;
 local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
 local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
@@ -11,13 +15,19 @@ local math = math;
 local ipairs = ipairs;
 local table = table;
 local strlen = strlen;
+local date = date;
 
+_G.ABGP_RaidInfo = {};
+
+-- https://wow.gamepedia.com/InstanceID
 local instanceIds = {
     MoltenCore    = 409,
     Onyxia        = 249,
     BlackwingLair = 469,
+    ZulGurub      = 859,
 };
 
+-- https://wow.gamepedia.com/DungeonEncounterID
 local bossIds = {
     Lucifron    = 663,
     Magmadar    = 664,
@@ -29,7 +39,9 @@ local bossIds = {
     Golemagg    = 670,
     Majordomo   = 671,
     Ragnaros    = 672,
+
     Onyxia      = 1084,
+
     Razorgore   = 610,
     Vaelastrasz = 611,
     Broodlord   = 612,
@@ -38,20 +50,66 @@ local bossIds = {
     Flamegor    = 615,
     Chromaggus  = 616,
     Nefarian    = 617,
+
+    Venoxis     = 784,
+    Jeklik      = 785,
+    Marli       = 786,
+    Mandokir    = 787,
+    Madness     = 788,
+    Thekal      = 789,
+    Gahzranka   = 790,
+    Arlokk      = 791,
+    Jindo       = 792,
+    Hakkar      = 793,
 };
 
 local instanceInfo = {
-    [instanceIds.MoltenCore]  = { phase = ABGP.Phases.p1, name = "Molten Core", bosses = {
-        bossIds.Lucifron, bossIds.Magmadar, bossIds.Gehennas, bossIds.Garr, bossIds.Shazzrah,
-        bossIds.Geddon, bossIds.Sulfuron, bossIds.Golemagg, bossIds.Majordomo, bossIds.Ragnaros
-    }},
-    [instanceIds.Onyxia] = { phase = ABGP.Phases.p1, name = "Onyxia's Lair", bosses = {
-        bossIds.Onyxia
-    }},
-    [instanceIds.BlackwingLair] = { phase = ABGP.Phases.p3, name = "Blackwing Lair", bosses = {
-        bossIds.Razorgore, bossIds.Vaelastrasz, bossIds.Broodlord, bossIds.Firemaw,
-        bossIds.Ebonroc, bossIds.Flamegor, bossIds.Chromaggus, bossIds.Nefarian
-    }},
+    [instanceIds.MoltenCore]  = {
+        phase = ABGP.Phases.p1,
+        name = "Molten Core",
+        shortName = "MC",
+        bosses = {
+            bossIds.Lucifron, bossIds.Magmadar, bossIds.Gehennas, bossIds.Garr, bossIds.Shazzrah,
+            bossIds.Geddon, bossIds.Sulfuron, bossIds.Golemagg, bossIds.Majordomo, bossIds.Ragnaros
+        },
+        awards = {
+            [ABGP.RaidGroups.RED] = { ABGP.Phases.p1, ABGP.Phases.p3 },
+            [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p1 },
+        },
+    },
+    -- [instanceIds.Onyxia] = {
+    --     phase = ABGP.Phases.p1,
+    --     name = "Onyxia's Lair",
+    --     bosses = {
+    --         bossIds.Onyxia
+    --     }
+    -- },
+    [instanceIds.BlackwingLair] = {
+        phase = ABGP.Phases.p3,
+        name = "Blackwing Lair",
+        shortName = "BWL",
+        bosses = {
+            bossIds.Razorgore, bossIds.Vaelastrasz, bossIds.Broodlord, bossIds.Firemaw,
+            bossIds.Ebonroc, bossIds.Flamegor, bossIds.Chromaggus, bossIds.Nefarian
+        },
+        awards = {
+            [ABGP.RaidGroups.RED] = { ABGP.Phases.p3 },
+            [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p3 },
+        },
+    },
+    [instanceIds.ZulGurub] = {
+        phase = ABGP.Phases.p3,
+        name = "Zul'Gurub",
+        shortName = "ZG",
+        bosses = {
+            bossIds.Venoxis, bossIds.Jeklik, bossIds.Marli, bossIds.Mandokir, bossIds.Madness,
+            bossIds.Thekal, bossIds.Gahzranka, bossIds.Arlokk, bossIds.Jindo, bossIds.Hakkar
+        },
+        awards = {
+            [ABGP.RaidGroups.RED] = { ABGP.Phases.p3 },
+            [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p3 },
+        },
+    },
 };
 
 local bossInfo = {
@@ -76,18 +134,57 @@ local bossInfo = {
     [bossIds.Flamegor]    = { instance = instanceIds.BlackwingLair, ep = 10, name = "Flamegor" },
     [bossIds.Chromaggus]  = { instance = instanceIds.BlackwingLair, ep = 10, name = "Chromaggus" },
     [bossIds.Nefarian]    = { instance = instanceIds.BlackwingLair, ep = 10, name = "Nefarian" },
+
+    [bossIds.Venoxis]     = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priest Venoxis" },
+    [bossIds.Jeklik]      = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priestess Jeklik" },
+    [bossIds.Marli]       = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priestess Mar'li" },
+    [bossIds.Mandokir]    = { instance = instanceIds.ZulGurub, ep = 5, name = "Bloodlord Mandokir" },
+    [bossIds.Madness]     = { instance = instanceIds.ZulGurub, ep = 5, name = "Edge of Madness" },
+    [bossIds.Thekal]      = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priest Thekal" },
+    [bossIds.Gahzranka]   = { instance = instanceIds.ZulGurub, ep = 5, name = "Gahz'ranka" },
+    [bossIds.Arlokk]      = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priestess Arlokk" },
+    [bossIds.Jindo]       = { instance = instanceIds.ZulGurub, ep = 5, name = "Jin'do the Hexxer" },
+    [bossIds.Hakkar]      = { instance = instanceIds.ZulGurub, ep = 5, name = "Hakkar" },
 };
+
+local currentInstance;
+
+local function AwardEP(ep)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    ABGP:Notify("Awarding %d EP to the current raid!", ep);
+
+    local groupSize = GetNumGroupMembers();
+    for i = 1, groupSize do
+        local unit = "player";
+        if IsInRaid() then
+            unit = "raid" .. i;
+        elseif i ~= groupSize then
+            unit = "party" .. i;
+        end
+
+        local player = UnitName(unit);
+        currentRaid.awards[player] = (currentRaid.awards[player] or 0) + ep;
+    end
+
+    for _, player in ipairs(currentRaid.standby) do
+        currentRaid.awards[player] = (currentRaid.awards[player] or 0) + ep;
+    end
+end
 
 function ABGP:EventOnBossKilled(bossId, name)
     self:LogDebug("%s defeated!", name);
     local info = bossInfo[bossId];
     if info then
         self:LogDebug("This boss is worth %d EP.", info.ep);
+        AwardEP(info.ep);
     end
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)
-    self:LogDebug("Zone changed to %s!", name);
+    self:LogDebug("Zone changed to %s[%d]!", name, instanceId);
+    currentInstance = instanceId;
     local info = instanceInfo[instanceId];
     if info then
         self:LogDebug("This instance is associated with phase %s.", info.phase);
@@ -95,19 +192,31 @@ function ABGP:EventOnZoneChanged(name, instanceId)
     end
 end
 
+function ABGP:ShowRaidWindow()
+    self:CancelRaidStateCheck();
+
+    if _G.ABGP_RaidInfo.currentRaid then
+        self:UpdateRaid();
+    else
+        self:StartRaid();
+    end
+end
+
 function ABGP:StartRaid()
+    local raidInstance;
+
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
     window:SetTitle(("%s Raid"):format(self:ColorizeText("ABGP")));
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raid", {
         version = math.random(),
-        defaultWidth = 200,
-        minWidth = 200,
-        maxWidth = 200,
-        defaultHeight = 160,
-        minHeight = 160,
-        maxHeight = 160
+        defaultWidth = 150,
+        minWidth = 150,
+        maxWidth = 150,
+        defaultHeight = 255,
+        minHeight = 255,
+        maxHeight = 255
     });
     self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
@@ -116,38 +225,162 @@ function ABGP:StartRaid()
         AceGUI:Release(widget);
     end);
 
-    local name = AceGUI:Create("ABGP_EditBox");
+    local custom = -1;
+    local instances = {
+        [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
+        -- [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
+        [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
+        [instanceIds.ZulGurub] = instanceInfo[instanceIds.ZulGurub].name,
+        [custom] = "Custom",
+    };
+    local instanceSelector = AceGUI:Create("Dropdown");
+    instanceSelector:SetFullWidth(true);
+    instanceSelector:SetLabel("Instance");
+    instanceSelector:SetList(instances, { instanceIds.MoltenCore, --[[ instanceIds.Onyxia, ]] instanceIds.BlackwingLair, instanceIds.ZulGurub, custom });
+    instanceSelector:SetCallback("OnValueChanged", function(widget, event, value)
+        raidInstance = value;
+
+        local shortName = "Raid";
+        local raidGroupEP = window:GetUserData("raidGroupEP");
+        local selectors = window:GetUserData("raidGroupSelectors");
+
+        if instanceInfo[value] then
+            shortName = instanceInfo[value].shortName;
+            for raidGroup, awards in pairs(instanceInfo[value].awards) do
+                table.wipe(raidGroupEP[raidGroup]);
+                for _, phase in ipairs(awards) do
+                    raidGroupEP[raidGroup][phase] = true;
+                end
+                selectors[raidGroup]:UpdateCheckboxes();
+            end
+        else
+            for raidGroup in pairs(self.RaidGroups) do
+                table.wipe(raidGroupEP[raidGroup]);
+                selectors[raidGroup]:UpdateCheckboxes();
+            end
+        end
+        window:GetUserData("nameEdit"):SetText(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
+    end);
+    window:AddChild(instanceSelector);
+
+    local name = AceGUI:Create("EditBox");
     name:SetFullWidth(true);
     name:SetMaxLetters(32);
     name:SetLabel("Name");
-    -- AutoCompleteEditBox_SetAutoCompleteSource(name.editbox, GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
     name:SetCallback("OnEnterPressed", function(widget)
         AceGUI:ClearFocus();
     end);
     window:AddChild(name);
+    window:SetUserData("nameEdit", name);
 
-    local custom = -1;
-    local instances = {
-        [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
-        [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
-        [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
-        [custom] = "Custom",
-    };
-    local instanceSelector = AceGUI:Create("Dropdown");
-    instanceSelector:SetText("Select Instance");
-    instanceSelector:SetFullWidth(true);
-    instanceSelector:SetValue(custom);
-    instanceSelector:SetList(instances, { instanceIds.MoltenCore, instanceIds.Onyxia, instanceIds.BlackwingLair, custom });
-    instanceSelector:SetCallback("OnValueChanged", function(widget, event, value)
+    local raidGroupSelectors = {};
+    window:SetUserData("raidGroupSelectors", raidGroupSelectors);
+    local raidGroupEP = {};
+    window:SetUserData("raidGroupEP", raidGroupEP);
+    for _, raidGroup in ipairs(self.RaidGroupsSorted) do
+        raidGroupEP[raidGroup] = {};
 
-    end);
-    window:AddChild(instanceSelector);
+        local epSelector = AceGUI:Create("ABGP_Filter");
+        epSelector:SetFullWidth(true);
+        epSelector:SetValues(raidGroupEP[raidGroup], false, self.PhaseNamesShort, self.PhasesSorted);
+        epSelector:SetCallback("OnFilterUpdated", function()
+
+        end);
+        epSelector:SetLabel(("%s EP"):format(self.RaidGroupNames[raidGroup]));
+        window:AddChild(epSelector);
+        raidGroupSelectors[raidGroup] = epSelector;
+    end
 
     local start = AceGUI:Create("Button");
     start:SetFullWidth(true);
     start:SetText("Start");
     start:SetCallback("OnClick", function(widget)
-
+        _G.ABGP_RaidInfo.currentRaid = {
+            instanceId = raidInstance,
+            name = name:GetText(),
+            raidGroupEP = raidGroupEP,
+            awards = {},
+            standby = {},
+            startTime = GetServerTime(),
+            stopTime = GetServerTime(),
+        };
+        self:Notify("Starting raid!");
+        window:Hide();
     end);
     window:AddChild(start);
+
+    local startingValue = instanceInfo[currentInstance] and currentInstance or custom;
+    instanceSelector:SetValue(startingValue);
+    instanceSelector:Fire("OnValueChanged", startingValue);
+end
+
+function ABGP:UpdateRaid()
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+
+    local window = AceGUI:Create("Window");
+    window:SetLayout("Flow");
+    window:SetTitle(currentRaid.name);
+    window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
+    self:BeginWindowManagement(window, "raidUpdate", {
+        version = math.random(),
+        defaultWidth = 150,
+        minWidth = 150,
+        maxWidth = 150,
+        defaultHeight = 255,
+        minHeight = 255,
+        maxHeight = 255
+    });
+    self:OpenWindow(window);
+    window:SetCallback("OnClose", function(widget)
+        ABGP:EndWindowManagement(widget);
+        ABGP:CloseWindow(widget);
+        AceGUI:Release(widget);
+    end);
+
+    local stop = AceGUI:Create("Button");
+    stop:SetFullWidth(true);
+    stop:SetText("Stop");
+    stop:SetCallback("OnClick", function(widget)
+        local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+        currentRaid.stopTime = GetServerTime();
+
+        _G.ABGP_RaidInfo.pastRaids = _G.ABGP_RaidInfo.pastRaids or {};
+        table.insert(_G.ABGP_RaidInfo.pastRaids, 1, currentRaid);
+        _G.ABGP_RaidInfo.currentRaid = nil;
+
+        self:Notify("Stopping the raid!");
+        window:Hide();
+    end);
+    window:AddChild(stop);
+
+    local epSlider = AceGUI:Create("Slider");
+    epSlider:SetFullWidth(true);
+    epSlider:SetSliderValues(1, 20, 1);
+    epSlider:SetValue(5);
+    window:AddChild(epSlider);
+
+    local awardEP = AceGUI:Create("Button");
+    awardEP:SetFullWidth(true);
+    awardEP:SetText("Award EP");
+    awardEP:SetCallback("OnClick", function(widget)
+        AwardEP(epSlider:GetValue());
+    end);
+    window:AddChild(awardEP);
+
+    -- Button/slider to award EP
+    -- Button/list to manage standby
+end
+
+function ABGP:CancelRaidStateCheck()
+    if self.checkRaidTimer then
+        self:CancelTimer(self.checkRaidTimer);
+        self.checkRaidTimer = nil;
+    end
+end
+
+function ABGP:CheckRaidState()
+    self.checkRaidTimer = nil;
+    if _G.ABGP_RaidInfo.currentRaid then
+        self:Notify("A raid is currently in progress!");
+    end
 end
