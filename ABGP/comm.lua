@@ -9,16 +9,26 @@ local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
 local GetTime = GetTime;
+local GetServerTime = GetServerTime;
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE;
 local pairs = pairs;
 local type = type;
 local table = table;
 local tostring = tostring;
 local strlen = strlen;
+local math = math;
+local ipairs = ipairs;
+local mod = mod;
+local hooksecurefunc = hooksecurefunc;
 
 local startTime = GetTime();
 local alertedSlowComms = false;
 local synchronousCheck = false;
+
+local monitoringComms = false;
+local bufferLength = 30;
+local currentSlot = 0;
+local commMonitor = {};
 
 local function GetBroadcastChannel()
     if ABGP.PrivateComms then return "WHISPER", UnitName("player"); end
@@ -166,9 +176,21 @@ function ABGP:SendComm(type, data, distribution, target)
         local commCallback = function(self, sent, total)
             self:CommCallback(sent, total, logInCallback);
             local now = GetTime();
-            if not alertedSlowComms and now - time > 5 and now - startTime > 60 then
-                alertedSlowComms = true;
-                _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+            local delay = now - time;
+            if delay > 5 and now - startTime > 60 then
+                if monitoringComms then
+                    self:DumpCommMonitor();
+                elseif not self:Get("commMonitoringEnabled") and not self:Get("commMonitoringTriggered") then
+                    self:Notify("Enabling comms monitoring! You can disable this in the options window.");
+                    self:Set("commMonitoringTriggered", true);
+                    self:Set("commMonitoringEnabled", true);
+                    self:SetupCommMonitor();
+                end
+                self:Error("An addon communication message was delayed by %.2f seconds!", delay);
+                if not alertedSlowComms then
+                    alertedSlowComms = true;
+                    _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+                end
             end
 
             -- for multipart messages, reset the initial time when each callback is received.
@@ -200,8 +222,83 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     self:SendMessage(data.type, data, distribution, sender);
 end
 
+local function GetSlot()
+    local slot = mod(GetServerTime(), bufferLength) + 1;
+    while currentSlot ~= slot do
+        currentSlot = mod(currentSlot, bufferLength) + 1;
+
+        commMonitor[currentSlot] = commMonitor[currentSlot] or {};
+        table.wipe(commMonitor[currentSlot]);
+    end
+
+    return slot;
+end
+
+function ABGP:SetupCommMonitor()
+    if not self:Get("commMonitoringEnabled") then return; end
+    if not monitoringComms then
+        monitoringComms = true;
+        hooksecurefunc(_G.C_ChatInfo, "SendAddonMessage", function(prefix, msg, chatType, target)
+            local slot = GetSlot();
+            commMonitor[slot][prefix] = commMonitor[slot][prefix] or {};
+            commMonitor[slot][prefix].count = (commMonitor[slot][prefix].count or 0) + 1;
+            commMonitor[slot][prefix].len = (commMonitor[slot][prefix].len or 0) + strlen(msg);
+        end);
+
+        self:ScheduleRepeatingTimer(GetSlot, bufferLength / 2);
+    end
+end
+
+function ABGP:DumpCommMonitor()
+    if not monitoringComms then return; end
+    GetSlot();
+
+    local totals = {};
+    local prefixes = {};
+    for i, slot in pairs(commMonitor) do
+        for prefix, data in pairs(slot) do
+            if not totals[prefix] then
+                totals[prefix] = { count = 0, len = 0 };
+                table.insert(prefixes, prefix);
+            end
+            totals[prefix].len = totals[prefix].len + data.len;
+            totals[prefix].count = totals[prefix].count + data.count;
+        end
+    end
+
+    table.sort(prefixes, function(a, b)
+        return totals[a].len > totals[b].len;
+    end);
+
+    if #prefixes > 0 then
+        self:Notify("Traffic in the last %d seconds:", bufferLength);
+        for i, prefix in ipairs(prefixes) do
+            self:Notify("  %s: %d bytes over %d msgs", prefix, totals[prefix].len, totals[prefix].count);
+        end
+    else
+        self:Notify("No traffic in the last %d seconds.", bufferLength);
+    end
+
+    local ctl = _G.ChatThrottleLib;
+    if ctl and ctl.bQueueing then
+        self:Notify("Queued traffic:");
+        for prioname, Prio in pairs(ctl.Prio) do
+            local ring = Prio.Ring;
+            local head = ring.pos;
+            local pipe = ring.pos;
+            while pipe do
+                local name = pipe.name;
+                local count = #pipe;
+                self:Notify("  %s: %d msgs at %s priority", name, count, prioname);
+                pipe = pipe.next;
+                if pipe == head then pipe = nil; end
+            end
+        end
+    end
+end
+
 StaticPopupDialogs["ABGP_SLOW_COMMS"] = {
-    text = ("%s: your addon communication is delayed! Consider reloading your UI."):format(ABGP:ColorizeText("ABGP")),
+    text = ("%s: your addon communication is delayed! Consider reloading your UI (and reporting this)."):format(ABGP:ColorizeText("ABGP")),
     button1 = "Reload",
     button2 = "Close",
     timeout = 0,

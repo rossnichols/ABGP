@@ -22,6 +22,8 @@ function ABGP:InitOptions()
             lootElvUI = true,
             lootShowToasts = true,
             lootIntegration = true,
+            commMonitoringTriggered = false,
+            commMonitoringEnabled = false,
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -65,6 +67,13 @@ function ABGP:InitOptions()
             cmdHidden = not self:IsPrivileged(),
             validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
             func = function() self:PerformVersionCheck(); end
+        },
+        comms = {
+            name = "Dump Comms",
+            desc = "Dumps the addon comms monitor state",
+            type = "execute",
+            hidden = function() return not self:Get("commMonitoringEnabled"); end,
+            func = function() self:DumpCommMonitor(); end
         },
         -- raid = {
         --     name = "Start Raid",
@@ -146,6 +155,14 @@ function ABGP:InitOptions()
                     type = "toggle",
                     get = function(info) return self.db.char.alwaysOpenWindow; end,
                     set = function(info, v) self.db.char.alwaysOpenWindow = v; end,
+                },
+                commMonitor = {
+                    name = "Monitor addon comms",
+                    order = 5,
+                    desc = "Monitor addon communication to help diagnose delayed messages.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.commMonitoringEnabled; end,
+                    set = function(info, v) self.db.char.commMonitoringEnabled = v; self:SetupCommMonitor(); end,
                 },
             },
         },
