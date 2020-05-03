@@ -297,6 +297,14 @@ function ABGP:DumpCommMonitor()
     end
 end
 
+function ABGP:CommOnBossKilled()
+    -- When a boss is killed, dump the comm monitor if CTL is currently queuing msgs.
+    local ctl = _G.ChatThrottleLib;
+    if ctl and ctl.bQueueing then
+        self:DumpCommMonitor();
+    end
+end
+
 StaticPopupDialogs["ABGP_SLOW_COMMS"] = {
     text = ("%s: your addon communication is delayed! Consider reloading your UI (and reporting this)."):format(ABGP:ColorizeText("ABGP")),
     button1 = "Reload",

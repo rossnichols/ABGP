@@ -236,6 +236,7 @@ function ABGP:OnInitialize()
     self:RegisterEvent("BOSS_KILL", function(self, event, ...)
         self:EventOnBossKilled(...);
         self:AnnounceOnBossKilled(...);
+        self:CommOnBossKilled(...);
     end, self);
     self:RegisterEvent("LOADING_SCREEN_DISABLED", function(self, event, ...)
         -- Per DBM, GetInstanceInfo() can return stale data for a period of time
