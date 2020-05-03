@@ -321,6 +321,11 @@ function ABGP:Error(str, ...)
     self:Notify("|cffff0000ERROR:|r " .. str, ...);
 end
 
+function ABGP:Alert(str, ...)
+    local msg = ("%s: %s"):format(self:ColorizeText("ABGP"), tostring(str):format(...));
+    _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, { r = 1, g = 1, b = 1 });
+end
+
 function ABGP:ColorizeText(text)
     return ("%s%s|r"):format(ABGP.Color, text);
 end

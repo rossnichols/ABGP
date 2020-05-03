@@ -7,9 +7,6 @@ local GetAutoCompleteResults = GetAutoCompleteResults;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
-local AutoCompleteEditBox_SetAutoCompleteSource = AutoCompleteEditBox_SetAutoCompleteSource;
-local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
-local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local pairs = pairs;
 local math = math;
 local ipairs = ipairs;
@@ -24,7 +21,7 @@ local instanceIds = {
     MoltenCore    = 409,
     Onyxia        = 249,
     BlackwingLair = 469,
-    ZulGurub      = 859,
+    ZulGurub      = 309,
 };
 
 -- https://wow.gamepedia.com/DungeonEncounterID
@@ -148,12 +145,48 @@ local bossInfo = {
 };
 
 local currentInstance;
+local activeWindow;
 
-local function AwardEP(ep)
+local function RefreshUI()
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
 
-    ABGP:Notify("Awarding %d EP to the current raid!", ep);
+    if not activeWindow then return; end
+    local scroll = activeWindow:GetUserData("standbyList");
+    scroll:ReleaseChildren();
+
+    for _, standby in ipairs(currentRaid.standby) do
+        local elt = AceGUI:Create("ABGP_Header");
+        elt:SetFullWidth(true);
+        elt:SetText(ABGP:ColorizeName(standby));
+        elt:EnableHighlight(true);
+        scroll:AddChild(elt);
+
+        elt:SetUserData("player", standby);
+        elt:SetCallback("OnClick", function(widget, event, button)
+            if button == "RightButton" then
+                ABGP:ShowContextMenu({
+                    {
+                        text = "Remove from standby",
+                        func = function(self, player)
+                            ABGP:RemoveStandby(player);
+                        end,
+                        arg1 = widget:GetUserData("player"),
+                        notCheckable = true
+                    },
+                    { text = "Cancel", notCheckable = true },
+                });
+            end
+        end);
+    end
+end
+
+function ABGP:AwardEP(ep)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    self:Alert("Awarding %d EP to the current raid!", ep);
+    currentRaid.stopTime = GetServerTime();
 
     local groupSize = GetNumGroupMembers();
     for i = 1, groupSize do
@@ -173,12 +206,35 @@ local function AwardEP(ep)
     end
 end
 
+function ABGP:AddStandby(player)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    self:Notify("Adding %s to the standby list!", self:ColorizeName(player));
+    table.insert(currentRaid.standby, player);
+    RefreshUI();
+end
+
+function ABGP:RemoveStandby(player)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    self:Notify("Removing %s from the standby list!", self:ColorizeName(player));
+    for i, standby in ipairs(currentRaid.standby) do
+        if standby == player then
+            table.remove(currentRaid.standby, i);
+            break;
+        end
+    end
+    RefreshUI();
+end
+
 function ABGP:EventOnBossKilled(bossId, name)
     self:LogDebug("%s defeated!", name);
     local info = bossInfo[bossId];
     if info then
         self:LogDebug("This boss is worth %d EP.", info.ep);
-        AwardEP(info.ep);
+        self:AwardEP(info.ep);
     end
 end
 
@@ -316,6 +372,7 @@ end
 
 function ABGP:UpdateRaid()
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
 
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
@@ -335,17 +392,15 @@ function ABGP:UpdateRaid()
         ABGP:EndWindowManagement(widget);
         ABGP:CloseWindow(widget);
         AceGUI:Release(widget);
+        activeWindow = nil;
     end);
 
     local stop = AceGUI:Create("Button");
     stop:SetFullWidth(true);
     stop:SetText("Stop");
     stop:SetCallback("OnClick", function(widget)
-        local currentRaid = _G.ABGP_RaidInfo.currentRaid;
-        currentRaid.stopTime = GetServerTime();
-
         _G.ABGP_RaidInfo.pastRaids = _G.ABGP_RaidInfo.pastRaids or {};
-        table.insert(_G.ABGP_RaidInfo.pastRaids, 1, currentRaid);
+        table.insert(_G.ABGP_RaidInfo.pastRaids, 1, _G.ABGP_RaidInfo.currentRaid);
         _G.ABGP_RaidInfo.currentRaid = nil;
 
         self:Notify("Stopping the raid!");
@@ -363,12 +418,36 @@ function ABGP:UpdateRaid()
     awardEP:SetFullWidth(true);
     awardEP:SetText("Award EP");
     awardEP:SetCallback("OnClick", function(widget)
-        AwardEP(epSlider:GetValue());
+        self:AwardEP(epSlider:GetValue());
     end);
     window:AddChild(awardEP);
 
-    -- Button/slider to award EP
-    -- Button/list to manage standby
+    local addStandby = AceGUI:Create("Button");
+    addStandby:SetFullWidth(true);
+    addStandby:SetText("Add Standby");
+    addStandby:SetCallback("OnClick", function(widget)
+        _G.StaticPopup_Show("ABGP_ADD_STANDBY");
+    end);
+    window:AddChild(addStandby);
+
+    local elt = AceGUI:Create("ABGP_Header");
+    elt:SetFullWidth(true);
+    elt:SetText("Current standby list:");
+    window:AddChild(elt);
+
+    local scrollContainer = AceGUI:Create("SimpleGroup");
+    scrollContainer:SetFullWidth(true);
+    scrollContainer:SetFullHeight(true);
+    scrollContainer:SetLayout("Fill");
+    window:AddChild(scrollContainer);
+
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("standbyList", scroll);
+
+    activeWindow = window;
+    RefreshUI();
 end
 
 function ABGP:CancelRaidStateCheck()
@@ -384,3 +463,35 @@ function ABGP:CheckRaidState()
         self:Notify("A raid is currently in progress!");
     end
 end
+
+StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
+    text = "Add a player to the standby list:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	autoCompleteSource = GetAutoCompleteResults,
+	autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
+	maxLetters = 31,
+    OnAccept = function(self, data)
+        ABGP:AddStandby(self.editBox:GetText());
+    end,
+    OnShow = function(self, data)
+        self.editBox:SetAutoFocus(false);
+    end,
+    EditBoxOnEnterPressed = function(self, data)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};

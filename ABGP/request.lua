@@ -199,9 +199,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     local rank = self:GetItemRank(itemLink);
     if rank >= self.ItemRanks.NORMAL then
         if not lootIntegration then
-            local msg = ("%s: %s is open for distribution!"):format(self:ColorizeText("ABGP"), itemLink);
-            _G.RaidNotice_AddMessage(_G.RaidWarningFrame, msg, { r = 1, g = 1, b = 1 });
-            PlaySound(_G.SOUNDKIT.RAID_WARNING);
+            self:Alert("%s is open for distribution!", itemLink);
         end
         FlashClientIcon();
     end

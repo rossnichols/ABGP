@@ -1004,6 +1004,11 @@ do
             self.text:SetJustifyV("CENTER");
             self.text:SetPoint("LEFT", self.frame, 2, 1);
             self.text:SetPoint("RIGHT", self.frame, -2, 1);
+            self.highlight:Hide();
+        end,
+
+        ["EnableHighlight"] = function(self, enable)
+            self.highlight[enable and "Show" or "Hide"](self.highlight);
         end,
 
         ["SetText"] = function(self, text)
@@ -1040,12 +1045,24 @@ do
         frame:SetHeight(16);
         frame:Hide();
 
+        frame:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+        frame:SetScript("OnClick", function(self, ...)
+            self.obj:Fire("OnClick", ...);
+        end);
+
         local text = CreateFontString(frame);
         text:SetFontObject(_G.GameFontHighlight);
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
 
         -- create widget
         local widget = {
             text = text,
+            highlight = highlight,
 
             frame = frame,
             type  = Type
