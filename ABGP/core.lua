@@ -726,6 +726,7 @@ function ABGP:RefreshActivePlayers()
             activePlayers[pri.player].rank = pri.rank;
             activePlayers[pri.player].class = pri.class;
             activePlayers[pri.player].trial = pri.trial;
+            activePlayers[pri.player].epRaidGroup = pri.epRaidGroup;
         end
     end
 

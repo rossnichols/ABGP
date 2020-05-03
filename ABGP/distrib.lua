@@ -538,6 +538,7 @@ local function PopulateRequest(request, value)
     local override;
     local rank, class;
     local priority, ep, gp;
+    local raidGroup;
     local requestGroup;
     local preferredGroup = currentRaidGroup;
 
@@ -548,6 +549,7 @@ local function PopulateRequest(request, value)
         rank = request.rank;
         class = request.class;
         override = request.override;
+        raidGroup = value and ABGP:GetGPRaidGroup(rank, value.phase);
     else
         local epgp = ABGP:GetActivePlayer(request.player);
         if epgp then
@@ -564,6 +566,7 @@ local function PopulateRequest(request, value)
                 priority = epgp[value.phase].priority;
                 ep = epgp[value.phase].ep;
                 gp = epgp[value.phase].gp;
+                raidGroup = epgp[value.phase].raidGroup;
             elseif not override then
                 override = "non-raider";
             end
@@ -571,7 +574,7 @@ local function PopulateRequest(request, value)
     end
 
     if rank and value and not override then
-        requestGroup = ABGP:GetRaidGroup(rank, value.phase);
+        requestGroup = raidGroup;
     end
 
     local needsUpdate = false;

@@ -77,10 +77,19 @@ function ABGP:RefreshFromOfficerNotes()
             local epgp = self:GetActivePlayer(player);
             local p1New, p3New;
             if self:IsTrial(rank) then
+                local trialGroup = self.RaidGroups.RED;
+                for raidGroup, raidGroupName in pairs(self.RaidGroupNames) do
+                    if publicNote == raidGroupName then
+                        trialGroup = raidGroup;
+                        break;
+                    end
+                end
                 table.insert(p1, {
                     player = player,
                     rank = rank,
                     class = class,
+                    epRaidGroup = trialGroup,
+                    gpRaidGroup = trialGroup,
                     ep = 0,
                     gp = 0,
                     priority = 0,
@@ -90,6 +99,8 @@ function ABGP:RefreshFromOfficerNotes()
                     player = player,
                     rank = rank,
                     class = class,
+                    epRaidGroup = trialGroup,
+                    gpRaidGroup = trialGroup,
                     ep = 0,
                     gp = 0,
                     priority = 0,
@@ -109,6 +120,8 @@ function ABGP:RefreshFromOfficerNotes()
                             proxy = proxy,
                             rank = rank,
                             class = class,
+                            epRaidGroup = self:GetEPRaidGroup(rank),
+                            gpRaidGroup = self:GetGPRaidGroup(rank, self.Phases.p1),
                             ep = p1ep,
                             gp = p1gp,
                             priority = p1ep * 10 / p1gp
@@ -120,6 +133,8 @@ function ABGP:RefreshFromOfficerNotes()
                             proxy = proxy,
                             rank = rank,
                             class = class,
+                            epRaidGroup = self:GetEPRaidGroup(rank),
+                            gpRaidGroup = self:GetGPRaidGroup(rank, self.Phases.p3),
                             ep = p3ep,
                             gp = p3gp,
                             priority = p3ep * 10 / p3gp
@@ -196,7 +211,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
 
         -- Sanity check: all ranks here must be in a raid group.
-        if not self:GetRaidGroup(rank, next(self.Phases)) then
+        if not self:GetGPRaidGroup(rank, next(self.Phases)) then
             self:Error("%s is rank %s which is not part of a raid group!", player, rank);
             note = "";
         end

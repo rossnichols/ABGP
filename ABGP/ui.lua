@@ -126,7 +126,7 @@ local function DrawPriority(container, rebuild, reason)
     local lastPriority = -1;
     local priority = ABGP.Priorities[ABGP.CurrentPhase];
     for i, data in ipairs(priority) do
-        local inRaidGroup = not currentRaidGroup or ABGP:GetRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
+        local inRaidGroup = not currentRaidGroup or ABGP:GetGPRaidGroup(data.rank, ABGP.CurrentPhase) == currentRaidGroup;
         local isGrouped = not onlyGrouped or UnitExists(data.player);
         if allowedClasses[data.class] and inRaidGroup and isGrouped then
             count = count + 1;
@@ -315,7 +315,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         for _, data in ipairs(gpHistory) do
             local epgp = ABGP:GetActivePlayer(data.player);
             if epgp then
-                if not currentRaidGroup or ABGP:GetRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
+                if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
                     local class = epgp.class;
                     if exact then
                         if data.player:lower() == exact or
