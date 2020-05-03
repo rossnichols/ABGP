@@ -251,7 +251,20 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
     if not elt then return; end
 
     elt:SetUserData("awards", elt:GetUserData("awards") or {});
-    table.insert(elt:GetUserData("awards"), self:ColorizeName(data.player));
+
+    local requestTypes = {
+        [self.RequestTypes.MS] = "ms",
+        [self.RequestTypes.OS] = "os",
+    };
+    local extra;
+    if requestTypes[data.requestType] then
+        extra = requestTypes[data.requestType];
+    elseif data.roll then
+        extra = data.roll;
+    end
+    extra = extra and (" (%s)"):format(self:ColorizeText(extra)) or "";
+    local award = ("%s%s"):format(self:ColorizeName(data.player), extra);
+    table.insert(elt:GetUserData("awards"), award);
 end
 
 function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
