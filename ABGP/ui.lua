@@ -241,7 +241,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                 ABGP:OpenWindow(window);
 
                 local edit = AceGUI:Create("MultiLineEditBox");
-                edit:SetLabel("In the spreadsheet, paste into the 'Item' colum.");
+                edit:SetLabel("In the spreadsheet, paste into the 'Item' column.");
                 edit:SetText(text);
                 edit.button:Enable();
                 window:AddChild(edit);
