@@ -1405,6 +1405,9 @@ do
             if enabled then
                 _G.GroupLootFrame_EnableLootButton(need);
                 need:SetWidth(need.baseWidth);
+
+                frame.glow:Show();
+                frame.glow.animIn:Play();
             elseif reason then
                 _G.GroupLootFrame_DisableLootButton(need);
                 need.reason = reason;
@@ -1515,6 +1518,31 @@ do
             -- Must be run after scripts are set.
             _G.ElvUI[1]:GetModule("Skins"):HandleCloseButton(close);
         end
+
+        local glow = need:CreateTexture(nil, "OVERLAY");
+        glow:SetAtlas("loottoast-glow");
+        glow:SetBlendMode("ADD");
+        if frame.elvui then
+            glow:SetPoint("TOPLEFT", frame, -40, 4);
+            glow:SetPoint("BOTTOMRIGHT", frame, 10, -4);
+        else
+            glow:SetPoint("TOPLEFT", frame, -10, 10);
+            glow:SetPoint("BOTTOMRIGHT", frame, 10, -10);
+        end
+        local animIn = glow:CreateAnimationGroup();
+        animIn:SetScript("OnFinished", function(self) self:GetParent():Hide(); end);
+        local fadeIn = animIn:CreateAnimation("Alpha");
+        fadeIn:SetFromAlpha(0);
+        fadeIn:SetToAlpha(1);
+        fadeIn:SetDuration(0.1);
+        fadeIn:SetOrder(1);
+        local fadeOut= animIn:CreateAnimation("Alpha");
+        fadeOut:SetFromAlpha(1);
+        fadeOut:SetToAlpha(0);
+        fadeOut:SetDuration(0.25);
+        fadeOut:SetOrder(2);
+        frame.glow = glow;
+        glow.animIn = animIn;
 
         -- create widget
         local widget = {

@@ -152,7 +152,7 @@
                     </OnEnter>
                     <OnLeave>
                         GameTooltip:Hide();
-				        ResetCursor();
+                        ResetCursor();
                     </OnLeave>
                     <OnUpdate>
                         if GameTooltip:IsOwned(self) then
@@ -163,15 +163,15 @@
                     </OnUpdate>
                 </Scripts>
             </Button>
-			<Button parentKey="NeedButton" inherits="LootRollButtonTemplate">
+            <Button parentKey="NeedButton" inherits="LootRollButtonTemplate">
                 <Size x="32" y="32"/>
-				<Anchors>
-					<Anchor point="RIGHT" x="-33" y="-3"/>
-				</Anchors>
-				<NormalTexture file="Interface\Buttons\UI-GroupLoot-Dice-Up"/>
-				<HighlightTexture file="Interface\Buttons\UI-GroupLoot-Dice-Highlight" alphaMode="ADD"/>
-				<PushedTexture file="Interface\Buttons\UI-GroupLoot-Dice-Down"/>
-			</Button>
+                <Anchors>
+                    <Anchor point="RIGHT" x="-33" y="-3"/>
+                </Anchors>
+                <NormalTexture file="Interface\Buttons\UI-GroupLoot-Dice-Up"/>
+                <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Dice-Highlight" alphaMode="ADD"/>
+                <PushedTexture file="Interface\Buttons\UI-GroupLoot-Dice-Down"/>
+            </Button>
             <Button parentKey="CloseButton" inherits="UIPanelCloseButton">
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeTo="$parentCorner" relativePoint="TOPRIGHT" x="5" y="5"/>
