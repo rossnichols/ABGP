@@ -49,6 +49,7 @@ local function OnGroupJoined()
     }, "BROADCAST");
     ABGP:VersionOnGroupJoined();
     ABGP:OutsiderOnGroupJoined();
+    ABGP:EventOnGroupJoined();
 end
 
 local function OnGuildRosterUpdate()
@@ -223,6 +224,7 @@ function ABGP:OnInitialize()
     self:RegisterEvent("GROUP_ROSTER_UPDATE", function(self, event, ...)
         self:RequestOnGroupUpdate();
         self:OutsiderOnGroupUpdate();
+        self:EventOnGroupUpdate();
     end, self);
     self:RegisterEvent("PLAYER_LEAVING_WORLD", function(self, event, ...)
         self:DistribOnLeavingWorld();

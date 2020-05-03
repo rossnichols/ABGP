@@ -13,6 +13,8 @@ local ipairs = ipairs;
 local table = table;
 local strlen = strlen;
 local date = date;
+local type = type;
+local tonumber = tonumber;
 
 _G.ABGP_RaidInfo = {};
 
@@ -147,15 +149,18 @@ local bossInfo = {
 local currentInstance;
 local activeWindow;
 
-local function RefreshUI()
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
-    if not currentRaid then return; end
+local function IsInProgress(raid)
+    return (raid and raid == _G.ABGP_RaidInfo.currentRaid);
+end
 
+local function RefreshUI()
     if not activeWindow then return; end
+    local windowRaid = activeWindow:GetUserData("raid");
+    if not IsInProgress(windowRaid) then return; end
     local scroll = activeWindow:GetUserData("standbyList");
     scroll:ReleaseChildren();
 
-    for _, standby in ipairs(currentRaid.standby) do
+    for _, standby in ipairs(windowRaid.standby) do
         local elt = AceGUI:Create("ABGP_Header");
         elt:SetFullWidth(true);
         elt:SetText(ABGP:ColorizeName(standby));
@@ -181,12 +186,9 @@ local function RefreshUI()
     end
 end
 
-function ABGP:AwardEP(ep)
+local function EnsureAwardsEntries()
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
-
-    self:Alert("Awarding %d EP to the current raid!", ep);
-    currentRaid.stopTime = GetServerTime();
 
     local groupSize = GetNumGroupMembers();
     for i = 1, groupSize do
@@ -198,11 +200,33 @@ function ABGP:AwardEP(ep)
         end
 
         local player = UnitName(unit);
-        currentRaid.awards[player] = (currentRaid.awards[player] or 0) + ep;
+        currentRaid.awards[player] = currentRaid.awards[player] or 0;
+    end
+end
+
+function ABGP:AwardEP(ep)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    self:Alert("Awarding %d EP to the current raid!", ep);
+    currentRaid.stopTime = GetServerTime();
+
+    EnsureAwardsEntries();
+    local groupSize = GetNumGroupMembers();
+    for i = 1, groupSize do
+        local unit = "player";
+        if IsInRaid() then
+            unit = "raid" .. i;
+        elseif i ~= groupSize then
+            unit = "party" .. i;
+        end
+
+        local player = UnitName(unit);
+        currentRaid.awards[player] = currentRaid.awards[player] + ep;
     end
 
     for _, player in ipairs(currentRaid.standby) do
-        currentRaid.awards[player] = (currentRaid.awards[player] or 0) + ep;
+        currentRaid.awards[player] = currentRaid.awards[player] + ep;
     end
 end
 
@@ -212,6 +236,7 @@ function ABGP:AddStandby(player)
 
     self:Notify("Adding %s to the standby list!", self:ColorizeName(player));
     table.insert(currentRaid.standby, player);
+    currentRaid.awards[player] = currentRaid.awards[player] or 0;
     RefreshUI();
 end
 
@@ -253,13 +278,13 @@ function ABGP:ShowRaidWindow()
 
     if _G.ABGP_RaidInfo.currentRaid then
         self:UpdateRaid();
-    else
+    elseif not activeWindow then
         self:StartRaid();
     end
 end
 
 function ABGP:StartRaid()
-    local raidInstance;
+    local raidInstance, raidPhase;
 
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
@@ -270,9 +295,9 @@ function ABGP:StartRaid()
         defaultWidth = 150,
         minWidth = 150,
         maxWidth = 150,
-        defaultHeight = 255,
-        minHeight = 255,
-        maxHeight = 255
+        defaultHeight = 300,
+        minHeight = 300,
+        maxHeight = 300
     });
     self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
@@ -309,6 +334,7 @@ function ABGP:StartRaid()
                 end
                 selectors[raidGroup]:UpdateCheckboxes();
             end
+            window:GetUserData("phaseSelector"):SetValue(instanceInfo[value].phase);
         else
             for raidGroup in pairs(self.RaidGroups) do
                 table.wipe(raidGroupEP[raidGroup]);
@@ -328,6 +354,16 @@ function ABGP:StartRaid()
     end);
     window:AddChild(name);
     window:SetUserData("nameEdit", name);
+
+    local phaseSelector = AceGUI:Create("Dropdown");
+    phaseSelector:SetFullWidth(true);
+    phaseSelector:SetLabel("Phase");
+    phaseSelector:SetList(self.PhaseNames, self.PhasesSorted);
+    phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
+        raidPhase = value;
+    end);
+    window:AddChild(phaseSelector);
+    window:SetUserData("phaseSelector", phaseSelector);
 
     local raidGroupSelectors = {};
     window:SetUserData("raidGroupSelectors", raidGroupSelectors);
@@ -370,22 +406,22 @@ function ABGP:StartRaid()
     instanceSelector:Fire("OnValueChanged", startingValue);
 end
 
-function ABGP:UpdateRaid()
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
-    if not currentRaid then return; end
+function ABGP:UpdateRaid(windowRaid)
+    windowRaid = windowRaid or _G.ABGP_RaidInfo.currentRaid;
+    if not windowRaid then return; end
 
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
-    window:SetTitle(currentRaid.name);
+    window:SetTitle(windowRaid.name);
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raidUpdate", {
         version = math.random(),
         defaultWidth = 150,
         minWidth = 150,
         maxWidth = 150,
-        defaultHeight = 255,
-        minHeight = 255,
-        maxHeight = 255
+        defaultHeight = 300,
+        minHeight = 300,
+        maxHeight = 300
     });
     self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
@@ -395,59 +431,200 @@ function ABGP:UpdateRaid()
         activeWindow = nil;
     end);
 
-    local stop = AceGUI:Create("Button");
-    stop:SetFullWidth(true);
-    stop:SetText("Stop");
-    stop:SetCallback("OnClick", function(widget)
-        _G.ABGP_RaidInfo.pastRaids = _G.ABGP_RaidInfo.pastRaids or {};
-        table.insert(_G.ABGP_RaidInfo.pastRaids, 1, _G.ABGP_RaidInfo.currentRaid);
-        _G.ABGP_RaidInfo.currentRaid = nil;
+    if IsInProgress(windowRaid) then
+        local stop = AceGUI:Create("Button");
+        stop:SetFullWidth(true);
+        stop:SetText("Stop");
+        stop:SetCallback("OnClick", function(widget)
+            _G.ABGP_RaidInfo.pastRaids = _G.ABGP_RaidInfo.pastRaids or {};
+            table.insert(_G.ABGP_RaidInfo.pastRaids, 1, _G.ABGP_RaidInfo.currentRaid);
+            _G.ABGP_RaidInfo.currentRaid = nil;
 
-        self:Notify("Stopping the raid!");
-        window:Hide();
+            self:Notify("Stopping the raid!");
+            window:Hide();
+            self:UpdateRaid(windowRaid);
+        end);
+        window:AddChild(stop);
+
+        local epSlider = AceGUI:Create("Slider");
+        epSlider:SetFullWidth(true);
+        epSlider:SetSliderValues(1, 20, 1);
+        epSlider:SetValue(5);
+        window:AddChild(epSlider);
+
+        local awardEP = AceGUI:Create("Button");
+        awardEP:SetFullWidth(true);
+        awardEP:SetText("Award EP");
+        awardEP:SetCallback("OnClick", function(widget)
+            self:AwardEP(epSlider:GetValue());
+        end);
+        window:AddChild(awardEP);
+    end
+
+    if not IsInProgress(windowRaid) or self.Debug then
+        local export = AceGUI:Create("Button");
+        export:SetFullWidth(true);
+        export:SetText("Export");
+        export:SetCallback("OnClick", function(widget)
+            self:ExportRaid(windowRaid);
+        end);
+        window:AddChild(export);
+    end
+
+    if not IsInProgress(windowRaid) and self.Debug then
+        local restart = AceGUI:Create("Button");
+        restart:SetFullWidth(true);
+        restart:SetText("Restart");
+        restart:SetCallback("OnClick", function(widget)
+            local past = _G.ABGP_RaidInfo.pastRaids;
+            for i, raid in ipairs(past) do
+                if raid == windowRaid then
+                    self:Notify("Restarting the raid!");
+                    self:RestartRaid(i);
+                    break;
+                end
+            end
+        end);
+        window:AddChild(restart);
+    end
+
+    local manageEP = AceGUI:Create("Button");
+    manageEP:SetFullWidth(true);
+    manageEP:SetText("Manage EP");
+    manageEP:SetCallback("OnClick", function(widget)
+        local windowRaid = window:GetUserData("raid");
+
+        local popup = window:GetUserData("popup");
+        if popup then
+            popup:Hide();
+            return;
+        end
+
+        local popup = AceGUI:Create("Window");
+        popup.frame:SetFrameStrata("DIALOG");
+        popup:SetTitle("Manage EP");
+        popup:SetLayout("Fill");
+        popup:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); window:SetUserData("popup", nil); end);
+        popup:SetWidth(240);
+        popup:SetHeight(300);
+        popup.frame:ClearAllPoints();
+        popup.frame:SetPoint("TOPLEFT", window.frame, "TOPRIGHT", 0, 0);
+        ABGP:OpenWindow(popup);
+
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetLayout("Table");
+        scroll:SetUserData("table", { columns = { 110, 75 } });
+        popup:AddChild(scroll);
+
+        local sorted = {};
+        for player in pairs(windowRaid.awards) do table.insert(sorted, player); end
+        table.sort(sorted);
+
+        for _, player in ipairs(sorted) do
+            local elt = AceGUI:Create("ABGP_Header");
+            elt:SetFullWidth(true);
+            elt:SetText(self:ColorizeName(player));
+            scroll:AddChild(elt);
+
+            elt = AceGUI:Create("EditBox");
+            elt:SetFullWidth(true);
+            elt:SetText(windowRaid.awards[player]);
+            scroll:AddChild(elt);
+            elt:SetCallback("OnEnterPressed", function(widget, event, value)
+                value = tonumber(value);
+                if type(value) == "number" and value > 0 and math.floor(value) == value then
+                    windowRaid.awards[player] = value;
+                    self:Notify("EP for %s set to %d.", self:ColorizeName(player), value);
+                else
+                    value = windowRaid.awards[player];
+                    self:Error("Invalid value! EP for %s remains at %d.", self:ColorizeName(player), value);
+                end
+                widget:SetText(value);
+                AceGUI:ClearFocus();
+            end);
+        end
+
+        window:SetUserData("popup", popup);
     end);
-    window:AddChild(stop);
+    window:AddChild(manageEP);
 
-    local epSlider = AceGUI:Create("Slider");
-    epSlider:SetFullWidth(true);
-    epSlider:SetSliderValues(1, 20, 1);
-    epSlider:SetValue(5);
-    window:AddChild(epSlider);
+    if IsInProgress(windowRaid) then
+        local addStandby = AceGUI:Create("Button");
+        addStandby:SetFullWidth(true);
+        addStandby:SetText("Add Standby");
+        addStandby:SetCallback("OnClick", function(widget)
+            _G.StaticPopup_Show("ABGP_ADD_STANDBY");
+        end);
+        window:AddChild(addStandby);
 
-    local awardEP = AceGUI:Create("Button");
-    awardEP:SetFullWidth(true);
-    awardEP:SetText("Award EP");
-    awardEP:SetCallback("OnClick", function(widget)
-        self:AwardEP(epSlider:GetValue());
-    end);
-    window:AddChild(awardEP);
+        local elt = AceGUI:Create("ABGP_Header");
+        elt:SetFullWidth(true);
+        elt:SetText("Current standby list:");
+        window:AddChild(elt);
 
-    local addStandby = AceGUI:Create("Button");
-    addStandby:SetFullWidth(true);
-    addStandby:SetText("Add Standby");
-    addStandby:SetCallback("OnClick", function(widget)
-        _G.StaticPopup_Show("ABGP_ADD_STANDBY");
-    end);
-    window:AddChild(addStandby);
+        local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetFullWidth(true);
+        scrollContainer:SetFullHeight(true);
+        scrollContainer:SetLayout("Fill");
+        window:AddChild(scrollContainer);
 
-    local elt = AceGUI:Create("ABGP_Header");
-    elt:SetFullWidth(true);
-    elt:SetText("Current standby list:");
-    window:AddChild(elt);
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetLayout("List");
+        scrollContainer:AddChild(scroll);
+        window:SetUserData("standbyList", scroll);
+    end
 
-    local scrollContainer = AceGUI:Create("SimpleGroup");
-    scrollContainer:SetFullWidth(true);
-    scrollContainer:SetFullHeight(true);
-    scrollContainer:SetLayout("Fill");
-    window:AddChild(scrollContainer);
-
-    local scroll = AceGUI:Create("ScrollFrame");
-    scroll:SetLayout("List");
-    scrollContainer:AddChild(scroll);
-    window:SetUserData("standbyList", scroll);
-
+    window:SetUserData("raid", windowRaid);
     activeWindow = window;
     RefreshUI();
+end
+
+function ABGP:RestartRaid(i)
+    local past = _G.ABGP_RaidInfo.pastRaids;
+    local raid = past[i];
+    table.remove(past, i);
+    _G.ABGP_RaidInfo.currentRaid = raid;
+    if activeWindow then activeWindow:Hide(); end
+    self:UpdateRaid();
+end
+
+function ABGP:ExportRaid(windowRaid)
+    local window = AceGUI:Create("Window");
+    window.frame:SetFrameStrata("DIALOG");
+    window:SetTitle("Export");
+    window:SetLayout("Table");
+    window:SetHeight(450);
+    local nPhases = #self.PhasesSorted;
+    local columns = {};
+    for i = 1, nPhases do table.insert(columns, 1 / nPhases); end
+    window:SetUserData("table", { columns = columns });
+    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+    ABGP:OpenWindow(window);
+
+    -- for _, phase in ipairs(self.PhasesSorted) do
+    --     local elt = AceGUI:Create("ABGP_Header");
+    --     elt:SetFullWidth(true);
+    --     elt:SetText(self.PhaseNames[phase]);
+    --     window:AddChild(elt);
+    -- end
+
+    for _, phase in ipairs(self.PhasesSorted) do
+        local edit = AceGUI:Create("MultiLineEditBox");
+        edit:SetFullWidth(true);
+        edit:SetFullHeight(true);
+        edit:SetLabel(self.PhaseNames[phase]);
+        edit:SetNumLines(25);
+        edit:SetText("");
+        edit:DisableButton(true);
+        window:AddChild(edit);
+        -- edit:SetFocus();
+        -- edit:HighlightText();
+        -- edit:SetCallback("OnEnterPressed", function()
+        --     window:Hide();
+        -- end);
+    end
+
+    window.frame:Raise();
 end
 
 function ABGP:CancelRaidStateCheck()
@@ -460,8 +637,16 @@ end
 function ABGP:CheckRaidState()
     self.checkRaidTimer = nil;
     if _G.ABGP_RaidInfo.currentRaid then
-        self:Notify("A raid is currently in progress!");
+        self:Alert("A raid is currently in progress!");
     end
+end
+
+function ABGP:EventOnGroupJoined()
+    EnsureAwardsEntries();
+end
+
+function ABGP:EventOnGroupUpdate()
+    EnsureAwardsEntries();
 end
 
 StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
