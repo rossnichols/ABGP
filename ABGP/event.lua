@@ -686,12 +686,19 @@ function ABGP:ExportRaid(windowRaid)
         local i = 1;
         for player, ep in pairs(windowRaid.awards) do
             local epgp = self:GetActivePlayer(player);
-            if epgp then
+            -- Filter to players that earned EP in the raid and are tracked by EPGP.
+            if epgp and ep > 0 then
+                -- Trials are tracked for attendance but don't earn EP.
+                if epgp.trial then ep = 0; end
                 local raidGroup = epgp.epRaidGroup;
                 if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
                     text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
-                        (i == 1 and "" or "\n"), ep, windowRaid.name, player, raidDate, "Tracked by ABGP");
+                        (i == 1 and "" or "\n"), ep, windowRaid.name, player, raidDate, epgp.rank);
                     i = i + 1;
+                    if not epgp[phase] then
+                        self:Notify("WARNING: %s doesn't have existing EPGP data for %s!",
+                            self:ColorizeName(player), self.PhaseNames[phase]);
+                    end
                 end
             end
         end
