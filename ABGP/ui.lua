@@ -716,6 +716,95 @@ local function DrawItems(container, rebuild, reason)
     end
 end
 
+local function DrawRaidHistory(container, rebuild, reason)
+    if not rebuild and reason then return; end
+
+    local widths = { 1.0 };
+    if rebuild then
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
+
+        local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetFullWidth(true);
+        scrollContainer:SetFullHeight(true);
+        scrollContainer:SetLayout("Flow");
+        container:AddChild(scrollContainer);
+
+        local columns = { "Name", weights = { unpack(widths) } };
+        local header = AceGUI:Create("SimpleGroup");
+        header:SetFullWidth(true);
+        header:SetLayout("Table");
+        header:SetUserData("table", { columns = columns.weights });
+        scrollContainer:AddChild(header);
+
+        for i = 1, #columns do
+            local desc = AceGUI:Create("ABGP_Header");
+            desc:SetText(columns[i]);
+            header:AddChild(desc);
+        end
+
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetFullWidth(true);
+        scroll:SetFullHeight(true);
+        scroll:SetLayout("List");
+        scrollContainer:AddChild(scroll);
+        container:SetUserData("raidList", scroll);
+    end
+
+    local raidList = container:GetUserData("raidList");
+    raidList:ReleaseChildren();
+
+    local raids = _G.ABGP_RaidInfo.pastRaids;
+    local filtered = {};
+    for _, raid in ipairs(raids) do
+        if raid.phase == ABGP.CurrentPhase then
+            table.insert(filtered, raid);
+        end
+    end
+
+    local pagination = container:GetUserData("pagination");
+    pagination:SetValues(#filtered, 100);
+    if #filtered > 0 then
+        local first, last = pagination:GetRange();
+        for i = first, last do
+            local raid = filtered[i];
+            local elt = AceGUI:Create("ABGP_Header");
+            elt:SetFullWidth(true);
+            elt:SetText(raid.name);
+            elt:EnableHighlight(true);
+            elt:SetCallback("OnClick", function(widget, event, button)
+                if button == "RightButton" then
+                    ABGP:ShowContextMenu({
+                        {
+                            text = "Export",
+                            func = function(self, raid)
+                                ABGP:ExportRaid(raid);
+                            end,
+                            arg1 = raid,
+                            notCheckable = true
+                        },
+                        {
+                            text = "Manage",
+                            func = function(self, raid)
+                                ABGP:UpdateRaid(raid);
+                            end,
+                            arg1 = raid,
+                            notCheckable = true
+                        },
+                        { text = "Cancel", notCheckable = true },
+                    });
+                end
+            end);
+            raidList:AddChild(elt);
+        end
+    end
+end
+
 local function DrawAuditLog(container, rebuild, reason)
     if not rebuild and reason then return; end
 
@@ -940,7 +1029,6 @@ function ABGP:CreateMainWindow(command)
 
     local tabs = {
         { value = "priority", text = "Priority", draw = DrawPriority },
-        -- { value = "ep", text = "Effort Points", draw = DrawEP },
         { value = "gp", text = "Item History", draw = DrawItemHistory },
         { value = "items", text = "Items", draw = DrawItems },
     };
@@ -950,6 +1038,9 @@ function ABGP:CreateMainWindow(command)
             hasAuditLog = true;
             break;
         end
+    end
+    if _G.ABGP_RaidInfo.pastRaids and #_G.ABGP_RaidInfo.pastRaids > 0 then
+        table.insert(tabs, { value = "ep", text = "Raid History", draw = DrawRaidHistory });
     end
     if hasAuditLog then
         table.insert(tabs, { value = "audit", text = "Audit Log", draw = DrawAuditLog });

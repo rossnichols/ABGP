@@ -7,6 +7,7 @@ local GetAutoCompleteResults = GetAutoCompleteResults;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
+local tContains = tContains;
 local pairs = pairs;
 local math = math;
 local ipairs = ipairs;
@@ -15,6 +16,7 @@ local strlen = strlen;
 local date = date;
 local type = type;
 local tonumber = tonumber;
+local next = next;
 
 _G.ABGP_RaidInfo = {};
 
@@ -76,13 +78,18 @@ local instanceInfo = {
             [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p1 },
         },
     },
-    -- [instanceIds.Onyxia] = {
-    --     phase = ABGP.Phases.p1,
-    --     name = "Onyxia's Lair",
-    --     bosses = {
-    --         bossIds.Onyxia
-    --     }
-    -- },
+    [instanceIds.Onyxia] = {
+        phase = ABGP.Phases.p1,
+        name = "Onyxia's Lair",
+        shortName = "Ony",
+        bosses = {
+            bossIds.Onyxia
+        },
+        awards = {
+            [ABGP.RaidGroups.RED] = { ABGP.Phases.p1, ABGP.Phases.p3 },
+            [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p1 },
+        },
+    },
     [instanceIds.BlackwingLair] = {
         phase = ABGP.Phases.p3,
         name = "Blackwing Lair",
@@ -190,6 +197,9 @@ local function EnsureAwardsEntries()
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
 
+    local player = UnitName("player");
+    currentRaid.awards[player] = currentRaid.awards[player] or 0;
+
     local groupSize = GetNumGroupMembers();
     for i = 1, groupSize do
         local unit = "player";
@@ -233,8 +243,24 @@ end
 function ABGP:AddStandby(player)
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
+    if tContains(currentRaid.standby, player) then return; end
+
+    if not self:GetActivePlayer(player) and not self:GetGuildInfo(player) then
+        local playerLower = player:lower();
+        local guildInfo = self:GetGuildInfo();
+        for guildie in pairs(guildInfo) do
+            if guildie:lower() == playerLower then
+                player = guildie;
+                break;
+            end
+        end
+    end
 
     self:Notify("Adding %s to the standby list!", self:ColorizeName(player));
+    if not self:GetActivePlayer(player) then
+        self:Notify("WARNING: %s doesn't have any EPGP data! Any awarded EP can't be exported.", self:ColorizeName(player));
+    end
+
     table.insert(currentRaid.standby, player);
     currentRaid.awards[player] = currentRaid.awards[player] or 0;
     RefreshUI();
@@ -309,21 +335,22 @@ function ABGP:StartRaid()
     local custom = -1;
     local instances = {
         [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
-        -- [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
         [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
+        [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
         [instanceIds.ZulGurub] = instanceInfo[instanceIds.ZulGurub].name,
         [custom] = "Custom",
     };
     local instanceSelector = AceGUI:Create("Dropdown");
     instanceSelector:SetFullWidth(true);
     instanceSelector:SetLabel("Instance");
-    instanceSelector:SetList(instances, { instanceIds.MoltenCore, --[[ instanceIds.Onyxia, ]] instanceIds.BlackwingLair, instanceIds.ZulGurub, custom });
+    instanceSelector:SetList(instances, { instanceIds.MoltenCore, instanceIds.BlackwingLair, instanceIds.Onyxia, instanceIds.ZulGurub, custom });
     instanceSelector:SetCallback("OnValueChanged", function(widget, event, value)
         raidInstance = value;
 
         local shortName = "Raid";
         local raidGroupEP = window:GetUserData("raidGroupEP");
         local selectors = window:GetUserData("raidGroupSelectors");
+        local phaseSelector = window:GetUserData("phaseSelector");
 
         if instanceInfo[value] then
             shortName = instanceInfo[value].shortName;
@@ -334,12 +361,14 @@ function ABGP:StartRaid()
                 end
                 selectors[raidGroup]:UpdateCheckboxes();
             end
-            window:GetUserData("phaseSelector"):SetValue(instanceInfo[value].phase);
+            phaseSelector:SetValue(instanceInfo[value].phase);
         else
             for raidGroup in pairs(self.RaidGroups) do
                 table.wipe(raidGroupEP[raidGroup]);
+                raidGroupEP[raidGroup][self.CurrentPhase] = true;
                 selectors[raidGroup]:UpdateCheckboxes();
             end
+            phaseSelector:SetValue(self.CurrentPhase);
         end
         window:GetUserData("nameEdit"):SetText(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
     end);
@@ -396,8 +425,10 @@ function ABGP:StartRaid()
             startTime = GetServerTime(),
             stopTime = GetServerTime(),
         };
-        self:Notify("Starting raid!");
+        EnsureAwardsEntries();
+        self:Notify("Starting a new raid!");
         window:Hide();
+        self:UpdateRaid();
     end);
     window:AddChild(start);
 
@@ -409,6 +440,8 @@ end
 function ABGP:UpdateRaid(windowRaid)
     windowRaid = windowRaid or _G.ABGP_RaidInfo.currentRaid;
     if not windowRaid then return; end
+
+    if activeWindow then activeWindow:Hide(); end
 
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
@@ -427,6 +460,8 @@ function ABGP:UpdateRaid(windowRaid)
     window:SetCallback("OnClose", function(widget)
         ABGP:EndWindowManagement(widget);
         ABGP:CloseWindow(widget);
+        local popup = widget:GetUserData("popup");
+        if popup then popup:Hide(); end
         AceGUI:Release(widget);
         activeWindow = nil;
     end);
@@ -437,18 +472,27 @@ function ABGP:UpdateRaid(windowRaid)
         stop:SetText("Stop");
         stop:SetCallback("OnClick", function(widget)
             _G.ABGP_RaidInfo.pastRaids = _G.ABGP_RaidInfo.pastRaids or {};
-            table.insert(_G.ABGP_RaidInfo.pastRaids, 1, _G.ABGP_RaidInfo.currentRaid);
-            _G.ABGP_RaidInfo.currentRaid = nil;
 
-            self:Notify("Stopping the raid!");
-            window:Hide();
-            self:UpdateRaid(windowRaid);
+            local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+            _G.ABGP_RaidInfo.currentRaid = nil;
+            for player, ep in pairs(currentRaid.awards) do
+                if ep == 0 then currentRaid.awards[player] = nil; end
+            end
+            if next(currentRaid.awards) then
+                self:Notify("Stopping the raid!");
+                table.insert(_G.ABGP_RaidInfo.pastRaids, 1, currentRaid);
+                window:Hide();
+                self:UpdateRaid(windowRaid);
+            else
+                self:Notify("No EP awarded in this raid. It has been deleted.");
+                window:Hide();
+            end
         end);
         window:AddChild(stop);
 
         local epSlider = AceGUI:Create("Slider");
         epSlider:SetFullWidth(true);
-        epSlider:SetSliderValues(1, 20, 1);
+        epSlider:SetSliderValues(-5, 20, 1);
         epSlider:SetValue(5);
         window:AddChild(epSlider);
 
@@ -461,7 +505,7 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(awardEP);
     end
 
-    if not IsInProgress(windowRaid) or self.Debug then
+    if not IsInProgress(windowRaid) or self.DebugRaidUI then
         local export = AceGUI:Create("Button");
         export:SetFullWidth(true);
         export:SetText("Export");
@@ -471,7 +515,7 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(export);
     end
 
-    if not IsInProgress(windowRaid) and self.Debug then
+    if not IsInProgress(windowRaid) and self.DebugRaidUI then
         local restart = AceGUI:Create("Button");
         restart:SetFullWidth(true);
         restart:SetText("Restart");
@@ -529,7 +573,6 @@ function ABGP:UpdateRaid(windowRaid)
             elt = AceGUI:Create("EditBox");
             elt:SetFullWidth(true);
             elt:SetText(windowRaid.awards[player]);
-            scroll:AddChild(elt);
             elt:SetCallback("OnEnterPressed", function(widget, event, value)
                 value = tonumber(value);
                 if type(value) == "number" and value > 0 and math.floor(value) == value then
@@ -542,6 +585,7 @@ function ABGP:UpdateRaid(windowRaid)
                 widget:SetText(value);
                 AceGUI:ClearFocus();
             end);
+            scroll:AddChild(elt);
         end
 
         window:SetUserData("popup", popup);
@@ -572,6 +616,16 @@ function ABGP:UpdateRaid(windowRaid)
         scroll:SetLayout("List");
         scrollContainer:AddChild(scroll);
         window:SetUserData("standbyList", scroll);
+    end
+
+    if not IsInProgress(windowRaid) then
+        local delete = AceGUI:Create("Button");
+        delete:SetFullWidth(true);
+        delete:SetText("Delete");
+        delete:SetCallback("OnClick", function(widget)
+            _G.StaticPopup_Show("ABGP_DELETE_RAID", nil, nil, windowRaid);
+        end);
+        window:AddChild(delete);
     end
 
     window:SetUserData("raid", windowRaid);
@@ -651,8 +705,8 @@ function ABGP:ExportRaid(windowRaid)
         edit:DisableButton(true);
         tableContainer:AddChild(edit);
         edit:HighlightText();
-        edit:SetCallback("OnEditFocusGained", function()
-            edit:HighlightText();
+        edit:SetCallback("OnEditFocusGained", function(widget)
+            widget:HighlightText();
         end);
     end
 
@@ -706,6 +760,27 @@ StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
     end,
     OnHide = function(self, data)
         self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_DELETE_RAID"] = {
+    text = "Delete this raid? This can't be undone!",
+    button1 = "Yes",
+    button2 = "No",
+    OnAccept = function(self, data)
+        local raids = _G.ABGP_RaidInfo.pastRaids;
+        for i, raid in ipairs(raids) do
+            if raid == data then
+                table.remove(raids, i);
+                ABGP:Notify("Deleted the raid!");
+                if activeWindow then activeWindow:Hide(); end
+                break;
+            end
+        end
     end,
     timeout = 0,
     whileDead = true,
