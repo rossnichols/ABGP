@@ -301,11 +301,30 @@ local function GetSystemFrame()
     return _G.DEFAULT_CHAT_FRAME;
 end
 
+_G.ABGP_MessageLog = {};
+
 ABGP.Color = "|cFF94E4FF";
 ABGP.ColorTable = { 0.58, 0.89, 1, r = 0.58, g = 0.89, b = 1 };
 function ABGP:Notify(str, ...)
     local msg = ("%s: %s"):format(self:ColorizeText("ABGP"), tostring(str):format(...));
     GetSystemFrame():AddMessage(msg, 1, 1, 1);
+end
+
+function ABGP:WriteLogged(log, str, ...)
+    local formatted = tostring(str):format(...);
+
+    _G.ABGP_MessageLog[log] = _G.ABGP_MessageLog[log] or {};
+    log = _G.ABGP_MessageLog[log];
+    while #log >= 1000 do table.remove(log, 1); end
+
+    local timestamp = date("%m/%d/%y %I:%M%p", GetServerTime()); -- https://strftime.org/
+    table.insert(log, ("%s: %s"):format(timestamp, formatted));
+end
+
+function ABGP:NotifyLogged(log, str, ...)
+    local formatted = tostring(str):format(...);
+    self:Notify(formatted);
+    self:WriteLogged(log, formatted);
 end
 
 function ABGP:LogDebug(str, ...)
@@ -322,6 +341,10 @@ end
 
 function ABGP:Error(str, ...)
     self:Notify("|cffff0000ERROR:|r " .. str, ...);
+end
+
+function ABGP:ErrorLogged(log, str, ...)
+    self:NotifyLogged(log, "|cffff0000ERROR:|r " .. str, ...);
 end
 
 function ABGP:Alert(str, ...)

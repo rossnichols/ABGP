@@ -186,7 +186,7 @@ function ABGP:SendComm(type, data, distribution, target)
                     self:Set("commMonitoringEnabled", true);
                     self:SetupCommMonitor();
                 end
-                self:Error("An addon communication message was delayed by %.2f seconds!", delay);
+                self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
                 if not alertedSlowComms then
                     alertedSlowComms = true;
                     _G.StaticPopup_Show("ABGP_SLOW_COMMS");
@@ -271,17 +271,17 @@ function ABGP:DumpCommMonitor()
     end);
 
     if #prefixes > 0 then
-        self:Notify("Traffic in the last %d seconds:", bufferLength);
+        self:NotifyLogged("COMM", "Traffic in the last %d seconds:", bufferLength);
         for i, prefix in ipairs(prefixes) do
-            self:Notify("  %s: %d bytes over %d msgs", prefix, totals[prefix].len, totals[prefix].count);
+            self:NotifyLogged("COMM", "  %s: %d bytes over %d msgs", prefix, totals[prefix].len, totals[prefix].count);
         end
     else
-        self:Notify("No traffic in the last %d seconds.", bufferLength);
+        self:NotifyLogged("COMM", "No traffic in the last %d seconds.", bufferLength);
     end
 
     local ctl = _G.ChatThrottleLib;
     if ctl and ctl.bQueueing then
-        self:Notify("Queued traffic:");
+        self:NotifyLogged("COMM", "Queued traffic:");
         for prioname, Prio in pairs(ctl.Prio) do
             local ring = Prio.Ring;
             local head = ring.pos;
@@ -289,7 +289,7 @@ function ABGP:DumpCommMonitor()
             while pipe do
                 local name = pipe.name;
                 local count = #pipe;
-                self:Notify("  %s: %d msgs at %s priority", name, count, prioname);
+                self:NotifyLogged("COMM", "  %s: %d msgs at %s priority", name, count, prioname);
                 pipe = pipe.next;
                 if pipe == head then pipe = nil; end
             end
@@ -297,10 +297,13 @@ function ABGP:DumpCommMonitor()
     end
 end
 
-function ABGP:CommOnBossKilled()
+function ABGP:CommOnBossKilled(bossId, name)
+    if not monitoringComms then return; end
+
     -- When a boss is killed, dump the comm monitor if CTL is currently queuing msgs.
     local ctl = _G.ChatThrottleLib;
     if ctl and ctl.bQueueing then
+        self:WriteLogged("COMM", "%s was just defeated", name);
         self:DumpCommMonitor();
     end
 end
