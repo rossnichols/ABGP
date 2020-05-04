@@ -1004,6 +1004,7 @@ do
             self.text:SetJustifyV("CENTER");
             self.text:SetPoint("LEFT", self.frame, 2, 1);
             self.text:SetPoint("RIGHT", self.frame, -2, 1);
+            self.text:SetWordWrap(false);
             self.highlight:Hide();
         end,
 
@@ -1034,6 +1035,10 @@ do
         ["SetPadding"] = function(self, left, right)
             self.text:SetPoint("LEFT", self.frame, left, 1);
             self.text:SetPoint("RIGHT", self.frame, right, 1);
+        end,
+
+        ["SetWordWrap"] = function(self, enable)
+            self.text:SetWordWrap(enable);
         end,
     }
 

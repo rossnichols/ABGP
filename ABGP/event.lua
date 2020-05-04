@@ -592,36 +592,68 @@ function ABGP:ExportRaid(windowRaid)
     local window = AceGUI:Create("Window");
     window.frame:SetFrameStrata("DIALOG");
     window:SetTitle("Export");
-    window:SetLayout("Table");
     window:SetHeight(450);
-    local nPhases = #self.PhasesSorted;
-    local columns = {};
-    for i = 1, nPhases do table.insert(columns, 1 / nPhases); end
-    window:SetUserData("table", { columns = columns });
+    window:SetLayout("List");
     window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
     ABGP:OpenWindow(window);
 
-    -- for _, phase in ipairs(self.PhasesSorted) do
-    --     local elt = AceGUI:Create("ABGP_Header");
-    --     elt:SetFullWidth(true);
-    --     elt:SetText(self.PhaseNames[phase]);
-    --     window:AddChild(elt);
-    -- end
+    local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
+
+    local skippedPlayers = {};
+    for player, ep in pairs(windowRaid.awards) do
+        local epgp = self:GetActivePlayer(player);
+        if not epgp then
+            table.insert(skippedPlayers, self:ColorizeName(player));
+        end
+    end
+    if #skippedPlayers > 0 then
+        local text = "The following players were skipped due to unknown raid group:\n";
+        text = text .. table.concat(skippedPlayers, ", ");
+        local skipped = AceGUI:Create("ABGP_Header");
+        skipped:SetFullWidth(true);
+        skipped:SetHeight(32);
+        skipped:SetWordWrap(true);
+        skipped:SetText(text);
+        window:AddChild(skipped);
+    end
+
+    local tableContainer = AceGUI:Create("SimpleGroup");
+    tableContainer:SetFullWidth(true);
+    tableContainer:SetFullHeight(true);
+    tableContainer:SetLayout("Table");
+    local nPhases = #self.PhasesSorted;
+    local columns = {};
+    for i = 1, nPhases do table.insert(columns, 1 / nPhases); end
+    tableContainer:SetUserData("table", { columns = columns });
+    window:AddChild(tableContainer);
 
     for _, phase in ipairs(self.PhasesSorted) do
+        local text = "";
+        local i = 1;
+        for player, ep in pairs(windowRaid.awards) do
+            local epgp = self:GetActivePlayer(player);
+            if epgp then
+                local raidGroup = epgp.epRaidGroup;
+                if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
+                    text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
+                        (i == 1 and "" or "\n"), ep, windowRaid.name, player, raidDate, "Tracked by ABGP");
+                    i = i + 1;
+                end
+            end
+        end
+
         local edit = AceGUI:Create("MultiLineEditBox");
         edit:SetFullWidth(true);
         edit:SetFullHeight(true);
         edit:SetLabel(self.PhaseNames[phase]);
         edit:SetNumLines(25);
-        edit:SetText("");
+        edit:SetText(text);
         edit:DisableButton(true);
-        window:AddChild(edit);
-        -- edit:SetFocus();
-        -- edit:HighlightText();
-        -- edit:SetCallback("OnEnterPressed", function()
-        --     window:Hide();
-        -- end);
+        tableContainer:AddChild(edit);
+        edit:HighlightText();
+        edit:SetCallback("OnEditFocusGained", function()
+            edit:HighlightText();
+        end);
     end
 
     window.frame:Raise();
