@@ -73,7 +73,7 @@ function ABGP:InitOptions()
             desc = "Dumps the addon comms monitor state",
             type = "execute",
             hidden = function() return not self:Get("commMonitoringEnabled"); end,
-            func = function() self:DumpCommMonitor(); end
+            func = function() self:DumpCommMonitor(true); end
         },
         raid = {
             name = "Start Raid",
