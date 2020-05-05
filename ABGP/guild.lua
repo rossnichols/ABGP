@@ -104,8 +104,21 @@ function ABGP:IsTrial(rank)
     return rank == "Trial" or rank == "Trial Lobster" or rank == "Lobster Trial";
 end
 
+function ABGP:GetTrialRaidGroup(publicNote)
+    local noteGroup = publicNote:match("^ABGP Raid Group: (.+)$");
+    if noteGroup then
+        for raidGroup, raidGroupName in pairs(self.RaidGroupNames) do
+            if noteGroup == raidGroupName then
+                return raidGroup;
+            end
+        end
+    end
+
+    return self.RaidGroups.RED;
+end
+
 function ABGP:CheckProxy(publicNote)
-    return publicNote:match("^ABGP Proxy: (.+)$")
+    return publicNote:match("^ABGP Proxy: (.+)$");
 end
 
 local guildInfo = {};

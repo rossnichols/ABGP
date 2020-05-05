@@ -77,13 +77,7 @@ function ABGP:RefreshFromOfficerNotes()
             local epgp = self:GetActivePlayer(player);
             local p1New, p3New;
             if self:IsTrial(rank) then
-                local trialGroup = self.RaidGroups.RED;
-                for raidGroup, raidGroupName in pairs(self.RaidGroupNames) do
-                    if publicNote == raidGroupName then
-                        trialGroup = raidGroup;
-                        break;
-                    end
-                end
+                local trialGroup = self:GetTrialRaidGroup(publicNote);
                 table.insert(p1, {
                     player = player,
                     rank = rank,
