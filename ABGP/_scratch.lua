@@ -8,6 +8,20 @@ local function GetCandidatesForLootSlot(slot)
     return candidates;
 end
 
+local function GetPlayerFromBNet(bnetId)
+    local _, _, _, _, _, gameAccountID = BNGetFriendInfoByID(bnetId);
+    if gameAccountID then
+        -- local _, characterName, clientProgram, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, wowProjectID = BNGetGameAccountInfo(gameAccountID);
+        -- if clientProgram == BNET_CLIENT_WOW and wowProjectID == WOW_PROJECT_CLASSIC then
+        --     return characterName;
+        -- end
+        local _, characterName = BNGetGameAccountInfo(gameAccountID);
+        if UnitExists(characterName) then
+            return characterName;
+        end
+    end
+end
+
 local f = CreateFrame("Frame");
 f:RegisterEvent("LOOT_OPENED");
 f:RegisterEvent("LOOT_CLOSED");

@@ -12,7 +12,6 @@ local pairs = pairs;
 local math = math;
 local ipairs = ipairs;
 local table = table;
-local strlen = strlen;
 local date = date;
 local type = type;
 local tonumber = tonumber;
@@ -418,6 +417,7 @@ function ABGP:StartRaid()
     start:SetCallback("OnClick", function(widget)
         _G.ABGP_RaidInfo.currentRaid = {
             instanceId = raidInstance,
+            phase = raidPhase,
             name = name:GetText(),
             raidGroupEP = raidGroupEP,
             awards = {},

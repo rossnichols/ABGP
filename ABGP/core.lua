@@ -32,7 +32,6 @@ local tostring = tostring;
 local min = min;
 local max = max;
 local date = date;
-local unpack = unpack;
 
 local version = "${ADDON_VERSION}";
 
@@ -861,7 +860,6 @@ end
 function ABGP:EndWindowManagement(window)
     local management = window:GetUserData("windowManagement");
     local name = management.name;
-    local defaults = management.defaults;
     _G.ABGP_WindowManagement[name] = _G.ABGP_WindowManagement[name] or {};
     local saved = _G.ABGP_WindowManagement[name];
 

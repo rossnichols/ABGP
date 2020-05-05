@@ -2,18 +2,15 @@ local _G = _G;
 local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
-local PlaySound = PlaySound;
 local FlashClientIcon = FlashClientIcon;
 local UnitName = UnitName;
 local GetItemInfo = GetItemInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
-local RandomRoll = RandomRoll;
 local GetBindingKey = GetBindingKey;
 local UnitExists = UnitExists;
 local table = table;
 local pairs = pairs;
 local select = select;
-local time = time;
 local ipairs = ipairs;
 
 local activeWindow;

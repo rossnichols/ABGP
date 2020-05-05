@@ -11,7 +11,6 @@ local UnitExists = UnitExists;
 local UnitIsFriend = UnitIsFriend;
 local UnitIsDead = UnitIsDead;
 local GetLootMethod = GetLootMethod;
-local CreateFrame = CreateFrame;
 local UnitGUID = UnitGUID;
 local select = select;
 local table = table;

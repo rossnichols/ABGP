@@ -4,17 +4,11 @@ local ABGP = ABGP;
 local IsInGroup = IsInGroup;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
-local IsInGuild = IsInGuild;
 local UnitName = UnitName;
 local UnitIsConnected = UnitIsConnected;
 local SendChatMessage = SendChatMessage;
-local CreateFrame = CreateFrame;
 local GetAddOnMetadata = GetAddOnMetadata;
-local UnitExists = UnitExists;
 local tonumber = tonumber;
-local table = table;
-local pairs = pairs;
-local ipairs = ipairs;
 
 local versionCheckData;
 local showedNagPopup = false;
@@ -160,7 +154,7 @@ function ABGP:PerformVersionCheck()
         return;
     end
 
-    local major, minor, patch, prerelType, prerelVersion = ABGP:ParseVersion(self:GetVersion());
+    local major, _, _, prerelType = ABGP:ParseVersion(self:GetVersion());
     if not major then
         self:Error("Unable to parse your version!");
         return;

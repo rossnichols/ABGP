@@ -5,7 +5,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local GetItemInfo = GetItemInfo;
 local pairs = pairs;
 local ipairs = ipairs;
-local date = date;
 local strupper = strupper;
 local type = type;
 local floor = floor;

@@ -2,13 +2,10 @@ local _G = _G;
 local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
-local IsInGuild = IsInGuild;
-local CreateFrame = CreateFrame;
 local UnitName = UnitName;
 local UnitExists = UnitExists;
 local IsInGroup = IsInGroup;
 local date = date;
-local time = time;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -505,7 +502,6 @@ local function DrawItems(container, rebuild, reason)
             export:SetText("Export");
             export:SetCallback("OnClick", function(widget, event)
                 local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
-                local text = "";
                 local _, sortedPriorities = ABGP:GetItemPriorities();
                 local text = ("Boss\tItem\t%s\tGP Cost\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
                 for i, item in ipairs(items) do
@@ -582,7 +578,6 @@ local function DrawItems(container, rebuild, reason)
 
     local itemList = container:GetUserData("itemList");
     itemList:ReleaseChildren();
-    local count = 0;
     local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
     local filtered = {};
     local selector = container:GetUserData("priSelector");

@@ -1,7 +1,6 @@
 local _G = _G;
 local ABGP = ABGP;
 
-local date = date;
 local pairs = pairs;
 local type = type;
 

@@ -2,11 +2,8 @@ local _G = _G;
 local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
-local BNGetFriendInfoByID = BNGetFriendInfoByID;
-local BNGetGameAccountInfo = BNGetGameAccountInfo;
 local UnitExists = UnitExists;
 local UnitName = UnitName;
-local UnitIsInMyGuild = UnitIsInMyGuild;
 local GetItemInfo = GetItemInfo;
 local IsAltKeyDown = IsAltKeyDown;
 local GetServerTime = GetServerTime;
@@ -15,7 +12,6 @@ local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
 local tonumber = tonumber;
-local select = select;
 local unpack = unpack;
 local math = math;
 local type = type;
@@ -317,20 +313,6 @@ local function ProcessNewRequest(request)
 
     if request.itemLink == currentItem.itemLink then
         RebuildUI();
-    end
-end
-
-local function GetPlayerFromBNet(bnetId)
-    local _, _, _, _, _, gameAccountID = BNGetFriendInfoByID(bnetId);
-    if gameAccountID then
-        -- local _, characterName, clientProgram, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, wowProjectID = BNGetGameAccountInfo(gameAccountID);
-        -- if clientProgram == BNET_CLIENT_WOW and wowProjectID == WOW_PROJECT_CLASSIC then
-        --     return characterName;
-        -- end
-        local _, characterName = BNGetGameAccountInfo(gameAccountID);
-        if UnitExists(characterName) then
-            return characterName;
-        end
     end
 end
 

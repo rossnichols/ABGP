@@ -4,7 +4,6 @@ local AceConfig = _G.LibStub("AceConfig-3.0");
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0");
 local AceDB = _G.LibStub("AceDB-3.0");
 
-local IsInGroup = IsInGroup;
 local pairs = pairs;
 
 function ABGP:InitOptions()

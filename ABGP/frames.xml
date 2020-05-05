@@ -41,7 +41,7 @@
                 </Texture>
                 <Texture name="$parentNameFrame" file="Interface\MerchantFrame\UI-Merchant-LabelSlots">
                     <Size>
-                        <AbsDimension y="56"/>
+                        <AbsDimension x="0" y="56"/>
                     </Size>
                     <Anchors>
                         <Anchor point="LEFT" relativeTo="$parentSlotTexture" relativePoint="RIGHT">
@@ -58,7 +58,7 @@
                 </Texture>
                 <FontString parentKey="Name" name="$parentName" inherits="GameFontNormal" text="Item Name" justifyH="LEFT" justifyV="TOP">
                     <Size>
-                        <AbsDimension y="12"/>
+                        <AbsDimension x="0" y="12"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeTo="$parentNameFrame" relativePoint="TOPLEFT">
@@ -75,7 +75,7 @@
                 </FontString>
                 <FontString parentKey="Cost" name="$parentCost" inherits="GameFontNormal" text="GP Cost" justifyH="LEFT" justifyV="BOTTOM">
                     <Size>
-                        <AbsDimension y="12"/>
+                        <AbsDimension x="0" y="12"/>
                     </Size>
                     <Anchors>
                         <Anchor point="BOTTOMLEFT" relativeTo="$parentNameFrame" relativePoint="BOTTOMLEFT">

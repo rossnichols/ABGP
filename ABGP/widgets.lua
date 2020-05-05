@@ -1335,7 +1335,6 @@ do
 
             local frame = self.frame;
             local itemName = ABGP:GetItemName(itemLink);
-            local value = ABGP:GetItemValue(itemName);
             local _, _, rarity = GetItemInfo(itemLink);
             local usable = true;
 

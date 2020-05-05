@@ -16,7 +16,6 @@ local type = type;
 local table = table;
 local tostring = tostring;
 local strlen = strlen;
-local math = math;
 local ipairs = ipairs;
 local mod = mod;
 local hooksecurefunc = hooksecurefunc;

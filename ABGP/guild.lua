@@ -12,7 +12,6 @@ local UnitIsGroupLeader = UnitIsGroupLeader;
 local UnitIsUnit = UnitIsUnit;
 local table = table;
 local pairs = pairs;
-local next = next;
 
 ABGP.Phases = {
     p1 = "p1",

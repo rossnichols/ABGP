@@ -1,6 +1,5 @@
 local _G = _G;
 local ABGP = ABGP;
-local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
@@ -12,7 +11,6 @@ local ipairs = ipairs;
 local table = table;
 local floor = floor;
 local tonumber = tonumber;
-local select = select;
 local pairs = pairs;
 local next = next;
 local hooksecurefunc = hooksecurefunc;
@@ -58,7 +56,6 @@ local function PrioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
-    local needsUpdate = false;
     local p1 = self.Priorities[self.Phases.p1];
     local p3 = self.Priorities[self.Phases.p3];
     table.wipe(p1);
@@ -74,8 +71,6 @@ function ABGP:RefreshFromOfficerNotes()
                 -- The name of the guild character is the proxy for holding their data.
                 player, proxy = proxy, player;
             end
-            local epgp = self:GetActivePlayer(player);
-            local p1New, p3New;
             if self:IsTrial(rank) then
                 local trialGroup = self:GetTrialRaidGroup(publicNote);
                 table.insert(p1, {
