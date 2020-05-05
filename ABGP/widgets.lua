@@ -1252,6 +1252,28 @@ do
         end
     end
 
+    local function Button_OnEnter(frame)
+        local itemLink = frame:GetParent().obj.itemLink;
+        if itemLink then
+            _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
+            _G.GameTooltip:SetHyperlink(itemLink);
+            CursorUpdate(frame);
+        end
+    end
+
+    local function Button_OnLeave(frame)
+        _G.GameTooltip:Hide();
+        ResetCursor();
+    end
+
+    local function Button_OnUpdate(frame)
+        if _G.GameTooltip:IsOwned(frame) then
+            _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
+            _G.GameTooltip:SetHyperlink(frame:GetParent().obj.itemLink);
+            CursorUpdate(frame);
+        end
+    end
+
     local function Need_OnClick(frame, button, down)
         local self = frame:GetParent().obj;
         self:Fire("OnRequest");
@@ -1283,6 +1305,7 @@ do
         ["OnAcquire"] = function(self)
             self.frame:SetAlpha(0);
             self.frame:Show();
+            self.frame.glow:Hide();
 
             self:SetItem(nil);
             self:SetCount(1);
@@ -1291,6 +1314,11 @@ do
             self.fadeIn = 0.2;
             self.duration = nil;
             self.fadeOut = nil;
+
+            if self.frame.elvui then
+                local need = self.frame.needbutt;
+                need:SetWidth(ABGP:Get("lootIntegration") and need.baseWidth or 1);
+            end
         end,
 
         ["OnRelease"] = function(self)
@@ -1409,18 +1437,15 @@ do
             local need = frame.elvui and frame.needbutt or frame.NeedButton;
             if enabled then
                 _G.GroupLootFrame_EnableLootButton(need);
-                need:SetWidth(need.baseWidth);
 
                 frame.glow:Show();
                 frame.glow.animIn:Play();
             elseif reason then
                 _G.GroupLootFrame_DisableLootButton(need);
                 need.reason = reason;
-                need:SetWidth(need.baseWidth);
             else
                 need:Disable();
                 need:SetAlpha(0);
-                need:SetWidth(1);
             end
         end,
 
@@ -1508,6 +1533,9 @@ do
         button.hasItem = true;
         button:RegisterForClicks("LeftButtonUp", "RightButtonUp");
         button:SetScript("OnClick", Button_OnClick);
+        button:SetScript("OnEnter", Button_OnEnter);
+        button:SetScript("OnLeave", Button_OnLeave);
+        button:SetScript("OnUpdate", Button_OnUpdate);
 
         need:SetScript("OnClick", Need_OnClick);
         need:SetScript("OnEnter", ShowTooltip_OnEnter);

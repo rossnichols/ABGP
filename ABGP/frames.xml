@@ -141,27 +141,6 @@
                         </FontString>
                     </Layer>
                 </Layers>
-                <Scripts>
-                    <OnEnter>
-                        local itemLink = self:GetParent().obj.itemLink;
-                        if itemLink then
-                            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-                            GameTooltip:SetHyperlink(itemLink);
-                            CursorUpdate(self);
-                        end
-                    </OnEnter>
-                    <OnLeave>
-                        GameTooltip:Hide();
-                        ResetCursor();
-                    </OnLeave>
-                    <OnUpdate>
-                        if GameTooltip:IsOwned(self) then
-                            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-                            GameTooltip:SetHyperlink(self:GetParent().obj.itemLink);
-                            CursorUpdate(self);
-                        end
-                    </OnUpdate>
-                </Scripts>
             </Button>
             <Button parentKey="NeedButton" inherits="LootRollButtonTemplate">
                 <Size x="32" y="32"/>
