@@ -382,8 +382,14 @@ function ABGP:ShowItemRequests(noAutoHide)
         return;
     end
 
-    activeWindow = self:CreateRequestWindow();
-    PopulateUI();
+    if self:Get("lootIntegration") then
+        for itemLink in pairs(activeItems) do
+            self:EnsureDistOpened(itemLink, true);
+        end
+    else
+        activeWindow = self:CreateRequestWindow();
+        PopulateUI();
+    end
 end
 
 function ABGP:RequestItem(itemLink, requestType, notes)

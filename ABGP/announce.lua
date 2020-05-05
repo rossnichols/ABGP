@@ -218,10 +218,14 @@ end
 
 function ABGP:AnnounceOnDistOpened(data, distribution, sender)
     if not self:Get("lootIntegration") then return; end
-    local elt = GetLootFrame(data.itemLink) or self:ShowLootFrame(data.itemLink);
+    self:EnsureDistOpened(data.itemLink);
+end
+
+function ABGP:EnsureDistOpened(itemLink, noAnimate)
+    local elt = GetLootFrame(itemLink) or self:ShowLootFrame(itemLink);
     if not elt then return; end
 
-    elt:EnableRequests(true);
+    elt:EnableRequests(true, nil, noAnimate);
     elt:SetDuration(nil);
 end
 

@@ -1431,14 +1431,16 @@ do
             self.fadeOut = fadeOut or 1;
         end,
 
-        ["EnableRequests"] = function(self, enabled, reason)
+        ["EnableRequests"] = function(self, enabled, reason, noAnimate)
             local frame = self.frame;
             local need = frame.elvui and frame.needbutt or frame.NeedButton;
             if enabled then
                 _G.GroupLootFrame_EnableLootButton(need);
 
-                frame.glow:Show();
-                frame.glow.animIn:Play();
+                if not noAnimate then
+                    frame.glow:Show();
+                    frame.glow.animIn:Play();
+                end
             elseif reason then
                 _G.GroupLootFrame_DisableLootButton(need);
                 need.reason = reason;
