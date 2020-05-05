@@ -317,7 +317,7 @@ function ABGP:StartRaid()
     window:SetTitle(("%s Raid"):format(self:ColorizeText("ABGP")));
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raid", {
-        version = math.random(),
+        version = 1,
         defaultWidth = 150,
         minWidth = 150,
         maxWidth = 150,
@@ -448,7 +448,7 @@ function ABGP:UpdateRaid(windowRaid)
     window:SetTitle(windowRaid.name);
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raidUpdate", {
-        version = math.random(),
+        version = 1,
         defaultWidth = 150,
         minWidth = 150,
         maxWidth = 150,
