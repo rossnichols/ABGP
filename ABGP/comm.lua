@@ -177,6 +177,11 @@ function ABGP:SendComm(type, data, distribution, target)
             local now = GetTime();
             local delay = now - time;
             if delay > 5 and now - startTime > 60 then
+                self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
+                if not alertedSlowComms then
+                    alertedSlowComms = true;
+                    _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+                end
                 if monitoringComms then
                     self:DumpCommMonitor();
                 elseif not self:Get("commMonitoringEnabled") and not self:Get("commMonitoringTriggered") then
@@ -184,11 +189,6 @@ function ABGP:SendComm(type, data, distribution, target)
                     self:Set("commMonitoringTriggered", true);
                     self:Set("commMonitoringEnabled", true);
                     self:SetupCommMonitor();
-                end
-                self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
-                if not alertedSlowComms then
-                    alertedSlowComms = true;
-                    _G.StaticPopup_Show("ABGP_SLOW_COMMS");
                 end
             end
 
