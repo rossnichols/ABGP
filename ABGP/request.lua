@@ -277,7 +277,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
 
     local cost = "";
     if self:GetItemValue(self:GetItemName(itemLink)) then
-        cost = (" for %d GP"):format(cost);
+        cost = (" for %d GP"):format(data.cost);
     end
 
     local requestTypes = {
