@@ -241,7 +241,7 @@ function ABGP:SetupCommMonitor()
             local slot = GetSlot();
             commMonitor[slot][prefix] = commMonitor[slot][prefix] or {};
             commMonitor[slot][prefix].count = (commMonitor[slot][prefix].count or 0) + 1;
-            commMonitor[slot][prefix].len = (commMonitor[slot][prefix].len or 0) + strlen(msg);
+            commMonitor[slot][prefix].len = (commMonitor[slot][prefix].len or 0) + strlen(prefix) + strlen(msg);
         end);
 
         self:ScheduleRepeatingTimer(GetSlot, bufferLength / 2);
