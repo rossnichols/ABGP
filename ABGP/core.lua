@@ -36,7 +36,7 @@ local date = date;
 local version = "${ADDON_VERSION}";
 
 _G.BINDING_HEADER_ABGP = "ABGP";
-_G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show item request window";
+_G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show items currently opened for distribution";
 
 local itemDataRequestToken = 0;
 

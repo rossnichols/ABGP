@@ -42,7 +42,7 @@ function ABGP:InitOptions()
         },
         loot = {
             name = "Loot",
-            desc = "shows the item request window",
+            desc = "shows items currently opened for distribution",
             type = "execute",
             func = function() self:ShowItemRequests(); end
         },
