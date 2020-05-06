@@ -12,6 +12,8 @@ local UnitIsFriend = UnitIsFriend;
 local UnitIsDead = UnitIsDead;
 local GetLootMethod = GetLootMethod;
 local UnitGUID = UnitGUID;
+local GetBindingKey = GetBindingKey;
+local FlashClientIcon = FlashClientIcon;
 local select = select;
 local table = table;
 local ipairs = ipairs;
@@ -89,7 +91,9 @@ function ABGP:AnnounceOnBossLoot(data)
         self:Notify("Loot from %s:", self:ColorizeText(name));
         for _, itemLink in ipairs(data.items) do
             self:Notify(itemLink);
-            self:ShowLootFrame(itemLink);
+            if self:Get("lootShowImmediately") then
+                self:ShowLootFrame(itemLink);
+            end
         end
     end
 end
@@ -128,8 +132,6 @@ local function GetLootFrame(itemLink)
 end
 
 function ABGP:ShowLootFrame(itemLink)
-    if not self:Get("showLootFrames") then return; end
-
     local _, fullLink = GetItemInfo(itemLink);
     itemLink = fullLink or itemLink;
 
@@ -143,12 +145,7 @@ function ABGP:ShowLootFrame(itemLink)
     elt = AceGUI:Create("ABGP_LootFrame");
     elt:SetItem(itemLink);
     elt:SetDuration(self:Get("lootDuration"));
-
-    local reason;
-    if self:Get("lootIntegration") then
-        reason = "Item not open for distribution.";
-    end
-    elt:EnableRequests(false, reason);
+    elt:EnableRequests(false, "Item not open for distribution.");
 
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
@@ -207,6 +204,11 @@ function ABGP:ShowLootFrame(itemLink)
         GetLootAnchor():StopMovingOrSizing();
     end);
     elt:SetCallback("OnHide", function(widget)
+        local itemLink = widget:GetItem();
+        if self:GetActiveItem(itemLink) then
+            local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "<unbound>";
+            self:Notify("Type '/abgp loot' or press your hotkey (%s) to show this item again.", keybinding);
+        end
         -- Free up the slot, preserving the indices of other frames.
         activeLootFrames[activeLootFrames[widget]] = nil;
         activeLootFrames[widget] = nil;
@@ -217,20 +219,18 @@ function ABGP:ShowLootFrame(itemLink)
 end
 
 function ABGP:AnnounceOnDistOpened(data, distribution, sender)
-    if not self:Get("lootIntegration") then return; end
+    FlashClientIcon();
     self:EnsureDistOpened(data.itemLink);
 end
 
 function ABGP:EnsureDistOpened(itemLink, noAnimate)
     local elt = GetLootFrame(itemLink) or self:ShowLootFrame(itemLink);
-    if not elt then return; end
 
     elt:EnableRequests(true, nil, noAnimate);
     elt:SetDuration(nil);
 end
 
 function ABGP:AnnounceOnDistClosed(data, distribution, sender)
-    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -249,7 +249,6 @@ function ABGP:AnnounceOnDistClosed(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
-    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -271,7 +270,6 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
-    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -279,7 +277,6 @@ function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemRolled(data, distribution, sender)
-    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -291,7 +288,6 @@ function ABGP:AnnounceOnItemRolled(data, distribution, sender)
 end
 
 function ABGP:AnnounceOnItemRequested(data)
-    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
@@ -322,7 +318,6 @@ function ABGP:AnnounceOnItemRequested(data)
 end
 
 function ABGP:AnnounceOnItemPassed(data)
-    if not self:Get("lootIntegration") then return; end
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 

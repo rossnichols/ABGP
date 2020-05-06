@@ -266,9 +266,7 @@ function ABGP:OnInitialize()
     if not UnitAffectingCombat("player") then
         AceGUI:Release(self:CreateMainWindow());
         AceGUI:Release(self:CreateDistribWindow());
-        AceGUI:Release(self:CreateRequestWindow());
         local frames = {};
-        for i = 1, 10 do frames[AceGUI:Create("ABGP_Item")] = true; end
         for i = 1, 50 do frames[AceGUI:Create("ABGP_Player")] = true; end
         for i = 1, 10 do frames[AceGUI:Create("ABGP_LootFrame")] = true; end
         for frame in pairs(frames) do AceGUI:Release(frame); end
@@ -677,39 +675,6 @@ function ABGP:IsItemUsable(itemLink)
     end
 
     return true;
-end
-
-ABGP.ItemRanks = {
-    HIGH = 3,
-    NORMAL = 2,
-    LOW = 1,
-};
-
-function ABGP:GetItemRank(itemLink)
-    local rank = self.ItemRanks.NORMAL;
-    if itemLink then
-        local itemName = self:GetItemName(itemLink);
-        if ABGP:IsItemFavorited(itemLink) then
-            rank = self.ItemRanks.HIGH;
-        elseif ABGP:HasReceivedItem(itemName) or not ABGP:IsItemUsable(itemLink) then
-            rank = self.ItemRanks.LOW;
-        elseif self:Get("usePreferredPriority") then
-            local name = self:GetItemName(itemLink);
-            local value = self:GetItemValue(name);
-            if value then
-                rank = self.ItemRanks.LOW;
-                local preferred = self:Get("preferredPriorities");
-                for _, pri in ipairs(value.priority) do
-                    if preferred[pri] then
-                        rank = self.ItemRanks.NORMAL;
-                        break;
-                    end
-                end
-            end
-        end
-    end
-
-    return rank;
 end
 
 function ABGP:ConvertChatString(chatString)

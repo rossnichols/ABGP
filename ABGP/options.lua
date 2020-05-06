@@ -9,18 +9,13 @@ local pairs = pairs;
 function ABGP:InitOptions()
     local defaults = {
         char = {
-            usePreferredPriority = false,
-            preferredPriorities = {},
-            itemHistoryLimit = 3,
+            itemHistoryLimit = 5,
             raidGroup = false,
             outsider = false,
-            alwaysOpenWindow = true,
-            showLootFrames = true,
+            lootShowImmediately = true,
             lootDirection = "up",
             lootDuration = 15,
             lootElvUI = true,
-            lootShowToasts = true,
-            lootIntegration = true,
             commMonitoringTriggered = false,
             commMonitoringEnabled = false,
         }
@@ -117,24 +112,6 @@ function ABGP:InitOptions()
                         self:ShowMainWindow();
                     end
                 },
-                priorities = {
-                    name = "Preferred Priorities",
-                    order = 2,
-                    desc = "If any priorites are chosen here, items not matching them will be deemphasized during distribution.",
-                    type = "multiselect",
-                    control = "Dropdown",
-                    values = self:GetItemPriorities(),
-                    get = function(info, k) return self.db.char.preferredPriorities[k]; end,
-                    set = function(info, k, v)
-                        self.db.char.preferredPriorities[k] = v;
-                        local usePriority = false;
-                        for _, v in pairs(self.db.char.preferredPriorities) do
-                            if v then usePriority = true; end
-                        end
-                        self.db.char.usePreferredPriority = usePriority;
-                    end,
-                    cmdHidden = true,
-                },
                 itemHistoryLimit = {
                     name = "Tooltip item history",
                     order = 3,
@@ -146,14 +123,6 @@ function ABGP:InitOptions()
                     get = function(info) return self.db.char.itemHistoryLimit; end,
                     set = function(info, v) self.db.char.itemHistoryLimit = v; end,
                     cmdHidden = true,
-                },
-                alwaysOpenWindow = {
-                    name = "Always show distrib",
-                    order = 4,
-                    desc = "If this is set, the request window will always open when loot is opened for distribution, instead of skipping some (like ones you can't use).",
-                    type = "toggle",
-                    get = function(info) return self.db.char.alwaysOpenWindow; end,
-                    set = function(info, v) self.db.char.alwaysOpenWindow = v; end,
                 },
                 commMonitor = {
                     name = "Monitor addon comms",
@@ -199,52 +168,17 @@ function ABGP:InitOptions()
             order = 3,
             args = {
                 show = {
-                    name = "Show boss loot",
+                    name = "Show loot immediately",
                     order = 1,
-                    desc = "Show loot items when a boss is killed.",
+                    desc = "Show popups when the loot is initially discovered, rather than waiting for it to be distributed.",
                     type = "toggle",
-                    get = function(info) return self.db.char.showLootFrames; end,
-                    set = function(info, v) self.db.char.showLootFrames = v; end,
-                },
-                toasts = {
-                    name = "Show loot toasts",
-                    order = 2,
-                    desc = "Show a toast when you are awarded an item.",
-                    type = "toggle",
-                    get = function(info) return self.db.char.lootShowToasts; end,
-                    set = function(info, v) self.db.char.lootShowToasts = v; end,
-                },
-                integration = {
-                    name = "Request integration",
-                    order = 3,
-                    desc = "Request items directly from the loot item frame.",
-                    type = "toggle",
-                    get = function(info) return self.db.char.lootIntegration; end,
-                    set = function(info, v) self.db.char.lootIntegration = v; end,
-                },
-                theme = {
-                    name = "Use ElvUI theme",
-                    order = 4,
-                    desc = "Make the boss loot item UI match ElvUI. You must reload your UI after changing this setting.",
-                    type = "toggle",
-                    hidden = function() return (_G.ElvUI == nil); end,
-                    get = function(info) return self.db.char.lootElvUI; end,
-                    set = function(info, v) self.db.char.lootElvUI = v; end,
-                },
-                direction = {
-                    name = "Direction",
-                    order = 5,
-                    desc = "Choose which direction new boss loot items are added.",
-                    type = "select",
-                    control = "Dropdown",
-                    values = { up = "Up", down = "Down" },
-                    get = function(info) return self.db.char.lootDirection; end,
-                    set = function(info, v) self.db.char.lootDirection = v; self:RefreshLootFrames(); end,
+                    get = function(info) return self.db.char.lootShowImmediately; end,
+                    set = function(info, v) self.db.char.lootShowImmediately = v; end,
                 },
                 duration = {
-                    name = "Item duration",
-                    order = 6,
-                    desc = "Sets how long the boss loot items will be shown.",
+                    name = "Popup duration",
+                    order = 2,
+                    desc = "Sets how long the boss loot popups will be shown, if the item doesn't get opened for distribution.",
                     type = "range",
                     min = 5,
                     max = 30,
@@ -253,10 +187,29 @@ function ABGP:InitOptions()
                     set = function(info, v) self.db.char.lootDuration = v; end,
                     cmdHidden = true,
                 },
+                theme = {
+                    name = "Use ElvUI theme",
+                    order = 3,
+                    desc = "Make the loot popups match ElvUI. You must reload your UI after changing this setting.",
+                    type = "toggle",
+                    hidden = function() return (_G.ElvUI == nil); end,
+                    get = function(info) return self.db.char.lootElvUI; end,
+                    set = function(info, v) self.db.char.lootElvUI = v; end,
+                },
+                direction = {
+                    name = "Direction",
+                    order = 4,
+                    desc = "Choose which direction new loot popups are added.",
+                    type = "select",
+                    control = "Dropdown",
+                    values = { up = "Up", down = "Down" },
+                    get = function(info) return self.db.char.lootDirection; end,
+                    set = function(info, v) self.db.char.lootDirection = v; self:RefreshLootFrames(); end,
+                },
                 test = {
                     name = "Test",
                     order = 7,
-                    desc = "Show test boss loot items.",
+                    desc = "Show test loot popups.",
                     type = "execute",
                     func = function() self:ShowTestLoot(); end
                 },

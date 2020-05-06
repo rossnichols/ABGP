@@ -400,94 +400,6 @@ do
 end
 
 do
-    local Type, Version = "ABGP_Item", 1;
-
-    --[[-----------------------------------------------------------------------------
-    Methods
-    -------------------------------------------------------------------------------]]
-    local methods = {
-        ["OnAcquire"] = function(self)
-            self.button:SetText("")
-            self.itemLink.text:SetText("");
-
-            self.frame.highlightRequests = 0;
-            self.frame:UnlockHighlight();
-        end,
-
-        ["SetData"] = function(self, data)
-            self.data = data;
-
-            local fonts = {
-                [ABGP.ItemRanks.HIGH] = "ABGPHighlight",
-                [ABGP.ItemRanks.NORMAL] = "GameFontNormal",
-                [ABGP.ItemRanks.LOW] = "GameFontDisable",
-            };
-            local font = fonts[ABGP:GetItemRank(data.itemLink)];
-            self.itemLink.text:SetFontObject(font);
-
-            self.itemLink.text:SetText(data.itemLink:match("(|H.+|h)"));
-        end,
-
-        ["SetText"] = function(self, text)
-            self.button:SetText(text);
-        end,
-    }
-
-    --[[-----------------------------------------------------------------------------
-    Constructor
-    -------------------------------------------------------------------------------]]
-    local function Constructor()
-        local frame = CreateFrame("Button");
-        frame:SetHeight(24);
-        frame:Hide();
-
-        frame.highlightRequests = 0;
-        frame.RequestHighlight = function(self, enable)
-            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
-            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
-        end;
-
-        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
-        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
-        highlight:SetAllPoints();
-        highlight:SetBlendMode("ADD");
-        highlight:SetTexCoord(0, 1, 0, 0.578125);
-
-        local button = CreateElement(frame, nil, "UIPanelButtonTemplate");
-        if _G.ElvUI then
-            _G.ElvUI[1]:GetModule("Skins"):HandleButton(button);
-        end
-        button:SetWidth(85);
-        button:ClearAllPoints();
-        button:SetPoint("TOPRIGHT", frame, -1, -1);
-        button:SetPoint("BOTTOMRIGHT", frame, -1, 3);
-
-        local itemLink = CreateElement(frame);
-        itemLink.text = CreateFontString(itemLink);
-        itemLink:ClearAllPoints();
-        itemLink:SetPoint("TOPLEFT", frame);
-        itemLink:SetPoint("BOTTOMLEFT", frame);
-        itemLink:SetPoint("RIGHT", button, "LEFT");
-
-        -- create widget
-        local widget = {
-            itemLink = itemLink,
-            button = button,
-
-            frame = frame,
-            type  = Type
-        }
-        for method, func in pairs(methods) do
-            widget[method] = func
-        end
-
-        return AceGUI:RegisterAsWidget(widget)
-    end
-
-    AceGUI:RegisterWidgetType(Type, Constructor, Version)
-end
-
-do
     local Type, Version = "ABGP_ItemHistory", 1;
 
     --[[-----------------------------------------------------------------------------
@@ -1314,11 +1226,6 @@ do
             self.fadeIn = 0.2;
             self.duration = nil;
             self.fadeOut = nil;
-
-            if self.frame.elvui then
-                local need = self.frame.needbutt;
-                need:SetWidth(ABGP:Get("lootIntegration") and need.baseWidth or 1);
-            end
         end,
 
         ["OnRelease"] = function(self)
@@ -1542,7 +1449,6 @@ do
         need:SetScript("OnEnter", ShowTooltip_OnEnter);
         need:SetScript("OnLeave", ShowTooltip_OnLeave);
         need.tooltipText = "Request this item";
-        need.baseWidth = need:GetWidth();
 
         close:SetScript("OnClick", Close_OnClick);
         close:SetScript("OnEnter", ShowTooltip_OnEnter);

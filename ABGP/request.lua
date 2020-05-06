@@ -1,21 +1,15 @@
 local _G = _G;
 local ABGP = ABGP;
-local AceGUI = _G.LibStub("AceGUI-3.0");
 
-local FlashClientIcon = FlashClientIcon;
 local UnitName = UnitName;
 local GetItemInfo = GetItemInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
-local GetBindingKey = GetBindingKey;
 local UnitExists = UnitExists;
 local table = table;
 local pairs = pairs;
 local select = select;
-local ipairs = ipairs;
 
-local activeWindow;
 local activeItems = {};
-local sortedItems = {};
 local staticPopups = {
     ABGP_LOOTDISTRIB = "ABGP_LOOTDISTRIB",
     ABGP_LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
@@ -61,84 +55,6 @@ local function ShowStaticPopup(itemLink, value, which)
         if not dialog then
             ABGP:Error("Unable to open window for %s! Try closing other open ones.", itemLink);
         end
-    end
-end
-
-local function FindExistingElt(itemLink)
-    if not activeWindow then return; end
-    local window = activeWindow;
-    local container = window:GetUserData("itemsContainer");
-
-    for _, elt in ipairs(container.children) do
-        if elt.data and elt.data.itemLink == itemLink then
-            return elt;
-        end
-    end
-end
-
-local function SetEltText(elt)
-    local item = activeItems[elt.data.itemLink];
-    if item then
-        local text = "Request";
-        if item.dialogShown then
-            text = "Cancel";
-        elseif item.sentComms then
-            text = "Update";
-        end
-        elt:SetText(text);
-    end
-end
-
-local function PopulateUI()
-    if not activeWindow then return; end
-    local window = activeWindow;
-    local container = window:GetUserData("itemsContainer");
-    container:ReleaseChildren();
-
-    for _, item in ipairs(sortedItems) do
-        local elt = AceGUI:Create("ABGP_Item");
-        elt:SetFullWidth(true);
-        elt:SetData(item);
-        SetEltText(elt);
-        elt:SetCallback("OnClick", function(elt, event, button)
-            if button == "RightButton" then
-                if item.itemLink then
-                    local context = {};
-                    if ABGP:CanFavoriteItems() then
-                        local faved = ABGP:IsItemFavorited(item.itemLink);
-                        table.insert(context, {
-                            text = faved and "Remove favorite" or "Add favorite",
-                            func = function(self, data)
-                                ABGP:SetItemFavorited(item.itemLink, not faved);
-                                elt:SetData(data);
-                            end,
-                            arg1 = elt.data,
-                            notCheckable = true
-                        });
-                    end
-                    if elt.data.value then
-                        table.insert(context, {
-                            text = "Show item history",
-                            func = function(self, data)
-                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemHistory, args = ABGP:GetItemName(data.itemLink), phase = data.value.phase })
-                            end,
-                            arg1 = elt.data,
-                            notCheckable = true
-                        });
-                    end
-                    if #context > 0 then
-                        table.insert(context, { text = "Cancel", notCheckable = true });
-                        ABGP:ShowContextMenu(context);
-                    end
-                end
-            else
-                if not CloseStaticPopups(elt.data.itemLink) then
-                    ShowStaticPopup(elt.data.itemLink, elt.data.value);
-                end
-            end
-        end);
-
-        container:AddChild(elt);
     end
 end
 
@@ -190,23 +106,6 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         requestType = data.requestType,
         value = data.value,
     };
-    table.insert(sortedItems, activeItems[itemLink]);
-
-    local lootIntegration = self:Get("lootIntegration");
-    local rank = self:GetItemRank(itemLink);
-    if rank >= self.ItemRanks.NORMAL then
-        if not lootIntegration then
-            self:Alert("%s is open for distribution!", itemLink);
-        end
-        FlashClientIcon();
-    end
-
-    if not lootIntegration then
-        local popup = GetStaticPopupType(itemLink);
-        if popup == staticPopups.ABGP_LOOTDISTRIB_FAVORITE or popup == staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE then
-            ShowStaticPopup(itemLink, data.value, popup);
-        end
-    end
 
     local gpCost, priority, notes = "No GP cost (rolled)", "", "";
     local value = data.value;
@@ -223,17 +122,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         end
     end
 
-    local prompt = "";
-    if not lootIntegration and (self:Get("alwaysOpenWindow") or rank >= self.ItemRanks.NORMAL) then
-        self:ShowItemRequests(true);
-    end
-    if activeWindow then
-        PopulateUI();
-    elseif not lootIntegration then
-        local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "<unbound>";
-        prompt = ("Type '/abgp loot' or press your hotkey (%s) to open the request window."):format(keybinding);
-    end
-    self:Notify("Item distribution opened for %s! %s%s%s. %s", itemLink, gpCost, priority, notes, prompt);
+    self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
 end
 
 function ABGP:RequestOnDistClosed(data, distribution, sender)
@@ -244,21 +133,7 @@ function ABGP:RequestOnDistClosed(data, distribution, sender)
         end
 
         CloseStaticPopups(itemLink);
-        for i, item in ipairs(sortedItems) do
-            if item == activeItems[itemLink] then
-                table.remove(sortedItems, i);
-                break;
-            end
-        end
         activeItems[itemLink] = nil;
-
-        if activeWindow then
-            if #sortedItems == 0 then
-                activeWindow:Hide();
-            else
-                PopulateUI();
-            end
-        end
     end
 end
 
@@ -300,15 +175,14 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
                 unfaved = " Removed it from your AtlasLoot favorites.";
             end
         end
-        if self:Get("lootShowToasts") then
-            local rollType, rollValue;
-            if data.roll then
-                rollType = _G.LOOT_ROLL_TYPE_NEED;
-                rollValue = data.roll;
-            end
-            local lessAwesome = (data.cost == 0);
-            _G.LootAlertSystem:AddAlert(itemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
+
+        local rollType, rollValue;
+        if data.roll then
+            rollType = _G.LOOT_ROLL_TYPE_NEED;
+            rollValue = data.roll;
         end
+        local lessAwesome = (data.cost == 0);
+        _G.LootAlertSystem:AddAlert(itemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
         self:Notify("%s%s was awarded to you%s%s!%s", itemLink, multiple, cost, requestType, unfaved);
     else
         local roll = "";
@@ -340,55 +214,9 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
     self:Notify("%s%s will be disenchanted%s.", itemLink, multiple, info);
 end
 
-function ABGP:CreateRequestWindow()
-    local window = AceGUI:Create("Window");
-    window.frame:SetFrameStrata("MEDIUM");
-    window:SetTitle(("%s Active Items"):format(self:ColorizeText("ABGP")));
-    window:SetLayout("Flow");
-    self:BeginWindowManagement(window, "request", {
-        version = 1,
-        defaultWidth = 325,
-        minWidth = 250,
-        maxWidth = 400,
-        defaultHeight = 175,
-        minHeight = 100,
-        maxHeight = 300
-    });
-    window:SetCallback("OnClose", function(widget)
-        ABGP:EndWindowManagement(window);
-        AceGUI:Release(widget);
-        activeWindow = nil;
-    end);
-
-    local scrollContainer = AceGUI:Create("SimpleGroup");
-    scrollContainer:SetFullWidth(true);
-    scrollContainer:SetFullHeight(true);
-    scrollContainer:SetLayout("Flow");
-    window:AddChild(scrollContainer);
-
-    local scroll = AceGUI:Create("ScrollFrame");
-    scroll:SetFullWidth(true);
-    scroll:SetFullHeight(true);
-    scroll:SetLayout("List");
-    scrollContainer:AddChild(scroll);
-    window:SetUserData("itemsContainer", scroll);
-
-    return window;
-end
-
-function ABGP:ShowItemRequests(noAutoHide)
-    if activeWindow then
-        if not noAutoHide then activeWindow:Hide(); end
-        return;
-    end
-
-    if self:Get("lootIntegration") then
-        for itemLink in pairs(activeItems) do
-            self:EnsureDistOpened(itemLink, true);
-        end
-    else
-        activeWindow = self:CreateRequestWindow();
-        PopulateUI();
+function ABGP:ShowItemRequests()
+    for itemLink in pairs(activeItems) do
+        self:EnsureDistOpened(itemLink, true);
     end
 end
 
@@ -470,10 +298,6 @@ function ABGP:RequestItem(itemLink, requestType, notes)
 
     activeItems[itemLink].sentComms = true;
     activeItems[itemLink].sentRequest = true;
-    local elt = FindExistingElt(itemLink);
-    if elt then
-        SetEltText(elt);
-    end
 end
 
 function ABGP:PassOnItem(itemLink, removeFromFaves)
@@ -498,11 +322,6 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 
     self:Notify("Passing on %s%s.", itemLink, faveRemove);
     activeItems[itemLink].sentComms = true;
-    local elt = FindExistingElt(itemLink);
-    if elt then
-        SetEltText(elt);
-        elt:SetData(elt.data);
-    end
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
@@ -525,26 +344,12 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {
     OnShow = function(self, data)
         self.editBox:SetAutoFocus(false);
         self.editBox:ClearFocus();
-        if activeItems[data.itemLink] then
-            activeItems[data.itemLink].dialogShown = true;
-            local elt = FindExistingElt(data.itemLink);
-            if elt then
-                SetEltText(elt);
-            end
-        end
 	end,
     EditBoxOnEscapePressed = function(self)
 		self:ClearFocus();
     end,
     OnHide = function(self, data)
         self.editBox:SetAutoFocus(true);
-        if activeItems[data.itemLink] then
-            activeItems[data.itemLink].dialogShown = false;
-            local elt = FindExistingElt(data.itemLink);
-            if elt then
-                SetEltText(elt);
-            end
-        end
     end,
 	OnAccept = function(self, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, self.editBox:GetText());
@@ -568,7 +373,6 @@ local dialog = {};
 for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB]) do dialog[k] = v; end
 dialog.extraButton = "Pass and unfavorite";
 dialog.OnExtraButton = function(self, data)
-    data.clicked = true;
     ABGP:PassOnItem(data.itemLink, true);
 end
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = dialog;
@@ -587,7 +391,6 @@ local dialog = {};
 for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL]) do dialog[k] = v; end
 dialog.extraButton = "Pass and unfavorite";
 dialog.OnExtraButton = function(self, data)
-    data.clicked = true;
     ABGP:PassOnItem(data.itemLink, true);
 end
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE] = dialog;
