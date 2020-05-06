@@ -317,9 +317,9 @@ function ABGP:StartRaid()
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raid", {
         version = 1,
-        defaultWidth = 150,
-        minWidth = 150,
-        maxWidth = 150,
+        defaultWidth = 200,
+        minWidth = 200,
+        maxWidth = 200,
         defaultHeight = 300,
         minHeight = 300,
         maxHeight = 300
@@ -350,6 +350,7 @@ function ABGP:StartRaid()
         local raidGroupEP = window:GetUserData("raidGroupEP");
         local selectors = window:GetUserData("raidGroupSelectors");
         local phaseSelector = window:GetUserData("phaseSelector");
+        local phase;
 
         if instanceInfo[value] then
             shortName = instanceInfo[value].shortName;
@@ -360,15 +361,17 @@ function ABGP:StartRaid()
                 end
                 selectors[raidGroup]:UpdateCheckboxes();
             end
-            phaseSelector:SetValue(instanceInfo[value].phase);
+            phase = instanceInfo[value].phase;
         else
             for raidGroup in pairs(self.RaidGroups) do
                 table.wipe(raidGroupEP[raidGroup]);
                 raidGroupEP[raidGroup][self.CurrentPhase] = true;
                 selectors[raidGroup]:UpdateCheckboxes();
             end
-            phaseSelector:SetValue(self.CurrentPhase);
+            phase = self.CurrentPhase;
         end
+        phaseSelector:SetValue(phase);
+        phaseSelector:Fire("OnValueChanged", phase);
         window:GetUserData("nameEdit"):SetText(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
     end);
     window:AddChild(instanceSelector);
@@ -785,6 +788,7 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = {
                 table.remove(raids, i);
                 ABGP:Notify("Deleted the raid!");
                 if activeWindow then activeWindow:Hide(); end
+                ABGP:RefreshUI();
                 break;
             end
         end
