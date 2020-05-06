@@ -217,7 +217,7 @@ function ABGP:AwardEP(ep)
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
 
-    self:Alert("Awarding %d EP to the current raid!", ep);
+    self:Alert("Awarding %d EP to the current raid and standby!", ep);
     currentRaid.stopTime = GetServerTime();
 
     EnsureAwardsEntries();
