@@ -64,7 +64,7 @@ function ABGP:InitOptions()
         },
         comms = {
             name = "Dump Comms",
-            desc = "Dumps the addon comms monitor state",
+            desc = "Dumps the addon comms monitor state (alias: comm)",
             type = "execute",
             hidden = function() return not self:Get("commMonitoringEnabled"); end,
             func = function() self:DumpCommMonitor(true); end
@@ -79,14 +79,16 @@ function ABGP:InitOptions()
         },
     };
 
-    -- Set up aliases
-    options.opt = { hidden = true };
-    for k, v in pairs(options.options) do options.opt[k] = v; end
-    options.config = { hidden = true };
-    for k, v in pairs(options.options) do options.config[k] = v; end
-    options.vc = { hidden = true };
-    for k, v in pairs(options.versioncheck) do options.vc[k] = v; end
-    options.vc.cmdHidden = nil;
+    local function setupAlias(existing, alias)
+        options[alias] = {};
+        for k, v in pairs(options[existing]) do options[alias][k] = v; end
+        options[alias].hidden = true;
+        options[alias].cmdHidden = nil;
+    end
+    setupAlias("options", "opt");
+    setupAlias("options", "config");
+    setupAlias("versioncheck", "vc");
+    setupAlias("comms", "comm");
 
     AceConfig:RegisterOptionsTable(self:ColorizeText(addonText), {
         type = "group",
