@@ -18,7 +18,6 @@ local tostring = tostring;
 local strlen = strlen;
 local ipairs = ipairs;
 local mod = mod;
-local hooksecurefunc = hooksecurefunc;
 
 local startTime = GetTime();
 local suppressionThreshold = 60;

@@ -759,11 +759,11 @@ local function OnHandleModifiedItemClick(itemLink)
     return false;
 end
 
-local old_HandleModifiedItemClick = _G.HandleModifiedItemClick;
-_G.HandleModifiedItemClick = function(itemLink)
-    local ret = old_HandleModifiedItemClick(itemLink);
+function ABGP:HandleModifiedItemClick(itemLink)
+    local ret = self.hooks.HandleModifiedItemClick(itemLink);
     return ret or OnHandleModifiedItemClick(itemLink);
 end
+ABGP:RawHook("HandleModifiedItemClick", true);
 
 
 --
@@ -780,11 +780,11 @@ local function CloseABGPWindows()
     return found;
 end
 
-local old_CloseSpecialWindows = _G.CloseSpecialWindows;
-_G.CloseSpecialWindows = function()
-    local found = old_CloseSpecialWindows();
+function ABGP:CloseSpecialWindows()
+    local found = self.hooks.CloseSpecialWindows();
     return CloseABGPWindows() or found;
 end
+ABGP:RawHook("CloseSpecialWindows", true);
 
 function ABGP:OpenWindow(window)
     openWindows[window] = true;

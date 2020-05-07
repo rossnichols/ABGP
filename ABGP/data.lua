@@ -13,7 +13,6 @@ local floor = floor;
 local tonumber = tonumber;
 local pairs = pairs;
 local next = next;
-local hooksecurefunc = hooksecurefunc;
 
 local updatingNotes = false;
 
@@ -42,9 +41,9 @@ function ABGP:AddDataHooks()
             end
         end
     end;
-    hooksecurefunc("GuildRosterSetPublicNote", onSetPublicNote);
-    hooksecurefunc("GuildRosterSetOfficerNote", onSetOfficerNote);
-    hooksecurefunc(_G.C_GuildInfo, "SetNote", onSetNote);
+    self:SecureHook("GuildRosterSetPublicNote", onSetPublicNote);
+    self:SecureHook("GuildRosterSetOfficerNote", onSetOfficerNote);
+    self:SecureHook(_G.C_GuildInfo, "SetNote", onSetNote);
 end
 
 local function PrioritySort(a, b)
