@@ -237,12 +237,26 @@ function ABGP:SetupCommMonitor()
     if not self:Get("commMonitoringEnabled") then return; end
     if not monitoringComms then
         monitoringComms = true;
-        hooksecurefunc(_G.C_ChatInfo, "SendAddonMessage", function(prefix, msg, chatType, target)
+        self:SecureHook(_G.C_ChatInfo, "SendAddonMessage", function(prefix, msg, chatType, target)
             local slot = GetSlot();
             commMonitor[slot][prefix] = commMonitor[slot][prefix] or {};
             commMonitor[slot][prefix].count = (commMonitor[slot][prefix].count or 0) + 1;
             commMonitor[slot][prefix].len = (commMonitor[slot][prefix].len or 0) + strlen(prefix) + strlen(msg);
         end);
+        if _G.ChatThrottleLib then
+            self:SecureHook(_G.ChatThrottleLib, "Enqueue", function(ctl, prioname, pipename, msg)
+                if _G.ChatThrottleLib.bQueueing and GetTime() - startTime > 60 then
+                    self:WriteLogged("COMM", "ChatThrottleLib has started queueing!");
+                    self:DumpCommMonitor();
+                end
+            end);
+            self:SecureHookScript(_G.ChatThrottleLib.Frame, "OnUpdate", function(frame, delay)
+                if not _G.ChatThrottleLib.bQueueing and GetTime() - startTime > 60 then
+                    self:WriteLogged("COMM", "ChatThrottleLib has stopped queueing.");
+                    self:DumpCommMonitor();
+                end
+            end);
+        end
 
         self:ScheduleRepeatingTimer(GetSlot, bufferLength / 2);
     end
@@ -275,17 +289,17 @@ function ABGP:DumpCommMonitor(toChat)
     end);
 
     if #prefixes > 0 then
-        self[logFn](self, "COMM", "Traffic in the last %d seconds:", bufferLength);
+        self[logFn](self, "COMM", " Traffic in the last %d seconds:", bufferLength);
         for i, prefix in ipairs(prefixes) do
             self[logFn](self, "COMM", "  %s: %d bytes over %d msgs", prefix, totals[prefix].len, totals[prefix].count);
         end
     else
-        self[logFn](self, "COMM", "No traffic in the last %d seconds.", bufferLength);
+        self[logFn](self, "COMM", " No traffic in the last %d seconds.", bufferLength);
     end
 
     local ctl = _G.ChatThrottleLib;
     if ctl and ctl.bQueueing then
-        self[logFn](self, "COMM", "Queued traffic:");
+        self[logFn](self, "COMM", " Queued traffic:");
         for prioname, Prio in pairs(ctl.Prio) do
             local ring = Prio.Ring;
             local head = ring.pos;

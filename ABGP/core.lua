@@ -1,5 +1,5 @@
 local _G = _G;
-_G.ABGP = _G.LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0");
+_G.ABGP = _G.LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0");
 local ABGP = ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
@@ -311,9 +311,9 @@ function ABGP:WriteLogged(log, str, ...)
 
     _G.ABGP_MessageLog[log] = _G.ABGP_MessageLog[log] or {};
     log = _G.ABGP_MessageLog[log];
-    while #log >= 1000 do table.remove(log, 1); end
+    while #log >= 2000 do table.remove(log, 1); end
 
-    local timestamp = date("%m/%d/%y %I:%M%p", GetServerTime()); -- https://strftime.org/
+    local timestamp = date("%m/%d/%y %I:%M:%S%p", GetServerTime()); -- https://strftime.org/
     table.insert(log, ("%s: %s"):format(timestamp, formatted));
 end
 
