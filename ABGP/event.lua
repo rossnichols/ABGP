@@ -510,7 +510,7 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(awardEP);
     end
 
-    if not IsInProgress(windowRaid) or self.DebugRaidUI then
+    if not IsInProgress(windowRaid) or self:GetDebug("DebugRaidUI") then
         local export = AceGUI:Create("Button");
         export:SetFullWidth(true);
         export:SetText("Export");
@@ -520,7 +520,7 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(export);
     end
 
-    if not IsInProgress(windowRaid) and self.DebugRaidUI then
+    if not IsInProgress(windowRaid) and self:GetDebug("DebugRaidUI") then
         local restart = AceGUI:Create("Button");
         restart:SetFullWidth(true);
         restart:SetText("Restart");

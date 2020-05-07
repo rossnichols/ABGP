@@ -32,7 +32,7 @@ local ctlQueue = { queueing = false, start = 0, count = 0 };
 local commMonitor = {};
 
 local function GetBroadcastChannel()
-    if ABGP.PrivateComms then return "WHISPER", UnitName("player"); end
+    if ABGP:GetDebug("PrivateComms") then return "WHISPER", UnitName("player"); end
 
     if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
         return "INSTANCE_CHAT";
@@ -129,7 +129,7 @@ ABGP.InternalEvents = {
 };
 
 function ABGP:CommCallback(sent, total, logInCallback)
-    if logInCallback and self.DebugComms then
+    if logInCallback and self:GetDebug("DebugComms") then
         self:LogDebug("COMM-CB: sent=%d total=%d", sent, total);
     end
     if sent == total then
@@ -157,7 +157,7 @@ function ABGP:SendComm(type, data, distribution, target)
     end
 
     local logInCallback = false;
-    if not type.name:find("VERSION") and self.DebugComms then
+    if not type.name:find("VERSION") and self:GetDebug("DebugComms") then
         logInCallback = true;
         self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
             type.name,
@@ -208,7 +208,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     local serialized = LibCompress:Decompress(compressed);
     local _, data = AceSerializer:Deserialize(serialized);
 
-    if self.Verbose then
+    if self:GetDebug("Verbose") then
         self:LogVerbose("COMM >>>");
         self:LogVerbose("Data from %s via %s:", sender, distribution);
         for k, v in pairs(data) do
@@ -216,7 +216,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
             self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
-    elseif sender ~= UnitName("player") and not data.type:find("VERSION") and self.DebugComms then
+    elseif sender ~= UnitName("player") and not data.type:find("VERSION") and self:GetDebug("DebugComms") then
         self:LogDebug("COMM-RECV: %s dist=%s sender=%s", data.type, distribution, sender);
     end
 

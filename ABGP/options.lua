@@ -9,6 +9,7 @@ local pairs = pairs;
 function ABGP:InitOptions()
     local defaults = {
         char = {
+            debug = false,
             itemHistoryLimit = 5,
             raidGroup = false,
             outsider = false,

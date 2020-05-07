@@ -238,7 +238,7 @@ local function UpdateEPGP(itemLink, player, cost, sender, skipOfficerNote)
 
             ABGP:RefreshActivePlayers();
 
-            if sender == UnitName("player") and not ABGP.IgnoreSelfDistributed and not skipOfficerNote then
+            if sender == UnitName("player") and not ABGP:GetDebug("IgnoreSelfDistributed") and not skipOfficerNote then
                 -- UpdateOfficerNote expects the name of the guild member
                 -- that is being updated, which is the proxy if it's set.
                 ABGP:UpdateOfficerNote(epgp.proxy or player);
@@ -261,7 +261,7 @@ end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
-    if sender == UnitName("player") and self.IgnoreSelfDistributed then return; end
+    if sender == UnitName("player") and self:GetDebug("IgnoreSelfDistributed") then return; end
 
     local itemLink = data.itemLink;
     local itemName = ABGP:GetItemName(itemLink);

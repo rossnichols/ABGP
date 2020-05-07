@@ -15,19 +15,19 @@ local showedNagPopup = false;
 local checkedGuild = false;
 
 function ABGP:GetVersion()
-    if ABGP.VersionDebug then
-        return ABGP.VersionDebug;
-    else
-        return GetAddOnMetadata("ABGP", "Version");
+    local version = GetAddOnMetadata("ABGP", "Version");
+    if version == "${ADDON_VERSION}" then
+        return ABGP.VersionOverride;
     end
+    return version;
 end
 
 function ABGP:GetCompareVersion()
-    if ABGP.VersionCmpDebug then
-        return ABGP.VersionCmpDebug;
-    else
-        return self:GetVersion();
+    local version = GetAddOnMetadata("ABGP", "Version");
+    if version == "${ADDON_VERSION}" then
+        return ABGP.VersionCmpOverride;
     end
+    return version;
 end
 
 function ABGP:ParseVersion(version)

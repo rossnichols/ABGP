@@ -24,5 +24,4 @@ options.lua
 event.lua
 frames.xml
 bindings.xml
-
-internal.xml
+debug.lua

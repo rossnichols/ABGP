@@ -404,7 +404,7 @@ local function RemoveActiveItem(itemLink, item)
         count = #item.distributions
     }, "BROADCAST");
 
-    if not (item.testItem or ABGP.IgnoreSelfDistributed) then
+    if not (item.testItem or ABGP:GetDebug("IgnoreSelfDistributed")) then
         ABGP:AuditItemDistribution(item);
     end
 end
@@ -714,7 +714,7 @@ function ABGP:ShowDistrib(itemLink)
     };
     AddActiveItem(data);
 
-    if self.ShowTestDistrib then
+    if self:GetDebug("ShowTestDistrib") then
         local ranks = {
             "Guild Master",
             "Officer",
@@ -1009,7 +1009,7 @@ local function DistributeLoot(itemLink)
     if not (itemLink and ShouldDistributeLoot()) then
         return false;
     end
-    if ABGP.TestLootFrame then
+    if ABGP:GetDebug("TestLootFrame") then
         ABGP:ShowLootFrame(itemLink);
     else
         ABGP:ShowDistrib(itemLink);
