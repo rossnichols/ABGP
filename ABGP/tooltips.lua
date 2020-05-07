@@ -28,7 +28,7 @@ function ABGP:HookTooltips()
                             if entry.item ~= itemName then return false; end
                             local epgp = ABGP:GetActivePlayer(entry.player);
                             if not epgp then return false; end
-                            return epgp[value.phase].raidGroup == raidGroup;
+                            return epgp[value.phase].gpRaidGroup == raidGroup;
                         end
 
                         -- First pass: count

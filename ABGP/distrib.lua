@@ -548,7 +548,7 @@ local function PopulateRequest(request, value)
                 priority = epgp[value.phase].priority;
                 ep = epgp[value.phase].ep;
                 gp = epgp[value.phase].gp;
-                raidGroup = epgp[value.phase].raidGroup;
+                raidGroup = epgp[value.phase].gpRaidGroup;
             elseif not override then
                 override = "non-raider";
             end
