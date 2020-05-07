@@ -21,12 +21,14 @@ local mod = mod;
 local hooksecurefunc = hooksecurefunc;
 
 local startTime = GetTime();
+local suppressionThreshold = 60;
 local alertedSlowComms = false;
 local synchronousCheck = false;
 
 local monitoringComms = false;
 local bufferLength = 30;
 local currentSlot = 0;
+local ctlQueue = { queueing = false, start = 0, count = 0 };
 local commMonitor = {};
 
 local function GetBroadcastChannel()
@@ -176,7 +178,7 @@ function ABGP:SendComm(type, data, distribution, target)
             self:CommCallback(sent, total, logInCallback);
             local now = GetTime();
             local delay = now - time;
-            if delay > 5 and now - startTime > 60 then
+            if delay > 5 and now - startTime > suppressionThreshold then
                 self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
                 if not alertedSlowComms then
                     alertedSlowComms = true;
@@ -245,15 +247,24 @@ function ABGP:SetupCommMonitor()
         end);
         if _G.ChatThrottleLib then
             self:SecureHook(_G.ChatThrottleLib, "Enqueue", function(ctl, prioname, pipename, msg)
-                if _G.ChatThrottleLib.bQueueing and GetTime() - startTime > 60 then
-                    self:WriteLogged("COMM", "ChatThrottleLib has started queueing!");
-                    self:DumpCommMonitor();
+                local now = GetTime();
+                if _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold then
+                    if not ctlQueue.queueing then
+                        self:WriteLogged("COMM", "ChatThrottleLib has started queueing!");
+                        self:DumpCommMonitor();
+                        ctlQueue.queueing = true;
+                        ctlQueue.start = now;
+                        ctlQueue.count = 0;
+                    end
+                    ctlQueue.count = ctlQueue.count + 1;
                 end
             end);
             self:SecureHookScript(_G.ChatThrottleLib.Frame, "OnUpdate", function(frame, delay)
-                if not _G.ChatThrottleLib.bQueueing and GetTime() - startTime > 60 then
-                    self:WriteLogged("COMM", "ChatThrottleLib has stopped queueing.");
+                local now = GetTime();
+                if not _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold and ctlQueue.queueing then
+                    self:WriteLogged("COMM", "ChatThrottleLib has stopped queueing (duration=%.2fs, msgs=%d).", now - ctlQueue.start, ctlQueue.count);
                     self:DumpCommMonitor();
+                    ctlQueue.queueing = false;
                 end
             end);
         end
