@@ -2,6 +2,7 @@ local _G = _G;
 local ABGP = ABGP;
 
 local IsAltKeyDown = IsAltKeyDown;
+local UnitName = UnitName;
 local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -21,6 +22,7 @@ function ABGP:HookTooltips()
                 local limit = ABGP:Get("itemHistoryLimit");
                 if limit > 0 then
                     if IsAltKeyDown() then
+                        local player = UnitName("player");
                         local gpHistory = _G.ABGP_Data[value.phase].gpHistory;
 
                         local raidGroup = ABGP:GetPreferredRaidGroup();
@@ -28,14 +30,17 @@ function ABGP:HookTooltips()
                             if entry.item ~= itemName then return false; end
                             local epgp = ABGP:GetActivePlayer(entry.player);
                             if not epgp then return false; end
-                            return epgp[value.phase].gpRaidGroup == raidGroup;
+                            return epgp[value.phase].gpRaidGroup == raidGroup, entry.player == player;
                         end
 
                         -- First pass: count
                         local count = 0;
+                        local hasSelfEntry = false;
                         for _, data in ipairs(gpHistory) do
-                            if shouldShowEntry(data) then
+                            local shouldShow, isSelf = shouldShowEntry(data);
+                            if shouldShow then
                                 count = count + 1;
+                                if isSelf then hasSelfEntry = true; end
                             end
                         end
 
@@ -48,14 +53,20 @@ function ABGP:HookTooltips()
                                 ABGP:ColorizeText("ABGP"), extra), 1, 1, 1);
                             count = 0;
 
+                            local showedSelf = false;
                             for _, data in ipairs(gpHistory) do
-                                if shouldShowEntry(data) then
-                                    count = count + 1;
-                                    if count > limit then
-                                        break;
+                                local shouldShow, isSelf = shouldShowEntry(data);
+                                if shouldShow then
+                                    local skip = hasSelfEntry and not isSelf and not showedSelf and count == limit - 1;
+                                    if not skip then
+                                        if isSelf then showedSelf = true; end
+                                        count = count + 1;
+                                        if count > limit then
+                                            break;
+                                        end
+                                        local epgp = ABGP:GetActivePlayer(data.player);
+                                        self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player, epgp.class), data.date, 1, 1, 1, 1, 1, 1);
                                     end
-                                    local epgp = ABGP:GetActivePlayer(data.player);
-                                    self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player, epgp.class), data.date, 1, 1, 1, 1, 1, 1);
                                 end
                             end
                         else
