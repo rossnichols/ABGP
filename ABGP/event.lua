@@ -289,18 +289,20 @@ function ABGP:EventOnBossKilled(bossId, name)
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)
-    self:LogDebug("Zone changed to %s[%d]!", name, instanceId);
+    self:LogVerbose("Zone changed to %s[%d]!", name, instanceId);
     currentInstance = instanceId;
     local info = instanceInfo[instanceId];
     if info then
         self:LogDebug("This instance is associated with phase %s.", info.phase);
         self.CurrentPhase = info.phase;
     end
+
+    if _G.ABGP_RaidInfo.currentRaid then
+        self:UpdateRaid();
+    end
 end
 
 function ABGP:ShowRaidWindow()
-    self:CancelRaidStateCheck();
-
     if _G.ABGP_RaidInfo.currentRaid then
         self:UpdateRaid();
     elseif not activeWindow then
@@ -721,20 +723,6 @@ function ABGP:ExportRaid(windowRaid)
     end
 
     window.frame:Raise();
-end
-
-function ABGP:CancelRaidStateCheck()
-    if self.checkRaidTimer then
-        self:CancelTimer(self.checkRaidTimer);
-        self.checkRaidTimer = nil;
-    end
-end
-
-function ABGP:CheckRaidState()
-    self.checkRaidTimer = nil;
-    if _G.ABGP_RaidInfo.currentRaid then
-        self:Alert("A raid is currently in progress!");
-    end
 end
 
 function ABGP:EventOnGroupJoined()
