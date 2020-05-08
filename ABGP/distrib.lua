@@ -714,7 +714,7 @@ function ABGP:ShowDistrib(itemLink)
     };
     AddActiveItem(data);
 
-    if self:GetDebug("ShowTestDistrib") then
+    if self:GetDebugOpt("ShowTestDistrib") then
         local ranks = {
             "Guild Master",
             "Officer",
@@ -1009,7 +1009,7 @@ local function DistributeLoot(itemLink)
     if not (itemLink and ShouldDistributeLoot()) then
         return false;
     end
-    if ABGP:GetDebug("TestLootFrame") then
+    if ABGP:GetDebugOpt("TestLootFrame") then
         ABGP:ShowLootFrame(itemLink);
     else
         ABGP:ShowDistrib(itemLink);

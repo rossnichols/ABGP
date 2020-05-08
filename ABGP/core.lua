@@ -331,13 +331,13 @@ function ABGP:NotifyLogged(log, str, ...)
 end
 
 function ABGP:LogDebug(str, ...)
-    if self:GetDebug() then
+    if self:GetDebugOpt() then
         self:Notify(str, ...);
     end
 end
 
 function ABGP:LogVerbose(str, ...)
-    if self:GetDebug("Verbose") then
+    if self:GetDebugOpt("Verbose") then
         self:Notify(str, ...);
     end
 end
@@ -392,7 +392,7 @@ end
 function ABGP:IsPrivileged()
     -- Check officer status by looking for the privilege to speak in officer chat.
     local isOfficer = C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[4];
-    return (isOfficer and not self:Get("outsider")) or ABGP:GetDebug();
+    return (isOfficer and not self:Get("outsider")) or ABGP:GetDebugOpt();
 end
 
 function ABGP:CanEditPublicNotes()
@@ -525,7 +525,7 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
 end
 
 function ABGP:CommitItemData()
-    if not self:GetDebug("IgnoreItemUpdates") then
+    if not self:GetDebugOpt("IgnoreItemUpdates") then
         _G.ABGP_DataTimestamp.itemValues = GetServerTime();
         ABGP:RefreshItemValues();
         self:BroadcastItemData();
@@ -760,7 +760,7 @@ local function OnHandleModifiedItemClick(itemLink)
         for _, fn in ipairs(hmicFns) do
             if fn(fullLink) then return true; end
         end
-    elseif ABGP:GetDebug() then
+    elseif ABGP:GetDebugOpt() then
         ABGP:Error("Failed GetItemInfo on %s!", itemLink);
     end
     return false;

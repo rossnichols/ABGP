@@ -12,8 +12,12 @@ local debugOpts = {
     IgnoreItemUpdates = true,
 };
 
-function ABGP:GetDebug(key)
+function ABGP:GetDebugOpt(key)
     return self:Get("debug") and (not key or debugOpts[key]);
+end
+
+function ABGP:SetDebug(enable)
+    self:Set("debug", enable);
 end
 
 ABGP.VersionOverride = "4.0.3";

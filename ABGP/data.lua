@@ -237,7 +237,7 @@ local function UpdateEPGP(itemLink, player, cost, sender, skipOfficerNote)
 
             ABGP:RefreshActivePlayers();
 
-            if sender == UnitName("player") and not ABGP:GetDebug("SkipOfficerNote") and not skipOfficerNote then
+            if sender == UnitName("player") and not ABGP:GetDebugOpt("SkipOfficerNote") and not skipOfficerNote then
                 -- UpdateOfficerNote expects the name of the guild member
                 -- that is being updated, which is the proxy if it's set.
                 ABGP:UpdateOfficerNote(epgp.proxy or player);
