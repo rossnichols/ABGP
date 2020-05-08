@@ -19,6 +19,9 @@ function ABGP:InitOptions()
             lootElvUI = true,
             commMonitoringTriggered = false,
             commMonitoringEnabled = false,
+            minimap = {
+                hide = false,
+            },
         }
     };
     self.db = AceDB:New("ABGP_DB", defaults);
@@ -117,7 +120,7 @@ function ABGP:InitOptions()
                 },
                 itemHistoryLimit = {
                     name = "Tooltip item history",
-                    order = 3,
+                    order = 2,
                     desc = "Controls the max number of item history entries to show in a tooltip when holding alt. Set to 0 to disable.",
                     type = "range",
                     min = 0,
@@ -129,11 +132,19 @@ function ABGP:InitOptions()
                 },
                 commMonitor = {
                     name = "Monitor addon comms",
-                    order = 5,
+                    order = 3,
                     desc = "Monitor addon communication to help diagnose delayed messages.",
                     type = "toggle",
                     get = function(info) return self.db.char.commMonitoringEnabled; end,
                     set = function(info, v) self.db.char.commMonitoringEnabled = v; self:SetupCommMonitor(); end,
+                },
+                minimap = {
+                    name = "Minimap Icon",
+                    order = 4,
+                    desc = "Show the minimap icon.",
+                    type = "toggle",
+                    get = function(info) return not self.db.char.minimap.hide; end,
+                    set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
                 },
             },
         },

@@ -22,6 +22,7 @@ data.lua
 ui.lua
 options.lua
 event.lua
+minimap.lua
 frames.xml
 bindings.xml
 debug.lua

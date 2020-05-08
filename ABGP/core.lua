@@ -72,6 +72,7 @@ function ABGP:OnInitialize()
     self:RefreshItemValues();
     self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
     self:SetupCommMonitor();
+    self:InitMinimapIcon();
 
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
@@ -88,11 +89,13 @@ function ABGP:OnInitialize()
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);
         self:AnnounceOnDistOpened(data, distribution, sender);
+        self:MinimapOnDistOpened(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_CLOSED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistClosed(data, distribution, sender);
         self:AnnounceOnDistClosed(data, distribution, sender);
+        self:MinimapOnDistClosed(data, distribution, sender);
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
@@ -842,8 +845,13 @@ end
 --
 
 local contextFrame = CreateFrame("Frame", "ABGPContextMenu", UIParent, "UIDropDownMenuTemplate");
-function ABGP:ShowContextMenu(context)
-    EasyMenu(context, contextFrame, "cursor", 3, -3, "MENU");
+contextFrame.relativePoint = "BOTTOMRIGHT";
+function ABGP:ShowContextMenu(context, frame)
+    if self:IsContextMenuOpen() then
+        self:HideContextMenu();
+    else
+        EasyMenu(context, contextFrame, frame or "cursor", 3, -3, "MENU");
+    end
 end
 
 function ABGP:IsContextMenuOpen()

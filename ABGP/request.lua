@@ -8,6 +8,7 @@ local UnitExists = UnitExists;
 local table = table;
 local pairs = pairs;
 local select = select;
+local next = next;
 
 local activeItems = {};
 local staticPopups = {
@@ -56,6 +57,10 @@ local function ShowStaticPopup(itemLink, value, which)
             ABGP:Error("Unable to open window for %s! Try closing other open ones.", itemLink);
         end
     end
+end
+
+function ABGP:HasActiveItems()
+    return next(activeItems) ~= nil;
 end
 
 function ABGP:GetActiveItem(itemLink)

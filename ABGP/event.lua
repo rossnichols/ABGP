@@ -162,6 +162,7 @@ end
 local function RefreshUI()
     if not activeWindow then return; end
     local windowRaid = activeWindow:GetUserData("raid");
+    if not windowRaid then return; end
     if not IsInProgress(windowRaid) then return; end
     local scroll = activeWindow:GetUserData("standbyList");
     scroll:ReleaseChildren();
@@ -211,6 +212,10 @@ local function EnsureAwardsEntries()
         local player = UnitName(unit);
         currentRaid.awards[player] = currentRaid.awards[player] or 0;
     end
+end
+
+function ABGP:IsRaidInProgress()
+    return _G.ABGP_RaidInfo.currentRaid ~= nil;
 end
 
 function ABGP:AwardEP(ep)
@@ -297,13 +302,13 @@ function ABGP:EventOnZoneChanged(name, instanceId)
         self.CurrentPhase = info.phase;
     end
 
-    if _G.ABGP_RaidInfo.currentRaid then
+    if self:IsRaidInProgress() then
         self:UpdateRaid();
     end
 end
 
 function ABGP:ShowRaidWindow()
-    if _G.ABGP_RaidInfo.currentRaid then
+    if self:IsRaidInProgress() then
         self:UpdateRaid();
     elseif not activeWindow then
         self:StartRaid();
@@ -312,6 +317,8 @@ end
 
 function ABGP:StartRaid()
     local raidInstance, raidPhase;
+
+    if activeWindow then activeWindow:Hide(); end
 
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
@@ -440,6 +447,8 @@ function ABGP:StartRaid()
     local startingValue = instanceInfo[currentInstance] and currentInstance or custom;
     instanceSelector:SetValue(startingValue);
     instanceSelector:Fire("OnValueChanged", startingValue);
+
+    activeWindow = window;
 end
 
 function ABGP:UpdateRaid(windowRaid)

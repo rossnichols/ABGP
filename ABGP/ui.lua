@@ -41,6 +41,7 @@ local function PopulateUI(rebuild, reason, command)
 
     local drawFunc = activeWindow:GetUserData("drawFunc");
     drawFunc(container, rebuild, reason, command);
+    ABGP:HideContextMenu();
 end
 
 local function DrawPriority(container, rebuild, reason)
@@ -1069,7 +1070,10 @@ function ABGP:CreateMainWindow(command)
 end
 
 function ABGP:ShowMainWindow(command)
-    if activeWindow and not command then return; end
+    if activeWindow and not command then
+        activeWindow:Hide();
+        return;
+    end
 
     if activeWindow then
         activeWindow:Hide();
