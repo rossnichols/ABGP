@@ -260,7 +260,7 @@ function ABGP:AddStandby(player)
         end
     end
 
-    self:Notify("Adding %s to the standby list!", self:ColorizeName(player));
+    self:Notify("Adding %s to the standby list.", self:ColorizeName(player));
     if not self:GetActivePlayer(player) then
         self:Notify("WARNING: %s doesn't have any EPGP data! Any awarded EP can't be exported.", self:ColorizeName(player));
     end
@@ -274,7 +274,7 @@ function ABGP:RemoveStandby(player)
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
 
-    self:Notify("Removing %s from the standby list!", self:ColorizeName(player));
+    self:Notify("Removing %s from the standby list.", self:ColorizeName(player));
     for i, standby in ipairs(currentRaid.standby) do
         if standby == player then
             table.remove(currentRaid.standby, i);
@@ -505,6 +505,7 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(stop);
 
         local epSlider = AceGUI:Create("Slider");
+        epSlider:SetLabel("");
         epSlider:SetFullWidth(true);
         epSlider:SetSliderValues(-5, 20, 1);
         epSlider:SetValue(5);
