@@ -207,7 +207,7 @@ function ABGP:ShowLootFrame(itemLink)
         local itemLink = widget:GetItem();
         if self:GetActiveItem(itemLink) then
             local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "<unbound>";
-            self:Notify("Type '/abgp loot' or press your hotkey (%s) to show this item again.", keybinding);
+            self:Notify("Type '/abgp loot', press your hotkey (%s), or use the minimap icon to show this item again.", keybinding);
         end
         -- Free up the slot, preserving the indices of other frames.
         activeLootFrames[activeLootFrames[widget]] = nil;
