@@ -404,7 +404,7 @@ local function RemoveActiveItem(itemLink, item)
         count = #item.distributions
     }, "BROADCAST");
 
-    if not (item.testItem or ABGP:GetDebug("IgnoreSelfDistributed")) then
+    if not item.testItem then
         ABGP:AuditItemDistribution(item);
     end
 end

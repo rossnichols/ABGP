@@ -8,7 +8,7 @@ local debugOpts = {
     -- TestLootFrame = true,
     -- DebugComms = true,
     -- DebugRaidUI = true,
-    IgnoreSelfDistributed = true,
+    SkipOfficerNote = true,
     IgnoreItemUpdates = true,
 };
 

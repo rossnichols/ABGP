@@ -79,6 +79,9 @@ ABGP.CommTypes = {
     -- override: string
     -- count: number
     -- testItem: bool
+    -- editId: number
+    -- oldPlayer: string
+    -- oldCost: number
 
     ITEM_DISTRIBUTION_TRASHED = { name = CV("ITEM_DISTRIBUTION_TRASHED"), priority = "ALERT" },
     -- itemLink: item link string

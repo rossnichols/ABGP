@@ -239,8 +239,10 @@ function ABGP:AnnounceOnDistClosed(data, distribution, sender)
     elt:SetUserData("blockReuse", true);
 
     local awards = elt:GetUserData("awards");
-    if awards then
-        elt:SetSecondaryText(("Awarded to %s"):format(table.concat(awards, ", ")));
+    if awards and #awards > 0 then
+        local awardText = {};
+        for _, award in ipairs(awards) do table.insert(awardText, award.text); end
+        elt:SetSecondaryText(("Awarded to %s"):format(table.concat(awardText, ", ")));
     elseif elt:GetUserData("trashed") then
         elt:SetSecondaryText(self:ColorizeText("Disenchanted"));
     else
@@ -253,20 +255,36 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
     if not elt then return; end
 
     elt:SetUserData("awards", elt:GetUserData("awards") or {});
+    local awards = elt:GetUserData("awards");
 
-    local requestTypes = {
-        [self.RequestTypes.MS] = "ms",
-        [self.RequestTypes.OS] = "os",
-    };
-    local extra;
-    if requestTypes[data.requestType] then
-        extra = requestTypes[data.requestType];
-    elseif data.roll then
-        extra = data.roll;
+    if data.oldPlayer or data.oldCost then
+        -- This award is an edit. See if we have an entry in the awards.
+        local found = false;
+        for i, award in ipairs(awards) do
+            if award.editId == data.editId then
+                found = true;
+                table.remove(awards, i);
+                break;
+            end
+        end
+        if not found then return; end
     end
-    extra = extra and (" (%s)"):format(self:ColorizeText(extra)) or "";
-    local award = ("%s%s"):format(self:ColorizeName(data.player), extra);
-    table.insert(elt:GetUserData("awards"), award);
+
+    if data.player then
+        local requestTypes = {
+            [self.RequestTypes.MS] = "ms",
+            [self.RequestTypes.OS] = "os",
+        };
+        local extra;
+        if requestTypes[data.requestType] then
+            extra = requestTypes[data.requestType];
+        elseif data.roll then
+            extra = data.roll;
+        end
+        extra = extra and (" (%s)"):format(self:ColorizeText(extra)) or "";
+        local award = ("%s%s"):format(self:ColorizeName(data.player), extra);
+        table.insert(awards, { editId = data.editId, text = award });
+    end
 end
 
 function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
