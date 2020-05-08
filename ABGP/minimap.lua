@@ -24,6 +24,10 @@ end
 function ABGP:OnIconCreated(event, frame, name)
     if name ~= "ABGP" then return; end
     minimapIcon = frame;
+    -- frame:SetScale(5);
+    frame.icon:SetSize(19, 18);
+    frame.icon:ClearAllPoints();
+    frame.icon:SetPoint("TOPLEFT", 6, -6);
 end
 
 function ABGP:MinimapOnDistOpened(data, distribution, sender)
