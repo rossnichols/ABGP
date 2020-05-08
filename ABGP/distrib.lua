@@ -8,6 +8,12 @@ local GetItemInfo = GetItemInfo;
 local IsAltKeyDown = IsAltKeyDown;
 local GetServerTime = GetServerTime;
 local IsInGroup = IsInGroup;
+local IsMasterLooter = IsMasterLooter;
+local GetNumGroupMembers = GetNumGroupMembers;
+local GiveMasterLoot = GiveMasterLoot;
+local GetMasterLootCandidate = GetMasterLootCandidate;
+local GetLootInfo = GetLootInfo;
+local GetNumLootItems = GetNumLootItems;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -472,6 +478,32 @@ function ABGP:DistribValidateCost(cost, player, value)
     return cost;
 end
 
+local function GiveItemViaML(itemLink, player)
+    if ABGP:Get("masterLoot") and IsMasterLooter() and player then
+        player = player:lower();
+        local itemName = ABGP:GetItemName(itemLink);
+        local slot;
+
+        local loot = GetLootInfo();
+        for i = 1, GetNumLootItems() do
+            local item = loot[i];
+            if item and item.item == itemName then
+                slot = i;
+                break;
+            end
+        end
+
+        if slot then
+            for i = 1, GetNumGroupMembers() do
+                if GetMasterLootCandidate(slot, i):lower() == player then
+                    GiveMasterLoot(slot, i);
+                    break;
+                end
+            end
+        end
+    end
+end
+
 local function DistributeItem(data)
     if not activeDistributionWindow then return; end
     local window = activeDistributionWindow;
@@ -519,6 +551,8 @@ local function DistributeItem(data)
     else
         RemoveActiveItem(data.itemLink);
     end
+
+    GiveItemViaML(data.itemLink, data.player);
 end
 
 function ABGP:DistribOnStateSync(data, distribution, sender)
@@ -1077,6 +1111,8 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
         else
             RemoveActiveItem(data.itemLink);
         end
+
+        GiveItemViaML(data.itemLink, ABGP:GetRaidDisenchanter());
     end,
     timeout = 0,
     whileDead = true,

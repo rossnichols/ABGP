@@ -164,6 +164,14 @@ local function RefreshUI()
     local windowRaid = activeWindow:GetUserData("raid");
     if not windowRaid then return; end
     if not IsInProgress(windowRaid) then return; end
+
+    local disenchanter = activeWindow:GetUserData("disenchanter");
+    if disenchanter then
+        disenchanter:SetText(windowRaid.disenchanter
+            and ("DE: %s"):format(ABGP:ColorizeName(windowRaid.disenchanter))
+            or "Disenchanter");
+    end
+
     local scroll = activeWindow:GetUserData("standbyList");
     scroll:ReleaseChildren();
 
@@ -282,6 +290,27 @@ function ABGP:RemoveStandby(player)
         end
     end
     RefreshUI();
+end
+
+function ABGP:SetDisenchanter(player)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    if player == "" then
+        player = nil;
+        self:Notify("Will not send disenchanted items to anyone.");
+    else
+        self:Notify("Sending disenchanted items to %s.", self:ColorizeName(player));
+    end
+    currentRaid.disenchanter = player;
+    RefreshUI();
+end
+
+function ABGP:GetRaidDisenchanter()
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    return currentRaid.disenchanter;
 end
 
 function ABGP:EventOnBossKilled(bossId, name)
@@ -608,6 +637,17 @@ function ABGP:UpdateRaid(windowRaid)
     window:AddChild(manageEP);
 
     if IsInProgress(windowRaid) then
+        if self:Get("masterLoot") then
+            local disenchanter = AceGUI:Create("Button");
+            disenchanter:SetFullWidth(true);
+            disenchanter:SetText("Disenchanter");
+            disenchanter:SetCallback("OnClick", function(widget)
+                _G.StaticPopup_Show("ABGP_SET_DISENCHANTER");
+            end);
+            window:AddChild(disenchanter);
+            window:SetUserData("disenchanter", disenchanter);
+        end
+
         local addStandby = AceGUI:Create("Button");
         addStandby:SetFullWidth(true);
         addStandby:SetText("Add Standby");
@@ -753,6 +793,38 @@ StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
 	maxLetters = 31,
     OnAccept = function(self, data)
         ABGP:AddStandby(self.editBox:GetText());
+    end,
+    OnShow = function(self, data)
+        self.editBox:SetAutoFocus(false);
+    end,
+    EditBoxOnEnterPressed = function(self, data)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_SET_DISENCHANTER"] = {
+    text = "Set the designated disenchanter:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	autoCompleteSource = GetAutoCompleteResults,
+	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+	maxLetters = 31,
+    OnAccept = function(self, data)
+        ABGP:SetDisenchanter(self.editBox:GetText());
     end,
     OnShow = function(self, data)
         self.editBox:SetAutoFocus(false);

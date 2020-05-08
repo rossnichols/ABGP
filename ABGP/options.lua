@@ -19,6 +19,7 @@ function ABGP:InitOptions()
             lootElvUI = true,
             commMonitoringTriggered = false,
             commMonitoringEnabled = false,
+            masterLoot = true,
             minimap = {
                 hide = false,
             },
@@ -145,6 +146,15 @@ function ABGP:InitOptions()
                     type = "toggle",
                     get = function(info) return not self.db.char.minimap.hide; end,
                     set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
+                },
+                masterLoot = {
+                    name = "Master Loot",
+                    order = 5,
+                    desc = "Distribute items via master loot as they're awarded or disenchanted.",
+                    type = "toggle",
+                    hidden = function() return not self:IsPrivileged(); end,
+                    get = function(info) return self.db.char.masterLoot; end,
+                    set = function(info, v) self.db.char.masterLoot = v; end,
                 },
             },
         },
