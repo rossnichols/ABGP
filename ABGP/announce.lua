@@ -346,6 +346,13 @@ function ABGP:AnnounceOnItemPassed(data)
     elt:SetSecondaryText(valueText, valueTextCompact);
 end
 
+function ABGP:AnnounceOnItemFavorited(data)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    elt:SetItem(elt:GetItem());
+end
+
 function ABGP:ShowTestLoot()
     self:ShowLootFrame("|cffff8000|Hitem:19019|h[Thunderfury, Blessed Blade of the Windseeker]|h|r");
     self:ShowLootFrame("|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r");
