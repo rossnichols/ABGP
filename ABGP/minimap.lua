@@ -1,28 +1,29 @@
 local _G = _G;
-local ABGP = ABGP;
+local ABGP = _G.ABGP;
+local LibDataBroker = _G.LibStub("LibDataBroker-1.1");
+local LibDBIcon = _G.LibStub("LibDBIcon-1.0");
 
 local table = table;
 
 local minimapIcon;
 
 function ABGP:InitMinimapIcon()
-    local ldb = _G.LibStub("LibDataBroker-1.1"):NewDataObject("ABGP", {
+    local obj = LibDataBroker:NewDataObject("ABGP", {
         icon = "Interface\\AddOns\\ABGP\\Assets\\lobster.tga",
         OnClick = function(frame, button) self:OnIconClick(frame, button); end,
         OnTooltipShow = function(tooltip) self:OnIconTooltip(tooltip); end,
     });
-    local icon = _G.LibStub("LibDBIcon-1.0");
-    icon.RegisterCallback(self, "LibDBIcon_IconCreated", "OnIconCreated");
-    icon:Register("ABGP", ldb, self.db.char.minimap);
+    LibDBIcon.RegisterCallback(self, "LibDBIcon_IconCreated", "OnIconCreated");
+    LibDBIcon:Register("ABGP", obj, self.db.char.minimap);
 end
 
 function ABGP:RefreshMinimapIcon()
-    local icon = _G.LibStub("LibDBIcon-1.0");
-    icon:Refresh("ABGP", self.db.char.minimap);
+    LibDBIcon:Refresh("ABGP", self.db.char.minimap);
 end
 
 function ABGP:OnIconCreated(event, frame, name)
     if name ~= "ABGP" then return; end
+
     minimapIcon = frame;
     -- frame:SetScale(5);
     frame.icon:SetSize(18, 18);

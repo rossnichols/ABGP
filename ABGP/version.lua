@@ -1,5 +1,5 @@
 local _G = _G;
-local ABGP = ABGP;
+local ABGP = _G.ABGP;
 
 local IsInGroup = IsInGroup;
 local GetNumGroupMembers = GetNumGroupMembers;

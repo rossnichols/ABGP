@@ -1,5 +1,5 @@
 local _G = _G;
-local ABGP = ABGP;
+local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetServerTime = GetServerTime;

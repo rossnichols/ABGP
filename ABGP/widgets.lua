@@ -1,5 +1,5 @@
 local _G = _G;
-local ABGP = ABGP;
+local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local CreateFrame = CreateFrame;
@@ -9,10 +9,10 @@ local IsModifiedClick = IsModifiedClick;
 local GetItemQualityColor = GetItemQualityColor;
 local ResetCursor = ResetCursor;
 local MouseIsOver = MouseIsOver;
+local RED_FONT_COLOR = RED_FONT_COLOR;
 local CursorUpdate = CursorUpdate;
 local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
 local LE_ITEM_QUALITY_ARTIFACT = LE_ITEM_QUALITY_ARTIFACT;
-local RED_FONT_COLOR = RED_FONT_COLOR;
 local pairs = pairs;
 local ipairs = ipairs;
 local floor = floor;

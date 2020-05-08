@@ -1,9 +1,9 @@
-local AceSerializer = LibStub("AceSerializer-3.0");
-local LibCompress = LibStub("LibCompress");
+local _G = _G;
+local ABGP = _G.ABGP;
+local AceSerializer = _G.LibStub("AceSerializer-3.0");
+local LibCompress = _G.LibStub("LibCompress");
 local AddonEncodeTable = LibCompress:GetAddonEncodeTable();
 
-local _G = _G;
-local ABGP = ABGP;
 local IsInGroup = IsInGroup;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
