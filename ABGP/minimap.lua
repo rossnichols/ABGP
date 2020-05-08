@@ -30,10 +30,14 @@ function ABGP:OnIconCreated(event, frame, name)
 end
 
 function ABGP:MinimapOnDistOpened(data, distribution, sender)
+    if not minimapIcon then return; end
+
     minimapIcon[self:HasActiveItems() and "LockHighlight" or "UnlockHighlight"](minimapIcon);
 end
 
 function ABGP:MinimapOnDistClosed(data, distribution, sender)
+    if not minimapIcon then return; end
+
     minimapIcon[self:HasActiveItems() and "LockHighlight" or "UnlockHighlight"](minimapIcon);
 end
 
