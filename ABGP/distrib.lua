@@ -213,7 +213,7 @@ local function RebuildUI()
     local minCount = math.max(1, #currentItem.distributions + 1);
     local maxCount = math.max(5, currentItem.totalCount);
     local values = {};
-    for i = minCount, 5 do values[i] = i; end
+    for i = minCount, maxCount do values[i] = i; end
     multiple:SetList(values);
     multiple:SetValue(currentItem.totalCount);
     multiple:SetText(("Count: %s"):format(currentItem.totalCount));
