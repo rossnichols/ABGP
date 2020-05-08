@@ -61,7 +61,7 @@ local function AwardItem(request)
     local cost = CalculateCost(request);
 
     local itemLink = currentItem.itemLink;
-    if currentItem.multipleItems then
+    if currentItem.totalCount > 1 then
         local count = #currentItem.distributions;
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
@@ -209,10 +209,25 @@ local function RebuildUI()
         end
     end
 
-    local multiple = window:GetUserData("multipleItemsCheckbox");
-    multiple:SetWidth(100);
-    multiple:SetValue(currentItem.multipleItems);
-    multiple:SetDisabled(#currentItem.distributions > 0);
+    local multiple = window:GetUserData("itemCountDropdown");
+    local minCount = math.max(1, #currentItem.distributions + 1);
+    local maxCount = math.max(5, currentItem.totalCount);
+    local values = {};
+    for i = minCount, 5 do values[i] = i; end
+    multiple:SetList(values);
+    multiple:SetValue(currentItem.totalCount);
+    multiple:SetText(("Count: %s"):format(currentItem.totalCount));
+    local itemLink = currentItem.itemLink;
+    local tabs = window:GetUserData("tabs");
+    local tabGroup = window:GetUserData("tabGroup");
+    for i, tab in ipairs(tabs) do
+        if tab.value == itemLink then
+            tab.text = (currentItem.totalCount == 1)
+                and ABGP:GetItemName(itemLink)
+                or ("%s %d/%d"):format(ABGP:GetItemName(itemLink), #currentItem.distributions + 1, currentItem.totalCount);
+        end
+    end
+    tabGroup:SetTabs(tabs);
 
     local test = window:GetUserData("testCheckbox");
     test:SetValue(currentItem.testItem);
@@ -353,12 +368,12 @@ local function AddActiveItem(data)
         selectedElt = nil,
         costEdited = nil,
         closeConfirmed = false,
-        multipleItems = false,
         distributions = {},
         rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
         data = data,
         receivedComm = false,
         testItem = not IsInGroup(),
+        totalCount = ABGP:GetLootCount(itemLink) or 1,
     };
 
     activeItems[itemLink] = newItem;
@@ -416,7 +431,7 @@ local function ChooseRecipient()
     local cost = CalculateCost();
 
     local itemLink = currentItem.itemLink;
-    if currentItem.multipleItems then
+    if currentItem.totalCount > 1 then
         local count = #currentItem.distributions;
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
@@ -499,9 +514,8 @@ local function DistributeItem(data)
     ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));
     ABGP:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
-    currentItem.closeConfirmed = true;
-    if currentItem.multipleItems then
-        window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
+    if #currentItem.distributions < currentItem.totalCount then
+        RebuildUI();
     else
         RemoveActiveItem(data.itemLink);
     end
@@ -845,7 +859,7 @@ function ABGP:CreateDistribWindow()
     disenchant:SetCallback("OnClick", function(widget)
         local currentItem = window:GetUserData("currentItem");
         local itemLink = currentItem.itemLink;
-        if currentItem.multipleItems then
+        if currentItem.totalCount > 1 then
             local count = #currentItem.distributions;
             itemLink = ("%s #%d"):format(itemLink, count + 1);
         end
@@ -885,15 +899,16 @@ function ABGP:CreateDistribWindow()
     desc:SetText(" Cost");
     mainLine:AddChild(desc);
 
-    local multiple = AceGUI:Create("CheckBox");
-    multiple:SetWidth(100);
-    multiple:SetLabel("Multiple");
+    local multiple = AceGUI:Create("Dropdown");
+    multiple:SetText("Count");
+    multiple:SetWidth(80);
     multiple:SetCallback("OnValueChanged", function(widget, event, value)
         local currentItem = window:GetUserData("currentItem");
-        currentItem.multipleItems = value;
+        currentItem.totalCount = value;
+        RebuildUI();
     end);
     mainLine:AddChild(multiple);
-    window:SetUserData("multipleItemsCheckbox", multiple);
+    window:SetUserData("itemCountDropdown", multiple);
 
     local resetRolls = AceGUI:Create("Button");
     resetRolls:SetWidth(110);
@@ -944,6 +959,9 @@ function ABGP:CreateDistribWindow()
             local extra = "";
             if #currentItem.distributions == 0 then
                 extra = "You haven't distributed it to anyone yet!";
+            elseif #currentItem.distributions < currentItem.totalCount then
+                local remaining = currentItem.totalCount - #currentItem.distributions;
+                extra = ("You haven't distributed the remaining %d of %d instances yet!"):format(remaining, currentItem.totalCount);
             end
             _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, extra, {
                 itemLink = itemLink,
@@ -1054,9 +1072,8 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
             testItem = currentItem.testItem
         }, "BROADCAST");
 
-        currentItem.closeConfirmed = true;
-        if currentItem.multipleItems then
-            window:GetUserData("multipleItemsCheckbox"):SetDisabled(true);
+        if #currentItem.distributions < currentItem.totalCount then
+            RebuildUI();
         else
             RemoveActiveItem(data.itemLink);
         end
