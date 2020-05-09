@@ -172,6 +172,9 @@ local function RefreshUI()
             or "Disenchanter");
     end
 
+    local autoDistrib = activeWindow:GetUserData("autoDistrib");
+    autoDistrib:SetValue(windowRaid.autoDistribute);
+
     local scroll = activeWindow:GetUserData("standbyList");
     scroll:ReleaseChildren();
 
@@ -311,6 +314,13 @@ function ABGP:GetRaidDisenchanter()
     if not currentRaid then return; end
 
     return currentRaid.disenchanter;
+end
+
+function ABGP:ShouldAutoDistribute()
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    return currentRaid.autoDistribute;
 end
 
 function ABGP:EventOnBossKilled(bossId, name)
@@ -465,6 +475,8 @@ function ABGP:StartRaid()
             standby = {},
             startTime = GetServerTime(),
             stopTime = GetServerTime(),
+            disenchanter = nil,
+            autoDistribute = false,
         };
         EnsureAwardsEntries();
         self:Notify("Starting a new raid!");
@@ -496,9 +508,9 @@ function ABGP:UpdateRaid(windowRaid)
         defaultWidth = 150,
         minWidth = 150,
         maxWidth = 150,
-        defaultHeight = 300,
-        minHeight = 300,
-        maxHeight = 300
+        defaultHeight = 350,
+        minHeight = 350,
+        maxHeight = 350
     });
     self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
@@ -648,6 +660,15 @@ function ABGP:UpdateRaid(windowRaid)
             window:AddChild(disenchanter);
             window:SetUserData("disenchanter", disenchanter);
         end
+
+        local autoDistrib = AceGUI:Create("CheckBox");
+        autoDistrib:SetFullWidth(true);
+        autoDistrib:SetLabel("Auto Distrib");
+        autoDistrib:SetCallback("OnValueChanged", function(widget, event, value)
+            windowRaid.autoDistribute = value;
+        end);
+        window:AddChild(autoDistrib);
+        window:SetUserData("autoDistrib", autoDistrib);
 
         local addStandby = AceGUI:Create("Button");
         addStandby:SetFullWidth(true);

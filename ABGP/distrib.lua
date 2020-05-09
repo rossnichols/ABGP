@@ -730,9 +730,12 @@ function ABGP:ShowDistrib(itemLink)
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
         if activeItems[itemLink] then
+            activeItems[itemLink].totalCount = activeItems[itemLink].totalCount + 1;
             local currentItem = window:GetUserData("currentItem");
             if currentItem.itemLink ~= itemLink then
                 window:GetUserData("tabGroup"):SelectTab(itemLink);
+            else
+                RebuildUI();
             end
             return;
         end
@@ -828,7 +831,7 @@ function ABGP:CreateDistribWindow()
         minWidth = 550,
         maxWidth = 800,
         defaultHeight = 400,
-        minHeight = 300,
+        minHeight = 350,
         maxHeight = 600
     });
     window:SetCallback("OnClose", function(widget)
