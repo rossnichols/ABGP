@@ -6,6 +6,7 @@ local GetGuildRosterInfo = GetGuildRosterInfo;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
+local tCompare = tCompare;
 local date = date;
 local ipairs = ipairs;
 local table = table;
@@ -55,10 +56,10 @@ local function PrioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
-    local p1 = self.Priorities[self.Phases.p1];
-    local p3 = self.Priorities[self.Phases.p3];
-    table.wipe(p1);
-    table.wipe(p3);
+    local p1Old = self.Priorities[self.Phases.p1];
+    local p3Old = self.Priorities[self.Phases.p3];
+    local p1 = {};
+    local p3 = {};
 
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, publicNote, note, _, _, class = GetGuildRosterInfo(i);
@@ -135,7 +136,12 @@ function ABGP:RefreshFromOfficerNotes()
 
     table.sort(p1, PrioritySort);
     table.sort(p3, PrioritySort);
-    self:RefreshActivePlayers();
+
+    if not tCompare(p1Old, p1, 2) or not tCompare(p3Old, p3, 2) then
+        self.Priorities[self.Phases.p1] = p1;
+        self.Priorities[self.Phases.p3] = p3;
+        self:RefreshActivePlayers();
+    end
 end
 
 function ABGP:RebuildOfficerNotes()
