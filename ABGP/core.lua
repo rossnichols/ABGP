@@ -915,32 +915,30 @@ end
 -- Util
 --
 
-if not _G.tCompare then
-    function _G.tCompare(lhsTable, rhsTable, depth)
-        depth = depth or 1;
-        for key, value in pairs(lhsTable) do
-            if type(value) == "table" then
-                local rhsValue = rhsTable[key];
-                if type(rhsValue) ~= "table" then
+ABGP.tCompare = _G.tCompare or function(lhsTable, rhsTable, depth)
+    depth = depth or 1;
+    for key, value in pairs(lhsTable) do
+        if type(value) == "table" then
+            local rhsValue = rhsTable[key];
+            if type(rhsValue) ~= "table" then
+                return false;
+            end
+            if depth > 1 then
+                if not _G.tCompare(value, rhsValue, depth - 1) then
                     return false;
                 end
-                if depth > 1 then
-                    if not _G.tCompare(value, rhsValue, depth - 1) then
-                        return false;
-                    end
-                end
-            elseif value ~= rhsTable[key] then
-                -- print("mismatched value: " .. key .. ": " .. tostring(value) .. ", " .. tostring(rhsTable[key]));
-                return false;
             end
+        elseif value ~= rhsTable[key] then
+            -- print("mismatched value: " .. key .. ": " .. tostring(value) .. ", " .. tostring(rhsTable[key]));
+            return false;
         end
-        -- Check for any keys that are in rhsTable and not lhsTable.
-        for key, value in pairs(rhsTable) do
-            if lhsTable[key] == nil then
-                -- print("mismatched key: " .. key);
-                return false;
-            end
-        end
-        return true;
     end
+    -- Check for any keys that are in rhsTable and not lhsTable.
+    for key, value in pairs(rhsTable) do
+        if lhsTable[key] == nil then
+            -- print("mismatched key: " .. key);
+            return false;
+        end
+    end
+    return true;
 end
