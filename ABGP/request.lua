@@ -270,15 +270,10 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         INVTYPE_RELIC = { _G.INVSLOT_RANGED },
     };
 
-    local faveInfo = "";
-    if ABGP:CanFavoriteItems() and not ABGP:IsItemFavorited(itemLink) then
-        faveInfo = "To automatically show the request window for this item in the future, favorite it in AtlasLoot.";
-    end
-
     if activeItems[itemLink].sentComms and activeItems[itemLink].sentRequest then
         self:Notify("Updated request for %s.", itemLink);
     else
-        self:Notify("Requesting %s %s! %s", itemLink, requestTypes[requestType], faveInfo);
+        self:Notify("Requesting %s %s!", itemLink, requestTypes[requestType]);
     end
 
     data.notes = (notes ~= "") and notes or nil;
