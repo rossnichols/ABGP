@@ -1066,6 +1066,7 @@ function ABGP:CreateMainWindow(command)
     end
     tabGroup:SelectTab(tabs[tab].value);
 
+    window.frame:Raise();
     return window;
 end
 

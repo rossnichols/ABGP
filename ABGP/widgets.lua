@@ -51,6 +51,13 @@ local function CreateElement(frame, anchor, template)
             self:GetParent().obj:Fire("OnClick", ...);
         end
     end);
+    elt:SetScript("OnUpdate", function(self)
+        if _G.GameTooltip:IsOwned(self) and self.hasItem then
+            _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
+            _G.GameTooltip:SetHyperlink(self.hasItem);
+            CursorUpdate(self);
+        end
+    end);
     elt:SetScript("OnEnter", function(self)
         self:GetParent():RequestHighlight(true);
     end);
@@ -59,13 +66,6 @@ local function CreateElement(frame, anchor, template)
     end);
     elt:SetScript("OnClick", function(self, ...)
         self:GetParent().obj:Fire("OnClick", ...)
-    end);
-    elt:SetScript("OnUpdate", function(self)
-        if _G.GameTooltip:IsOwned(self) and self.hasItem then
-            _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
-            _G.GameTooltip:SetHyperlink(self.hasItem);
-            CursorUpdate(self);
-        end
     end);
 
     if anchor then
@@ -105,14 +105,10 @@ do
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
-            self:SetHeight(32);
-
             self.player.text:SetText("");
             self.rank.text:SetText("");
             self.priority.text:SetText("");
-            self.equipped.textTop:SetText("");
-            self.equipped.textMid:SetText("");
-            self.equipped.textBot:SetText("");
+            self.equipped.text:SetText("");
             self.requestType.text:SetText("");
             self.notes.text:SetText("");
 
@@ -122,23 +118,28 @@ do
             self.background:Hide();
         end,
 
-        ["SetData"] = function(self, data)
+        ["SetData"] = function(self, data, equippable)
             self.data = data;
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
             self.rank.text:SetFontObject((data.preferredGroup and data.group == data.preferredGroup) and "ABGPHighlight" or "GameFontNormal");
-            self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");
-            self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
-            self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
+            if data.priority then
+                self.priority.text:SetText(("%.3f"):format(data.priority));
+                self.priority.text:SetJustifyH("LEFT");
+            else
+                self.priority.text:SetText("--");
+                self.priority.text:SetJustifyH("CENTER");
+            end
 
-            if data.equipped then
-                if #data.equipped == 2 then
-                    self.equipped.textTop:SetText(data.equipped[1]);
-                    self.equipped.textBot:SetText(data.equipped[2]);
-                elseif #data.equipped == 1 then
-                    self.equipped.textMid:SetText(data.equipped[1]);
+            if equippable then
+                self.frame:SetHeight(36);
+                if data.equipped then
+                    self.equipped.text:SetText(table.concat(data.equipped, ""));
                 end
+            else
+                self.frame:SetHeight(22);
+                self.equipped.text:SetText("");
             end
 
             local requestTypes = {
@@ -159,16 +160,9 @@ do
         ["SetWidths"] = function(self, widths)
             self.player:SetWidth(widths[1] or 0);
             self.rank:SetWidth(widths[2] or 0);
-            self.ep:SetWidth(widths[3] or 0);
-            self.gp:SetWidth(widths[4] or 0);
-            self.priority:SetWidth(widths[5] or 0);
-            self.equipped:SetWidth(widths[6] or 0);
-            self.requestType:SetWidth(widths[7] or 0);
-            self.roll:SetWidth(widths[8] or 0);
-        end,
-
-        ["SetHeight"] = function(self, height)
-            self.frame:SetHeight(height);
+            self.priority:SetWidth(widths[3] or 0);
+            self.requestType:SetWidth(widths[4] or 0);
+            self.roll:SetWidth(widths[5] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -181,7 +175,7 @@ do
     -------------------------------------------------------------------------------]]
     local function Constructor()
         local frame = CreateFrame("Button");
-        frame:SetHeight(32);
+        frame:SetHeight(36);
         frame:Hide();
 
         frame.highlightRequests = 0;
@@ -202,40 +196,65 @@ do
 
         local player = CreateElement(frame);
         player.text = CreateFontString(player);
+        player:ClearAllPoints();
+        player:SetPoint("TOPLEFT", frame, 0, -3);
+        player:SetHeight(16);
 
-        local rank = CreateElement(frame, player);
+        local rank = CreateElement(frame);
         rank.text = CreateFontString(rank);
+        rank:ClearAllPoints();
+        rank:SetPoint("TOPLEFT", player, "TOPRIGHT");
+        rank:SetHeight(16);
 
-        local ep = CreateElement(frame, rank);
-        ep.text = CreateFontString(ep);
-
-        local gp = CreateElement(frame, ep);
-        gp.text = CreateFontString(gp);
-
-        local priority = CreateElement(frame, gp);
+        local priority = CreateElement(frame);
         priority.text = CreateFontString(priority);
+        priority:ClearAllPoints();
+        priority:SetPoint("TOPLEFT", rank, "TOPRIGHT");
+        priority:SetHeight(16);
+        priority:SetScript("OnEnter", function(self)
+            local obj = self:GetParent().obj;
+            if obj.data.ep and obj.data.gp then
+                _G.ShowUIPanel(_G.GameTooltip);
+                _G.GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
+                _G.GameTooltip:AddDoubleLine(("|cffffffff%.3f|r EP"):format(obj.data.ep), ("|cffffffff%.3f|r GP"):format(obj.data.gp));
+                _G.GameTooltip:Show();
+            end
+            self:GetParent():RequestHighlight(true);
+        end);
+        priority:SetScript("OnLeave", function(self)
+            _G.GameTooltip:Hide();
+            self:GetParent():RequestHighlight(false);
+        end);
 
-        local equipped = CreateElement(frame, priority);
-        equipped.textTop = CreateFontString(equipped, 8);
-        equipped.textMid = CreateFontString(equipped);
-        equipped.textBot = CreateFontString(equipped, -4);
+        local equipped = CreateElement(frame);
+        equipped.text = CreateFontString(equipped);
+        equipped.text:SetTextHeight(11);
+        equipped:ClearAllPoints();
+        equipped:SetPoint("BOTTOMLEFT", frame, 0, 3);
+        equipped:SetPoint("BOTTOMRIGHT", frame, 0, 3);
+        equipped:SetHeight(16);
 
-        local requestType = CreateElement(frame, equipped);
+        local requestType = CreateElement(frame);
         requestType.text = CreateFontString(requestType);
         requestType.text:SetJustifyH("CENTER");
+        requestType:ClearAllPoints();
+        requestType:SetPoint("TOPLEFT", priority, "TOPRIGHT");
+        requestType:SetHeight(16);
 
-        local roll = CreateElement(frame, requestType);
+        local roll = CreateElement(frame);
         roll.text = CreateFontString(roll);
         roll.text:SetJustifyH("RIGHT");
         roll.text:SetPoint("RIGHT", roll, -10, 1);
+        roll:ClearAllPoints();
+        roll:SetPoint("TOPLEFT", requestType, "TOPRIGHT");
+        roll:SetHeight(16);
 
         local notes = CreateElement(frame, roll);
-        notes:SetPoint("TOPRIGHT", frame);
         notes.text = CreateFontString(notes);
-        notes.text:ClearAllPoints();
-        notes.text:SetPoint("TOPLEFT", notes, 0, 1);
-        notes.text:SetPoint("BOTTOMRIGHT", notes, -2, 1);
-        notes.text:SetWordWrap(true);
+        notes:ClearAllPoints();
+        notes:SetPoint("TOPLEFT", roll, "TOPRIGHT");
+        notes:SetPoint("TOPRIGHT", frame, 0, -2);
+        notes:SetHeight(16);
         notes:SetScript("OnEnter", function(self)
             if self.text:IsTruncated() then
                 _G.ShowUIPanel(_G.GameTooltip);
@@ -254,8 +273,6 @@ do
         local widget = {
             player = player,
             rank = rank,
-            ep = ep,
-            gp = gp,
             priority = priority,
             equipped = equipped,
             requestType = requestType,
@@ -965,6 +982,38 @@ do
         frame:RegisterForClicks("LeftButtonUp", "RightButtonUp");
         frame:SetScript("OnClick", function(self, ...)
             self.obj:Fire("OnClick", ...);
+        end);
+        frame:SetHyperlinksEnabled(true);
+        frame:SetScript("OnHyperlinkEnter", function(self, itemLink)
+            _G.ShowUIPanel(_G.GameTooltip);
+            _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
+            _G.GameTooltip:ClearAllPoints();
+            _G.GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT");
+            _G.GameTooltip:SetHyperlink(itemLink);
+            _G.GameTooltip:Show();
+            self.hasItem = itemLink;
+            CursorUpdate(self);
+        end);
+        frame:SetScript("OnHyperlinkLeave", function(self)
+            _G.GameTooltip:Hide();
+            self.hasItem = nil;
+            ResetCursor();
+        end);
+        frame:SetScript("OnHyperlinkClick", function(self, itemLink, text, ...)
+            if IsModifiedClick() then
+                _G.HandleModifiedItemClick(select(2, GetItemInfo(itemLink)));
+            else
+                self:GetParent().obj:Fire("OnClick", ...);
+            end
+        end);
+        frame:SetScript("OnUpdate", function(self)
+            if _G.GameTooltip:IsOwned(self) and self.hasItem then
+                _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
+                _G.GameTooltip:ClearAllPoints();
+                _G.GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT");
+                _G.GameTooltip:SetHyperlink(self.hasItem);
+                CursorUpdate(self);
+            end
         end);
 
         local text = CreateFontString(frame);

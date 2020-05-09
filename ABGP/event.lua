@@ -478,6 +478,7 @@ function ABGP:StartRaid()
     instanceSelector:Fire("OnValueChanged", startingValue);
 
     activeWindow = window;
+    window.frame:Raise();
 end
 
 function ABGP:UpdateRaid(windowRaid)
@@ -685,6 +686,7 @@ function ABGP:UpdateRaid(windowRaid)
 
     window:SetUserData("raid", windowRaid);
     activeWindow = window;
+    window.frame:Raise();
     RefreshUI();
 end
 

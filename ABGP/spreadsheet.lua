@@ -406,6 +406,7 @@ function ABGP:ShowImportWindow()
     tabGroup:SelectTab(selectedTab);
     phaseSelector:SetUserData("tabGroup", tabGroup);
     window:AddChild(tabGroup);
+    window.frame:Raise();
 end
 
 

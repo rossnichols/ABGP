@@ -14,6 +14,7 @@ local GiveMasterLoot = GiveMasterLoot;
 local GetMasterLootCandidate = GetMasterLootCandidate;
 local GetLootInfo = GetLootInfo;
 local GetNumLootItems = GetNumLootItems;
+local IsEquippableItem = IsEquippableItem;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -26,7 +27,7 @@ local max = max;
 local lastEditId = 0;
 local activeDistributionWindow;
 local currentRaidGroup;
-local widths = { 110, 100, 70, 70, 70, 180, 60, 40, 1.0 };
+local widths = { 110, 100, 70, 40, 40, 1.0 };
 
 local function CalculateCost(request)
     local window = activeDistributionWindow;
@@ -143,7 +144,7 @@ local function RebuildUI()
             currentHeading = heading;
             local elt = AceGUI:Create("Heading");
             elt:SetFullWidth(true);
-            elt:SetText(heading);
+            elt:SetText(("|cffffffff%s|r"):format(heading));
             requestsContainer:AddChild(elt);
         end
 
@@ -151,7 +152,7 @@ local function RebuildUI()
 
         local elt = AceGUI:Create("ABGP_Player");
         elt:SetFullWidth(true);
-        elt:SetData(request);
+        elt:SetData(request, IsEquippableItem(currentItem.itemLink));
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt, event, button)
@@ -211,7 +212,7 @@ local function RebuildUI()
     for _, rolls in pairs(maxRolls) do
         for _, elt in ipairs(rolls.elts) do
             elt.data.currentMaxRoll = true;
-            elt:SetData(elt.data);
+            elt:SetData(elt.data, IsEquippableItem(currentItem.itemLink));
         end
     end
 
@@ -241,16 +242,8 @@ local function RebuildUI()
     local resetRolls = window:GetUserData("resetRollsButton");
     resetRolls:SetText(currentItem.rollsAllowed and "Reset Rolls" or "Allow Rolls");
 
-    window:SetTitle("Loot Distribution: " .. currentItem.itemLink);
-
-    if _G.ItemRefTooltip:IsOwned(window.frame) then
-        _G.ShowUIPanel(_G.ItemRefTooltip);
-        _G.ItemRefTooltip:SetOwner(window.frame, "ANCHOR_NONE");
-        _G.ItemRefTooltip:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
-        _G.ItemRefTooltip:SetHyperlink(currentItem.itemLink);
-        _G.ItemRefTooltip:SetFrameStrata("HIGH");
-        _G.ItemRefTooltip:Show();
-    end
+    window:SetTitle(("Loot Distribution: |cffffffff%s|r"):format(ABGP:GetItemName(currentItem.itemLink)));
+    window:GetUserData("itemRef"):SetText(currentItem.itemLink);
 
     ABGP:HideContextMenu();
 end
@@ -758,7 +751,6 @@ function ABGP:ShowDistrib(itemLink)
 
     if not activeDistributionWindow then
         activeDistributionWindow = self:CreateDistribWindow();
-        _G.ItemRefTooltip:SetOwner(activeDistributionWindow.frame, "ANCHOR_NONE");
     end
 
     local data = {
@@ -782,6 +774,16 @@ function ABGP:ShowDistrib(itemLink)
             "Fiddler Crab",
             "Other rank",
         };
+        local classes = {
+            "DRUID",
+            "HUNTER",
+            "MAGE",
+            "PALADIN",
+            "PRIEST",
+            "ROGUE",
+            "WARLOCK",
+            "WARRIOR",
+        };
         local testBase = {
             itemLink = itemLink,
             testContent = true,
@@ -797,6 +799,7 @@ function ABGP:ShowDistrib(itemLink)
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
             entry.rank = ranks[math.random(1, #ranks)];
+            entry.class = classes[math.random(1, #classes)];
             local rand = math.random();
             if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
             elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
@@ -818,13 +821,13 @@ end
 function ABGP:CreateDistribWindow()
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
-    window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
+    window.frame:SetFrameStrata("MEDIUM"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "distrib", {
-        version = 1,
-        defaultWidth = 1000,
-        minWidth = 900,
-        maxWidth = 1100,
-        defaultHeight = 500,
+        version = 2,
+        defaultWidth = 600,
+        minWidth = 550,
+        maxWidth = 800,
+        defaultHeight = 400,
         minHeight = 300,
         maxHeight = 600
     });
@@ -845,8 +848,6 @@ function ABGP:CreateDistribWindow()
 
             ABGP:EndWindowManagement(widget);
             AceGUI:Release(widget);
-            _G.ItemRefTooltip:Hide();
-            _G.ItemRefTooltip:SetFrameStrata("TOOLTIP");
 
             _G.StaticPopup_Hide("ABGP_CONFIRM_END_DIST");
             _G.StaticPopup_Hide("ABGP_CONFIRM_DIST");
@@ -857,6 +858,12 @@ function ABGP:CreateDistribWindow()
             widget:Show();
         end
     end);
+
+    local topLine = AceGUI:Create("SimpleGroup");
+    topLine:SetFullWidth(true);
+    topLine:SetLayout("table");
+    topLine:SetUserData("table", { columns = { 0, 1.0 } });
+    window:AddChild(topLine);
 
     local raidGroups, raidGroupNames = {}, {};
     for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
@@ -873,7 +880,13 @@ function ABGP:CreateDistribWindow()
         currentRaidGroup = ABGP:GetPreferredRaidGroup();
     end
     groupSelector:SetValue(currentRaidGroup);
-    window:AddChild(groupSelector);
+    topLine:AddChild(groupSelector);
+
+    local itemRef = AceGUI:Create("ABGP_Header");
+    itemRef:SetJustifyH("RIGHT");
+    itemRef:SetFullWidth(true);
+    topLine:AddChild(itemRef);
+    window:SetUserData("itemRef", itemRef);
 
     local tabGroup = AceGUI:Create("TabGroup");
     tabGroup:SetFullWidth(true);
@@ -890,7 +903,7 @@ function ABGP:CreateDistribWindow()
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 0, 1.0, 0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 0, 0, 1.0, 0, 0 } });
     tabGroup:AddChild(mainLine);
 
     local disenchant = AceGUI:Create("Button");
@@ -917,55 +930,6 @@ function ABGP:CreateDistribWindow()
     distrib:SetCallback("OnClick", function() AwardItem(); end);
     mainLine:AddChild(distrib);
     window:SetUserData("distributeButton", distrib);
-
-    local cost = AceGUI:Create("EditBox");
-    cost:SetWidth(75);
-    cost:SetCallback("OnEnterPressed", function(widget)
-        local currentItem = window:GetUserData("currentItem");
-        AceGUI:ClearFocus();
-        local text = widget:GetText();
-        if type(tonumber(text)) == "number" then
-            currentItem.costEdited = tonumber(text);
-        else
-            currentItem.costEdited = nil;
-        end
-        ProcessSelectedRequest();
-    end);
-    mainLine:AddChild(cost);
-    window:SetUserData("costEdit", cost);
-
-    local desc = AceGUI:Create("Label");
-    desc:SetWidth(45);
-    desc:SetText(" Cost");
-    mainLine:AddChild(desc);
-
-    local multiple = AceGUI:Create("Dropdown");
-    multiple:SetText("Count");
-    multiple:SetWidth(80);
-    multiple:SetCallback("OnValueChanged", function(widget, event, value)
-        local currentItem = window:GetUserData("currentItem");
-        currentItem.totalCount = value;
-        RebuildUI();
-    end);
-    mainLine:AddChild(multiple);
-    window:SetUserData("itemCountDropdown", multiple);
-
-    local resetRolls = AceGUI:Create("Button");
-    resetRolls:SetWidth(110);
-    resetRolls:SetCallback("OnClick", function(widget)
-        local currentItem = window:GetUserData("currentItem");
-        if currentItem.rollsAllowed then
-            for _, request in ipairs(currentItem.requests) do
-                request.roll = nil;
-            end
-            table.wipe(currentItem.rolls);
-        else
-            currentItem.rollsAllowed = true;
-        end
-        RebuildUI();
-    end);
-    mainLine:AddChild(resetRolls);
-    window:SetUserData("resetRollsButton", resetRolls);
 
     local choose = AceGUI:Create("Button");
     choose:SetWidth(125);
@@ -1010,6 +974,60 @@ function ABGP:CreateDistribWindow()
     end);
     mainLine:AddChild(done);
 
+    local secondLine = AceGUI:Create("SimpleGroup");
+    secondLine:SetFullWidth(true);
+    secondLine:SetLayout("Flow");
+    tabGroup:AddChild(secondLine);
+
+    local resetRolls = AceGUI:Create("Button");
+    resetRolls:SetWidth(110);
+    resetRolls:SetCallback("OnClick", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        if currentItem.rollsAllowed then
+            for _, request in ipairs(currentItem.requests) do
+                request.roll = nil;
+            end
+            table.wipe(currentItem.rolls);
+        else
+            currentItem.rollsAllowed = true;
+        end
+        RebuildUI();
+    end);
+    secondLine:AddChild(resetRolls);
+    window:SetUserData("resetRollsButton", resetRolls);
+
+    local cost = AceGUI:Create("EditBox");
+    cost:SetWidth(75);
+    cost:SetCallback("OnEnterPressed", function(widget)
+        local currentItem = window:GetUserData("currentItem");
+        AceGUI:ClearFocus();
+        local text = widget:GetText();
+        if type(tonumber(text)) == "number" then
+            currentItem.costEdited = tonumber(text);
+        else
+            currentItem.costEdited = nil;
+        end
+        ProcessSelectedRequest();
+    end);
+    secondLine:AddChild(cost);
+    window:SetUserData("costEdit", cost);
+
+    local desc = AceGUI:Create("Label");
+    desc:SetWidth(45);
+    desc:SetText(" Cost");
+    secondLine:AddChild(desc);
+
+    local multiple = AceGUI:Create("Dropdown");
+    multiple:SetText("Count");
+    multiple:SetWidth(80);
+    multiple:SetCallback("OnValueChanged", function(widget, event, value)
+        local currentItem = window:GetUserData("currentItem");
+        currentItem.totalCount = value;
+        RebuildUI();
+    end);
+    secondLine:AddChild(multiple);
+    window:SetUserData("itemCountDropdown", multiple);
+
     local spacer = AceGUI:Create("Label");
     spacer:SetFullWidth(true);
     spacer:SetText(" ");
@@ -1021,7 +1039,7 @@ function ABGP:CreateDistribWindow()
     scrollContainer:SetLayout("Flow");
     tabGroup:AddChild(scrollContainer);
 
-    local columns = { "Player", "Rank", "EP", "GP", "Priority", "Equipped", "Request", "Roll", "Notes", weights = { unpack(widths) } };
+    local columns = { "Player", "Rank", "Priority", "Type", "Roll", "Notes", weights = { unpack(widths) } };
     local header = AceGUI:Create("SimpleGroup");
     header:SetFullWidth(true);
     header:SetLayout("Table");
@@ -1034,6 +1052,8 @@ function ABGP:CreateDistribWindow()
         if columns[i] == "Roll" then
             desc:SetJustifyH("RIGHT");
             desc:SetPadding(0, -10);
+        elseif columns[i] == "Type" or columns[i] == "Priority" then
+            desc:SetJustifyH("CENTER");
         end
         header:AddChild(desc);
     end
@@ -1048,6 +1068,7 @@ function ABGP:CreateDistribWindow()
     window:SetUserData("activeItems", {});
     window:SetUserData("tabs", {});
 
+    window.frame:Raise();
     return window;
 end
 
