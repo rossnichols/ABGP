@@ -588,6 +588,12 @@ local function PopulateRequest(request, value)
             if epgp.trial then
                 override = "trial";
             end
+        else
+            local guildInfo = ABGP:GetGuildInfo(request.player);
+            if guildInfo then
+                rank = guildInfo[2];
+                class = guildInfo[11];
+            end
         end
 
         if value then
@@ -1025,6 +1031,10 @@ function ABGP:CreateDistribWindow()
     for i = 1, #columns do
         local desc = AceGUI:Create("ABGP_Header");
         desc:SetText(columns[i]);
+        if columns[i] == "Roll" then
+            desc:SetJustifyH("RIGHT");
+            desc:SetPadding(0, -10);
+        end
         header:AddChild(desc);
     end
 
