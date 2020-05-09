@@ -314,10 +314,10 @@ do
             self.background:Hide();
         end,
 
-        ["SetData"] = function(self, data)
+        ["SetData"] = function(self, data, order)
             self.data = data;
 
-            self.order.text:SetText(data.order or "");
+            self.order.text:SetText(order or "");
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
             self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");

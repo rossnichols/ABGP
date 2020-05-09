@@ -137,8 +137,7 @@ local function DrawPriority(container, rebuild, reason)
                 lastPriority = data.priority;
                 order = count;
             end
-            data.order = order;
-            elt:SetData(data);
+            elt:SetData(data, order);
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
