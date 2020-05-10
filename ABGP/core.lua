@@ -924,7 +924,7 @@ ABGP.tCompare = _G.tCompare or function(lhsTable, rhsTable, depth)
                 return false;
             end
             if depth > 1 then
-                if not _G.tCompare(value, rhsValue, depth - 1) then
+                if not ABGP.tCompare(value, rhsValue, depth - 1) then
                     return false;
                 end
             end
