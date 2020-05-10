@@ -505,9 +505,9 @@ function ABGP:UpdateRaid(windowRaid)
     window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raidUpdate", {
         version = 1,
-        defaultWidth = 150,
-        minWidth = 150,
-        maxWidth = 150,
+        defaultWidth = 175,
+        minWidth = 175,
+        maxWidth = 175,
         defaultHeight = 350,
         minHeight = 350,
         maxHeight = 350
