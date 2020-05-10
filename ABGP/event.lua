@@ -663,7 +663,7 @@ function ABGP:UpdateRaid(windowRaid)
 
         local autoDistrib = AceGUI:Create("CheckBox");
         autoDistrib:SetFullWidth(true);
-        autoDistrib:SetLabel("Auto Distrib");
+        autoDistrib:SetLabel("Auto Distribution");
         autoDistrib:SetCallback("OnValueChanged", function(widget, event, value)
             windowRaid.autoDistribute = value;
         end);
