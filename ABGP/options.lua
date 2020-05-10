@@ -19,7 +19,7 @@ function ABGP:InitOptions()
             lootElvUI = true,
             commMonitoringTriggered = false,
             commMonitoringEnabled = false,
-            masterLoot = true,
+            masterLoot = false,
             minimap = {
                 hide = false,
             },
