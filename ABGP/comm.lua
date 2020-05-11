@@ -129,6 +129,8 @@ ABGP.InternalEvents = {
     ITEM_REQUESTED = CV("ITEM_REQUESTED"),
     ITEM_PASSED = CV("ITEM_PASSED"),
     ITEM_FAVORITED = CV("ITEM_FAVORITED"),
+    LOOT_FRAME_OPENED = CV("LOOT_FRAME_OPENED"),
+    LOOT_FRAME_CLOSED = CV("LOOT_FRAME_CLOSED"),
 };
 
 function ABGP:CommCallback(sent, total, logInCallback)

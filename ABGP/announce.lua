@@ -214,30 +214,32 @@ function ABGP:ShowLootFrame(itemLink)
         GetLootAnchor():StopMovingOrSizing();
     end);
     elt:SetCallback("OnHide", function(widget)
-        local itemLink = widget:GetItem();
-        if self:GetActiveItem(itemLink) then
-            local keybinding = GetBindingKey("ABGP_SHOWITEMREQUESTS") or "<unbound>";
-            self:Notify("Type '/abgp loot', press your hotkey (%s), or use the minimap icon to show this item again.", keybinding);
-        end
         -- Free up the slot, preserving the indices of other frames.
         activeLootFrames[activeLootFrames[widget]] = nil;
         activeLootFrames[widget] = nil;
         AceGUI:Release(widget);
+        
+        self:SendMessage(self.InternalEvents.LOOT_FRAME_CLOSED, {});
     end);
 
+    self:SendMessage(self.InternalEvents.LOOT_FRAME_OPENED, {});
     return elt;
 end
 
 function ABGP:AnnounceOnDistOpened(data, distribution, sender)
     FlashClientIcon();
-    self:EnsureDistOpened(data.itemLink);
+    self:EnsureLootItemVisible(data.itemLink);
 end
 
-function ABGP:EnsureDistOpened(itemLink, noAnimate)
+function ABGP:EnsureLootItemVisible(itemLink, noAnimate)
     local elt = GetLootFrame(itemLink) or self:ShowLootFrame(itemLink);
 
     elt:EnableRequests(true, nil, noAnimate);
     elt:SetDuration(nil);
+end
+
+function ABGP:IsLootItemVisible(itemLink)
+    return (GetLootFrame(itemLink) ~= nil);
 end
 
 function ABGP:AnnounceOnDistClosed(data, distribution, sender)

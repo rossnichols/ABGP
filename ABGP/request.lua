@@ -221,8 +221,18 @@ end
 
 function ABGP:ShowItemRequests()
     for itemLink in pairs(activeItems) do
-        self:EnsureDistOpened(itemLink, true);
+        self:EnsureLootItemVisible(itemLink, true);
     end
+end
+
+function ABGP:HasHiddenItemRequests()
+    for itemLink in pairs(activeItems) do
+        if not self:IsLootItemVisible(itemLink) then
+            return true;
+        end
+    end
+
+    return false;
 end
 
 function ABGP:RequestItem(itemLink, requestType, notes)

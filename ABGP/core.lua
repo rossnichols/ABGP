@@ -183,6 +183,14 @@ function ABGP:OnInitialize()
         self:AnnounceOnItemFavorited(data);
     end, self);
 
+    self:RegisterMessage(self.InternalEvents.LOOT_FRAME_OPENED, function(self, event, data)
+        self:MinimapOnLootFrameOpened(data);
+    end, self);
+
+    self:RegisterMessage(self.InternalEvents.LOOT_FRAME_CLOSED, function(self, event, data)
+        self:MinimapOnLootFrameClosed(data);
+    end, self);
+
     local rollRegex = self:ConvertChatString(_G.RANDOM_ROLL_RESULT);
     local lootMultipleRegex = self:ConvertChatString(_G.LOOT_ITEM_MULTIPLE);
     local lootRegex = self:ConvertChatString(_G.LOOT_ITEM);
