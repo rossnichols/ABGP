@@ -6,6 +6,7 @@ local UnitExists = UnitExists;
 local UnitName = UnitName;
 local GetItemInfo = GetItemInfo;
 local IsAltKeyDown = IsAltKeyDown;
+local IsShiftKeyDown = IsShiftKeyDown;
 local GetServerTime = GetServerTime;
 local IsInGroup = IsInGroup;
 local IsMasterLooter = IsMasterLooter;
@@ -1106,10 +1107,17 @@ local function DistributeLoot(itemLink)
     if not (itemLink and ShouldDistributeLoot()) then
         return false;
     end
-    if ABGP:GetDebugOpt("TestLootFrame") then
-        ABGP:ShowLootFrame(itemLink);
+    if IsShiftKeyDown() then
+        local mule = ABGP:GetRaidMule();
+        if mule then
+            GiveItemViaML(itemLink, mule);
+        end
     else
-        ABGP:ShowDistrib(itemLink);
+        if ABGP:GetDebugOpt("TestLootFrame") then
+            ABGP:ShowLootFrame(itemLink);
+        else
+            ABGP:ShowDistrib(itemLink);
+        end
     end
     return true;
 end

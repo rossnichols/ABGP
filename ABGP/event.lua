@@ -172,6 +172,13 @@ local function RefreshUI()
             or "Disenchanter");
     end
 
+    local mule = activeWindow:GetUserData("mule");
+    if mule then
+        mule:SetText(windowRaid.mule
+            and ("Mule: %s"):format(ABGP:ColorizeName(windowRaid.mule))
+            or "Mule");
+    end
+
     local autoDistrib = activeWindow:GetUserData("autoDistrib");
     autoDistrib:SetValue(windowRaid.autoDistribute);
 
@@ -314,6 +321,27 @@ function ABGP:GetRaidDisenchanter()
     if not currentRaid then return; end
 
     return currentRaid.disenchanter;
+end
+
+function ABGP:SetMule(player)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    if player == "" then
+        player = nil;
+        self:Notify("Clearing the designated raid mule.");
+    else
+        self:Notify("Sending muled items to %s.", self:ColorizeName(player));
+    end
+    currentRaid.mule = player;
+    RefreshUI();
+end
+
+function ABGP:GetRaidMule()
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
+
+    return currentRaid.mule;
 end
 
 function ABGP:ShouldAutoDistribute()
@@ -480,6 +508,7 @@ function ABGP:StartRaid()
             stopTime = GetServerTime(),
             disenchanter = nil,
             autoDistribute = false,
+            mule = nil,
         };
         EnsureAwardsEntries();
         self:Notify("Starting a new raid!");
@@ -512,9 +541,9 @@ function ABGP:UpdateRaid(windowRaid)
         defaultWidth = 175,
         minWidth = 175,
         maxWidth = 175,
-        defaultHeight = 350,
-        minHeight = 350,
-        maxHeight = 350
+        defaultHeight = 375,
+        minHeight = 375,
+        maxHeight = 450
     });
     self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
@@ -670,6 +699,16 @@ function ABGP:UpdateRaid(windowRaid)
             window:AddChild(disenchanter);
             window:SetUserData("disenchanter", disenchanter);
             self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items will get ML'd.");
+
+            local mule = AceGUI:Create("Button");
+            mule:SetFullWidth(true);
+            mule:SetText("Mule");
+            mule:SetCallback("OnClick", function(widget)
+                _G.StaticPopup_Show("ABGP_SET_MULE");
+            end);
+            window:AddChild(mule);
+            window:SetUserData("mule", mule);
+            self:AddWidgetTooltip(mule, "Choose the player to whom items you alt+shift+click will get ML'd.");
         end
 
         local autoDistrib = AceGUI:Create("CheckBox");
@@ -862,6 +901,38 @@ StaticPopupDialogs["ABGP_SET_DISENCHANTER"] = {
 	maxLetters = 31,
     OnAccept = function(self, data)
         ABGP:SetDisenchanter(self.editBox:GetText());
+    end,
+    OnShow = function(self, data)
+        self.editBox:SetAutoFocus(false);
+    end,
+    EditBoxOnEnterPressed = function(self, data)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_SET_MULE"] = {
+    text = "Set the designated mule:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	autoCompleteSource = GetAutoCompleteResults,
+	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+	maxLetters = 31,
+    OnAccept = function(self, data)
+        ABGP:SetMule(self.editBox:GetText());
     end,
     OnShow = function(self, data)
         self.editBox:SetAutoFocus(false);
