@@ -423,6 +423,7 @@ function ABGP:StartRaid()
         window:GetUserData("nameEdit"):SetText(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
     end);
     window:AddChild(instanceSelector);
+    self:AddWidgetTooltip(instanceSelector, "If a preset instance is chosen, EP will automatically be recorded for boss kills.");
 
     local name = AceGUI:Create("EditBox");
     name:SetFullWidth(true);
@@ -443,6 +444,7 @@ function ABGP:StartRaid()
     end);
     window:AddChild(phaseSelector);
     window:SetUserData("phaseSelector", phaseSelector);
+    self:AddWidgetTooltip(phaseSelector, "Choose the phase in which this raid will be displayed in the main window.");
 
     local raidGroupSelectors = {};
     window:SetUserData("raidGroupSelectors", raidGroupSelectors);
@@ -460,6 +462,7 @@ function ABGP:StartRaid()
         epSelector:SetLabel(("%s EP"):format(self.RaidGroupNames[raidGroup]));
         window:AddChild(epSelector);
         raidGroupSelectors[raidGroup] = epSelector;
+        self:AddWidgetTooltip(epSelector, "Choose the phase(s) into which EP should be awarded for this raid group.");
     end
 
     local start = AceGUI:Create("Button");
@@ -484,6 +487,7 @@ function ABGP:StartRaid()
         self:UpdateRaid();
     end);
     window:AddChild(start);
+    self:AddWidgetTooltip(start, "Start the raid.");
 
     local startingValue = instanceInfo[currentInstance] and currentInstance or custom;
     instanceSelector:SetValue(startingValue);
@@ -545,6 +549,7 @@ function ABGP:UpdateRaid(windowRaid)
             end
         end);
         window:AddChild(stop);
+        self:AddWidgetTooltip(stop, "Stop the raid.");
 
         local epSlider = AceGUI:Create("Slider");
         epSlider:SetLabel("");
@@ -552,6 +557,7 @@ function ABGP:UpdateRaid(windowRaid)
         epSlider:SetSliderValues(-5, 20, 1);
         epSlider:SetValue(5);
         window:AddChild(epSlider);
+        self:AddWidgetTooltip(epSlider, "Select how much EP to award with the below button.");
 
         local awardEP = AceGUI:Create("Button");
         awardEP:SetFullWidth(true);
@@ -560,6 +566,7 @@ function ABGP:UpdateRaid(windowRaid)
             self:AwardEP(epSlider:GetValue());
         end);
         window:AddChild(awardEP);
+        self:AddWidgetTooltip(awardEP, "Award the above amount of EP to the raid and standby list.");
     end
 
     if not IsInProgress(windowRaid) or self:GetDebugOpt("DebugRaidUI") then
@@ -570,9 +577,10 @@ function ABGP:UpdateRaid(windowRaid)
             self:ExportRaid(windowRaid);
         end);
         window:AddChild(export);
+        self:AddWidgetTooltip(export, "Open the window to export this raid's EP in the spreadsheet.");
     end
 
-    if not IsInProgress(windowRaid) and self:GetDebugOpt("DebugRaidUI") then
+    if not IsInProgress(windowRaid) and self:GetDebugOpt("DebugRaidUI") and not self:IsRaidInProgress() then
         local restart = AceGUI:Create("Button");
         restart:SetFullWidth(true);
         restart:SetText("Restart");
@@ -587,6 +595,7 @@ function ABGP:UpdateRaid(windowRaid)
             end
         end);
         window:AddChild(restart);
+        self:AddWidgetTooltip(restart, "Mark the raid as current again.");
     end
 
     local manageEP = AceGUI:Create("Button");
@@ -648,6 +657,7 @@ function ABGP:UpdateRaid(windowRaid)
         window:SetUserData("popup", popup);
     end);
     window:AddChild(manageEP);
+    self:AddWidgetTooltip(manageEP, "Open the window to individually manage everyone's awarded EP.");
 
     if IsInProgress(windowRaid) then
         if self:Get("masterLoot") then
@@ -659,6 +669,7 @@ function ABGP:UpdateRaid(windowRaid)
             end);
             window:AddChild(disenchanter);
             window:SetUserData("disenchanter", disenchanter);
+            self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items will get ML'd.");
         end
 
         local autoDistrib = AceGUI:Create("CheckBox");
@@ -669,6 +680,7 @@ function ABGP:UpdateRaid(windowRaid)
         end);
         window:AddChild(autoDistrib);
         window:SetUserData("autoDistrib", autoDistrib);
+        self:AddWidgetTooltip(autoDistrib, "If enabled, items will be automatically opened for distribution when loot popups are created.");
 
         local addStandby = AceGUI:Create("Button");
         addStandby:SetFullWidth(true);
@@ -677,6 +689,7 @@ function ABGP:UpdateRaid(windowRaid)
             _G.StaticPopup_Show("ABGP_ADD_STANDBY");
         end);
         window:AddChild(addStandby);
+        self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
 
         local elt = AceGUI:Create("ABGP_Header");
         elt:SetFullWidth(true);
@@ -703,6 +716,7 @@ function ABGP:UpdateRaid(windowRaid)
             _G.StaticPopup_Show("ABGP_DELETE_RAID", nil, nil, windowRaid);
         end);
         window:AddChild(delete);
+        self:AddWidgetTooltip(delete, "Delete the raid.");
     end
 
     window:SetUserData("raid", windowRaid);

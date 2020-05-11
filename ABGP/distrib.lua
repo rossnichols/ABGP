@@ -241,6 +241,9 @@ local function RebuildUI()
 
     local resetRolls = window:GetUserData("resetRollsButton");
     resetRolls:SetText(currentItem.rollsAllowed and "Reset Rolls" or "Allow Rolls");
+    ABGP:AddWidgetTooltip(resetRolls, currentItem.rollsAllowed
+        and "Reset the recorded rolls for everyone (e.g., in case of a tie). Ask the appropriate players to /roll."
+        or "Start recording rolls made by players who requested this item.");
 
     window:SetTitle(("Loot Distribution: |cffffffff%s|r"):format(ABGP:GetItemName(currentItem.itemLink)));
     window:GetUserData("itemRef"):SetText(currentItem.itemLink);
@@ -884,6 +887,7 @@ function ABGP:CreateDistribWindow()
     end
     groupSelector:SetValue(currentRaidGroup);
     topLine:AddChild(groupSelector);
+    self:AddWidgetTooltip(groupSelector, "The selected raid group receives priority for loot.");
 
     local itemRef = AceGUI:Create("ABGP_Header");
     itemRef:SetJustifyH("RIGHT");
@@ -925,6 +929,7 @@ function ABGP:CreateDistribWindow()
     end);
     mainLine:AddChild(disenchant);
     window:SetUserData("disenchantButton", disenchant);
+    self:AddWidgetTooltip(disenchant, "Marks the item as disenchanted. If configured, the item will be ML'd to the designated disenchanter.");
 
     local distrib = AceGUI:Create("Button");
     distrib:SetWidth(105);
@@ -933,12 +938,14 @@ function ABGP:CreateDistribWindow()
     distrib:SetCallback("OnClick", function() AwardItem(); end);
     mainLine:AddChild(distrib);
     window:SetUserData("distributeButton", distrib);
+    self:AddWidgetTooltip(distrib, "Awards the item to the selected player. If configured, the item will be ML'd to them.");
 
     local choose = AceGUI:Create("Button");
     choose:SetWidth(125);
     choose:SetText("Choose Player");
     choose:SetCallback("OnClick", function() ChooseRecipient(); end);
     mainLine:AddChild(choose);
+    self:AddWidgetTooltip(choose, "Manually choose the player to whom the item will be awarded. If configured, the item will be ML'd to them.");
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);
@@ -952,6 +959,7 @@ function ABGP:CreateDistribWindow()
     end);
     mainLine:AddChild(test);
     window:SetUserData("testCheckbox", test);
+    self:AddWidgetTooltip(test, "Items marked as test don't affect GP and won't be recorded in the item history.");
 
     local done = AceGUI:Create("Button");
     done:SetWidth(75);
@@ -968,7 +976,7 @@ function ABGP:CreateDistribWindow()
                 extra = "You haven't distributed it to anyone yet!";
             elseif #currentItem.distributions < currentItem.totalCount then
                 local remaining = currentItem.totalCount - #currentItem.distributions;
-                extra = ("You haven't distributed the remaining %d of %d instances yet!"):format(remaining, currentItem.totalCount);
+                extra = ("You haven't distributed the remaining %d of %d copies yet!"):format(remaining, currentItem.totalCount);
             end
             _G.StaticPopup_Show("ABGP_CONFIRM_DONE", itemLink, extra, {
                 itemLink = itemLink,
@@ -976,6 +984,7 @@ function ABGP:CreateDistribWindow()
         end
     end);
     mainLine:AddChild(done);
+    self:AddWidgetTooltip(done, "End distribution of this item.");
 
     local secondLine = AceGUI:Create("SimpleGroup");
     secondLine:SetFullWidth(true);
@@ -1014,6 +1023,7 @@ function ABGP:CreateDistribWindow()
     end);
     secondLine:AddChild(cost);
     window:SetUserData("costEdit", cost);
+    self:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
 
     local desc = AceGUI:Create("Label");
     desc:SetWidth(45);
@@ -1030,6 +1040,7 @@ function ABGP:CreateDistribWindow()
     end);
     secondLine:AddChild(multiple);
     window:SetUserData("itemCountDropdown", multiple);
+    self:AddWidgetTooltip(multiple, "Choose how many copies of this item are being distributed.");
 
     local spacer = AceGUI:Create("Label");
     spacer:SetFullWidth(true);

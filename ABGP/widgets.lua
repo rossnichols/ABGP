@@ -23,6 +23,16 @@ local table = table;
 local select = select;
 local math = math;
 
+function ABGP:AddWidgetTooltip(widget, text)
+    widget:SetCallback("OnEnter", function(widget)
+        _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT");
+        _G.GameTooltip:SetText(text, nil, nil, nil, nil, true);
+    end);
+    widget:SetCallback("OnLeave", function(widget)
+        _G.GameTooltip:Hide();
+    end);
+end
+
 local function CreateElement(frame, anchor, template)
     local elt = CreateFrame("Button", nil, frame, template);
     elt:SetHeight(frame:GetHeight());
