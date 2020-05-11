@@ -20,6 +20,7 @@ function ABGP:InitOptions()
             commMonitoringTriggered = false,
             commMonitoringEnabled = false,
             masterLoot = false,
+            minimapAlert = true,
             minimap = {
                 hide = false,
             },
@@ -147,9 +148,17 @@ function ABGP:InitOptions()
                     get = function(info) return not self.db.char.minimap.hide; end,
                     set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
                 },
+                minimapAlert = {
+                    name = "Minimap Alert",
+                    order = 5,
+                    desc = "Show an alert on the minimap icon when you've hidden items that are open for distribution.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.minimapAlert; end,
+                    set = function(info, v) self.db.char.minimapAlert = v; self:RefreshMinimapIcon(); end,
+                },
                 masterLoot = {
                     name = "Master Loot",
-                    order = 5,
+                    order = 6,
                     desc = "Distribute items via master loot as they're awarded or disenchanted.",
                     type = "toggle",
                     hidden = function() return not self:IsPrivileged(); end,

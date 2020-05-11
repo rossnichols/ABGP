@@ -857,7 +857,7 @@ end
 -- Context Menu support
 --
 
-local contextFrame = CreateFrame("Frame", "ABGPContextMenu", UIParent, "UIDropDownMenuTemplate");
+local contextFrame = CreateFrame("Frame", "ABGPContextMenu", _G.UIParent, "UIDropDownMenuTemplate");
 contextFrame.relativePoint = "BOTTOMRIGHT";
 function ABGP:ShowContextMenu(context, frame)
     if self:IsContextMenuOpen() then

@@ -4,7 +4,10 @@ local LibDataBroker = _G.LibStub("LibDataBroker-1.1");
 local LibDBIcon = _G.LibStub("LibDBIcon-1.0");
 
 local CreateFrame = CreateFrame;
+local GetScreenWidth = GetScreenWidth;
+local GetScreenHeight = GetScreenHeight;
 local table = table;
+local unpack = unpack;
 
 local minimapIcon;
 local suppressTooltip = false;
@@ -20,22 +23,21 @@ function ABGP:InitMinimapIcon()
     LibDBIcon:Register("ABGP", obj, self.db.char.minimap);
 end
 
-function ABGP:RefreshMinimapIcon()
-    LibDBIcon:Refresh("ABGP", self.db.char.minimap);
-end
-
 function ABGP:OnIconCreated(event, frame, name)
     if name ~= "ABGP" then return; end
 
     minimapIcon = frame;
     -- frame:SetScale(5);
     frame.icon:SetSize(18, 18);
-    frame.tooltip = CreateFrame("GameTooltip", "ABGPMinimapTooltip", nil, "GameTooltipTemplate");
+    frame.tooltip = CreateFrame("GameTooltip", "ABGPMinimapTooltip", _G.UIParent, "GameTooltipTemplate");
     _G.ABGPMinimapTooltipTextLeft1:SetFontObject("GameFontNormalSmall");
+    frame.tooltip:SetScript("OnUpdate", function(self, elapsed)
+        self:SetAlpha(ABGP:IsContextMenuOpen() and 0 or 1);
+    end);
 end
 
 local function ShouldOverride()
-    return ABGP:HasActiveItems() and ABGP:HasHiddenItemRequests();
+    return ABGP:Get("minimapAlert") and ABGP:HasActiveItems() and ABGP:HasHiddenItemRequests();
 end
 
 local function UpdateIcon()
@@ -47,13 +49,33 @@ local function UpdateIcon()
         if suppressTooltip then
             minimapIcon.tooltip:Hide();
         else
-            minimapIcon.tooltip:SetOwner(minimapIcon, "ANCHOR_BOTTOMLEFT", 8, 8);
+            local offset = 7;
+            local anchors = {
+                [true] = {
+                    [true] = { "ANCHOR_RIGHT", -offset, -offset }, -- bottomleft
+                    [false] = { "ANCHOR_BOTTOMRIGHT", -offset, offset }, -- topleft
+                },
+                [false] = {
+                    [true] = { "ANCHOR_LEFT", offset, -offset }, -- bottomright
+                    [false] = { "ANCHOR_BOTTOMLEFT", offset, offset }, -- topright
+                },
+            };
+            local left, bottom = minimapIcon:GetRect();
+            local scale = minimapIcon:GetEffectiveScale();
+            left, bottom = left * scale, bottom * scale;
+            local anchor = anchors[left < GetScreenWidth() / 2][bottom < GetScreenHeight() / 2];
+            minimapIcon.tooltip:SetOwner(minimapIcon, unpack(anchor));
             minimapIcon.tooltip:SetText(("%s: Items Hidden!"):format(ABGP:ColorizeText("ABGP")), 1, 1, 1);
         end
     else
         minimapIcon:UnlockHighlight();
         minimapIcon.tooltip:Hide();
     end
+end
+
+function ABGP:RefreshMinimapIcon()
+    LibDBIcon:Refresh("ABGP", self.db.char.minimap);
+    UpdateIcon();
 end
 
 function ABGP:MinimapOnDistOpened(data, distribution, sender)

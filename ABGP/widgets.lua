@@ -174,7 +174,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame = CreateFrame("Button");
+        local frame = CreateFrame("Button", nil, _G.UIParent);
         frame:SetHeight(36);
         frame:Hide();
 
@@ -351,7 +351,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame = CreateFrame("Button");
+        local frame = CreateFrame("Button", nil, _G.UIParent);
         frame:SetHeight(32);
         frame:Hide();
 
@@ -459,7 +459,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame = CreateFrame("Button");
+        local frame = CreateFrame("Button", nil, _G.UIParent);
         frame:SetHeight(20);
         frame:Hide();
 
@@ -601,7 +601,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame = CreateFrame("Button");
+        local frame = CreateFrame("Button", nil, _G.UIParent);
         frame:SetHeight(20);
         frame:Hide();
 
@@ -975,7 +975,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame = CreateFrame("Button");
+        local frame = CreateFrame("Button", nil, _G.UIParent);
         frame:SetHeight(16);
         frame:Hide();
 
@@ -1087,7 +1087,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local frame = CreateFrame("Button");
+        local frame = CreateFrame("Button", nil, _G.UIParent);
         frame:SetHeight(20);
         frame:Hide();
 
@@ -1472,7 +1472,7 @@ do
             close = frame.closeButton;
         else
             frameCount = frameCount + 1;
-            frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, nil, "ABGPLootTemplate");
+            frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, _G.UIParent, "ABGPLootTemplate");
             button = frame.IconFrame;
             need = frame.NeedButton;
             close = frame.CloseButton;
