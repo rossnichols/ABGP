@@ -6,6 +6,8 @@ local LibDBIcon = _G.LibStub("LibDBIcon-1.0");
 local CreateFrame = CreateFrame;
 local GetScreenWidth = GetScreenWidth;
 local GetScreenHeight = GetScreenHeight;
+local IsControlKeyDown = IsControlKeyDown;
+local IsShiftKeyDown = IsShiftKeyDown;
 local table = table;
 local unpack = unpack;
 
@@ -149,7 +151,9 @@ function ABGP:OnIconTooltip(tooltip)
         tooltip:AddLine("|cffffffffClick|r to show the main window.");
     end
     tooltip:AddLine("|cffffffffShift-click|r to show the options window.");
-    tooltip:AddLine("|cffffffffControl-click|r to show the raid window.");
+    if self:IsPrivileged() then
+        tooltip:AddLine("|cffffffffControl-click|r to show the raid window.");
+    end
     tooltip:AddLine("|cffffffffRight-click|r for more options.");
 end
 
