@@ -5,6 +5,10 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local GetServerTime = GetServerTime;
 local GetAutoCompleteResults = GetAutoCompleteResults;
 local GetNumGroupMembers = GetNumGroupMembers;
+local UnitIsGroupLeader = UnitIsGroupLeader;
+local GetLootMethod = GetLootMethod;
+local SetLootMethod = SetLootMethod;
+local IsInGroup = IsInGroup;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
 local tContains = tContains;
@@ -173,6 +177,7 @@ local awardCategoriesSorted = {
 
 local currentInstance;
 local activeWindow;
+local pendingLootMethod;
 
 local function IsInProgress(raid)
     return (raid and raid == _G.ABGP_RaidInfo.currentRaid);
@@ -630,6 +635,28 @@ function ABGP:UpdateRaid(windowRaid)
         end);
         window:AddChild(epSelector);
         self:AddWidgetTooltip(epSelector, "Select an amount of EP to the raid and standby list.");
+
+        if UnitIsGroupLeader("player") then
+            local lootMethod = GetLootMethod();
+            local lootValues = {
+                group = "Group Loot",
+                master = "Master Loot",
+                freeforall = "Free For All",
+                needbeforegreed = "Need Before Greed",
+                roundrobin = "Round Robin"
+            };
+            local lootSelector = AceGUI:Create("Dropdown");
+            lootSelector:SetFullWidth(true);
+            lootSelector:SetValue(lootMethod);
+            lootSelector:SetText(lootValues[lootMethod]);
+            lootSelector:SetList(lootValues);
+            lootSelector:SetCallback("OnValueChanged", function(widget, event, value)
+                pendingLootMethod = value;
+                self:ChangeLootMethod();
+            end);
+            window:AddChild(lootSelector);
+            self:AddWidgetTooltip(lootSelector, "Select the loot method.");
+        end
     end
 
     if not IsInProgress(windowRaid) or self:GetDebugOpt("DebugRaidUI") then
@@ -913,6 +940,15 @@ end
 
 function ABGP:EventOnGroupUpdate()
     EnsureAwardsEntries();
+end
+
+function ABGP:ChangeLootMethod()
+    if GetLootMethod() ~= pendingLootMethod and IsInGroup() then
+        SetLootMethod(pendingLootMethod, UnitName("player"));
+        self:ScheduleTimer("ChangeLootMethod", 1);
+    else
+        pendingLootMethod = nil;
+    end
 end
 
 local function ValidateEP(ep)
