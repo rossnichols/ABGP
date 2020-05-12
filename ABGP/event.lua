@@ -152,6 +152,25 @@ local bossInfo = {
     [bossIds.Hakkar]      = { instance = instanceIds.ZulGurub, ep = 5, name = "Hakkar" },
 };
 
+local awardCategories = {
+    BOSS = "BOSS",
+    AWARD = "AWARD",
+    ADJUST = "ADJUST",
+    TRIAL = "TRIAL",
+};
+local awardCategoryNames = {
+    [awardCategories.BOSS] = "bosses",
+    [awardCategories.AWARD] = "awards",
+    [awardCategories.ADJUST] = "adjustments",
+    [awardCategories.TRIAL] = "trial",
+};
+local awardCategoriesSorted = {
+    awardCategories.BOSS,
+    awardCategories.AWARD,
+    awardCategories.ADJUST,
+    awardCategories.TRIAL,
+};
+
 local currentInstance;
 local activeWindow;
 
@@ -216,7 +235,7 @@ local function EnsureAwardsEntries()
     if not currentRaid then return; end
 
     local player = UnitName("player");
-    currentRaid.awards[player] = currentRaid.awards[player] or 0;
+    currentRaid.awards[player] = currentRaid.awards[player] or { ep = 0, categories = {} };
 
     local groupSize = GetNumGroupMembers();
     for i = 1, groupSize do
@@ -228,7 +247,7 @@ local function EnsureAwardsEntries()
         end
 
         local player = UnitName(unit);
-        currentRaid.awards[player] = currentRaid.awards[player] or 0;
+        currentRaid.awards[player] = currentRaid.awards[player] or { ep = 0, categories = {} };
     end
 end
 
@@ -236,7 +255,13 @@ function ABGP:IsRaidInProgress()
     return _G.ABGP_RaidInfo.currentRaid ~= nil;
 end
 
-function ABGP:AwardEP(ep)
+function ABGP:AwardPlayerEP(raid, player, ep, category)
+    local award = raid.awards[player];
+    award.ep = award.ep + ep;
+    award.categories[category] = (award.categories[category] or 0) + ep;
+end
+
+function ABGP:AwardEP(ep, category)
     local currentRaid = _G.ABGP_RaidInfo.currentRaid;
     if not currentRaid then return; end
 
@@ -254,11 +279,11 @@ function ABGP:AwardEP(ep)
         end
 
         local player = UnitName(unit);
-        currentRaid.awards[player] = currentRaid.awards[player] + ep;
+        self:AwardPlayerEP(currentRaid, player, ep, category);
     end
 
     for _, player in ipairs(currentRaid.standby) do
-        currentRaid.awards[player] = currentRaid.awards[player] + ep;
+        self:AwardPlayerEP(currentRaid, player, ep, category);
     end
 end
 
@@ -352,11 +377,11 @@ function ABGP:ShouldAutoDistribute()
 end
 
 function ABGP:EventOnBossKilled(bossId, name)
-    self:LogDebug("%s defeated!", name);
+    self:LogVerbose("%s defeated!", name);
     local info = bossInfo[bossId];
     if info then
-        self:LogDebug("This boss is worth %d EP.", info.ep);
-        self:AwardEP(info.ep);
+        self:LogVerbose("This boss is worth %d EP.", info.ep);
+        self:AwardEP(info.ep, awardCategories.BOSS);
     end
 end
 
@@ -365,7 +390,7 @@ function ABGP:EventOnZoneChanged(name, instanceId)
     currentInstance = instanceId;
     local info = instanceInfo[instanceId];
     if info then
-        self:LogDebug("This instance is associated with phase %s.", info.phase);
+        self:LogVerbose("This instance is associated with phase %s.", info.phase);
         self.CurrentPhase = info.phase;
     end
 
@@ -532,6 +557,13 @@ function ABGP:UpdateRaid(windowRaid)
 
     if activeWindow then activeWindow:Hide(); end
 
+    -- Fixup the raid if it's using the older data format.
+    for player, award in pairs(windowRaid.awards) do
+        if type(award) == "number" then
+            windowRaid.awards[player] = { ep = award, categories = { [awardCategories.AWARD] = award } };
+        end
+    end
+
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
     window:SetTitle(windowRaid.name);
@@ -592,7 +624,7 @@ function ABGP:UpdateRaid(windowRaid)
         awardEP:SetFullWidth(true);
         awardEP:SetText("Award EP");
         awardEP:SetCallback("OnClick", function(widget)
-            self:AwardEP(epSlider:GetValue());
+            self:AwardEP(epSlider:GetValue(), awardCategories.AWARD);
         end);
         window:AddChild(awardEP);
         self:AddWidgetTooltip(awardEP, "Award the above amount of EP to the raid and standby list.");
@@ -644,11 +676,18 @@ function ABGP:UpdateRaid(windowRaid)
         popup:SetTitle("Manage EP");
         popup:SetLayout("Fill");
         popup:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); window:SetUserData("popup", nil); end);
-        popup:SetWidth(240);
+        local popupWidth = 240;
+        popup:SetWidth(popupWidth);
         popup:SetHeight(300);
-        popup.frame:ClearAllPoints();
-        popup.frame:SetPoint("TOPLEFT", window.frame, "TOPRIGHT", 0, 0);
         ABGP:OpenWindow(popup);
+        local _, _, screenWidth = _G.UIParent:GetRect();
+        local windowLeft, _, windowWidth = window.frame:GetRect();
+        popup.frame:ClearAllPoints();
+        if screenWidth - windowWidth - windowLeft >= popupWidth then
+            popup.frame:SetPoint("TOPLEFT", window.frame, "TOPRIGHT");
+        else
+            popup.frame:SetPoint("TOPRIGHT", window.frame, "TOPLEFT");
+        end
 
         local scroll = AceGUI:Create("ScrollFrame");
         scroll:SetLayout("Table");
@@ -667,11 +706,11 @@ function ABGP:UpdateRaid(windowRaid)
 
             elt = AceGUI:Create("EditBox");
             elt:SetFullWidth(true);
-            elt:SetText(windowRaid.awards[player]);
+            elt:SetText(windowRaid.awards[player].ep);
             elt:SetCallback("OnEnterPressed", function(widget, event, value)
                 value = tonumber(value);
-                if type(value) == "number" and value > 0 and math.floor(value) == value then
-                    windowRaid.awards[player] = value;
+                if type(value) == "number" and value >= 0 and math.floor(value) == value then
+                    self:AwardPlayerEP(windowRaid, player, value - windowRaid.awards[player].ep, awardCategories.ADJUST);
                     self:Notify("EP for %s set to %d.", self:ColorizeName(player), value);
                 else
                     value = windowRaid.awards[player];
@@ -791,16 +830,12 @@ function ABGP:ExportRaid(windowRaid)
             table.insert(skippedPlayers, self:ColorizeName(player));
         end
     end
-    if #skippedPlayers > 0 then
-        local text = "The following players were skipped due to unknown raid group:\n";
-        text = text .. table.concat(skippedPlayers, ", ");
-        local skipped = AceGUI:Create("ABGP_Header");
-        skipped:SetFullWidth(true);
-        skipped:SetHeight(32);
-        skipped:SetWordWrap(true);
-        skipped:SetText(text);
-        window:AddChild(skipped);
-    end
+
+    local skipped = AceGUI:Create("ABGP_Header");
+    skipped:SetFullWidth(true);
+    skipped:SetHeight(32);
+    skipped:SetWordWrap(true);
+    window:AddChild(skipped);
 
     local tableContainer = AceGUI:Create("SimpleGroup");
     tableContainer:SetFullWidth(true);
@@ -812,23 +847,36 @@ function ABGP:ExportRaid(windowRaid)
     tableContainer:SetUserData("table", { columns = columns });
     window:AddChild(tableContainer);
 
+    local playersSorted = {};
+    for player in pairs(windowRaid.awards) do table.insert(playersSorted, player); end
+    table.sort(playersSorted);
+
     for _, phase in ipairs(self.PhasesSorted) do
         local text = "";
         local i = 1;
-        for player, ep in pairs(windowRaid.awards) do
+        for _, player in ipairs(playersSorted) do
+            local award = windowRaid.awards[player];
             local epgp = self:GetActivePlayer(player);
             -- Filter to players that earned EP in the raid and are tracked by EPGP.
-            if epgp and ep > 0 then
+            if epgp and award.ep > 0 then
                 -- Trials are tracked for attendance but don't earn EP.
-                if epgp.trial then ep = 0; end
+                if epgp.trial then
+                    self:AwardPlayerEP(windowRaid, player, -award.ep, awardCategories.TRIAL);
+                end
                 local raidGroup = epgp.epRaidGroup;
                 if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
-                    text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
-                        (i == 1 and "" or "\n"), ep, windowRaid.name, player, raidDate, epgp.rank);
-                    i = i + 1;
-                    if not epgp[phase] then
-                        self:Notify("WARNING: %s doesn't have existing EPGP data for %s!",
-                            self:ColorizeName(player), self.PhaseNames[phase]);
+                    if epgp[phase] then
+                        local breakdown = {};
+                        for _, cat in ipairs(awardCategoriesSorted) do
+                            if award.categories[cat] then
+                                table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
+                            end
+                        end
+                        text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
+                            (i == 1 and "" or "\n"), award.ep, windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
+                        i = i + 1;
+                    else
+                        table.insert(skippedPlayers, self:ColorizeName(player));
                     end
                 end
             end
@@ -846,6 +894,12 @@ function ABGP:ExportRaid(windowRaid)
         edit:SetCallback("OnEditFocusGained", function(widget)
             widget:HighlightText();
         end);
+    end
+
+    if #skippedPlayers > 0 then
+        local text = "The following players were skipped due to unknown raid group or missing phase EPGP:\n";
+        text = text .. table.concat(skippedPlayers, ", ");
+        skipped:SetText(text);
     end
 
     window.frame:Raise();
