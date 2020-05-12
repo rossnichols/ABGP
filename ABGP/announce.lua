@@ -218,7 +218,7 @@ function ABGP:ShowLootFrame(itemLink)
         activeLootFrames[activeLootFrames[widget]] = nil;
         activeLootFrames[widget] = nil;
         AceGUI:Release(widget);
-        
+
         self:SendMessage(self.InternalEvents.LOOT_FRAME_CLOSED, {});
     end);
 
@@ -254,7 +254,7 @@ function ABGP:AnnounceOnDistClosed(data, distribution, sender)
     if awards and #awards > 0 then
         local awardText = {};
         for _, award in ipairs(awards) do table.insert(awardText, award.text); end
-        elt:SetSecondaryText(("Awarded to %s"):format(table.concat(awardText, ", ")));
+        elt:SetSecondaryText(table.concat(awardText, ", "));
     elseif elt:GetUserData("trashed") then
         elt:SetSecondaryText(self:ColorizeText("Disenchanted"));
     else
