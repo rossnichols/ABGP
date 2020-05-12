@@ -154,19 +154,19 @@ local bossInfo = {
 
 local awardCategories = {
     BOSS = "BOSS",
-    AWARD = "AWARD",
+    BONUS = "BONUS",
     ADJUST = "ADJUST",
     TRIAL = "TRIAL",
 };
 local awardCategoryNames = {
     [awardCategories.BOSS] = "bosses",
-    [awardCategories.AWARD] = "awards",
+    [awardCategories.BONUS] = "bonus",
     [awardCategories.ADJUST] = "adjustments",
     [awardCategories.TRIAL] = "trial",
 };
 local awardCategoriesSorted = {
     awardCategories.BOSS,
-    awardCategories.AWARD,
+    awardCategories.BONUS,
     awardCategories.ADJUST,
     awardCategories.TRIAL,
 };
@@ -560,7 +560,7 @@ function ABGP:UpdateRaid(windowRaid)
     -- Fixup the raid if it's using the older data format.
     for player, award in pairs(windowRaid.awards) do
         if type(award) == "number" then
-            windowRaid.awards[player] = { ep = award, categories = { [awardCategories.AWARD] = award } };
+            windowRaid.awards[player] = { ep = award, categories = {} };
         end
     end
 
@@ -617,15 +617,15 @@ function ABGP:UpdateRaid(windowRaid)
         local epValuesSorted = { 5, 10, epCustom };
         local epSelector = AceGUI:Create("Dropdown");
         epSelector:SetFullWidth(true);
-        epSelector:SetText("Award EP");
+        epSelector:SetText("Award Bonus EP");
         epSelector:SetList(epValues, epValuesSorted);
         epSelector:SetCallback("OnValueChanged", function(widget, event, value)
             widget:SetValue(nil);
-            widget:SetText("Award EP");
+            widget:SetText("Award Bonus EP");
             if value == epCustom then
                 _G.StaticPopup_Show("ABGP_AWARD_EP");
             else
-                self:AwardEP(value, awardCategories.AWARD);
+                self:AwardEP(value, awardCategories.BONUS);
             end
         end);
         window:AddChild(epSelector);
@@ -1050,7 +1050,7 @@ StaticPopupDialogs["ABGP_AWARD_EP"] = {
     OnAccept = function(self, widget)
         local ep = ValidateEP(self.editBox:GetText());
         if ep then
-            ABGP:AwardEP(ep, awardCategories.AWARD);
+            ABGP:AwardEP(ep, awardCategories.BONUS);
         end
     end,
     OnShow = function(self)
