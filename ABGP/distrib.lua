@@ -1015,8 +1015,9 @@ function ABGP:CreateDistribWindow()
         local currentItem = window:GetUserData("currentItem");
         AceGUI:ClearFocus();
         local text = widget:GetText();
-        if type(tonumber(text)) == "number" then
-            currentItem.costEdited = tonumber(text);
+        local cost = self:DistribValidateCost(widget:GetText());
+        if cost then
+            currentItem.costEdited = cost;
         else
             currentItem.costEdited = nil;
         end

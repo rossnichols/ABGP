@@ -612,22 +612,24 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(stop);
         self:AddWidgetTooltip(stop, "Stop the raid.");
 
-        local epSlider = AceGUI:Create("Slider");
-        epSlider:SetLabel("");
-        epSlider:SetFullWidth(true);
-        epSlider:SetSliderValues(-5, 20, 1);
-        epSlider:SetValue(5);
-        window:AddChild(epSlider);
-        self:AddWidgetTooltip(epSlider, "Select how much EP to award with the below button.");
-
-        local awardEP = AceGUI:Create("Button");
-        awardEP:SetFullWidth(true);
-        awardEP:SetText("Award EP");
-        awardEP:SetCallback("OnClick", function(widget)
-            self:AwardEP(epSlider:GetValue(), awardCategories.AWARD);
+        local epCustom = -1;
+        local epValues = { [5] = 5, [10] = 10, [epCustom] = "Custom" };
+        local epValuesSorted = { 5, 10, epCustom };
+        local epSelector = AceGUI:Create("Dropdown");
+        epSelector:SetFullWidth(true);
+        epSelector:SetText("Award EP");
+        epSelector:SetList(epValues, epValuesSorted);
+        epSelector:SetCallback("OnValueChanged", function(widget, event, value)
+            widget:SetValue(nil);
+            widget:SetText("Award EP");
+            if value == epCustom then
+                _G.StaticPopup_Show("ABGP_AWARD_EP");
+            else
+                self:AwardEP(value, awardCategories.AWARD);
+            end
         end);
-        window:AddChild(awardEP);
-        self:AddWidgetTooltip(awardEP, "Award the above amount of EP to the raid and standby list.");
+        window:AddChild(epSelector);
+        self:AddWidgetTooltip(epSelector, "Select an amount of EP to the raid and standby list.");
     end
 
     if not IsInProgress(windowRaid) or self:GetDebugOpt("DebugRaidUI") then
@@ -913,6 +915,14 @@ function ABGP:EventOnGroupUpdate()
     EnsureAwardsEntries();
 end
 
+local function ValidateEP(ep)
+    ep = tonumber(ep);
+    if type(ep) ~= "number" then return false, "Not a number"; end
+    if math.floor(ep) ~= ep then return false, "Must be a whole number"; end
+
+    return ep;
+end
+
 StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
     text = "Add a player to the standby list:",
     button1 = "Done",
@@ -1024,6 +1034,52 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = {
                 break;
             end
         end
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};
+
+StaticPopupDialogs["ABGP_AWARD_EP"] = {
+    text = "Enter the amount of EP to award:",
+    button1 = "Done",
+    button2 = "Cancel",
+	hasEditBox = 1,
+	maxLetters = 31,
+    OnAccept = function(self, widget)
+        local ep = ValidateEP(self.editBox:GetText());
+        if ep then
+            ABGP:AwardEP(ep, awardCategories.AWARD);
+        end
+    end,
+    OnShow = function(self)
+        self.editBox:SetAutoFocus(false);
+        self.button1:Disable();
+    end,
+    EditBoxOnTextChanged = function(self)
+        local parent = self:GetParent();
+        local ep = ValidateEP(parent.editBox:GetText());
+        if ep then
+            parent.button1:Enable();
+        else
+            parent.button1:Disable();
+        end
+    end,
+    EditBoxOnEnterPressed = function(self)
+        local parent = self:GetParent();
+        if parent.button1:IsEnabled() then
+            parent.button1:Click();
+        else
+            local _, errorText = ValidateEP(parent.editBox:GetText());
+            ABGP:Error("Invalid EP! %s.", errorText);
+        end
+    end,
+    EditBoxOnEscapePressed = function(self)
+		self:ClearFocus();
+    end,
+    OnHide = function(self, data)
+        self.editBox:SetAutoFocus(true);
     end,
     timeout = 0,
     whileDead = true,
