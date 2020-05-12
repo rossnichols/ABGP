@@ -220,8 +220,12 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
 end
 
 function ABGP:ShowItemRequests()
-    for itemLink in pairs(activeItems) do
-        self:EnsureLootItemVisible(itemLink, true);
+    if self:HasActiveItems() then
+        for itemLink in pairs(activeItems) do
+            self:EnsureLootItemVisible(itemLink, true);
+        end
+    else
+        self:Notify("No items are being distributed.");
     end
 end
 
