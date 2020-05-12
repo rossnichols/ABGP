@@ -96,7 +96,11 @@ end
 
 function ABGP:OnIconClick(frame, button)
     if button == "LeftButton" then
-        if ShouldOverride() then
+        if IsShiftKeyDown() then
+            self:ShowOptionsWindow();
+        elseif IsControlKeyDown() then
+            self:ShowRaidWindow();
+        elseif ShouldOverride() then
             self:ShowItemRequests();
         else
             self:ShowMainWindow();
@@ -140,11 +144,13 @@ function ABGP:OnIconTooltip(tooltip)
     local header = ("%s v%s"):format(self:ColorizeText("ABGP"), self:GetVersion());
     tooltip:AddLine(header, 1, 1, 1);
     if ShouldOverride() then
-        tooltip:AddLine("Left-click to show open items.");
+        tooltip:AddLine("|cffffffffClick|r to show open items.");
     else
-        tooltip:AddLine("Left-click to show the main window.");
+        tooltip:AddLine("|cffffffffClick|r to show the main window.");
     end
-    tooltip:AddLine("Right-click for more options.");
+    tooltip:AddLine("|cffffffffShift-click|r to show the options window.");
+    tooltip:AddLine("|cffffffffControl-click|r to show the raid window.");
+    tooltip:AddLine("|cffffffffRight-click|r for more options.");
 end
 
 function ABGP:OnIconLeave(frame)
