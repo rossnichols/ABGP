@@ -21,6 +21,7 @@ function ABGP:InitOptions()
             commMonitoringEnabled = false,
             masterLoot = false,
             minimapAlert = true,
+            promptRaids = true,
             minimap = {
                 hide = false,
             },
@@ -164,6 +165,15 @@ function ABGP:InitOptions()
                     hidden = function() return not self:IsPrivileged(); end,
                     get = function(info) return self.db.char.masterLoot; end,
                     set = function(info, v) self.db.char.masterLoot = v; end,
+                },
+                promptRaids = {
+                    name = "Prompt Raids",
+                    order = 6,
+                    desc = "Open the raid window when zoning into an instance associated with a raid.",
+                    type = "toggle",
+                    hidden = function() return not self:IsPrivileged(); end,
+                    get = function(info) return self.db.char.promptRaids; end,
+                    set = function(info, v) self.db.char.promptRaids = v; end,
                 },
             },
         },

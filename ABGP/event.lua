@@ -387,6 +387,17 @@ function ABGP:EventOnBossKilled(bossId, name)
     if info then
         self:LogVerbose("This boss is worth %d EP.", info.ep);
         self:AwardEP(info.ep, awardCategories.BOSS);
+
+        -- See if we killed the final boss of the current raid.
+        if self:IsRaidInProgress() then
+            local raidInstance = _G.ABGP_RaidInfo.currentRaid.instanceId;
+            if instanceInfo[raidInstance] then
+                local bosses = instanceInfo[raidInstance].bosses;
+                if bosses[#bosses] == bossId then
+                    self:UpdateRaid();
+                end
+            end
+        end
     end
 end
 
@@ -397,6 +408,11 @@ function ABGP:EventOnZoneChanged(name, instanceId)
     if info then
         self:LogVerbose("This instance is associated with phase %s.", info.phase);
         self.CurrentPhase = info.phase;
+
+        -- Gently suggest that a raid gets started.
+        if self:IsPrivileged() and not self:IsRaidInProgress() and self:Get("promptRaids") then
+            self:StartRaid();
+        end
     end
 
     if self:IsRaidInProgress() then
