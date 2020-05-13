@@ -314,7 +314,7 @@ function ABGP:AddStandby(player)
     end
 
     table.insert(currentRaid.standby, player);
-    currentRaid.awards[player] = currentRaid.awards[player] or 0;
+    currentRaid.awards[player] = currentRaid.awards[player] or { ep = 0, categories = {} };
     RefreshUI();
 end
 
@@ -565,7 +565,7 @@ function ABGP:UpdateRaid(windowRaid)
     -- Fixup the raid if it's using the older data format.
     for player, award in pairs(windowRaid.awards) do
         if type(award) == "number" then
-            windowRaid.awards[player] = { ep = award, categories = {} };
+            windowRaid.awards[player] = { ep = 0, categories = {} };
         end
     end
 
@@ -601,8 +601,8 @@ function ABGP:UpdateRaid(windowRaid)
 
             local currentRaid = _G.ABGP_RaidInfo.currentRaid;
             _G.ABGP_RaidInfo.currentRaid = nil;
-            for player, ep in pairs(currentRaid.awards) do
-                if ep == 0 then currentRaid.awards[player] = nil; end
+            for player, award in pairs(currentRaid.awards) do
+                if award.ep == 0 then currentRaid.awards[player] = nil; end
             end
             if next(currentRaid.awards) then
                 self:Notify("Stopping the raid!");
@@ -742,7 +742,7 @@ function ABGP:UpdateRaid(windowRaid)
                     self:AwardPlayerEP(windowRaid, player, value - windowRaid.awards[player].ep, awardCategories.ADJUST);
                     self:Notify("EP for %s set to %d.", self:ColorizeName(player), value);
                 else
-                    value = windowRaid.awards[player];
+                    value = windowRaid.awards[player].ep;
                     self:Error("Invalid value! EP for %s remains at %d.", self:ColorizeName(player), value);
                 end
                 widget:SetText(value);
@@ -852,13 +852,17 @@ function ABGP:ExportRaid(windowRaid)
 
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
 
+    local sortedPlayers = {};
     local skippedPlayers = {};
-    for player, ep in pairs(windowRaid.awards) do
+    for player in pairs(windowRaid.awards) do
         local epgp = self:GetActivePlayer(player);
-        if not epgp then
+        if epgp then
+            table.insert(sortedPlayers, player);
+        else
             table.insert(skippedPlayers, self:ColorizeName(player));
         end
     end
+    table.sort(sortedPlayers);
 
     local skipped = AceGUI:Create("ABGP_Header");
     skipped:SetFullWidth(true);
@@ -876,37 +880,30 @@ function ABGP:ExportRaid(windowRaid)
     tableContainer:SetUserData("table", { columns = columns });
     window:AddChild(tableContainer);
 
-    local playersSorted = {};
-    for player in pairs(windowRaid.awards) do table.insert(playersSorted, player); end
-    table.sort(playersSorted);
-
     for _, phase in ipairs(self.PhasesSorted) do
         local text = "";
         local i = 1;
-        for _, player in ipairs(playersSorted) do
+        for _, player in ipairs(sortedPlayers) do
             local award = windowRaid.awards[player];
             local epgp = self:GetActivePlayer(player);
-            -- Filter to players that earned EP in the raid and are tracked by EPGP.
-            if epgp and award.ep > 0 then
-                -- Trials are tracked for attendance but don't earn EP.
-                if epgp.trial then
-                    self:AwardPlayerEP(windowRaid, player, -award.ep, awardCategories.TRIAL);
-                end
-                local raidGroup = epgp.epRaidGroup;
-                if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
-                    if epgp[phase] then
-                        local breakdown = {};
-                        for _, cat in ipairs(awardCategoriesSorted) do
-                            if award.categories[cat] then
-                                table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
-                            end
+            -- Trials are tracked for attendance but don't earn EP.
+            if award.ep > 0 and epgp.trial then
+                self:AwardPlayerEP(windowRaid, player, -award.ep, awardCategories.TRIAL);
+            end
+            local raidGroup = epgp.epRaidGroup;
+            if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
+                if epgp[phase] then
+                    local breakdown = {};
+                    for _, cat in ipairs(awardCategoriesSorted) do
+                        if award.categories[cat] then
+                            table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
                         end
-                        text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
-                            (i == 1 and "" or "\n"), award.ep, windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
-                        i = i + 1;
-                    else
-                        table.insert(skippedPlayers, self:ColorizeName(player));
                     end
+                    text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
+                        (i == 1 and "" or "\n"), award.ep, windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
+                    i = i + 1;
+                else
+                    table.insert(skippedPlayers, self:ColorizeName(player));
                 end
             end
         end
