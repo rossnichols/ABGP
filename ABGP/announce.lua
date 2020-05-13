@@ -15,6 +15,7 @@ local UnitGUID = UnitGUID;
 local GetBindingKey = GetBindingKey;
 local FlashClientIcon = FlashClientIcon;
 local GetTime = GetTime;
+local IsShiftKeyDown = IsShiftKeyDown;
 local select = select;
 local table = table;
 local ipairs = ipairs;
@@ -230,14 +231,24 @@ function ABGP:ShowLootFrame(itemLink)
         GetLootAnchor():StopMovingOrSizing();
     end);
     elt:SetCallback("OnHide", function(widget)
-        if widget:GetItem() and widget:GetUserData("forceClosed") then
-            forceClosures[widget:GetItem()] = GetTime();
-        end
         -- Free up the slot, preserving the indices of other frames.
         activeLootFrames[activeLootFrames[widget]] = nil;
         activeLootFrames[widget] = nil;
-        AceGUI:Release(widget);
 
+        if widget:GetItem() and widget:GetUserData("forceClosed") then
+            forceClosures[widget:GetItem()] = GetTime();
+
+            if IsShiftKeyDown() then
+                for _, elt in pairs(activeLootFrames) do
+                    if type(elt) == "table" and elt:GetItem() and not elt:GetUserData("requested") then
+                        elt:SetUserData("forceClosed", true);
+                        elt.frame:Hide();
+                    end
+                end
+            end
+        end
+
+        AceGUI:Release(widget);
         self:SendMessage(self.InternalEvents.LOOT_FRAME_CLOSED, {});
     end);
 
@@ -309,8 +320,8 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
 
     if data.player then
         local requestTypes = {
-            [self.RequestTypes.MS] = "ms",
-            [self.RequestTypes.OS] = "os",
+            [self.RequestTypes.MS] = "MS",
+            [self.RequestTypes.OS] = "OS",
         };
         local extra;
         if requestTypes[data.requestType] then
@@ -335,7 +346,8 @@ function ABGP:AnnounceOnItemRolled(data, distribution, sender)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    local roll = data.roll
+    elt:SetUserData("requested", true);
+    local roll = data.roll;
     elt:SetUserData("roll", roll);
     local rollText = ("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll);
     local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
@@ -346,6 +358,7 @@ function ABGP:AnnounceOnItemRequested(data)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
+    elt:SetUserData("requested", true);
     local roll = elt:GetUserData("roll");
     if roll then
         local rollText = ("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll);

@@ -1253,6 +1253,10 @@ do
     local function ShowTooltip_OnEnter(frame)
         _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
         _G.GameTooltip:SetText(frame.tooltipText);
+        if frame.tooltipSubtext then
+            _G.GameTooltip:AddLine(frame.tooltipSubtext, nil, nil, nil, true);
+            _G.GameTooltip:Show();
+        end
         if not frame:IsEnabled() then
             _G.GameTooltip:AddLine(frame.reason, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, true);
             _G.GameTooltip:Show();
@@ -1515,6 +1519,7 @@ do
         close:SetScript("OnEnter", ShowTooltip_OnEnter);
         close:SetScript("OnLeave", ShowTooltip_OnLeave);
         close.tooltipText = "Close";
+        close.tooltipSubtext = "|cffffffffShift+click|r to close all items you haven't requested.";
         if frame.elvui then
             -- Must be run after scripts are set.
             _G.ElvUI[1]:GetModule("Skins"):HandleCloseButton(close);
