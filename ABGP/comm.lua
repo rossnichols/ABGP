@@ -255,8 +255,8 @@ function ABGP:SetupCommMonitor()
         if _G.ChatThrottleLib then
             self:SecureHook(_G.ChatThrottleLib, "Enqueue", function(ctl, prioname, pipename, msg)
                 local now = GetTime();
-                if _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold then
-                    if not ctlQueue.queueing and UnitAffectingCombat("player") then
+                if _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold and UnitAffectingCombat("player") then
+                    if not ctlQueue.queueing then
                         local when = currentEncounter and ("during %s"):format(currentEncounter) or "in combat";
                         self:WriteLogged("COMM", "ChatThrottleLib has started queueing %s!", when);
                         self:DumpCommMonitor();
