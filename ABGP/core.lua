@@ -252,7 +252,6 @@ function ABGP:OnInitialize()
     self:RegisterEvent("BOSS_KILL", function(self, event, ...)
         self:EventOnBossKilled(...);
         self:AnnounceOnBossKilled(...);
-        self:CommOnBossKilled(...);
     end, self);
     self:RegisterEvent("LOADING_SCREEN_DISABLED", function(self, event, ...)
         -- Per DBM, GetInstanceInfo() can return stale data for a period of time
@@ -275,6 +274,12 @@ function ABGP:OnInitialize()
     end, self);
     self:RegisterEvent("PARTY_LEADER_CHANGED", function(self, event, ...)
         self:OutsiderOnPartyLeaderChanged();
+    end, self);
+    self:RegisterEvent("ENCOUNTER_START", function(self, event, ...)
+        self:CommOnEncounterStart(...);
+    end, self);
+    self:RegisterEvent("ENCOUNTER_END", function(self, event, ...)
+        self:CommOnEncounterEnd(...);
     end, self);
 
     -- Precreate frames to avoid issues generating them during combat.

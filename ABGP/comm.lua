@@ -10,6 +10,7 @@ local IsInRaid = IsInRaid;
 local UnitName = UnitName;
 local GetTime = GetTime;
 local GetServerTime = GetServerTime;
+local UnitAffectingCombat = UnitAffectingCombat;
 local LE_PARTY_CATEGORY_INSTANCE = LE_PARTY_CATEGORY_INSTANCE;
 local pairs = pairs;
 local type = type;
@@ -29,6 +30,7 @@ local bufferLength = 30;
 local currentSlot = 0;
 local ctlQueue = { queueing = false, start = 0, count = 0 };
 local commMonitor = {};
+local currentEncounter;
 
 local function GetBroadcastChannel()
     if ABGP:GetDebugOpt("PrivateComms") then return "WHISPER", UnitName("player"); end
@@ -254,8 +256,9 @@ function ABGP:SetupCommMonitor()
             self:SecureHook(_G.ChatThrottleLib, "Enqueue", function(ctl, prioname, pipename, msg)
                 local now = GetTime();
                 if _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold then
-                    if not ctlQueue.queueing then
-                        self:WriteLogged("COMM", "ChatThrottleLib has started queueing!");
+                    if not ctlQueue.queueing and UnitAffectingCombat("player") then
+                        local when = currentEncounter and ("during %s"):format(currentEncounter) or "in combat";
+                        self:WriteLogged("COMM", "ChatThrottleLib has started queueing %s!", when);
                         self:DumpCommMonitor();
                         ctlQueue.queueing = true;
                         ctlQueue.start = now;
@@ -331,13 +334,18 @@ function ABGP:DumpCommMonitor(toChat)
     end
 end
 
-function ABGP:CommOnBossKilled(bossId, name)
+function ABGP:CommOnEncounterStart(encounterId, encounterName)
+    currentEncounter = encounterName;
+end
+
+function ABGP:CommOnEncounterEnd(encounterId, encounterName)
+    currentEncounter = nil;
     if not monitoringComms then return; end
 
     -- When a boss is killed, dump the comm monitor if CTL is currently queuing msgs.
     local ctl = _G.ChatThrottleLib;
     if ctl and ctl.bQueueing then
-        self:ErrorLogged("COMM", "Addon comms after defeating %s are delayed!", name);
+        self:ErrorLogged("COMM", "Addon comms after %s are delayed!", encounterName);
         self:DumpCommMonitor();
     end
 end
