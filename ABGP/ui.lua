@@ -130,14 +130,12 @@ local function DrawPriority(container, rebuild, reason)
             count = count + 1;
             local elt = AceGUI:Create("ABGP_Priority");
             elt:SetFullWidth(true);
-            if data.player == UnitName("player") then
-                data.important = true;
-            end
+            local important = (data.player == UnitName("player"));
             if data.priority ~= lastPriority then
                 lastPriority = data.priority;
                 order = count;
             end
-            elt:SetData(data, order);
+            elt:SetData(data, order, important);
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)

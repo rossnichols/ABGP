@@ -324,7 +324,7 @@ do
             self.background:Hide();
         end,
 
-        ["SetData"] = function(self, data, order)
+        ["SetData"] = function(self, data, order, important)
             self.data = data;
 
             self.order.text:SetText(order or "");
@@ -334,7 +334,7 @@ do
             self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
             self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
 
-            local specialFont = data.important and "ABGPHighlight" or "GameFontNormal";
+            local specialFont = important and "ABGPHighlight" or "GameFontNormal";
             self.order.text:SetFontObject(specialFont);
             self.player.text:SetFontObject(specialFont);
             self.rank.text:SetFontObject(specialFont);
