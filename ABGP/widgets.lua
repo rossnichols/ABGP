@@ -1264,7 +1264,9 @@ do
     end
 
     local function Close_OnClick(frame)
-        frame:GetParent():Hide();
+        local parent = frame:GetParent();
+        parent.obj:SetUserData("forceClosed", true);
+        parent:Hide();
     end
 
     local frameCount = 0;

@@ -14,6 +14,7 @@ local GetLootMethod = GetLootMethod;
 local UnitGUID = UnitGUID;
 local GetBindingKey = GetBindingKey;
 local FlashClientIcon = FlashClientIcon;
+local GetTime = GetTime;
 local select = select;
 local table = table;
 local ipairs = ipairs;
@@ -24,6 +25,8 @@ local bossKills = {};
 local lootAnnouncements = {};
 local lastBoss;
 local activeLootFrames = {};
+local forceClosures = {};
+local forceCloseThreshold = 30;
 
 local function ItemShouldBeAutoAnnounced(item)
     -- Announce rare+ BoP items
@@ -227,6 +230,9 @@ function ABGP:ShowLootFrame(itemLink)
         GetLootAnchor():StopMovingOrSizing();
     end);
     elt:SetCallback("OnHide", function(widget)
+        if widget:GetItem() and widget:GetUserData("forceClosed") then
+            forceClosures[widget:GetItem()] = GetTime();
+        end
         -- Free up the slot, preserving the indices of other frames.
         activeLootFrames[activeLootFrames[widget]] = nil;
         activeLootFrames[widget] = nil;
@@ -240,7 +246,13 @@ function ABGP:ShowLootFrame(itemLink)
 end
 
 function ABGP:AnnounceOnDistOpened(data, distribution, sender)
+    local itemLink = data.itemLink;
     FlashClientIcon();
+
+    if forceClosures[itemLink] and GetTime() - forceClosures[itemLink] < forceCloseThreshold then
+        -- This itemlink was force-closed recently. Don't pop up the loot item again.
+        return;
+    end
     self:EnsureLootItemVisible(data.itemLink);
 end
 
