@@ -448,11 +448,8 @@ local function ChooseRecipient()
 end
 
 function ABGP:DistribValidateRecipient(player, cost, value)
-    player = UnitExists(player) and UnitName(player);
-    if not player then return false, "The player must be in your group"; end
-
     local epgp = self:GetActivePlayer(player);
-    if cost ~= 0 and not (epgp and epgp[value.phase]) then
+    if cost and cost ~= 0 and not (epgp and epgp[value.phase]) then
         return false, "The player must have EPGP for this phase";
     end
 
