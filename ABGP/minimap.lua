@@ -134,6 +134,20 @@ function ABGP:OnIconClick(frame, button)
                 notCheckable = true
             });
         end
+        if self:IsPrivileged() then
+            table.insert(context, {
+                text = "Version Check",
+                func = function() self:PerformVersionCheck(); end,
+                notCheckable = true
+            });
+        end
+        if self:Get("commMonitoringEnabled") then
+            table.insert(context, {
+                text = "Dump Addon Comms",
+                func = function() self:DumpCommMonitor(true); end,
+                notCheckable = true
+            });
+        end
         table.insert(context, { text = "Cancel", notCheckable = true });
         self:ShowContextMenu(context, frame);
     end
