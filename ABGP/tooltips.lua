@@ -29,7 +29,7 @@ function ABGP:HookTooltips()
                         local function shouldShowEntry(entry)
                             if entry.item ~= itemName then return false; end
                             local epgp = ABGP:GetActivePlayer(entry.player);
-                            if not epgp then return false; end
+                            if not epgp or not epgp[value.phase] then return false; end
                             return epgp[value.phase].gpRaidGroup == raidGroup, entry.player == player;
                         end
 
