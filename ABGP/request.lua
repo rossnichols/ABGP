@@ -89,7 +89,12 @@ function ABGP:RequestOnGroupUpdate()
 end
 
 function ABGP:RequestOnItemRolled(data, distribution, sender)
-    self:Notify("You rolled %d on %s.", data.roll, data.itemLink);
+    local itemLink = data.itemLink;
+    self:Notify("You rolled %d on %s.", data.roll, itemLink);
+
+    if activeItems[itemLink] then
+        activeItems[itemLink].roll = data.roll;
+    end
 end
 
 function ABGP:RequestOnDistOpened(data, distribution, sender)
@@ -110,6 +115,9 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         sender = sender,
         requestType = data.requestType,
         value = data.value,
+        roll = nil,
+        sentComms = false,
+        sentRequestType = nil,
     };
 
     local gpCost, priority, notes = "No GP cost (rolled)", "", "";
@@ -284,7 +292,7 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         INVTYPE_RELIC = { _G.INVSLOT_RANGED },
     };
 
-    if activeItems[itemLink].sentComms and activeItems[itemLink].sentRequest then
+    if activeItems[itemLink].sentComms and activeItems[itemLink].sentRequestType then
         self:Notify("Updated request for %s.", itemLink);
     else
         self:Notify("Requesting %s %s!", itemLink, requestTypes[requestType]);
@@ -300,8 +308,6 @@ function ABGP:RequestItem(itemLink, requestType, notes)
         if current2 then table.insert(data.equipped, current2); end
     end
 
-    self:SendMessage(self.InternalEvents.ITEM_REQUESTED, data);
-
     local synchronous = self:SendComm(self.CommTypes.ITEM_REQUEST, data, "WHISPER", sender);
     if not synchronous then
         -- The request wasn't completed synchronously. Send another one with a reduced payload.
@@ -311,7 +317,9 @@ function ABGP:RequestItem(itemLink, requestType, notes)
     end
 
     activeItems[itemLink].sentComms = true;
-    activeItems[itemLink].sentRequest = true;
+    activeItems[itemLink].sentRequestType = requestType;
+
+    self:SendMessage(self.InternalEvents.ITEM_REQUESTED, data);
 end
 
 function ABGP:PassOnItem(itemLink, removeFromFaves)
@@ -325,7 +333,6 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
         itemLink = itemLink,
     };
 
-    self:SendMessage(self.InternalEvents.ITEM_PASSED, data);
     self:SendComm(self.CommTypes.ITEM_PASS, data, "WHISPER", sender);
 
     local faveRemove = "";
@@ -336,6 +343,9 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 
     self:Notify("Passing on %s%s.", itemLink, faveRemove);
     activeItems[itemLink].sentComms = true;
+    activeItems[itemLink].sentRequestType = nil;
+
+    self:SendMessage(self.InternalEvents.ITEM_PASSED, data);
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = {

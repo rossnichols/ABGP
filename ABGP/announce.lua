@@ -151,6 +151,42 @@ local function GetLootFrame(itemLink)
     end
 end
 
+local function SetRequestInfo(elt, itemLink, requestType, roll)
+    if requestType then
+        elt:SetUserData("requested", true);
+        if roll then
+            local rollText = ("Requested by %srolling|r (%s%d|r)"):format(ABGP.Color, ABGP.Color, roll);
+            local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
+            elt:SetSecondaryText(rollText, rollTextCompact);
+        else
+            local requestTypesPre = {
+                [ABGP.RequestTypes.MS] = "for",
+                [ABGP.RequestTypes.OS] = "for",
+                [ABGP.RequestTypes.ROLL] = "by",
+            };
+            local requestTypes = {
+                [ABGP.RequestTypes.MS] = "main spec",
+                [ABGP.RequestTypes.OS] = "off spec",
+                [ABGP.RequestTypes.ROLL] = "rolling",
+            };
+            local requestTypesCompact = {
+                [ABGP.RequestTypes.MS] = "MS",
+                [ABGP.RequestTypes.OS] = "OS",
+                [ABGP.RequestTypes.ROLL] = "Roll",
+            };
+            local text = ("Requested %s %s"):format(requestTypesPre[requestType], ABGP:ColorizeText(requestTypes[requestType]));
+            elt:SetSecondaryText(text, requestTypesCompact[requestType]);
+        end
+    else
+        elt:SetUserData("requested", false);
+        local itemName = ABGP:GetItemName(itemLink);
+        local value = ABGP:GetItemValue(itemName);
+        local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(ABGP:ColorizeText(value.gp)) or "No GP Cost";
+        local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
+        elt:SetSecondaryText(valueText, valueTextCompact);
+    end
+end
+
 function ABGP:GetLootCount(itemLink)
     local elt = GetLootFrame(itemLink);
     if not elt then return; end
@@ -270,8 +306,12 @@ end
 function ABGP:EnsureLootItemVisible(itemLink, noAnimate)
     local elt = GetLootFrame(itemLink) or self:ShowLootFrame(itemLink);
 
-    elt:EnableRequests(true, nil, noAnimate);
-    elt:SetDuration(nil);
+    local activeItem = self:GetActiveItem(itemLink);
+    if activeItem then
+        elt:EnableRequests(true, nil, noAnimate);
+        elt:SetDuration(nil);
+        SetRequestInfo(elt, itemLink, activeItem.sentRequestType, activeItem.roll);
+    end
 end
 
 function ABGP:IsLootItemVisible(itemLink)
@@ -346,54 +386,28 @@ function ABGP:AnnounceOnItemRolled(data, distribution, sender)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    elt:SetUserData("requested", true);
-    local roll = data.roll;
-    elt:SetUserData("roll", roll);
-    local rollText = ("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll);
-    local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
-    elt:SetSecondaryText(rollText, rollTextCompact);
+    -- Since this message is delivered from the distributor, the item may no longer
+    -- be active by the time we receive it.
+    local activeItem = self:GetActiveItem(data.itemLink);
+    if activeItem then
+        SetRequestInfo(elt, data.itemLink, activeItem.sentRequestType, activeItem.roll);
+    end
 end
 
 function ABGP:AnnounceOnItemRequested(data)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    elt:SetUserData("requested", true);
-    local roll = elt:GetUserData("roll");
-    if roll then
-        local rollText = ("Requested by %srolling|r (%s%d|r)"):format(self.Color, self.Color, roll);
-        local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
-        elt:SetSecondaryText(rollText, rollTextCompact);
-    else
-        local requestTypesPre = {
-            [ABGP.RequestTypes.MS] = "for",
-            [ABGP.RequestTypes.OS] = "for",
-            [ABGP.RequestTypes.ROLL] = "by",
-        };
-        local requestTypes = {
-            [ABGP.RequestTypes.MS] = "main spec",
-            [ABGP.RequestTypes.OS] = "off spec",
-            [ABGP.RequestTypes.ROLL] = "rolling",
-        };
-        local requestTypesCompact = {
-            [ABGP.RequestTypes.MS] = "MS",
-            [ABGP.RequestTypes.OS] = "OS",
-            [ABGP.RequestTypes.ROLL] = "Roll",
-        };
-        local text = ("Requested %s %s"):format(requestTypesPre[data.requestType], self:ColorizeText(requestTypes[data.requestType]));
-        elt:SetSecondaryText(text, requestTypesCompact[data.requestType]);
-    end
+    local activeItem = self:GetActiveItem(data.itemLink);
+    SetRequestInfo(elt, activeItem.sentRequestType, activeItem.roll);
 end
 
 function ABGP:AnnounceOnItemPassed(data)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
-    local itemName = ABGP:GetItemName(data.itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(self:ColorizeText(value.gp)) or "No GP Cost";
-    local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
-    elt:SetSecondaryText(valueText, valueTextCompact);
+    local activeItem = self:GetActiveItem(data.itemLink);
+    SetRequestInfo(elt, data.itemLink, activeItem.sentRequestType, activeItem.roll);
 end
 
 function ABGP:AnnounceOnItemFavorited(data)
