@@ -28,6 +28,7 @@ local lastBoss;
 local activeLootFrames = {};
 local forceClosures = {};
 local forceCloseThreshold = 60;
+local forceClosing = false;
 
 local function ItemShouldBeAutoAnnounced(item)
     -- Announce rare+ BoP items
@@ -275,13 +276,15 @@ function ABGP:ShowLootFrame(itemLink)
         if widget:GetItem() and widget:GetUserData("forceClosed") then
             forceClosures[widget:GetItem()] = GetTime();
 
-            if IsShiftKeyDown() then
+            if IsShiftKeyDown() and not forceClosing then
+                forceClosing = true;
                 for _, elt in pairs(activeLootFrames) do
                     if type(elt) == "table" and elt:GetItem() and not elt:GetUserData("requested") then
                         elt:SetUserData("forceClosed", true);
                         elt.frame:Hide();
                     end
                 end
+                forceClosing = false;
             end
         end
 
