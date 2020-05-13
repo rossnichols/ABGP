@@ -1022,8 +1022,8 @@ function ABGP:CreateMainWindow(command)
 
     local tabs = {
         { value = "priority", text = "Priority", draw = DrawPriority },
-        { value = "gp", text = "Item History", draw = DrawItemHistory },
         { value = "items", text = "Items", draw = DrawItems },
+        { value = "gp", text = "Item History", draw = DrawItemHistory },
     };
     local hasAuditLog = false;
     for _, log in pairs(_G.ABGP_ItemAuditLog) do
