@@ -27,7 +27,7 @@ local lootAnnouncements = {};
 local lastBoss;
 local activeLootFrames = {};
 local forceClosures = {};
-local forceCloseThreshold = 30;
+local forceCloseThreshold = 60;
 
 local function ItemShouldBeAutoAnnounced(item)
     -- Announce rare+ BoP items
@@ -209,6 +209,7 @@ function ABGP:ShowLootFrame(itemLink)
     elt:SetItem(itemLink);
     elt:SetDuration(self:Get("lootDuration"));
     elt:EnableRequests(false, "Item not open for distribution.");
+    forceClosures[itemLink] = nil;
 
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
