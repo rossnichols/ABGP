@@ -11,6 +11,7 @@ local SetLootMethod = SetLootMethod;
 local IsInGroup = IsInGroup;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
+local UnitAffectingCombat = UnitAffectingCombat;
 local tContains = tContains;
 local pairs = pairs;
 local math = math;
@@ -958,10 +959,13 @@ function ABGP:EventOnGroupUpdate()
 end
 
 function ABGP:ChangeLootMethod()
-    if GetLootMethod() ~= pendingLootMethod and IsInGroup() then
+    if GetLootMethod() ~= pendingLootMethod and IsInGroup() and not UnitAffectingCombat("player") then
         SetLootMethod(pendingLootMethod, UnitName("player"));
         self:ScheduleTimer("ChangeLootMethod", 1);
     else
+        if GetLootMethod() ~= pendingLootMethod then
+            self:Notify("Giving up trying to change the loot type (in combat or not grouped).");
+        end
         pendingLootMethod = nil;
     end
 end
