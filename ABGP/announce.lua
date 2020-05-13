@@ -56,7 +56,11 @@ function ABGP:AnnounceOnLootOpened()
     if not source then return; end
 
     -- Only use the target GUID as the source if it's not a boss kill.
-    if bossKills[name] then source = name; end
+    local bossSource;
+    if bossKills[name] then
+        source, bossSource = name, source;
+        if source == bossSource then bossSource = nil; end
+    end
 
     -- Loot from boss kills should always be announced.
     -- If not from a boss, check if any of the items have an item value.
@@ -75,7 +79,12 @@ function ABGP:AnnounceOnLootOpened()
     lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
     if lootAnnouncements[source].announced then return; end
 
-    local data = { source = source, name = name, items = announceItems };
+    if bossSource then
+        lootAnnouncements[bossSource] = lootAnnouncements[bossSource] or { name = name, announced = false };
+        if lootAnnouncements[bossSource].announced then return; end
+    end
+
+    local data = { source = source, name = name, bossSource = bossSource, items = announceItems };
     self:SendComm(self.CommTypes.BOSS_LOOT, data, "BROADCAST");
     self:AnnounceOnBossLoot(data);
 end
@@ -85,8 +94,12 @@ function ABGP:AnnounceOnBossLoot(data)
     local name = data.name or source;
     lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
 
-    if not lootAnnouncements[source].announced then
+    local bossSource = data.source;
+    local bossSourceAnnounced = bossSource and lootAnnouncements[bossSource].announced;
+
+    if not lootAnnouncements[source].announced and not bossSourceAnnounced then
         lootAnnouncements[source].announced = true;
+        if bossSource then lootAnnouncements[bossSource].announced = true; end
 
         self:Notify("Loot from %s:", self:ColorizeText(name));
         for _, itemLink in ipairs(data.items) do
