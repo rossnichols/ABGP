@@ -850,6 +850,8 @@ function ABGP:EndWindowManagement(window)
     saved.height = window.frame:GetHeight();
     window.frame:SetMinResize(management.oldMinW, management.oldMinH);
     window.frame:SetMaxResize(management.oldMaxW, management.oldMaxH);
+
+    self:HideContextMenu();
 end
 
 
