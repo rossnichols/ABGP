@@ -386,7 +386,9 @@ function ABGP:EventOnBossKilled(bossId, name)
     local info = bossInfo[bossId];
     if info then
         self:LogVerbose("This boss is worth %d EP.", info.ep);
-        self:AwardEP(info.ep, awardCategories.BOSS);
+        if info.ep > 0 then
+            self:AwardEP(info.ep, awardCategories.BOSS);
+        end
 
         -- See if we killed the final boss of the current raid.
         if self:IsRaidInProgress() then
