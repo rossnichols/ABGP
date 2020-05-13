@@ -133,7 +133,7 @@ local bossInfo = {
     [bossIds.Majordomo] = { instance = instanceIds.MoltenCore, ep = 5, name = "Majordomo Executus" },
     [bossIds.Ragnaros]  = { instance = instanceIds.MoltenCore, ep = 5, name = "Ragnaros" },
 
-    [bossIds.Onyxia] = { instance = instanceIds.Onyxia, ep = 5, name =  "Onyxia" },
+    [bossIds.Onyxia] = { instance = instanceIds.Onyxia, ep = 0, name =  "Onyxia" },
 
     [bossIds.Razorgore]   = { instance = instanceIds.BlackwingLair, ep = 10, name = "Razorgore the Untamed" },
     [bossIds.Vaelastrasz] = { instance = instanceIds.BlackwingLair, ep = 10, name = "Vaelastrasz the Corrupt" },
@@ -144,16 +144,16 @@ local bossInfo = {
     [bossIds.Chromaggus]  = { instance = instanceIds.BlackwingLair, ep = 10, name = "Chromaggus" },
     [bossIds.Nefarian]    = { instance = instanceIds.BlackwingLair, ep = 10, name = "Nefarian" },
 
-    [bossIds.Venoxis]     = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priest Venoxis" },
-    [bossIds.Jeklik]      = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priestess Jeklik" },
-    [bossIds.Marli]       = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priestess Mar'li" },
-    [bossIds.Mandokir]    = { instance = instanceIds.ZulGurub, ep = 5, name = "Bloodlord Mandokir" },
-    [bossIds.Madness]     = { instance = instanceIds.ZulGurub, ep = 5, name = "Edge of Madness" },
-    [bossIds.Thekal]      = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priest Thekal" },
-    [bossIds.Gahzranka]   = { instance = instanceIds.ZulGurub, ep = 5, name = "Gahz'ranka" },
-    [bossIds.Arlokk]      = { instance = instanceIds.ZulGurub, ep = 5, name = "High Priestess Arlokk" },
-    [bossIds.Jindo]       = { instance = instanceIds.ZulGurub, ep = 5, name = "Jin'do the Hexxer" },
-    [bossIds.Hakkar]      = { instance = instanceIds.ZulGurub, ep = 5, name = "Hakkar" },
+    [bossIds.Venoxis]     = { instance = instanceIds.ZulGurub, ep = 0, name = "High Priest Venoxis" },
+    [bossIds.Jeklik]      = { instance = instanceIds.ZulGurub, ep = 0, name = "High Priestess Jeklik" },
+    [bossIds.Marli]       = { instance = instanceIds.ZulGurub, ep = 0, name = "High Priestess Mar'li" },
+    [bossIds.Mandokir]    = { instance = instanceIds.ZulGurub, ep = 0, name = "Bloodlord Mandokir" },
+    [bossIds.Madness]     = { instance = instanceIds.ZulGurub, ep = 0, name = "Edge of Madness" },
+    [bossIds.Thekal]      = { instance = instanceIds.ZulGurub, ep = 0, name = "High Priest Thekal" },
+    [bossIds.Gahzranka]   = { instance = instanceIds.ZulGurub, ep = 0, name = "Gahz'ranka" },
+    [bossIds.Arlokk]      = { instance = instanceIds.ZulGurub, ep = 0, name = "High Priestess Arlokk" },
+    [bossIds.Jindo]       = { instance = instanceIds.ZulGurub, ep = 0, name = "Jin'do the Hexxer" },
+    [bossIds.Hakkar]      = { instance = instanceIds.ZulGurub, ep = 0, name = "Hakkar" },
 };
 
 local awardCategories = {
