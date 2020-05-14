@@ -439,7 +439,7 @@ function ABGP:StartRaid()
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
     window:SetTitle(("%s Raid"):format(self:ColorizeText("ABGP")));
-    window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
+    window.frame:SetFrameStrata("MEDIUM"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raid", {
         version = 1,
         defaultWidth = 200,
@@ -591,7 +591,7 @@ function ABGP:UpdateRaid(windowRaid)
     local window = AceGUI:Create("Window");
     window:SetLayout("Flow");
     window:SetTitle(windowRaid.name);
-    window.frame:SetFrameStrata("HIGH"); -- restored by Window.OnAcquire
+    window.frame:SetFrameStrata("MEDIUM"); -- restored by Window.OnAcquire
     self:BeginWindowManagement(window, "raidUpdate", {
         version = 1,
         defaultWidth = 175,
