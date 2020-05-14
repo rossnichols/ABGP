@@ -25,6 +25,7 @@ local type = type;
 local bossKills = {};
 local lootAnnouncements = {};
 local lastBoss;
+local lastBossTime;
 local activeLootFrames = {};
 local forceClosures = {};
 local forceCloseThreshold = 60;
@@ -53,7 +54,8 @@ function ABGP:AnnounceOnLootOpened()
     if #announceItems == 0 then return; end
 
     -- Determine the source of the loot. Use current target if it seems appropriate,
-    -- otherwise use the last boss killed.
+    -- otherwise use the last boss killed (if it was recent).
+    if GetTime() - lastBossTime >= 60 then lastBoss = nil; end
     local source, name = lastBoss, lastBoss;
     if UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target') then
         source, name = UnitGUID("target"), UnitName("target");
@@ -122,6 +124,7 @@ end
 function ABGP:AnnounceOnBossKilled(id, name)
     bossKills[name] = true;
     lastBoss = name;
+    lastBossTime = GetTime();
 end
 
 function ABGP:AnnounceOnZoneChanged()
