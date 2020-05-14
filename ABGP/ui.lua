@@ -381,7 +381,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             notCheckable = true
                         });
                     end
-                    if data.editId and data.sender == UnitName("player") then
+                    if data.editId and ABGP:CanEditOfficerNotes() then
                         table.insert(context, {
                             text = "Edit cost",
                             func = function(self, data)

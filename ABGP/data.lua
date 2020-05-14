@@ -291,7 +291,6 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
             item = itemName,
             gp = data.cost,
             date = d,
-            sender = sender,
             editId = data.editId,
         });
     end
