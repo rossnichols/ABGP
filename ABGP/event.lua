@@ -179,6 +179,7 @@ local awardCategoriesSorted = {
 local currentInstance;
 local activeWindow;
 local pendingLootMethod;
+local checkCombatWhilePending;
 
 local function IsInProgress(raid)
     return (raid and raid == _G.ABGP_RaidInfo.currentRaid);
@@ -671,6 +672,7 @@ function ABGP:UpdateRaid(windowRaid)
             lootSelector:SetList(lootValues);
             lootSelector:SetCallback("OnValueChanged", function(widget, event, value)
                 pendingLootMethod = value;
+                checkCombatWhilePending = not UnitAffectingCombat("player");
                 self:ChangeLootMethod();
             end);
             window:AddChild(lootSelector);
@@ -959,7 +961,8 @@ function ABGP:EventOnGroupUpdate()
 end
 
 function ABGP:ChangeLootMethod()
-    if GetLootMethod() ~= pendingLootMethod and IsInGroup() and not UnitAffectingCombat("player") then
+    local passedCombatCheck = not checkCombatWhilePending or not UnitAffectingCombat("player");
+    if GetLootMethod() ~= pendingLootMethod and IsInGroup() and passedCombatCheck then
         SetLootMethod(pendingLootMethod, UnitName("player"));
         self:ScheduleTimer("ChangeLootMethod", 1);
     else
