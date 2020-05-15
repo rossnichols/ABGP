@@ -64,7 +64,7 @@ local function UpdateIcon()
             };
             local left, bottom = minimapIcon:GetRect();
             local scale = minimapIcon:GetEffectiveScale();
-            left, bottom = left * scale, bottom * scale;
+            left, bottom = left / scale, bottom / scale;
             local anchor = anchors[left < GetScreenWidth() / 2][bottom < GetScreenHeight() / 2];
             minimapIcon.tooltip:SetOwner(minimapIcon, unpack(anchor));
             minimapIcon.tooltip:SetText(("%s: Items Hidden!"):format(ABGP:ColorizeText("ABGP")), 1, 1, 1);
@@ -160,6 +160,7 @@ function ABGP:OnIconTooltip(tooltip)
     local header = ("%s v%s"):format(self:ColorizeText("ABGP"), self:GetVersion());
     tooltip:AddLine(header, 1, 1, 1);
     if ShouldOverride() then
+        tooltip:AddLine("|cffff0000NOTE:|r There are items being distributed that are currently hidden!");
         tooltip:AddLine("|cffffffffClick|r to show open items.");
     else
         tooltip:AddLine("|cffffffffClick|r to show the main window.");
