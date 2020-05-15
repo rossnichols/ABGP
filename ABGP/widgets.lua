@@ -1250,6 +1250,14 @@ do
         self:Fire("OnRequest");
     end
 
+    local function Need_OnMouseDown(frame)
+        frame:GetNormalTexture():SetVertexColor(0.8, 0.8, 0.8);
+    end
+
+    local function Need_OnMouseUp(frame)
+        frame:GetNormalTexture():SetVertexColor(1, 1, 1);
+    end
+
     local function ShowTooltip_OnEnter(frame)
         _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
         _G.GameTooltip:SetText(frame.tooltipText);
@@ -1511,13 +1519,15 @@ do
         button:SetScript("OnUpdate", Button_OnUpdate);
 
         need:SetScript("OnClick", Need_OnClick);
+        need:SetScript("OnMouseDown", Need_OnMouseDown);
+        need:SetScript("OnMouseUp", Need_OnMouseUp);
         need:SetScript("OnEnter", ShowTooltip_OnEnter);
         need:SetScript("OnLeave", ShowTooltip_OnLeave);
         need.tooltipText = "Request this item";
 
         need:SetNormalTexture("Interface\\CHATFRAME\\UI-ChatIcon-Share");
+        need:SetHighlightTexture("Interface\\GLUES\\Models\\UI_Alliance\\Glow32", "ADD");
         need:SetPushedTexture(nil);
-        need:SetHighlightTexture(nil);
 
         close:SetScript("OnClick", Close_OnClick);
         close:SetScript("OnEnter", ShowTooltip_OnEnter);
