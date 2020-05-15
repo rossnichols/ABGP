@@ -23,7 +23,7 @@
             </Anchor>
         </Anchors>
     </Frame>
-    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" frameStrata="DIALOG" hidden="true" clampedToScreen="true" virtual="true" scale="1.0">
+    <Frame name="ABGPLootTemplate" parent="UIParent" toplevel="true" hidden="true" clampedToScreen="true" virtual="true" scale="1.0">
         <Size x="300" y="60"/>
         <Layers>
             <Layer level="ARTWORK">

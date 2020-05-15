@@ -1498,6 +1498,7 @@ do
         frame:SetScript("OnUpdate", Frame_OnUpdate);
         frame:SetScript("OnHide", Frame_OnHide);
 
+        frame:SetFrameStrata("HIGH");
         frame:EnableMouse(true);
         frame:SetClampedToScreen(true);
         frame:SetScript("OnMouseDown", Frame_OnMouseDown);
@@ -1514,6 +1515,10 @@ do
         need:SetScript("OnEnter", ShowTooltip_OnEnter);
         need:SetScript("OnLeave", ShowTooltip_OnLeave);
         need.tooltipText = "Request this item";
+
+        need:SetNormalTexture("Interface\\AddOns\\ABGP\\Assets\\request-normal.tga");
+        need:SetPushedTexture("Interface\\AddOns\\ABGP\\Assets\\request-pushed.tga");
+        need:SetHighlightTexture(nil);
 
         close:SetScript("OnClick", Close_OnClick);
         close:SetScript("OnEnter", ShowTooltip_OnEnter);
