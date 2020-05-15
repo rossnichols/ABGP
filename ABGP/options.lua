@@ -21,7 +21,7 @@ function ABGP:InitOptions()
             commMonitoringEnabled = false,
             masterLoot = false,
             minimapAlert = true,
-            promptRaids = true,
+            promptRaidStart = false,
             minimap = {
                 hide = false,
             },
@@ -254,13 +254,13 @@ function ABGP:InitOptions()
                     get = function(info) return self.db.char.masterLoot; end,
                     set = function(info, v) self.db.char.masterLoot = v; end,
                 },
-                promptRaids = {
+                promptRaidStart = {
                     name = "Prompt Raids",
                     order = 2,
                     desc = "Open the raid window when zoning into an instance associated with a raid.",
                     type = "toggle",
-                    get = function(info) return self.db.char.promptRaids; end,
-                    set = function(info, v) self.db.char.promptRaids = v; end,
+                    get = function(info) return self.db.char.promptRaidStart; end,
+                    set = function(info, v) self.db.char.promptRaidStart = v; end,
                 },
             },
         },

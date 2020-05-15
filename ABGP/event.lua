@@ -414,7 +414,7 @@ function ABGP:EventOnZoneChanged(name, instanceId)
         self.CurrentPhase = info.phase;
 
         -- Gently suggest that a raid gets started.
-        if self:IsPrivileged() and not self:IsRaidInProgress() and self:Get("promptRaids") then
+        if self:IsPrivileged() and not self:IsRaidInProgress() and self:Get("promptRaidStart") then
             self:StartRaid();
         end
     end
