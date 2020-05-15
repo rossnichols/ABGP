@@ -66,6 +66,7 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
+    -- slots: array of strings
 
     ITEM_DISTRIBUTION_CLOSED = { name = CV("ITEM_DISTRIBUTION_CLOSED"), priority = "INSTANT" },
     -- itemLink: item link string

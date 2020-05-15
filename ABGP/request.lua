@@ -5,7 +5,6 @@ local UnitName = UnitName;
 local GetItemInfo = GetItemInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
 local UnitExists = UnitExists;
-local IsEquippableItem = IsEquippableItem;
 local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -19,74 +18,6 @@ local staticPopups = {
     ABGP_LOOTDISTRIB_ROLL = "ABGP_LOOTDISTRIB_ROLL",
     ABGP_LOOTDISTRIB_ROLL_FAVORITE = "ABGP_LOOTDISTRIB_ROLL_FAVORITE",
 };
-
-local itemSlots = {
-    INVTYPE_HEAD = { _G.INVSLOT_HEAD },
-    INVTYPE_NECK = { _G.INVSLOT_NECK },
-    INVTYPE_SHOULDER = { _G.INVSLOT_SHOULDER },
-    INVTYPE_BODY = { _G.INVSLOT_BODY },
-    INVTYPE_CHEST = { _G.INVSLOT_CHEST },
-    INVTYPE_WAIST = { _G.INVSLOT_WAIST },
-    INVTYPE_LEGS = { _G.INVSLOT_LEGS },
-    INVTYPE_FEET = { _G.INVSLOT_FEET },
-    INVTYPE_WRIST = { _G.INVSLOT_WRIST },
-    INVTYPE_HAND = { _G.INVSLOT_HAND },
-    INVTYPE_FINGER = { _G.INVSLOT_FINGER1, _G.INVSLOT_FINGER2 },
-    INVTYPE_TRINKET = { _G.INVSLOT_TRINKET1, _G.INVSLOT_TRINKET2 },
-    INVTYPE_WEAPON = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
-    INVTYPE_SHIELD = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
-    INVTYPE_RANGED = { _G.INVSLOT_RANGED },
-    INVTYPE_CLOAK = { _G.INVSLOT_BACK },
-    INVTYPE_2HWEAPON = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
-    INVTYPE_TABARD = { _G.INVSLOT_TABARD },
-    INVTYPE_ROBE = { _G.INVSLOT_CHEST },
-    INVTYPE_WEAPONMAINHAND = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
-    INVTYPE_WEAPONOFFHAND = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
-    INVTYPE_HOLDABLE = { _G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND },
-    INVTYPE_AMMO = { _G.INVSLOT_AMMO },
-    INVTYPE_THROWN = { _G.INVSLOT_RANGED },
-    INVTYPE_RANGEDRIGHT = { _G.INVSLOT_RANGED },
-    INVTYPE_RELIC = { _G.INVSLOT_RANGED },
-};
-
-local itemOverrides = {
-    [18423] = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_TRINKET" }, -- Head of Onyxia
-    [19003] = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_HOLDABLE" }, -- Head of Nefarian
-    [22637] = { "INVTYPE_HEAD", "INVTYPE_LEGS" }, -- Primal Hakkari Idol
-    [21221] = { "INVTYPE_NECK", "INVTYPE_CLOAK", "INVTYPE_FINGER" }, -- Eye of C'Thun
-    [21232] = { "INVTYPE_WEAPONMAINHAND" }, -- Imperial Qiraji Armaments
-    [21237] = { "INVTYPE_WEAPONMAINHAND" }, -- Imperial Qiraji Regalia
-    [20928] = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, -- Qiraji Bindings of Command
-    [20932] = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, -- Qiraji Bindings of Dominance
-    [20929] = { "INVTYPE_CHEST" }, -- Carapace of the Old God
-    [20933] = { "INVTYPE_CHEST" }, -- Husk of the Old God
-    [20926] = { "INVTYPE_HEAD" }, -- Vek'nilash's Circlet
-    [20930] = { "INVTYPE_HEAD" }, -- Vek'lor's Diadem
-    [20927] = { "INVTYPE_LEGS" }, -- Ouro's Intact Hide
-    [20931] = { "INVTYPE_LEGS" }, -- Skin of the Great Sandworm
-};
-
-function ABGP:GetItemEquipSlots(itemLink)
-    local itemId = self:GetItemId(itemLink);
-    if itemOverrides[itemId] then
-        if #itemOverrides[itemId] == 1 then
-            return itemSlots[itemOverrides[itemId][1]];
-        else
-            local slots = {};
-            for _, loc in ipairs(itemOverrides[itemId]) do
-                for _, slot in ipairs(itemSlots[loc]) do
-                    table.insert(slots, slot);
-                end
-            end
-            return slots;
-        end
-    elseif IsEquippableItem(itemLink) then
-        local equipLoc = select(9, GetItemInfo(itemLink));
-        if equipLoc and itemSlots[equipLoc] then
-            return itemSlots[equipLoc];
-        end
-    end
-end
 
 local function GetStaticPopupType(itemLink)
     if not activeItems[itemLink] then return; end
@@ -185,6 +116,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         sender = sender,
         requestType = data.requestType,
         value = data.value,
+        slots = data.slots,
         roll = nil,
         sentComms = false,
         sentRequestType = nil,
@@ -342,7 +274,7 @@ function ABGP:RequestItem(itemLink, requestType, notes)
 
     data.notes = (notes ~= "") and notes or nil;
     data.equipped = {};
-    local slots = self:GetItemEquipSlots(itemLink);
+    local slots = activeItems[itemLink].slots or self:GetItemEquipSlots(itemLink);
     local equipLoc = select(9, GetItemInfo(itemLink));
     if slots then
         for _, slot in ipairs(slots) do

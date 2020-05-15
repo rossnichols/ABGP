@@ -760,6 +760,7 @@ function ABGP:ShowDistrib(itemLink)
         itemLink = itemLink,
         value = value,
         requestType = requestType,
+        slots = self:GetItemEquipSlots(itemLink),
     };
     AddActiveItem(data);
 
