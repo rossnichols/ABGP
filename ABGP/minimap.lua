@@ -100,7 +100,7 @@ function ABGP:OnIconClick(frame, button)
     if button == "LeftButton" then
         if IsShiftKeyDown() then
             self:ShowOptionsWindow();
-        elseif IsControlKeyDown() then
+        elseif IsControlKeyDown() and self:IsPrivileged() then
             self:ShowRaidWindow();
         elseif ShouldOverride() then
             self:ShowItemRequests();
