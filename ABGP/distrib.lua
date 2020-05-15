@@ -15,7 +15,6 @@ local GiveMasterLoot = GiveMasterLoot;
 local GetMasterLootCandidate = GetMasterLootCandidate;
 local GetLootInfo = GetLootInfo;
 local GetNumLootItems = GetNumLootItems;
-local IsEquippableItem = IsEquippableItem;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -153,7 +152,7 @@ local function RebuildUI()
 
         local elt = AceGUI:Create("ABGP_Player");
         elt:SetFullWidth(true);
-        elt:SetData(request, IsEquippableItem(currentItem.itemLink));
+        elt:SetData(request, ABGP:GetItemEquipSlots(currentItem.itemLink));
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt, event, button)
@@ -213,7 +212,7 @@ local function RebuildUI()
     for _, rolls in pairs(maxRolls) do
         for _, elt in ipairs(rolls.elts) do
             elt.data.currentMaxRoll = true;
-            elt:SetData(elt.data, IsEquippableItem(currentItem.itemLink));
+            elt:SetData(elt.data, ABGP:GetItemEquipSlots(currentItem.itemLink));
         end
     end
 
