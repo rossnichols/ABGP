@@ -5,7 +5,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local UnitExists = UnitExists;
 local UnitName = UnitName;
 local GetItemInfo = GetItemInfo;
-local IsAltKeyDown = IsAltKeyDown;
 local IsShiftKeyDown = IsShiftKeyDown;
 local GetServerTime = GetServerTime;
 local IsInGroup = IsInGroup;
@@ -1097,14 +1096,7 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     end
 end
 
-local function ShouldDistributeLoot()
-    return IsAltKeyDown() and ABGP:IsPrivileged();
-end
-
 local function DistributeLoot(itemLink)
-    if not (itemLink and ShouldDistributeLoot()) then
-        return false;
-    end
     if IsShiftKeyDown() then
         local mule = ABGP:GetRaidMule();
         if mule then

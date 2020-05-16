@@ -21,6 +21,7 @@ local GetServerTime = GetServerTime;
 local UnitIsGroupLeader = UnitIsGroupLeader;
 local GetTime = GetTime;
 local IsEquippableItem = IsEquippableItem;
+local IsAltKeyDown = IsAltKeyDown;
 local GetClassColor = GetClassColor;
 local EasyMenu = EasyMenu;
 local ToggleDropDownMenu = ToggleDropDownMenu;
@@ -765,7 +766,9 @@ function ABGP:RegisterModifiedItemClickFn(fn)
     table.insert(hmicFns, fn);
 end
 
-local function OnHandleModifiedItemClick(itemLink)
+ABGP:SecureHook("HandleModifiedItemClick", function(itemLink)
+    if not IsAltKeyDown() or not ABGP:IsPrivileged() then return; end
+
     local _, fullLink = GetItemInfo(itemLink);
     if fullLink then
         for _, fn in ipairs(hmicFns) do
@@ -775,13 +778,7 @@ local function OnHandleModifiedItemClick(itemLink)
         ABGP:Error("Failed GetItemInfo on %s!", itemLink);
     end
     return false;
-end
-
-function ABGP:HandleModifiedItemClick(itemLink)
-    local ret = self.hooks.HandleModifiedItemClick(itemLink);
-    return ret or OnHandleModifiedItemClick(itemLink);
-end
-ABGP:RawHook("HandleModifiedItemClick", true);
+end);
 
 
 --
