@@ -257,18 +257,14 @@ function ABGP:OnInitialize()
     self:RegisterEvent("LOADING_SCREEN_DISABLED", function(self, event, ...)
         -- Per DBM, GetInstanceInfo() can return stale data for a period of time
         -- after this event is triggered. Workaround: wait a short period of time. Amazing.
-        -- Schedule two timers so we opportunistically process it quicker, with the
-        -- second one to ensure we end up in the right final state.
-        local onZoneChanged = function()
+        self:ScheduleTimer(function()
             local name, _, _, _, _, _, _, instanceId = GetInstanceInfo();
             if name and name ~= lastZone then
                 lastZone = name;
                 self:EventOnZoneChanged(name, instanceId);
                 self:AnnounceOnZoneChanged(name, instanceId);
             end
-        end
-        self:ScheduleTimer(onZoneChanged, 1);
-        self:ScheduleTimer(onZoneChanged, 5);
+        end, 5);
     end, self);
     self:RegisterEvent("LOOT_OPENED", function(self, event, ...)
         self:AnnounceOnLootOpened();
