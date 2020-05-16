@@ -787,7 +787,7 @@ function ABGP:UpdateRaid(windowRaid)
             end);
             window:AddChild(disenchanter);
             window:SetUserData("disenchanter", disenchanter);
-            self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items will get ML'd.");
+            self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
 
             local mule = AceGUI:Create("Button");
             mule:SetFullWidth(true);
