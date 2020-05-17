@@ -1102,11 +1102,15 @@ local function DistributeLoot(itemLink)
         local mule = ABGP:GetRaidMule();
         if mule then
             GiveItemViaML(itemLink, mule);
+        else
+            ABGP:Notify("You don't have a raid mule set up! Choose a player via the raid window.");
         end
     elseif IsControlKeyDown() then
         local disenchanter = ABGP:GetRaidDisenchanter();
         if disenchanter then
             GiveItemViaML(itemLink, disenchanter);
+        else
+            ABGP:Notify("You don't have a raid disenchanter set up! Choose a player via the raid window.");
         end
     else
         if ABGP:GetDebugOpt("TestLootFrame") then
