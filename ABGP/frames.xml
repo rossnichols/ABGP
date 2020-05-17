@@ -145,11 +145,8 @@
             <Button parentKey="NeedButton" inherits="LootRollButtonTemplate">
                 <Size x="32" y="32"/>
                 <Anchors>
-                    <Anchor point="RIGHT" x="-33" y="-3"/>
+                    <Anchor point="RIGHT" x="-34" y="-1"/>
                 </Anchors>
-                <NormalTexture file="Interface\Buttons\UI-GroupLoot-Dice-Up"/>
-                <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Dice-Highlight" alphaMode="ADD"/>
-                <PushedTexture file="Interface\Buttons\UI-GroupLoot-Dice-Down"/>
             </Button>
             <Button parentKey="CloseButton" inherits="UIPanelCloseButton">
                 <Anchors>
