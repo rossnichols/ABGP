@@ -55,7 +55,7 @@ function ABGP:AnnounceOnLootOpened()
 
     -- Determine the source of the loot. Use current target if it seems appropriate,
     -- otherwise use the last boss killed (if it was recent).
-    if GetTime() - lastBossTime >= 60 then lastBoss = nil; end
+    if lastBossTime and GetTime() - lastBossTime >= 60 then lastBoss = nil; end
     local source, name = lastBoss, lastBoss;
     if UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target') then
         source, name = UnitGUID("target"), UnitName("target");
@@ -129,6 +129,7 @@ end
 
 function ABGP:AnnounceOnZoneChanged()
     lastBoss = nil;
+    lastBossTime = nil;
 end
 
 local function GetLootAnchor()
