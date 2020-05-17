@@ -4111,7 +4111,7 @@ ABGP.initialData = {
 		},
 	},
 	gpHistory = {
-		timestamp = 1589673086, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1589673087, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				["player"] = "Phaemos",
@@ -4293,7 +4293,7 @@ ABGP.initialData = {
 				["item"] = "Fire Runed Grimoire",
 				["date"] = "05/12/20",
 				["itemLink"] = "|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r",
-				["gp"] = 30,
+				["gp"] = 0,
 			},
 			{
 				["player"] = "Xantink",
@@ -4594,7 +4594,7 @@ ABGP.initialData = {
 				["item"] = "Fire Runed Grimoire",
 				["date"] = "05/05/20",
 				["itemLink"] = "|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r",
-				["gp"] = 30,
+				["gp"] = 0,
 			},
 			{
 				["player"] = "Olinthia",
@@ -5441,7 +5441,7 @@ ABGP.initialData = {
 				["item"] = "Snowblind Shoes",
 				["date"] = "04/01/20",
 				["itemLink"] = "|cffa335ee|Hitem:19131|h[Snowblind Shoes]|h|r",
-				["gp"] = 100,
+				["gp"] = 150,
 			},
 			{
 				["player"] = "Oya",
@@ -7569,7 +7569,7 @@ ABGP.initialData = {
 				["item"] = "Fire Runed Grimoire",
 				["date"] = "12/02/19",
 				["itemLink"] = "|cffa335ee|Hitem:19142|h[Fire Runed Grimoire]|h|r",
-				["gp"] = 30,
+				["gp"] = 0,
 			},
 			{
 				["player"] = "Lunamar",
