@@ -2,13 +2,28 @@ local _G = _G;
 local ABGP = _G.ABGP;
 
 local debugOpts = {
+    -- If set, extra debug messages will be printed.
     -- Verbose = true,
+
+    -- If set, "BROADCAST" will get rerouted to "WHISPER" even in a group.
     -- PrivateComms = true,
+
+    -- If set, opening an item will populate distrib with test entries.
     -- ShowTestDistrib = true,
+
+    -- If set, alt+clicking items will show the loot frame instead of opening distrib.
     -- TestLootFrame = true,
+
+    -- If set, some extra logging will be printed for comms.
     -- DebugComms = true,
+
+    -- If set, the raid window will have "Export" in an in-progress raid and "Restart" for a completed one.
     -- DebugRaidUI = true,
+
+    -- If set, item awards/updates will avoid editing the officer note.
     SkipOfficerNote = true,
+
+    -- If set, changing item EPGP data will not "commit" them for propagation.
     IgnoreItemUpdates = true,
 };
 
