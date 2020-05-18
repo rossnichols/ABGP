@@ -58,7 +58,7 @@ function ABGP:InitOptions()
             name = "Data Import",
             desc = "shows the import window",
             type = "execute",
-            cmdHidden = true,
+            hidden = function() return not self:IsPrivileged(); end,
             validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
             func = function() self:ShowImportWindow(); end
         },
@@ -66,7 +66,7 @@ function ABGP:InitOptions()
             name = "Version Check",
             desc = "checks the raid for an outdated or missing addon versions (alias: vc)",
             type = "execute",
-            cmdHidden = not self:IsPrivileged(),
+            hidden = function() return not self:IsPrivileged(); end,
             validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
             func = function() self:PerformVersionCheck(); end
         },
@@ -81,7 +81,7 @@ function ABGP:InitOptions()
             name = "Start Raid",
             desc = "starts or updates a raid (for EP tracking)",
             type = "execute",
-            cmdHidden = not self:IsPrivileged(),
+            hidden = function() return not self:IsPrivileged(); end,
             validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
             func = function() self:ShowRaidWindow(); end
         },
