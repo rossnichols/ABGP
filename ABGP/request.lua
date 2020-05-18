@@ -384,6 +384,12 @@ dialog.button2 = nil;
 dialog.OnAccept = function(self, data)
     ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, self.editBox:GetText());
 end
+dialog.EditBoxOnEnterPressed = function(self, data)
+    local parent = self:GetParent();
+    if parent.button1:IsEnabled() then
+        parent.button1:Click();
+    end
+end
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = dialog;
 
 local dialog = {};
