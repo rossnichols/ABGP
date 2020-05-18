@@ -1262,7 +1262,7 @@ do
         _G.GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
         _G.GameTooltip:SetText(frame.tooltipText);
         if frame.tooltipSubtext then
-            _G.GameTooltip:AddLine(frame.tooltipSubtext, nil, nil, nil, true);
+            _G.GameTooltip:AddLine(frame.tooltipSubtext(), nil, nil, nil, true);
             _G.GameTooltip:Show();
         end
         if not frame:IsEnabled() then
@@ -1533,7 +1533,10 @@ do
         close:SetScript("OnEnter", ShowTooltip_OnEnter);
         close:SetScript("OnLeave", ShowTooltip_OnLeave);
         close.tooltipText = "Close";
-        close.tooltipSubtext = "|cffffffffShift+click|r to close all items you haven't requested.";
+        close.tooltipSubtext = function()
+            local qualifier = ABGP:Get("lootShiftAll") and "" or " you haven't requested";
+            return ("|cffffffffShift+click|r to close all items%s."):format(qualifier);
+        end;
         if frame.elvui then
             -- Must be run after scripts are set.
             _G.ElvUI[1]:GetModule("Skins"):HandleCloseButton(close);
