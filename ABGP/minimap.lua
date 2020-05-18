@@ -8,6 +8,7 @@ local GetScreenWidth = GetScreenWidth;
 local GetScreenHeight = GetScreenHeight;
 local IsControlKeyDown = IsControlKeyDown;
 local IsShiftKeyDown = IsShiftKeyDown;
+local IsAltKeyDown = IsAltKeyDown;
 local table = table;
 local unpack = unpack;
 
@@ -102,6 +103,8 @@ function ABGP:OnIconClick(frame, button)
             self:ShowOptionsWindow();
         elseif IsControlKeyDown() and self:IsPrivileged() then
             self:ShowRaidWindow();
+        elseif IsAltKeyDown() and self:IsPrivileged() then
+            self:ShowImportWindow();
         elseif ShouldOverride() then
             self:ShowItemRequests();
         else
@@ -148,6 +151,13 @@ function ABGP:OnIconClick(frame, button)
                 notCheckable = true
             });
         end
+        if self:IsPrivileged() then
+            table.insert(context, {
+                text = "Show Import Window",
+                func = function() self:ShowImportWindow(); end,
+                notCheckable = true
+            });
+        end
         table.insert(context, { text = "Cancel", notCheckable = true });
         self:ShowContextMenu(context, frame);
     end
@@ -168,6 +178,7 @@ function ABGP:OnIconTooltip(tooltip)
     tooltip:AddLine("|cffffffffShift-click|r to show the options window.");
     if self:IsPrivileged() then
         tooltip:AddLine("|cffffffffControl-click|r to show the raid window.");
+        tooltip:AddLine("|cffffffffAlt-click|r to show the import window.");
     end
     tooltip:AddLine("|cffffffffRight-click|r for more options.");
 end

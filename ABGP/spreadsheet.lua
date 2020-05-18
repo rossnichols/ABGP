@@ -11,6 +11,8 @@ local floor = floor;
 local table = table;
 local tonumber = tonumber;
 
+local activeWindow;
+
 local epMapping = {
     ["Points Earned"] = "ep",
     ["Action Taken"] = "action",
@@ -389,6 +391,7 @@ local function DrawItems(container)
 end
 
 function ABGP:ShowImportWindow()
+    if activeWindow then return; end
     if not (_G.AtlasLoot and
             _G.AtlasLoot.ItemDB and
             _G.AtlasLoot.ItemDB.Storage and
@@ -405,7 +408,7 @@ function ABGP:ShowImportWindow()
     window:SetWidth(650);
     window:SetHeight(400);
     window:SetLayout("Flow");
-    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
+    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); activeWindow = nil; end);
     ABGP:OpenWindow(window);
 
     local tabs = {
@@ -447,6 +450,7 @@ function ABGP:ShowImportWindow()
     phaseSelector:SetUserData("tabGroup", tabGroup);
     window:AddChild(tabGroup);
     window.frame:Raise();
+    activeWindow = window;
 end
 
 
