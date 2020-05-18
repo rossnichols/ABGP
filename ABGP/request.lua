@@ -17,6 +17,8 @@ local staticPopups = {
     ABGP_LOOTDISTRIB_FAVORITE = "ABGP_LOOTDISTRIB_FAVORITE",
     ABGP_LOOTDISTRIB_ROLL = "ABGP_LOOTDISTRIB_ROLL",
     ABGP_LOOTDISTRIB_ROLL_FAVORITE = "ABGP_LOOTDISTRIB_ROLL_FAVORITE",
+    ABGP_LOOTDISTRIB_UPDATEROLL = "ABGP_LOOTDISTRIB_UPDATEROLL",
+    ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE = "ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE",
 };
 
 local function GetStaticPopupType(itemLink)
@@ -24,9 +26,15 @@ local function GetStaticPopupType(itemLink)
 
     local favorited = ABGP:IsItemFavorited(itemLink);
     if activeItems[itemLink].requestType == ABGP.RequestTypes.ROLL then
-        return (favorited)
-            and staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE
-            or staticPopups.ABGP_LOOTDISTRIB_ROLL;
+        if activeItems[itemLink].roll then
+            return (favorited)
+                and staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE
+                or staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL;
+        else
+            return (favorited)
+                and staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE
+                or staticPopups.ABGP_LOOTDISTRIB_ROLL;
+        end
     end
 
     return (favorited)
@@ -394,8 +402,18 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = dialog;
 
 local dialog = {};
 for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL]) do dialog[k] = v; end
+dialog.button1 = "Update";
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL] = dialog;
+
+local dialog = {};
+for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL]) do dialog[k] = v; end
 dialog.extraButton = "Pass and unfavorite";
 dialog.OnExtraButton = function(self, data)
     ABGP:PassOnItem(data.itemLink, true);
 end
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE] = dialog;
+
+local dialog = {};
+for k, v in pairs(StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE]) do dialog[k] = v; end
+dialog.button1 = "Update";
+StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE] = dialog;
