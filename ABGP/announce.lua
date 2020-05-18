@@ -283,9 +283,12 @@ function ABGP:ShowLootFrame(itemLink)
             if IsShiftKeyDown() and not forceClosing then
                 forceClosing = true;
                 for _, elt in pairs(activeLootFrames) do
-                    if type(elt) == "table" and elt:GetItem() and not elt:GetUserData("requested") then
-                        elt:SetUserData("forceClosed", true);
-                        elt.frame:Hide();
+                    if type(elt) == "table" and elt:GetItem() then
+                        local shouldClose = self:Get("lootShiftAll") or not elt:GetUserData("requested");
+                        if shouldClose then
+                            elt:SetUserData("forceClosed", true);
+                            elt.frame:Hide();
+                        end
                     end
                 end
                 forceClosing = false;

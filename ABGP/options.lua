@@ -17,6 +17,7 @@ function ABGP:InitOptions()
             lootDirection = "up",
             lootDuration = 15,
             lootElvUI = true,
+            lootShiftAll = false,
             commMonitoringTriggered = false,
             commMonitoringEnabled = false,
             masterLoot = false,
@@ -231,9 +232,17 @@ function ABGP:InitOptions()
                     get = function(info) return self.db.char.lootDirection; end,
                     set = function(info, v) self.db.char.lootDirection = v; self:RefreshLootFrames(); end,
                 },
+                shiftAll = {
+                    name = "Shift Closes All",
+                    order = 5,
+                    desc = "If enabled, shift+clicking the 'Close' button of a loot popup will close all popups, instead of just those for items you haven't requested.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.lootShiftAll; end,
+                    set = function(info, v) self.db.char.lootShiftAll = v; end,
+                },
                 test = {
                     name = "Test",
-                    order = 7,
+                    order = 6,
                     desc = "Show test loot popups.",
                     type = "execute",
                     func = function() self:ShowTestLoot(); end
