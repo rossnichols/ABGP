@@ -78,7 +78,7 @@ local priColumns = {
     { value = "priority", text = "Ratio" },
 };
 
-local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc)
+local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc, canBeDelta)
     spreadsheet = spreadsheet or {};
     container:SetLayout("Flow");
 
@@ -88,11 +88,24 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
         import:SetCallback("OnClick", function(widget, event)
             local window = AceGUI:Create("Window");
             window:SetTitle("Import");
-            window:SetLayout("Fill");
+            window:SetLayout("Flow");
             window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
             ABGP:OpenWindow(window);
 
             local edit = AceGUI:Create("MultiLineEditBox");
+            if canBeDelta then
+                local delta = AceGUI:Create("CheckBox");
+                delta:SetLabel("Delta Import");
+                delta:SetWidth(110);
+                ABGP:AddWidgetTooltip(delta, "If checked, the import process will only consider the data to be an update, rather than a replacement of existing data.");
+                delta:SetCallback("OnValueChanged", function(widget, event, value)
+                    edit:SetUserData("deltaImport", value);
+                end);
+                window:AddChild(delta);
+            end
+
+            edit:SetFullWidth(true);
+            edit:SetFullHeight(true);
             edit:SetLabel("Copy the data from the ABP spreadsheet");
             edit:SetCallback("OnEnterPressed", importFunc);
             window:AddChild(edit);
@@ -178,8 +191,7 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
 end
 
 local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
-    table.wipe(spreadsheet);
-
+    local newData = {};
     local labels;
     for line in text:gmatch("[^\n]+") do
         if line:find("    ") then
@@ -198,7 +210,8 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
             labels = values;
             for j = 1, #labels do
                 if mapping[labels[j]] == nil then
-                    ABGP:Notify("No mapping for column: %s. Data may be incorrect!", labels[j]);
+                    ABGP:Notify("No mapping for column: %s. Cancelling import!", labels[j]);
+                    return false;
                 end
             end
         else
@@ -209,15 +222,41 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
                 end
             end
             if (not filter or filter(row)) then
-                table.insert(spreadsheet, row);
+                table.insert(newData, row);
             end
         end
     end
+
+    table.wipe(spreadsheet);
+    for k, v in pairs(newData) do spreadsheet[k] = v; end
+    return true;
 end
 
 local function DrawPriority(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), ABGP.Priorities[ABGP.CurrentPhase], priMapping);
+        if widget:GetUserData("deltaImport") then
+            local newPriorities = {};
+            if PopulateSpreadsheet(widget:GetText(), newPriorities, priMapping) then
+                for _, newPri in ipairs(newPriorities) do
+                    local found = false;
+                    for _, existingPri in ipairs(ABGP.Priorities[ABGP.CurrentPhase]) do
+                        if existingPri.player == newPri.player then
+                            found = true;
+                            existingPri.ep = newPri.ep;
+                            existingPri.gp = newPri.gp;
+                            break;
+                        end
+                    end
+
+                    if not found then
+                        table.insert(ABGP.Priorities[ABGP.CurrentPhase], newPri);
+                    end
+                end
+            end
+        else
+            PopulateSpreadsheet(widget:GetText(), ABGP.Priorities[ABGP.CurrentPhase], priMapping);
+        end
+
         ABGP:RefreshActivePlayers();
         ABGP:RebuildOfficerNotes();
         ABGP:RefreshFromOfficerNotes();
@@ -237,7 +276,7 @@ local function DrawPriority(container)
         return text;
     end
 
-    DrawTable(container, ABGP.Priorities[ABGP.CurrentPhase], priColumns, importFunc, exportFunc);
+    DrawTable(container, ABGP.Priorities[ABGP.CurrentPhase], priColumns, importFunc, exportFunc, true);
 end
 
 local function DrawEP(container)
@@ -361,6 +400,7 @@ function ABGP:ShowImportWindow()
     self:BuildItemLookup();
 
     local window = AceGUI:Create("Window");
+    window.frame:SetFrameStrata("MEDIUM");
     window:SetTitle(("%s Spreadsheet Interop"):format(self:ColorizeText("ABGP")));
     window:SetWidth(650);
     window:SetHeight(400);

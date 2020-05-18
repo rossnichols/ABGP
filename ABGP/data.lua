@@ -182,6 +182,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
 
     if not guildIndex then
         self:Error("Couldn't find %s in the guild!", self:ColorizeName(player));
+        return;
     end
 
     local _, rank, _, _, _, _, publicNote, existingNote = GetGuildRosterInfo(guildIndex);
