@@ -407,7 +407,7 @@ function ABGP:AnnounceOnItemRequested(data)
     if not elt then return; end
 
     local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, activeItem.sentRequestType, activeItem.roll);
+    SetRequestInfo(elt, data.itemLink, activeItem.sentRequestType, activeItem.roll);
 end
 
 function ABGP:AnnounceOnItemPassed(data)
