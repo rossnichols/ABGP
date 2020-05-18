@@ -62,13 +62,13 @@ ABGP.CommTypes = {
     ITEM_PASS = { name = CV("ITEM_PASS"), priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_DISTRIBUTION_OPENED = { name = CV("ITEM_DISTRIBUTION_OPENED"), priority = "INSTANT" },
+    ITEM_DISTRIBUTION_OPENED = { name = CV("ITEM_DISTRIBUTION_OPENED"), priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
     -- slots: array of strings
 
-    ITEM_DISTRIBUTION_CLOSED = { name = CV("ITEM_DISTRIBUTION_CLOSED"), priority = "INSTANT" },
+    ITEM_DISTRIBUTION_CLOSED = { name = CV("ITEM_DISTRIBUTION_CLOSED"), priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
