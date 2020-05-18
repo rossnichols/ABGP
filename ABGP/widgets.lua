@@ -448,10 +448,12 @@ do
         ["SetData"] = function(self, data)
             self.data = data;
 
-            self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
-            self.gp.text:SetText(data.gp);
-            self.date.text:SetText(data.date);
-            self.itemLink.text:SetText(data.itemLink or data.item);
+            self.player.text:SetText(ABGP:ColorizeName(data[ABGP.ItemHistoryIndex.PLAYER] or ""));
+            self.gp.text:SetText(data[ABGP.ItemHistoryIndex.GP]);
+            self.date.text:SetText(data[ABGP.ItemHistoryIndex.DATE]);
+
+            local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.NAME]);
+            self.itemLink.text:SetText(value and value.itemLink or data[ABGP.ItemHistoryIndex.NAME]);
         end,
 
         ["SetWidths"] = function(self, widths)

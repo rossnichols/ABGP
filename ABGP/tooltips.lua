@@ -27,10 +27,10 @@ function ABGP:HookTooltips()
 
                         local raidGroup = ABGP:GetPreferredRaidGroup();
                         local function shouldShowEntry(entry)
-                            if entry.item ~= itemName then return false; end
-                            local epgp = ABGP:GetActivePlayer(entry.player);
+                            if entry[ABGP.ItemHistoryIndex.NAME] ~= itemName then return false; end
+                            local epgp = ABGP:GetActivePlayer(entry[ABGP.ItemHistoryIndex.PLAYER]);
                             if not (epgp and epgp[value.phase]) then return false; end
-                            return epgp[value.phase].gpRaidGroup == raidGroup, entry.player == player;
+                            return epgp[value.phase].gpRaidGroup == raidGroup, entry[ABGP.ItemHistoryIndex.PLAYER] == player;
                         end
 
                         -- First pass: count
@@ -64,8 +64,8 @@ function ABGP:HookTooltips()
                                         if count > limit then
                                             break;
                                         end
-                                        local epgp = ABGP:GetActivePlayer(data.player);
-                                        self:AddDoubleLine(" " .. ABGP:ColorizeName(data.player, epgp.class), data.date, 1, 1, 1, 1, 1, 1);
+                                        local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
+                                        self:AddDoubleLine(" " .. ABGP:ColorizeName(epgp.player, epgp.class), data[ABGP.ItemHistoryIndex.DATE], 1, 1, 1, 1, 1, 1);
                                     end
                                 end
                             end

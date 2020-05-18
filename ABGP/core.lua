@@ -431,11 +431,18 @@ ABGP.ItemDataIndex = {
     PRIORITY = 5,
     NOTES = 6,
 };
+ABGP.ItemHistoryIndex = {
+    PLAYER = 1,
+    NAME = 2,
+    DATE = 3,
+    GP = 4,
+};
 
 local function ValueFromItem(item, phase)
     return {
         item = item[ABGP.ItemDataIndex.NAME],
         gp = item[ABGP.ItemDataIndex.GP],
+        itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
         boss = item[ABGP.ItemDataIndex.BOSS],
         priority = item[ABGP.ItemDataIndex.PRIORITY],
         notes = item[ABGP.ItemDataIndex.NOTES],
@@ -643,7 +650,7 @@ function ABGP:HasReceivedItem(itemName)
     if not value then return false; end
 
     for _, item in ipairs(_G.ABGP_Data[value.phase].gpHistory) do
-        if item.item == itemName and item.player == player then
+        if item[self.ItemHistoryIndex.NAME] == itemName and item[self.ItemHistoryIndex.PLAYER] == player then
             return true;
         end
     end
@@ -728,6 +735,7 @@ function ABGP:RefreshActivePlayers()
         for _, pri in ipairs(self.Priorities[phase]) do
             activePlayers[pri.player] = activePlayers[pri.player] or {};
             activePlayers[pri.player][phase] = pri;
+            activePlayers[pri.player].player = pri.player;
             activePlayers[pri.player].proxy = pri.proxy;
             activePlayers[pri.player].rank = pri.rank;
             activePlayers[pri.player].class = pri.class;

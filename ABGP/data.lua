@@ -279,19 +279,27 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         if not entry.editId then break; end
         if entry.editId == data.editId then
             table.remove(history, i);
-            entry.skipOfficerNote = (entry.player == data.player);
-            self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, entry);
+
+            -- If the previous award is for the same player, then the officer note will already
+            -- get updated to the proper value for the new award, and writing the officer note
+            -- twice for the same player with no delay will fail.
+            self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
+                itemLink = value.itemLink,
+                player = entry[ABGP.ItemHistoryIndex.PLAYER],
+                gp = entry[ABGP.ItemHistoryIndex.GP],
+                skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
+                sender = sender,
+            });
             break;
         end
     end
 
     if data.player then
         table.insert(history, 1, {
-            itemLink = itemLink,
-            player = data.player,
-            item = itemName,
-            gp = data.cost,
-            date = d,
+            [ABGP.ItemHistoryIndex.PLAYER] = data.player,
+            [ABGP.ItemHistoryIndex.NAME] = itemName,
+            [ABGP.ItemHistoryIndex.DATE] = d,
+            [ABGP.ItemHistoryIndex.GP] = data.cost,
             editId = data.editId,
         });
     end

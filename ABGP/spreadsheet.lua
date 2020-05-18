@@ -29,18 +29,18 @@ local epColumns = {
 };
 
 local gpMapping = {
-    ["New Points"] = "gp",
-    ["Item"] = "item",
-    ["Character"] = "player",
-    ["Date Won"] = "date",
+    ["New Points"] = ABGP.ItemHistoryIndex.GP,
+    ["Item"] = ABGP.ItemHistoryIndex.NAME,
+    ["Character"] = ABGP.ItemHistoryIndex.PLAYER,
+    ["Date Won"] = ABGP.ItemHistoryIndex.DATE,
     ["Boss"] = false,
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
-    { value = "player", text = "Character" },
-    { value = "date", text = "Date" },
-    { value = "gp", text = "Points" },
-    { value = "item", text = "Item" },
+    { value = ABGP.ItemHistoryIndex.PLAYER, text = "Character" },
+    { value = ABGP.ItemHistoryIndex.DATE, text = "Date" },
+    { value = ABGP.ItemHistoryIndex.GP, text = "Points" },
+    { value = ABGP.ItemHistoryIndex.NAME, text = "Item" },
 };
 
 local itemPriorities = ABGP:GetItemPriorities();
@@ -56,8 +56,8 @@ for value, text in pairs(itemPriorities) do
 end
 local itemColumns = {
     weights = { 200, 50, 350 },
-    { value = 1, text = "Item" },
-    { value = 2, text = "GP" },
+    { value = ABGP.ItemDataIndex.NAME, text = "Item" },
+    { value = ABGP.ItemDataIndex.GP, text = "GP" },
     { value = "priority", text = "Priority" },
 };
 
@@ -320,14 +320,19 @@ local function DrawGP(container)
     };
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
-            row.gp = row.gp or 0;
-            row.date = row.date or "";
-            row.date = row.date:gsub("20(%d%d)", "%1");
-            local m, d, y = row.date:match("^(%d-)/(%d-)/(%d-)$");
+            row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
+            row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE] or "";
+            row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE]:gsub("20(%d%d)", "%1");
+            local m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
             if m ~= "" then
-                row.date = ("%02d/%02d/%02d"):format(m, d, y);
+                row[ABGP.ItemHistoryIndex.DATE] = ("%02d/%02d/%02d"):format(m, d, y);
             end
-            return row.player and row.item and row.gp >= 0 and not banned[row.item:lower()] and ABGP:GetActivePlayer(row.player);
+            return
+                row[ABGP.ItemHistoryIndex.PLAYER] and
+                row[ABGP.ItemHistoryIndex.NAME] and
+                row[ABGP.ItemHistoryIndex.GP] >= 0 and
+                not banned[row[ABGP.ItemHistoryIndex.NAME]:lower()] and
+                ABGP:GetActivePlayer(row[ABGP.ItemHistoryIndex.PLAYER]);
         end);
 
         local function reverse(arr)
@@ -353,7 +358,7 @@ local function DrawGP(container)
         local text = "New Points,Item,Character,Date Won\n";
         for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory) do
             text = text .. ("%s,%s,%s,%s\n"):format(
-                item.gp, item.item, item.player, item.date);
+                item[ABGP.ItemHistoryIndex.GP], item[ABGP.ItemHistoryIndex.NAME], item[ABGP.ItemHistoryIndex.PLAYER], item[ABGP.ItemHistoryIndex.DATE]);
         end
 
         return text;
@@ -520,20 +525,17 @@ function ABGP:FixupHistory()
     local p3 = _G.ABGP_Data.p3.gpHistory;
     for _, phase in ipairs({ p1, p3 }) do
         for _, entry in ipairs(phase) do
-            if lookup[entry.item] then
-                entry.itemLink = lookup[entry.item];
-            else
+            if not lookup[entry[self.ItemHistoryIndex.NAME]] then
                 for name, link in pairs(lookup) do
-                    local lowered = entry.item:lower();
+                    local lowered = entry[self.ItemHistoryIndex.NAME]:lower();
                     if lowered:find(name:lower(), 1, true) then
-                        -- print(("Updating [%s] to [%s]"):format(entry.item, name));
-                        entry.item = name;
-                        entry.itemLink = link;
+                        -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.NAME], name));
+                        entry[self.ItemHistoryIndex.NAME] = name;
                         break;
                     end
                 end
-                if not entry.itemLink then
-                    self:Notify(("FAILED TO FIND [%s]"):format(entry.item));
+                if not lookup[entry[self.ItemHistoryIndex.NAME]] then
+                    self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.NAME]));
                 end
             end
         end

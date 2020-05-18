@@ -308,22 +308,22 @@ local function DrawItemHistory(container, rebuild, reason, command)
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
         for _, data in ipairs(gpHistory) do
-            local epgp = ABGP:GetActivePlayer(data.player);
+            local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
             if epgp then
                 if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
                     local class = epgp.class;
                     if exact then
-                        if data.player:lower() == exact or
-                            data.item:lower() == exact or
+                        if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
+                            data[ABGP.ItemHistoryIndex.NAME]:lower() == exact or
                             class:lower() == exact or
-                            data.date:lower() == exact then
+                            data[ABGP.ItemHistoryIndex.DATE]:lower() == exact then
                             table.insert(filtered, data);
                         end
                     else
-                        if data.player:lower():find(searchText, 1, true) or
-                            data.item:lower():find(searchText, 1, true) or
+                        if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
+                            data[ABGP.ItemHistoryIndex.NAME]:lower():find(searchText, 1, true) or
                             class:lower():find(searchText, 1, true) or
-                            data.date:lower():find(searchText, 1, true) then
+                            data[ABGP.ItemHistoryIndex.DATE]:lower():find(searchText, 1, true) then
                             table.insert(filtered, data);
                         end
                     end
@@ -349,9 +349,9 @@ local function DrawItemHistory(container, rebuild, reason, command)
                     local context = {
                         {
                             text = "Show player history",
-                            func = function(self, data)
+                            func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetText(("\"%s\""):format(data.player));
+                                    search:SetText(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.PLAYER]));
                                     PopulateUI(false);
                                 end
                             end,
@@ -360,9 +360,9 @@ local function DrawItemHistory(container, rebuild, reason, command)
                         },
                         {
                             text = "Show item history",
-                            func = function(self, data)
+                            func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetText(("\"%s\""):format(data.item));
+                                    search:SetText(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.NAME]));
                                     PopulateUI(false);
                                 end
                             end,
@@ -370,42 +370,58 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             notCheckable = true
                         },
                     };
-                    if data.itemLink and ABGP:CanFavoriteItems() then
-                        local faved = ABGP:IsItemFavorited(data.itemLink);
+                    local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.NAME]);
+                    if value and ABGP:CanFavoriteItems() then
+                        local faved = ABGP:IsItemFavorited(value.itemLink);
                         table.insert(context, 1, {
                             text = faved and "Remove item favorite" or "Add item favorite",
-                            func = function(self, data)
-                                ABGP:SetItemFavorited(data.itemLink, not faved);
+                            func = function(self, arg1)
+                                ABGP:SetItemFavorited(value.itemLink, not faved);
                             end,
                             arg1 = data,
                             notCheckable = true
                         });
                     end
-                    if data.editId and ABGP:CanEditOfficerNotes() then
+                    if value and data.editId and ABGP:CanEditOfficerNotes() then
                         table.insert(context, {
                             text = "Edit cost",
-                            func = function(self, data)
-                                data.value = ABGP:GetItemValue(data.item);
-                                _G.StaticPopup_Show("ABGP_UPDATE_COST", data.itemLink, ABGP:ColorizeName(data.player), data);
+                            func = function(self, arg1)
+                                _G.StaticPopup_Show("ABGP_UPDATE_COST", value.itemLink, ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), {
+                                    value = value,
+                                    editId = arg1.editId,
+                                    itemLink = value.itemLink,
+                                    player = arg1[ABGP.ItemHistoryIndex.PLAYER],
+                                    gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                });
                             end,
                             arg1 = data,
                             notCheckable = true
                         });
                         table.insert(context, {
                             text = "Edit player",
-                            func = function(self, data)
-                                data.value = ABGP:GetItemValue(data.item);
-                                _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", data.itemLink, data.gp, data);
+                            func = function(self, arg1)
+                                _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", value.itemLink, arg1[ABGP.ItemHistoryIndex.GP], {
+                                    value = value,
+                                    editId = arg1.editId,
+                                    itemLink = value.itemLink,
+                                    player = arg1[ABGP.ItemHistoryIndex.PLAYER],
+                                    gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                });
                             end,
                             arg1 = data,
                             notCheckable = true
                         });
                         table.insert(context, {
                             text = "Delete entry",
-                            func = function(self, data)
-                                data.value = ABGP:GetItemValue(data.item);
-                                local award = ("%s for %d GP"):format(ABGP:ColorizeName(data.player), data.gp);
-                                _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", data.itemLink, award, data);
+                            func = function(self, arg1)
+                                local award = ("%s for %d GP"):format(ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), arg1[ABGP.ItemHistoryIndex.GP]);
+                                _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", value.itemLink, award, {
+                                    value = value,
+                                    editId = arg1.editId,
+                                    itemLink = value.itemLink,
+                                    player = arg1[ABGP.ItemHistoryIndex.PLAYER],
+                                    gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                });
                             end,
                             arg1 = data,
                             notCheckable = true
