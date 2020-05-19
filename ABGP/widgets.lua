@@ -1654,7 +1654,7 @@ do
             OnEscapePressed = _G.AutoCompleteEditBox_OnEscapePressed,
             OnArrowPressed = _G.AutoCompleteEditBox_OnArrowPressed,
         };
-        for name, script in ipairs(scripts) do
+        for name, script in pairs(scripts) do
             local existing = elt.editbox:GetScript(name);
             elt.editbox:SetScript(name, script);
             if existing then
