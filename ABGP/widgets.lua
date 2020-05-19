@@ -22,6 +22,7 @@ local mod = mod;
 local table = table;
 local select = select;
 local math = math;
+local strlen = strlen;
 
 function ABGP:AddWidgetTooltip(widget, text)
     widget:SetCallback("OnEnter", function(widget)
@@ -1588,7 +1589,28 @@ do
     local Type, Version = "ABGP_EditBox", 1;
 
     local function Edit_OnFocusGained(frame)
-        frame.obj:Fire("OnEditFocusGained");
+        local self = frame.obj;
+        self:SetValue(self:GetValue());
+        self:HighlightText();
+        self.editbox:SetCursorPosition(strlen(self:GetText()));
+    end
+
+    local function Edit_OnFocusLost(frame)
+        local self = frame.obj;
+        self:SetText(self:GetValue() or "");
+    end
+
+    local function Edit_OnEnterPressed(widget, event, value)
+        local oldValue = widget:GetValue();
+        widget:SetValue(value);
+        local cancel = widget:Fire("OnValueChanged", value);
+        if cancel then
+            widget:SetValue(oldValue);
+            Edit_OnFocusGained(widget.editbox);
+        else
+            AceGUI:ClearFocus();
+        end
+        return cancel;
     end
 
     --[[-----------------------------------------------------------------------------
@@ -1601,10 +1623,21 @@ do
             self:DisableButton(true);
 
             self:SetAutoCompleteSource(nil);
+            self:SetValue(nil);
+            self:SetCallback("OnEnterPressed", Edit_OnEnterPressed);
         end,
 
         ["SetAutoCompleteSource"] = function(self, fn, include, exclude)
             _G.AutoCompleteEditBox_SetAutoCompleteSource(self.editbox, fn, include, exclude);
+        end,
+
+        ["SetValue"] = function(self, value)
+            self.value = value;
+            self:SetText(value or "");
+        end,
+
+        ["GetValue"] = function(self)
+            return self.value;
         end,
     }
 
@@ -1612,7 +1645,7 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local editbox = AceGUI:Create("EditBox");
+        local elt = AceGUI:Create("EditBox");
 
         local scripts = {
             OnTabPressed = _G.AutoCompleteEditBox_OnTabPressed,
@@ -1624,18 +1657,23 @@ do
             OnArrowPressed = _G.AutoCompleteEditBox_OnArrowPressed,
         };
         for name, script in ipairs(scripts) do
-            editbox.editbox:HookScript(name, script);
+            local existing = elt.editbox:GetScript(name);
+            elt.editbox:SetScript(name, script);
+            if existing then
+                elt.editbox:HookScript(name, existing);
+            end
         end
 
-        editbox.editbox:HookScript("OnEditFocusGained", Edit_OnFocusGained);
+        elt.editbox:HookScript("OnEditFocusGained", Edit_OnFocusGained);
+        elt.editbox:HookScript("OnEditFocusLost", Edit_OnFocusLost);
 
-        editbox.type = Type;
-        editbox.EditBoxOnAcquire = editbox.OnAcquire;
+        elt.type = Type;
+        elt.EditBoxOnAcquire = elt.OnAcquire;
         for method, func in pairs(methods) do
-            editbox[method] = func;
+            elt[method] = func;
         end
 
-        return editbox;
+        return elt;
     end
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)

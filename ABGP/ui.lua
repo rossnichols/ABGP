@@ -147,7 +147,7 @@ local function DrawPriority(container, rebuild, reason)
                                 if activeWindow then
                                     local container = activeWindow:GetUserData("container");
                                     container:SelectTab("gp");
-                                    container:GetUserData("search"):SetText(("\"%s\""):format(data.player));
+                                    container:GetUserData("search"):SetValue(("\"%s\""):format(data.player));
                                     PopulateUI(false);
                                 end
                             end,
@@ -177,8 +177,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
 
         local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(125);
-        search:SetCallback("OnEnterPressed", function(widget)
-            AceGUI:ClearFocus();
+        search:SetCallback("OnValueChanged", function(widget)
             PopulateUI(false);
         end);
         search:SetCallback("OnEnter", function(widget)
@@ -191,9 +190,6 @@ local function DrawItemHistory(container, rebuild, reason, command)
         end);
         search:SetCallback("OnLeave", function(widget)
             _G.GameTooltip:Hide();
-        end);
-        search:SetCallback("OnEditFocusGained", function(widget)
-            widget:HighlightText();
         end);
         mainLine:AddChild(search);
         container:SetUserData("search", search);
@@ -294,7 +290,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
 
     if command then
         if command.command == ABGP.UICommands.ShowItemHistory then
-            container:GetUserData("search"):SetText(command.args);
+            container:GetUserData("search"):SetValue(command.args);
         end
     end
 
@@ -354,7 +350,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             text = "Show player history",
                             func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetText(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.PLAYER]));
+                                    search:SetValue(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.PLAYER]));
                                     PopulateUI(false);
                                 end
                             end,
@@ -365,7 +361,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             text = "Show item history",
                             func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetText(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.NAME]));
+                                    search:SetValue(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.NAME]));
                                     PopulateUI(false);
                                 end
                             end,
@@ -462,8 +458,7 @@ local function DrawItems(container, rebuild, reason)
 
         local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(120);
-        search:SetCallback("OnEnterPressed", function(widget)
-            AceGUI:ClearFocus();
+        search:SetCallback("OnValueChanged", function(widget)
             PopulateUI(false);
         end);
         search:SetCallback("OnEnter", function(widget)
@@ -476,9 +471,6 @@ local function DrawItems(container, rebuild, reason)
         end);
         search:SetCallback("OnLeave", function(widget)
             _G.GameTooltip:Hide();
-        end);
-        search:SetCallback("OnEditFocusGained", function(widget)
-            widget:HighlightText();
         end);
         mainLine:AddChild(search);
         container:SetUserData("search", search);
@@ -672,7 +664,7 @@ local function DrawItems(container, rebuild, reason)
                                 if activeWindow then
                                     local container = activeWindow:GetUserData("container");
                                     container:SelectTab("gp");
-                                    container:GetUserData("search"):SetText(("\"%s\""):format(data[ABGP.ItemDataIndex.NAME]));
+                                    container:GetUserData("search"):SetValue(("\"%s\""):format(data[ABGP.ItemDataIndex.NAME]));
                                     PopulateUI(false);
                                 end
                             end,

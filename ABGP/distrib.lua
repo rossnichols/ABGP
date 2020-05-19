@@ -54,7 +54,7 @@ local function ProcessSelectedRequest()
 
     local cost, editable, reason = CalculateCost(selected);
     local edit = window:GetUserData("costEdit");
-    edit:SetText(reason or cost);
+    edit:SetValue(reason or cost);
     edit:SetDisabled(not editable);
 end
 
@@ -1008,20 +1008,15 @@ function ABGP:CreateDistribWindow()
 
     local cost = AceGUI:Create("ABGP_EditBox");
     cost:SetWidth(75);
-    cost:SetCallback("OnEnterPressed", function(widget)
+    cost:SetCallback("OnValueChanged", function(widget, event, value)
         local currentItem = window:GetUserData("currentItem");
-        AceGUI:ClearFocus();
-        local text = widget:GetText();
-        local cost = self:DistribValidateCost(widget:GetText());
+        local cost = self:DistribValidateCost(value);
         if cost then
             currentItem.costEdited = cost;
         else
             currentItem.costEdited = nil;
         end
         ProcessSelectedRequest();
-    end);
-    cost:SetCallback("OnEditFocusGained", function(widget)
-        widget:HighlightText();
     end);
     secondLine:AddChild(cost);
     window:SetUserData("costEdit", cost);

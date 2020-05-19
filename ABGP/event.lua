@@ -498,7 +498,7 @@ function ABGP:StartRaid()
         end
         phaseSelector:SetValue(phase);
         phaseSelector:Fire("OnValueChanged", phase);
-        window:GetUserData("nameEdit"):SetText(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
+        window:GetUserData("nameEdit"):SetValue(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
     end);
     window:AddChild(instanceSelector);
     self:AddWidgetTooltip(instanceSelector, "If a preset instance is chosen, EP will automatically be recorded for boss kills.");
@@ -507,12 +507,6 @@ function ABGP:StartRaid()
     name:SetFullWidth(true);
     name:SetMaxLetters(32);
     name:SetLabel("Name");
-    name:SetCallback("OnEnterPressed", function(widget)
-        AceGUI:ClearFocus();
-    end);
-    name:SetCallback("OnEditFocusGained", function(widget)
-        widget:HighlightText();
-    end);
     window:AddChild(name);
     window:SetUserData("nameEdit", name);
 
@@ -759,21 +753,16 @@ function ABGP:UpdateRaid(windowRaid)
 
             elt = AceGUI:Create("ABGP_EditBox");
             elt:SetFullWidth(true);
-            elt:SetText(windowRaid.awards[player].ep);
-            elt:SetCallback("OnEnterPressed", function(widget, event, value)
+            elt:SetValue(windowRaid.awards[player].ep);
+            elt:SetCallback("OnValueChanged", function(widget, event, value)
                 value = tonumber(value);
                 if type(value) == "number" and value >= 0 and math.floor(value) == value then
                     self:AwardPlayerEP(windowRaid, player, value - windowRaid.awards[player].ep, awardCategories.ADJUST);
                     self:Notify("EP for %s set to %d.", self:ColorizeName(player), value);
                 else
-                    value = windowRaid.awards[player].ep;
-                    self:Error("Invalid value! EP for %s remains at %d.", self:ColorizeName(player), value);
+                    self:Error("Invalid value!");
+                    return true;
                 end
-                widget:SetText(value);
-                AceGUI:ClearFocus();
-            end);
-            elt:SetCallback("OnEditFocusGained", function(widget)
-                widget:HighlightText();
             end);
             scroll:AddChild(elt);
         end
