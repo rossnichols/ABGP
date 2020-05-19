@@ -1006,7 +1006,7 @@ function ABGP:CreateDistribWindow()
     secondLine:AddChild(resetRolls);
     window:SetUserData("resetRollsButton", resetRolls);
 
-    local cost = AceGUI:Create("EditBox");
+    local cost = AceGUI:Create("ABGP_EditBox");
     cost:SetWidth(75);
     cost:SetCallback("OnEnterPressed", function(widget)
         local currentItem = window:GetUserData("currentItem");
@@ -1019,6 +1019,9 @@ function ABGP:CreateDistribWindow()
             currentItem.costEdited = nil;
         end
         ProcessSelectedRequest();
+    end);
+    cost:SetCallback("OnEditFocusGained", function(widget)
+        widget:HighlightText();
     end);
     secondLine:AddChild(cost);
     window:SetUserData("costEdit", cost);

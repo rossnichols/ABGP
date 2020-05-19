@@ -1583,3 +1583,60 @@ do
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
 end
+
+do
+    local Type, Version = "ABGP_EditBox", 1;
+
+    local function Edit_OnFocusGained(frame)
+        frame.obj:Fire("OnEditFocusGained");
+    end
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self:EditBoxOnAcquire();
+            self:DisableButton(true);
+
+            self:SetAutoCompleteSource(nil);
+        end,
+
+        ["SetAutoCompleteSource"] = function(self, fn, include, exclude)
+            _G.AutoCompleteEditBox_SetAutoCompleteSource(self.editbox, fn, include, exclude);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local editbox = AceGUI:Create("EditBox");
+
+        local scripts = {
+            OnTabPressed = _G.AutoCompleteEditBox_OnTabPressed,
+            OnEnterPressed = _G.AutoCompleteEditBox_OnEnterPressed,
+            OnTextChanged = _G.AutoCompleteEditBox_OnTextChanged,
+            OnChar = _G.AutoCompleteEditBox_OnChar,
+            OnEditFocusLost = _G.AutoCompleteEditBox_OnEditFocusLost,
+            OnEscapePressed = _G.AutoCompleteEditBox_OnEscapePressed,
+            OnArrowPressed = _G.AutoCompleteEditBox_OnArrowPressed,
+        };
+        for name, script in ipairs(scripts) do
+            editbox.editbox:HookScript(name, script);
+        end
+
+        editbox.editbox:HookScript("OnEditFocusGained", Edit_OnFocusGained);
+
+        editbox.type = Type;
+        editbox.EditBoxOnAcquire = editbox.OnAcquire;
+        for method, func in pairs(methods) do
+            editbox[method] = func;
+        end
+
+        return editbox;
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end

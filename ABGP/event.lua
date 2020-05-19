@@ -503,12 +503,15 @@ function ABGP:StartRaid()
     window:AddChild(instanceSelector);
     self:AddWidgetTooltip(instanceSelector, "If a preset instance is chosen, EP will automatically be recorded for boss kills.");
 
-    local name = AceGUI:Create("EditBox");
+    local name = AceGUI:Create("ABGP_EditBox");
     name:SetFullWidth(true);
     name:SetMaxLetters(32);
     name:SetLabel("Name");
     name:SetCallback("OnEnterPressed", function(widget)
         AceGUI:ClearFocus();
+    end);
+    name:SetCallback("OnEditFocusGained", function(widget)
+        widget:HighlightText();
     end);
     window:AddChild(name);
     window:SetUserData("nameEdit", name);
@@ -754,7 +757,7 @@ function ABGP:UpdateRaid(windowRaid)
             elt:SetText(self:ColorizeName(player));
             scroll:AddChild(elt);
 
-            elt = AceGUI:Create("EditBox");
+            elt = AceGUI:Create("ABGP_EditBox");
             elt:SetFullWidth(true);
             elt:SetText(windowRaid.awards[player].ep);
             elt:SetCallback("OnEnterPressed", function(widget, event, value)
@@ -768,6 +771,9 @@ function ABGP:UpdateRaid(windowRaid)
                 end
                 widget:SetText(value);
                 AceGUI:ClearFocus();
+            end);
+            elt:SetCallback("OnEditFocusGained", function(widget)
+                widget:HighlightText();
             end);
             scroll:AddChild(elt);
         end

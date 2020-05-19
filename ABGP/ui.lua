@@ -175,7 +175,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
         container:AddChild(mainLine);
 
-        local search = AceGUI:Create("EditBox");
+        local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(125);
         search:SetCallback("OnEnterPressed", function(widget)
             AceGUI:ClearFocus();
@@ -191,6 +191,9 @@ local function DrawItemHistory(container, rebuild, reason, command)
         end);
         search:SetCallback("OnLeave", function(widget)
             _G.GameTooltip:Hide();
+        end);
+        search:SetCallback("OnEditFocusGained", function(widget)
+            widget:HighlightText();
         end);
         mainLine:AddChild(search);
         container:SetUserData("search", search);
@@ -457,7 +460,7 @@ local function DrawItems(container, rebuild, reason)
         mainLine:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
 
-        local search = AceGUI:Create("EditBox");
+        local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(120);
         search:SetCallback("OnEnterPressed", function(widget)
             AceGUI:ClearFocus();
@@ -473,6 +476,9 @@ local function DrawItems(container, rebuild, reason)
         end);
         search:SetCallback("OnLeave", function(widget)
             _G.GameTooltip:Hide();
+        end);
+        search:SetCallback("OnEditFocusGained", function(widget)
+            widget:HighlightText();
         end);
         mainLine:AddChild(search);
         container:SetUserData("search", search);
