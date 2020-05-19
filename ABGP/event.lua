@@ -11,7 +11,10 @@ local IsInGroup = IsInGroup;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
 local UnitAffectingCombat = UnitAffectingCombat;
+local GetAutoCompleteResults = GetAutoCompleteResults;
 local tContains = tContains;
+local AUTOCOMPLETE_FLAG_IN_GROUP = AUTOCOMPLETE_FLAG_IN_GROUP;
+local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local pairs = pairs;
 local math = math;
 local ipairs = ipairs;
@@ -188,24 +191,21 @@ local function RefreshUI()
     if not activeWindow then return; end
     local windowRaid = activeWindow:GetUserData("raid");
     if not windowRaid then return; end
-    if not IsInProgress(windowRaid) then return; end
 
     local disenchanter = activeWindow:GetUserData("disenchanter");
     if disenchanter then
-        disenchanter:SetText(windowRaid.disenchanter
-            and ("DE: %s"):format(ABGP:ColorizeName(windowRaid.disenchanter))
-            or "Disenchanter");
+        disenchanter:SetValue(windowRaid.disenchanter);
     end
 
     local mule = activeWindow:GetUserData("mule");
     if mule then
-        mule:SetText(windowRaid.mule
-            and ("Mule: %s"):format(ABGP:ColorizeName(windowRaid.mule))
-            or "Mule");
+        mule:SetValue(windowRaid.mule);
     end
 
     local autoDistrib = activeWindow:GetUserData("autoDistrib");
-    autoDistrib:SetValue(windowRaid.autoDistribute);
+    if autoDistrib then
+        autoDistrib:SetValue(windowRaid.autoDistribute);
+    end
 
     local scroll = activeWindow:GetUserData("standbyList");
     scroll:ReleaseChildren();
@@ -224,7 +224,7 @@ local function RefreshUI()
                     {
                         text = "Remove from standby",
                         func = function(self, player)
-                            ABGP:RemoveStandby(player);
+                            ABGP:RemoveStandby(windowRaid, player);
                         end,
                         arg1 = widget:GetUserData("player"),
                         notCheckable = true
@@ -293,10 +293,8 @@ function ABGP:AwardEP(ep, category)
     end
 end
 
-function ABGP:AddStandby(player)
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
-    if not currentRaid then return; end
-    if tContains(currentRaid.standby, player) then return; end
+function ABGP:AddStandby(raid, player)
+    if tContains(raid.standby, player) then return; end
 
     if not self:GetActivePlayer(player) and not self:GetGuildInfo(player) then
         local playerLower = player:lower();
@@ -314,19 +312,16 @@ function ABGP:AddStandby(player)
         self:Notify("WARNING: %s doesn't have any EPGP data! Any awarded EP can't be exported.", self:ColorizeName(player));
     end
 
-    table.insert(currentRaid.standby, player);
-    currentRaid.awards[player] = currentRaid.awards[player] or { ep = 0, categories = {} };
+    table.insert(raid.standby, player);
+    raid.awards[player] = raid.awards[player] or { ep = 0, categories = {} };
     RefreshUI();
 end
 
-function ABGP:RemoveStandby(player)
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
-    if not currentRaid then return; end
-
+function ABGP:RemoveStandby(raid, player)
     self:Notify("Removing %s from the standby list.", self:ColorizeName(player));
-    for i, standby in ipairs(currentRaid.standby) do
+    for i, standby in ipairs(raid.standby) do
         if standby == player then
-            table.remove(currentRaid.standby, i);
+            table.remove(raid.standby, i);
             break;
         end
     end
@@ -772,37 +767,6 @@ function ABGP:UpdateRaid(windowRaid)
     self:AddWidgetTooltip(manageEP, "Open the window to individually manage everyone's awarded EP.");
 
     if IsInProgress(windowRaid) then
-        if self:Get("masterLoot") then
-            -- local disenchanter = AceGUI:Create("Button");
-            -- disenchanter:SetFullWidth(true);
-            -- disenchanter:SetText("Disenchanter");
-            -- disenchanter:SetCallback("OnClick", function(widget)
-            --     _G.StaticPopup_Show("ABGP_SET_DISENCHANTER");
-            -- end);
-            -- window:AddChild(disenchanter);
-            -- window:SetUserData("disenchanter", disenchanter);
-            -- self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
-
-            local disenchanter = AceGUI:Create("ABGP_EditBox");
-            disenchanter:SetFullWidth(true);
-            disenchanter:SetLabel("Disenchanter");
-            disenchanter:SetValue(self:GetRaidDisenchanter());
-            disenchanter:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
-            window:AddChild(disenchanter);
-            self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
-            
-
-            local mule = AceGUI:Create("Button");
-            mule:SetFullWidth(true);
-            mule:SetText("Mule");
-            mule:SetCallback("OnClick", function(widget)
-                _G.StaticPopup_Show("ABGP_SET_MULE");
-            end);
-            window:AddChild(mule);
-            window:SetUserData("mule", mule);
-            self:AddWidgetTooltip(mule, "Choose the player to whom items you alt+shift+click will get ML'd.");
-        end
-
         local autoDistrib = AceGUI:Create("CheckBox");
         autoDistrib:SetFullWidth(true);
         autoDistrib:SetLabel("Auto Distribution");
@@ -813,33 +777,30 @@ function ABGP:UpdateRaid(windowRaid)
         window:SetUserData("autoDistrib", autoDistrib);
         self:AddWidgetTooltip(autoDistrib, "If enabled, items will be automatically opened for distribution when loot popups are created.");
 
-        local addStandby = AceGUI:Create("Button");
-        addStandby:SetFullWidth(true);
-        addStandby:SetText("Add Standby");
-        addStandby:SetCallback("OnClick", function(widget)
-            _G.StaticPopup_Show("ABGP_ADD_STANDBY");
-        end);
-        window:AddChild(addStandby);
-        self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
+        if self:Get("masterLoot") then
+            local disenchanter = AceGUI:Create("ABGP_EditBox");
+            disenchanter:SetFullWidth(true);
+            disenchanter:SetLabel("Disenchanter");
+            disenchanter:SetCallback("OnValueChanged", function(widget, event, value)
+                self:SetDisenchanter(value);
+            end);
+            disenchanter:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE);
+            window:AddChild(disenchanter);
+            window:SetUserData("disenchanter", disenchanter);
+            self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
 
-        local elt = AceGUI:Create("ABGP_Header");
-        elt:SetFullWidth(true);
-        elt:SetText("Current standby list:");
-        window:AddChild(elt);
-
-        local scrollContainer = AceGUI:Create("SimpleGroup");
-        scrollContainer:SetFullWidth(true);
-        scrollContainer:SetFullHeight(true);
-        scrollContainer:SetLayout("Fill");
-        window:AddChild(scrollContainer);
-
-        local scroll = AceGUI:Create("ScrollFrame");
-        scroll:SetLayout("List");
-        scrollContainer:AddChild(scroll);
-        window:SetUserData("standbyList", scroll);
-    end
-
-    if not IsInProgress(windowRaid) then
+            local mule = AceGUI:Create("ABGP_EditBox");
+            mule:SetFullWidth(true);
+            mule:SetLabel("Raid Mule");
+            mule:SetCallback("OnValueChanged", function(widget, event, value)
+                self:SetMule(value);
+            end);
+            mule:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE);
+            window:AddChild(mule);
+            window:SetUserData("mule", mule);
+            self:AddWidgetTooltip(mule, "Choose the player to whom items you alt+shift+click will get ML'd.");
+        end
+    else
         local delete = AceGUI:Create("Button");
         delete:SetFullWidth(true);
         delete:SetText("Delete");
@@ -849,6 +810,31 @@ function ABGP:UpdateRaid(windowRaid)
         window:AddChild(delete);
         self:AddWidgetTooltip(delete, "Delete the raid.");
     end
+
+    local addStandby = AceGUI:Create("Button");
+    addStandby:SetFullWidth(true);
+    addStandby:SetText("Add Standby");
+    addStandby:SetCallback("OnClick", function(widget)
+        _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
+    end);
+    window:AddChild(addStandby);
+    self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
+
+    local elt = AceGUI:Create("ABGP_Header");
+    elt:SetFullWidth(true);
+    elt:SetText("Current standby list:");
+    window:AddChild(elt);
+
+    local scrollContainer = AceGUI:Create("SimpleGroup");
+    scrollContainer:SetFullWidth(true);
+    scrollContainer:SetFullHeight(true);
+    scrollContainer:SetLayout("Fill");
+    window:AddChild(scrollContainer);
+
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("standbyList", scroll);
 
     window:SetUserData("raid", windowRaid);
     activeWindow = window;
@@ -993,71 +979,7 @@ StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
 	autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
 	maxLetters = 31,
     OnAccept = function(self, data)
-        ABGP:AddStandby(self.editBox:GetText());
-    end,
-    OnShow = function(self, data)
-        self.editBox:SetAutoFocus(false);
-    end,
-    EditBoxOnEnterPressed = function(self, data)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_SET_DISENCHANTER"] = {
-    text = "Set the designated disenchanter:",
-    button1 = "Done",
-    button2 = "Cancel",
-	hasEditBox = 1,
-	autoCompleteSource = GetAutoCompleteResults,
-	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
-	maxLetters = 31,
-    OnAccept = function(self, data)
-        ABGP:SetDisenchanter(self.editBox:GetText());
-    end,
-    OnShow = function(self, data)
-        self.editBox:SetAutoFocus(false);
-    end,
-    EditBoxOnEnterPressed = function(self, data)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_SET_MULE"] = {
-    text = "Set the designated mule:",
-    button1 = "Done",
-    button2 = "Cancel",
-	hasEditBox = 1,
-	autoCompleteSource = GetAutoCompleteResults,
-	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
-	maxLetters = 31,
-    OnAccept = function(self, data)
-        ABGP:SetMule(self.editBox:GetText());
+        ABGP:AddStandby(data, self.editBox:GetText());
     end,
     OnShow = function(self, data)
         self.editBox:SetAutoFocus(false);
