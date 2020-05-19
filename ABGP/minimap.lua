@@ -123,13 +123,6 @@ function ABGP:OnIconClick(frame, button)
                 notCheckable = true
             },
         };
-        if self:IsPrivileged() then
-            table.insert(context, {
-                text = self:IsRaidInProgress() and "Manage Raid" or "Start Raid",
-                func = function() self:ShowRaidWindow(); end,
-                notCheckable = true
-            });
-        end
         if self:HasActiveItems() then
             table.insert(context, {
                 text = "Show Open Items",
@@ -138,6 +131,16 @@ function ABGP:OnIconClick(frame, button)
             });
         end
         if self:IsPrivileged() then
+            table.insert(context, {
+                text = self:IsRaidInProgress() and "Manage Raid" or "Start Raid",
+                func = function() self:ShowRaidWindow(); end,
+                notCheckable = true
+            });
+            table.insert(context, {
+                text = "Show Import",
+                func = function() self:ShowImportWindow(); end,
+                notCheckable = true
+            });
             table.insert(context, {
                 text = "Version Check",
                 func = function() self:PerformVersionCheck(); end,
@@ -148,13 +151,6 @@ function ABGP:OnIconClick(frame, button)
             table.insert(context, {
                 text = "Dump Addon Comms",
                 func = function() self:DumpCommMonitor(true); end,
-                notCheckable = true
-            });
-        end
-        if self:IsPrivileged() then
-            table.insert(context, {
-                text = "Show Import Window",
-                func = function() self:ShowImportWindow(); end,
                 notCheckable = true
             });
         end
