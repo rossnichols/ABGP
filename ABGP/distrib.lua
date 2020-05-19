@@ -1063,7 +1063,7 @@ function ABGP:CreateDistribWindow()
         if columns[i] == "Roll" then
             desc:SetJustifyH("RIGHT");
             desc:SetPadding(0, -10);
-        elseif columns[i] == "Type" or columns[i] == "Priority" then
+        elseif columns[i] == "Type" then
             desc:SetJustifyH("CENTER");
         end
         header:AddChild(desc);

@@ -137,10 +137,8 @@ do
             self.rank.text:SetFontObject((data.preferredGroup and data.group == data.preferredGroup) and "ABGPHighlight" or "GameFontNormal");
             if data.priority then
                 self.priority.text:SetText(("%.3f"):format(data.priority));
-                self.priority.text:SetJustifyH("LEFT");
             else
                 self.priority.text:SetText("--");
-                self.priority.text:SetJustifyH("CENTER");
             end
 
             if equippable then
