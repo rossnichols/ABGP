@@ -3,7 +3,6 @@ local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetServerTime = GetServerTime;
-local GetAutoCompleteResults = GetAutoCompleteResults;
 local GetNumGroupMembers = GetNumGroupMembers;
 local UnitIsGroupLeader = UnitIsGroupLeader;
 local GetLootMethod = GetLootMethod;
@@ -774,15 +773,24 @@ function ABGP:UpdateRaid(windowRaid)
 
     if IsInProgress(windowRaid) then
         if self:Get("masterLoot") then
-            local disenchanter = AceGUI:Create("Button");
+            -- local disenchanter = AceGUI:Create("Button");
+            -- disenchanter:SetFullWidth(true);
+            -- disenchanter:SetText("Disenchanter");
+            -- disenchanter:SetCallback("OnClick", function(widget)
+            --     _G.StaticPopup_Show("ABGP_SET_DISENCHANTER");
+            -- end);
+            -- window:AddChild(disenchanter);
+            -- window:SetUserData("disenchanter", disenchanter);
+            -- self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
+
+            local disenchanter = AceGUI:Create("ABGP_EditBox");
             disenchanter:SetFullWidth(true);
-            disenchanter:SetText("Disenchanter");
-            disenchanter:SetCallback("OnClick", function(widget)
-                _G.StaticPopup_Show("ABGP_SET_DISENCHANTER");
-            end);
+            disenchanter:SetLabel("Disenchanter");
+            disenchanter:SetValue(self:GetRaidDisenchanter());
+            disenchanter:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
             window:AddChild(disenchanter);
-            window:SetUserData("disenchanter", disenchanter);
             self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
+            
 
             local mule = AceGUI:Create("Button");
             mule:SetFullWidth(true);
