@@ -106,6 +106,14 @@ function ABGP:RequestOnItemRolled(data, distribution, sender)
     end
 end
 
+function ABGP:RequestOnItemRequestCount(data, distribution, sender)
+    local itemLink = data.itemLink;
+
+    if activeItems[itemLink] then
+        activeItems[itemLink].requestCount = data.count;
+    end
+end
+
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
     if activeItems[itemLink] then
@@ -128,6 +136,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         roll = nil,
         sentComms = false,
         sentRequestType = nil,
+        requestCount = 0,
     };
 
     local gpCost, priority, notes = "No GP cost (rolled)", "", "";

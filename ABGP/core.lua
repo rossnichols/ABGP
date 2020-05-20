@@ -88,6 +88,11 @@ function ABGP:OnInitialize()
         self:DistribOnItemPass(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.CommTypes.ITEM_REQUESTCOUNT.name, function(self, event, data, distribution, sender)
+        self:RequestOnItemRequestCount(data, distribution, sender);
+        self:AnnounceOnItemRequestCount(data, distribution, sender);
+    end, self);
+
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);

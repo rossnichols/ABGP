@@ -261,6 +261,10 @@ local function RemoveRequest(sender, itemLink)
         if request.player == sender then
             table.remove(requests, i);
             ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), currentItem.itemLink);
+            ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
+                itemLink = request.itemLink,
+                count = #requests,
+            }, "BROADCAST");
             break;
         end
     end
@@ -327,6 +331,12 @@ local function ProcessNewRequest(request)
     end
 
     table.insert(requests, request);
+    if not oldRequest then
+        ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
+            itemLink = request.itemLink,
+            count = #requests,
+        }, "BROADCAST");
+    end
 
     if request.itemLink == currentItem.itemLink then
         RebuildUI();

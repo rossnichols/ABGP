@@ -56,7 +56,7 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-                <FontString parentKey="Name" name="$parentName" inherits="GameFontNormal" text="Item Name" justifyH="LEFT" justifyV="TOP">
+                <FontString parentKey="Name" name="$parentName" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
                     <Size>
                         <AbsDimension x="0" y="12"/>
                     </Size>
@@ -73,7 +73,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString parentKey="Cost" name="$parentCost" inherits="GameFontNormal" text="GP Cost" justifyH="LEFT" justifyV="BOTTOM">
+                <FontString parentKey="Cost" name="$parentCost" inherits="GameFontNormal" justifyH="LEFT" justifyV="BOTTOM">
                     <Size>
                         <AbsDimension x="0" y="12"/>
                     </Size>
@@ -134,9 +134,14 @@
                         </Texture>
                     </Layer>
                     <Layer level="OVERLAY">
-                        <FontString parentKey="Count" inherits="NumberFontNormalLarge" justifyH="RIGHT" hidden="true">
+                        <FontString parentKey="Count" inherits="NumberFontNormalLarge" justifyH="RIGHT" justifyV="BOTTOM" hidden="true">
                             <Anchors>
-                                <Anchor point="BOTTOMRIGHT" x="-5" y="2"/>
+                                <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="RequestCount" inherits="NumberFontNormalLarge" justifyH="LEFT" justifyV="TOP" hidden="true">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="2" y="-2"/>
                             </Anchors>
                         </FontString>
                     </Layer>

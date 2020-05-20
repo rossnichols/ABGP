@@ -1295,6 +1295,7 @@ do
 
             self:SetItem(nil);
             self:SetCount(1);
+            self:SetRequestCount(0);
 
             self.elapsed = 0;
             self.fadeIn = 0.2;
@@ -1443,6 +1444,17 @@ do
             end
         end,
 
+        ["SetRequestCount"] = function(self, count)
+            local frame = self.frame;
+            if frame.elvui then
+                frame.requestcountstr[count == 0 and "Hide" or "Show"](frame.requestcountstr);
+                frame.requestcountstr:SetText(count == 0 and "" or count);
+            else
+                frame.IconFrame.RequestCount[count == 0 and "Hide" or "Show"](frame.IconFrame.RequestCount);
+                frame.IconFrame.RequestCount:SetText(count == 0 and "" or count);
+            end
+        end,
+
         ["GetCount"] = function(self)
             return self.count;
         end,
@@ -1475,9 +1487,18 @@ do
             -- Add count fontstring
             local count = frame.button:CreateFontString(nil, 'OVERLAY');
             count:SetJustifyH("RIGHT");
+            count:SetJustifyV("BOTTOM");
             count:Point("BOTTOMRIGHT", frame.button, -2, 2);
             count:FontTemplate(nil, nil, "OUTLINE");
             frame.countstr = count;
+
+            -- Add request count fontstring
+            local requestcount = frame.button:CreateFontString(nil, 'OVERLAY');
+            requestcount:SetJustifyH("LEFT");
+            requestcount:SetJustifyV("TOP");
+            requestcount:Point("TOPLEFT", frame.button, 2, -2);
+            requestcount:FontTemplate(nil, nil, "OUTLINE");
+            frame.requestcountstr = requestcount;
 
             -- Add close button
             frame.closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton");

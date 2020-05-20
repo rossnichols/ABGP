@@ -156,7 +156,11 @@ local function GetLootFrame(itemLink)
     end
 end
 
-local function SetRequestInfo(elt, itemLink, requestType, roll)
+local function SetRequestInfo(elt, itemLink, activeItem)
+    local requestType = activeItem.sentRequestType;
+    local roll = activeItem.roll;
+    local requestCount = activeItem.requestCount;
+
     if requestType then
         elt:SetUserData("requested", true);
         if roll then
@@ -190,6 +194,7 @@ local function SetRequestInfo(elt, itemLink, requestType, roll)
         local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
         elt:SetSecondaryText(valueText, valueTextCompact);
     end
+    elt:SetRequestCount(requestCount);
 end
 
 function ABGP:GetLootCount(itemLink)
@@ -321,7 +326,7 @@ function ABGP:EnsureLootItemVisible(itemLink, noAnimate)
     if activeItem then
         elt:EnableRequests(true, nil, noAnimate);
         elt:SetDuration(nil);
-        SetRequestInfo(elt, itemLink, activeItem.sentRequestType, activeItem.roll);
+        SetRequestInfo(elt, itemLink, activeItem);
     end
 end
 
@@ -401,7 +406,7 @@ function ABGP:AnnounceOnItemRolled(data, distribution, sender)
     -- be active by the time we receive it.
     local activeItem = self:GetActiveItem(data.itemLink);
     if activeItem then
-        SetRequestInfo(elt, data.itemLink, activeItem.sentRequestType, activeItem.roll);
+        SetRequestInfo(elt, data.itemLink, activeItem);
     end
 end
 
@@ -410,7 +415,7 @@ function ABGP:AnnounceOnItemRequested(data)
     if not elt then return; end
 
     local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, data.itemLink, activeItem.sentRequestType, activeItem.roll);
+    SetRequestInfo(elt, data.itemLink, activeItem);
 end
 
 function ABGP:AnnounceOnItemPassed(data)
@@ -418,7 +423,15 @@ function ABGP:AnnounceOnItemPassed(data)
     if not elt then return; end
 
     local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, data.itemLink, activeItem.sentRequestType, activeItem.roll);
+    SetRequestInfo(elt, data.itemLink, activeItem);
+end
+
+function ABGP:AnnounceOnItemRequestCount(data, distribution, sender)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    local activeItem = self:GetActiveItem(data.itemLink);
+    SetRequestInfo(elt, data.itemLink, activeItem);
 end
 
 function ABGP:AnnounceOnItemFavorited(data)

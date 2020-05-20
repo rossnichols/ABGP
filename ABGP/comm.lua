@@ -63,6 +63,10 @@ ABGP.CommTypes = {
     ITEM_PASS = { name = CV("ITEM_PASS"), priority = "INSTANT" },
     -- itemLink: item link string
 
+    ITEM_REQUESTCOUNT = { name = CV("ITEM_REQUESTCOUNT"), priority = "ALERT" },
+    -- itemLink: item link string
+    -- count: number
+
     ITEM_DISTRIBUTION_OPENED = { name = CV("ITEM_DISTRIBUTION_OPENED"), priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
