@@ -21,7 +21,7 @@ local ipairs = ipairs;
 local mod = mod;
 
 local startTime = GetTime();
-local suppressionThreshold = 60;
+local suppressionThreshold = 30;
 local alertedSlowComms = false;
 local synchronousCheck = false;
 
@@ -349,6 +349,10 @@ function ABGP:CommOnEncounterEnd(encounterId, encounterName)
         self:ErrorLogged("COMM", "Addon comms after %s are delayed!", encounterName);
         self:DumpCommMonitor();
     end
+end
+
+function ABGP:CommOnZoneChanged()
+    startTime = GetTime();
 end
 
 StaticPopupDialogs["ABGP_SLOW_COMMS"] = {
