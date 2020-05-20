@@ -24,6 +24,7 @@ local startTime = GetTime();
 local suppressionThreshold = 30;
 local alertedSlowComms = false;
 local synchronousCheck = false;
+local delayThreshold = 5;
 
 local monitoringComms = false;
 local bufferLength = 30;
@@ -186,7 +187,7 @@ function ABGP:SendComm(type, data, distribution, target)
             self:CommCallback(sent, total, logInCallback);
             local now = GetTime();
             local delay = now - time;
-            if delay > 5 and now - startTime > suppressionThreshold then
+            if delay > delayThreshold and now - startTime > suppressionThreshold then
                 self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
                 if not alertedSlowComms then
                     alertedSlowComms = true;
@@ -351,7 +352,7 @@ function ABGP:CommOnEncounterEnd(encounterId, encounterName)
     end
 end
 
-function ABGP:CommOnZoneChanged()
+function ABGP:CommOnEnteringWorld()
     startTime = GetTime();
 end
 

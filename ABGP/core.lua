@@ -245,6 +245,9 @@ function ABGP:OnInitialize()
     self:RegisterEvent("PLAYER_LEAVING_WORLD", function(self, event, ...)
         self:DistribOnLeavingWorld();
     end, self);
+    self:RegisterEvent("PLAYER_ENTERING_WORLD", function(self, event, ...)
+        self:CommOnEnteringWorld();
+    end, self);
     self:RegisterEvent("LOADING_SCREEN_ENABLED", function(self, event, ...)
         self:DistribOnLoadingScreen();
     end, self);
