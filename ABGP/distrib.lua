@@ -260,9 +260,9 @@ local function RemoveRequest(sender, itemLink)
     for i, request in ipairs(requests) do
         if request.player == sender then
             table.remove(requests, i);
-            ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), currentItem.itemLink);
+            ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), itemLink);
             ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
-                itemLink = request.itemLink,
+                itemLink = itemLink,
                 count = #requests,
             }, "BROADCAST");
             break;
@@ -385,7 +385,7 @@ local function AddActiveItem(data)
         data = data,
         receivedComm = false,
         testItem = not IsInGroup(),
-        totalCount = ABGP:GetLootCount(itemLink) or 1,
+        totalCount = data.count,
     };
 
     activeItems[itemLink] = newItem;
@@ -741,6 +741,10 @@ function ABGP:ShowDistrib(itemLink)
         local activeItems = window:GetUserData("activeItems");
         if activeItems[itemLink] then
             activeItems[itemLink].totalCount = activeItems[itemLink].totalCount + 1;
+            ABGP:SendComm(ABGP.CommTypes.ITEM_COUNT, {
+                itemLink = itemLink,
+                count = activeItems[itemLink].totalCount,
+            }, "BROADCAST");
             local currentItem = window:GetUserData("currentItem");
             if currentItem.itemLink ~= itemLink then
                 window:GetUserData("tabGroup"):SelectTab(itemLink);
@@ -771,6 +775,7 @@ function ABGP:ShowDistrib(itemLink)
         value = value,
         requestType = requestType,
         slots = self:GetItemEquipSlots(itemLink),
+        count = self:GetLootCount(itemLink) or 1,
     };
     AddActiveItem(data);
 
@@ -1043,6 +1048,10 @@ function ABGP:CreateDistribWindow()
     multiple:SetCallback("OnValueChanged", function(widget, event, value)
         local currentItem = window:GetUserData("currentItem");
         currentItem.totalCount = value;
+        ABGP:SendComm(ABGP.CommTypes.ITEM_COUNT, {
+            itemLink = currentItem.itemLink,
+            count = currentItem.totalCount,
+        }, "BROADCAST");
         RebuildUI();
     end);
     secondLine:AddChild(multiple);

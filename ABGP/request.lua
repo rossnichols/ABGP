@@ -114,6 +114,14 @@ function ABGP:RequestOnItemRequestCount(data, distribution, sender)
     end
 end
 
+function ABGP:RequestOnItemCount(data, distribution, sender)
+    local itemLink = data.itemLink;
+
+    if activeItems[itemLink] then
+        activeItems[itemLink].count = data.count;
+    end
+end
+
 function ABGP:RequestOnDistOpened(data, distribution, sender)
     local itemLink = data.itemLink;
     if activeItems[itemLink] then
@@ -136,6 +144,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         roll = nil,
         sentComms = false,
         sentRequestType = nil,
+        count = data.count or 1,
         requestCount = 0,
     };
 

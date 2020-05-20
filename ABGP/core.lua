@@ -93,6 +93,11 @@ function ABGP:OnInitialize()
         self:AnnounceOnItemRequestCount(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.CommTypes.ITEM_COUNT.name, function(self, event, data, distribution, sender)
+        self:RequestOnItemCount(data, distribution, sender);
+        self:AnnounceOnItemCount(data, distribution, sender);
+    end, self);
+
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_OPENED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);

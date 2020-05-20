@@ -159,6 +159,7 @@ end
 local function SetRequestInfo(elt, itemLink, activeItem)
     local requestType = activeItem.sentRequestType;
     local roll = activeItem.roll;
+    local count = activeItem.count;
     local requestCount = activeItem.requestCount;
 
     if requestType then
@@ -194,6 +195,8 @@ local function SetRequestInfo(elt, itemLink, activeItem)
         local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
         elt:SetSecondaryText(valueText, valueTextCompact);
     end
+
+    elt:SetCount(count);
     elt:SetRequestCount(requestCount);
 end
 
@@ -427,6 +430,14 @@ function ABGP:AnnounceOnItemPassed(data)
 end
 
 function ABGP:AnnounceOnItemRequestCount(data, distribution, sender)
+    local elt = GetLootFrame(data.itemLink);
+    if not elt then return; end
+
+    local activeItem = self:GetActiveItem(data.itemLink);
+    SetRequestInfo(elt, data.itemLink, activeItem);
+end
+
+function ABGP:AnnounceOnItemCount(data, distribution, sender)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 
