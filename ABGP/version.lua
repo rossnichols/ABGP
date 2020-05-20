@@ -101,11 +101,11 @@ function ABGP:OnVersionRequest(data, distribution, sender)
         self:SendComm(self.CommTypes.VERSION_RESPONSE, {
             commPriority = "INSTANT",
             version = self:GetVersion()
-        }, distribution);
+        }, "WHISPER", sender);
     elseif self:VersionIsNewer(self:GetCompareVersion(), data.version) then
         self:SendComm(self.CommTypes.VERSION_RESPONSE, {
             version = self:GetVersion()
-        }, distribution);
+        }, "WHISPER", sender);
     end
 
     CompareVersion(data.version, sender);
