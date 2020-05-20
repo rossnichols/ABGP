@@ -267,7 +267,6 @@ function ABGP:OnInitialize()
                 lastZone = name;
                 self:EventOnZoneChanged(name, instanceId);
                 self:AnnounceOnZoneChanged(name, instanceId);
-                self:CommOnZoneChanged(name, instanceId);
             end
         end, 5);
     end, self);
