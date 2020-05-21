@@ -449,6 +449,7 @@ ABGP.ItemHistoryIndex = {
     NAME = 2,
     DATE = 3,
     GP = 4,
+    ID = 5,
 };
 
 local function ValueFromItem(item, phase)

@@ -276,8 +276,8 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     local history = _G.ABGP_Data[value.phase].gpHistory;
 
     for i, entry in ipairs(history) do
-        if not entry.editId then break; end
-        if entry.editId == data.editId then
+        if not entry[self.ItemHistoryIndex.ID] then break; end
+        if entry[self.ItemHistoryIndex.ID] == data.editId then
             table.remove(history, i);
 
             -- If the previous award is for the same player, then the officer note will already
@@ -300,7 +300,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
             [ABGP.ItemHistoryIndex.NAME] = itemName,
             [ABGP.ItemHistoryIndex.DATE] = d,
             [ABGP.ItemHistoryIndex.GP] = data.cost,
-            editId = data.editId,
+            [ABGP.ItemHistoryIndex.ID] = data.editId,
         });
     end
 
