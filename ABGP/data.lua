@@ -318,8 +318,8 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
             [ABGP.ItemHistoryIndex.ID] = newHistoryId,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.NAME] = itemName,
-            [ABGP.ItemHistoryIndex.DATE] = awardDate,
             [ABGP.ItemHistoryIndex.GP] = data.cost,
+            [ABGP.ItemHistoryIndex.DATE] = awardDate,
         });
     end
 

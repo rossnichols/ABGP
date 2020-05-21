@@ -458,8 +458,8 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.ITEM
     PLAYER = 3,     -- player name (string)
     NAME = 4,       -- item name (string)
-    DATE = 5,       -- date won (number)
-    GP = 6,         -- gp cost (number)
+    GP = 5,         -- gp cost (number)
+    DATE = 6,       -- date won (number)
 
     -- ABGP.ItemHistoryType.DECAY
     VALUE = 3,      -- decay percentage (number)
