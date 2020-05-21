@@ -273,8 +273,6 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if not value then return; end
     local history = _G.ABGP_Data[value.phase].gpHistory;
 
-    -- If this is an update, date.editId will be the entry being updated.
-    -- We want the new record to reflect the original entry's date.
     local newHistoryId = data.editId;
     local _, awardDate = self:ParseHistoryId(newHistoryId);
     if not awardDate then
@@ -293,7 +291,9 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         for i, entry in ipairs(history) do
             if not entry[self.ItemHistoryIndex.ID] then break; end
             if entry[self.ItemHistoryIndex.ID] == data.editId then
-                if not data.updateId then
+                if data.updateId then
+                    awardDate = history[i][ABGP.ItemHistoryIndex.DATE];
+                else
                     table.remove(history, i);
                 end
 

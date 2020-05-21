@@ -335,6 +335,11 @@ local function DrawItemHistory(container, rebuild, reason, command)
         end
     end
 
+    table.sort(filtered, function(a, b)
+        -- NOTE: assumes all entries are type ITEM.
+        return a[ABGP.ItemHistoryIndex.DATE] > b[ABGP.ItemHistoryIndex.DATE];
+    end);
+
     pagination:SetValues(#filtered, 50);
     if #filtered > 0 then
         local first, last = pagination:GetRange();
@@ -385,7 +390,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             notCheckable = true
                         });
                     end
-                    if value and data[ABGP.ItemHistoryIndex.ID] and ABGP:CanEditOfficerNotes() then
+                    if value and data[ABGP.ItemHistoryIndex.ID] and ABGP:IsPrivileged() then
                         table.insert(context, {
                             text = "Edit cost",
                             func = function(self, arg1)

@@ -4111,7 +4111,7 @@ ABGP.initialData = {
 		},
 	},
 	gpHistory = {
-		timestamp = 1589673092, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1589673095, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				1,

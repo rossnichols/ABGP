@@ -477,7 +477,9 @@ function ABGP:GetHistoryId()
 end
 
 function ABGP:ParseHistoryId(id)
-    return id:match("^(.-):(.-)$")
+    local player, date = id:match("^(.-):(.-)$");
+    if player then date = tonumber(date); end
+    return player, date;
 end
 
 local function ValueFromItem(item, phase)
