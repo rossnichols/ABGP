@@ -195,12 +195,12 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
         local p3 = epgp[ABGP.Phases.p3];
         local p1ep, p1gp, p3ep, p3gp = 0, 0, 0, 0;
         if p1 then
-            p1ep = floor(p1.ep * 1000);
-            p1gp = floor(p1.gp * 1000);
+            p1ep = floor(p1.ep * 1000 + 0.5);
+            p1gp = floor(p1.gp * 1000 + 0.5);
         end
         if p3 then
-            p3ep = floor(p3.ep * 1000);
-            p3gp = floor(p3.gp * 1000);
+            p3ep = floor(p3.ep * 1000 + 0.5);
+            p3gp = floor(p3.gp * 1000 + 0.5);
         end
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
 
