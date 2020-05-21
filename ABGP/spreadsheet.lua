@@ -328,7 +328,7 @@ local function DrawGP(container)
             row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE] or "";
             row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE]:gsub("20(%d%d)", "%1");
             local m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
-            if m ~= "" then
+            if m then
                 local entryTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) });
                 while entryTimes[entryTime] do entryTime = entryTime + 1; end
                 entryTimes[entryTime] = true;
