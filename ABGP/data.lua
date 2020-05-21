@@ -216,7 +216,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
     if note ~= existingNote then
         updatingNotes = true;
         _G.GuildRosterSetOfficerNote(guildIndex, note);
-        self:LogVerbose("Officer note for %s: %s", player, note);
+        self:LogDebug("Officer note for %s: %s (was: %s)", player, note, existingNote);
         updatingNotes = false;
     end
 
