@@ -313,7 +313,13 @@ local function DrawGP(container)
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             if not row[ABGP.ItemHistoryIndex.DATE] then
-                ABGP:Error("Found row without date!");
+                -- Only print an error if the row isn't completely blank.
+                for _, v in pairs(row) do
+                    if v then
+                        ABGP:Error("Found row without date!");
+                        break;
+                    end
+                end
                 return false;
             end
             local rowDate =  row[ABGP.ItemHistoryIndex.DATE];
