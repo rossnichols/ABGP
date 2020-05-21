@@ -10,6 +10,7 @@ local type = type;
 local floor = floor;
 local table = table;
 local tonumber = tonumber;
+local time = time;
 
 local activeWindow;
 
@@ -318,14 +319,21 @@ local function DrawGP(container)
         ["carryover gp from previous bwl"] = true,
         ["split start gp"] = true,
     };
+    local entryTimes = {};
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
+            row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM;
             row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
             row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE] or "";
             row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE]:gsub("20(%d%d)", "%1");
             local m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
             if m ~= "" then
                 row[ABGP.ItemHistoryIndex.DATE] = ("%02d/%02d/%02d"):format(m, d, y);
+                m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
+                local entryTime = time({ year = 2000 + y, month = m, day = d });
+                while entryTimes[entryTime] do entryTime = entryTime + 1; end
+                entryTimes[entryTime] = true;
+                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime);
             end
             return
                 row[ABGP.ItemHistoryIndex.PLAYER] and

@@ -24,7 +24,6 @@ local math = math;
 local type = type;
 local max = max;
 
-local lastEditId = 0;
 local activeDistributionWindow;
 local currentRaidGroup;
 local widths = { 110, 100, 70, 40, 40, 1.0 };
@@ -543,7 +542,7 @@ local function DistributeItem(data)
         override = data.override,
         count = #currentItem.distributions,
         testItem = currentItem.testItem,
-        editId = ABGP:GetEditId(),
+        editId = ABGP:GetHistoryId(),
     };
     ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -653,13 +652,6 @@ local function RepopulateRequests()
     end
 
     return needsUpdate;
-end
-
-function ABGP:GetEditId()
-    local nextId = GetServerTime();
-    while nextId == lastEditId do nextId = nextId + 1; end
-    lastEditId = nextId;
-    return nextId;
 end
 
 function ABGP:DistribOnItemRequest(data, distribution, sender)

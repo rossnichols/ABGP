@@ -436,6 +436,8 @@ end
 --
 
 local itemValues = {};
+local lastHistoryId = 0;
+
 ABGP.ItemDataIndex = {
     NAME = 1,
     GP = 2,
@@ -444,13 +446,35 @@ ABGP.ItemDataIndex = {
     PRIORITY = 5,
     NOTES = 6,
 };
-ABGP.ItemHistoryIndex = {
-    PLAYER = 1,
-    NAME = 2,
-    DATE = 3,
-    GP = 4,
-    ID = 5,
+ABGP.ItemHistoryType = {
+    ITEM = 1,
+    DECAY = 2,
+    DELETE = 3,
 };
+ABGP.ItemHistoryIndex = {
+    TYPE = 1,       -- from ABGP.ItemHistoryType
+    ID = 2,         -- from ABGP:GetHistoryId()
+
+    -- ABGP.ItemHistoryType.ITEM
+    PLAYER = 3,     -- player name (string)
+    NAME = 4,       -- item name (string)
+    DATE = 5,       -- date won (string, MM/DD/YY)
+    GP = 6,         -- gp cost (number)
+
+    -- ABGP.ItemHistoryType.DECAY
+    VALUE = 3,      -- decay percentage (number)
+    FLOOR = 4,      -- gp floor (number)
+
+    -- ABGP.ItemHistoryType.DELETE
+    DELETEDID = 3,  -- from ABGP:GetHistoryId()
+};
+
+function ABGP:GetHistoryId()
+    local nextId = max(lastHistoryId, GetServerTime());
+    if nextId == lastHistoryId then nextId = nextId + 1; end
+    lastHistoryId = nextId;
+    return ("%s:%d"):format(UnitName("player"), nextId);
+end
 
 local function ValueFromItem(item, phase)
     return {

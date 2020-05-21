@@ -274,33 +274,47 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
 
     local d = date("%m/%d/%y", GetServerTime()); -- https://strftime.org/
     local history = _G.ABGP_Data[value.phase].gpHistory;
+    local newHistoryId = data.editId;
 
-    for i, entry in ipairs(history) do
-        if not entry[self.ItemHistoryIndex.ID] then break; end
-        if entry[self.ItemHistoryIndex.ID] == data.editId then
-            table.remove(history, i);
-
-            -- If the previous award is for the same player, then the officer note will already
-            -- get updated to the proper value for the new award, and writing the officer note
-            -- twice for the same player with no delay will fail.
-            self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
-                itemLink = value.itemLink,
-                player = entry[ABGP.ItemHistoryIndex.PLAYER],
-                gp = entry[ABGP.ItemHistoryIndex.GP],
-                skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
-                sender = sender,
+    if data.oldCost or data.oldPlayer then
+        if data.updateId then
+            newHistoryId = data.newEditId;
+            table.insert(history, 1, {
+                [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
+                [ABGP.ItemHistoryIndex.ID] = data.updateId,
+                [ABGP.ItemHistoryIndex.DELETEDID] = data.editId,
             });
-            break;
+        end
+        for i, entry in ipairs(history) do
+            if not entry[self.ItemHistoryIndex.ID] then break; end
+            if entry[self.ItemHistoryIndex.ID] == data.editId then
+                if not data.updateId then
+                    table.remove(history, i);
+                end
+
+                -- If the previous award is for the same player, then the officer note will already
+                -- get updated to the proper value for the new award, and writing the officer note
+                -- twice for the same player with no delay will fail.
+                self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
+                    itemLink = value.itemLink,
+                    player = entry[ABGP.ItemHistoryIndex.PLAYER],
+                    gp = entry[ABGP.ItemHistoryIndex.GP],
+                    skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
+                    sender = sender,
+                });
+                break;
+            end
         end
     end
 
     if data.player then
         table.insert(history, 1, {
+            [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
+            [ABGP.ItemHistoryIndex.ID] = newHistoryId,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.NAME] = itemName,
             [ABGP.ItemHistoryIndex.DATE] = d,
             [ABGP.ItemHistoryIndex.GP] = data.cost,
-            [ABGP.ItemHistoryIndex.ID] = data.editId,
         });
     end
 
@@ -315,6 +329,8 @@ function ABGP:HistoryUpdateCost(data, cost)
         oldCost = data.gp,
         requestType = self.RequestTypes.MANUAL,
         editId = data.editId,
+        updateId = ABGP:GetHistoryId(),
+        newEditId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -332,6 +348,8 @@ function ABGP:HistoryUpdatePlayer(data, player)
         cost = data.gp,
         requestType = self.RequestTypes.MANUAL,
         editId = data.editId,
+        updateId = ABGP:GetHistoryId(),
+        newEditId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -347,6 +365,7 @@ function ABGP:HistoryDelete(data)
         oldPlayer = data.player,
         cost = data.gp,
         editId = data.editId,
+        updateId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));

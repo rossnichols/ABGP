@@ -301,12 +301,13 @@ local function DrawItemHistory(container, rebuild, reason, command)
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
     local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
-    local filtered = gpHistory;
-    if searchText ~= "" or currentRaidGroup then
-        filtered = {};
-        local exact = searchText:match("^\"(.+)\"$");
-        exact = exact and exact:lower() or exact;
-        for _, data in ipairs(gpHistory) do
+    local filtered = {};
+    local deleted = {};
+    local exact = searchText:match("^\"(.+)\"$");
+    exact = exact and exact:lower() or exact;
+    for _, data in ipairs(gpHistory) do
+        local entryType = data[ABGP.ItemHistoryIndex.TYPE];
+        if entryType == ABGP.ItemHistoryType.ITEM and not deleted[data[ABGP.ItemHistoryIndex.ID]] then
             local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
             if epgp then
                 if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
@@ -328,6 +329,8 @@ local function DrawItemHistory(container, rebuild, reason, command)
                     end
                 end
             end
+        elseif entryType == ABGP.ItemHistoryType.DELETE then
+            deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
         end
     end
 
