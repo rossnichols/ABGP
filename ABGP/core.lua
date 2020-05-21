@@ -458,7 +458,7 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.ITEM
     PLAYER = 3,     -- player name (string)
     NAME = 4,       -- item name (string)
-    DATE = 5,       -- date won (string, MM/DD/YY)
+    DATE = 5,       -- date won (number)
     GP = 6,         -- gp cost (number)
 
     -- ABGP.ItemHistoryType.DECAY
@@ -474,6 +474,10 @@ function ABGP:GetHistoryId()
     if nextId == lastHistoryId then nextId = nextId + 1; end
     lastHistoryId = nextId;
     return ("%s:%d"):format(UnitName("player"), nextId);
+end
+
+function ABGP:ParseHistoryId(id)
+    return id:match("^(.-):(.-)$")
 end
 
 local function ValueFromItem(item, phase)

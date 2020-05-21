@@ -271,10 +271,15 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
-
-    local d = date("%m/%d/%y", GetServerTime()); -- https://strftime.org/
     local history = _G.ABGP_Data[value.phase].gpHistory;
+
+    -- If this is an update, date.editId will be the entry being updated.
+    -- We want the new record to reflect the original entry's date.
     local newHistoryId = data.editId;
+    local _, awardDate = self:ParseHistoryId(newHistoryId);
+    if not awardDate then
+        awardDate = GetServerTime();
+    end
 
     if data.oldCost or data.oldPlayer then
         if data.updateId then
@@ -313,7 +318,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
             [ABGP.ItemHistoryIndex.ID] = newHistoryId,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.NAME] = itemName,
-            [ABGP.ItemHistoryIndex.DATE] = d,
+            [ABGP.ItemHistoryIndex.DATE] = awardDate,
             [ABGP.ItemHistoryIndex.GP] = data.cost,
         });
     end

@@ -23,6 +23,7 @@ local table = table;
 local select = select;
 local math = math;
 local strlen = strlen;
+local date = date;
 
 function ABGP:AddWidgetTooltip(widget, text)
     widget:SetCallback("OnEnter", function(widget)
@@ -449,7 +450,8 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data[ABGP.ItemHistoryIndex.PLAYER] or ""));
             self.gp.text:SetText(data[ABGP.ItemHistoryIndex.GP]);
-            self.date.text:SetText(data[ABGP.ItemHistoryIndex.DATE]);
+            local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
+            self.date.text:SetText(entryDate);
 
             local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.NAME]);
             self.itemLink.text:SetText(value and value.itemLink or data[ABGP.ItemHistoryIndex.NAME]);

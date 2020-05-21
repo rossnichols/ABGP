@@ -11,6 +11,7 @@ local floor = floor;
 local table = table;
 local tonumber = tonumber;
 local time = time;
+local date = date;
 
 local activeWindow;
 
@@ -328,17 +329,17 @@ local function DrawGP(container)
             row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE]:gsub("20(%d%d)", "%1");
             local m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
             if m ~= "" then
-                row[ABGP.ItemHistoryIndex.DATE] = ("%02d/%02d/%02d"):format(m, d, y);
-                m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
-                local entryTime = time({ year = 2000 + y, month = m, day = d });
+                local entryTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) });
                 while entryTimes[entryTime] do entryTime = entryTime + 1; end
                 entryTimes[entryTime] = true;
+                row[ABGP.ItemHistoryIndex.DATE] = entryTime;
                 row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime);
             end
             return
                 row[ABGP.ItemHistoryIndex.PLAYER] and
                 row[ABGP.ItemHistoryIndex.NAME] and
                 row[ABGP.ItemHistoryIndex.GP] >= 0 and
+                type(row[ABGP.ItemHistoryIndex.DATE]) == "number" and
                 not banned[row[ABGP.ItemHistoryIndex.NAME]:lower()] and
                 ABGP:GetActivePlayer(row[ABGP.ItemHistoryIndex.PLAYER]);
         end);
@@ -365,8 +366,9 @@ local function DrawGP(container)
     local exportFunc = function()
         local text = "New Points,Item,Character,Date Won\n";
         for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory) do
+            local entryDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
             text = text .. ("%s,%s,%s,%s\n"):format(
-                item[ABGP.ItemHistoryIndex.GP], item[ABGP.ItemHistoryIndex.NAME], item[ABGP.ItemHistoryIndex.PLAYER], item[ABGP.ItemHistoryIndex.DATE]);
+                item[ABGP.ItemHistoryIndex.GP], item[ABGP.ItemHistoryIndex.NAME], item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
         end
 
         return text;

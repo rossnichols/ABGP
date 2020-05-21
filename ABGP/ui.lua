@@ -311,19 +311,20 @@ local function DrawItemHistory(container, rebuild, reason, command)
             local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
             if epgp then
                 if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
-                    local class = epgp.class;
+                    local class = epgp.class:lower();
+                    local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                     if exact then
                         if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
                             data[ABGP.ItemHistoryIndex.NAME]:lower() == exact or
-                            class:lower() == exact or
-                            data[ABGP.ItemHistoryIndex.DATE]:lower() == exact then
+                            class == exact or
+                            entryDate == exact then
                             table.insert(filtered, data);
                         end
                     else
                         if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
                             data[ABGP.ItemHistoryIndex.NAME]:lower():find(searchText, 1, true) or
-                            class:lower():find(searchText, 1, true) or
-                            data[ABGP.ItemHistoryIndex.DATE]:lower():find(searchText, 1, true) then
+                            class:find(searchText, 1, true) or
+                            entryDate:find(searchText, 1, true) then
                             table.insert(filtered, data);
                         end
                     end

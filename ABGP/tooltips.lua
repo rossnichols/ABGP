@@ -6,6 +6,7 @@ local UnitName = UnitName;
 local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
+local date = date;
 
 function ABGP:HookTooltips()
     for _, tt in pairs({ _G.GameTooltip, _G.ItemRefTooltip, _G.ShoppingTooltip1, _G.ShoppingTooltip2 }) do
@@ -65,7 +66,8 @@ function ABGP:HookTooltips()
                                             break;
                                         end
                                         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-                                        self:AddDoubleLine(" " .. ABGP:ColorizeName(epgp.player, epgp.class), data[ABGP.ItemHistoryIndex.DATE], 1, 1, 1, 1, 1, 1);
+                                        local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
+                                        self:AddDoubleLine(" " .. ABGP:ColorizeName(epgp.player, epgp.class), entryDate, 1, 1, 1, 1, 1, 1);
                                     end
                                 end
                             end
