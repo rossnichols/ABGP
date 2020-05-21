@@ -308,40 +308,72 @@ local function DrawEP(container)
 end
 
 local function DrawGP(container)
-    local banned = {
-        ["placeholder decay"] = true,
-        ["starting gp"] = true,
-        ["conversion from trial"] = true,
-        ["promotion to raider"] = true,
-        ["conversion to raider"] = true,
-        ["week 9 decay"] = true,
-        ["trial end"] = true,
-        ["trial"] = true,
-        ["carryover gp from previous bwl"] = true,
-        ["split start gp"] = true,
-    };
-    local entryTimes = {};
+    local lastRowTime = 0;
+    local rowTimes = {};
     local importFunc = function(widget, event)
         PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
-            row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM;
-            row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
-            row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE] or "";
-            row[ABGP.ItemHistoryIndex.DATE] = row[ABGP.ItemHistoryIndex.DATE]:gsub("20(%d%d)", "%1");
-            local m, d, y = row[ABGP.ItemHistoryIndex.DATE]:match("^(%d-)/(%d-)/(%d-)$");
-            if m then
-                local entryTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) });
-                while entryTimes[entryTime] do entryTime = entryTime + 1; end
-                entryTimes[entryTime] = true;
-                row[ABGP.ItemHistoryIndex.DATE] = entryTime;
-                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime);
+            if not row[ABGP.ItemHistoryIndex.DATE] then
+                ABGP:Error("Found row without date!");
+                return false;
             end
-            return
-                row[ABGP.ItemHistoryIndex.PLAYER] and
-                row[ABGP.ItemHistoryIndex.NAME] and
-                row[ABGP.ItemHistoryIndex.GP] >= 0 and
-                type(row[ABGP.ItemHistoryIndex.DATE]) == "number" and
-                not banned[row[ABGP.ItemHistoryIndex.NAME]:lower()] and
-                ABGP:GetActivePlayer(row[ABGP.ItemHistoryIndex.PLAYER]);
+            local rowDate =  row[ABGP.ItemHistoryIndex.DATE];
+            rowDate = rowDate:gsub("20(%d%d)", "%1");
+            local m, d, y = rowDate:match("^(%d-)/(%d-)/(%d-)$");
+            if not m then
+                ABGP:Error("Malformed date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                return false;
+            end
+            local rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) });
+            if rowTime < lastRowTime then
+                ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                return false;
+            end
+            while rowTimes[rowTime] do rowTime = rowTime + 1; end
+
+            if row[ABGP.ItemHistoryIndex.PLAYER] == "DECAY" then
+                row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DECAY;
+
+                -- Set the time to the last second of the day, to give room for backdating other entries.
+                rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) }) + (24 * 60 * 60) - 1;
+                if rowTimes[rowTime] then
+                    ABGP:Error("Duplicate decay on date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                    return false;
+                end
+
+                rowTimes[rowTime] = true;
+                row[ABGP.ItemHistoryIndex.DATE] = rowTime;
+                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
+
+                local gpDecay, gpFloor = ABGP:GetGPDecayInfo();
+                row[ABGP.ItemHistoryIndex.VALUE] = gpDecay;
+                row[ABGP.ItemHistoryIndex.FLOOR] = gpFloor;
+
+                return true;
+            else
+                if not row[ABGP.ItemHistoryIndex.PLAYER] then
+                    ABGP:Error("Found row without player on %s!", row[ABGP.ItemHistoryIndex.DATE]);
+                    return false;
+                end
+
+                row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
+                if row[ABGP.ItemHistoryIndex.GP] < 0 then
+                    ABGP:Error("Found row with negative gp on %s!", row[ABGP.ItemHistoryIndex.DATE]);
+                    return false;
+                end
+
+                rowTimes[rowTime] = true;
+                row[ABGP.ItemHistoryIndex.DATE] = rowTime;
+                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
+
+                if row[ABGP.ItemHistoryIndex.NAME] == "Bonus GP" then
+                    row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.BONUS;
+                    row[ABGP.ItemHistoryIndex.NAME] = nil;
+                else
+                    row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM;
+                end
+
+                return ABGP:GetActivePlayer(row[ABGP.ItemHistoryIndex.PLAYER]);
+            end
         end);
 
         local function reverse(arr)
@@ -364,11 +396,21 @@ local function DrawGP(container)
     end
 
     local exportFunc = function()
-        local text = "New Points,Item,Character,Date Won\n";
-        for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory) do
+        local history = ABGP:ProcessItemHistory(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory, true, true);
+
+        local text = "New Points\tItem\tCharacter\tDate Won\n";
+        for i = #history, 1, -1 do
+            local item = history[i];
             local entryDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
-            text = text .. ("%s,%s,%s,%s\n"):format(
-                item[ABGP.ItemHistoryIndex.GP], item[ABGP.ItemHistoryIndex.NAME], item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
+            if item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.ITEM then
+                text = text .. ("%s\t%s\t%s\t%s\n"):format(
+                    item[ABGP.ItemHistoryIndex.GP], item[ABGP.ItemHistoryIndex.NAME], item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
+            elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
+                text = text .. ("%s\t%s\t%s\t%s\n"):format("", "", "DECAY", entryDate);
+            elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.BONUS then
+                text = text .. ("%s\t%s\t%s\t%s\n"):format(
+                    item[ABGP.ItemHistoryIndex.GP], "Bonus GP", item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
+            end
         end
 
         return text;
@@ -535,17 +577,19 @@ function ABGP:FixupHistory()
     local p3 = _G.ABGP_Data.p3.gpHistory;
     for _, phase in ipairs({ p1, p3 }) do
         for _, entry in ipairs(phase) do
-            if not lookup[entry[self.ItemHistoryIndex.NAME]] then
-                for name, link in pairs(lookup) do
-                    local lowered = entry[self.ItemHistoryIndex.NAME]:lower();
-                    if lowered:find(name:lower(), 1, true) then
-                        -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.NAME], name));
-                        entry[self.ItemHistoryIndex.NAME] = name;
-                        break;
-                    end
-                end
+            if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM then
                 if not lookup[entry[self.ItemHistoryIndex.NAME]] then
-                    self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.NAME]));
+                    for name, link in pairs(lookup) do
+                        local lowered = entry[self.ItemHistoryIndex.NAME]:lower();
+                        if lowered:find(name:lower(), 1, true) then
+                            -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.NAME], name));
+                            entry[self.ItemHistoryIndex.NAME] = name;
+                            break;
+                        end
+                    end
+                    if not lookup[entry[self.ItemHistoryIndex.NAME]] then
+                        self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.NAME]));
+                    end
                 end
             end
         end

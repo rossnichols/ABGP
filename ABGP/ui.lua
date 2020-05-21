@@ -300,45 +300,34 @@ local function DrawItemHistory(container, rebuild, reason, command)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    local gpHistory = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
+    local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory);
     local filtered = {};
-    local deleted = {};
     local exact = searchText:match("^\"(.+)\"$");
     exact = exact and exact:lower() or exact;
     for _, data in ipairs(gpHistory) do
-        local entryType = data[ABGP.ItemHistoryIndex.TYPE];
-        if entryType == ABGP.ItemHistoryType.ITEM and not deleted[data[ABGP.ItemHistoryIndex.ID]] then
-            local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-            if epgp then
-                if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
-                    local class = epgp.class:lower();
-                    local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
-                    if exact then
-                        if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
-                            data[ABGP.ItemHistoryIndex.NAME]:lower() == exact or
-                            class == exact or
-                            entryDate == exact then
-                            table.insert(filtered, data);
-                        end
-                    else
-                        if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
-                            data[ABGP.ItemHistoryIndex.NAME]:lower():find(searchText, 1, true) or
-                            class:find(searchText, 1, true) or
-                            entryDate:find(searchText, 1, true) then
-                            table.insert(filtered, data);
-                        end
+        local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
+        if epgp then
+            if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
+                local class = epgp.class:lower();
+                local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
+                if exact then
+                    if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
+                        data[ABGP.ItemHistoryIndex.NAME]:lower() == exact or
+                        class == exact or
+                        entryDate == exact then
+                        table.insert(filtered, data);
+                    end
+                else
+                    if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
+                        data[ABGP.ItemHistoryIndex.NAME]:lower():find(searchText, 1, true) or
+                        class:find(searchText, 1, true) or
+                        entryDate:find(searchText, 1, true) then
+                        table.insert(filtered, data);
                     end
                 end
             end
-        elseif entryType == ABGP.ItemHistoryType.DELETE then
-            deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
         end
     end
-
-    table.sort(filtered, function(a, b)
-        -- NOTE: assumes all entries are type ITEM.
-        return a[ABGP.ItemHistoryIndex.DATE] > b[ABGP.ItemHistoryIndex.DATE];
-    end);
 
     pagination:SetValues(#filtered, 50);
     if #filtered > 0 then

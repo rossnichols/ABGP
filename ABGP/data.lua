@@ -13,6 +13,8 @@ local floor = floor;
 local tonumber = tonumber;
 local pairs = pairs;
 local next = next;
+local max = max;
+local abs = abs;
 
 local updatingNotes = false;
 
@@ -316,14 +318,67 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         table.insert(history, 1, {
             [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
             [ABGP.ItemHistoryIndex.ID] = newHistoryId,
+            [ABGP.ItemHistoryIndex.DATE] = awardDate,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.NAME] = itemName,
             [ABGP.ItemHistoryIndex.GP] = data.cost,
-            [ABGP.ItemHistoryIndex.DATE] = awardDate,
         });
     end
 
     self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
+end
+
+function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
+    local processed = {};
+    local deleted = {};
+    for _, data in ipairs(gpHistory) do
+        if not deleted[data[ABGP.ItemHistoryIndex.ID]] then
+            local entryType = data[ABGP.ItemHistoryIndex.TYPE];
+            if entryType == ABGP.ItemHistoryType.ITEM then
+                table.insert(processed, data);
+            elseif entryType == ABGP.ItemHistoryType.BONUS and includeBonus then
+                table.insert(processed, data);
+            elseif entryType == ABGP.ItemHistoryType.DECAY and includeDecay then
+                table.insert(processed, data);
+            elseif entryType == ABGP.ItemHistoryType.DELETE then
+                deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
+            end
+        end
+    end
+
+    -- All entries in the processed table must have a DATE field.
+    table.sort(processed, function(a, b)
+        return a[ABGP.ItemHistoryIndex.DATE] > b[ABGP.ItemHistoryIndex.DATE];
+    end);
+
+    return processed;
+end
+
+function ABGP:CheckItemHistory()
+    for phase in pairs(self.Phases) do
+        local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true, true);
+        for player, epgp in pairs(self:GetActivePlayers()) do
+            if epgp[phase] then
+                local calculated = 0;
+                for i = #history, 1, -1 do
+                    local entry = history[i];
+                    local entryType = entry[self.ItemHistoryIndex.TYPE];
+                    if (entryType == self.ItemHistoryType.ITEM or entryType == self.ItemHistoryType.BONUS) and
+                       entry[self.ItemHistoryIndex.PLAYER] == player then
+                        calculated = calculated + entry[self.ItemHistoryIndex.GP];
+                    elseif entryType == self.ItemHistoryType.DECAY then
+                        calculated = calculated * (1 - entry[self.ItemHistoryIndex.VALUE]);
+                        calculated = max(calculated, entry[self.ItemHistoryIndex.FLOOR]);
+                    end
+                end
+
+                if abs(calculated - epgp[phase].gp) > 0.001 then
+                    self:Error("GP for %s in %s is wrong! Expected %.3f, got %.3f.",
+                        self:ColorizeName(player), self.PhaseNames[phase], epgp[phase].gp, calculated);
+                end
+            end
+        end
+    end
 end
 
 function ABGP:HistoryUpdateCost(data, cost)

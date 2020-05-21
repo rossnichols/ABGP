@@ -74,6 +74,10 @@ local rankData = {
     ["Fiddler Crab"] =   { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
 };
 
+function ABGP:GetGPDecayInfo()
+    return 0.25, 0;
+end
+
 function ABGP:GetGPRaidGroup(rank, phase)
     return rank and rankData[rank] and rankData[rank].gp[phase];
 end

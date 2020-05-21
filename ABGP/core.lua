@@ -448,22 +448,29 @@ ABGP.ItemDataIndex = {
 };
 ABGP.ItemHistoryType = {
     ITEM = 1,
-    DECAY = 2,
-    DELETE = 3,
+    BONUS = 2,
+    DECAY = 3,
+    DELETE = 4,
 };
 ABGP.ItemHistoryIndex = {
     TYPE = 1,       -- from ABGP.ItemHistoryType
     ID = 2,         -- from ABGP:GetHistoryId()
 
     -- ABGP.ItemHistoryType.ITEM
-    PLAYER = 3,     -- player name (string)
-    NAME = 4,       -- item name (string)
+    DATE = 3,       -- date won (number)
+    PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp cost (number)
-    DATE = 6,       -- date won (number)
+    NAME = 6,       -- item name (string)
+
+    -- ABGP.ItemHistoryType.BONUS
+    DATE = 3,       -- date won (number)
+    PLAYER = 4,     -- player name (string)
+    GP = 5,         -- gp award (number)
 
     -- ABGP.ItemHistoryType.DECAY
-    VALUE = 3,      -- decay percentage (number)
-    FLOOR = 4,      -- gp floor (number)
+    DATE = 3,       -- date won (number)
+    VALUE = 4,      -- decay percentage (number)
+    FLOOR = 5,      -- gp floor (number)
 
     -- ABGP.ItemHistoryType.DELETE
     DELETEDID = 3,  -- from ABGP:GetHistoryId()
@@ -789,6 +796,10 @@ function ABGP:RefreshActivePlayers()
     end
 
     self:SendMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED);
+end
+
+function ABGP:GetActivePlayers()
+    return activePlayers;
 end
 
 function ABGP:GetActivePlayer(name)
