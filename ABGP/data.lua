@@ -6,6 +6,7 @@ local GetGuildRosterInfo = GetGuildRosterInfo;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
+local GetTime = GetTime;
 local date = date;
 local ipairs = ipairs;
 local table = table;
@@ -17,6 +18,8 @@ local max = max;
 local abs = abs;
 
 local updatingNotes = false;
+local checkedHistory = false;
+local itemHistoryToken;
 
 function ABGP:AddDataHooks()
     local onSetNote = function(note, name, canEdit, existing)
@@ -354,7 +357,8 @@ function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
     return processed;
 end
 
-function ABGP:CheckItemHistory()
+function ABGP:HasCompleteHistory()
+    local hasComplete = true;
     for phase in pairs(self.Phases) do
         local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true, true);
         for player, epgp in pairs(self:GetActivePlayers()) do
@@ -373,9 +377,204 @@ function ABGP:CheckItemHistory()
                 end
 
                 if abs(calculated - epgp[phase].gp) > 0.001 then
-                    self:Error("GP for %s in %s is wrong! Expected %.3f, got %.3f.",
+                    hasComplete = false;
+                    self:LogDebug("GP for %s in %s is wrong! Expected %.3f, got %.3f.",
                         self:ColorizeName(player), self.PhaseNames[phase], epgp[phase].gp, calculated);
                 end
+            end
+        end
+    end
+
+    return hasComplete;
+end
+
+function ABGP:HistoryOnGuildRosterUpdate()
+    checkedHistory = true;
+    if checkedHistory then return; end
+
+    local now = GetServerTime();
+    local threshold = 14 * 24 * 60 * 60;
+
+    for phase in pairs(self.Phases) do
+        local commData = {
+            type = "gpHistory",
+            phase = phase,
+            token = GetTime(),
+            ids = {},
+            baseline = _G.ABGP_DataTimestamp.gpHistory,
+        };
+        local gpHistory = _G.ABGP_Data[phase].gpHistory;
+        for _, entry in ipairs(gpHistory) do
+            local id = entry[self.ItemHistoryIndex.ID];
+            local player, date = self:ParseHistoryId(id);
+            if now - date > threshold then break; end
+
+            commData.ids[id] = true;
+        end
+
+        self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
+    end
+end
+
+function ABGP:HistoryOnSync(data, distribution, sender)
+    if sender == UnitName("player") then return; end
+    local senderIsPrivileged = self:CanEditOfficerNotes(sender);
+
+    local baseline = _G.ABGP_DataTimestamp[data.type];
+    local now = GetServerTime();
+    local threshold = 14 * 24 * 60 * 60;
+
+    if self:CanEditOfficerNotes() then
+        if not next(data.ids) or data.baseline < baseline then
+            -- The sender either has no recent history or an older baseline.
+            -- They need an entirely new set of data.
+            self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
+                type = data.type,
+                phase = data.phase,
+                token = data.token,
+            }, "WHISPER", sender);
+        elseif data.baseline == baseline then
+            -- The sender has some recent history and a matching baseline.
+            -- See if we have any supplemental entries to send, or
+            -- any entries to add.
+            local history = _G.ABGP_Data[data.phase][data.type];
+            local merge = {};
+            for _, entry in ipairs(history) do
+                local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
+                local player, date = self:ParseHistoryId(id);
+                if now - date > threshold then break; end
+
+                if data.ids[id] then
+                    -- We both have this entry.
+                    data.ids[id] = nil;
+                else
+                    -- Sender doesn't have this entry.
+                    merge[id] = entry;
+                end
+            end
+
+            -- At this point, anything left in data.ids represents entries
+            -- the sender has but we don't.
+            local requested;
+            if senderIsPrivileged and next(data.ids) then
+                requested = data.ids;
+            end
+            if #merge > 0 or next(data.ids) then
+                self:SendComm(self.CommTypes.HISTORY_MERGE, {
+                    type = data.type,
+                    phase = data.phase,
+                    baseline = baseline,
+                    merge = merge,
+                    requested = requested,
+                }, "WHISPER", sender);
+            end
+        end
+    end
+
+    if senderIsPrivileged and data.baseline > baseline then
+        -- The sender has a newer baseline. Our own data is out of date.
+        _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", nil, nil, {
+            type = data.type,
+            phase = data.phase,
+            sender = sender,
+        });
+    end
+end
+
+function ABGP:HistoryOnReplaceInit(data, distribution, sender)
+    if not self:CanEditOfficerNotes(sender) then return; end
+    if itemHistoryToken == data.token then return; end
+    itemHistoryToken = data.token;
+
+    -- The sender has a newer baseline. Our own data is out of date.
+    _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", nil, nil, {
+        type = data.type,
+        phase = data.phase,
+        sender = sender,
+    });
+end
+
+function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
+    -- The sender is asking for our entire history.
+
+    self:SendComm(self.CommTypes.HISTORY_REPLACE, {
+        type = data.type,
+        phase = data.phase,
+        history = _G.ABGP_Data[data.phase][data.type],
+        baseline = _G.ABGP_DataTimestamp[data.type],
+    }, "WHISPER", sender);
+end
+
+-- NOTES:
+-- need baselines for each phase...
+-- CanEditOfficerNotes needs to support an arg
+-- Add comm plumbing for all the new versions
+
+function ABGP:HistoryOnMerge(data, distribution, sender)
+    local baseline = _G.ABGP_DataTimestamp[data.type];
+    if data.baseline ~= baseline then return; end
+
+    local history = _G.ABGP_Data[data.phase][data.type];
+    local now = GetServerTime();
+    local threshold = 14 * 24 * 60 * 60;
+    
+    if data.requested then
+        -- The sender is requesting history entries.
+        local merge = {};
+        for _, entry in ipairs(history) do
+            local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
+            local player, date = self:ParseHistoryId(id);
+            if now - date > threshold then break; end
+
+            if data.requested[id] then
+                -- Sender wants this entry.
+                merge[id] = entry;
+            end
+        end
+        if #merge > 0 then
+            self:SendComm(self.CommTypes.HISTORY_MERGE, {
+                type = data.type,
+                phase = data.phase,
+                baseline = baseline,
+                merge = merge,
+            }, "WHISPER", sender);
+        end
+    end
+
+    if data.merge and self:CanEditOfficerNotes(sender) then
+        -- The sender is sharing entries. First remove the ones we already have.
+        for _, entry in ipairs(history) do
+            local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
+            local player, date = self:ParseHistoryId(id);
+            if now - date > threshold then break; end
+
+            if data.merge[id] then
+                -- We already have this entry from the sender.
+                data.merge[id] = nil;
+            end
+        end
+
+        -- At this point, data.merge contains entries we don't have.
+        if next(data.merge) then
+            local mergeCount = 0;
+            for _, entry in pairs(data.merge) do
+                -- Sanity check - don't merge in anything older than the threshold
+                local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
+                local player, date = self:ParseHistoryId(id);
+                if now - date <= threshold then
+                    table.insert(history, 1, entry);
+                    mergeCount = mergeCount + 1;
+                end
+            end
+
+            if mergeCount > 0 then
+                table.sort(history, function(a, b)
+                    local _, aDate = self:ParseHistoryId(a[self.ItemHistoryIndex.ID]);
+                    local _, bDate = self:ParseHistoryId(b[self.ItemHistoryIndex.ID]);
+
+                    return aDate > bDate;
+                end);
+                self:Notify("Received %d history entries from %s!", mergeCount, self:ColorizeName(sender));
             end
         end
     end

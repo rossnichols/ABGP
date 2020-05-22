@@ -58,6 +58,7 @@ local function OnGuildRosterUpdate()
     ABGP:RebuildGuildInfo();
     ABGP:VersionOnGuildRosterUpdate();
     ABGP:PriorityOnGuildRosterUpdate();
+    ABGP:HistoryOnGuildRosterUpdate();
 end
 
 function ABGP:OnInitialize()
