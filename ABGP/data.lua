@@ -7,6 +7,7 @@ local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
 local GetTime = GetTime;
+local InCombatLockdown = InCombatLockdown;
 local date = date;
 local ipairs = ipairs;
 local table = table;
@@ -389,8 +390,8 @@ function ABGP:HasCompleteHistory()
 end
 
 function ABGP:HistoryOnGuildRosterUpdate()
+    if checkedHistory or InCombatLockdown() then return; end
     checkedHistory = true;
-    if checkedHistory then return; end
 
     local now = GetServerTime();
     local threshold = 14 * 24 * 60 * 60;
@@ -400,8 +401,9 @@ function ABGP:HistoryOnGuildRosterUpdate()
             type = "gpHistory",
             phase = phase,
             token = GetTime(),
+            notPrivileged = self:GetDebugOpt("AvoidHistorySend"),
+            baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
             ids = {},
-            baseline = _G.ABGP_DataTimestamp.gpHistory,
         };
         local gpHistory = _G.ABGP_Data[phase].gpHistory;
         for _, entry in ipairs(gpHistory) do
@@ -417,14 +419,14 @@ function ABGP:HistoryOnGuildRosterUpdate()
 end
 
 function ABGP:HistoryOnSync(data, distribution, sender)
-    if sender == UnitName("player") then return; end
-    local senderIsPrivileged = self:CanEditOfficerNotes(sender);
+    if sender == UnitName("player") or InCombatLockdown() then return; end
+    local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
 
-    local baseline = _G.ABGP_DataTimestamp[data.type];
+    local baseline = _G.ABGP_DataTimestamp[data.type][data.phase];
     local now = GetServerTime();
     local threshold = 14 * 24 * 60 * 60;
 
-    if self:CanEditOfficerNotes() then
+    if self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") then
         if not next(data.ids) or data.baseline < baseline then
             -- The sender either has no recent history or an older baseline.
             -- They need an entirely new set of data.
@@ -473,7 +475,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
 
     if senderIsPrivileged and data.baseline > baseline then
         -- The sender has a newer baseline. Our own data is out of date.
-        _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", nil, nil, {
+        _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self:ColorizeName(sender), nil, {
             type = data.type,
             phase = data.phase,
             sender = sender,
@@ -487,7 +489,7 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
     itemHistoryToken = data.token;
 
     -- The sender has a newer baseline. Our own data is out of date.
-    _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", nil, nil, {
+    _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self:ColorizeName(sender), nil, {
         type = data.type,
         phase = data.phase,
         sender = sender,
@@ -497,28 +499,56 @@ end
 function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
     -- The sender is asking for our entire history.
 
+    local history = _G.ABGP_Data[data.phase][data.type];
+    if self:GetDebugOpt("AvoidHistorySend") then history = nil; end
+
     self:SendComm(self.CommTypes.HISTORY_REPLACE, {
         type = data.type,
         phase = data.phase,
-        history = _G.ABGP_Data[data.phase][data.type],
-        baseline = _G.ABGP_DataTimestamp[data.type],
+        baseline = _G.ABGP_DataTimestamp[data.type][data.phase],
+        history = history,
     }, "WHISPER", sender);
 end
 
--- NOTES:
--- need baselines for each phase...
--- CanEditOfficerNotes needs to support an arg
--- Add comm plumbing for all the new versions
+function ABGP:HistoryOnReplace(data, distribution, sender)
+    if not self:CanEditOfficerNotes(sender) then return; end
+    if not data.history then
+        self:Error("%s declined sending their full history!", ABGP:ColorizeName(sender));
+        return;
+    end
+
+    local baseline = _G.ABGP_DataTimestamp[data.type][data.phase];
+    if data.baseline < baseline then
+        self:Error("Received full history from %s, but it's out of date!", ABGP:ColorizeName(sender));
+        return;
+    end
+
+    _G.ABGP_DataTimestamp[data.type][data.phase] = data.baseline;
+    _G.ABGP_Data[data.phase][data.type] = data.history;
+
+    self:Notify("Received complete history from %s!", self:ColorizeName(sender));
+    self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
+end
+
+local function RequestFullHistory(data)
+    -- We're asking the sender for their full history.
+
+    ABGP:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
+        type = data.type,
+        phase = data.phase,
+    }, "WHISPER", data.sender);
+    ABGP:Notify("Requesting full history from %s! This could take a while.", ABGP:ColorizeName(data.sender));
+end
 
 function ABGP:HistoryOnMerge(data, distribution, sender)
-    local baseline = _G.ABGP_DataTimestamp[data.type];
+    local baseline = _G.ABGP_DataTimestamp[data.type][data.phase];
     if data.baseline ~= baseline then return; end
 
     local history = _G.ABGP_Data[data.phase][data.type];
     local now = GetServerTime();
     local threshold = 14 * 24 * 60 * 60;
-    
-    if data.requested then
+
+    if data.requested and self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") then
         -- The sender is requesting history entries.
         local merge = {};
         for _, entry in ipairs(history) do
@@ -575,6 +605,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
                     return aDate > bDate;
                 end);
                 self:Notify("Received %d history entries from %s!", mergeCount, self:ColorizeName(sender));
+                self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
             end
         end
     end
@@ -694,3 +725,16 @@ function ABGP:AuditItemUpdate(update)
         update = update,
     });
 end
+
+StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = {
+    text = "Your EPGP history is out of date! Sync from %s?",
+    button1 = "Yes",
+    button2 = "No",
+    OnAccept = function(self, data)
+        RequestFullHistory(data);
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    exclusive = true,
+};

@@ -4111,7 +4111,11 @@ ABGP.initialData = {
 		},
 	},
 	gpHistory = {
-		timestamp = 1589673099, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamps = {
+			[ABGP.PhasesAll.p1] = 1589673099,
+			[ABGP.PhasesAll.p3] = 1589673099,
+			[ABGP.PhasesAll.p5] = 1589673099,
+		},
 		[ABGP.PhasesAll.p1] = {
 			{
 				1,
@@ -15738,23 +15742,52 @@ ABGP.initialData = {
 function ABGP:CheckHardcodedData()
 	-- _G.ABGP_DataTimestamp was previously a flat number, converted later to a table.
 	if _G.ABGP_DataTimestamp == nil then
-		_G.ABGP_DataTimestamp = { itemValues = 0, gpHistory = 0 };
+		_G.ABGP_DataTimestamp = { itemValues = 0, gpHistory = {
+			[ABGP.PhasesAll.p1] = 0,
+			[ABGP.PhasesAll.p3] = 0,
+			[ABGP.PhasesAll.p5] = 0
+		}};
 	elseif type(_G.ABGP_DataTimestamp) == "number" then
-		_G.ABGP_DataTimestamp = { itemValues = _G.ABGP_DataTimestamp, gpHistory = 0 };
+		_G.ABGP_DataTimestamp = { itemValues = _G.ABGP_DataTimestamp, gpHistory = {
+			[ABGP.PhasesAll.p1] = 0,
+			[ABGP.PhasesAll.p3] = 0,
+			[ABGP.PhasesAll.p5] = 0
+		}};
+	elseif type(_G.ABGP_DataTimestamp.gpHistory) == "number" then
+		_G.ABGP_DataTimestamp.gpHistory = {
+			[ABGP.PhasesAll.p1] = 0,
+			[ABGP.PhasesAll.p3] = 0,
+			[ABGP.PhasesAll.p5] = 0
+		};
 	end
 
 	for key, initialData in pairs(self.initialData) do
-		local updateBaseline = false;
-		if _G.ABGP_DataTimestamp[key] < initialData.timestamp then
-			_G.ABGP_DataTimestamp[key] = initialData.timestamp;
-			updateBaseline = true;
-		end
+		if initialData.timestamp then
+			local updateBaseline = false;
+			if _G.ABGP_DataTimestamp[key] < initialData.timestamp then
+				_G.ABGP_DataTimestamp[key] = initialData.timestamp;
+				updateBaseline = true;
+			end
 
-		for phase in pairs(ABGP.PhasesAll) do
-			_G.ABGP_Data[phase] = _G.ABGP_Data[phase] or {};
-			_G.ABGP_Data[phase][key] = _G.ABGP_Data[phase][key] or {};
-			if updateBaseline then
-				_G.ABGP_Data[phase][key] = initialData[phase];
+			for phase in pairs(ABGP.PhasesAll) do
+				_G.ABGP_Data[phase] = _G.ABGP_Data[phase] or {};
+				_G.ABGP_Data[phase][key] = _G.ABGP_Data[phase][key] or {};
+				if updateBaseline then
+					_G.ABGP_Data[phase][key] = initialData[phase];
+				end
+			end
+		end
+	end
+
+	for key, initialData in pairs(self.initialData) do
+		if initialData.timestamps then
+			for phase in pairs(ABGP.PhasesAll) do
+				_G.ABGP_Data[phase] = _G.ABGP_Data[phase] or {};
+				_G.ABGP_Data[phase][key] = _G.ABGP_Data[phase][key] or {};
+				if _G.ABGP_DataTimestamp[key][phase] < initialData.timestamps[phase] then
+					_G.ABGP_DataTimestamp[key][phase] = initialData.timestamps[phase];
+					_G.ABGP_Data[phase][key] = initialData[phase];
+				end
 			end
 		end
 	end

@@ -131,6 +131,36 @@ ABGP.CommTypes = {
     -- itemDataTime: number
     -- itemValues: table
 
+    HISTORY_SYNC = { name = CV("HISTORY_SYNC"), priority = "BULK" },
+    -- type: string
+    -- phase: from ABGP.Phases
+    -- token: unique token for the message
+    -- notPrivileged: bool
+    -- baseline: number
+    -- ids: table
+
+    HISTORY_REPLACE_INITIATION = { name = CV("HISTORY_REPLACE_INITIATION"), priority = "NORMAL" },
+    -- type: string
+    -- phase: from ABGP.Phases
+    -- token: value from HISTORY_SYNC
+
+    HISTORY_MERGE = { name = CV("HISTORY_MERGE"), priority = "BULK" },
+    -- type: string
+    -- phase: from ABGP.Phases
+    -- baseline: number
+    -- merge: table
+    -- requested: table
+
+    HISTORY_REPLACE = { name = CV("HISTORY_REPLACE"), priority = "BULK" },
+    -- type: string
+    -- phase: from ABGP.Phases
+    -- baseline: number
+    -- history: table
+
+    HISTORY_REPLACE_REQUEST = { name = CV("HISTORY_REPLACE_REQUEST"), priority = "NORMAL" },
+    -- type: string
+    -- phase: from ABGP.Phases
+
     -- NOTE: these aren't versioned so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL" },
     -- reset: bool or nil

@@ -174,6 +174,26 @@ function ABGP:OnInitialize()
         self:ItemOnDataSync(data, distribution, sender);
     end, self);
 
+    self:RegisterMessage(self.CommTypes.HISTORY_SYNC.name, function(self, event, data, distribution, sender)
+        self:HistoryOnSync(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.HISTORY_REPLACE_INITIATION.name, function(self, event, data, distribution, sender)
+        self:HistoryOnReplaceInit(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.HISTORY_MERGE.name, function(self, event, data, distribution, sender)
+        self:HistoryOnMerge(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.HISTORY_REPLACE.name, function(self, event, data, distribution, sender)
+        self:HistoryOnReplace(data, distribution, sender);
+    end, self);
+
+    self:RegisterMessage(self.CommTypes.HISTORY_REPLACE_REQUEST.name, function(self, event, data, distribution, sender)
+        self:HistoryOnReplaceRequest(data, distribution, sender);
+    end, self);
+
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
@@ -426,9 +446,15 @@ function ABGP:CanEditPublicNotes()
     return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[10];
 end
 
-function ABGP:CanEditOfficerNotes()
+function ABGP:CanEditOfficerNotes(player)
     if self:Get("outsider") then return false; end
-    return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(UnitGUID("player")))[12];
+    local guid = UnitGUID("player");
+    if player then
+        local guildInfo = self:GetGuildInfo(player);
+        if not guildInfo then return false; end
+        guid = guildInfo[17];
+    end
+    return C_GuildInfo.GuildControlGetRankFlags(C_GuildInfo.GetGuildRankOrder(guid))[12];
 end
 
 
@@ -596,9 +622,9 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
 end
 
 function ABGP:CommitItemData()
-    if not self:GetDebugOpt("IgnoreItemUpdates") then
+    ABGP:RefreshItemValues();
+    if not self:GetDebugOpt("IgnoreItemCommit") then
         _G.ABGP_DataTimestamp.itemValues = GetServerTime();
-        ABGP:RefreshItemValues();
         self:BroadcastItemData();
     end
 end
