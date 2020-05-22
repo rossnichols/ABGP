@@ -449,6 +449,7 @@ function ABGP:StartRaid()
         ABGP:EndWindowManagement(widget);
         ABGP:CloseWindow(widget);
         AceGUI:Release(widget);
+        activeWindow = nil;
     end);
 
     local custom = -1;
