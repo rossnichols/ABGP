@@ -213,18 +213,19 @@ local function DrawItemHistory(container, rebuild, reason, command)
                     local elt = history.children[i];
                     local data = elt.data;
 
-                    local item = data.item;
+                    local item = data[ABGP.ItemHistoryIndex.NAME];
+                    local itemDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE])
                     local value = ABGP:GetItemValue(item);
-                    if value and value.gp ~= data.gp then
-                        if data.gp == 0 then
+                    if value and value.gp ~= data[ABGP.ItemHistoryIndex.GP] then
+                        if data[ABGP.ItemHistoryIndex.GP] == 0 then
                             item = item .. " OFF";
                         else
-                            item = ("%s @ %d"):format(item, data.gp);
+                            item = ("%s @ %d"):format(item, data[ABGP.ItemHistoryIndex.GP]);
                         end
                     end
 
                     text = text .. ("%s\t%s\t%s%s"):format(
-                        item, data.player, data.date, (i == 1 and "" or "\n"));
+                        item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
                 end
 
                 local window = AceGUI:Create("Window");
