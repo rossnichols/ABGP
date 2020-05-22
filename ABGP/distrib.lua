@@ -481,7 +481,7 @@ function ABGP:DistribValidateCost(cost, player, value)
 end
 
 local function GiveItemViaML(itemLink, player)
-    if ABGP:Get("masterLoot") and IsMasterLooter() and player then
+    if ABGP:Get("masterLoot") and player then
         player = player:lower();
         local itemName = ABGP:GetItemName(itemLink);
         local slot;
@@ -496,8 +496,9 @@ local function GiveItemViaML(itemLink, player)
         end
 
         if slot then
-            for i = 1, GetNumGroupMembers() do
-                if GetMasterLootCandidate(slot, i):lower() == player then
+            for i = 1, _G.MAX_RAID_MEMBERS do
+                local candidate = GetMasterLootCandidate(slot, i);
+                if candidate and candidate:lower() == player then
                     GiveMasterLoot(slot, i);
                     break;
                 end
