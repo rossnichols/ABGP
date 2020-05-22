@@ -949,14 +949,35 @@ function ABGP:EventOnGroupUpdate()
     EnsureAwardsEntries();
 end
 
+local function IsRaidInCombat()
+    local groupSize = GetNumGroupMembers();
+    for i = 1, groupSize do
+        local unit = "player";
+        if IsInRaid() then
+            unit = "raid" .. i;
+        elseif i ~= groupSize then
+            unit = "party" .. i;
+        end
+
+        if UnitAffectingCombat(unit) then return true; end
+    end
+
+    return false;
+end
+
 function ABGP:ChangeLootMethod()
-    local passedCombatCheck = not checkCombatWhilePending or not UnitAffectingCombat("player");
+    local inCombat = UnitAffectingCombat("player");
+    local passedCombatCheck = not checkCombatWhilePending or not inCombat;
+    checkCombatWhilePending = not inCombat;
+
     if GetLootMethod() ~= pendingLootMethod and IsInGroup() and passedCombatCheck then
-        SetLootMethod(pendingLootMethod, UnitName("player"));
+        if not IsRaidInCombat() then
+            SetLootMethod(pendingLootMethod, UnitName("player"));
+        end
         self:ScheduleTimer("ChangeLootMethod", 1);
     else
         if GetLootMethod() ~= pendingLootMethod then
-            self:Notify("Giving up trying to change the loot type (in combat or not grouped).");
+            self:Notify("Giving up trying to change the loot type (entered combat or not grouped).");
         end
         pendingLootMethod = nil;
     end
