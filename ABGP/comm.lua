@@ -132,6 +132,7 @@ ABGP.CommTypes = {
     -- itemValues: table
 
     HISTORY_SYNC = { name = CV("HISTORY_SYNC"), priority = "BULK" },
+    -- version: from ABGP:GetVersion()
     -- type: string
     -- phase: from ABGP.Phases
     -- token: unique token for the message

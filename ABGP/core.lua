@@ -830,7 +830,7 @@ function ABGP:GetActivePlayers()
 end
 
 function ABGP:GetActivePlayer(name)
-    return activePlayers[name];
+    return activePlayers[name or UnitName("player")];
 end
 
 function ABGP:OnPrioritySyncRequested(data, distribution, sender)

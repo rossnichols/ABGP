@@ -17,6 +17,7 @@ local pairs = pairs;
 local next = next;
 local max = max;
 local abs = abs;
+local type = type;
 
 local updatingNotes = false;
 local checkedHistory = false;
@@ -279,26 +280,28 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if not value then return; end
     local history = _G.ABGP_Data[value.phase].gpHistory;
 
-    local newHistoryId = data.editId;
-    local _, awardDate = self:ParseHistoryId(newHistoryId);
-    if not awardDate then
-        awardDate = GetServerTime();
+    -- For temporary back-compat, handle editIds that are just numbers.
+    -- Turn them into a consistently-formatted history id.
+    local historyId = data.editId;
+    if type(data.editId) == "number" then
+        historyId = ("COMPAT:%d"):format(data.editId);
     end
+    local _, awardDate = self:ParseHistoryId(historyId);
 
     if data.oldCost or data.oldPlayer then
-        if data.updateId then
-            newHistoryId = data.newEditId;
-            table.insert(history, 1, {
-                [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
-                [ABGP.ItemHistoryIndex.ID] = data.updateId,
-                [ABGP.ItemHistoryIndex.DELETEDID] = data.editId,
-            });
-        end
         for i, entry in ipairs(history) do
-            if not entry[self.ItemHistoryIndex.ID] then break; end
-            if entry[self.ItemHistoryIndex.ID] == data.editId then
+            if entry[self.ItemHistoryIndex.ID] == historyId then
+                -- This is the entry being replaced. If legacy, remove the entry.
+                -- Otherwise, insert an entry representing its removal and update
+                -- the historyId for the new entry.
                 if data.updateId then
                     awardDate = history[i][ABGP.ItemHistoryIndex.DATE];
+                    table.insert(history, 1, {
+                        [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
+                        [ABGP.ItemHistoryIndex.ID] = data.updateId,
+                        [ABGP.ItemHistoryIndex.DELETEDID] = historyId,
+                    });
+                    historyId = data.newEditId;
                 else
                     table.remove(history, i);
                 end
@@ -321,7 +324,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if data.player then
         table.insert(history, 1, {
             [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
-            [ABGP.ItemHistoryIndex.ID] = newHistoryId,
+            [ABGP.ItemHistoryIndex.ID] = historyId,
             [ABGP.ItemHistoryIndex.DATE] = awardDate,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.NAME] = itemName,
@@ -390,7 +393,7 @@ function ABGP:HasCompleteHistory()
 end
 
 function ABGP:HistoryOnGuildRosterUpdate()
-    if checkedHistory or InCombatLockdown() then return; end
+    if checkedHistory or InCombatLockdown() or self:Get("outsider") or not self:GetActivePlayer() then return; end
     checkedHistory = true;
 
     local now = GetServerTime();
@@ -398,6 +401,7 @@ function ABGP:HistoryOnGuildRosterUpdate()
 
     for phase in pairs(self.Phases) do
         local commData = {
+            version = self:GetVersion(),
             type = "gpHistory",
             phase = phase,
             token = GetTime(),
@@ -419,9 +423,10 @@ function ABGP:HistoryOnGuildRosterUpdate()
 end
 
 function ABGP:HistoryOnSync(data, distribution, sender)
-    if sender == UnitName("player") or InCombatLockdown() then return; end
-    local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
+    if sender == UnitName("player") or InCombatLockdown() or self:Get("outsider") or not self:GetActivePlayer() then return; end
+    if self:GetCompareVersion() ~= data.version then return; end
 
+    local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
     local baseline = _G.ABGP_DataTimestamp[data.type][data.phase];
     local now = GetServerTime();
     local threshold = 14 * 24 * 60 * 60;
@@ -608,6 +613,12 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
                 self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
             end
         end
+    end
+end
+
+function ABGP:CommitHistory(type, phase)
+    if not self:GetDebugOpt("AvoidHistorySend") then
+        _G.ABGP_DataTimestamp[type][phase] = GetServerTime();
     end
 end
 

@@ -225,7 +225,15 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
                     row[mapping[labels[j]]] = (type(tonumber(values[j])) == "number" and tonumber(values[j]) or values[j]);
                 end
             end
-            if (not filter or filter(row)) then
+            local insert, isError = true, false;
+            if filter then
+                insert, isError = filter(row);
+            end
+            if isError then
+                ABGP:Notify("Cancelling import!");
+                return false;
+            end
+            if insert then
                 table.insert(newData, row);
             end
         end
@@ -311,28 +319,30 @@ local function DrawGP(container)
     local lastRowTime = 0;
     local rowTimes = {};
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
+        local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             if not row[ABGP.ItemHistoryIndex.DATE] then
                 -- Only print an error if the row isn't completely blank.
+                local isError = false;
                 for _, v in pairs(row) do
                     if v then
                         ABGP:Error("Found row without date!");
+                        isError = true;
                         break;
                     end
                 end
-                return false;
+                return false, isError;
             end
             local rowDate =  row[ABGP.ItemHistoryIndex.DATE];
             rowDate = rowDate:gsub("20(%d%d)", "%1");
             local m, d, y = rowDate:match("^(%d-)/(%d-)/(%d-)$");
             if not m then
                 ABGP:Error("Malformed date: %s", row[ABGP.ItemHistoryIndex.DATE]);
-                return false;
+                return false, true;
             end
             local rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) });
             if rowTime < lastRowTime then
                 ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.DATE]);
-                return false;
+                return false, true;
             end
             while rowTimes[rowTime] do rowTime = rowTime + 1; end
 
@@ -343,7 +353,7 @@ local function DrawGP(container)
                 rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) }) + (24 * 60 * 60) - 1;
                 if rowTimes[rowTime] then
                     ABGP:Error("Duplicate decay on date: %s", row[ABGP.ItemHistoryIndex.DATE]);
-                    return false;
+                    return false, true;
                 end
 
                 rowTimes[rowTime] = true;
@@ -358,13 +368,13 @@ local function DrawGP(container)
             else
                 if not row[ABGP.ItemHistoryIndex.PLAYER] then
                     ABGP:Error("Found row without player on %s!", row[ABGP.ItemHistoryIndex.DATE]);
-                    return false;
+                    return false, true;
                 end
 
                 row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
                 if row[ABGP.ItemHistoryIndex.GP] < 0 then
                     ABGP:Error("Found row with negative gp on %s!", row[ABGP.ItemHistoryIndex.DATE]);
-                    return false;
+                    return false, true;
                 end
 
                 rowTimes[rowTime] = true;
@@ -382,22 +392,24 @@ local function DrawGP(container)
             end
         end);
 
-        local function reverse(arr)
-            local i, j = 1, #arr;
-            while i < j do
-                arr[i], arr[j] = arr[j], arr[i];
-                i = i + 1;
-                j = j - 1;
+        if success then
+            local function reverse(arr)
+                local i, j = 1, #arr;
+                while i < j do
+                    arr[i], arr[j] = arr[j], arr[i];
+                    i = i + 1;
+                    j = j - 1;
+                end
             end
-        end
-        reverse(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory);
+            reverse(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory);
 
-        widget:GetUserData("window"):Hide();
-        container:ReleaseChildren();
-        DrawGP(container);
+            widget:GetUserData("window"):Hide();
+            container:ReleaseChildren();
+            DrawGP(container);
 
-        if not ABGP:FixupHistory() then
-            ABGP:ScheduleTimer("FixupHistory", 5);
+            if ABGP:FixupHistory() then
+                ABGP:CommitHistory("gpHistory", ABGP.CurrentPhase);
+            end
         end
     end
 
@@ -601,6 +613,5 @@ function ABGP:FixupHistory()
         end
     end
 
-    self:Notify("Done fixing up history!");
     return true;
 end
