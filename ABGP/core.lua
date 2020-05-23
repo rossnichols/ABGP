@@ -61,7 +61,7 @@ local function OnGuildRosterUpdate()
     ABGP:HistoryOnGuildRosterUpdate();
 end
 
-function ABGP:OnInitialize()
+function ABGP:OnEnable()
     if GetAddOnMetadata("ABGP", "Version") ~= version then
         self:NotifyVersionMismatch();
         return;
@@ -278,6 +278,7 @@ function ABGP:OnInitialize()
     end, self);
     self:RegisterEvent("PLAYER_ENTERING_WORLD", function(self, event, ...)
         self:CommOnEnteringWorld();
+        self:HistoryOnEnteringWorld(...);
     end, self);
     self:RegisterEvent("LOADING_SCREEN_ENABLED", function(self, event, ...)
         self:DistribOnLoadingScreen();
