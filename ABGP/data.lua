@@ -425,14 +425,14 @@ function ABGP:HistoryOnGuildRosterUpdate()
             syncCount = syncCount + 1;
         end
 
-        self:LogDebug("Sending history sync with %d entries [%s, %s]", 
+        self:LogDebug("Sending history sync with %d entries [%s, %s]",
             syncCount, "gpHistory", self.PhaseNames[phase]);
         self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
     end
 end
 
 function ABGP:HistoryOnSync(data, distribution, sender)
-    if sender == UnitName("player") or InCombatLockdown() or self:Get("outsider") or not self:GetActivePlayer() then return; end
+    if sender == UnitName("player") or InCombatLockdown() or self:Get("outsider") then return; end
     if self:GetCompareVersion() ~= data.version then return; end
 
     local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
@@ -443,7 +443,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         if not next(data.ids) or data.baseline < baseline then
             -- The sender either has no recent history or an older baseline.
             -- They need an entirely new set of data.
-            self:LogDebug("Sending history replace init to %s [%s, %s]", 
+            self:LogDebug("Sending history replace init to %s [%s, %s]",
                 self:ColorizeName(sender), data.type, self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 type = data.type,
@@ -495,7 +495,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
 
     if senderIsPrivileged and data.baseline > baseline then
         -- The sender has a newer baseline. Our own data is out of date.
-        self:LogDebug("Updated baseline found from %s [%s, %s]", 
+        self:LogDebug("Updated baseline found from %s [%s, %s]",
             self:ColorizeName(sender), data.type, self.PhaseNames[data.phase]);
         _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self.PhaseNames[data.phase], self:ColorizeName(sender), {
             type = data.type,
@@ -511,7 +511,7 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
     itemHistoryToken = data.token;
 
     -- The sender has a newer baseline. Our own data is out of date.
-    self:LogDebug("History replace init received from %s [%s, %s]", 
+    self:LogDebug("History replace init received from %s [%s, %s]",
         self:ColorizeName(sender), data.type, self.PhaseNames[data.phase]);
     _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self.PhaseNames[data.phase], self:ColorizeName(sender), {
         type = data.type,
@@ -522,7 +522,7 @@ end
 
 function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
     -- The sender is asking for our entire history.
-    self:LogDebug("Sending history replacement to %s [%s, %s]", 
+    self:LogDebug("Sending history replacement to %s [%s, %s]",
         self:ColorizeName(sender), data.type, self.PhaseNames[data.phase]);
 
     local history = _G.ABGP_Data[data.phase][data.type];
