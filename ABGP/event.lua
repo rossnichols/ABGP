@@ -400,11 +400,11 @@ function ABGP:EventOnBossKilled(bossId, name)
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)
-    self:LogVerbose("Zone changed to %s[%d]!", name, instanceId);
+    self:LogDebug("Zone changed to %s[%d]!", name, instanceId);
     currentInstance = instanceId;
     local info = instanceInfo[instanceId];
     if info then
-        self:LogVerbose("This instance is associated with phase %s.", info.phase);
+        self:LogDebug("This instance is associated with phase %s.", info.phase);
         self.CurrentPhase = info.phase;
 
         -- Gently suggest that a raid gets started.
