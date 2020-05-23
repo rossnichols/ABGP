@@ -133,7 +133,7 @@ ABGP.CommTypes = {
 
     HISTORY_SYNC = { name = CV("HISTORY_SYNC"), priority = "BULK" },
     -- version: from ABGP:GetVersion()
-    -- type: string
+    -- historyType: string
     -- phase: from ABGP.Phases
     -- token: unique token for the message
     -- notPrivileged: bool
@@ -141,25 +141,25 @@ ABGP.CommTypes = {
     -- ids: table
 
     HISTORY_REPLACE_INITIATION = { name = CV("HISTORY_REPLACE_INITIATION"), priority = "NORMAL" },
-    -- type: string
+    -- historyType: string
     -- phase: from ABGP.Phases
     -- token: value from HISTORY_SYNC
 
     HISTORY_MERGE = { name = CV("HISTORY_MERGE"), priority = "BULK" },
-    -- type: string
+    -- historyType: string
     -- phase: from ABGP.Phases
     -- baseline: number
     -- merge: table
     -- requested: table
 
     HISTORY_REPLACE = { name = CV("HISTORY_REPLACE"), priority = "BULK" },
-    -- type: string
+    -- historyType: string
     -- phase: from ABGP.Phases
     -- baseline: number
     -- history: table
 
     HISTORY_REPLACE_REQUEST = { name = CV("HISTORY_REPLACE_REQUEST"), priority = "NORMAL" },
-    -- type: string
+    -- historyType: string
     -- phase: from ABGP.Phases
 
     -- NOTE: these aren't versioned so they can continue to function across major changes.
@@ -189,6 +189,7 @@ function ABGP:CommCallback(sent, total, logInCallback)
 end
 
 function ABGP:SendComm(type, data, distribution, target)
+    _G.assert(data.type == nil);
     data.type = type.name;
 
     local priority = data.commPriority or type.priority;
