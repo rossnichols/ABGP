@@ -4127,6 +4127,14 @@ ABGP.initialData = {
 			},
 			{
 				1,
+				"IMPORT:1590087614",
+				1590087614,
+				"Vitallion",
+				0,
+				"Essence of the Pure Flame",
+			},
+			{
+				1,
 				"IMPORT:1590113167",
 				1590113167,
 				"Arrowcard",
@@ -4183,14 +4191,6 @@ ABGP.initialData = {
 			},
 			{
 				1,
-				"IMPORT:1590112026",
-				1590112026,
-				"Symbol",
-				0,
-				"Cenarion Belt",
-			},
-			{
-				1,
 				"IMPORT:1590111769",
 				1590111769,
 				"Phaemos",
@@ -4204,14 +4204,6 @@ ABGP.initialData = {
 				"Friend",
 				0,
 				"Crimson Shocker",
-			},
-			{
-				1,
-				"IMPORT:1590111390",
-				1590111390,
-				"Quintic",
-				0,
-				"Felheart Shoulder Pads",
 			},
 			{
 				1,
@@ -4252,22 +4244,6 @@ ABGP.initialData = {
 				"Azuj",
 				200,
 				"Quick Strike Ring",
-			},
-			{
-				1,
-				"IMPORT:1590109805",
-				1590109805,
-				"Symbol",
-				0,
-				"Cenarion Boots",
-			},
-			{
-				1,
-				"IMPORT:1590109801",
-				1590109801,
-				"Quintic",
-				0,
-				"Felheart Gloves",
 			},
 			{
 				1,
@@ -4435,6 +4411,14 @@ ABGP.initialData = {
 				1589828400,
 				"Rumhammer",
 				130,
+			},
+			{
+				1,
+				"IMPORT:1589742000",
+				1589742000,
+				"Xantink",
+				100,
+				"Cold Snap",
 			},
 			{
 				1,
