@@ -214,7 +214,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                     local data = elt.data;
 
                     local item = data[ABGP.ItemHistoryIndex.NAME];
-                    local itemDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE])
+                    local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE])
                     local value = ABGP:GetItemValue(item);
                     if value and value.gp ~= data[ABGP.ItemHistoryIndex.GP] then
                         if data[ABGP.ItemHistoryIndex.GP] == 0 then
