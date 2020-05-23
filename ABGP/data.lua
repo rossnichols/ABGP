@@ -22,6 +22,7 @@ local type = type;
 local updatingNotes = false;
 local checkedHistory = false;
 local itemHistoryToken;
+local syncThreshold = 10 * 24 * 60 * 60;
 
 function ABGP:AddDataHooks()
     local onSetNote = function(note, name, canEdit, existing)
@@ -397,7 +398,6 @@ function ABGP:HistoryOnGuildRosterUpdate()
     checkedHistory = true;
 
     local now = GetServerTime();
-    local threshold = 14 * 24 * 60 * 60;
 
     for phase in pairs(self.Phases) do
         local syncCount = 0;
@@ -414,7 +414,7 @@ function ABGP:HistoryOnGuildRosterUpdate()
         for _, entry in ipairs(gpHistory) do
             local id = entry[self.ItemHistoryIndex.ID];
             local player, date = self:ParseHistoryId(id);
-            if now - date > threshold then break; end
+            if now - date > syncThreshold then break; end
 
             commData.ids[id] = true;
             syncCount = syncCount + 1;
@@ -433,7 +433,6 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
     local baseline = _G.ABGP_DataTimestamp[data.type][data.phase];
     local now = GetServerTime();
-    local threshold = 14 * 24 * 60 * 60;
 
     if self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") then
         if not next(data.ids) or data.baseline < baseline then
@@ -456,7 +455,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             for _, entry in ipairs(history) do
                 local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
                 local player, date = self:ParseHistoryId(id);
-                if now - date > threshold then break; end
+                if now - date > syncThreshold then break; end
 
                 if data.ids[id] then
                     -- We both have this entry.
@@ -569,7 +568,6 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
     local history = _G.ABGP_Data[data.phase][data.type];
     local now = GetServerTime();
-    local threshold = 14 * 24 * 60 * 60;
 
     if data.requested and self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") then
         -- The sender is requesting history entries.
@@ -577,9 +575,6 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
         local sendCount = 0;
         for _, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
-            local player, date = self:ParseHistoryId(id);
-            if now - date > threshold then break; end
-
             if data.requested[id] then
                 -- Sender wants this entry.
                 merge[id] = entry;
@@ -602,26 +597,15 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
         -- The sender is sharing entries. First remove the ones we already have.
         for _, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
-            local player, date = self:ParseHistoryId(id);
-            if now - date > threshold then break; end
-
-            if data.merge[id] then
-                -- We already have this entry from the sender.
-                data.merge[id] = nil;
-            end
+            data.merge[id] = nil;
         end
 
         -- At this point, data.merge contains entries we don't have.
         if next(data.merge) then
             local mergeCount = 0;
             for _, entry in pairs(data.merge) do
-                -- Sanity check - don't merge in anything older than the threshold
-                local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
-                local player, date = self:ParseHistoryId(id);
-                if now - date <= threshold then
-                    table.insert(history, 1, entry);
-                    mergeCount = mergeCount + 1;
-                end
+                table.insert(history, 1, entry);
+                mergeCount = mergeCount + 1;
             end
 
             if mergeCount > 0 then
@@ -699,8 +683,8 @@ function ABGP:HistoryDelete(data)
     ABGP:AuditItemUpdate(commData);
 end
 
-function ABGP:TrimAuditLog(threshold)
-    threshold = threshold or 0;
+function ABGP:TrimAuditLog(trimThreshold)
+    trimThreshold = trimThreshold or 0;
 
     _G.ABGP_ItemAuditLog = _G.ABGP_ItemAuditLog or {};
     for phase in pairs(ABGP.PhasesAll) do
@@ -712,7 +696,7 @@ function ABGP:TrimAuditLog(threshold)
         local i = 1;
         while i <= #phaseLog do
             local age = current - phaseLog[i].time;
-            if age >= threshold then
+            if age >= trimThreshold then
                 table.remove(phaseLog, i);
             else
                 i = i + 1;
