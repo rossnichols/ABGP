@@ -4112,18 +4112,18 @@ ABGP.initialData = {
 	},
 	gpHistory = {
 		timestamps = {
-			[ABGP.PhasesAll.p5] = 1589673101,
-			[ABGP.PhasesAll.p1] = 1589673101,
-			[ABGP.PhasesAll.p3] = 1589673101,
+			[ABGP.PhasesAll.p5] = 1589673102,
+			[ABGP.PhasesAll.p1] = 1589673102,
+			[ABGP.PhasesAll.p3] = 1589673102,
 		},
 		[ABGP.PhasesAll.p1] = {
 			{
 				1,
-				"IMPORT:1590113170",
-				1590113170,
-				"Vitallion",
-				0,
-				"Essence of the Pure Flame",
+				"IMPORT:1590256606",
+				1590256606,
+				"Asrathi",
+				150,
+				"Puissant Cape",
 			},
 			{
 				1,

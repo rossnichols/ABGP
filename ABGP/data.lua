@@ -383,7 +383,7 @@ function ABGP:HasCompleteHistory()
 
                 if abs(calculated - epgp[phase].gp) > 0.001 then
                     hasComplete = false;
-                    self:LogDebug("GP for %s in %s is wrong! Expected %.3f, got %.3f.",
+                    self:LogDebug("GP history for %s in %s is incomplete! Expected %.3f, calculated %.3f.",
                         self:ColorizeName(player), self.PhaseNames[phase], epgp[phase].gp, calculated);
                 end
             end
