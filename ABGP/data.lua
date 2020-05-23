@@ -400,6 +400,7 @@ function ABGP:HistoryOnGuildRosterUpdate()
     local threshold = 14 * 24 * 60 * 60;
 
     for phase in pairs(self.Phases) do
+        local syncCount = 0;
         local commData = {
             version = self:GetVersion(),
             type = "gpHistory",
@@ -416,8 +417,11 @@ function ABGP:HistoryOnGuildRosterUpdate()
             if now - date > threshold then break; end
 
             commData.ids[id] = true;
+            syncCount = syncCount + 1;
         end
 
+        self:LogDebug("Sending history sync with %d entries [%s, %s]", 
+            syncCount, "gpHistory", self.PhaseNames[phase]);
         self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
     end
 end
