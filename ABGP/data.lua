@@ -402,8 +402,15 @@ function ABGP:HistoryOnGuildRosterUpdate()
     if checkedHistory or InCombatLockdown() or self:Get("outsider") or not self:GetActivePlayer() then return; end
     checkedHistory = true;
 
-    local now = GetServerTime();
+    local privileged = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend");
+    local upToDate = self:HasCompleteHistory();
+    if upToDate and not privileged then
+        -- Doesn't seem like anything is missing. Since we're not privileged, we can't share
+        -- our entries with anyone, so there's no real point in sending the sync.
+        return;
+    end
 
+    local now = GetServerTime();
     for phase in pairs(self.Phases) do
         local syncCount = 0;
         local commData = {
@@ -411,7 +418,7 @@ function ABGP:HistoryOnGuildRosterUpdate()
             historyType = "gpHistory",
             phase = phase,
             token = GetTime(),
-            notPrivileged = self:GetDebugOpt("AvoidHistorySend"),
+            notPrivileged = not privileged,
             baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
             ids = {},
         };
