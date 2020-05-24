@@ -390,6 +390,7 @@ function ABGP:HasCompleteHistory()
         end
     end
 
+    if hasComplete then self:LogDebug("GP history is complete!"); end
     return hasComplete;
 end
 
