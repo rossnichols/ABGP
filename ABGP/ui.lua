@@ -307,9 +307,9 @@ local function DrawItemHistory(container, rebuild, reason, command)
     exact = exact and exact:lower() or exact;
     for _, data in ipairs(gpHistory) do
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-        if epgp then
+        if epgp or not currentRaidGroup then
             if not currentRaidGroup or ABGP:GetGPRaidGroup(epgp.rank, ABGP.CurrentPhase) == currentRaidGroup then
-                local class = epgp.class:lower();
+                local class = epgp and epgp.class:lower() or "";
                 local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                 if exact then
                     if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
