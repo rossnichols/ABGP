@@ -27,7 +27,7 @@ local debugOpts = {
     IgnoreItemCommit = true,
 
     -- If set, the addon will never send its history to other players
-    AvoidHistorySend = true,
+    -- AvoidHistorySend = true,
 };
 
 function ABGP:GetDebugOpt(key)
