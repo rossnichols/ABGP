@@ -490,7 +490,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 for _ in pairs(requested) do requestCount = requestCount + 1; end
             end
             if sendCount > 0 or requestCount > 0 then
-                self:LogDebug("Sending %d / requesting %d history entries from %s [%s, %s]",
+                self:LogDebug("Sending %d to / requesting %d history entries from %s [%s, %s]",
                     sendCount, requestCount, self:ColorizeName(sender), data.historyType, self.PhaseNames[data.phase]);
                 self:SendComm(self.CommTypes.HISTORY_MERGE, {
                     historyType = data.historyType,
