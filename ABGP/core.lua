@@ -74,7 +74,6 @@ function ABGP:OnEnable()
     self:AddItemHooks();
     self:AddDataHooks();
     self:RefreshItemValues();
-    self:TrimAuditLog(30 * 24 * 60 * 60); -- 30 days
     self:SetupCommMonitor();
     self:InitMinimapIcon();
 

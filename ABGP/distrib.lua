@@ -429,10 +429,6 @@ local function RemoveActiveItem(itemLink, item)
         itemLink = itemLink,
         count = #item.distributions
     }, "BROADCAST");
-
-    if not item.testItem then
-        ABGP:AuditItemDistribution(item);
-    end
 end
 
 local function ChooseRecipient()

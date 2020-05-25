@@ -697,7 +697,6 @@ function ABGP:HistoryUpdateCost(data, cost)
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
     commData.value = data.value;
-    ABGP:AuditItemUpdate(commData);
 end
 
 function ABGP:HistoryUpdatePlayer(data, player)
@@ -716,7 +715,6 @@ function ABGP:HistoryUpdatePlayer(data, player)
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
     commData.value = data.value;
-    ABGP:AuditItemUpdate(commData);
 end
 
 function ABGP:HistoryDelete(data)
@@ -732,68 +730,6 @@ function ABGP:HistoryDelete(data)
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
     commData.value = data.value;
-    ABGP:AuditItemUpdate(commData);
-end
-
-function ABGP:TrimAuditLog(trimThreshold)
-    trimThreshold = trimThreshold or 0;
-
-    _G.ABGP_ItemAuditLog = _G.ABGP_ItemAuditLog or {};
-    for phase in pairs(ABGP.PhasesAll) do
-        _G.ABGP_ItemAuditLog[phase] = _G.ABGP_ItemAuditLog[phase] or {};
-    end
-
-    local current = GetServerTime();
-    for _, phaseLog in pairs(_G.ABGP_ItemAuditLog) do
-        local i = 1;
-        while i <= #phaseLog do
-            local age = current - phaseLog[i].time;
-            if age >= trimThreshold then
-                table.remove(phaseLog, i);
-            else
-                i = i + 1;
-            end
-        end
-    end
-end
-
-function ABGP:AuditItemDistribution(item)
-    local time = GetServerTime();
-    local value = item.data.value;
-    if value and #item.distributions > 0 then
-        local players = {};
-        for _, distrib in ipairs(item.distributions) do
-            if not distrib.trashed then
-                players[distrib.player] = true;
-            end
-        end
-        for _, request in ipairs(item.requests) do
-            if not players[request.player] then
-                table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
-                    itemLink = item.itemLink,
-                    time = time,
-                    request = request,
-                });
-            end
-        end
-        for _, distrib in ipairs(item.distributions) do
-            table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
-                itemLink = item.itemLink,
-                time = time,
-                distribution = distrib,
-            });
-        end
-    end
-end
-
-function ABGP:AuditItemUpdate(update)
-    local time = GetServerTime();
-    local value = update.value;
-    table.insert(_G.ABGP_ItemAuditLog[value.phase], 1, {
-        itemLink = update.itemLink,
-        time = time,
-        update = update,
-    });
 end
 
 StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = {
