@@ -902,7 +902,7 @@ local function DrawAuditLog(container, rebuild, reason)
                 entryMsg = ("%s to %s for %d GP"):format(
                     item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.GP]);
             elseif entryType == ABGP.ItemHistoryType.BONUS then
-                entryMsg = ("%s awarded %d GP"):format(
+                entryMsg = ("%s awarded %.3f GP"):format(
                     entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
             elseif entryType == ABGP.ItemHistoryType.DECAY then
                 entryMsg = ("GP decayed by %d%%"):format(
@@ -954,6 +954,92 @@ local function DrawAuditLog(container, rebuild, reason)
                 deleteRef = deleteRef,
             });
             elt:SetWidths(widths);
+            elt:SetCallback("OnClick", function(widget, event, button)
+                if button == "RightButton" then
+                    local context = {};
+
+                    if deleted then
+                        table.insert(context, {
+                            text = "Undelete entry [NYI]",
+                            func = function(self, arg1)
+
+                            end,
+                            arg1 = entry,
+                            notCheckable = true
+                        });
+                    else
+                        if entryType == ABGP.ItemHistoryType.ITEM then
+                            local value = ABGP:GetItemValue(entry[ABGP.ItemHistoryIndex.NAME]);
+                            if value then
+                                table.insert(context, {
+                                    text = "Edit cost",
+                                    func = function(self, arg1)
+                                        _G.StaticPopup_Show("ABGP_UPDATE_COST", value.itemLink, ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), {
+                                            value = value,
+                                            editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                            itemLink = value.itemLink,
+                                            player = arg1[ABGP.ItemHistoryIndex.PLAYER],
+                                            gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                        });
+                                    end,
+                                    arg1 = entry,
+                                    notCheckable = true
+                                });
+                                table.insert(context, {
+                                    text = "Edit player",
+                                    func = function(self, arg1)
+                                        _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", value.itemLink, arg1[ABGP.ItemHistoryIndex.GP], {
+                                            value = value,
+                                            editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                            itemLink = value.itemLink,
+                                            player = arg1[ABGP.ItemHistoryIndex.PLAYER],
+                                            gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                        });
+                                    end,
+                                    arg1 = entry,
+                                    notCheckable = true
+                                });
+                                if ABGP:GetDebugOpt() then
+                                    table.insert(context, {
+                                        text = "Effective cost",
+                                        func = function(self, arg1)
+                                            local cost, decayCount = ABGP:GetEffectiveCost(entry[ABGP.ItemHistoryIndex.ID], entry[ABGP.ItemHistoryIndex.GP], ABGP.CurrentPhase);
+                                            if cost then
+                                                ABGP:LogDebug("Effective cost is %.3f after %d decays.", cost, decayCount);
+                                            else
+                                                ABGP:LogDebug("Failed to calculate!");
+                                            end
+                                        end,
+                                        arg1 = entry,
+                                        notCheckable = true
+                                    });
+                                end
+                            end
+                        elseif  entryType == ABGP.ItemHistoryType.BONUS then
+                            table.insert(context, {
+                                text = "Edit amount [NYI]",
+                                func = function(self, arg1)
+
+                                end,
+                                arg1 = entry,
+                                notCheckable = true
+                            });
+                        end
+
+                        table.insert(context, {
+                            text = "Delete entry [NYI]",
+                            func = function(self, arg1)
+
+                            end,
+                            arg1 = entry,
+                            notCheckable = true
+                        });
+                    end
+
+                    table.insert(context, { text = "Cancel", notCheckable = true });
+                    ABGP:ShowContextMenu(context);
+                end
+            end);
             auditLog:AddChild(elt);
         end
     end

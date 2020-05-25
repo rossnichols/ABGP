@@ -233,21 +233,17 @@ function ABGP:PriorityOnGuildRosterUpdate()
     self:RefreshFromOfficerNotes();
 end
 
-local function UpdateEPGP(itemLink, player, cost, sender, skipOfficerNote)
-    local itemName = ABGP:GetItemName(itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    if not value then return; end
-
+local function UpdateEPGP(itemLink, player, cost, sender, phase, skipOfficerNote)
     local epgp = ABGP:GetActivePlayer(player);
-    if epgp and epgp[value.phase] then
-		local phaseEPGP = epgp[value.phase];
+    if epgp and epgp[phase] then
+		local phaseEPGP = epgp[phase];
 		if not epgp.trial then
 			phaseEPGP.gp = phaseEPGP.gp + cost;
             phaseEPGP.priority = phaseEPGP.ep * 10 / phaseEPGP.gp;
             local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
             ABGP:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-                value.phase, player, proxy, phaseEPGP.ep, phaseEPGP.gp, cost, phaseEPGP.priority);
-            table.sort(ABGP.Priorities[value.phase], PrioritySort);
+                phase, player, proxy, phaseEPGP.ep, phaseEPGP.gp, cost, phaseEPGP.priority);
+            table.sort(ABGP.Priorities[phase], PrioritySort);
 
             ABGP:RefreshActivePlayers();
 
@@ -264,12 +260,31 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
     if not data.player then return; end
 
-    UpdateEPGP(data.itemLink, data.player, data.cost, sender);
+    local itemName = ABGP:GetItemName(data.itemLink);
+    local value = ABGP:GetItemValue(itemName);
+    if not value then return; end
+
+    local cost = data.cost;
+    local historyId = data.newEditId or data.editId;
+    local cost = self:GetEffectiveCost(historyId, data.cost, value.phase) or data.cost;
+
+    UpdateEPGP(data.itemLink, data.player, cost, sender, value.phase);
 end
 
 function ABGP:PriorityOnItemUnawarded(data)
-    local cost = -data.gp; -- negative because we're undoing the GP adjustment
-    UpdateEPGP(data.itemLink, data.player, cost, data.sender, data.skipOfficerNote);
+    if data.testItem then return; end
+    if not data.player then return; end
+
+    local itemName = ABGP:GetItemName(data.itemLink);
+    local value = ABGP:GetItemValue(itemName);
+    if not value then return; end
+
+    local cost = data.cost;
+    local historyId = data.newEditId or data.editId;
+    local cost = self:GetEffectiveCost(historyId, data.gp, value.phase) or data.gp;
+    cost = -cost; -- negative because we're undoing the GP adjustment
+
+    UpdateEPGP(data.itemLink, data.player, cost, data.sender, value.phase, data.skipOfficerNote);
 end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
@@ -362,25 +377,27 @@ function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
     return processed;
 end
 
-function ABGP:GetEffectiveCost(item, phase)
-    if item[self.ItemHistoryIndex.GP] == 0 then return 0; end
+function ABGP:GetEffectiveCost(id, gp, phase)
+    if gp == 0 then return 0, 0; end
     local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, false, true);
     local cost = 0;
+    local decayCount = 0;
 
     for i = #history, 1, -1 do
         local entry = history[i];
-        if entry == item then
-            cost = entry[self.ItemHistoryIndex.GP];
+        if entry[self.ItemHistoryIndex.ID] == id then
+            cost = gp;
         elseif cost ~= 0 and entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.DECAY then
             cost = cost * (1 - entry[self.ItemHistoryIndex.VALUE]);
             cost = max(cost, entry[self.ItemHistoryIndex.FLOOR]);
+            decayCount = decayCount + 1;
         end
     end
 
     if cost == 0 then
         return false;
     end
-    return cost;
+    return cost, decayCount;
 end
 
 function ABGP:BreakdownHistory(history)
@@ -397,10 +414,10 @@ function ABGP:BreakdownHistory(history)
     };
 
     local typeNames = {
-        [self.ItemHistoryType.ITEM] = "item awards",
-        [self.ItemHistoryType.BONUS] = "gp awards",
-        [self.ItemHistoryType.DECAY] = "decay triggers",
-        [self.ItemHistoryType.DELETE] = "deletions",
+        [self.ItemHistoryType.ITEM] = "item award",
+        [self.ItemHistoryType.BONUS] = "gp award",
+        [self.ItemHistoryType.DECAY] = "decay trigger",
+        [self.ItemHistoryType.DELETE] = "deletion",
     };
 
     local out = {};
@@ -619,6 +636,10 @@ function ABGP:HistoryOnReplace(data, distribution, sender)
     _G.ABGP_Data[data.phase][data.historyType] = data.history;
 
     self:Notify("Received complete history from %s! Breakdown: %s.", self:ColorizeName(sender), self:BreakdownHistory(data.history));
+    local upToDate = self:HasCompleteHistory();
+    if upToDate then
+        self:Notify("You're now up to date!");
+    end
     self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
 end
 
@@ -690,6 +711,10 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
                 end);
                 self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
                     mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));
+                local upToDate = self:HasCompleteHistory();
+                if upToDate then
+                    self:Notify("You're now up to date!");
+                end
                 self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
             end
         end
