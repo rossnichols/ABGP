@@ -356,10 +356,6 @@ local function DrawGP(container)
 
                 -- Set the time to the last second of the day, to give room for backdating other entries.
                 rowTime = rowTime + (24 * 60 * 60) - 1;
-                if rowTimes[rowTime] then
-                    ABGP:Error("Duplicate decay on date: %s", row[ABGP.ItemHistoryIndex.DATE]);
-                    return false, true;
-                end
 
                 rowTimes[rowTime] = true;
                 row[ABGP.ItemHistoryIndex.DATE] = rowTime;
