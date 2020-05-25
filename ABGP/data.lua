@@ -362,6 +362,27 @@ function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
     return processed;
 end
 
+function ABGP:GetEffectiveCost(item, phase)
+    if item[self.ItemHistoryIndex.GP] == 0 then return 0; end
+    local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, false, true);
+    local cost = 0;
+
+    for i = #history, 1, -1 do
+        local entry = history[i];
+        if entry == item then
+            cost = entry[self.ItemHistoryIndex.GP];
+        elseif cost ~= 0 and entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.DECAY then
+            cost = cost * (1 - entry[self.ItemHistoryIndex.VALUE]);
+            cost = max(cost, entry[self.ItemHistoryIndex.FLOOR]);
+        end
+    end
+
+    if cost == 0 then
+        return false;
+    end
+    return cost;
+end
+
 function ABGP:BreakdownHistory(history)
     local types = {};
     for _, entry in pairs(history) do
