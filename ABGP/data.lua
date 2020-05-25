@@ -383,7 +383,7 @@ function ABGP:BreakdownHistory(history)
     };
 
     local out = {};
-    for _, entryType in ipairs(typeNames) do
+    for _, entryType in ipairs(typesSorted) do
         if types[entryType] then
             table.insert(out, ("%d %s"):format(types[entryType], typeNames[entryType]));
         end
