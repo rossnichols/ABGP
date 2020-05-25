@@ -896,8 +896,11 @@ local function DrawAuditLog(container, rebuild, reason)
             end
         else
             if entryType == ABGP.ItemHistoryType.ITEM then
-                entryMsg = ("%s awarded %s for %d GP"):format(
-                    ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.NAME], entry[ABGP.ItemHistoryIndex.GP]);
+                local item = entry[ABGP.ItemHistoryIndex.NAME];
+                local value = ABGP:GetItemValue(item);
+                if value then item = value.itemLink; end
+                entryMsg = ("%s to %s for %d GP"):format(
+                    item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.GP]);
             elseif entryType == ABGP.ItemHistoryType.BONUS then
                 entryMsg = ("%s awarded %d GP"):format(
                     entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
@@ -970,10 +973,10 @@ function ABGP:CreateMainWindow(command)
     window:SetTitle(self:ColorizeText("ABGP"));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
-        version = 1,
-        defaultWidth = 600,
+        version = 2,
+        defaultWidth = 650,
         minWidth = 625,
-        maxWidth = 750,
+        maxWidth = 800,
         defaultHeight = 500,
         minHeight = 300,
         maxHeight = 700
