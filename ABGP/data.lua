@@ -362,6 +362,35 @@ function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
     return processed;
 end
 
+function ABGP:BreakdownHistory(history)
+    local types = {};
+    for _, entry in pairs(history) do
+        types[entry[self.ItemHistoryIndex.TYPE]] = (types[entry[self.ItemHistoryIndex.TYPE]] or 0) + 1;
+    end
+
+    local typesSorted = {
+        self.ItemHistoryType.ITEM,
+        self.ItemHistoryType.BONUS,
+        self.ItemHistoryType.DECAY,
+        self.ItemHistoryType.DELETE,
+    };
+
+    local typeNames = {
+        [self.ItemHistoryType.ITEM] = "item awards",
+        [self.ItemHistoryType.BONUS] = "gp awards",
+        [self.ItemHistoryType.DECAY] = "decay triggers",
+        [self.ItemHistoryType.DELETE] = "deletions",
+    };
+
+    local out = {};
+    for _, entryType in ipairs(typeNames) do
+        if types[entryType] then
+            table.insert(out, ("%d %s"):format(types[entryType], typeNames[entryType]));
+        end
+    end
+    return table.concat(out, ", ");
+end
+
 function ABGP:HasCompleteHistory()
     local hasComplete = true;
     for phase in pairs(self.Phases) do
@@ -568,7 +597,7 @@ function ABGP:HistoryOnReplace(data, distribution, sender)
     _G.ABGP_DataTimestamp[data.historyType][data.phase] = data.baseline;
     _G.ABGP_Data[data.phase][data.historyType] = data.history;
 
-    self:Notify("Received complete history from %s!", self:ColorizeName(sender));
+    self:Notify("Received complete history from %s! Breakdown: %s.", self:ColorizeName(sender), self:BreakdownHistory(data.history));
     self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
 end
 
@@ -579,7 +608,7 @@ local function RequestFullHistory(data)
         historyType = data.historyType,
         phase = data.phase,
     }, "WHISPER", data.sender);
-    ABGP:Notify("Requesting full item history for %s from %s! This could take a while.",
+    ABGP:Notify("Requesting full item history for %s from %s! This could take a little while.",
         ABGP.PhaseNames[data.phase], ABGP:ColorizeName(data.sender));
 end
 
@@ -638,8 +667,8 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
                     return aDate > bDate;
                 end);
-                self:Notify("Received %d item history entries for %s from %s!",
-                    mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender));
+                self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
+                    mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));
                 self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
             end
         end
