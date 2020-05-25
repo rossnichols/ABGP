@@ -1084,6 +1084,13 @@ do
             self.auditType.text:SetText(data.type);
             self.date.text:SetText(data.date);
             self.audit.text:SetText(data.audit);
+            
+            local font = data.deleted and "GameFontRed" or "GameFontNormal";
+            self.entryPlayer.text:SetFontObject(font);
+            self.entryDate.text:SetFontObject(font);
+            self.auditType.text:SetFontObject(font);
+            self.date.text:SetFontObject(font);
+            self.audit.text:SetFontObject(data.deleted and "GameFontRed" or "GameFontHighlight");
         end,
 
         ["SetWidths"] = function(self, widths)
@@ -1136,13 +1143,21 @@ do
 
         local audit = CreateElement(frame, date);
         audit.text = CreateFontString(audit);
-        audit.text:SetFontObject("GameFontHighlight");
         audit:SetPoint("TOPRIGHT", frame);
         audit:SetScript("OnEnter", function(self)
-            if self.text:IsTruncated() then
+            local obj = self:GetParent().obj;
+            if self.text:IsTruncated() or obj.data.deleted or obj.data.deleteRef then
                 _G.ShowUIPanel(_G.GameTooltip);
                 _G.GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-                _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                if obj.data.deleteRef then
+                    _G.GameTooltip:SetText("Deleted Entry", 1, 1, 1, 1, true);
+                    _G.GameTooltip:AddLine(obj.data.deleteRef, 1, 1, 1, 1, true);
+                elseif obj.data.deleted then
+                    _G.GameTooltip:SetText(obj.data.deleted, 1, 1, 1, 1, true);
+                    _G.GameTooltip:AddLine(self.text:GetText(), 1, 1, 1, 1, true);
+                else
+                    _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
+                end
                 _G.GameTooltip:Show();
             end
             self:GetParent():RequestHighlight(true);

@@ -858,11 +858,57 @@ local function DrawAuditLog(container, rebuild, reason)
 
     local entries = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
     local deletedEntries = {};
+    local deleteReferences = {};
+    for i, entry in ipairs(entries) do
+        local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
+        local id = entry[ABGP.ItemHistoryIndex.ID];
+
+        if entryType == ABGP.ItemHistoryType.DELETE then
+            deleteReferences[entry[ABGP.ItemHistoryIndex.DELETEDID]] = false;
+            if not deletedEntries[id] then
+                deletedEntries[entry[ABGP.ItemHistoryIndex.DELETEDID]] = entry;
+            end
+        end
+
+        if deleteReferences[id] ~= nil then
+            deleteReferences[id] = entry;
+        end
+    end
     local typeNames = {
         [ABGP.ItemHistoryType.ITEM] = "Item",
         [ABGP.ItemHistoryType.BONUS] = "Award",
         [ABGP.ItemHistoryType.DECAY] = "Decay",
+        [ABGP.ItemHistoryType.DELETE] = "Delete",
     };
+
+    local function getAuditMessage(entry)
+        local entryMsg;
+        local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
+
+        if entryType == ABGP.ItemHistoryType.DELETE then
+            local reference = deleteReferences[entry[ABGP.ItemHistoryIndex.DELETEDID]];
+            if reference then
+                local _, refDate = ABGP:ParseHistoryId(reference[ABGP.ItemHistoryIndex.ID]);
+                entryMsg = ("Deleted an entry of type '%s' from %s"):format(
+                    typeNames[reference[ABGP.ItemHistoryIndex.TYPE]], date("%m/%d/%y", refDate));
+            else
+                entryMsg = "Deleted a nonexistent entry";
+            end
+        else
+            if entryType == ABGP.ItemHistoryType.ITEM then
+                entryMsg = ("%s awarded %s for %d GP"):format(
+                    ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.NAME], entry[ABGP.ItemHistoryIndex.GP]);
+            elseif entryType == ABGP.ItemHistoryType.BONUS then
+                entryMsg = ("%s awarded %d GP"):format(
+                    entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
+            elseif entryType == ABGP.ItemHistoryType.DECAY then
+                entryMsg = ("GP decayed by %d%%"):format(
+                    floor(entry[ABGP.ItemHistoryIndex.VALUE] * 100 + 0.5));
+            end
+        end
+
+        return entryMsg;
+    end
 
     local pagination = container:GetUserData("pagination");
     pagination:SetValues(#entries, 50);
@@ -870,44 +916,42 @@ local function DrawAuditLog(container, rebuild, reason)
         local first, last = pagination:GetRange();
         for i = first, last do
             local entry = entries[i];
+            local id = entry[ABGP.ItemHistoryIndex.ID];
+            local entryPlayer, entryDate = ABGP:ParseHistoryId(id);
             local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
 
+            local deleteRef;
+            local actionDate = "";
+            local entryMsg = getAuditMessage(entry) or "";
             if entryType == ABGP.ItemHistoryType.DELETE then
-                deletedEntries[entry[ABGP.ItemHistoryIndex.DELETEDID]] = entry;
+                local reference = deleteReferences[entry[ABGP.ItemHistoryIndex.DELETEDID]];
+                if reference then
+                    deleteRef = getAuditMessage(reference);
+                end
             else
-                local entryPlayer, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
-                local entryMsg = "";
-                if entryType == ABGP.ItemHistoryType.ITEM then
-                    entryMsg = ("%s awarded %s for %d GP"):format(
-                        ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.NAME], entry[ABGP.ItemHistoryIndex.GP]);
-                elseif entryType == ABGP.ItemHistoryType.BONUS then
-                    entryMsg = ("%s awarded %d GP"):format(
-                        entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
-                elseif entryType == ABGP.ItemHistoryType.DECAY then
-                    entryMsg = ("GP decayed by %d%%"):format(
-                        floor(entry[ABGP.ItemHistoryIndex.VALUE] * 100 + 0.5));
-                end
-
-                local deleted;
-                if deletedEntries[entry[ABGP.ItemHistoryIndex.ID]] then
-                    local del = deletedEntries[entry[ABGP.ItemHistoryIndex.ID]];
-                    local delPlayer, delDate = ABGP:ParseHistoryId(del[ABGP.ItemHistoryIndex.ID]);
-                    deleted = (""):format(ABGP:ColorizeName(delPlayer), date("%m/%d/%y", delDate));
-                end
-
-                local elt = AceGUI:Create("ABGP_AuditLog");
-                elt:SetFullWidth(true);
-                elt:SetData({
-                    entryPlayer = ABGP:ColorizeName(entryPlayer),
-                    entryDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.DATE]),
-                    type = typeNames[entryType],
-                    date = date("%m/%d/%y", entryDate),
-                    audit = entryMsg,
-                    deleted = deleted,
-                });
-                elt:SetWidths(widths);
-                auditLog:AddChild(elt);
+                actionDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.DATE]);
             end
+
+            local deleted;
+            if deletedEntries[entry[ABGP.ItemHistoryIndex.ID]] then
+                local del = deletedEntries[entry[ABGP.ItemHistoryIndex.ID]];
+                local delPlayer, delDate = ABGP:ParseHistoryId(del[ABGP.ItemHistoryIndex.ID]);
+                deleted = ("Deleted by %s on %s"):format(ABGP:ColorizeName(delPlayer), date("%m/%d/%y", delDate));
+            end
+
+            local elt = AceGUI:Create("ABGP_AuditLog");
+            elt:SetFullWidth(true);
+            elt:SetData({
+                entryPlayer = ABGP:ColorizeName(entryPlayer),
+                entryDate = date("%m/%d/%y", entryDate),
+                type = typeNames[entryType],
+                date = actionDate,
+                audit = entryMsg,
+                deleted = deleted,
+                deleteRef = deleteRef,
+            });
+            elt:SetWidths(widths);
+            auditLog:AddChild(elt);
         end
     end
 end
