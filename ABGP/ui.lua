@@ -813,7 +813,7 @@ local function DrawRaidHistory(container, rebuild, reason)
 end
 
 local function DrawAuditLog(container, rebuild, reason)
-    if not rebuild and reason then return; end
+    if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
     local headerWidths = { 150, 50, 70, 1.0 };
     local widths = { 80, 70, 50, 70, 1.0 };
