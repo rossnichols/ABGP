@@ -317,6 +317,7 @@ end
 
 local function DrawGP(container)
     local lastRowTime = 0;
+    local lastDecayTime = 0;
     local rowTimes = {};
     local importFunc = function(widget, event)
         local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
@@ -344,13 +345,17 @@ local function DrawGP(container)
                 ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                 return false, true;
             end
-            while rowTimes[rowTime] do rowTime = rowTime + 1; end
+            if rowTime == lastDecayTime then
+                ABGP:Error("Entry after decay on same date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                return false, true;
+            end
 
             if row[ABGP.ItemHistoryIndex.PLAYER] == "DECAY" then
                 row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DECAY;
+                lastDecayTime = rowTime;
 
                 -- Set the time to the last second of the day, to give room for backdating other entries.
-                rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) }) + (24 * 60 * 60) - 1;
+                rowTime = rowTime + (24 * 60 * 60) - 1;
                 if rowTimes[rowTime] then
                     ABGP:Error("Duplicate decay on date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                     return false, true;
@@ -366,6 +371,8 @@ local function DrawGP(container)
 
                 return true;
             else
+                while rowTimes[rowTime] do rowTime = rowTime + 1; end
+
                 if not row[ABGP.ItemHistoryIndex.PLAYER] then
                     ABGP:Error("Found row without player on %s!", row[ABGP.ItemHistoryIndex.DATE]);
                     return false, true;
