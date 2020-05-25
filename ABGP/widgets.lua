@@ -940,7 +940,7 @@ do
     local methods = {
         ["OnAcquire"] = function(self)
             self.text:SetText("");
-            self.frame:SetWidth(100);
+            self.frame:SetWidth(200);
             self.frame:SetHeight(16);
             self.text:SetJustifyH("LEFT");
             self.text:SetJustifyV("CENTER");
@@ -1064,8 +1064,10 @@ do
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
-            self.date.text:SetText("");
+            self.entryPlayer.text:SetText("");
+            self.entryDate.text:SetText("");
             self.auditType.text:SetText("");
+            self.date.text:SetText("");
             self.audit.text:SetText("");
 
             self.frame.highlightRequests = 0;
@@ -1077,18 +1079,18 @@ do
         ["SetData"] = function(self, data)
             self.data = data;
 
-            self.date.text:SetText(data.date);
+            self.entryPlayer.text:SetText(data.entryPlayer);
+            self.entryDate.text:SetText(data.entryDate);
             self.auditType.text:SetText(data.type);
+            self.date.text:SetText(data.date);
             self.audit.text:SetText(data.audit);
-
-            local specialFont = (data.important) and "ABGPHighlight" or "GameFontHighlight";
-            self.auditType.text:SetFontObject(specialFont);
-            self.audit.text:SetFontObject(specialFont);
         end,
 
         ["SetWidths"] = function(self, widths)
-            self.date:SetWidth(widths[1] or 0);
-            self.auditType:SetWidth(widths[2] or 0);
+            self.entryPlayer:SetWidth(widths[1] or 0);
+            self.entryDate:SetWidth(widths[2] or 0);
+            self.auditType:SetWidth(widths[3] or 0);
+            self.date:SetWidth(widths[4] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -1120,14 +1122,21 @@ do
         background:SetAllPoints();
         background:SetColorTexture(0, 0, 0, 0.5);
 
-        local date = CreateElement(frame);
-        date.text = CreateFontString(date);
+        local entryPlayer = CreateElement(frame);
+        entryPlayer.text = CreateFontString(entryPlayer);
 
-        local auditType = CreateElement(frame, date);
+        local entryDate = CreateElement(frame, entryPlayer);
+        entryDate.text = CreateFontString(entryDate);
+
+        local auditType = CreateElement(frame, entryDate);
         auditType.text = CreateFontString(auditType);
 
-        local audit = CreateElement(frame, auditType);
+        local date = CreateElement(frame, auditType);
+        date.text = CreateFontString(date);
+
+        local audit = CreateElement(frame, date);
         audit.text = CreateFontString(audit);
+        audit.text:SetFontObject("GameFontHighlight");
         audit:SetPoint("TOPRIGHT", frame);
         audit:SetScript("OnEnter", function(self)
             if self.text:IsTruncated() then
@@ -1145,8 +1154,10 @@ do
 
         -- create widget
         local widget = {
-            date = date,
+            entryPlayer = entryPlayer,
+            entryDate = entryDate,
             auditType = auditType,
+            date = date,
             audit = audit,
 
             background = background,

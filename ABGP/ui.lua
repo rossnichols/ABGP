@@ -10,6 +10,7 @@ local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
 local unpack = unpack;
+local floor = floor;
 
 local activeWindow;
 local allowedClasses = {
@@ -814,7 +815,8 @@ end
 local function DrawAuditLog(container, rebuild, reason)
     if not rebuild and reason then return; end
 
-    local widths = { 70, 70, 1.0 };
+    local headerWidths = { 150, 50, 70, 1.0 };
+    local widths = { 80, 70, 50, 70, 1.0 };
     if rebuild then
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
@@ -830,7 +832,7 @@ local function DrawAuditLog(container, rebuild, reason)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Date", "Type", "Info", weights = { unpack(widths) } };
+        local columns = { "Entry Player/Date", "Type", "Date", "Info", weights = { unpack(headerWidths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -854,80 +856,54 @@ local function DrawAuditLog(container, rebuild, reason)
     local auditLog = container:GetUserData("auditLog");
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_ItemAuditLog[ABGP.CurrentPhase];
+    local entries = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
+    local deletedEntries = {};
+    local typeNames = {
+        [ABGP.ItemHistoryType.ITEM] = "Item",
+        [ABGP.ItemHistoryType.BONUS] = "Award",
+        [ABGP.ItemHistoryType.DECAY] = "Decay",
+    };
+
     local pagination = container:GetUserData("pagination");
-    pagination:SetValues(#entries, 100);
+    pagination:SetValues(#entries, 50);
     if #entries > 0 then
         local first, last = pagination:GetRange();
-        local requestTypes = {
-            [ABGP.RequestTypes.MS] = "ms",
-            [ABGP.RequestTypes.OS] = "os",
-            [ABGP.RequestTypes.ROLL] = "roll",
-            [ABGP.RequestTypes.MANUAL] = "manual",
-        };
         for i = first, last do
-            local data = entries[i];
-            if data.distribution then
-                local distrib = data.distribution;
-                local audit;
-                if distrib.trashed then
-                    audit = ("%s was disenchanted"):format(data.itemLink);
-                else
-                    local requestType = requestTypes[distrib.requestType];
-                    if distrib.roll then
-                        requestType = ("%s:%d"):format(requestType, distrib.roll);
-                    end
-                    local override = distrib.override
-                        and (",%s"):format(distrib.override)
-                        or "";
-                    local epgp = ("ep=%.2f gp=%.2f pri=%.2f"):format(distrib.ep, distrib.gp, distrib.priority);
-                    audit = ("%s for %dgp to %s (%s%s): %s"):format(
-                        data.itemLink, distrib.cost, distrib.player, requestType, override, epgp);
+            local entry = entries[i];
+            local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
+
+            if entryType == ABGP.ItemHistoryType.DELETE then
+                deletedEntries[entry[ABGP.ItemHistoryIndex.DELETEDID]] = entry;
+            else
+                local entryPlayer, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
+                local entryMsg = "";
+                if entryType == ABGP.ItemHistoryType.ITEM then
+                    entryMsg = ("%s awarded %s for %d GP"):format(
+                        ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.NAME], entry[ABGP.ItemHistoryIndex.GP]);
+                elseif entryType == ABGP.ItemHistoryType.BONUS then
+                    entryMsg = ("%s awarded %d GP"):format(
+                        entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
+                elseif entryType == ABGP.ItemHistoryType.DECAY then
+                    entryMsg = ("GP decayed by %d%%"):format(
+                        floor(entry[ABGP.ItemHistoryIndex.VALUE] * 100 + 0.5));
                 end
+
+                local deleted;
+                if deletedEntries[entry[ABGP.ItemHistoryIndex.ID]] then
+                    local del = deletedEntries[entry[ABGP.ItemHistoryIndex.ID]];
+                    local delPlayer, delDate = ABGP:ParseHistoryId(del[ABGP.ItemHistoryIndex.ID]);
+                    deleted = (""):format(ABGP:ColorizeName(delPlayer), date("%m/%d/%y", delDate));
+                end
+
                 local elt = AceGUI:Create("ABGP_AuditLog");
                 elt:SetFullWidth(true);
                 elt:SetData({
-                    date = date("%m/%d/%y", data.time),
-                    type = "Distrib",
-                    audit = audit,
-                    important = true,
-                });
-                elt:SetWidths(widths);
-                auditLog:AddChild(elt);
-            elseif data.request then
-                local request = data.request;
-                local requestType = requestTypes[request.requestType];
-                if request.roll then
-                    requestType = ("%s:%d"):format(requestType, request.roll);
-                end
-                local epgp = ("ep=%.2f gp=%.2f pri=%.2f"):format(request.ep, request.gp, request.priority);
-                local audit = ("%s by %s (%s): %s"):format(
-                    data.itemLink, request.player, requestType, epgp);
-                local elt = AceGUI:Create("ABGP_AuditLog");
-                elt:SetFullWidth(true);
-                elt:SetData({
-                    date = date("%m/%d/%y", data.time),
-                    type = "Request",
-                    audit = audit,
-                    important = false,
-                });
-                elt:SetWidths(widths);
-                auditLog:AddChild(elt);
-            elseif data.update then
-                local update = data.update;
-                local audit = "";
-                if update.oldPlayer then
-                    audit = ("%s recipient new=%s old=%s cost=%d"):format(update.itemLink, update.player or "none", update.oldPlayer, update.cost);
-                elseif update.oldCost then
-                    audit = ("%s cost new=%d old=%d player=%s"):format(update.itemLink, update.cost, update.oldCost, update.player);
-                end
-                local elt = AceGUI:Create("ABGP_AuditLog");
-                elt:SetFullWidth(true);
-                elt:SetData({
-                    date = date("%m/%d/%y", data.time),
-                    type = "Update",
-                    audit = audit,
-                    important = false,
+                    entryPlayer = ABGP:ColorizeName(entryPlayer),
+                    entryDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.DATE]),
+                    type = typeNames[entryType],
+                    date = date("%m/%d/%y", entryDate),
+                    audit = entryMsg,
+                    deleted = deleted,
                 });
                 elt:SetWidths(widths);
                 auditLog:AddChild(elt);
@@ -1038,17 +1014,10 @@ function ABGP:CreateMainWindow(command)
         { value = "items", text = "Items", draw = DrawItems },
         { value = "gp", text = "Item History", draw = DrawItemHistory },
     };
-    local hasAuditLog = false;
-    for _, log in pairs(_G.ABGP_ItemAuditLog) do
-        if #log > 0 then
-            hasAuditLog = true;
-            break;
-        end
-    end
     if _G.ABGP_RaidInfo.pastRaids and #_G.ABGP_RaidInfo.pastRaids > 0 then
         table.insert(tabs, { value = "ep", text = "Raid History", draw = DrawRaidHistory });
     end
-    if hasAuditLog then
+    if self:IsPrivileged() then
         table.insert(tabs, { value = "audit", text = "Audit Log", draw = DrawAuditLog });
     end
     local tabGroup = AceGUI:Create("TabGroup");
