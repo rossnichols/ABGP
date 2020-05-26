@@ -107,24 +107,41 @@ function ABGP:InitOptions()
     for k, v in pairs(self.RaidGroupNames) do raidGroupNames[k] = v; end
 
     local guiOptions = {
-        general = {
+        header1 = {
+            order = 11,
+            type = "header",
             name = "General",
+        },
+        desc1 = {
+            order = 12,
+            type = "description",
+            name = "General addon settings",
+        },
+        general = {
+            name = " ",
             type = "group",
-            order = 1,
+            inline = true,
+            order = 13,
             args = {
-                show = {
-                    name = "Show Window",
+                minimap = {
+                    name = "Minimap Icon",
                     order = 1,
-                    desc = "Show the main window",
-                    type = "execute",
-                    func = function()
-                        _G.InterfaceOptionsFrame_Show(); -- it's really a toggle, calling this to hide the frame.
-                        self:ShowMainWindow();
-                    end
+                    desc = "Show the minimap icon.",
+                    type = "toggle",
+                    get = function(info) return not self.db.char.minimap.hide; end,
+                    set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
+                },
+                minimapAlert = {
+                    name = "Minimap Alert",
+                    order = 2,
+                    desc = "Show an alert on the minimap icon when you've hidden items that are open for distribution.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.minimapAlert; end,
+                    set = function(info, v) self.db.char.minimapAlert = v; self:RefreshMinimapIcon(); end,
                 },
                 itemHistoryLimit = {
                     name = "Tooltip item history",
-                    order = 2,
+                    order = 3,
                     desc = "Controls the max number of item history entries to show in a tooltip when holding alt. Set to 0 to disable.",
                     type = "range",
                     min = 0,
@@ -136,34 +153,30 @@ function ABGP:InitOptions()
                 },
                 commMonitor = {
                     name = "Monitor addon comms",
-                    order = 3,
+                    order = 4,
                     desc = "Monitor addon communication to help diagnose delayed messages.",
                     type = "toggle",
                     get = function(info) return self.db.char.commMonitoringEnabled; end,
                     set = function(info, v) self.db.char.commMonitoringEnabled = v; self:SetupCommMonitor(); end,
                 },
-                minimap = {
-                    name = "Minimap Icon",
-                    order = 4,
-                    desc = "Show the minimap icon.",
-                    type = "toggle",
-                    get = function(info) return not self.db.char.minimap.hide; end,
-                    set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
-                },
-                minimapAlert = {
-                    name = "Minimap Alert",
-                    order = 5,
-                    desc = "Show an alert on the minimap icon when you've hidden items that are open for distribution.",
-                    type = "toggle",
-                    get = function(info) return self.db.char.minimapAlert; end,
-                    set = function(info, v) self.db.char.minimapAlert = v; self:RefreshMinimapIcon(); end,
-                },
             },
         },
-        raidGroups = {
+
+        header2 = {
+            order = 21,
+            type = "header",
             name = "Raid Groups",
+        },
+        desc2 = {
+            order = 22,
+            type = "description",
+            name = "Your raid group is normally determined from your guild rank.",
+        },
+        raidGroups = {
+            name = " ",
             type = "group",
-            order = 2,
+            inline = true,
+            order = 23,
             args = {
                 raidGroup = {
                     name = "Raid Group",
@@ -188,13 +201,25 @@ function ABGP:InitOptions()
                 },
             },
         },
+
+        header3 = {
+            order = 31,
+            type = "header",
+            name = "Loot",
+        },
+        desc3 = {
+            order = 32,
+            type = "description",
+            name = "Loot popups are shown when items are opened for distribution.",
+        },
         loot = {
             name = "Loot",
             type = "group",
-            order = 3,
+            inline = true,
+            order = 33,
             args = {
                 show = {
-                    name = "Show loot immediately",
+                    name = "Show popups immediately",
                     order = 1,
                     desc = "Show popups when the loot is initially discovered, rather than waiting for it to be distributed.",
                     type = "toggle",
@@ -249,10 +274,22 @@ function ABGP:InitOptions()
                 },
             },
         },
+
+        header4 = {
+            order = 41,
+            type = "header",
+            name = "Officer",
+        },
+        desc4 = {
+            order = 42,
+            type = "description",
+            name = "Special settings for officers.",
+        },
         officer = {
             name = "Officer",
             type = "group",
-            order = 3,
+            inline = true,
+            order = 43,
             hidden = function() return not self:IsPrivileged(); end,
             args = {
                 masterLoot = {
