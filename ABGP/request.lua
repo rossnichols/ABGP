@@ -187,7 +187,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     if not player then return; end
 
     local multiple = "";
-    if data.count and data.count > 1 then
+    if data.count > 1 or data.requestCount > 1 then
         multiple = (" #%d"):format(data.count);
     end
 
@@ -253,7 +253,7 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
     if data.testItem then info = " (test)"; end
 
     local multiple = "";
-    if data.count > 1 then
+    if data.count > 1 or data.requestCount > 1 then
         multiple = (" #%d"):format(data.count);
     end
 
