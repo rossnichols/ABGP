@@ -276,7 +276,7 @@ function ABGP:PriorityOnItemUnawarded(data)
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
-    local cost = self:GetEffectiveCost(data.historyId, data.gp, value.phase) or data.gp;
+    local cost = self:GetEffectiveCost(data.historyId, data.cost, value.phase) or data.cost;
     cost = -cost; -- negative because we're undoing the GP adjustment
     UpdateEPGP(data.itemLink, data.player, cost, data.sender, value.phase, data.skipOfficerNote);
 end
@@ -315,7 +315,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                     historyId = data.oldHistoryId,
                     phase = value.phase,
                     player = entry[ABGP.ItemHistoryIndex.PLAYER],
-                    gp = entry[ABGP.ItemHistoryIndex.GP],
+                    cost = entry[ABGP.ItemHistoryIndex.GP],
                     skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
                     sender = sender,
                 });
