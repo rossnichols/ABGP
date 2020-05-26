@@ -192,8 +192,11 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     end
 
     local cost = "";
-    if self:GetItemValue(self:GetItemName(itemLink)) then
-        cost = (" for %d GP"):format(data.cost);
+    local value = self:GetItemValue(self:GetItemName(itemLink));
+    if value then
+        local effective = self:GetEffectiveCost(data.newEditId or data.editId, data.cost, value.phase);
+        effective = (effective and effective ~= data.cost) and (" (%.3f effective)"):format(effective) or "";
+        cost = (" for %d GP%s"):format(data.cost, effective);
     end
 
     local requestTypes = {
@@ -236,9 +239,11 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
 end
 
 function ABGP:RequestOnItemUnawarded(data)
-    local player = (data.player == UnitName("player")) and "you" or  self:ColorizeName(data.player);
-    self:Notify("Award of %s to %s for %d GP was removed.",
-        data.itemLink, player, data.gp);
+    local player = (data.player == UnitName("player")) and "you" or self:ColorizeName(data.player);
+    local effective = self:GetEffectiveCost(data.editId, data.gp, data.phase);
+    effective = (effective and effective ~= data.gp) and (" (%.3f effective)"):format(effective) or "";
+    self:Notify("Award of %s to %s for %d GP%s was removed.",
+        data.itemLink, player, data.gp, effective);
 end
 
 function ABGP:RequestOnItemTrashed(data, distribution, sender)

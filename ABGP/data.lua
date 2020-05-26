@@ -327,6 +327,8 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                 -- twice for the same player with no delay will fail.
                 self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
                     itemLink = value.itemLink,
+                    editId = historyId,
+                    phase = value.phase,
                     player = entry[ABGP.ItemHistoryIndex.PLAYER],
                     gp = entry[ABGP.ItemHistoryIndex.GP],
                     skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
