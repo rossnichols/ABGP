@@ -530,6 +530,7 @@ local function DistributeItem(data)
         override = data.override,
     });
 
+    local historyId = ABGP:GetHistoryId();
     local commData = {
         itemLink = data.itemLink,
         player = data.player,
@@ -539,7 +540,10 @@ local function DistributeItem(data)
         override = data.override,
         count = #currentItem.distributions,
         testItem = currentItem.testItem,
-        editId = ABGP:GetHistoryId(),
+        historyId = historyId,
+
+        -- for compat
+        editId = historyId,
     };
     ABGP:SendComm(ABGP.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));

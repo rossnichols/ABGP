@@ -92,9 +92,9 @@ ABGP.CommTypes = {
     -- override: string
     -- count: number
     -- testItem: bool
-    -- editId: string
+    -- historyId: string
     -- updateId: string
-    -- newEditId: string
+    -- oldHistoryId: string
     -- oldPlayer: string
     -- oldCost: number
 

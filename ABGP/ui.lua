@@ -387,7 +387,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             func = function(self, arg1)
                                 _G.StaticPopup_Show("ABGP_UPDATE_COST", value.itemLink, ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), {
                                     value = value,
-                                    editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                    historyId = arg1[ABGP.ItemHistoryIndex.ID],
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
@@ -401,7 +401,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             func = function(self, arg1)
                                 _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", value.itemLink, arg1[ABGP.ItemHistoryIndex.GP], {
                                     value = value,
-                                    editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                    historyId = arg1[ABGP.ItemHistoryIndex.ID],
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
@@ -416,7 +416,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                                 local award = ("%s for %d GP"):format(ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), arg1[ABGP.ItemHistoryIndex.GP]);
                                 _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", value.itemLink, award, {
                                     value = value,
-                                    editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                    historyId = arg1[ABGP.ItemHistoryIndex.ID],
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
@@ -976,7 +976,7 @@ local function DrawAuditLog(container, rebuild, reason)
                                     func = function(self, arg1)
                                         _G.StaticPopup_Show("ABGP_UPDATE_COST", value.itemLink, ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), {
                                             value = value,
-                                            editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                            historyId = arg1[ABGP.ItemHistoryIndex.ID],
                                             itemLink = value.itemLink,
                                             player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                             gp = arg1[ABGP.ItemHistoryIndex.GP],
@@ -990,7 +990,7 @@ local function DrawAuditLog(container, rebuild, reason)
                                     func = function(self, arg1)
                                         _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", value.itemLink, arg1[ABGP.ItemHistoryIndex.GP], {
                                             value = value,
-                                            editId = arg1[ABGP.ItemHistoryIndex.ID],
+                                            historyId = arg1[ABGP.ItemHistoryIndex.ID],
                                             itemLink = value.itemLink,
                                             player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                             gp = arg1[ABGP.ItemHistoryIndex.GP],

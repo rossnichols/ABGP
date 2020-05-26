@@ -264,10 +264,7 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
-    local cost = data.cost;
-    local historyId = data.newEditId or data.editId;
-    local cost = self:GetEffectiveCost(historyId, data.cost, value.phase) or data.cost;
-
+    local cost = self:GetEffectiveCost(data.historyId, data.cost, value.phase) or data.cost;
     UpdateEPGP(data.itemLink, data.player, cost, sender, value.phase);
 end
 
@@ -279,11 +276,8 @@ function ABGP:PriorityOnItemUnawarded(data)
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
 
-    local cost = data.cost;
-    local historyId = data.newEditId or data.editId;
-    local cost = self:GetEffectiveCost(historyId, data.gp, value.phase) or data.gp;
+    local cost = self:GetEffectiveCost(data.historyId, data.gp, value.phase) or data.gp;
     cost = -cost; -- negative because we're undoing the GP adjustment
-
     UpdateEPGP(data.itemLink, data.player, cost, data.sender, value.phase, data.skipOfficerNote);
 end
 
@@ -296,28 +290,19 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if not value then return; end
     local history = _G.ABGP_Data[value.phase].gpHistory;
 
-    -- For temporary back-compat, handle editIds that are just numbers.
-    -- Turn them into a consistently-formatted history id.
-    local historyId = data.editId;
-    if type(data.editId) == "number" then
-        historyId = ("COMPAT:%d"):format(data.editId);
-    end
-    local _, awardDate = self:ParseHistoryId(historyId);
-
+    local _, awardDate = self:ParseHistoryId(data.historyId);
     if data.oldCost or data.oldPlayer then
         for i, entry in ipairs(history) do
-            if entry[self.ItemHistoryIndex.ID] == historyId then
+            if entry[self.ItemHistoryIndex.ID] == data.oldHistoryId then
                 -- This is the entry being replaced. If legacy, remove the entry.
-                -- Otherwise, insert an entry representing its removal and update
-                -- the historyId for the new entry.
+                -- Otherwise, insert an entry representing its removal.
                 if data.updateId then
                     awardDate = history[i][ABGP.ItemHistoryIndex.DATE];
                     table.insert(history, 1, {
                         [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
                         [ABGP.ItemHistoryIndex.ID] = data.updateId,
-                        [ABGP.ItemHistoryIndex.DELETEDID] = historyId,
+                        [ABGP.ItemHistoryIndex.DELETEDID] = data.oldHistoryId,
                     });
-                    historyId = data.newEditId;
                 else
                     table.remove(history, i);
                 end
@@ -327,7 +312,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                 -- twice for the same player with no delay will fail.
                 self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
                     itemLink = value.itemLink,
-                    editId = historyId,
+                    historyId = data.oldHistoryId,
                     phase = value.phase,
                     player = entry[ABGP.ItemHistoryIndex.PLAYER],
                     gp = entry[ABGP.ItemHistoryIndex.GP],
@@ -342,7 +327,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if data.player and self:GetActivePlayer(data.player) then
         table.insert(history, 1, {
             [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
-            [ABGP.ItemHistoryIndex.ID] = historyId,
+            [ABGP.ItemHistoryIndex.ID] = data.historyId,
             [ABGP.ItemHistoryIndex.DATE] = awardDate,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.NAME] = itemName,
@@ -730,15 +715,20 @@ function ABGP:CommitHistory(historyType, phase)
 end
 
 function ABGP:HistoryUpdateCost(data, cost)
+    local newHistoryId = ABGP:GetHistoryId();
     local commData = {
         itemLink = data.itemLink,
         player = data.player,
         cost = cost,
         oldCost = data.gp,
         requestType = self.RequestTypes.MANUAL,
-        editId = data.editId,
+        oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
-        newEditId = ABGP:GetHistoryId(),
+        historyId = newHistoryId,
+
+        -- for compat
+        editId = data.historyId,
+        newEditId = newHistoryId,
     };
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -748,15 +738,20 @@ function ABGP:HistoryUpdateCost(data, cost)
 end
 
 function ABGP:HistoryUpdatePlayer(data, player)
+    local newHistoryId = ABGP:GetHistoryId();
     local commData = {
         itemLink = data.itemLink,
         player = player,
         oldPlayer = data.player,
         cost = data.gp,
         requestType = self.RequestTypes.MANUAL,
-        editId = data.editId,
+        oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
-        newEditId = ABGP:GetHistoryId(),
+        historyId = newHistoryId,
+
+        -- for compat
+        editId = data.historyId,
+        newEditId = newHistoryId,
     };
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -770,8 +765,11 @@ function ABGP:HistoryDelete(data)
         itemLink = data.itemLink,
         oldPlayer = data.player,
         cost = data.gp,
-        editId = data.editId,
+        oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
+
+        -- for compat
+        editId = data.historyId,
     };
     self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));

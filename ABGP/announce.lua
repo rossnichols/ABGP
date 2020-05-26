@@ -368,7 +368,7 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
         -- This award is an edit. See if we have an entry in the awards.
         local found = false;
         for i, award in ipairs(awards) do
-            if award.editId == data.editId then
+            if award.historyId == data.historyId then
                 found = true;
                 table.remove(awards, i);
                 break;
@@ -390,7 +390,7 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
         end
         extra = extra and (" (%s)"):format(self:ColorizeText(extra)) or "";
         local award = ("%s%s"):format(self:ColorizeName(data.player), extra);
-        table.insert(awards, { editId = data.editId, text = award });
+        table.insert(awards, { historyId = data.historyId, text = award });
     end
 end
 

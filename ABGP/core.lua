@@ -112,6 +112,25 @@ function ABGP:OnEnable()
     end, self);
 
     self:RegisterMessage(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
+        -- Convert older messages to newer format.
+        -- Legacy1: editId is number, reused for updates
+        -- Legacy2: editId is string, represents edited item. newEditId is new entry.
+        if type(data.editId) == "number" then
+            data.historyId = ("COMPAT:%d"):format(data.editId);
+            if data.oldPlayer or data.oldCost then
+                data.oldHistoryId = data.historyId;
+            end
+        else
+            if data.oldPlayer or data.oldCost then
+                if not data.oldHistoryId then
+                    data.historyId, data.oldHistoryId = data.newEditId, data.editId;
+                end
+            end
+            if not data.historyId then
+                data.historyId = data.editId;
+            end
+        end
+
         if sender ~= UnitName("player") then
             self:HistoryOnItemAwarded(data, distribution, sender);
             self:PriorityOnItemAwarded(data, distribution, sender);

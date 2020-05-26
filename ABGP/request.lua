@@ -194,7 +194,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local cost = "";
     local value = self:GetItemValue(self:GetItemName(itemLink));
     if value then
-        local effective = self:GetEffectiveCost(data.newEditId or data.editId, data.cost, value.phase);
+        local effective = self:GetEffectiveCost(data.historyId, data.cost, value.phase);
         effective = (effective and effective ~= data.cost) and (" (%.3f effective)"):format(effective) or "";
         cost = (" for %d GP%s"):format(data.cost, effective);
     end
@@ -240,7 +240,7 @@ end
 
 function ABGP:RequestOnItemUnawarded(data)
     local player = (data.player == UnitName("player")) and "you" or self:ColorizeName(data.player);
-    local effective = self:GetEffectiveCost(data.editId, data.gp, data.phase);
+    local effective = self:GetEffectiveCost(data.historyId, data.gp, data.phase);
     effective = (effective and effective ~= data.gp) and (" (%.3f effective)"):format(effective) or "";
     self:Notify("Award of %s to %s for %d GP%s was removed.",
         data.itemLink, player, data.gp, effective);
