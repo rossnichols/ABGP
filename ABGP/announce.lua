@@ -337,7 +337,7 @@ function ABGP:IsLootItemVisible(itemLink)
     return (GetLootFrame(itemLink) ~= nil);
 end
 
-function ABGP:AnnounceOnDistClosed(data, distribution, sender)
+function ABGP:AnnounceOnDistClosed(data)
     local elt = GetLootFrame(data.itemLink);
     if not elt then return; end
 

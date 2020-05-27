@@ -85,7 +85,7 @@ function ABGP:MinimapOnDistOpened(data, distribution, sender)
     UpdateIcon();
 end
 
-function ABGP:MinimapOnDistClosed(data, distribution, sender)
+function ABGP:MinimapOnDistClosed(data)
     UpdateIcon();
 end
 

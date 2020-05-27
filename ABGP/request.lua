@@ -84,7 +84,10 @@ local function VerifyItemRequests()
     for itemLink, item in pairs(activeItems) do
         if not UnitExists(item.sender) then
             -- The sender is gone, close the item.
-            ABGP:RequestOnDistClosed({ itemLink = itemLink });
+            ABGP:SendMessage(ABGP.InternalEvents.ITEM_DISTRIBUTION_CLOSED, {
+                itemLink = itemLink,
+                interrupted = true,
+            }, "BROADCAST");
         end
     end
 end
@@ -166,10 +169,12 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
 end
 
-function ABGP:RequestOnDistClosed(data, distribution, sender)
+function ABGP:RequestOnDistClosed(data)
     local itemLink = data.itemLink;
     if activeItems[itemLink] then
-        if data.count == 0 then
+        if data.interrupted then
+            self:Notify("Item distribution interrupted for %s (distributor no longer found).", itemLink);
+        elseif data.count == 0 then
             self:Notify("Item distribution closed for %s.", itemLink);
         end
 

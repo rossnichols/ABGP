@@ -222,6 +222,12 @@ function ABGP:OnEnable()
         self:RequestOnItemUnawarded(data);
     end, self);
 
+    self:RegisterMessage(self.InternalEvents.ITEM_DISTRIBUTION_CLOSED, function(self, event, data)
+        self:RequestOnDistClosed(data);
+        self:AnnounceOnDistClosed(data);
+        self:MinimapOnDistClosed(data);
+    end, self);
+
     self:RegisterMessage(self.InternalEvents.ITEM_REQUESTED, function(self, event, data)
         self:AnnounceOnItemRequested(data);
     end, self);
