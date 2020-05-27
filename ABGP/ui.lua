@@ -1197,171 +1197,62 @@ function ABGP:ShowMainWindow(command)
     PopulateUI(true, nil, command);
 end
 
-StaticPopupDialogs["ABGP_UPDATE_COST"] = {
+StaticPopupDialogs["ABGP_UPDATE_COST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Update the cost of %s to %s:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	maxLetters = 31,
-    OnAccept = function(self, data)
-        local cost = ABGP:DistribValidateCost(self.editBox:GetText(), data.player, data.value);
-        if cost then
-            ABGP:HistoryUpdateCost(data, cost);
-        end
+    maxLetters = 31,
+    Validate = function(text, data)
+        return ABGP:DistribValidateCost(text, data.player, data.value);
     end,
-    OnShow = function(self, data)
-        self.editBox:SetAutoFocus(false);
-        self.button1:Disable();
+    Commit = function(cost, data)
+        ABGP:HistoryUpdateCost(data, cost);
     end,
-    EditBoxOnTextChanged = function(self, data)
-        local parent = self:GetParent();
-        local cost = ABGP:DistribValidateCost(parent.editBox:GetText(), data.player, data.value);
-        if cost then
-            parent.button1:Enable();
-        else
-            parent.button1:Disable();
-        end
-    end,
-    EditBoxOnEnterPressed = function(self, data)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        else
-            local _, errorText = ABGP:DistribValidateCost(parent.editBox:GetText(), data.player, data.value);
-            ABGP:Error("Invalid cost! %s.", errorText);
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_UPDATE_PLAYER"] = {
+});
+StaticPopupDialogs["ABGP_UPDATE_PLAYER"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Update the recipient of %s for %d GP:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	autoCompleteSource = GetAutoCompleteResults,
-	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
-	maxLetters = 31,
-    OnAccept = function(self, data)
-        local player = ABGP:DistribValidateRecipient(self.editBox:GetText(), data.gp, data.value);
-        if player then
-            ABGP:HistoryUpdatePlayer(data, player);
-        end
+    maxLetters = 31,
+    autoCompleteSource = GetAutoCompleteResults,
+    autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+    Validate = function(text, data)
+        return ABGP:DistribValidateRecipient(text, data.gp, data.value);
     end,
-    OnShow = function(self, data)
-        self.editBox:SetAutoFocus(false);
-        self.button1:Disable();
+    Commit = function(player, data)
+        ABGP:HistoryUpdatePlayer(data, player);
     end,
-    EditBoxOnTextChanged = function(self, data)
-        local parent = self:GetParent();
-        local player = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.gp, data.value);
-        if player then
-            parent.button1:Enable();
-        else
-            parent.button1:Disable();
-        end
-    end,
-    EditBoxOnEnterPressed = function(self, data)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        else
-            local _, errorText = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.gp, data.value);
-            ABGP:Error("Invalid recipient! %s.", errorText);
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = {
+});
+StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Remove award of %s to %s?",
     button1 = "Yes",
     button2 = "No",
     OnAccept = function(self, data)
         ABGP:HistoryDelete(data);
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_UPDATE_GP"] = {
+});
+StaticPopupDialogs["ABGP_UPDATE_GP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Update the cost of %s:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	maxLetters = 31,
-    OnAccept = function(self, widget)
-        local cost = ABGP:DistribValidateCost(self.editBox:GetText());
-        if cost then
-            widget.data[ABGP.ItemDataIndex.GP] = cost;
-            widget:SetData(widget.data);
+    maxLetters = 31,
+    Validate = function(text, widget)
+        return ABGP:DistribValidateCost(text);
+    end,
+    Commit = function(cost, widget)
+        widget.data[ABGP.ItemDataIndex.GP] = cost;
+        widget:SetData(widget.data);
 
-            ABGP:Notify("Cost of %s is now %d.", widget.data[ABGP.ItemDataIndex.ITEMLINK], cost);
-            ABGP:CommitItemData();
-        end
+        ABGP:Notify("Cost of %s is now %d.", widget.data[ABGP.ItemDataIndex.ITEMLINK], cost);
+        ABGP:CommitItemData();
     end,
-    OnShow = function(self)
-        self.editBox:SetAutoFocus(false);
-        self.button1:Disable();
-    end,
-    EditBoxOnTextChanged = function(self)
-        local parent = self:GetParent();
-        local cost = ABGP:DistribValidateCost(parent.editBox:GetText());
-        if cost then
-            parent.button1:Enable();
-        else
-            parent.button1:Disable();
-        end
-    end,
-    EditBoxOnEnterPressed = function(self)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        else
-            local _, errorText = ABGP:DistribValidateCost(parent.editBox:GetText());
-            ABGP:Error("Invalid cost! %s.", errorText);
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_UPDATE_NOTES"] = {
+});
+StaticPopupDialogs["ABGP_UPDATE_NOTES"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Update the notes for %s:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	maxLetters = 31,
-    OnAccept = function(self, widget)
-        local text = self.editBox:GetText();
+    maxLetters = 100,
+    Commit = function(text, widget)
         if text == "" then
             ABGP:Notify("Cleared note for %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK]);
             text = nil;
@@ -1373,20 +1264,4 @@ StaticPopupDialogs["ABGP_UPDATE_NOTES"] = {
 
         ABGP:CommitItemData();
     end,
-    OnShow = function(self)
-        self.editBox:SetAutoFocus(false);
-    end,
-    EditBoxOnEnterPressed = function(self)
-        self:GetParent().button1:Click();
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
+});

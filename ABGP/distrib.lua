@@ -1136,20 +1136,18 @@ function ABGP:AddItemHooks()
     self:RegisterModifiedItemClickFn(DistributeLoot);
 end
 
-StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
+StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Award %s to %s?",
     button1 = "Yes",
     button2 = "No",
-    hideOnEscape = true,
     OnAccept = function(self, data)
         DistributeItem(data);
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
+StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Disenchant %s?",
     button1 = "Yes",
     button2 = "No",
-    hideOnEscape = true,
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
@@ -1175,11 +1173,10 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.Static
         GiveItemViaML(data.itemLink, ABGP:GetRaidDisenchanter());
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
+StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Stop distribution of all items?",
     button1 = "Yes",
     button2 = "No",
-    hideOnEscape = true,
     showAlert = true,
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
@@ -1191,62 +1188,27 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.Sta
         window:Hide();
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
+StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Done with %s? %s",
     button1 = "Yes",
     button2 = "No",
-    hideOnEscape = true,
     showAlert = true,
     OnAccept = function(self, data)
         RemoveActiveItem(data.itemLink);
     end,
 });
-
-StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = {
+StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Choose the recipient of %s for %d GP:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	autoCompleteSource = GetAutoCompleteResults,
-	autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
-	maxLetters = 31,
-    OnAccept = function(self, data)
-        local player = ABGP:DistribValidateRecipient(self.editBox:GetText(), data.cost, data.value);
-        if player then
-            data.player = player;
-            DistributeItem(data);
-        end
+    maxLetters = 31,
+    autoCompleteSource = GetAutoCompleteResults,
+    autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+    Validate = function(text, data)
+        return ABGP:DistribValidateRecipient(text, data.cost, data.value);
     end,
-    OnShow = function(self, data)
-        self.editBox:SetAutoFocus(false);
-        self.button1:Disable();
+    Commit = function(player, data)
+        data.player = player;
+        DistributeItem(data);
     end,
-    EditBoxOnTextChanged = function(self, data)
-        local parent = self:GetParent();
-        local player = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.cost, data.value);
-        if player then
-            parent.button1:Enable();
-        else
-            parent.button1:Disable();
-        end
-    end,
-    EditBoxOnEnterPressed = function(self, data)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        else
-            local _, errorText = ABGP:DistribValidateRecipient(parent.editBox:GetText(), data.cost, data.value);
-            ABGP:Error("Invalid recipient! %s.", errorText);
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
+});

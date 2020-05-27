@@ -236,9 +236,9 @@ end
 local function UpdateEPGP(itemLink, player, cost, sender, phase, skipOfficerNote)
     local epgp = ABGP:GetActivePlayer(player);
     if epgp and epgp[phase] then
-		local phaseEPGP = epgp[phase];
-		if not epgp.trial then
-			phaseEPGP.gp = phaseEPGP.gp + cost;
+        local phaseEPGP = epgp[phase];
+        if not epgp.trial then
+            phaseEPGP.gp = phaseEPGP.gp + cost;
             phaseEPGP.priority = phaseEPGP.ep * 10 / phaseEPGP.gp;
             local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
             ABGP:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
@@ -252,7 +252,7 @@ local function UpdateEPGP(itemLink, player, cost, sender, phase, skipOfficerNote
                 -- that is being updated, which is the proxy if it's set.
                 ABGP:UpdateOfficerNote(epgp.proxy or player);
             end
-		end
+        end
     end
 end
 
@@ -778,11 +778,10 @@ function ABGP:HistoryDelete(data)
     commData.value = data.value;
 end
 
-StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
+StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Your item history for %s is out of date! Sync from %s?",
     button1 = "Yes",
     button2 = "No",
-    hideOnEscape = true,
     OnAccept = function(self, data)
         RequestFullHistory(data);
     end,

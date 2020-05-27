@@ -399,11 +399,10 @@ function ABGP:CommOnEnteringWorld()
     startTime = GetTime();
 end
 
-StaticPopupDialogs["ABGP_SLOW_COMMS"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
+StaticPopupDialogs["ABGP_SLOW_COMMS"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = ("%s: your addon communication is delayed! Consider reloading your UI (and reporting this)."):format(ABGP:ColorizeText("ABGP")),
     button1 = "Reload",
     button2 = "Close",
-    hideOnEscape = false,
     showAlert = true,
     OnAccept = ReloadUI,
 });

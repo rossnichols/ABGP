@@ -1130,16 +1130,83 @@ function ABGP:GetItemEquipSlots(itemLink)
 end
 
 ABGP.StaticDialogTemplates = {
-    TWO_BUTTON = "TWO_BUTTON",
+    JUST_BUTTONS = "JUST_BUTTONS",
+    EDIT_BOX = "EDIT_BOX",
 };
 
 function ABGP:StaticDialogTemplate(template, t)
-    if template == ABGP.StaticDialogTemplates.TWO_BUTTON then
-        t.timeout = 0;
-        t.whileDead = true;
-        t.exclusive = true;
-        return t;
-    -- elseif
+    t.timeout = 0;
+    t.whileDead = true;
+    t.exclusive = true;
+    t.hideOnEscape = true;
+    t.OnHyperlinkEnter = function(self, itemLink)
+        _G.ShowUIPanel(_G.GameTooltip);
+        _G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
+        _G.GameTooltip:SetHyperlink(itemLink);
+        _G.GameTooltip:Show();
+    end;
+    t.OnHyperlinkLeave = function(self, itemLink)
+        _G.GameTooltip:Hide();
+    end;
 
+    if template == ABGP.StaticDialogTemplates.JUST_BUTTONS then
+        return t;
+    elseif template == ABGP.StaticDialogTemplates.EDIT_BOX then
+        t.hasEditBox = true;
+        t.countInvisibleLetters = true;
+        t.OnAccept = function(self, data)
+            local text = self.editBox:GetText();
+            if t.Validate then
+                text = t.Validate(text, data);
+                if text then
+                    t.Commit(text, data);
+                end
+            else
+                t.Commit(text, data);
+            end
+        end;
+        t.OnShow = function(self, data)
+            self.editBox:SetAutoFocus(false);
+            if t.Validate then
+                self.button1:Disable();
+            end
+            if t.notFocused then
+                self.editBox:ClearFocus();
+            end
+        end;
+        t.EditBoxOnTextChanged = function(self, data)
+            if t.Validate then
+                local parent = self:GetParent();
+                local text = self:GetText();
+                if t.Validate(text, data) then
+                    parent.button1:Enable();
+                else
+                    parent.button1:Disable();
+                end
+            end
+        end;
+        t.EditBoxOnEnterPressed = function(self, data)
+            if t.button3 then return; end
+
+            local parent = self:GetParent();
+            local text = self:GetText();
+            if t.Validate then
+                if parent.button1:IsEnabled() then
+                    parent.button1:Click();
+                else
+                    local _, errorText = t.Validate(text, data);
+                    if errorText then ABGP:Error("Invalid input! %s.", errorText); end
+                end
+            else
+                parent.button1:Click();
+            end
+        end;
+        t.EditBoxOnEscapePressed = function(self)
+            self:ClearFocus();
+        end;
+        t.OnHide = function(self, data)
+            self.editBox:SetAutoFocus(true);
+        end;
+        return t;
     end
 end

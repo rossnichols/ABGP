@@ -992,42 +992,22 @@ local function ValidateEP(ep)
     return ep;
 end
 
-StaticPopupDialogs["ABGP_ADD_STANDBY"] = {
+StaticPopupDialogs["ABGP_ADD_STANDBY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Add a player to the standby list:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	autoCompleteSource = GetAutoCompleteResults,
-	autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
-	maxLetters = 31,
-    OnAccept = function(self, data)
-        ABGP:AddStandby(data, self.editBox:GetText());
+    maxLetters = 31,
+    autoCompleteSource = GetAutoCompleteResults,
+    autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
+    Commit = function(text, data)
+        ABGP:AddStandby(data, text);
     end,
-    OnShow = function(self, data)
-        self.editBox:SetAutoFocus(false);
-    end,
-    EditBoxOnEnterPressed = function(self, data)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_DELETE_RAID"] = {
+});
+StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Delete this raid? This can't be undone!",
     button1 = "Yes",
     button2 = "No",
+    showAlert = true,
     OnAccept = function(self, data)
         local raids = _G.ABGP_RaidInfo.pastRaids;
         for i, raid in ipairs(raids) do
@@ -1040,54 +1020,16 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = {
             end
         end
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_AWARD_EP"] = {
+});
+StaticPopupDialogs["ABGP_AWARD_EP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Enter the amount of EP to award:",
     button1 = "Done",
     button2 = "Cancel",
-	hasEditBox = 1,
-	maxLetters = 31,
-    OnAccept = function(self, widget)
-        local ep = ValidateEP(self.editBox:GetText());
-        if ep then
-            ABGP:AwardEP(ep, awardCategories.BONUS);
-        end
+    maxLetters = 31,
+    Validate = function(text, data)
+        return ValidateEP(text);
     end,
-    OnShow = function(self)
-        self.editBox:SetAutoFocus(false);
-        self.button1:Disable();
+    Commit = function(ep, data)
+        ABGP:AwardEP(ep, awardCategories.BONUS);
     end,
-    EditBoxOnTextChanged = function(self)
-        local parent = self:GetParent();
-        local ep = ValidateEP(parent.editBox:GetText());
-        if ep then
-            parent.button1:Enable();
-        else
-            parent.button1:Disable();
-        end
-    end,
-    EditBoxOnEnterPressed = function(self)
-        local parent = self:GetParent();
-        if parent.button1:IsEnabled() then
-            parent.button1:Click();
-        else
-            local _, errorText = ValidateEP(parent.editBox:GetText());
-            ABGP:Error("Invalid EP! %s.", errorText);
-        end
-    end,
-    EditBoxOnEscapePressed = function(self)
-		self:ClearFocus();
-    end,
-    OnHide = function(self, data)
-        self.editBox:SetAutoFocus(true);
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
+});
