@@ -1056,7 +1056,7 @@ end
 function ABGP:CreateMainWindow(command)
     local window = AceGUI:Create("Window");
     window.frame:SetFrameStrata("MEDIUM");
-    window:SetTitle(self:ColorizeText("ABGP"));
+    window:SetTitle(("%s v%s"):format(self:ColorizeText("ABGP"), self:GetVersion()));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
         version = 2,
