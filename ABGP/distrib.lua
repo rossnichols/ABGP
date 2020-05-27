@@ -1136,23 +1136,20 @@ function ABGP:AddItemHooks()
     self:RegisterModifiedItemClickFn(DistributeLoot);
 end
 
-StaticPopupDialogs["ABGP_CONFIRM_DIST"] = {
+StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
     text = "Award %s to %s?",
     button1 = "Yes",
     button2 = "No",
+    hideOnEscape = true,
     OnAccept = function(self, data)
         DistributeItem(data);
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
+});
+StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
     text = "Disenchant %s?",
     button1 = "Yes",
     button2 = "No",
+    hideOnEscape = true,
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
@@ -1177,16 +1174,13 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = {
 
         GiveItemViaML(data.itemLink, ABGP:GetRaidDisenchanter());
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
-
-StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
+});
+StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
     text = "Stop distribution of all items?",
     button1 = "Yes",
     button2 = "No",
+    hideOnEscape = true,
+    showAlert = true,
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
@@ -1196,25 +1190,17 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = {
         end
         window:Hide();
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-    showAlert = true,
-};
-
-StaticPopupDialogs["ABGP_CONFIRM_DONE"] = {
+});
+StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
     text = "Done with %s? %s",
     button1 = "Yes",
     button2 = "No",
+    hideOnEscape = true,
+    showAlert = true,
     OnAccept = function(self, data)
         RemoveActiveItem(data.itemLink);
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
+});
 
 StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = {
     text = "Choose the recipient of %s for %d GP:",

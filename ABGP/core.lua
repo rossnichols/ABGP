@@ -1128,3 +1128,18 @@ function ABGP:GetItemEquipSlots(itemLink)
         end
     end
 end
+
+ABGP.StaticDialogTemplates = {
+    TWO_BUTTON = "TWO_BUTTON",
+};
+
+function ABGP:StaticDialogTemplate(template, t)
+    if template == ABGP.StaticDialogTemplates.TWO_BUTTON then
+        t.timeout = 0;
+        t.whileDead = true;
+        t.exclusive = true;
+        return t;
+    -- elseif
+
+    end
+end

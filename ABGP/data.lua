@@ -778,15 +778,12 @@ function ABGP:HistoryDelete(data)
     commData.value = data.value;
 end
 
-StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = {
+StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.TWO_BUTTON, {
     text = "Your item history for %s is out of date! Sync from %s?",
     button1 = "Yes",
     button2 = "No",
+    hideOnEscape = true,
     OnAccept = function(self, data)
         RequestFullHistory(data);
     end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    exclusive = true,
-};
+});
