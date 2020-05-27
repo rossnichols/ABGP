@@ -188,7 +188,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
 
     local multiple = "";
     local itemCount = activeItems[data.itemLink] and activeItems[data.itemLink].count or 1;
-    if data.count > 1 or itemCount > 1 then
+    if (data.count and data.count > 1) or itemCount > 1 then
         multiple = (" #%d"):format(data.count);
     end
 
