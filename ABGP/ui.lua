@@ -114,12 +114,16 @@ local function DrawPriority(container, rebuild, reason)
         scroll:SetFullWidth(true);
         scroll:SetFullHeight(true);
         scroll:SetLayout("List");
+        scroll:SetUserData("statusTable", {});
+        scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("priorities", scroll);
     end
 
     local priorities = container:GetUserData("priorities");
+    local scrollValue = priorities:GetUserData("statusTable").scrollvalue;
     priorities:ReleaseChildren();
+
     local count = 0;
     local order = 0;
     local lastPriority = -1;
@@ -163,6 +167,8 @@ local function DrawPriority(container, rebuild, reason)
             priorities:AddChild(elt);
         end
     end
+
+    priorities:SetScroll(scrollValue);
 end
 
 local function DrawItemHistory(container, rebuild, reason, command)
@@ -286,6 +292,8 @@ local function DrawItemHistory(container, rebuild, reason, command)
         scroll:SetFullWidth(true);
         scroll:SetFullHeight(true);
         scroll:SetLayout("List");
+        scroll:SetUserData("statusTable", {});
+        scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("itemHistory", scroll);
     end
@@ -297,6 +305,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
     end
 
     local history = container:GetUserData("itemHistory");
+    local scrollValue = history:GetUserData("statusTable").scrollvalue;
     history:ReleaseChildren();
 
     local pagination = container:GetUserData("pagination");
@@ -433,6 +442,8 @@ local function DrawItemHistory(container, rebuild, reason, command)
             history:AddChild(elt);
         end
     end
+
+    history:SetScroll(scrollValue);
 end
 
 local function DrawItems(container, rebuild, reason)
@@ -584,12 +595,16 @@ local function DrawItems(container, rebuild, reason)
         scroll:SetFullWidth(true);
         scroll:SetFullHeight(true);
         scroll:SetLayout("List");
+        scroll:SetUserData("statusTable", {});
+        scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("itemList", scroll);
     end
 
     local itemList = container:GetUserData("itemList");
+    local scrollValue = itemList:GetUserData("statusTable").scrollvalue;
     itemList:ReleaseChildren();
+
     local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
     local filtered = {};
     local selector = container:GetUserData("priSelector");
@@ -721,6 +736,8 @@ local function DrawItems(container, rebuild, reason)
             itemList:AddChild(elt);
         end
     end
+
+    itemList:SetScroll(scrollValue);
 end
 
 local function DrawRaidHistory(container, rebuild, reason)
@@ -759,11 +776,14 @@ local function DrawRaidHistory(container, rebuild, reason)
         scroll:SetFullWidth(true);
         scroll:SetFullHeight(true);
         scroll:SetLayout("List");
+        scroll:SetUserData("statusTable", {});
+        scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("raidList", scroll);
     end
 
     local raidList = container:GetUserData("raidList");
+    local scrollValue = raidList:GetUserData("statusTable").scrollvalue;
     raidList:ReleaseChildren();
 
     local raids = _G.ABGP_RaidInfo.pastRaids;
@@ -810,6 +830,8 @@ local function DrawRaidHistory(container, rebuild, reason)
             raidList:AddChild(elt);
         end
     end
+
+    raidList:SetScroll(scrollValue);
 end
 
 local function DrawAuditLog(container, rebuild, reason)
@@ -849,11 +871,14 @@ local function DrawAuditLog(container, rebuild, reason)
         scroll:SetFullWidth(true);
         scroll:SetFullHeight(true);
         scroll:SetLayout("List");
+        scroll:SetUserData("statusTable", {});
+        scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("auditLog", scroll);
     end
 
     local auditLog = container:GetUserData("auditLog");
+    local scrollValue = auditLog:GetUserData("statusTable").scrollvalue;
     auditLog:ReleaseChildren();
 
     local entries = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
@@ -1043,6 +1068,8 @@ local function DrawAuditLog(container, rebuild, reason)
             auditLog:AddChild(elt);
         end
     end
+
+    auditLog:SetScroll(scrollValue);
 end
 
 ABGP.RefreshReasons = {
