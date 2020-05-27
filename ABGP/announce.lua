@@ -37,7 +37,6 @@ local function ItemShouldBeAutoAnnounced(item)
 end
 
 function ABGP:AnnounceOnLootOpened()
-    if GetLootMethod() ~= "master" then return; end
     local loot = GetLootInfo();
 
     -- Determine the items that meet announcement criteria.
@@ -63,6 +62,7 @@ function ABGP:AnnounceOnLootOpened()
     if not source then return; end
 
     -- Only use the target GUID as the source if it's not a boss kill.
+    -- For boss kills, bossSource will be the GUID if it's set.
     local bossSource;
     if bossKills[name] then
         source, bossSource = name, source;
@@ -108,14 +108,16 @@ function ABGP:AnnounceOnBossLoot(data)
         lootAnnouncements[source].announced = true;
         if bossSource then lootAnnouncements[bossSource].announced = true; end
 
-        self:Notify("Loot from %s:", self:ColorizeText(name));
-        for _, itemLink in ipairs(data.items) do
-            self:Notify(itemLink);
-            if self:Get("lootShowImmediately") then
-                self:ShowLootFrame(itemLink);
-            end
-            if self:ShouldAutoDistribute() then
-                self:ShowDistrib(itemLink);
+        if GetLootMethod() == "master" then
+            self:Notify("Loot from %s:", self:ColorizeText(name));
+            for _, itemLink in ipairs(data.items) do
+                self:Notify(itemLink);
+                if self:Get("lootShowImmediately") then
+                    self:ShowLootFrame(itemLink);
+                end
+                if self:ShouldAutoDistribute() then
+                    self:ShowDistrib(itemLink);
+                end
             end
         end
     end
