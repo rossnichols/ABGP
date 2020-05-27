@@ -228,26 +228,28 @@ function ABGP:SendComm(type, data, distribution, target)
         local time = GetTime();
         local commCallback = function(self, sent, total)
             self:CommCallback(sent, total, logInCallback);
-            local now = GetTime();
-            local delay = now - time;
-            if delay > delayThreshold and now - startTime > suppressionThreshold then
-                self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
-                if not alertedSlowComms then
-                    alertedSlowComms = true;
-                    _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+            if priority ~= "BULK" then
+                local now = GetTime();
+                local delay = now - time;
+                if delay > delayThreshold and now - startTime > suppressionThreshold then
+                    self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
+                    if not alertedSlowComms then
+                        alertedSlowComms = true;
+                        _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+                    end
+                    if monitoringComms then
+                        self:DumpCommMonitor();
+                    elseif not self:Get("commMonitoringEnabled") and not self:Get("commMonitoringTriggered") then
+                        self:Notify("Enabling comms monitoring! You can disable this in the options window.");
+                        self:Set("commMonitoringTriggered", true);
+                        self:Set("commMonitoringEnabled", true);
+                        self:SetupCommMonitor();
+                    end
                 end
-                if monitoringComms then
-                    self:DumpCommMonitor();
-                elseif not self:Get("commMonitoringEnabled") and not self:Get("commMonitoringTriggered") then
-                    self:Notify("Enabling comms monitoring! You can disable this in the options window.");
-                    self:Set("commMonitoringTriggered", true);
-                    self:Set("commMonitoringEnabled", true);
-                    self:SetupCommMonitor();
-                end
-            end
 
-            -- for multipart messages, reset the initial time when each callback is received.
-            time = now;
+                -- for multipart messages, reset the initial time when each callback is received.
+                time = now;
+            end
         end
         self:SendCommMessage("ABGP", payload, distribution, target, priority, commCallback, self);
     end
