@@ -263,7 +263,10 @@ function ABGP:InitOptions()
                             type = "toggle",
                             hidden = function() return (_G.ElvUI == nil); end,
                             get = function(info) return self.db.char.lootElvUI; end,
-                            set = function(info, v) self.db.char.lootElvUI = v; end,
+                            set = function(info, v)
+                                self.db.char.lootElvUI = v;
+                                _G.StaticPopup_Show("ABGP_PROMPT_RELOAD", "Changing this option requires a UI reload.");
+                            end,
                         },
                         direction = {
                             name = "Direction",

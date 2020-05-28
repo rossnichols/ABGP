@@ -237,7 +237,8 @@ function ABGP:SendComm(type, data, distribution, target)
                     self:ErrorLogged("COMM", "An addon communication message was delayed by %.2f seconds!", delay);
                     if not alertedSlowComms then
                         alertedSlowComms = true;
-                        _G.StaticPopup_Show("ABGP_SLOW_COMMS");
+                        _G.StaticPopup_Show("ABGP_PROMPT_RELOAD",
+                            ("%s: your addon communication is delayed! Consider reloading your UI (and reporting this)."):format(ABGP:ColorizeText("ABGP")));
                     end
                     if monitoringComms then
                         self:DumpCommMonitor();
@@ -402,11 +403,3 @@ end
 function ABGP:CommOnEnteringWorld()
     startTime = GetTime();
 end
-
-StaticPopupDialogs["ABGP_SLOW_COMMS"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
-    text = ("%s: your addon communication is delayed! Consider reloading your UI (and reporting this)."):format(ABGP:ColorizeText("ABGP")),
-    button1 = "Reload",
-    button2 = "Close",
-    showAlert = true,
-    OnAccept = ReloadUI,
-});

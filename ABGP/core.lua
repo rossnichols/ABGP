@@ -1222,3 +1222,11 @@ function ABGP:StaticDialogTemplate(template, t)
         return t;
     end
 end
+
+StaticPopupDialogs["ABGP_PROMPT_RELOAD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+    text = "%s",
+    button1 = "Reload",
+    button2 = "Close",
+    showAlert = true,
+    OnAccept = ReloadUI,
+});
