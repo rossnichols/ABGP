@@ -210,9 +210,6 @@ function ABGP:GetLootCount(itemLink)
 end
 
 function ABGP:ShowLootFrame(itemLink)
-    local _, fullLink = GetItemInfo(itemLink);
-    itemLink = fullLink or itemLink;
-
     local elt = GetLootFrame(itemLink);
     if elt then
         elt:SetCount(elt:GetCount() + 1);

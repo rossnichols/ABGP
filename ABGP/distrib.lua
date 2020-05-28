@@ -726,9 +726,6 @@ function ABGP:DistribOnLogout()
 end
 
 function ABGP:ShowDistrib(itemLink)
-    local _, fullLink = GetItemInfo(itemLink);
-    itemLink = fullLink or itemLink;
-
     if activeDistributionWindow then
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
