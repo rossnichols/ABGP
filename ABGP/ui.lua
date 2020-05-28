@@ -837,8 +837,8 @@ end
 local function DrawAuditLog(container, rebuild, reason)
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
-    local headerWidths = { 150, 50, 70, 1.0 };
-    local widths = { 80, 70, 50, 70, 1.0 };
+    local headerWidths = { 200, 50, 70, 1.0 };
+    local widths = { 120, 80, 50, 70, 1.0 };
     if rebuild then
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
@@ -864,6 +864,7 @@ local function DrawAuditLog(container, rebuild, reason)
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
             desc:SetText(columns[i]);
+            desc:SetFullWidth(true);
             header:AddChild(desc);
         end
 

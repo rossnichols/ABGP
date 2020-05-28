@@ -940,7 +940,7 @@ do
     local methods = {
         ["OnAcquire"] = function(self)
             self.text:SetText("");
-            self.frame:SetWidth(200);
+            self.frame:SetWidth(100);
             self.frame:SetHeight(16);
             self.text:SetJustifyH("LEFT");
             self.text:SetJustifyV("CENTER");
@@ -956,14 +956,6 @@ do
 
         ["SetText"] = function(self, text)
             self.text:SetText(text);
-        end,
-
-        ["SetWidth"] = function(self, width)
-            self.frame:SetWidth(width);
-        end,
-
-        ["SetHeight"] = function(self, height)
-            self.frame:SetHeight(height);
         end,
 
         ["SetJustifyH"] = function(self, justify)
@@ -1084,7 +1076,7 @@ do
             self.auditType.text:SetText(data.type);
             self.date.text:SetText(data.date);
             self.audit.text:SetText(data.audit);
-            
+
             local font = data.deleted and "GameFontRed" or "GameFontNormal";
             self.entryPlayer.text:SetFontObject(font);
             self.entryDate.text:SetFontObject(font);
