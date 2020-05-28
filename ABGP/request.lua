@@ -406,40 +406,40 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTe
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "%s is being distributed! You may roll for it and provide an optional note.",
     button1 = "Roll",
-    button2 = "Pass",
+    button3 = "Pass",
     maxLetters = 255,
     notFocused = true,
     Commit = function(text, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, text);
     end,
-    OnCancel = function(self, data)
+    OnAlt = function(self, data)
         ABGP:PassOnItem(data.itemLink, false);
     end,
 });
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "%s is being distributed! You may roll for it and provide an optional note.",
     button1 = "Update",
-    button2 = "Pass",
+    button3 = "Pass",
     maxLetters = 255,
     notFocused = true,
     Commit = function(text, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, text);
     end,
-    OnCancel = function(self, data)
+    OnAlt = function(self, data)
         ABGP:PassOnItem(data.itemLink, false);
     end,
 });
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "%s is being distributed! You may roll for it and provide an optional note.",
     button1 = "Roll",
-    button2 = "Pass",
+    button3 = "Pass",
     extraButton = "Pass and unfavorite",
     maxLetters = 255,
     notFocused = true,
     Commit = function(text, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, text);
     end,
-    OnCancel = function(self, data)
+    OnAlt = function(self, data)
         ABGP:PassOnItem(data.itemLink, false);
     end,
     OnExtraButton = function(self, data)
@@ -449,14 +449,14 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE] = ABGP:StaticDia
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "%s is being distributed! You may roll for it and provide an optional note.",
     button1 = "Update",
-    button2 = "Pass",
+    button3 = "Pass",
     extraButton = "Pass and unfavorite",
     maxLetters = 255,
     notFocused = true,
     Commit = function(text, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.ROLL, text);
     end,
-    OnCancel = function(self, data)
+    OnAlt = function(self, data)
         ABGP:PassOnItem(data.itemLink, false);
     end,
     OnExtraButton = function(self, data)
