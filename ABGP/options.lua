@@ -316,7 +316,7 @@ function ABGP:InitOptions()
                     type = "group",
                     inline = true,
                     order = 3,
-                    hidden = function() return self.db.char.outsider or self:HasCompleteHistory(); end,
+                    hidden = function() return self:HasCompleteHistory(); end,
                     args = {
                         status = {
                             order = 1,
