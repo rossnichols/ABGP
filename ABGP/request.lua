@@ -63,8 +63,10 @@ local function ShowStaticPopup(itemLink, value, which)
     if which then
         local dialog = _G.StaticPopup_Show(which, itemLink, value and value.gp or 0, { itemLink = itemLink });
         if not dialog then
-            ABGP:Error("Unable to open window for %s! Try closing other open ones.", itemLink);
+            ABGP:Error("Unable to open request dialog for %s! Try closing other open ones.", itemLink);
         end
+    else
+        ABGP:Error("Unable to open request dialog for %s! It's not open for distribution.", itemLink);
     end
 end
 
