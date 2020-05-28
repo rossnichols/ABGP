@@ -227,7 +227,7 @@ function ABGP:InitOptions()
                 desc = {
                     order = 2,
                     type = "description",
-                    name = "Loot popups are shown when items are opened for distribution.",
+                    name = "Loot popups are shown when items are opened for distribution, and optionally when they are initially discovered by looting.",
                 },
                 settings = {
                     name = " ",
@@ -238,7 +238,7 @@ function ABGP:InitOptions()
                         show = {
                             name = "Show when looted",
                             order = 1,
-                            desc = "Show popups when the loot is initially discovered, rather than waiting for it to be distributed.",
+                            desc = "Show popups when the items are initially discovered by looting, rather than waiting for them to be distributed.",
                             type = "toggle",
                             get = function(info) return self.db.char.lootShowImmediately; end,
                             set = function(info, v) self.db.char.lootShowImmediately = v; end,
