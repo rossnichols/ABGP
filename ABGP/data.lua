@@ -453,6 +453,14 @@ function ABGP:HistoryOnEnteringWorld(isInitialLogin)
     if not isInitialLogin then checkedHistory = true; end
 end
 
+function ABGP:HistoryTriggerSync()
+
+end
+
+function ABGP:HistoryTriggerRebuild()
+
+end
+
 function ABGP:HistoryOnGuildRosterUpdate()
     if checkedHistory or InCombatLockdown() or self:Get("outsider") or not self:GetActivePlayer() then return; end
     checkedHistory = true;

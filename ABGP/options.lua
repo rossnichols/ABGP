@@ -23,6 +23,7 @@ function ABGP:InitOptions()
             masterLoot = false,
             minimapAlert = true,
             promptRaidStart = false,
+            syncEnabled = true,
             minimap = {
                 hide = false,
             },
@@ -115,7 +116,7 @@ function ABGP:InitOptions()
         desc1 = {
             order = 12,
             type = "description",
-            name = "General addon settings",
+            name = "General addon settings.",
         },
         general = {
             name = " ",
@@ -136,6 +137,7 @@ function ABGP:InitOptions()
                     order = 2,
                     desc = "Show an alert on the minimap icon when you've hidden items that are open for distribution.",
                     type = "toggle",
+                    disabled = function() return self.db.char.minimap.hide; end,
                     get = function(info) return self.db.char.minimapAlert; end,
                     set = function(info, v) self.db.char.minimapAlert = v; self:RefreshMinimapIcon(); end,
                 },
@@ -213,13 +215,13 @@ function ABGP:InitOptions()
             name = "Loot popups are shown when items are opened for distribution.",
         },
         loot = {
-            name = "Loot",
+            name = " ",
             type = "group",
             inline = true,
             order = 33,
             args = {
                 show = {
-                    name = "Show popups immediately",
+                    name = "Show when looted",
                     order = 1,
                     desc = "Show popups when the loot is initially discovered, rather than waiting for it to be distributed.",
                     type = "toggle",
@@ -229,11 +231,12 @@ function ABGP:InitOptions()
                 duration = {
                     name = "Popup duration",
                     order = 2,
-                    desc = "Sets how long the boss loot popups will be shown, if the item doesn't get opened for distribution.",
+                    desc = "Sets how long the loot popups will be shown. If the item is opened for distribution, the popup will remain until distribution is closed.",
                     type = "range",
                     min = 5,
                     max = 30,
                     step = 1,
+                    disabled = function() return not self.db.char.lootShowImmediately; end,
                     get = function(info) return self.db.char.lootDuration; end,
                     set = function(info, v) self.db.char.lootDuration = v; end,
                     cmdHidden = true,
@@ -278,18 +281,63 @@ function ABGP:InitOptions()
         header4 = {
             order = 41,
             type = "header",
-            name = "Officer",
+            name = "History Sync",
         },
         desc4 = {
             order = 42,
             type = "description",
-            name = "Special settings for officers.",
+            name = "EPGP history is kept up to date by syncing new entries from officers when you log in. If your local history is more than 10 days out of date, it will need a complete rebuild.",
         },
-        officer = {
-            name = "Officer",
+        sync = {
+            name = " ",
             type = "group",
             inline = true,
             order = 43,
+            args = {
+                enabled = {
+                    name = "Enabled",
+                    order = 1,
+                    desc = "If disabled, your history will only contain entries you personally witnessed. It may become inaccurate if those entries get edited.",
+                    type = "toggle",
+                    get = function(info) return self.db.char.syncEnabled; end,
+                    set = function(info, v) self.db.char.syncEnabled = v; end,
+                },
+                syncNow = {
+                    name = "Sync",
+                    order = 1,
+                    desc = "Trigger a sync now, for the last 10 days of history.",
+                    type = "toggle",
+                    disabled = function() return not self.db.char.syncEnabled; end,
+                    type = "execute",
+                    func = function() self:HistoryTriggerSync(); end
+                },
+                rebuild = {
+                    name = "Rebuild",
+                    order = 1,
+                    desc = "Trigger a complete rebuild of your history.",
+                    type = "toggle",
+                    disabled = function() return not self.db.char.syncEnabled; end,
+                    type = "execute",
+                    func = function() self:HistoryTriggerRebuild(); end
+                },
+            },
+        },
+
+        header5 = {
+            order = 51,
+            type = "header",
+            name = "Officer",
+        },
+        desc5 = {
+            order = 52,
+            type = "description",
+            name = "Special settings for officers.",
+        },
+        officer = {
+            name = " ",
+            type = "group",
+            inline = true,
+            order = 53,
             hidden = function() return not self:IsPrivileged(); end,
             args = {
                 masterLoot = {
