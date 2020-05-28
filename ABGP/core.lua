@@ -214,6 +214,7 @@ function ABGP:OnEnable()
 
     self:RegisterMessage(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
         self:DistribOnActivePlayersRefreshed();
+        self:HistoryOnActivePlayersRefreshed();
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
     end, self);
 
@@ -246,6 +247,11 @@ function ABGP:OnEnable()
 
     self:RegisterMessage(self.InternalEvents.LOOT_FRAME_CLOSED, function(self, event, data)
         self:MinimapOnLootFrameClosed(data);
+    end, self);
+
+    self:RegisterMessage(self.InternalEvents.HISTORY_UPDATED, function(self, event, data)
+        self:HistoryOnUpdate();
+        self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
     end, self);
 
     local rollRegex = self:ConvertChatString(_G.RANDOM_ROLL_RESULT);

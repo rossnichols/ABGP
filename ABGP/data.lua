@@ -21,6 +21,8 @@ local type = type;
 
 local updatingNotes = false;
 local checkedHistory = false;
+local hasCompleteCached = false;
+local hasComplete = false;
 local itemHistoryToken;
 local syncThreshold = 10 * 24 * 60 * 60;
 
@@ -335,7 +337,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         });
     end
 
-    self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
+    self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
 end
 
 function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
@@ -416,8 +418,18 @@ function ABGP:BreakdownHistory(history)
     return table.concat(out, ", ");
 end
 
+function ABGP:HistoryOnActivePlayersRefreshed()
+    hasCompleteCached = false;
+end
+
+function ABGP:HistoryOnUpdate()
+    hasCompleteCached = false;
+end
+
 function ABGP:HasCompleteHistory(shouldPrint)
-    local hasComplete = true;
+    if hasCompleteCached and not shouldPrint then return hasComplete; end
+
+    hasComplete = true;
     for phase in pairs(self.Phases) do
         local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true, true);
         for player, epgp in pairs(self:GetActivePlayers()) do
@@ -447,6 +459,7 @@ function ABGP:HasCompleteHistory(shouldPrint)
     end
 
     if hasComplete and shouldPrint then self:Notify("GP history is complete!"); end
+    hasCompleteCached = true;
     return hasComplete;
 end
 
@@ -633,13 +646,13 @@ function ABGP:HistoryOnReplace(data, distribution, sender)
 
     _G.ABGP_DataTimestamp[data.historyType][data.phase] = data.baseline;
     _G.ABGP_Data[data.phase][data.historyType] = data.history;
+    self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
 
     self:Notify("Received complete history from %s! Breakdown: %s.", self:ColorizeName(sender), self:BreakdownHistory(data.history));
     local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
     if upToDate then
         self:Notify("You're now up to date!");
     end
-    self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
 end
 
 local function RequestFullHistory(data)
@@ -708,13 +721,14 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
                     return aDate > bDate;
                 end);
+                self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
+
                 self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
                     mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));
                 local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
                 if upToDate then
                     self:Notify("You're now up to date!");
                 end
-                self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
             end
         end
     end
