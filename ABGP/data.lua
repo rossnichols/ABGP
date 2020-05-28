@@ -416,7 +416,7 @@ function ABGP:BreakdownHistory(history)
     return table.concat(out, ", ");
 end
 
-function ABGP:HasCompleteHistory()
+function ABGP:HasCompleteHistory(shouldPrint)
     local hasComplete = true;
     for phase in pairs(self.Phases) do
         local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true, true);
@@ -437,14 +437,16 @@ function ABGP:HasCompleteHistory()
 
                 if abs(calculated - epgp[phase].gp) > 0.001 then
                     hasComplete = false;
-                    self:LogDebug("GP history for %s in %s is incomplete! Expected %.3f, calculated %.3f.",
-                        self:ColorizeName(player), self.PhaseNames[phase], epgp[phase].gp, calculated);
+                    if shouldPrint then
+                        self:Notify("GP history for %s in %s is incomplete! Expected %.3f, calculated %.3f.",
+                            self:ColorizeName(player), self.PhaseNames[phase], epgp[phase].gp, calculated);
+                    end
                 end
             end
         end
     end
 
-    if hasComplete then self:LogDebug("GP history is complete!"); end
+    if hasComplete and shouldPrint then self:Notify("GP history is complete!"); end
     return hasComplete;
 end
 
@@ -453,21 +455,10 @@ function ABGP:HistoryOnEnteringWorld(isInitialLogin)
     if not isInitialLogin then checkedHistory = true; end
 end
 
-function ABGP:HistoryTriggerSync()
-
-end
-
-function ABGP:HistoryTriggerRebuild()
-
-end
-
-function ABGP:HistoryOnGuildRosterUpdate()
-    if checkedHistory or InCombatLockdown() or self:Get("outsider") or not self:GetActivePlayer() then return; end
-    checkedHistory = true;
-
+function ABGP:HistoryTriggerSync(force)
     local privileged = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend");
-    local upToDate = self:HasCompleteHistory();
-    if upToDate and not privileged then
+    local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
+    if not force and upToDate and not privileged then
         -- Doesn't seem like anything is missing. Since we're not privileged, we can't share
         -- our entries with anyone, so there's no real point in sending the sync.
         return;
@@ -501,10 +492,23 @@ function ABGP:HistoryOnGuildRosterUpdate()
     end
 end
 
+function ABGP:HistoryTriggerRebuild()
+
+end
+
+function ABGP:HistoryOnGuildRosterUpdate()
+    if self:Get("outsider") or not self:Get("syncEnabled") then return; end
+    if checkedHistory or InCombatLockdown() or not self:GetActivePlayer() then return; end
+    checkedHistory = true;
+
+    self:HistoryTriggerSync();
+end
+
 function ABGP:HistoryOnSync(data, distribution, sender)
     if not data.historyType then return; end -- can remove after release
 
-    if sender == UnitName("player") or InCombatLockdown() or self:Get("outsider") then return; end
+    if self:Get("outsider") or not self:Get("syncEnabled") then return; end
+    if sender == UnitName("player") or InCombatLockdown() then return; end
     if self:GetCompareVersion() ~= data.version then return; end
 
     local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
@@ -631,7 +635,7 @@ function ABGP:HistoryOnReplace(data, distribution, sender)
     _G.ABGP_Data[data.phase][data.historyType] = data.history;
 
     self:Notify("Received complete history from %s! Breakdown: %s.", self:ColorizeName(sender), self:BreakdownHistory(data.history));
-    local upToDate = self:HasCompleteHistory();
+    local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
     if upToDate then
         self:Notify("You're now up to date!");
     end
@@ -706,7 +710,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
                 end);
                 self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
                     mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));
-                local upToDate = self:HasCompleteHistory();
+                local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
                 if upToDate then
                     self:Notify("You're now up to date!");
                 end
