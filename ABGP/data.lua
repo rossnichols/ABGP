@@ -26,6 +26,7 @@ local hasCompleteCached = false;
 local hasComplete = false;
 local hasActivePlayers = false;
 local itemHistoryTokens = {};
+local warnedOutOfDate = {};
 local syncThreshold = 10 * 24 * 60 * 60;
 
 function ABGP:AddDataHooks()
@@ -552,6 +553,7 @@ function ABGP:HistoryTriggerSync(target)
 end
 
 function ABGP:HistoryTriggerRebuild()
+    table.wipe(warnedOutOfDate);
     for phase in pairs(self.Phases) do
         _G.ABGP_DataTimestamp.gpHistory[phase] = 0;
     end
@@ -565,6 +567,16 @@ function ABGP:HistoryOnGuildRosterUpdate()
     hasCompleteCached = false;
 
     self:HistoryTriggerSync();
+end
+
+local function WarnOutOfDate(phase, sender)
+    if not warnedOutOfDate[phase] then
+        warnedOutOfDate[phase] = true;
+        _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", ABGP.PhaseNames[phase], ABGP:ColorizeName(sender), {
+            phase = phase,
+            sender = sender,
+        });
+    end
 end
 
 function ABGP:HistoryOnSync(data, distribution, sender)
@@ -626,19 +638,13 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             _G.ABGP_DataTimestamp.gpHistory[data.phase] = 0;
             self:LogDebug("Updated baseline found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
-            _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self.PhaseNames[data.phase], self:ColorizeName(sender), {
-                phase = data.phase,
-                sender = sender,
-            });
+            WarnOutOfDate(data.phase, sender);
         elseif data.baseline == baseline and data.archivedCount and data.archivedCount > archivedCount then -- TODO: can remove nil check
             -- The sender has more archived entries than us. We need a history replacement.
             _G.ABGP_DataTimestamp.gpHistory[data.phase] = 0;
             self:LogDebug("More archived entries found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
-            _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self.PhaseNames[data.phase], self:ColorizeName(sender), {
-                phase = data.phase,
-                sender = sender,
-            });
+            WarnOutOfDate(data.phase, sender);
         end
     end
 
@@ -702,10 +708,7 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
 
     self:LogDebug("History replace init received from %s [%s]",
         self:ColorizeName(sender), self.PhaseNames[data.phase]);
-    _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", self.PhaseNames[data.phase], self:ColorizeName(sender), {
-        phase = data.phase,
-        sender = sender,
-    });
+    WarnOutOfDate(data.phase, sender);
 end
 
 function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
