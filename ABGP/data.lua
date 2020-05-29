@@ -539,16 +539,13 @@ function ABGP:HistoryTriggerSync(target)
         end
 
         commData.archivedCount = #gpHistory - syncCount;
-        self:LogDebug("Sending history sync for %s: %d synced, %d older",
-            self.PhaseNames[phase], syncCount, commData.archivedCount);
-
         if target then
-            self:LogDebug("Sending %s history sync to %s: %d synced, %d older",
+            self:LogDebug("Sending %s history sync to %s: %d synced (ids), %d archived",
                 self.PhaseNames[phase], self:ColorizeName(target), syncCount, commData.archivedCount);
             self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", target);
         else
-            self:LogDebug("Sending %s history sync: %d synced, %d older",
-                self.PhaseNames[phase], syncCount, commData.archivedCount);
+            self:LogDebug("Sending %s history sync: %d synced (%s), %d archived",
+                self.PhaseNames[phase], syncCount, commData.hash and "hash" or "ids", commData.archivedCount);
             self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
         end
     end
