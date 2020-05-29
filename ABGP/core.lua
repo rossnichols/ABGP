@@ -1149,8 +1149,10 @@ ABGP.StaticDialogTemplates = {
 function ABGP:StaticDialogTemplate(template, t)
     t.timeout = 0;
     t.whileDead = true;
-    t.exclusive = true;
     t.hideOnEscape = true;
+    if t.exclusive == nil then
+        t.exclusive = true;
+    end
     t.OnHyperlinkEnter = function(self, itemLink)
         _G.ShowUIPanel(_G.GameTooltip);
         _G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");

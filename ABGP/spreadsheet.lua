@@ -411,7 +411,7 @@ local function DrawGP(container)
             DrawGP(container);
 
             if ABGP:FixupHistory() then
-                ABGP:CommitHistory("gpHistory", ABGP.CurrentPhase);
+                ABGP:CommitHistory(ABGP.CurrentPhase);
             end
         end
     end

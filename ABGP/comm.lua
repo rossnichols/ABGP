@@ -133,33 +133,31 @@ ABGP.CommTypes = {
 
     HISTORY_SYNC = { name = CV("HISTORY_SYNC"), priority = "BULK" },
     -- version: from ABGP:GetVersion()
-    -- historyType: string
     -- phase: from ABGP.Phases
     -- token: unique token for the message
     -- notPrivileged: bool
     -- baseline: number
+    -- archivedCount: number
+    -- now: number
     -- ids: table
 
     HISTORY_REPLACE_INITIATION = { name = CV("HISTORY_REPLACE_INITIATION"), priority = "NORMAL" },
-    -- historyType: string
     -- phase: from ABGP.Phases
     -- token: value from HISTORY_SYNC
 
     HISTORY_MERGE = { name = CV("HISTORY_MERGE"), priority = "BULK" },
-    -- historyType: string
     -- phase: from ABGP.Phases
     -- baseline: number
+    -- now: number
     -- merge: table
     -- requested: table
 
     HISTORY_REPLACE = { name = CV("HISTORY_REPLACE"), priority = "BULK" },
-    -- historyType: string
     -- phase: from ABGP.Phases
     -- baseline: number
     -- history: table
 
     HISTORY_REPLACE_REQUEST = { name = CV("HISTORY_REPLACE_REQUEST"), priority = "NORMAL" },
-    -- historyType: string
     -- phase: from ABGP.Phases
 
     -- NOTE: these aren't versioned so they can continue to function across major changes.
@@ -269,7 +267,6 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
         self:LogVerbose("COMM >>>");
         self:LogVerbose("Data from %s via %s:", sender, distribution);
         for k, v in pairs(data) do
-            if type(v) == "table" then v = table.concat(v, ", "); end
             self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
