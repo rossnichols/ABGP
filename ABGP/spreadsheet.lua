@@ -340,7 +340,7 @@ local function DrawGP(container)
                 ABGP:Error("Malformed date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                 return false, true;
             end
-            local rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d) });
+            local rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
             if rowTime < lastRowTime then
                 ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                 return false, true;

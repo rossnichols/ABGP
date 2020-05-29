@@ -4,7 +4,12 @@ local AceConfig = _G.LibStub("AceConfig-3.0");
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0");
 local AceDB = _G.LibStub("AceDB-3.0");
 
+local GetServerTime = GetServerTime;
 local pairs = pairs;
+local time = time;
+local ipairs = ipairs;
+local table = table;
+local tonumber = tonumber;
 
 function ABGP:InitOptions()
     local defaults = {
@@ -354,18 +359,16 @@ function ABGP:InitOptions()
                             name = "Sync",
                             order = 2,
                             desc = "Trigger a sync now, for the last 10 days of history.",
-                            type = "toggle",
-                            disabled = function() return not self.db.char.syncEnabled; end,
                             type = "execute",
+                            disabled = function() return not self.db.char.syncEnabled; end,
                             func = function() self:HistoryTriggerSync(); end,
                         },
                         rebuild = {
                             name = "Rebuild",
                             order = 3,
                             desc = "Trigger a complete rebuild of your history.",
-                            type = "toggle",
-                            disabled = function() return not self.db.char.syncEnabled; end,
                             type = "execute",
+                            disabled = function() return not self.db.char.syncEnabled; end,
                             func = function() self:HistoryTriggerRebuild(); end,
                         },
                     },
@@ -411,6 +414,13 @@ function ABGP:InitOptions()
                             get = function(info) return self.db.char.promptRaidStart; end,
                             set = function(info, v) self.db.char.promptRaidStart = v; end,
                         },
+                        decay = {
+                            name = "Decay",
+                            order = 3,
+                            desc = "Trigger EPGP decay.",
+                            type = "execute",
+                            func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
+                        },
                     },
                 },
             },
@@ -436,3 +446,37 @@ end
 function ABGP:Set(k, v)
     self.db.char[k] = v;
 end
+
+StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+    text = "Choose the date for the decay (M/D/Y):",
+    button1 = "Done",
+    button2 = "Cancel",
+    maxLetters = 31,
+    Validate = function(text)
+        text = text:gsub("20(%d%d)", "%1");
+        local m, d, y = text:match("^(%d+)/(%d+)/(%d+)$");
+        if not m then return false, "Couldn't parse date"; end
+
+        local now = GetServerTime();
+        local decayTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
+        decayTime = decayTime + (24 * 60 * 60) - 1;
+        if decayTime > now then return false, "Date must be before today"; end
+
+        for phase in pairs(ABGP.Phases) do
+            local history = ABGP:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true, true);
+            for _, entry in ipairs(history) do
+                local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
+                if entryDate < decayTime then break; end
+
+                if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
+                    return false, "A more recent decay already exists";
+                end
+            end
+        end
+
+        return decayTime;
+    end,
+    Commit = function(decayTime)
+        ABGP:HistoryTriggerDecay(decayTime);
+    end,
+});

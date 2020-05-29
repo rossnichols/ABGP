@@ -343,6 +343,41 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
 end
 
+function ABGP:HistoryTriggerDecay(decayTime)
+    local decayValue, decayFloor = self:GetGPDecayInfo();
+    for phase in pairs(self.Phases) do
+        table.insert(_G.ABGP_Data[phase].gpHistory, 1, {
+            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
+            [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+            [self.ItemHistoryIndex.DATE] = decayTime,
+            [self.ItemHistoryIndex.VALUE] = decayValue,
+            [self.ItemHistoryIndex.FLOOR] = decayFloor,
+        });
+    end
+
+    for phase, prio in pairs(self.Priorities) do
+        for _, epgp in ipairs(prio) do
+            if not epgp.trial then
+                epgp.ep = epgp.ep * (1 - decayValue);
+                epgp.ep = max(epgp.ep, decayFloor);
+                epgp.gp = epgp.gp * (1 - decayValue);
+                epgp.gp = max(epgp.gp, decayFloor);
+            end
+        end
+    end
+
+    self:RefreshActivePlayers();
+    self:RebuildOfficerNotes();
+    self:RefreshFromOfficerNotes();
+
+    local floorText = "";
+    if decayFloor ~= 0 then
+        floorText = (" (floor: %d"):format(decayFloor);
+    end
+    self:Notify("Applied a decay of %d%%%s to EPGP.",
+        floor(decayValue * 100 + 0.5), floorText);
+end
+
 function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
     local processed = {};
     local deleted = {};
