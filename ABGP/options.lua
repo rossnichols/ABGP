@@ -357,7 +357,7 @@ function ABGP:InitOptions()
                             type = "toggle",
                             disabled = function() return not self.db.char.syncEnabled; end,
                             type = "execute",
-                            func = function() self:HistoryTriggerSync(true); end,
+                            func = function() self:HistoryTriggerSync(); end,
                         },
                         rebuild = {
                             name = "Rebuild",

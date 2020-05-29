@@ -135,11 +135,10 @@ ABGP.CommTypes = {
     -- version: from ABGP:GetVersion()
     -- phase: from ABGP.Phases
     -- token: unique token for the message
-    -- notPrivileged: bool
     -- baseline: number
     -- archivedCount: number
     -- now: number
-    -- ids: table
+    -- ids: table OR hash: number
 
     HISTORY_REPLACE_INITIATION = { name = CV("HISTORY_REPLACE_INITIATION"), priority = "NORMAL" },
     -- phase: from ABGP.Phases
