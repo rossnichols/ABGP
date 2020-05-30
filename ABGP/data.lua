@@ -79,9 +79,14 @@ function ABGP:RefreshFromOfficerNotes()
             local player = Ambiguate(name, "short");
             local proxy = self:CheckProxy(publicNote);
             if proxy then
-                -- Treat the name extracted from the public note as the actual player name.
-                -- The name of the guild character is the proxy for holding their data.
-                player, proxy = proxy, player;
+                if self:GetGuildInfo(proxy) then
+                    -- The proxy is also a guild member. Ignore the proxy.
+                    note = "";
+                else
+                    -- Treat the name extracted from the public note as the actual player name.
+                    -- The name of the guild character is the proxy for holding their data.
+                    player, proxy = proxy, player;
+                end
             end
             if self:IsTrial(rank) then
                 local trialGroup = self:GetTrialRaidGroup(publicNote);
