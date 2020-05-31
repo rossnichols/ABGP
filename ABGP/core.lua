@@ -513,25 +513,23 @@ ABGP.ItemHistoryType = {
 ABGP.ItemHistoryIndex = {
     TYPE = 1,       -- from ABGP.ItemHistoryType
     ID = 2,         -- from ABGP:GetHistoryId()
+    DATE = 3,       -- date applied (number)
 
     -- ABGP.ItemHistoryType.ITEM
-    DATE = 3,       -- date won (number)
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp cost (number)
     NAME = 6,       -- item name (string)
 
     -- ABGP.ItemHistoryType.BONUS
-    DATE = 3,       -- date won (number)
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp award (number)
 
     -- ABGP.ItemHistoryType.DECAY
-    DATE = 3,       -- date won (number)
     VALUE = 4,      -- decay percentage (number)
     FLOOR = 5,      -- gp floor (number)
 
     -- ABGP.ItemHistoryType.DELETE
-    DELETEDID = 3,  -- from ABGP:GetHistoryId()
+    DELETEDID = 4,  -- from ABGP:GetHistoryId()
 };
 
 function ABGP:GetHistoryId()

@@ -180,12 +180,12 @@ function ABGP:InitOptions()
                 header2 = {
                     order = 1,
                     type = "header",
-                    name = "Raid Groups",
+                    name = "Raid Group",
                 },
                 desc2 = {
                     order = 2,
                     type = "description",
-                    name = "Your raid group is normally determined from your guild rank.",
+                    name = "Your raid group is generally determined from your guild rank.",
                 },
                 settings = {
                     name = " ",
@@ -398,19 +398,21 @@ function ABGP:InitOptions()
                     inline = true,
                     order = 3,
                     args = {
-                        decay = {
-                            name = "Decay",
-                            order = 2,
-                            desc = "Trigger EPGP decay.",
-                            type = "execute",
-                            func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
-                        },
                         add = {
                             name = "Add Player",
                             order = 1,
                             desc = "Add a player into the EPGP system.",
                             type = "execute",
+                            hidden = function() return not self:GetDebugOpt("HistoryUI"); end,
                             func = function() ABGP:ShowAddPlayerWindow(); end,
+                        },
+                        decay = {
+                            name = "Decay",
+                            order = 2,
+                            desc = "Trigger EPGP decay.",
+                            type = "execute",
+                            hidden = function() return not self:GetDebugOpt("HistoryUI"); end,
+                            func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
                         },
                         masterLoot = {
                             name = "Master Loot",

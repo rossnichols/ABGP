@@ -908,7 +908,7 @@ local function DrawAuditLog(container, rebuild, reason)
     };
 
     local function getAuditMessage(entry)
-        local entryMsg;
+        local entryMsg = "UNKNOWN";
         local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
 
         if entryType == ABGP.ItemHistoryType.DELETE then
@@ -949,16 +949,15 @@ local function DrawAuditLog(container, rebuild, reason)
             local entryPlayer, entryDate = ABGP:ParseHistoryId(id);
             local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
 
+            local actionDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.DATE]);
+            local entryMsg = getAuditMessage(entry);
+
             local deleteRef;
-            local actionDate = "";
-            local entryMsg = getAuditMessage(entry) or "";
             if entryType == ABGP.ItemHistoryType.DELETE then
                 local reference = deleteReferences[entry[ABGP.ItemHistoryIndex.DELETEDID]];
                 if reference then
                     deleteRef = getAuditMessage(reference);
                 end
-            else
-                actionDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.DATE]);
             end
 
             local deleted;
@@ -981,6 +980,7 @@ local function DrawAuditLog(container, rebuild, reason)
             });
             elt:SetWidths(widths);
             elt:SetCallback("OnClick", function(widget, event, button)
+                if not ABGP:GetDebugOpt("HistoryUI") then return; end
                 if button == "RightButton" then
                     local context = {};
 
@@ -1090,7 +1090,7 @@ function ABGP:CreateMainWindow(command)
         version = 2,
         defaultWidth = 650,
         minWidth = 625,
-        maxWidth = 800,
+        maxWidth = 850,
         defaultHeight = 500,
         minHeight = 300,
         maxHeight = 700

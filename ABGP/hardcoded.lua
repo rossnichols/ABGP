@@ -2,6 +2,7 @@ local _G = _G;
 local ABGP = _G.ABGP;
 
 local pairs = pairs;
+local ipairs = ipairs;
 local type = type;
 
 _G.ABGP_Data = {};
@@ -15923,6 +15924,19 @@ function ABGP:CheckHardcodedData()
 				if _G.ABGP_DataTimestamp[key][phase] < initialData.timestamps[phase] then
 					_G.ABGP_DataTimestamp[key][phase] = initialData.timestamps[phase];
 					_G.ABGP_Data[phase][key] = initialData[phase];
+				end
+			end
+		end
+	end
+
+	-- TODO: can remove
+	for phase in pairs(ABGP.PhasesAll) do
+		for _, entry in ipairs(_G.ABGP_Data[phase].gpHistory) do
+			if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DELETE then
+				if type(entry[ABGP.ItemHistoryIndex.DATE]) == "string" then
+					entry[ABGP.ItemHistoryIndex.DELETEDID] = entry[ABGP.ItemHistoryIndex.DATE];
+					local _, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.DATE]);
+					entry[ABGP.ItemHistoryIndex.DATE] = entryDate;
 				end
 			end
 		end

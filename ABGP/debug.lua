@@ -28,6 +28,9 @@ local debugOpts = {
 
     -- If set, the addon will never send its history to other players
     AvoidHistorySend = true,
+
+    -- If set, shows WIP UI for history modifications
+    -- HistoryUI = true,
 };
 
 function ABGP:GetDebugOpt(key)

@@ -310,12 +310,13 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                 -- This is the entry being replaced. If legacy, remove the entry.
                 -- Otherwise, insert an entry representing its removal.
                 if data.updateId then
-                    awardDate = history[i][ABGP.ItemHistoryIndex.DATE];
                     table.insert(history, 1, {
                         [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
                         [ABGP.ItemHistoryIndex.ID] = data.updateId,
+                        [ABGP.ItemHistoryIndex.DATE] = awardDate,
                         [ABGP.ItemHistoryIndex.DELETEDID] = data.oldHistoryId,
                     });
+                    awardDate = history[i][ABGP.ItemHistoryIndex.DATE];
                 else
                     table.remove(history, i);
                 end
@@ -363,20 +364,22 @@ function ABGP:HistoryTriggerDecay(decayTime)
         });
     end
 
-    for phase, prio in pairs(self.Priorities) do
-        for _, epgp in ipairs(prio) do
-            if not epgp.trial then
-                epgp.ep = epgp.ep * (1 - decayValue);
-                epgp.ep = max(epgp.ep, decayFloor);
-                epgp.gp = epgp.gp * (1 - decayValue);
-                epgp.gp = max(epgp.gp, decayFloor);
-            end
-        end
-    end
+    -- TODO: this code is flawed because it doesn't handle
+    -- any EP/GP awarded after the decay date.
+    -- for phase, prio in pairs(self.Priorities) do
+    --     for _, epgp in ipairs(prio) do
+    --         if not epgp.trial then
+    --             epgp.ep = epgp.ep * (1 - decayValue);
+    --             epgp.ep = max(epgp.ep, decayFloor);
+    --             epgp.gp = epgp.gp * (1 - decayValue);
+    --             epgp.gp = max(epgp.gp, decayFloor);
+    --         end
+    --     end
+    -- end
 
-    self:RefreshActivePlayers();
-    self:RebuildOfficerNotes();
-    self:RefreshFromOfficerNotes();
+    -- self:RefreshActivePlayers();
+    -- self:RebuildOfficerNotes();
+    -- self:RefreshFromOfficerNotes();
 
     local floorText = "";
     if decayFloor ~= 0 then
@@ -404,7 +407,6 @@ function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
         end
     end
 
-    -- All entries in the processed table must have a DATE field.
     table.sort(processed, function(a, b)
         return a[ABGP.ItemHistoryIndex.DATE] > b[ABGP.ItemHistoryIndex.DATE];
     end);
