@@ -204,7 +204,10 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
     end
 
     local _, rank, _, _, _, _, publicNote, existingNote = GetGuildRosterInfo(guildIndex);
-    player = self:CheckProxy(publicNote) or player;
+    local proxy = self:CheckProxy(publicNote);
+    if proxy and not self:GetGuildInfo(proxy) then
+        player = proxy;
+    end
 
     local epgp = self:GetActivePlayer(player);
     local note = "";
