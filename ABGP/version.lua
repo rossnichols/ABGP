@@ -201,7 +201,7 @@ function ABGP:VersionCheckCallback()
                     if self:VersionIsNewer(version, versionCmp, true) then
                         self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
                         SendChatMessage(
-                            ("You don't have the latest ABGP version installed! Please update it from Curse/Twitch so you can request loot. The latest version is %s."):format(version),
+                            ("You don't have the latest ABGP version installed! Please update it from Curse/Twitch so you can request loot. The latest version is %s, you have %s."):format(version, versionCmp),
                             "WHISPER", nil, player);
                         allUpToDate = false;
                     end
