@@ -398,9 +398,23 @@ function ABGP:InitOptions()
                     inline = true,
                     order = 3,
                     args = {
+                        decay = {
+                            name = "Decay",
+                            order = 2,
+                            desc = "Trigger EPGP decay.",
+                            type = "execute",
+                            func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
+                        },
+                        add = {
+                            name = "Add Player",
+                            order = 1,
+                            desc = "Add a player into the EPGP system.",
+                            type = "execute",
+                            func = function() ABGP:ShowAddPlayerWindow(); end,
+                        },
                         masterLoot = {
                             name = "Master Loot",
-                            order = 1,
+                            order = 3,
                             desc = "Distribute items via master loot as they're awarded or disenchanted.",
                             type = "toggle",
                             get = function(info) return self.db.char.masterLoot; end,
@@ -408,18 +422,11 @@ function ABGP:InitOptions()
                         },
                         promptRaidStart = {
                             name = "Prompt Raids",
-                            order = 2,
+                            order = 4,
                             desc = "Open the raid window when zoning into an instance associated with a raid.",
                             type = "toggle",
                             get = function(info) return self.db.char.promptRaidStart; end,
                             set = function(info, v) self.db.char.promptRaidStart = v; end,
-                        },
-                        decay = {
-                            name = "Decay",
-                            order = 3,
-                            desc = "Trigger EPGP decay.",
-                            type = "execute",
-                            func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
                         },
                     },
                 },
@@ -445,6 +452,10 @@ end
 
 function ABGP:Set(k, v)
     self.db.char[k] = v;
+end
+
+function ABGP:ShowAddPlayerWindow()
+
 end
 
 StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
