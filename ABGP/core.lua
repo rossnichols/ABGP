@@ -252,6 +252,7 @@ function ABGP:OnEnable()
     self:RegisterMessage(self.InternalEvents.HISTORY_UPDATED, function(self, event, data)
         self:HistoryOnUpdate();
         self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
+        self:OptionsOnHistoryUpdate();
     end, self);
 
     local rollRegex = self:ConvertChatString(_G.RANDOM_ROLL_RESULT);

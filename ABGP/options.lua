@@ -478,6 +478,16 @@ function ABGP:Set(k, v)
     self.db.char[k] = v;
 end
 
+function ABGP:RefreshOptionsWindow()
+    if self.OptionsFrame:IsVisible() then
+        AceConfigDialog:Open("ABGP", self.OptionsFrame.obj);
+    end
+end
+
+function ABGP:OptionsOnHistoryUpdate()
+    self:RefreshOptionsWindow();
+end
+
 function ABGP:ShowAddPlayerWindow()
 
 end
