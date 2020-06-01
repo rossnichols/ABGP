@@ -513,6 +513,7 @@ local function DrawItems(container, rebuild, reason)
             mainLine:AddChild(faved);
         else
             local spacer = AceGUI:Create("Label");
+            spacer:SetWidth(80);
             mainLine:AddChild(spacer);
         end
 
