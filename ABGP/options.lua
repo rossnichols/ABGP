@@ -341,11 +341,33 @@ function ABGP:InitOptions()
                         },
                     },
                 },
+                baseline = {
+                    name = "",
+                    type = "group",
+                    inline = true,
+                    order = 4,
+                    hidden = function() return self:HasValidBaselines(); end,
+                    args = {
+                        status = {
+                            order = 1,
+                            type = "description",
+                            name = function()
+                                local invalidBaselines = {};
+                                for _, phase in ipairs(self.PhasesSorted) do
+                                    if not self:HasValidBaseline(phase) then
+                                        table.insert(invalidBaselines, self.PhaseNames[phase]);
+                                    end
+                                end
+                                return ("You currently need a full history rebuild for these phase(s): %s"):format(table.concat(invalidBaselines, ", "));
+                            end,
+                        },
+                    },
+                },
                 settings = {
                     name = " ",
                     type = "group",
                     inline = true,
-                    order = 4,
+                    order = 5,
                     args = {
                         enabled = {
                             name = "Enabled",

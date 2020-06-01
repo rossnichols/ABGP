@@ -27,6 +27,7 @@ local hasComplete = false;
 local hasActivePlayers = false;
 local itemHistoryTokens = {};
 local warnedOutOfDate = {};
+local invalidBaseline = -1;
 local syncThreshold = 10 * 24 * 60 * 60;
 
 function ABGP:AddDataHooks()
@@ -515,6 +516,17 @@ function ABGP:HasCompleteHistory(shouldPrint)
     return hasComplete;
 end
 
+function ABGP:HasValidBaseline(phase)
+    return _G.ABGP_DataTimestamp.gpHistory[phase] ~= invalidBaseline;
+end
+
+function ABGP:HasValidBaselines()
+    for phase in pairs(self.Phases) do
+        if not self:HasValidBaseline(phase) then return false; end
+    end
+    return true;
+end
+
 local function Hash(str)
     if str:len() == 0 then return 0; end
 
@@ -531,7 +543,7 @@ local function BuildSyncHashData(phase, now)
 
     local gpHistory = _G.ABGP_Data[phase].gpHistory;
     local baseline = _G.ABGP_DataTimestamp.gpHistory[phase];
-    if baseline == 0 then return hash, syncCount; end
+    if baseline == invalidBaseline then return hash, syncCount; end
 
     for _, entry in ipairs(gpHistory) do
         local id = entry[ABGP.ItemHistoryIndex.ID];
@@ -558,7 +570,7 @@ function ABGP:HistoryTriggerSync(target)
     for phase in pairs(self.Phases) do
         local gpHistory = _G.ABGP_Data[phase].gpHistory;
         local baseline = _G.ABGP_DataTimestamp.gpHistory[phase];
-        local canSendHistory = privileged and baseline ~= 0;
+        local canSendHistory = privileged and baseline ~= invalidBaseline;
         local commData = {
             version = self:GetVersion(),
             phase = phase,
@@ -600,7 +612,7 @@ end
 function ABGP:HistoryTriggerRebuild()
     table.wipe(warnedOutOfDate);
     for phase in pairs(self.Phases) do
-        _G.ABGP_DataTimestamp.gpHistory[phase] = 0;
+        _G.ABGP_DataTimestamp.gpHistory[phase] = invalidBaseline;
     end
     self:HistoryTriggerSync();
 end
@@ -632,7 +644,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
     local history = _G.ABGP_Data[data.phase].gpHistory;
     local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
-    local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= 0;
+    local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
     local now = data.now or GetServerTime(); -- TODO: can remove fallback
 
     -- Compute the archivedCount and hash (if necessary).
@@ -680,13 +692,13 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     if senderIsPrivileged then
         if data.baseline > baseline then
             -- The sender has a newer baseline. We need a history replacement.
-            _G.ABGP_DataTimestamp.gpHistory[data.phase] = 0;
+            _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
             self:LogDebug("Updated baseline found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             WarnOutOfDate(data.phase, sender);
         elseif data.baseline == baseline and data.archivedCount and data.archivedCount > archivedCount then -- TODO: can remove nil check
             -- The sender has more archived entries than us. We need a history replacement.
-            _G.ABGP_DataTimestamp.gpHistory[data.phase] = 0;
+            _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
             self:LogDebug("More archived entries found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             WarnOutOfDate(data.phase, sender);
@@ -749,7 +761,7 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
 
     -- The sender has determined our history is out of date and wants to give us theirs.
     -- At this point our history should not be considered as valid for sending to others.
-    _G.ABGP_DataTimestamp.gpHistory[data.phase] = 0;
+    _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
 
     self:LogDebug("History replace init received from %s [%s]",
         self:ColorizeName(sender), self.PhaseNames[data.phase]);
@@ -817,7 +829,7 @@ end
 function ABGP:HistoryOnMerge(data, distribution, sender)
     local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
     if data.baseline ~= baseline then return; end
-    local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= 0;
+    local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
 
     local history = _G.ABGP_Data[data.phase].gpHistory;
     local now = data.now or GetServerTime(); -- TODO: can remove fallback

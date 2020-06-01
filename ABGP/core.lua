@@ -668,7 +668,7 @@ function ABGP:BroadcastItemData(target)
     local defaultValues = self:BuildDefaultItemValues();
     for phase in pairs(ABGP.PhasesAll) do
         payload.itemValues[phase] = {};
-        for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
+        for i, item in ipairs(_G.ABGP_Data[phase].itemValues) do
             local name = item[self.ItemDataIndex.NAME];
             local defaultValue = defaultValues[name];
             local currentValue = self:GetItemValue(name);
