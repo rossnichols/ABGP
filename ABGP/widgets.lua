@@ -1778,6 +1778,7 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
 
     local tableObj = obj:GetUserData("table")
     local cols = tableObj.columns
+    local rowObjs = tableObj.rows or {};
     local spaceH = tableObj.spaceH or tableObj.space or 0
     local spaceV = tableObj.spaceV or tableObj.space or 0
     local totalH = (content:GetWidth() or content.width or 0) - spaceH * (#cols - 1)
@@ -1831,6 +1832,7 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
     end
 
     local rows = ceil(n / #cols)
+    local totalV = (content:GetHeight() or content.height or 0) - spaceV * (rows - 1)
 
     -- Determine fixed size cols and collect weights
     local extantH, totalWeight = totalH, 0
@@ -1876,9 +1878,19 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
         end
     end
 
+    local extantV, totalWeight = totalV, 0
+
     -- Arrange children
     for row=1,rows do
         local rowV = 0
+
+        local rowObj = rowObjs[row];
+        if not rowObj then
+            rowObj = { width = 0 };
+        elseif type(rowObj) == "number" then
+            rowObj = {[rowObj >= 1 and rowObj < 10 and "weight" or "width"] = rowObj}
+        end
+        rowObjs[row] = rowObj;
 
         -- Horizontal placement and sizing
         for col=1,#cols do
@@ -1903,12 +1915,33 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
                     child:DoLayout()
                 end
 
-                rowV = max(rowV, (f:GetHeight() or 0) - GetCellDimension("V", laneV, rowStart[child], row - 1, spaceV))
+                if rowObj.weight then
+                    -- Weight
+                    totalWeight = totalWeight + (rowObj.weight or 1)
+                else
+                    if not rowObj.width or rowObj.width <= 0 then
+                        -- Content width
+                        rowV = max(rowV, (f:GetHeight() or 0) - GetCellDimension("V", laneV, rowStart[child], row - 1, spaceV))
+                    else
+                        -- Rel./Abs. width
+                        rowV = rowObj.height < 1 and rowObj.height * totalV or rowObj.height
+                    end
+                end
             end
         end
 
         laneV[row] = rowV
+        extantV = max(0, extantV - laneV[row])
+    end
 
+    local scale = totalWeight > 0 and extantV / totalWeight or 0
+    for row,rowObj in pairs(rowObjs) do
+        if rowObj.weight then
+            laneV[row] = scale * rowObj.weight
+        end
+    end
+
+    for row=1,rows do
         -- Vertical placement and sizing
         for col=1,#cols do
             local child = t[(row - 1) * #cols + col]
