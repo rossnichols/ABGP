@@ -38,6 +38,7 @@ local function PopulateUI(rebuild, reason, command)
     local container = activeWindow:GetUserData("container");
     if rebuild then
         container:ReleaseChildren();
+        container:SetLayout("Flow");
     end
 
     local drawFunc = activeWindow:GetUserData("drawFunc");
@@ -176,6 +177,9 @@ local function DrawItemHistory(container, rebuild, reason, command)
 
     local widths = { 120, 70, 50, 1.0 };
     if rebuild then
+        container:SetLayout("ABGP_Table");
+        container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0, 0 } });
+
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
@@ -257,15 +261,8 @@ local function DrawItemHistory(container, rebuild, reason, command)
             mainLine:AddChild(export);
         end
 
-        local pagination = AceGUI:Create("ABGP_Paginator");
-        pagination:SetFullWidth(true);
-        pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
-        end);
-        container:AddChild(pagination);
-        container:SetUserData("pagination", pagination);
-
         local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
         scrollContainer:SetLayout("Flow");
@@ -296,6 +293,14 @@ local function DrawItemHistory(container, rebuild, reason, command)
         scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("itemHistory", scroll);
+
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
     end
 
     if command then
@@ -451,6 +456,9 @@ local function DrawItems(container, rebuild, reason)
 
     local widths = { 225, 50, 50, 1.0 };
     if rebuild then
+        container:SetLayout("ABGP_Table");
+        container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0, 0 } });
+
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
@@ -561,15 +569,8 @@ local function DrawItems(container, rebuild, reason)
             mainLine:AddChild(export);
         end
 
-        local pagination = AceGUI:Create("ABGP_Paginator");
-        pagination:SetFullWidth(true);
-        pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
-        end);
-        container:AddChild(pagination);
-        container:SetUserData("pagination", pagination);
-
         local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
         scrollContainer:SetLayout("Flow");
@@ -600,6 +601,14 @@ local function DrawItems(container, rebuild, reason)
         scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("itemList", scroll);
+
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
     end
 
     local itemList = container:GetUserData("itemList");
@@ -841,15 +850,11 @@ local function DrawAuditLog(container, rebuild, reason)
     local headerWidths = { 200, 50, 70, 1.0 };
     local widths = { 120, 80, 50, 70, 1.0 };
     if rebuild then
-        local pagination = AceGUI:Create("ABGP_Paginator");
-        pagination:SetFullWidth(true);
-        pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
-        end);
-        container:AddChild(pagination);
-        container:SetUserData("pagination", pagination);
+        container:SetLayout("ABGP_Table");
+        container:SetUserData("table", { columns = { 1.0 }, rows = { 1.0, 0 } });
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
         scrollContainer:SetLayout("Flow");
@@ -877,6 +882,14 @@ local function DrawAuditLog(container, rebuild, reason)
         scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("auditLog", scroll);
+
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI(false);
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
     end
 
     local auditLog = container:GetUserData("auditLog");
@@ -1183,7 +1196,6 @@ function ABGP:CreateMainWindow(command)
         table.insert(tabs, { value = "audit", text = "Audit Log", draw = DrawAuditLog });
     end
     local tabGroup = AceGUI:Create("TabGroup");
-    tabGroup:SetLayout("Flow");
     tabGroup:SetFullWidth(true);
     tabGroup:SetFullHeight(true);
     tabGroup:SetTabs(tabs);

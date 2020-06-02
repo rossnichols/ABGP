@@ -13,7 +13,8 @@ local RED_FONT_COLOR = RED_FONT_COLOR;
 local CursorUpdate = CursorUpdate;
 local LE_ITEM_QUALITY_COMMON = LE_ITEM_QUALITY_COMMON;
 local LE_ITEM_QUALITY_ARTIFACT = LE_ITEM_QUALITY_ARTIFACT;
-local safecall = safecall;
+local geterrorhandler = geterrorhandler;
+local xpcall = xpcall;
 local pairs = pairs;
 local ipairs = ipairs;
 local floor = floor;
@@ -29,6 +30,24 @@ local type = type;
 local ceil = ceil;
 local unpack = unpack;
 local wipe = table.wipe;
+
+local function errorhandler(err)
+    return geterrorhandler()(err)
+end
+
+local function safecall(func, ...)
+    if func then
+        return xpcall(func, errorhandler, ...)
+    end
+end
+
+local function pickfirstset(...)
+    for i=1,select("#",...) do
+        if select(i,...)~=nil then
+            return select(i,...)
+        end
+    end
+end
 
 function ABGP:AddWidgetTooltip(widget, text)
     widget:SetCallback("OnEnter", function(widget)
@@ -1759,6 +1778,7 @@ end
 ============
 Container:
  - columns ({col, col, ...}): Column settings. "col" can be a number (<= 0: content width, <1: rel. width, <10: weight, >=10: abs. width) or a table with column setting.
+ - rows ({row, row, ...}): Row settings. "row" can be a number (<= 0: content height, <1: rel. height, <10: weight, >=10: abs. height) or a table with row setting.
  - space, spaceH, spaceV: Overall, horizontal and vertical spacing between cells.
  - align, alignH, alignV: Overall, horizontal and vertical cell alignment. See GetCellAlign() for possible values.
 Columns:
@@ -1767,10 +1787,14 @@ Columns:
  - max or 2: Max width for content based width
  - weight: Flexible column width. The leftover width after accounting for fixed-width columns is distributed to weighted columns according to their weights.
  - align, alignH, alignV: Overwrites the container setting for alignment.
+Rows:
+ - height: Fixed column height (nil or <=0: content height, <1: rel. height, >=1: abs. height).
+ - weight: Flexible column height. The leftover height after accounting for fixed-height rows is distributed to weighted rows according to their weights.
 Cell:
  - colspan: Makes a cell span multiple columns.
  - rowspan: Makes a cell span multiple rows.
  - align, alignH, alignV: Overwrites the container and column setting for alignment.
+ - paddingLeft, paddingTop, paddingRight, paddingBottom, paddingH, paddingV, padding: Adds padding for an individual cell
 ]]
 AceGUI:RegisterLayout("ABGP_Table", function (content, children)
     local obj = content.obj
@@ -1879,6 +1903,12 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
     end
 
     local extantV, totalWeight = totalV, 0
+    for row,rowObj in pairs(rowObjs) do
+        if type(rowObj) == "number" then
+            rowObj = {[rowObj >= 1 and rowObj < 10 and "weight" or "height"] = rowObj}
+            rowObjs[row] = rowObj;
+        end
+    end
 
     -- Arrange children
     for row=1,rows do
@@ -1886,11 +1916,9 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
 
         local rowObj = rowObjs[row];
         if not rowObj then
-            rowObj = { width = 0 };
-        elseif type(rowObj) == "number" then
-            rowObj = {[rowObj >= 1 and rowObj < 10 and "weight" or "width"] = rowObj}
+            rowObj = { height = 0 };
+            rowObjs[row] = rowObj;
         end
-        rowObjs[row] = rowObj;
 
         -- Horizontal placement and sizing
         for col=1,#cols do
@@ -1900,15 +1928,21 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
                 local cellObj = child:GetUserData("cell")
                 local offsetH = GetCellDimension("H", laneH, 1, colStart[child] - 1, spaceH) + (colStart[child] == 1 and 0 or spaceH)
                 local cellH = GetCellDimension("H", laneH, colStart[child], col, spaceH)
+                local paddingLeft, paddingRight = 0, 0
+                if cellObj then
+                    paddingLeft = pickfirstset(cellObj.paddingLeft, cellObj.paddingH, cellObj.padding, 0)
+                    paddingRight = pickfirstset(cellObj.paddingRight, cellObj.paddingH, cellObj.padding, 0)
+                end
+                cellH = cellH - paddingLeft - paddingRight
 
                 local f = child.frame
                 f:ClearAllPoints()
                 local childH = f:GetWidth() or 0
 
                 local alignFn, align = GetCellAlign("H", tableObj, colObj, cellObj, cellH, childH)
-                f:SetPoint("LEFT", content, offsetH + align, 0)
+                f:SetPoint("LEFT", content, offsetH + align + paddingLeft, 0)
                 if child:IsFullWidth() or alignFn == "fill" or childH > cellH then
-                    f:SetPoint("RIGHT", content, "LEFT", offsetH + align + cellH, 0)
+                    f:SetPoint("RIGHT", content, "LEFT", offsetH + align + paddingLeft + cellH, 0)
                 end
 
                 if child.DoLayout then
@@ -1919,11 +1953,11 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
                     -- Weight
                     totalWeight = totalWeight + (rowObj.weight or 1)
                 else
-                    if not rowObj.width or rowObj.width <= 0 then
-                        -- Content width
+                    if not rowObj.height or rowObj.height <= 0 then
+                        -- Content height
                         rowV = max(rowV, (f:GetHeight() or 0) - GetCellDimension("V", laneV, rowStart[child], row - 1, spaceV))
                     else
-                        -- Rel./Abs. width
+                        -- Rel./Abs. height
                         rowV = rowObj.height < 1 and rowObj.height * totalV or rowObj.height
                     end
                 end
@@ -1950,15 +1984,21 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
                 local cellObj = child:GetUserData("cell")
                 local offsetV = GetCellDimension("V", laneV, 1, rowStart[child] - 1, spaceV) + (rowStart[child] == 1 and 0 or spaceV)
                 local cellV = GetCellDimension("V", laneV, rowStart[child], row, spaceV)
+                local paddingTop, paddingBottom = 0, 0
+                if cellObj then
+                    paddingTop = pickfirstset(cellObj.paddingTop, cellObj.paddingV, cellObj.padding, 0)
+                    paddingBottom = pickfirstset(cellObj.paddingBottom, cellObj.paddingV, cellObj.padding, 0)
+                end
+                cellV = cellV - paddingTop - paddingBottom
 
                 local f = child.frame
                 local childV = f:GetHeight() or 0
 
                 local alignFn, align = GetCellAlign("V", tableObj, colObj, cellObj, cellV, childV)
                 if child:IsFullHeight() or alignFn == "fill" then
-                    f:SetHeight(cellV)
+                    f:SetPoint("BOTTOM", content, "TOP", 0, -(offsetV + align + paddingTop + cellV))
                 end
-                f:SetPoint("TOP", content, 0, -(offsetV + align))
+                f:SetPoint("TOP", content, 0, -(offsetV + align + paddingTop))
             end
         end
     end
