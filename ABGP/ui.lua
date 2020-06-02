@@ -847,7 +847,6 @@ end
 local function DrawAuditLog(container, rebuild, reason)
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
-    local headerWidths = { 200, 50, 70, 1.0 };
     local widths = { 120, 80, 50, 70, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
@@ -860,7 +859,7 @@ local function DrawAuditLog(container, rebuild, reason)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Entry Player/Date", "Type", "Date", "Info", weights = { unpack(headerWidths) } };
+        local columns = { "Player", "Date", "Type", "Effective", "Info", weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
