@@ -857,7 +857,7 @@ function ABGP:ExportRaid(windowRaid)
     window.frame:SetFrameStrata("DIALOG");
     window:SetTitle("Export");
     window:SetHeight(450);
-    window:SetLayout("List");
+    window:SetLayout("Flow");
     window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
     ABGP:OpenWindow(window);
 
@@ -884,11 +884,11 @@ function ABGP:ExportRaid(windowRaid)
     local tableContainer = AceGUI:Create("SimpleGroup");
     tableContainer:SetFullWidth(true);
     tableContainer:SetFullHeight(true);
-    tableContainer:SetLayout("Table");
+    tableContainer:SetLayout("ABGP_Table");
     local nPhases = #self.PhasesSorted;
     local columns = {};
     for i = 1, nPhases do table.insert(columns, 1 / nPhases); end
-    tableContainer:SetUserData("table", { columns = columns });
+    tableContainer:SetUserData("table", { columns = columns, rows = { 1.0 } });
     window:AddChild(tableContainer);
 
     for _, phase in ipairs(self.PhasesSorted) do
@@ -922,8 +922,8 @@ function ABGP:ExportRaid(windowRaid)
         local edit = AceGUI:Create("MultiLineEditBox");
         edit:SetFullWidth(true);
         edit:SetFullHeight(true);
+        edit:SetUserData("cell", { align = "fill" });
         edit:SetLabel(self.PhaseNames[phase]);
-        edit:SetNumLines(25);
         edit:SetText(text);
         edit:DisableButton(true);
         tableContainer:AddChild(edit);
@@ -937,6 +937,9 @@ function ABGP:ExportRaid(windowRaid)
         local text = "The following players were skipped due to unknown raid group or missing phase EPGP:\n";
         text = text .. table.concat(skippedPlayers, ", ");
         skipped:SetText(text);
+    else
+        skipped:SetHeight(0);
+        window:DoLayout();
     end
 
     window.frame:Raise();

@@ -1920,6 +1920,11 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
             rowObjs[row] = rowObj;
         end
 
+        if rowObj.weight then
+            -- Weight
+            totalWeight = totalWeight + (rowObj.weight or 1)
+        end
+
         -- Horizontal placement and sizing
         for col=1,#cols do
             local child = t[(row - 1) * #cols + col]
@@ -1949,10 +1954,7 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
                     child:DoLayout()
                 end
 
-                if rowObj.weight then
-                    -- Weight
-                    totalWeight = totalWeight + (rowObj.weight or 1)
-                else
+                if not rowObj.weight then
                     if not rowObj.height or rowObj.height <= 0 then
                         -- Content height
                         rowV = max(rowV, (f:GetHeight() or 0) - GetCellDimension("V", laneV, rowStart[child], row - 1, spaceV))
