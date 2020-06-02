@@ -359,7 +359,7 @@ local function DrawGP(container)
 
                 rowTimes[rowTime] = true;
                 row[ABGP.ItemHistoryIndex.DATE] = rowTime;
-                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
+                row[ABGP.ItemHistoryIndex.ID] = ABGP:GetHistoryId();
 
                 local gpDecay, gpFloor = ABGP:GetGPDecayInfo();
                 row[ABGP.ItemHistoryIndex.VALUE] = gpDecay;
