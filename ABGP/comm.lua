@@ -172,7 +172,7 @@ ABGP.CommTypes = {
     HISTORY_REPLACE_REQUEST = { name = CV("HISTORY_REPLACE_REQUEST"), priority = "NORMAL" },
     -- phase: from ABGP.Phases
 
-    -- NOTE: these aren't versioned so they can continue to function across major changes.
+    -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },
     -- reset: bool or nil
     VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "NORMAL", legacy = true },
@@ -201,17 +201,16 @@ function ABGP:CommCallback(sent, total, logInCallback)
 end
 
 function ABGP:Serialize(data, legacy)
+    legacy = true;
+
     if legacy then
         local serialized = AceSerializer:Serialize(data);
         local compressed = LibCompress:Compress(serialized);
-        return "ABGP", AddonEncodeTable:Encode(compressed);
+        return (AddonEncodeTable:Encode(compressed)), "ABGP";
     else
-        -- local serialized = _G.QuestieLoader:ImportModule("QuestieSerializer"):Serialize(data);
-        -- local compressed = LibDeflate:CompressDeflate(serialized);
-        -- return self:GetCommPrefix(), LibDeflate:EncodeForWoWAddonChannel(compressed);
-        local serialized = AceSerializer:Serialize(data);
-        local compressed = LibCompress:Compress(serialized);
-        return "ABGP", AddonEncodeTable:Encode(compressed);
+        local serialized = _G.QuestieLoader:ImportModule("QuestieSerializer"):Serialize(data);
+        local compressed = LibDeflate:CompressDeflate(serialized);
+        return (LibDeflate:EncodeForWoWAddonChannel(compressed)), self:GetCommPrefix();
     end
 end
 
@@ -221,12 +220,9 @@ function ABGP:Deserialize(payload, legacy)
         local serialized = LibCompress:Decompress(compressed);
         return AceSerializer:Deserialize(serialized);
     else
-        -- local compressed = LibDeflate:DecodeForWoWAddonChannel(payload);
-        -- local serialized = LibDeflate:DecompressDeflate(compressed);
-        -- return _G.QuestieLoader:ImportModule("QuestieSerializer"):Deserialize(serialized);
-        local compressed = AddonEncodeTable:Decode(payload);
-        local serialized = LibCompress:Decompress(compressed);
-        return AceSerializer:Deserialize(serialized);
+        local compressed = LibDeflate:DecodeForWoWAddonChannel(payload);
+        local serialized = LibDeflate:DecompressDeflate(compressed);
+        return _G.QuestieLoader:ImportModule("QuestieSerializer"):Deserialize(serialized);
     end
 end
 
@@ -237,7 +233,7 @@ function ABGP:SendComm(type, data, distribution, target)
     local priority = data.commPriority or type.priority;
     data.commPriority = nil;
 
-    local prefix, payload = self:Serialize(data, type.legacy);
+    local payload, prefix = self:Serialize(data, type.legacy);
 
     if distribution == "BROADCAST" then
         distribution, target = GetBroadcastChannel();
