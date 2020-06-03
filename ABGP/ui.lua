@@ -225,18 +225,10 @@ local function DrawItemHistory(container, rebuild, reason, command)
                     local data = elt.data;
 
                     local item = data[ABGP.ItemHistoryIndex.NAME];
-                    local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE])
-                    local value = ABGP:GetItemValue(item);
-                    if value and value.gp ~= data[ABGP.ItemHistoryIndex.GP] then
-                        if data[ABGP.ItemHistoryIndex.GP] == 0 then
-                            item = item .. " OFF";
-                        else
-                            item = ("%s @ %d"):format(item, data[ABGP.ItemHistoryIndex.GP]);
-                        end
-                    end
+                    local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]);
 
-                    text = text .. ("%s\t%s\t%s%s"):format(
-                        item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
+                    text = text .. ("%s\t%s\t%s\t%s%s"):format(
+                        data[ABGP.ItemHistoryIndex.GP], item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
                 end
 
                 local window = AceGUI:Create("Window");
@@ -247,7 +239,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                 ABGP:OpenWindow(window);
 
                 local edit = AceGUI:Create("MultiLineEditBox");
-                edit:SetLabel("In the spreadsheet, paste into the 'Item' column.");
+                edit:SetLabel("Paste the following into the spreadsheet.");
                 edit:SetText(text);
                 edit.button:Enable();
                 window:AddChild(edit);
