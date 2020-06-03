@@ -325,7 +325,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                 -- If the previous award is for the same player, then the officer note will already
                 -- get updated to the proper value for the new award, and writing the officer note
                 -- twice for the same player with no delay will fail.
-                self:SendMessage(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
+                self:Fire(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
                     itemLink = value.itemLink,
                     historyId = data.oldHistoryId,
                     phase = value.phase,
@@ -350,7 +350,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         });
     end
 
-    self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
 function ABGP:HistoryTriggerDecay(decayTime)
@@ -804,7 +804,7 @@ function ABGP:HistoryOnReplace(data, distribution, sender)
 
     _G.ABGP_DataTimestamp.gpHistory[data.phase] = data.baseline;
     _G.ABGP_Data[data.phase].gpHistory = data.history;
-    self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 
     self:Notify("Received complete %s history from %s! Breakdown: %s.",
         ABGP.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.history));
@@ -881,7 +881,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
                     return aDate > bDate;
                 end);
-                self:SendMessage(self.InternalEvents.HISTORY_UPDATED);
+                self:Fire(self.InternalEvents.HISTORY_UPDATED);
 
                 self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
                     mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));

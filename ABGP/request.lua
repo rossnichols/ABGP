@@ -86,7 +86,7 @@ local function VerifyItemRequests()
     for itemLink, item in pairs(activeItems) do
         if not UnitExists(item.sender) then
             -- The sender is gone, close the item.
-            ABGP:SendMessage(ABGP.InternalEvents.ITEM_DISTRIBUTION_CLOSED, {
+            ABGP:Fire(ABGP.InternalEvents.ITEM_DISTRIBUTION_CLOSED, {
                 itemLink = itemLink,
                 interrupted = true,
             }, "BROADCAST");
@@ -334,7 +334,7 @@ function ABGP:RequestItem(itemLink, requestType, notes)
     activeItems[itemLink].sentComms = true;
     activeItems[itemLink].sentRequestType = requestType;
 
-    self:SendMessage(self.InternalEvents.ITEM_REQUESTED, data);
+    self:Fire(self.InternalEvents.ITEM_REQUESTED, data);
 end
 
 function ABGP:PassOnItem(itemLink, removeFromFaves)
@@ -360,7 +360,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     activeItems[itemLink].sentComms = true;
     activeItems[itemLink].sentRequestType = nil;
 
-    self:SendMessage(self.InternalEvents.ITEM_PASSED, data);
+    self:Fire(self.InternalEvents.ITEM_PASSED, data);
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {

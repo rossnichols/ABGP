@@ -303,10 +303,10 @@ function ABGP:ShowLootFrame(itemLink)
         end
 
         AceGUI:Release(widget);
-        self:SendMessage(self.InternalEvents.LOOT_FRAME_CLOSED, {});
+        self:Fire(self.InternalEvents.LOOT_FRAME_CLOSED);
     end);
 
-    self:SendMessage(self.InternalEvents.LOOT_FRAME_OPENED, {});
+    self:Fire(self.InternalEvents.LOOT_FRAME_OPENED);
     return elt;
 end
 

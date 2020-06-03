@@ -1,6 +1,7 @@
 local _G = _G;
 local ABGP = _G.ABGP;
 local AceSerializer = _G.LibStub("AceSerializer-3.0");
+local LibDeflate = _G.LibStub("LibDeflate");
 local LibCompress = _G.LibStub("LibCompress");
 local AddonEncodeTable = LibCompress:GetAddonEncodeTable();
 
@@ -25,13 +26,13 @@ local suppressionThreshold = 30;
 local alertedSlowComms = false;
 local synchronousCheck = false;
 local delayThreshold = 5;
-
 local monitoringComms = false;
 local bufferLength = 30;
 local currentSlot = 0;
 local ctlQueue = { queueing = false, start = 0, count = 0 };
 local commMonitor = {};
 local currentEncounter;
+local events = {};
 
 local function GetBroadcastChannel()
     if ABGP:GetDebugOpt("PrivateComms") then return "WHISPER", UnitName("player"); end
@@ -47,7 +48,19 @@ local function GetBroadcastChannel()
     end
 end
 
--- The commVersion can be revved to create a backwards-incompatible version.
+function ABGP:SetCallback(name, fn)
+    events[name] = fn;
+end
+
+function ABGP:Fire(name, ...)
+    local fn = events[name];
+    if fn then fn(self, name, ...); end
+end
+
+-- The prefix can be revved to create a backwards-incompatible version.
+function ABGP:GetCommPrefix()
+    return "ABGP2";
+end
 local commVersion = ":3";
 local function CV(str)
     return ("ABGP_%s%s"):format(str, commVersion);
@@ -160,9 +173,9 @@ ABGP.CommTypes = {
     -- phase: from ABGP.Phases
 
     -- NOTE: these aren't versioned so they can continue to function across major changes.
-    VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL" },
+    VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },
     -- reset: bool or nil
-    VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "NORMAL" },
+    VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "NORMAL", legacy = true },
     -- no payload
 };
 
@@ -187,6 +200,36 @@ function ABGP:CommCallback(sent, total, logInCallback)
     end
 end
 
+function ABGP:Serialize(data, legacy)
+    if legacy then
+        local serialized = AceSerializer:Serialize(data);
+        local compressed = LibCompress:Compress(serialized);
+        return "ABGP", AddonEncodeTable:Encode(compressed);
+    else
+        -- local serialized = _G.QuestieLoader:ImportModule("QuestieSerializer"):Serialize(data);
+        -- local compressed = LibDeflate:CompressDeflate(serialized);
+        -- return self:GetCommPrefix(), LibDeflate:EncodeForWoWAddonChannel(compressed);
+        local serialized = AceSerializer:Serialize(data);
+        local compressed = LibCompress:Compress(serialized);
+        return "ABGP", AddonEncodeTable:Encode(compressed);
+    end
+end
+
+function ABGP:Deserialize(payload, legacy)
+    if legacy then
+        local compressed = AddonEncodeTable:Decode(payload);
+        local serialized = LibCompress:Decompress(compressed);
+        return AceSerializer:Deserialize(serialized);
+    else
+        -- local compressed = LibDeflate:DecodeForWoWAddonChannel(payload);
+        -- local serialized = LibDeflate:DecompressDeflate(compressed);
+        -- return _G.QuestieLoader:ImportModule("QuestieSerializer"):Deserialize(serialized);
+        local compressed = AddonEncodeTable:Decode(payload);
+        local serialized = LibCompress:Decompress(compressed);
+        return AceSerializer:Deserialize(serialized);
+    end
+end
+
 function ABGP:SendComm(type, data, distribution, target)
     _G.assert(data.type == nil);
     data.type = type.name;
@@ -194,9 +237,7 @@ function ABGP:SendComm(type, data, distribution, target)
     local priority = data.commPriority or type.priority;
     data.commPriority = nil;
 
-    local serialized = AceSerializer:Serialize(data);
-    local compressed = LibCompress:Compress(serialized);
-    local payload = AddonEncodeTable:Encode(compressed);
+    local prefix, payload = self:Serialize(data, type.legacy);
 
     if distribution == "BROADCAST" then
         distribution, target = GetBroadcastChannel();
@@ -220,7 +261,7 @@ function ABGP:SendComm(type, data, distribution, target)
     if priority == "INSTANT" then
         -- The \004 prefix is AceComm's "escape" control. Prepend it so that the
         -- payload is properly interpreted when received.
-        _G.C_ChatInfo.SendAddonMessage("ABGP", "\004" .. payload, distribution, target);
+        _G.C_ChatInfo.SendAddonMessage(prefix, "\004" .. payload, distribution, target);
         synchronousCheck = true;
     else
         synchronousCheck = false;
@@ -251,16 +292,19 @@ function ABGP:SendComm(type, data, distribution, target)
                 time = now;
             end
         end
-        self:SendCommMessage("ABGP", payload, distribution, target, priority, commCallback, self);
+        self:SendCommMessage(prefix, payload, distribution, target, priority, commCallback, self);
     end
 
     return synchronousCheck;
 end
 
 function ABGP:OnCommReceived(prefix, payload, distribution, sender)
-    local compressed = AddonEncodeTable:Decode(payload);
-    local serialized = LibCompress:Decompress(compressed);
-    local _, data = AceSerializer:Deserialize(serialized);
+    local legacy = (prefix == "ABGP");
+    local success, data = self:Deserialize(payload, legacy);
+    if not success then
+        self:Error("Received an invalid addon comm!");
+        return;
+    end
 
     if self:GetDebugOpt("Verbose") then
         self:LogVerbose("COMM >>>");
@@ -273,7 +317,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
         self:LogDebug("COMM-RECV: %s dist=%s sender=%s", data.type, distribution, sender);
     end
 
-    self:SendMessage(data.type, data, distribution, sender);
+    self:Fire(data.type, data, distribution, sender);
 end
 
 local function GetSlot()

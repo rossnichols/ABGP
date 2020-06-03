@@ -89,11 +89,11 @@ function ABGP:MinimapOnDistClosed(data)
     UpdateIcon();
 end
 
-function ABGP:MinimapOnLootFrameOpened(data)
+function ABGP:MinimapOnLootFrameOpened()
     UpdateIcon();
 end
 
-function ABGP:MinimapOnLootFrameClosed(data)
+function ABGP:MinimapOnLootFrameClosed()
     UpdateIcon();
 end
 
