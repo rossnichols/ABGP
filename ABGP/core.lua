@@ -907,11 +907,18 @@ end);
 --
 
 local openWindows = {};
+local openPopups = {};
 local function CloseABGPWindows()
     local found = false;
-    for window in pairs(openWindows) do
+    for window in pairs(openPopups) do
         found = true;
         window:Hide();
+    end
+    if not found then
+        for window in pairs(openWindows) do
+            found = true;
+            window:Hide();
+        end
     end
     return found;
 end
@@ -928,6 +935,14 @@ end
 
 function ABGP:CloseWindow(window)
     openWindows[window] = nil;
+end
+
+function ABGP:OpenPopup(window)
+    openPopups[window] = true;
+end
+
+function ABGP:ClosePopup(window)
+    openPopups[window] = nil;
 end
 
 

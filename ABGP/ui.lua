@@ -235,8 +235,8 @@ local function DrawItemHistory(container, rebuild, reason, command)
                 window.frame:SetFrameStrata("DIALOG");
                 window:SetTitle("Export");
                 window:SetLayout("Fill");
-                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
-                ABGP:OpenWindow(window);
+                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
+                ABGP:OpenPopup(window);
 
                 local edit = AceGUI:Create("MultiLineEditBox");
                 edit:SetLabel("Paste the following into the spreadsheet.");
@@ -543,8 +543,8 @@ local function DrawItems(container, rebuild, reason)
                 window.frame:SetFrameStrata("DIALOG");
                 window:SetTitle("Export");
                 window:SetLayout("Fill");
-                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
-                ABGP:OpenWindow(window);
+                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
+                ABGP:OpenPopup(window);
 
                 local edit = AceGUI:Create("MultiLineEditBox");
                 edit:SetLabel("In the spreadsheet, select all, press <delete>, select A1, then paste.");

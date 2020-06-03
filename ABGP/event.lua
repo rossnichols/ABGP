@@ -717,11 +717,15 @@ function ABGP:UpdateRaid(windowRaid)
         popup.frame:SetFrameStrata("DIALOG");
         popup:SetTitle("Manage EP");
         popup:SetLayout("Fill");
-        popup:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); window:SetUserData("popup", nil); end);
+        popup:SetCallback("OnClose", function(widget)
+            AceGUI:Release(widget);
+            ABGP:ClosePopup(widget);
+            window:SetUserData("popup", nil);
+        end);
         local popupWidth = 240;
         popup:SetWidth(popupWidth);
         popup:SetHeight(300);
-        ABGP:OpenWindow(popup);
+        ABGP:OpenPopup(popup);
         local _, _, screenWidth = _G.UIParent:GetRect();
         local windowLeft, _, windowWidth = window.frame:GetRect();
         popup.frame:ClearAllPoints();
@@ -858,8 +862,11 @@ function ABGP:ExportRaid(windowRaid)
     window:SetTitle("Export");
     window:SetHeight(450);
     window:SetLayout("Flow");
-    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
-    ABGP:OpenWindow(window);
+    window:SetCallback("OnClose", function(widget)
+        AceGUI:Release(widget);
+        ABGP:ClosePopup(widget);
+    end);
+    ABGP:OpenPopup(window);
 
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
 

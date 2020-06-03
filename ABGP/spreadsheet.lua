@@ -93,8 +93,8 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local window = AceGUI:Create("Window");
             window:SetTitle("Import");
             window:SetLayout("Flow");
-            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
-            ABGP:OpenWindow(window);
+            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
+            ABGP:OpenPopup(window);
 
             local edit = AceGUI:Create("MultiLineEditBox");
             if canBeDelta then
@@ -127,8 +127,8 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
             local window = AceGUI:Create("Window");
             window:SetTitle("Export");
             window:SetLayout("Fill");
-            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); end);
-            ABGP:OpenWindow(window);
+            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
+            ABGP:OpenPopup(window);
 
             local edit = AceGUI:Create("MultiLineEditBox");
             edit:SetLabel("Export the data");
@@ -486,8 +486,8 @@ function ABGP:ShowImportWindow()
     window:SetWidth(650);
     window:SetHeight(400);
     window:SetLayout("Flow");
-    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:CloseWindow(widget); activeWindow = nil; end);
-    ABGP:OpenWindow(window);
+    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); activeWindow = nil; end);
+    ABGP:OpenPopup(window);
 
     local tabs = {
         { value = "priority", text = "Priority", selected = DrawPriority },
