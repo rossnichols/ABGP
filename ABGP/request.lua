@@ -86,7 +86,7 @@ local function VerifyItemRequests()
     for itemLink, item in pairs(activeItems) do
         if not UnitExists(item.sender) then
             -- The sender is gone, close the item.
-            ABGP:Fire(ABGP.InternalEvents.ITEM_DISTRIBUTION_CLOSED, {
+            ABGP:Fire(ABGP.InternalEvents.ITEM_CLOSED, {
                 itemLink = itemLink,
                 interrupted = true,
             }, "BROADCAST");
