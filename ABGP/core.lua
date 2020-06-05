@@ -89,7 +89,7 @@ function ABGP:OnEnable()
         self:DistribOnItemPass(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_REQUESTED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_REQUESTCOUNT.name, function(self, event, data, distribution, sender)
         self:RequestOnItemRequestCount(data, distribution, sender);
         self:AnnounceOnItemRequestCount(data, distribution, sender);
     end, self);
@@ -99,20 +99,20 @@ function ABGP:OnEnable()
         self:AnnounceOnItemCount(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_OPENED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_DISTRIBUTION_OPENED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);
         self:AnnounceOnDistOpened(data, distribution, sender);
         self:MinimapOnDistOpened(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_CLOSED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_DISTRIBUTION_CLOSED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistClosed(data, distribution, sender);
         self:AnnounceOnDistClosed(data, distribution, sender);
         self:MinimapOnDistClosed(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_AWARDED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_DISTRIBUTION_AWARDED.name, function(self, event, data, distribution, sender)
         -- Convert older messages to newer format.
         -- Legacy1: editId is number, reused for updates
         -- Legacy2: editId is string, represents edited item. newEditId is new entry.
@@ -141,7 +141,7 @@ function ABGP:OnEnable()
         self:AnnounceOnItemAwarded(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_TRASHED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_DISTRIBUTION_TRASHED.name, function(self, event, data, distribution, sender)
         self:RequestOnItemTrashed(data, distribution, sender);
         self:AnnounceOnItemTrashed(data, distribution, sender);
     end, self);
@@ -159,7 +159,7 @@ function ABGP:OnEnable()
         self:OnVersionResponse(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.GUILD_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.OFFICER_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
         if self:Get("outsider") then
             self:OutsiderOnOfficerNotesUpdated();
         elseif IsInGuild() then
@@ -224,7 +224,7 @@ function ABGP:OnEnable()
         self:RequestOnItemUnawarded(data);
     end, self);
 
-    self:SetCallback(self.InternalEvents.ITEM_CLOSED, function(self, event, data)
+    self:SetCallback(self.InternalEvents.ITEM_DISTRIBUTION_CLOSED, function(self, event, data)
         self:RequestOnDistClosed(data);
         self:AnnounceOnDistClosed(data);
         self:MinimapOnDistClosed(data);
