@@ -155,7 +155,6 @@ ABGP.CommTypes = {
 
     HISTORY_REPLACE_INITIATION = { name = CV("HISTORY_REPLACE_INITIATION"), priority = "NORMAL" },
     -- phase: from ABGP.Phases
-    -- token: value from HISTORY_SYNC
 
     HISTORY_MERGE = { name = CV("HISTORY_MERGE"), priority = "BULK" },
     -- phase: from ABGP.Phases

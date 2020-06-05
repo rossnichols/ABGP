@@ -25,7 +25,8 @@ local checkedHistory = false;
 local hasCompleteCached = false;
 local hasComplete = false;
 local hasActivePlayers = false;
-local itemHistoryTokens = {};
+local requestedHistoryToken;
+local requestedHistoryEntries = {};
 local warnedOutOfDate = {};
 local invalidBaseline = -1;
 local syncThreshold = 10 * 24 * 60 * 60;
@@ -562,11 +563,11 @@ function ABGP:HistoryOnEnteringWorld(isInitialLogin)
     if not isInitialLogin then checkedHistory = true; end
 end
 
-function ABGP:HistoryTriggerSync(target)
+function ABGP:HistoryTriggerSync(target, token, now)
     local privileged = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend");
     local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
 
-    local now = GetServerTime();
+    local now = now or GetServerTime();
     for phase in pairs(self.Phases) do
         local gpHistory = _G.ABGP_Data[phase].gpHistory;
         local baseline = _G.ABGP_DataTimestamp.gpHistory[phase];
@@ -574,7 +575,7 @@ function ABGP:HistoryTriggerSync(target)
         local commData = {
             version = self:GetVersion(),
             phase = phase,
-            token = GetTime(),
+            token = token or GetTime(),
             baseline = baseline,
             archivedCount = 0,
             now = now,
@@ -641,6 +642,11 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     if sender == UnitName("player") or InCombatLockdown() then return; end
     if self:GetCompareVersion() ~= data.version then return; end
 
+    if data.token ~= requestedHistoryToken then
+        table.wipe(requestedHistoryEntries);
+        requestedHistoryToken = data.token;
+    end
+
     local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
     local history = _G.ABGP_Data[data.phase].gpHistory;
     local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
@@ -672,8 +678,8 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
-                token = data.token,
 
+                token = data.token, -- for compat
                 historyType = "gpHistory", -- for compat
             }, "WHISPER", sender);
         elseif data.baseline == baseline and data.archivedCount and data.archivedCount < archivedCount then -- TODO: can remove nil check
@@ -682,8 +688,8 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
-                token = data.token,
 
+                token = data.token, -- for compat
                 historyType = "gpHistory", -- for compat
             }, "WHISPER", sender);
         end
@@ -713,7 +719,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         -- The sender sent a hash of their recent entries. If our hash is different,
         -- we'll deliver them a sync and they can request whatever they need.
         if data.hash ~= hash then
-            self:HistoryTriggerSync(sender);
+            self:HistoryTriggerSync(sender, data.token, now);
         end
     elseif data.ids and senderIsPrivileged then
         -- The sender sent ids. We'll go through them looking for entries we need,
@@ -737,8 +743,18 @@ function ABGP:HistoryOnSync(data, distribution, sender)
 
         -- At this point, anything left in data.ids represents entries
         -- the sender has but we don't. Request those if they exist,
-        -- and send any we have they're missing.
-        for _ in pairs(data.ids) do requestCount = requestCount + 1; end
+        -- and send any we have they're missing. Remove ones we've
+        -- already requested for this token.
+        for id in pairs(data.ids) do
+            if requestedHistoryEntries[id] then
+                -- We already requested this entry from someone.
+                data.ids[id] = nil;
+            else
+                -- We need to request this id.
+                requestedHistoryEntries[id] = true;
+                requestCount = requestCount + 1;
+            end
+        end
         if sendCount > 0 or requestCount > 0 then
             self:LogDebug("Sending %d to / requesting %d history entries from %s [%s]",
                 sendCount, requestCount, self:ColorizeName(sender), self.PhaseNames[data.phase]);
@@ -756,8 +772,6 @@ end
 
 function ABGP:HistoryOnReplaceInit(data, distribution, sender)
     if not self:CanEditOfficerNotes(sender) then return; end
-    if itemHistoryTokens[data.phase] == data.token then return; end
-    itemHistoryTokens[data.phase] = data.token;
 
     -- The sender has determined our history is out of date and wants to give us theirs.
     -- At this point our history should not be considered as valid for sending to others.
@@ -839,7 +853,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
         local merge = {};
         local sendCount = 0;
         for _, entry in ipairs(history) do
-            local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
+            local id = entry[self.ItemHistoryIndex.ID];
             if data.requested[id] then
                 -- Sender wants this entry.
                 merge[id] = entry;
@@ -862,7 +876,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
     if data.merge and next(data.merge) and self:CanEditOfficerNotes(sender) then
         -- The sender is sharing entries. First remove the ones we already have.
         for _, entry in ipairs(history) do
-            local id = entry[self.ItemHistoryIndex.ID]; -- TODO: this is generic history, not item history?
+            local id = entry[self.ItemHistoryIndex.ID];
             data.merge[id] = nil;
         end
 
