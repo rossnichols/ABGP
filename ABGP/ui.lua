@@ -732,7 +732,12 @@ local function DrawItems(container, rebuild, reason)
                 end
             end);
             elt:SetCallback("OnPrioritiesUpdated", function(widget, event)
-                ABGP:Notify("Priorities for %s: %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK], table.concat(widget.data[ABGP.ItemDataIndex.PRIORITY], ", "));
+                local pri = widget.data[ABGP.ItemDataIndex.PRIORITY];
+                if #pri > 0 then
+                    ABGP:Notify("Priorities for %s: %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK], table.concat(pri, ", "));
+                else
+                    ABGP:Notify("Priorities for %s have been cleared.", widget.data[ABGP.ItemDataIndex.ITEMLINK]);
+                end
                 ABGP:CommitItemData();
             end);
             itemList:AddChild(elt);
