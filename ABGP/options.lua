@@ -423,17 +423,15 @@ function ABGP:InitOptions()
                         add = {
                             name = "Add Player",
                             order = 1,
-                            desc = "Add a player into the EPGP system.",
+                            desc = "Add a player into the EPGP system. NOTE: for now this just creates history items, it does not update officer notes. Use it after importing EPGP from the spreadsheet.",
                             type = "execute",
-                            hidden = function() return not self:GetDebugOpt("HistoryUI"); end,
                             func = function() ABGP:ShowAddPlayerWindow(); end,
                         },
                         decay = {
                             name = "Decay",
                             order = 2,
-                            desc = "Trigger EPGP decay.",
+                            desc = "Trigger EPGP decay. NOTE: for now this just creates a history item, it does not update officer notes. Use it after importing EPGP from the spreadsheet.",
                             type = "execute",
-                            hidden = function() return not self:GetDebugOpt("HistoryUI"); end,
                             func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
                         },
                         masterLoot = {
