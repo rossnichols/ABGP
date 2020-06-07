@@ -1,5 +1,6 @@
 local _G = _G;
 local ABGP = _G.ABGP;
+local LibQuestieSerializer = _G.LibStub("LibQuestieSerializer");
 local AceSerializer = _G.LibStub("AceSerializer-3.0");
 local LibDeflate = _G.LibStub("LibDeflate");
 local LibCompress = _G.LibStub("LibCompress");
@@ -200,14 +201,12 @@ function ABGP:CommCallback(sent, total, logInCallback)
 end
 
 function ABGP:Serialize(data, legacy)
-    legacy = true;
-
     if legacy then
         local serialized = AceSerializer:Serialize(data);
         local compressed = LibCompress:Compress(serialized);
         return (AddonEncodeTable:Encode(compressed)), "ABGP";
     else
-        local serialized = _G.QuestieLoader:ImportModule("QuestieSerializer"):Serialize(data);
+        local serialized = LibQuestieSerializer:Serialize(data);
         local compressed = LibDeflate:CompressDeflate(serialized);
         return (LibDeflate:EncodeForWoWAddonChannel(compressed)), self:GetCommPrefix();
     end
@@ -221,7 +220,7 @@ function ABGP:Deserialize(payload, legacy)
     else
         local compressed = LibDeflate:DecodeForWoWAddonChannel(payload);
         local serialized = LibDeflate:DecompressDeflate(compressed);
-        return _G.QuestieLoader:ImportModule("QuestieSerializer"):Deserialize(serialized);
+        return LibQuestieSerializer:Deserialize(serialized);
     end
 end
 

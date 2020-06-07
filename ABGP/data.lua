@@ -1,5 +1,6 @@
 local _G = _G;
 local ABGP = _G.ABGP;
+local LibQuestieSerializer = _G.LibStub("LibQuestieSerializer");
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
@@ -528,16 +529,6 @@ function ABGP:HasValidBaselines()
     return true;
 end
 
-local function Hash(str)
-    if str:len() == 0 then return 0; end
-
-    local h = 5381;
-    for i = 1, str:len() do
-        h = bit.band((31 * h + str:byte(i)), 4294967295);
-    end
-    return h;
-end
-
 local function BuildSyncHashData(phase, now)
     local hash = 0;
     local syncCount = 0;
@@ -551,7 +542,7 @@ local function BuildSyncHashData(phase, now)
         local player, date = ABGP:ParseHistoryId(id);
         if now - date > syncThreshold then break; end
 
-        hash = bit.bxor(hash, Hash(id));
+        hash = bit.bxor(hash, LibQuestieSerializer:Hash(id));
         syncCount = syncCount + 1;
     end
 

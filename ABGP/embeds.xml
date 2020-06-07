@@ -1,7 +1,9 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
   <Script file="Libs\LibStub\LibStub.lua"/>
-  <Script file="Libs\LibCompress\LibCompress.lua"/>
   <Include file="Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
+  <Script file="Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
+  <Include file="Libs\LibQuestieStream\lib.xml"/>
+
   <Include file="Libs\AceGUI-3.0\AceGUI-3.0.xml"/>
   <Include file="Libs\AceAddon-3.0\AceAddon-3.0.xml"/>
   <Include file="Libs\AceComm-3.0\AceComm-3.0.xml"/>
@@ -13,7 +15,8 @@
   <Include file="Libs\AceDB-3.0\AceDB-3.0.xml"/>
   <Include file="Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml"/>
   <Include file="Libs\AceHook-3.0\AceHook-3.0.xml"/>
-  <Script file="Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
-  <Script file="Libs\LibDeflate\LibDeflate.lua"/>
   <Include file="Libs\LibDBIcon-1.0\lib.xml"/>
+  <Include file="Libs\LibQuestieSerializer\lib.xml"/>
+  <Script file="Libs\LibCompress\LibCompress.lua"/>
+  <Script file="Libs\LibDeflate\LibDeflate.lua"/>
 </Ui>
