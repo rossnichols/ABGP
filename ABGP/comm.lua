@@ -245,10 +245,11 @@ function ABGP:SendComm(type, data, distribution, target)
     local logInCallback = false;
     if not type.name:find("VERSION") and self:GetDebugOpt("DebugComms") then
         logInCallback = true;
-        self:LogDebug("COMM-SEND: %s pri=%s dist=%s len=%d",
+        self:LogDebug("COMM-SEND: %s pri=%s dist=%s prefix=%s len=%d",
             type.name,
             priority,
             target and ("%s:%s"):format(distribution, target) or distribution,
+            prefix,
             strlen(payload));
     end
 
@@ -302,13 +303,13 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
 
     if self:GetDebugOpt("Verbose") then
         self:LogVerbose("COMM >>>");
-        self:LogVerbose("Data from %s via %s:", sender, distribution);
+        self:LogVerbose("Data from %s via %s using %s:", sender, distribution, prefix);
         for k, v in pairs(data) do
             self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
     elseif sender ~= UnitName("player") and not data.type:find("VERSION") and self:GetDebugOpt("DebugComms") then
-        self:LogDebug("COMM-RECV: %s dist=%s sender=%s", data.type, distribution, sender);
+        self:LogDebug("COMM-RECV: %s dist=%s sender=%s prefix=%s len=%s", data.type, distribution, sender, prefix, payload:len());
     end
 
     self:Fire(data.type, data, distribution, sender);
