@@ -62,41 +62,37 @@ end
 function ABGP:GetCommPrefix()
     return "ABGP2";
 end
-local commVersion = ":3";
-local function CV(str)
-    return ("ABGP_%s%s"):format(str, commVersion);
-end
 
 ABGP.CommTypes = {
-    ITEM_REQUEST = { name = CV("ITEM_REQUEST"), priority = "INSTANT" },
+    ITEM_REQUEST = { name = "ITEM_REQUEST", priority = "INSTANT" },
     -- itemLink: item link string
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings or nil
 
-    ITEM_PASS = { name = CV("ITEM_PASS"), priority = "INSTANT" },
+    ITEM_PASS = { name = "ITEM_PASS", priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_REQUESTED = { name = CV("ITEM_REQUESTED"), priority = "ALERT" },
-    -- itemLink: item link string
-    -- count: number
-
-    ITEM_COUNT = { name = CV("ITEM_COUNT"), priority = "ALERT" },
+    ITEM_REQUESTED = { name = "ITEM_REQUESTED", priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
-    ITEM_OPENED = { name = CV("ITEM_OPENED"), priority = "ALERT" },
+    ITEM_COUNT = { name = "ITEM_COUNT", priority = "ALERT" },
+    -- itemLink: item link string
+    -- count: number
+
+    ITEM_OPENED = { name = "ITEM_OPENED", priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
     -- slots: array of strings
     -- count: number
 
-    ITEM_CLOSED = { name = CV("ITEM_CLOSED"), priority = "ALERT" },
+    ITEM_CLOSED = { name = "ITEM_CLOSED", priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
-    ITEM_AWARDED = { name = CV("ITEM_AWARDED"), priority = "ALERT" },
+    ITEM_AWARDED = { name = "ITEM_AWARDED", priority = "ALERT" },
     -- itemLink: item link string
     -- player: string
     -- cost: number
@@ -112,40 +108,40 @@ ABGP.CommTypes = {
     -- oldPlayer: string
     -- oldCost: number
 
-    ITEM_TRASHED = { name = CV("ITEM_TRASHED"), priority = "ALERT" },
+    ITEM_TRASHED = { name = "ITEM_TRASHED", priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
 
-    STATE_SYNC = { name = CV("STATE_SYNC"), priority = "ALERT" },
+    STATE_SYNC = { name = "STATE_SYNC", priority = "ALERT" },
     -- token: unique token for the message
     -- itemDataTime: number
 
-    ITEM_ROLLED = { name = CV("ITEM_ROLLED"), priority = "ALERT" },
+    ITEM_ROLLED = { name = "ITEM_ROLLED", priority = "ALERT" },
     -- itemLink: item link string
     -- roll: number
 
-    GUILD_NOTES_UPDATED = { name = CV("GUILD_NOTES_UPDATED"), priority = "NORMAL" },
+    GUILD_NOTES_UPDATED = { name = "GUILD_NOTES_UPDATED", priority = "NORMAL" },
     -- no payload
 
-    REQUEST_PRIORITY_SYNC = { name = CV("REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },
+    REQUEST_PRIORITY_SYNC = { name = "REQUEST_PRIORITY_SYNC", priority = "NORMAL" },
     -- no payload
 
-    PRIORITY_SYNC = { name = CV("PRIORITY_SYNC"), priority = "BULK" },
+    PRIORITY_SYNC = { name = "PRIORITY_SYNC", priority = "BULK" },
     -- priorities: table
 
-    BOSS_LOOT = { name = CV("BOSS_LOOT"), priority = "ALERT" },
+    BOSS_LOOT = { name = "BOSS_LOOT", priority = "ALERT" },
     -- source: string
     -- items: table
 
-    REQUEST_ITEM_DATA_SYNC = { name = CV("REQUEST_ITEM_DATA_SYNC"), priority = "NORMAL" },
+    REQUEST_ITEM_DATA_SYNC = { name = "REQUEST_ITEM_DATA_SYNC", priority = "NORMAL" },
     -- token: value from STATE_SYNC
 
-    ITEM_DATA_SYNC = { name = CV("ITEM_DATA_SYNC"), priority = "BULK" },
+    ITEM_DATA_SYNC = { name = "ITEM_DATA_SYNC", priority = "BULK" },
     -- itemDataTime: number
     -- itemValues: table
 
-    HISTORY_SYNC = { name = CV("HISTORY_SYNC"), priority = "BULK" },
+    HISTORY_SYNC = { name = "HISTORY_SYNC", priority = "BULK" },
     -- version: from ABGP:GetVersion()
     -- phase: from ABGP.Phases
     -- token: unique token for the message
@@ -154,22 +150,23 @@ ABGP.CommTypes = {
     -- now: number
     -- ids: table OR hash: number
 
-    HISTORY_REPLACE_INITIATION = { name = CV("HISTORY_REPLACE_INITIATION"), priority = "NORMAL" },
+    HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", priority = "NORMAL" },
     -- phase: from ABGP.Phases
 
-    HISTORY_MERGE = { name = CV("HISTORY_MERGE"), priority = "BULK" },
+    HISTORY_MERGE = { name = "HISTORY_MERGE", priority = "BULK" },
     -- phase: from ABGP.Phases
     -- baseline: number
     -- now: number
     -- merge: table
     -- requested: table
+    -- now: number
 
-    HISTORY_REPLACE = { name = CV("HISTORY_REPLACE"), priority = "BULK" },
+    HISTORY_REPLACE = { name = "HISTORY_REPLACE", priority = "BULK" },
     -- phase: from ABGP.Phases
     -- baseline: number
     -- history: table
 
-    HISTORY_REPLACE_REQUEST = { name = CV("HISTORY_REPLACE_REQUEST"), priority = "NORMAL" },
+    HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", priority = "NORMAL" },
     -- phase: from ABGP.Phases
 
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.

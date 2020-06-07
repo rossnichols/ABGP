@@ -541,9 +541,6 @@ local function DistributeItem(data)
         count = #currentItem.distributions,
         testItem = currentItem.testItem,
         historyId = historyId,
-
-        -- for compat
-        editId = historyId,
     };
     ABGP:SendComm(ABGP.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));

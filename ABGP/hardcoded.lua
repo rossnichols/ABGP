@@ -15928,17 +15928,4 @@ function ABGP:CheckHardcodedData()
 			end
 		end
 	end
-
-	-- TODO: can remove
-	for phase in pairs(ABGP.PhasesAll) do
-		for _, entry in ipairs(_G.ABGP_Data[phase].gpHistory) do
-			if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DELETE then
-				if type(entry[ABGP.ItemHistoryIndex.DATE]) == "string" then
-					entry[ABGP.ItemHistoryIndex.DELETEDID] = entry[ABGP.ItemHistoryIndex.DATE];
-					local _, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.DATE]);
-					entry[ABGP.ItemHistoryIndex.DATE] = entryDate;
-				end
-			end
-		end
-	end
 end

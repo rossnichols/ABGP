@@ -575,7 +575,6 @@ function ABGP:HistoryTriggerSync(target, token, now)
         local syncCount = 0;
         if canSendHistory then
             commData.ids = {};
-            commData.historyType = "gpHistory"; -- for compat
             for _, entry in ipairs(gpHistory) do
                 local id = entry[self.ItemHistoryIndex.ID];
                 local player, date = self:ParseHistoryId(id);
@@ -642,7 +641,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     local history = _G.ABGP_Data[data.phase].gpHistory;
     local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
     local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
-    local now = data.now or GetServerTime(); -- TODO: can remove fallback
+    local now = data.now;
 
     -- Compute the archivedCount and hash (if necessary).
     local hash, syncCount = 0, 0;
@@ -669,19 +668,13 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
-
-                token = data.token, -- for compat
-                historyType = "gpHistory", -- for compat
             }, "WHISPER", sender);
-        elseif data.baseline == baseline and data.archivedCount and data.archivedCount < archivedCount then -- TODO: can remove nil check
+        elseif data.baseline == baseline and data.archivedCount < archivedCount then
             -- The sender has fewer archived entries than us. They need a history replacement.
             self:LogDebug("Sending history replace init to %s (fewer archived) [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
-
-                token = data.token, -- for compat
-                historyType = "gpHistory", -- for compat
             }, "WHISPER", sender);
         end
     end
@@ -693,7 +686,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             self:LogDebug("Updated baseline found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             WarnOutOfDate(data.phase, sender);
-        elseif data.baseline == baseline and data.archivedCount and data.archivedCount > archivedCount then -- TODO: can remove nil check
+        elseif data.baseline == baseline and data.archivedCount > archivedCount then
             -- The sender has more archived entries than us. We need a history replacement.
             _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
             self:LogDebug("More archived entries found from %s [%s]",
@@ -703,7 +696,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     end
 
     -- A deeper sync check should only occur if the baselines and archivedCounts match.
-    local checkRecent = data.baseline == baseline and (not data.archivedCount or data.archivedCount == archivedCount); -- TODO: can remove fallback
+    local checkRecent = data.baseline == baseline and data.archivedCount == archivedCount;
     if not checkRecent then return; end
 
     if data.hash and canSendHistory then
@@ -754,8 +747,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 baseline = baseline,
                 merge = merge,
                 requested = data.ids,
-
-                historyType = "gpHistory", -- for compat
+                now = now,
             }, "WHISPER", sender);
         end
     end
@@ -785,8 +777,6 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
         phase = data.phase,
         baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase],
         history = history,
-
-        historyType = "gpHistory", -- for compat
     }, "WHISPER", sender);
 end
 
@@ -824,8 +814,6 @@ local function RequestFullHistory(data)
 
     ABGP:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
         phase = data.phase,
-
-        historyType = "gpHistory", -- for compat
     }, "WHISPER", data.sender);
     ABGP:Notify("Requesting full item history for %s from %s! This could take a little while.",
         ABGP.PhaseNames[data.phase], ABGP:ColorizeName(data.sender));
@@ -837,7 +825,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
     local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
 
     local history = _G.ABGP_Data[data.phase].gpHistory;
-    local now = data.now or GetServerTime(); -- TODO: can remove fallback
+    local now = data.now;
 
     if data.requested and next(data.requested) and canSendHistory then
         -- The sender is requesting history entries.
@@ -858,8 +846,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
                 phase = data.phase,
                 baseline = baseline,
                 merge = merge,
-
-                historyType = "gpHistory", -- for compat
+                now = now,
             }, "WHISPER", sender);
         end
     end
@@ -916,10 +903,6 @@ function ABGP:HistoryUpdateCost(data, cost)
         oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
         historyId = newHistoryId,
-
-        -- for compat
-        editId = data.historyId,
-        newEditId = newHistoryId,
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -939,10 +922,6 @@ function ABGP:HistoryUpdatePlayer(data, player)
         oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
         historyId = newHistoryId,
-
-        -- for compat
-        editId = data.historyId,
-        newEditId = newHistoryId,
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -958,9 +937,6 @@ function ABGP:HistoryDelete(data)
         cost = data.gp,
         oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
-
-        -- for compat
-        editId = data.historyId,
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
