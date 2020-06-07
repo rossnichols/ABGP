@@ -630,7 +630,7 @@ end
 
 function ABGP:ItemOnDataSync(data, distribution, sender)
     -- Ignore data syncs that don't have a newer timestamp or have a mismatched baseline.
-    if data.itemDataTime < _G.ABGP_DataTimestamp.itemValues then return; end
+    if data.itemDataTime <= _G.ABGP_DataTimestamp.itemValues then return; end
     if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
     _G.ABGP_DataTimestamp.itemValues = data.itemDataTime;
