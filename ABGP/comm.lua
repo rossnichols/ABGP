@@ -77,7 +77,7 @@ ABGP.CommTypes = {
     ITEM_PASS = { name = CV("ITEM_PASS"), priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_REQUESTCOUNT = { name = CV("ITEM_REQUESTCOUNT"), priority = "ALERT" },
+    ITEM_REQUESTED = { name = CV("ITEM_REQUESTED"), priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
@@ -85,18 +85,18 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- count: number
 
-    ITEM_DISTRIBUTION_OPENED = { name = CV("ITEM_DISTRIBUTION_OPENED"), priority = "ALERT" },
+    ITEM_OPENED = { name = CV("ITEM_OPENED"), priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
     -- slots: array of strings
     -- count: number
 
-    ITEM_DISTRIBUTION_CLOSED = { name = CV("ITEM_DISTRIBUTION_CLOSED"), priority = "ALERT" },
+    ITEM_CLOSED = { name = CV("ITEM_CLOSED"), priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
-    ITEM_DISTRIBUTION_AWARDED = { name = CV("ITEM_DISTRIBUTION_AWARDED"), priority = "ALERT" },
+    ITEM_AWARDED = { name = CV("ITEM_AWARDED"), priority = "ALERT" },
     -- itemLink: item link string
     -- player: string
     -- cost: number
@@ -112,7 +112,7 @@ ABGP.CommTypes = {
     -- oldPlayer: string
     -- oldCost: number
 
-    ITEM_DISTRIBUTION_TRASHED = { name = CV("ITEM_DISTRIBUTION_TRASHED"), priority = "ALERT" },
+    ITEM_TRASHED = { name = CV("ITEM_TRASHED"), priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
@@ -125,7 +125,7 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- roll: number
 
-    OFFICER_NOTES_UPDATED = { name = CV("OFFICER_NOTES_UPDATED"), priority = "NORMAL" },
+    GUILD_NOTES_UPDATED = { name = CV("GUILD_NOTES_UPDATED"), priority = "NORMAL" },
     -- no payload
 
     REQUEST_PRIORITY_SYNC = { name = CV("REQUEST_PRIORITY_SYNC"), priority = "NORMAL" },
@@ -180,15 +180,15 @@ ABGP.CommTypes = {
 };
 
 ABGP.InternalEvents = {
-    ACTIVE_PLAYERS_REFRESHED = CV("ACTIVE_PLAYERS_REFRESHED"),
-    ITEM_DISTRIBUTION_UNAWARDED = CV("ITEM_DISTRIBUTION_UNAWARDED"),
-    ITEM_DISTRIBUTION_CLOSED = CV("ITEM_DISTRIBUTION_CLOSED"),
-    ITEM_REQUESTED = CV("ITEM_REQUESTED"),
-    ITEM_PASSED = CV("ITEM_PASSED"),
-    ITEM_FAVORITED = CV("ITEM_FAVORITED"),
-    LOOT_FRAME_OPENED = CV("LOOT_FRAME_OPENED"),
-    LOOT_FRAME_CLOSED = CV("LOOT_FRAME_CLOSED"),
-    HISTORY_UPDATED = CV("HISTORY_UPDATED"),
+    ACTIVE_PLAYERS_REFRESHED = "ACTIVE_PLAYERS_REFRESHED",
+    ITEM_DISTRIBUTION_UNAWARDED = "ITEM_DISTRIBUTION_UNAWARDED",
+    ITEM_CLOSED = "ITEM_CLOSED",
+    ITEM_REQUESTED = "ITEM_REQUESTED",
+    ITEM_PASSED = "ITEM_PASSED",
+    ITEM_FAVORITED = "ITEM_FAVORITED",
+    LOOT_FRAME_OPENED = "LOOT_FRAME_OPENED",
+    LOOT_FRAME_CLOSED = "LOOT_FRAME_CLOSED",
+    HISTORY_UPDATED = "HISTORY_UPDATED",
 };
 
 function ABGP:CommCallback(sent, total, logInCallback)

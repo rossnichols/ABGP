@@ -36,8 +36,8 @@ function ABGP:AddDataHooks()
     local onSetNote = function(note, name, canEdit, existing)
         if updatingNotes or not name or not canEdit or note == existing then return; end
 
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "BROADCAST");
     end;
     local onSetPublicNote = function(index, note)
         local name, _, _, _, _, _, existing = GetGuildRosterInfo(index);
@@ -182,8 +182,8 @@ function ABGP:RebuildOfficerNotes()
         self:Notify("Everything already up to date!");
     else
         self:Notify("Updated %d officer notes with the latest priority data!", count);
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "GUILD");
-        self:SendComm(self.CommTypes.OFFICER_NOTES_UPDATED, {}, "BROADCAST");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
+        self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "BROADCAST");
     end
 end
 
@@ -921,7 +921,7 @@ function ABGP:HistoryUpdateCost(data, cost)
         editId = data.historyId,
         newEditId = newHistoryId,
     };
-    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
@@ -944,7 +944,7 @@ function ABGP:HistoryUpdatePlayer(data, player)
         editId = data.historyId,
         newEditId = newHistoryId,
     };
-    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
@@ -962,7 +962,7 @@ function ABGP:HistoryDelete(data)
         -- for compat
         editId = data.historyId,
     };
-    self:SendComm(self.CommTypes.ITEM_DISTRIBUTION_AWARDED, commData, "BROADCAST");
+    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
