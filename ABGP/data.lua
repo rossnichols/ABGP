@@ -501,7 +501,7 @@ function ABGP:HasCompleteHistory(shouldPrint)
                     end
                 end
 
-                if abs(calculated - epgp[phase].gp) > 0.001 then
+                if abs(calculated - epgp[phase].gp) > 0.0015 then
                     hasComplete = false;
                     if shouldPrint then
                         self:Notify("Incomplete %s history for %s: expected %.3f, calculated %.3f.",
