@@ -397,6 +397,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                    awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                 });
                             end,
                             arg1 = data,
@@ -411,6 +412,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                    awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                 });
                             end,
                             arg1 = data,
@@ -1016,6 +1018,7 @@ local function DrawAuditLog(container, rebuild, reason)
                                             itemLink = value.itemLink,
                                             player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                             gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                         });
                                     end,
                                     arg1 = entry,
@@ -1030,6 +1033,7 @@ local function DrawAuditLog(container, rebuild, reason)
                                             itemLink = value.itemLink,
                                             player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                             gp = arg1[ABGP.ItemHistoryIndex.GP],
+                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                         });
                                     end,
                                     arg1 = entry,

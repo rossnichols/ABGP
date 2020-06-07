@@ -364,11 +364,11 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
     elt:SetUserData("awards", elt:GetUserData("awards") or {});
     local awards = elt:GetUserData("awards");
 
-    if data.oldPlayer or data.oldCost then
+    if data.oldHistoryId then
         -- This award is an edit. See if we have an entry in the awards.
         local found = false;
         for i, award in ipairs(awards) do
-            if award.historyId == data.historyId then
+            if award.historyId == data.oldHistoryId then
                 found = true;
                 table.remove(awards, i);
                 break;

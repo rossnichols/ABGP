@@ -301,28 +301,23 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
 
     local itemLink = data.itemLink;
+    local awardDate = data.awarded;
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
     local history = _G.ABGP_Data[value.phase].gpHistory;
 
-    local _, awardDate = self:ParseHistoryId(data.historyId);
-    if data.oldCost or data.oldPlayer then
+    if data.oldHistoryId then
         for i, entry in ipairs(history) do
             if entry[self.ItemHistoryIndex.ID] == data.oldHistoryId then
-                -- This is the entry being replaced. If legacy, remove the entry.
-                -- Otherwise, insert an entry representing its removal.
-                if data.updateId then
-                    table.insert(history, 1, {
-                        [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
-                        [ABGP.ItemHistoryIndex.ID] = data.updateId,
-                        [ABGP.ItemHistoryIndex.DATE] = awardDate,
-                        [ABGP.ItemHistoryIndex.DELETEDID] = data.oldHistoryId,
-                    });
-                    awardDate = history[i][ABGP.ItemHistoryIndex.DATE];
-                else
-                    table.remove(history, i);
-                end
+                -- This is the entry being replaced.
+                local _, deleteDate = self:ParseHistoryId(data.updateId);
+                table.insert(history, 1, {
+                    [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
+                    [ABGP.ItemHistoryIndex.ID] = data.updateId,
+                    [ABGP.ItemHistoryIndex.DATE] = deleteDate,
+                    [ABGP.ItemHistoryIndex.DELETEDID] = data.oldHistoryId,
+                });
 
                 -- If the previous award is for the same player, then the officer note will already
                 -- get updated to the proper value for the new award, and writing the officer note
@@ -893,16 +888,15 @@ function ABGP:CommitHistory(phase)
 end
 
 function ABGP:HistoryUpdateCost(data, cost)
-    local newHistoryId = ABGP:GetHistoryId();
     local commData = {
         itemLink = data.itemLink,
         player = data.player,
         cost = cost,
-        oldCost = data.gp,
         requestType = self.RequestTypes.MANUAL,
         oldHistoryId = data.historyId,
+        awarded = data.awarded,
         updateId = ABGP:GetHistoryId(),
-        historyId = newHistoryId,
+        historyId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
@@ -912,16 +906,15 @@ function ABGP:HistoryUpdateCost(data, cost)
 end
 
 function ABGP:HistoryUpdatePlayer(data, player)
-    local newHistoryId = ABGP:GetHistoryId();
     local commData = {
         itemLink = data.itemLink,
         player = player,
-        oldPlayer = data.player,
         cost = data.gp,
         requestType = self.RequestTypes.MANUAL,
         oldHistoryId = data.historyId,
+        awarded = data.awarded,
         updateId = ABGP:GetHistoryId(),
-        historyId = newHistoryId,
+        historyId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));

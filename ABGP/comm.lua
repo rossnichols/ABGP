@@ -104,9 +104,8 @@ ABGP.CommTypes = {
     -- testItem: bool
     -- historyId: string
     -- updateId: string
+    -- awarded: number
     -- oldHistoryId: string
-    -- oldPlayer: string
-    -- oldCost: number
 
     ITEM_TRASHED = { name = "ITEM_TRASHED", priority = "ALERT" },
     -- itemLink: item link string
