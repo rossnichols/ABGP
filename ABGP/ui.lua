@@ -33,20 +33,24 @@ ABGP.UICommands = {
     ShowItemHistory = "ShowItemHistory",
 };
 
-local function PopulateUI(rebuild, reason, command)
+local function PopulateUI(options)
     if not activeWindow then return; end
     local container = activeWindow:GetUserData("container");
-    if rebuild then
+    if options.rebuild then
         container:ReleaseChildren();
         container:SetLayout("Flow");
     end
 
     local drawFunc = activeWindow:GetUserData("drawFunc");
-    drawFunc(container, rebuild, reason, command);
+    drawFunc(container, options);
     ABGP:HideContextMenu();
 end
 
-local function DrawPriority(container, rebuild, reason)
+local function DrawPriority(container, options)
+    local rebuild = options.rebuild;
+    local reason = options.reason;
+    local preserveScroll = options.preserveScroll;
+    -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
     local widths = { 35, 120, 110, 75, 75, 75 };
@@ -73,7 +77,7 @@ local function DrawPriority(container, rebuild, reason)
             "WARRIOR",
         });
         classSelector:SetCallback("OnFilterUpdated", function()
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         classSelector:SetText("Classes");
         container:AddChild(classSelector);
@@ -85,7 +89,7 @@ local function DrawPriority(container, rebuild, reason)
             grouped:SetValue(onlyGrouped);
             grouped:SetCallback("OnValueChanged", function(widget, event, value)
                 onlyGrouped = value;
-                PopulateUI(false);
+                PopulateUI({ rebuild = false });
             end);
             container:AddChild(grouped);
         else
@@ -122,7 +126,7 @@ local function DrawPriority(container, rebuild, reason)
     end
 
     local priorities = container:GetUserData("priorities");
-    local scrollValue = priorities:GetUserData("statusTable").scrollvalue;
+    local scrollValue = preserveScroll and priorities:GetUserData("statusTable").scrollvalue or 0;
     priorities:ReleaseChildren();
 
     local count = 0;
@@ -154,7 +158,7 @@ local function DrawPriority(container, rebuild, reason)
                                     local container = activeWindow:GetUserData("container");
                                     container:SelectTab("gp");
                                     container:GetUserData("search"):SetValue(("\"%s\""):format(data.player));
-                                    PopulateUI(false);
+                                    PopulateUI({ rebuild = false });
                                 end
                             end,
                             arg1 = elt.data,
@@ -172,7 +176,11 @@ local function DrawPriority(container, rebuild, reason)
     priorities:SetScroll(scrollValue);
 end
 
-local function DrawItemHistory(container, rebuild, reason, command)
+local function DrawItemHistory(container, options)
+    local rebuild = options.rebuild;
+    local reason = options.reason;
+    local preserveScroll = options.preserveScroll;
+    local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
     local widths = { 120, 70, 50, 1.0 };
@@ -189,7 +197,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(125);
         search:SetCallback("OnValueChanged", function(widget)
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         search:SetCallback("OnEnter", function(widget)
             _G.ShowUIPanel(_G.GameTooltip);
@@ -289,7 +297,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
         pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
@@ -302,7 +310,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
     end
 
     local history = container:GetUserData("itemHistory");
-    local scrollValue = history:GetUserData("statusTable").scrollvalue;
+    local scrollValue = preserveScroll and history:GetUserData("statusTable").scrollvalue or 0;
     history:ReleaseChildren();
 
     local pagination = container:GetUserData("pagination");
@@ -357,7 +365,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             func = function(self, arg1)
                                 if activeWindow then
                                     search:SetValue(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.PLAYER]));
-                                    PopulateUI(false);
+                                    PopulateUI({ rebuild = false });
                                 end
                             end,
                             arg1 = data,
@@ -368,7 +376,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                             func = function(self, arg1)
                                 if activeWindow then
                                     search:SetValue(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.NAME]));
-                                    PopulateUI(false);
+                                    PopulateUI({ rebuild = false });
                                 end
                             end,
                             arg1 = data,
@@ -445,7 +453,11 @@ local function DrawItemHistory(container, rebuild, reason, command)
     history:SetScroll(scrollValue);
 end
 
-local function DrawItems(container, rebuild, reason)
+local function DrawItems(container, options)
+    local rebuild = options.rebuild;
+    local reason = options.reason;
+    local preserveScroll = options.preserveScroll;
+    -- local command = options.command;
     if not rebuild and reason then return; end
 
     local widths = { 225, 50, 50, 1.0 };
@@ -463,7 +475,7 @@ local function DrawItems(container, rebuild, reason)
         priSelector:SetWidth(125);
         priSelector:SetValues(allowedPriorities, true, ABGP:GetItemPriorities());
         priSelector:SetCallback("OnFilterUpdated", function()
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         priSelector:SetText("Priorities");
         mainLine:AddChild(priSelector);
@@ -472,7 +484,7 @@ local function DrawItems(container, rebuild, reason)
         local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(120);
         search:SetCallback("OnValueChanged", function(widget)
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         search:SetCallback("OnEnter", function(widget)
             _G.ShowUIPanel(_G.GameTooltip);
@@ -499,7 +511,7 @@ local function DrawItems(container, rebuild, reason)
         usable:SetValue(onlyUsable);
         usable:SetCallback("OnValueChanged", function(widget, event, value)
             onlyUsable = value;
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         mainLine:AddChild(usable);
 
@@ -510,7 +522,7 @@ local function DrawItems(container, rebuild, reason)
             faved:SetValue(onlyFaved);
             faved:SetCallback("OnValueChanged", function(widget, event, value)
                 onlyFaved = value;
-                PopulateUI(false);
+                PopulateUI({ rebuild = false });
             end);
             mainLine:AddChild(faved);
         else
@@ -599,14 +611,14 @@ local function DrawItems(container, rebuild, reason)
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
         pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
     end
 
     local itemList = container:GetUserData("itemList");
-    local scrollValue = itemList:GetUserData("statusTable").scrollvalue;
+    local scrollValue = preserveScroll and itemList:GetUserData("statusTable").scrollvalue or 0;
     itemList:ReleaseChildren();
 
     local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
@@ -684,7 +696,7 @@ local function DrawItems(container, rebuild, reason)
                                     local container = activeWindow:GetUserData("container");
                                     container:SelectTab("gp");
                                     container:GetUserData("search"):SetValue(("\"%s\""):format(data[ABGP.ItemDataIndex.NAME]));
-                                    PopulateUI(false);
+                                    PopulateUI({ rebuild = false });
                                 end
                             end,
                             arg1 = data,
@@ -749,7 +761,11 @@ local function DrawItems(container, rebuild, reason)
     itemList:SetScroll(scrollValue);
 end
 
-local function DrawRaidHistory(container, rebuild, reason)
+local function DrawRaidHistory(container, options)
+    local rebuild = options.rebuild;
+    local reason = options.reason;
+    local preserveScroll = options.preserveScroll;
+    -- local command = options.command;
     if not rebuild and reason then return; end
 
     local widths = { 1.0 };
@@ -757,7 +773,7 @@ local function DrawRaidHistory(container, rebuild, reason)
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
         pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
@@ -792,7 +808,7 @@ local function DrawRaidHistory(container, rebuild, reason)
     end
 
     local raidList = container:GetUserData("raidList");
-    local scrollValue = raidList:GetUserData("statusTable").scrollvalue;
+    local scrollValue = preserveScroll and raidList:GetUserData("statusTable").scrollvalue or 0;
     raidList:ReleaseChildren();
 
     local raids = _G.ABGP_RaidInfo.pastRaids;
@@ -843,7 +859,11 @@ local function DrawRaidHistory(container, rebuild, reason)
     raidList:SetScroll(scrollValue);
 end
 
-local function DrawAuditLog(container, rebuild, reason)
+local function DrawAuditLog(container, options)
+    local rebuild = options.rebuild;
+    local reason = options.reason;
+    local preserveScroll = options.preserveScroll;
+    -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
     local widths = { 120, 80, 50, 70, 1.0 };
@@ -884,14 +904,14 @@ local function DrawAuditLog(container, rebuild, reason)
         local pagination = AceGUI:Create("ABGP_Paginator");
         pagination:SetFullWidth(true);
         pagination:SetCallback("OnRangeSet", function()
-            PopulateUI(false);
+            PopulateUI({ rebuild = false });
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
     end
 
     local auditLog = container:GetUserData("auditLog");
-    local scrollValue = auditLog:GetUserData("statusTable").scrollvalue;
+    local scrollValue = preserveScroll and auditLog:GetUserData("statusTable").scrollvalue or 0;
     auditLog:ReleaseChildren();
 
     local entries = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
@@ -1092,7 +1112,7 @@ ABGP.RefreshReasons = {
     HISTORY_UPDATED = "HISTORY_UPDATED",
 };
 function ABGP:RefreshUI(reason)
-    PopulateUI(false, reason);
+    PopulateUI({ rebuild = false, reason = reason, preserveScroll = true });
 end
 
 function ABGP:CreateMainWindow(command)
@@ -1139,7 +1159,7 @@ function ABGP:CreateMainWindow(command)
                 pagination:SetPage(1);
             end
         end
-        PopulateUI(false);
+        PopulateUI({ rebuild = false });
     end);
     mainLine:AddChild(phaseSelector);
 
@@ -1161,7 +1181,7 @@ function ABGP:CreateMainWindow(command)
                 pagination:SetPage(1);
             end
         end
-        PopulateUI(false);
+        PopulateUI({ rebuild = false });
     end);
     currentRaidGroup = ABGP:GetPreferredRaidGroup();
     groupSelector:SetValue(currentRaidGroup);
@@ -1206,7 +1226,7 @@ function ABGP:CreateMainWindow(command)
                 break;
             end
         end
-        PopulateUI(true);
+        PopulateUI({ rebuild = true });
     end);
     window:AddChild(tabGroup);
     window:SetUserData("container", tabGroup);
@@ -1235,7 +1255,7 @@ function ABGP:ShowMainWindow(command)
     end
 
     activeWindow = self:CreateMainWindow(command);
-    PopulateUI(true, nil, command);
+    PopulateUI({ rebuild = true, command = command });
 end
 
 StaticPopupDialogs["ABGP_UPDATE_COST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
