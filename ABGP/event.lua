@@ -187,7 +187,7 @@ local function IsInProgress(raid)
     return (raid and raid == _G.ABGP_RaidInfo.currentRaid);
 end
 
-local function RefreshUI()
+local function PopulateUI()
     if not activeWindow then return; end
     local windowRaid = activeWindow:GetUserData("raid");
     if not windowRaid then return; end
@@ -314,7 +314,7 @@ function ABGP:AddStandby(raid, player)
 
     table.insert(raid.standby, player);
     raid.awards[player] = raid.awards[player] or { ep = 0, categories = {} };
-    RefreshUI();
+    PopulateUI();
 end
 
 function ABGP:RemoveStandby(raid, player)
@@ -325,7 +325,7 @@ function ABGP:RemoveStandby(raid, player)
             break;
         end
     end
-    RefreshUI();
+    PopulateUI();
 end
 
 function ABGP:SetDisenchanter(player)
@@ -339,7 +339,7 @@ function ABGP:SetDisenchanter(player)
         self:Notify("Sending disenchanted items to %s.", self:ColorizeName(player));
     end
     currentRaid.disenchanter = player;
-    RefreshUI();
+    PopulateUI();
 end
 
 function ABGP:GetRaidDisenchanter()
@@ -360,7 +360,7 @@ function ABGP:SetMule(player)
         self:Notify("Sending muled items to %s.", self:ColorizeName(player));
     end
     currentRaid.mule = player;
-    RefreshUI();
+    PopulateUI();
 end
 
 function ABGP:GetRaidMule()
@@ -844,7 +844,7 @@ function ABGP:UpdateRaid(windowRaid)
     window:SetUserData("raid", windowRaid);
     activeWindow = window;
     window.frame:Raise();
-    RefreshUI();
+    PopulateUI();
 end
 
 function ABGP:RestartRaid(i)
@@ -1025,7 +1025,7 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
                 table.remove(raids, i);
                 ABGP:Notify("Deleted the raid!");
                 if activeWindow then activeWindow:Hide(); end
-                ABGP:RefreshUI();
+                ABGP:PopulateUI();
                 break;
             end
         end
