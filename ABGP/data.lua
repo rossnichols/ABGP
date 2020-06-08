@@ -29,6 +29,7 @@ local hasComplete = false;
 local hasActivePlayers = false;
 local requestedHistoryToken;
 local requestedHistoryEntries = {};
+local replaceRequestTokens = {};
 local warnedOutOfDate = {};
 local invalidBaseline = -1;
 local syncThreshold = 10 * 24 * 60 * 60;
@@ -688,16 +689,6 @@ function ABGP:HistoryOnGuildRosterUpdate()
     self:HistoryTriggerSync();
 end
 
-local function WarnOutOfDate(phase, sender)
-    if not warnedOutOfDate[phase] then
-        warnedOutOfDate[phase] = true;
-        _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", ABGP.PhaseNames[phase], ABGP:ColorizeName(sender), {
-            phase = phase,
-            sender = sender,
-        });
-    end
-end
-
 function ABGP:HistoryOnSync(data, distribution, sender)
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if sender == UnitName("player") or InCombatLockdown() then return; end
@@ -739,6 +730,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
+                token = data.token,
             }, "WHISPER", sender);
         elseif data.baseline == baseline and data.archivedCount < archivedCount then
             -- The sender has fewer archived entries than us. They need a history replacement.
@@ -746,6 +738,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
+                token = data.token,
             }, "WHISPER", sender);
         end
     end
@@ -756,13 +749,19 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
             self:LogDebug("Updated baseline found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
-            WarnOutOfDate(data.phase, sender);
+            self:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
+                phase = data.phase,
+                token = data.token,
+            }, "WHISPER", data.sender);
         elseif data.baseline == baseline and data.archivedCount > archivedCount then
             -- The sender has more archived entries than us. We need a history replacement.
             _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
             self:LogDebug("More archived entries found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
-            WarnOutOfDate(data.phase, sender);
+            self:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
+                phase = data.phase,
+                token = data.token,
+            }, "WHISPER", data.sender);
         end
     end
 
@@ -833,50 +832,79 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
 
     self:LogDebug("History replace init received from %s [%s]",
         self:ColorizeName(sender), self.PhaseNames[data.phase]);
-    WarnOutOfDate(data.phase, sender);
+
+    if not warnedOutOfDate[data.phase] then
+        warnedOutOfDate[data.phase] = true;
+        _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", ABGP.PhaseNames[data.phase], ABGP:ColorizeName(sender), {
+            phase = data.phase,
+            sender = sender,
+        });
+    end
 end
 
 function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
     -- The sender is asking for our entire history.
-    self:LogDebug("Sending history replacement to %s [%s]",
-        self:ColorizeName(sender), self.PhaseNames[data.phase]);
+    if self:GetDebugOpt("AvoidHistorySend") then return; end
 
-    local history = _G.ABGP_Data[data.phase].gpHistory;
-    if self:GetDebugOpt("AvoidHistorySend") then history = nil; end
+    if data.token then
+        -- The sender is asking in response to our own sync. Send to GUILD,
+        -- so that anyone else who needs this baseline can get it.
+        if replaceRequestTokens[data.phase] == data.token then return; end
+        replaceRequestTokens[data.phase] = data.token;
 
-    self:SendComm(self.CommTypes.HISTORY_REPLACE, {
-        phase = data.phase,
-        baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase],
-        history = history,
-    }, "WHISPER", sender);
+        self:LogDebug("Broadcasting history to guild [%s]", self.PhaseNames[data.phase]);
+        self:SendComm(self.CommTypes.HISTORY_REPLACE, {
+            phase = data.phase,
+            baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase],
+            history = _G.ABGP_Data[data.phase].gpHistory,
+        }, "GUILD");
+    else
+        -- The sender is asking in response to our initiation, which was
+        -- triggered by their sync. Send to them via WHISPER.
+        self:LogDebug("Sending history to %s [%s]",
+            self:ColorizeName(sender), self.PhaseNames[data.phase]);
+        self:SendComm(self.CommTypes.HISTORY_REPLACE, {
+            phase = data.phase,
+            baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase],
+            history = _G.ABGP_Data[data.phase].gpHistory,
+        }, "WHISPER", sender);
+    end
 end
 
-function ABGP:HistoryOnReplace(data, distribution, sender)
-    if not self:CanEditOfficerNotes(sender) then return; end
-    if not data.history then
-        -- This shouldn't really happen - the "notPrivileged" field
-        -- prevents us from asking for history from people with the
-        -- debug option AvoidHistorySend enabled.
-        self:Error("%s declined sending their full history!", ABGP:ColorizeName(sender));
-        return;
-    end
+function ABGP:ApplyHistoryReplacement(phase, sender, baseline, history)
 
-    local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
-    if data.baseline < baseline then
-        -- This can only happen if we somehow get a new history from two people?
-        self:Error("Received full history from %s, but it's out of date!", ABGP:ColorizeName(sender));
-        return;
-    end
-
-    _G.ABGP_DataTimestamp.gpHistory[data.phase] = data.baseline;
-    _G.ABGP_Data[data.phase].gpHistory = data.history;
+    _G.ABGP_DataTimestamp.gpHistory[phase] = baseline;
+    _G.ABGP_Data[phase].gpHistory = history;
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
 
     self:Notify("Received complete %s history from %s! Breakdown: %s.",
-        ABGP.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.history));
+        ABGP.PhaseNames[phase], self:ColorizeName(sender), self:BreakdownHistory(history));
     local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
     if upToDate then
         self:Notify("You're now up to date!");
+    end
+end
+
+function ABGP:HistoryOnReplace(data, distribution, sender)
+    if not self:CanEditOfficerNotes(sender) or not self:Get("syncEnabled") then return; end
+
+    -- Only accept newer baselines.
+    local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
+    if data.baseline <= baseline then return; end
+
+    if distribution == "WHISPER" then
+        -- We already requested this one explicitly, so we can just directly apply it.
+        self:ApplyHistoryReplacement(data.phase, sender, data.baseline, data.history);
+    else
+        -- Not explicit - ask before applying. Our baseline should be invalid now, though,
+        -- since an updated history has been discovered.
+        _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
+        _G.StaticPopup_Show("ABGP_UPDATED_HISTORY", ABGP.PhaseNames[data.phase], ABGP:ColorizeName(sender), {
+            phase = data.phase,
+            sender = sender,
+            baseline = data.baseline,
+            history = data.history
+        });
     end
 end
 
@@ -960,6 +988,13 @@ end
 function ABGP:CommitHistory(phase)
     if not self:GetDebugOpt("AvoidHistorySend") then
         _G.ABGP_DataTimestamp.gpHistory[phase] = GetServerTime();
+
+        -- Since this baseline is new for everyone, send it out now.
+        self:SendComm(self.CommTypes.HISTORY_REPLACE, {
+            phase = phase,
+            baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
+            history = _G.ABGP_Data[phase].gpHistory,
+        }, "GUILD");
     end
 end
 
@@ -1022,5 +1057,16 @@ StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.
     button2 = "No",
     OnAccept = function(self, data)
         RequestFullHistory(data);
+    end,
+});
+
+StaticPopupDialogs["ABGP_UPDATED_HISTORY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+    exclusive = false,
+    multiple = true,
+    text = "Updated history for %s has been discovered from %s! Apply it?",
+    button1 = "Yes",
+    button2 = "No",
+    OnAccept = function(self, data)
+        ABGP:ApplyHistoryReplacement(data.phase, data.sender, data.baseline, data.history);
     end,
 });

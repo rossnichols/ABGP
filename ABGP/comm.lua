@@ -151,6 +151,7 @@ ABGP.CommTypes = {
 
     HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", priority = "NORMAL" },
     -- phase: from ABGP.Phases
+    -- token: from HISTORY_SYNC
 
     HISTORY_MERGE = { name = "HISTORY_MERGE", priority = "BULK" },
     -- phase: from ABGP.Phases
@@ -167,6 +168,7 @@ ABGP.CommTypes = {
 
     HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", priority = "NORMAL" },
     -- phase: from ABGP.Phases
+    -- token: from HISTORY_SYNC
 
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },
