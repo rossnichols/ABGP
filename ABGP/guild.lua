@@ -22,8 +22,8 @@ ABGP.PhaseNames = {
     [ABGP.Phases.p3] = "Phase 3/4",
 };
 ABGP.PhaseNamesShort = {
-    [ABGP.Phases.p1] = "P 1/2",
-    [ABGP.Phases.p3] = "P 3/4",
+    [ABGP.Phases.p1] = "P1/2",
+    [ABGP.Phases.p3] = "P3/4",
 };
 ABGP.PhasesSorted = {
     ABGP.Phases.p1,
@@ -78,6 +78,10 @@ function ABGP:GetGPDecayInfo()
     return 0.25, 0;
 end
 
+function ABGP:GetEPGPMultipliers()
+    return 0.85, 1.0;
+end
+
 function ABGP:GetGPRaidGroup(rank, phase)
     return rank and rankData[rank] and rankData[rank].gp[phase];
 end
@@ -117,7 +121,7 @@ function ABGP:GetTrialRaidGroup(publicNote)
         end
     end
 
-    return self.RaidGroups.RED;
+    return false;
 end
 
 function ABGP:CheckProxy(publicNote)

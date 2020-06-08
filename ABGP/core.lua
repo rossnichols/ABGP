@@ -889,26 +889,26 @@ end);
 
 local openWindows = {};
 local openPopups = {};
-local function CloseABGPWindows()
+local function CloseABGPWindows(t)
     local found = false;
-    for window in pairs(openPopups) do
+    for window in pairs(t) do
         found = true;
         window:Hide();
-    end
-    if not found then
-        for window in pairs(openWindows) do
-            found = true;
-            window:Hide();
-        end
     end
     return found;
 end
 
 function ABGP:CloseSpecialWindows()
     local found = self.hooks.CloseSpecialWindows();
-    return CloseABGPWindows() or found;
+    return CloseABGPWindows(openWindows) or found;
 end
 ABGP:RawHook("CloseSpecialWindows", true);
+
+function ABGP:StaticPopup_EscapePressed()
+    local found = self.hooks.StaticPopup_EscapePressed();
+    return CloseABGPWindows(openPopups) or found;
+end
+ABGP:RawHook("StaticPopup_EscapePressed", true);
 
 function ABGP:OpenWindow(window)
     openWindows[window] = true;
@@ -936,7 +936,7 @@ _G.ABGP_WindowManagement = {};
 function ABGP:BeginWindowManagement(window, name, defaults)
     _G.ABGP_WindowManagement[name] = _G.ABGP_WindowManagement[name] or {};
     local saved = _G.ABGP_WindowManagement[name];
-    if saved.version ~= defaults.version then
+    if not defaults.version or saved.version ~= defaults.version then
         table.wipe(saved);
         saved.version = defaults.version;
     end
@@ -952,6 +952,11 @@ function ABGP:BeginWindowManagement(window, name, defaults)
     management.oldMaxW, management.oldMaxH = window.frame:GetMaxResize();
     window.frame:SetMinResize(defaults.minWidth, defaults.minHeight);
     window.frame:SetMaxResize(defaults.maxWidth, defaults.maxHeight);
+
+    if defaults.minWidth == defaults.maxWidth and defaults.minHeight == defaults.maxHeight then
+        window.line1:Hide();
+        window.line2:Hide();
+    end
 end
 
 function ABGP:EndWindowManagement(window)
@@ -966,6 +971,8 @@ function ABGP:EndWindowManagement(window)
     saved.height = window.frame:GetHeight();
     window.frame:SetMinResize(management.oldMinW, management.oldMinH);
     window.frame:SetMaxResize(management.oldMaxW, management.oldMaxH);
+    window.line1:Show();
+    window.line2:Show();
 
     self:HideContextMenu();
 end

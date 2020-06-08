@@ -231,7 +231,7 @@ local function DrawItemHistory(container, rebuild, reason, command)
                         data[ABGP.ItemHistoryIndex.GP], item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
                 end
 
-                local window = AceGUI:Create("Window");
+                local window = AceGUI:Create("ABGP_OpaqueWindow");
                 window.frame:SetFrameStrata("DIALOG");
                 window:SetTitle("Export");
                 window:SetLayout("Fill");
@@ -541,7 +541,7 @@ local function DrawItems(container, rebuild, reason)
                         item[ABGP.ItemDataIndex.BOSS] or "", item[ABGP.ItemDataIndex.NAME], table.concat(priorities, "\t"), item[ABGP.ItemDataIndex.GP], item[ABGP.ItemDataIndex.NOTES] or "", (i == #items and "" or "\n"));
                 end
 
-                local window = AceGUI:Create("Window");
+                local window = AceGUI:Create("ABGP_OpaqueWindow");
                 window.frame:SetFrameStrata("DIALOG");
                 window:SetTitle("Export");
                 window:SetLayout("Fill");

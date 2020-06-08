@@ -90,7 +90,7 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
         local import = AceGUI:Create("Button");
         import:SetText("Import");
         import:SetCallback("OnClick", function(widget, event)
-            local window = AceGUI:Create("Window");
+            local window = AceGUI:Create("ABGP_OpaqueWindow");
             window:SetTitle("Import");
             window:SetLayout("Flow");
             window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
@@ -124,7 +124,7 @@ local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc
         local export = AceGUI:Create("Button");
         export:SetText("Export");
         export:SetCallback("OnClick", function(widget, event)
-            local window = AceGUI:Create("Window");
+            local window = AceGUI:Create("ABGP_OpaqueWindow");
             window:SetTitle("Export");
             window:SetLayout("Fill");
             window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
@@ -271,7 +271,6 @@ local function DrawPriority(container)
 
         ABGP:RefreshActivePlayers();
         ABGP:RebuildOfficerNotes();
-        ABGP:RefreshFromOfficerNotes();
 
         widget:GetUserData("window"):Hide();
         container:ReleaseChildren();
@@ -480,7 +479,7 @@ function ABGP:ShowImportWindow()
 
     self:BuildItemLookup();
 
-    local window = AceGUI:Create("Window");
+    local window = AceGUI:Create("ABGP_OpaqueWindow");
     window.frame:SetFrameStrata("MEDIUM");
     window:SetTitle(("%s Spreadsheet Interop"):format(self:ColorizeText("ABGP")));
     window:SetWidth(650);

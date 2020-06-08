@@ -3,13 +3,18 @@ local ABGP = _G.ABGP;
 local AceConfig = _G.LibStub("AceConfig-3.0");
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0");
 local AceDB = _G.LibStub("AceDB-3.0");
+local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetServerTime = GetServerTime;
+local GetAutoCompleteResults = GetAutoCompleteResults;
+local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
+local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local pairs = pairs;
 local time = time;
 local ipairs = ipairs;
 local table = table;
 local tonumber = tonumber;
+local type = type;
 
 function ABGP:InitOptions()
     local defaults = {
@@ -420,23 +425,30 @@ function ABGP:InitOptions()
                     inline = true,
                     order = 3,
                     args = {
-                        add = {
+                        addPlayer = {
                             name = "Add Player",
                             order = 1,
-                            desc = "Add a player into the EPGP system. NOTE: for now this just creates history items, it does not update officer notes. Use it after importing EPGP from the spreadsheet.",
+                            desc = "Add a player into the EPGP system.",
                             type = "execute",
                             func = function() ABGP:ShowAddPlayerWindow(); end,
                         },
+                        addTrial = {
+                            name = "Add Trial",
+                            order = 2,
+                            desc = "Add a trial into the EPGP system.",
+                            type = "execute",
+                            func = function() ABGP:ShowAddTrialWindow(); end,
+                        },
                         decay = {
                             name = "Decay",
-                            order = 2,
+                            order = 3,
                             desc = "Trigger EPGP decay. NOTE: for now this just creates a history item, it does not update officer notes. Use it after importing EPGP from the spreadsheet.",
                             type = "execute",
                             func = function() _G.StaticPopup_Show("ABGP_TRIGGER_DECAY"); end,
                         },
                         masterLoot = {
                             name = "Master Loot",
-                            order = 3,
+                            order = 4,
                             desc = "Distribute items via master loot as they're awarded or disenchanted.",
                             type = "toggle",
                             get = function(info) return self.db.char.masterLoot; end,
@@ -444,7 +456,7 @@ function ABGP:InitOptions()
                         },
                         promptRaidStart = {
                             name = "Prompt Raids",
-                            order = 4,
+                            order = 5,
                             desc = "Open the raid window when zoning into an instance associated with a raid.",
                             type = "toggle",
                             get = function(info) return self.db.char.promptRaidStart; end,
@@ -486,8 +498,356 @@ function ABGP:OptionsOnHistoryUpdate()
     self:RefreshOptionsWindow();
 end
 
-function ABGP:ShowAddPlayerWindow()
+function ABGP:ShowAddTrialWindow()
+    local width = 400;
 
+    local window = AceGUI:Create("ABGP_OpaqueWindow");
+    window:SetWidth(width);
+    window:SetLayout("Flow");
+    window:SetTitle("Add Player");
+    self:OpenPopup(window);
+    window:SetCallback("OnClose", function(widget)
+        ABGP:ClosePopup(widget);
+        ABGP:EndWindowManagement(widget);
+        AceGUI:Release(widget);
+    end);
+
+    local container = AceGUI:Create("SimpleGroup");
+    container:SetFullWidth(true);
+    container:SetLayout("Table");
+    container:SetUserData("table", { columns = { 1.0 }});
+    window:AddChild(container);
+
+    local playerContainer = AceGUI:Create("SimpleGroup");
+    playerContainer:SetFullWidth(true);
+    playerContainer:SetLayout("Table");
+    playerContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
+    container:AddChild(playerContainer);
+
+    local playerEdit = AceGUI:Create("ABGP_EditBox");
+    playerEdit:SetLabel("Player");
+    playerEdit:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
+    playerContainer:AddChild(playerEdit);
+    self:AddWidgetTooltip(playerEdit, "Enter the player being added as a trial.");
+
+    local currentRaidGroup = self:GetPreferredRaidGroup();
+    local raidGroups, raidGroupNames = {}, {};
+    for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
+    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
+    local groupSelector = AceGUI:Create("Dropdown");
+    groupSelector:SetLabel("Raid Group");
+    groupSelector:SetList(raidGroupNames, raidGroups);
+    groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
+        currentRaidGroup = value;
+    end);
+    groupSelector:SetValue(currentRaidGroup);
+    playerContainer:AddChild(groupSelector);
+    self:AddWidgetTooltip(groupSelector, "Select the raid group with which the player is trialing.");
+
+    local label = AceGUI:Create("ABGP_Header");
+    label:SetFullWidth(true);
+    label:SetText("Enter the player being added as a trial.");
+    container:AddChild(label);
+
+    local done = AceGUI:Create("Button");
+    done:SetWidth(100);
+    done:SetText("Done");
+    done:SetUserData("cell", { align = "CENTERRIGHT" });
+    done:SetCallback("OnClick", function(widget, event)
+        local player = playerEdit:GetValue();
+        self:AddTrial(player, currentRaidGroup);
+        window:Hide();
+    end);
+    container:AddChild(done);
+
+    local function processPlayer()
+        done:SetDisabled(true);
+        groupSelector:SetDisabled(true);
+
+        local player = playerEdit:GetValue();
+        player = player ~= "" and player or nil;
+        if not player then
+            label:SetText("Enter the player being added as a trial.");
+            return;
+        elseif not self:GetGuildInfo(player) then
+            label:SetText("Couldn't find the player in the guild!");
+            return true;
+        end
+
+        local guildInfo = self:GetGuildInfo(player);
+        local rank = guildInfo[2];
+        local isTrial = self:IsTrial(rank);
+        if not isTrial then
+            label:SetText("The player doesn't have the appropriate guild rank!");
+            return true;
+        end
+
+        local active = self:GetActivePlayer(player);
+        if active then
+            label:SetText("The player is already active!");
+            return true;
+        end
+
+        label:SetText("Choose the appropriate raid group.");
+        done:SetDisabled(false);
+        groupSelector:SetDisabled(false);
+    end
+    playerEdit:SetCallback("OnValueChanged", processPlayer);
+    processPlayer();
+
+    local height = container.frame:GetHeight() + 57;
+    self:BeginWindowManagement(window, "popup", {
+        defaultWidth = width,
+        minWidth = width,
+        maxWidth = width,
+        defaultHeight = height,
+        minHeight = height,
+        maxHeight = height
+    });
+end
+
+function ABGP:ShowAddPlayerWindow()
+    local width = 400;
+
+    local window = AceGUI:Create("ABGP_OpaqueWindow");
+    window:SetWidth(width);
+    window:SetLayout("Flow");
+    window:SetTitle("Add Player");
+    self:OpenPopup(window);
+    window:SetCallback("OnClose", function(widget)
+        ABGP:ClosePopup(widget);
+        ABGP:EndWindowManagement(widget);
+        AceGUI:Release(widget);
+    end);
+
+    local container = AceGUI:Create("SimpleGroup");
+    container:SetFullWidth(true);
+    container:SetLayout("Table");
+    container:SetUserData("table", { columns = { 1.0 }});
+    window:AddChild(container);
+
+    local playerContainer = AceGUI:Create("SimpleGroup");
+    playerContainer:SetFullWidth(true);
+    playerContainer:SetLayout("Table");
+    playerContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
+    container:AddChild(playerContainer);
+
+    local playerEdit = AceGUI:Create("ABGP_EditBox");
+    playerEdit:SetLabel("Player");
+    playerEdit:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
+    playerContainer:AddChild(playerEdit);
+    self:AddWidgetTooltip(playerEdit, "Enter the player being added into the EPGP system.");
+
+    local proxyEdit = AceGUI:Create("ABGP_EditBox");
+    proxyEdit:SetLabel("Proxy");
+    proxyEdit:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
+    playerContainer:AddChild(proxyEdit);
+    self:AddWidgetTooltip(proxyEdit, "If the player is not in the guild, enter the name of the character in the guild that will serve as their proxy.");
+
+    local label = AceGUI:Create("ABGP_Header");
+    label:SetFullWidth(true);
+    label:SetText("Enter a player to calculate the below values.");
+    container:AddChild(label);
+
+    local epgpContainer = AceGUI:Create("InlineGroup");
+    epgpContainer:SetFullWidth(true);
+    epgpContainer:SetLayout("Table");
+    epgpContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
+    container:AddChild(epgpContainer);
+
+    local function checkNumber(widget, event, value)
+        if value == nil then return; end
+        if value == "" then
+            widget:SetValue(nil);
+            return;
+        end
+
+        value = tonumber(value);
+        if type(value) ~= "number" then return true; end
+        if value < 0 then return true; end
+        widget:SetValue(value);
+    end
+
+    local p1epEdit = AceGUI:Create("ABGP_EditBox");
+    p1epEdit:SetLabel(("%s EP"):format(self.PhaseNames[self.Phases.p1]));
+    p1epEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(p1epEdit);
+    self:AddWidgetTooltip(p1epEdit, ("Starting EP for %s."):format(self.PhaseNames[self.Phases.p1]));
+
+    local p3epEdit = AceGUI:Create("ABGP_EditBox");
+    p3epEdit:SetLabel(("%s EP"):format(self.PhaseNames[self.Phases.p3]));
+    p3epEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(p3epEdit);
+    self:AddWidgetTooltip(p3epEdit, ("Starting EP for %s."):format(self.PhaseNames[self.Phases.p3]));
+
+    local p1gpEdit = AceGUI:Create("ABGP_EditBox");
+    p1gpEdit:SetLabel(("%s GP"):format(self.PhaseNames[self.Phases.p1]));
+    p1gpEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(p1gpEdit);
+    self:AddWidgetTooltip(p1gpEdit, ("Starting GP for %s."):format(self.PhaseNames[self.Phases.p1]));
+
+    local p3gpEdit = AceGUI:Create("ABGP_EditBox");
+    p3gpEdit:SetLabel(("%s GP"):format(self.PhaseNames[self.Phases.p3]));
+    p3gpEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(p3gpEdit);
+    self:AddWidgetTooltip(p3gpEdit, ("Starting GP for %s."):format(self.PhaseNames[self.Phases.p3]));
+
+    local done = AceGUI:Create("Button");
+    done:SetWidth(100);
+    done:SetText("Done");
+    done:SetUserData("cell", { align = "CENTERRIGHT" });
+    done:SetCallback("OnClick", function(widget, event)
+        local player = playerEdit:GetValue();
+        local proxy = proxyEdit:GetValue();
+        player = player ~= "" and player or nil;
+        proxy = proxy ~= "" and proxy or nil;
+        local p1ep = p1epEdit:GetValue();
+        local p1gp = p1gpEdit:GetValue();
+        local p3ep = p3epEdit:GetValue();
+        local p3gp = p3gpEdit:GetValue();
+        self:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp);
+        window:Hide();
+    end);
+    container:AddChild(done);
+
+    local function processPlayer()
+        done:SetDisabled(true);
+        p1epEdit:SetValue(0);
+        p1gpEdit:SetValue(0);
+        p3epEdit:SetValue(0);
+        p3gpEdit:SetValue(0);
+        p1epEdit:SetDisabled(true);
+        p1gpEdit:SetDisabled(true);
+        p3epEdit:SetDisabled(true);
+        p3gpEdit:SetDisabled(true);
+
+        local player = playerEdit:GetValue();
+        local proxy = proxyEdit:GetValue();
+        player = player ~= "" and player or nil;
+        proxy = proxy ~= "" and proxy or nil;
+        if not player then
+            label:SetText("Enter a player to calculate the below values.");
+            return;
+        elseif self:GetGuildInfo(player) then
+            -- Standard case: player has guild info
+            if proxy then
+                label:SetText("Players in the guild shouldn't have a proxy!");
+                return true;
+            end
+        elseif proxy and self:GetGuildInfo(proxy) then
+            -- Set the player to the proxy for calculating raid groups.
+            player = proxy;
+        elseif player or proxy then
+            label:SetText("Couldn't find the player/proxy in the guild!");
+            return true;
+        else
+            label:SetText("Enter a player to calculate the below values.");
+            return true;
+        end
+
+        local guildInfo = self:GetGuildInfo(player);
+        local rank = guildInfo[2];
+        local epGroup = self:GetEPRaidGroup(rank);
+        local gpGroupP1 = self:GetGPRaidGroup(rank, self.Phases.p1);
+        local gpGroupP3 = self:GetGPRaidGroup(rank, self.Phases.p3);
+        if not epGroup then
+            label:SetText("The player's guild rank is invalid!");
+            return true;
+        end
+
+        p1epEdit:SetDisabled(false);
+        p1gpEdit:SetDisabled(false);
+        p3epEdit:SetDisabled(false);
+        p3gpEdit:SetDisabled(false);
+
+        local calcP1, calcP3 = true, true;
+        local active = self:GetActivePlayer(player);
+        if active then
+            if active[self.Phases.p1] then
+                p1epEdit:SetDisabled(true);
+                p1gpEdit:SetDisabled(true);
+                calcP1 = false;
+            end
+            if active[self.Phases.p3] then
+                p3epEdit:SetDisabled(true);
+                p3gpEdit:SetDisabled(true);
+                calcP3 = false;
+            end
+        end
+
+        if not calcP1 and not calcP3 then
+            label:SetText("The player is already active!");
+            return true;
+        end
+
+        label:SetText(("EP=%s, GP[%s]=%s, GP[%s]=%s"):format(
+            self.RaidGroupNames[epGroup],
+            self.PhaseNamesShort[self.Phases.p1],
+            self.RaidGroupNames[gpGroupP1],
+            self.PhaseNamesShort[self.Phases.p3],
+            self.RaidGroupNames[gpGroupP3]));
+
+        local players = self:GetActivePlayers();
+        local p1epSum, p1epCount, p3epSum, p3epCount = 0, 0, 0, 0;
+        local p1gpSum, p1gpCount, p3gpSum, p3gpCount = 0, 0, 0, 0;
+        for _, active in pairs(players) do
+            if not active.trial then
+                if calcP1 and active[self.Phases.p1] then
+                    if active[self.Phases.p1].epRaidGroup == epGroup then
+                        p1epSum = p1epSum + active[self.Phases.p1].ep;
+                        p1epCount = p1epCount + 1;
+                    end
+                    if active[self.Phases.p1].gpRaidGroup == gpGroupP1 then
+                        p1gpSum = p1gpSum + active[self.Phases.p1].gp;
+                        p1gpCount = p1gpCount + 1;
+                    end
+                end
+                if calcP3 and active[self.Phases.p3] then
+                    if active[self.Phases.p3].epRaidGroup == epGroup then
+                        p3epSum = p1epSum + active[self.Phases.p3].ep;
+                        p3epCount = p3epCount + 1;
+                    end
+                    if active[self.Phases.p3].gpRaidGroup == gpGroupP3 then
+                        p3gpSum = p3gpSum + active[self.Phases.p3].gp;
+                        p3gpCount = p3gpCount + 1;
+                    end
+                end
+            end
+        end
+
+        local epMult, gpMult = self:GetEPGPMultipliers();
+        if calcP1 then
+            p1epEdit:SetValue(epMult * p1epSum / p1epCount);
+            p1gpEdit:SetValue(gpMult * p1gpSum / p1gpCount);
+            self:Notify("EP for %s calculated by averaging %d active players and multiplying by %.2f.",
+                self.PhaseNames[self.Phases.p1], p1epCount, epMult);
+            self:Notify("GP for %s calculated by averaging %d active players and multiplying by %.2f.",
+                self.PhaseNames[self.Phases.p1], p1gpCount, gpMult);
+        end
+        if calcP3 then
+            p3epEdit:SetValue(epMult * p3epSum / p3epCount);
+            p3gpEdit:SetValue(gpMult * p3gpSum / p3gpCount);
+            self:Notify("EP for %s calculated by averaging %d active players and multiplying by %.2f.",
+                self.PhaseNames[self.Phases.p3], p3epCount, epMult);
+            self:Notify("GP for %s calculated by averaging %d active players and multiplying by %.2f.",
+                self.PhaseNames[self.Phases.p3], p3gpCount, gpMult);
+        end
+        self:Notify("NOTE: since an active player may have their GP associated with different raid groups based on phase, the counts for a given phase may vary.");
+        done:SetDisabled(false);
+    end
+    playerEdit:SetCallback("OnValueChanged", processPlayer);
+    proxyEdit:SetCallback("OnValueChanged", processPlayer);
+    processPlayer();
+
+    local height = container.frame:GetHeight() + 57;
+    self:BeginWindowManagement(window, "popup", {
+        defaultWidth = width,
+        minWidth = width,
+        maxWidth = width,
+        defaultHeight = height,
+        minHeight = height,
+        maxHeight = height
+    });
 end
 
 StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {

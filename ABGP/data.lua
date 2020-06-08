@@ -20,6 +20,7 @@ local max = max;
 local abs = abs;
 local type = type;
 local bit = bit;
+local unpack = unpack;
 
 local updatingNotes = false;
 local checkedHistory = false;
@@ -33,26 +34,30 @@ local invalidBaseline = -1;
 local syncThreshold = 10 * 24 * 60 * 60;
 
 function ABGP:AddDataHooks()
-    local onSetNote = function(note, name, canEdit, existing)
+    local onSetNote = function(note, name, canEdit, existing, isPublic)
         if updatingNotes or not name or not canEdit or note == existing then return; end
+
+        local player = Ambiguate(name, "short");
+        local info = self:GetGuildInfo(player);
+        info[isPublic and 7 or 8] = note;
 
         self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "GUILD");
         self:SendComm(self.CommTypes.GUILD_NOTES_UPDATED, {}, "BROADCAST");
     end;
     local onSetPublicNote = function(index, note)
         local name, _, _, _, _, _, existing = GetGuildRosterInfo(index);
-        onSetNote(note, name, self:CanEditPublicNotes(), existing);
+        onSetNote(note, name, self:CanEditPublicNotes(), existing, true);
     end;
     local onSetOfficerNote = function(index, note)
         local name, _, _, _, _, _, _, existing = GetGuildRosterInfo(index);
-        onSetNote(note, name, self:CanEditOfficerNotes(), existing);
+        onSetNote(note, name, self:CanEditOfficerNotes(), existing, false);
     end;
     local onSetNote = function(guid, note, isPublic)
         for _, info in pairs(self:GetGuildInfo()) do
             if info[17] == guid then
                 local canEdit = self[isPublic and "CanEditPublicNotes" or "CanEditOfficerNotes"](self);
                 local existing = info[isPublic and 7 or 8];
-                onSetNote(note, info[1], canEdit, existing);
+                onSetNote(note, info[1], canEdit, existing, isPublic);
                 break;
             end
         end
@@ -93,28 +98,30 @@ function ABGP:RefreshFromOfficerNotes()
             end
             if self:IsTrial(rank) then
                 local trialGroup = self:GetTrialRaidGroup(publicNote);
-                table.insert(p1, {
-                    player = player,
-                    rank = rank,
-                    class = class,
-                    epRaidGroup = trialGroup,
-                    gpRaidGroup = trialGroup,
-                    ep = 0,
-                    gp = 0,
-                    priority = 0,
-                    trial = true
-                });
-                table.insert(p3, {
-                    player = player,
-                    rank = rank,
-                    class = class,
-                    epRaidGroup = trialGroup,
-                    gpRaidGroup = trialGroup,
-                    ep = 0,
-                    gp = 0,
-                    priority = 0,
-                    trial = true
-                });
+                if trialGroup then
+                    table.insert(p1, {
+                        player = player,
+                        rank = rank,
+                        class = class,
+                        epRaidGroup = trialGroup,
+                        gpRaidGroup = trialGroup,
+                        ep = 0,
+                        gp = 0,
+                        priority = 0,
+                        trial = true
+                    });
+                    table.insert(p3, {
+                        player = player,
+                        rank = rank,
+                        class = class,
+                        epRaidGroup = trialGroup,
+                        gpRaidGroup = trialGroup,
+                        ep = 0,
+                        gp = 0,
+                        priority = 0,
+                        trial = true
+                    });
+                end
             elseif note ~= "" then
                 local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
                 if p1ep then
@@ -187,26 +194,31 @@ function ABGP:RebuildOfficerNotes()
     end
 end
 
+function ABGP:GetGuildIndex(player)
+    for i = 1, GetNumGuildMembers() do
+        local name = GetGuildRosterInfo(i);
+        if name and player == Ambiguate(name, "short") then
+            return i;
+        end
+    end
+
+    return false;
+end
+
 function ABGP:UpdateOfficerNote(player, guildIndex)
     if not self:IsPrivileged() then return; end
     if not self:CanEditOfficerNotes() then return; end
 
-    if not guildIndex then
-        for i = 1, GetNumGuildMembers() do
-            local name = GetGuildRosterInfo(i);
-            if name and player == Ambiguate(name, "short") then
-                guildIndex = i;
-                break;
-            end
-        end
-    end
-
+    guildIndex = guildIndex or self:GetGuildIndex(player);
     if not guildIndex then
         self:Error("Couldn't find %s in the guild!", self:ColorizeName(player));
         return;
     end
 
-    local _, rank, _, _, _, _, publicNote, existingNote = GetGuildRosterInfo(guildIndex);
+    -- Use GetGuildInfo instead of calling the API directly to handle the guild note
+    -- having already been updated before calling this function - it won't be reflected
+    -- in the API call yet.
+    local _, rank, _, _, _, _, publicNote, existingNote = unpack(self:GetGuildInfo(player));
     local proxy = self:CheckProxy(publicNote);
     if proxy and not self:GetGuildInfo(proxy) then
         player = proxy;
@@ -229,7 +241,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
         note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
 
         -- Sanity check: all ranks here must be in a raid group.
-        if not self:GetGPRaidGroup(rank, next(self.Phases)) then
+        if not self:GetEPRaidGroup(rank) then
             self:Error("%s is rank %s which is not part of a raid group!", player, rank);
             note = "";
         end
@@ -377,7 +389,6 @@ function ABGP:HistoryTriggerDecay(decayTime)
 
     -- self:RefreshActivePlayers();
     -- self:RebuildOfficerNotes();
-    -- self:RefreshFromOfficerNotes();
 
     local floorText = "";
     if decayFloor ~= 0 then
@@ -385,6 +396,61 @@ function ABGP:HistoryTriggerDecay(decayTime)
     end
     self:Notify("Applied a decay of %d%%%s to EPGP.",
         floor(decayValue * 100 + 0.5), floorText);
+    self:Notify("NOTE: this just adds the appropriate history entries for now. Officer notes are unchanged.");
+end
+
+function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
+    if proxy then
+        self:Notify("Adding %s into the EPGP system, proxied by %s.", self:ColorizeName(player), self:ColorizeName(proxy));
+        _G.GuildRosterSetPublicNote(self:GetGuildIndex(proxy), ("ABGP Proxy: %s"):format(player));
+    else
+        self:Notify("Adding %s into the EPGP system.", self:ColorizeName(player));
+        local publicNote = self:GetGuildInfo(player)[7];
+        if publicNote:find("^ABGP") then
+            _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), "");
+        end
+    end
+
+    if p1ep ~= 0 and p1gp ~= 0 then
+        table.insert(_G.ABGP_Data[self.Phases.p1].gpHistory, 1, {
+            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+            [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+            [self.ItemHistoryIndex.DATE] = GetServerTime(),
+            [self.ItemHistoryIndex.PLAYER] = player,
+            [self.ItemHistoryIndex.GP] = p1gp,
+        });
+        table.insert(self.Priorities[self.Phases.p1], {
+            player = player,
+            ep = p1ep,
+            gp = p1gp,
+        });
+        self:Notify("Inserted into %s at EP=%f and GP=%f.", self.PhaseNames[self.Phases.p1], p1ep, p1gp);
+    end
+
+    if p3ep ~= 0 and p3gp ~= 0 then
+        table.insert(_G.ABGP_Data[self.Phases.p3].gpHistory, 1, {
+            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+            [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+            [self.ItemHistoryIndex.DATE] = GetServerTime(),
+            [self.ItemHistoryIndex.PLAYER] = player,
+            [self.ItemHistoryIndex.GP] = p3gp,
+        });
+        table.insert(self.Priorities[self.Phases.p3], {
+            player = player,
+            ep = p3ep,
+            gp = p3gp,
+        });
+        self:Notify("Inserted into %s at EP=%f and GP=%f.", self.PhaseNames[self.Phases.p3], p3ep, p3gp);
+    end
+
+    self:RefreshActivePlayers();
+    self:RebuildOfficerNotes();
+end
+
+function ABGP:AddTrial(player, raidGroup)
+    local raidGroupName = self.RaidGroupNames[raidGroup];
+    self:Notify("Adding %s as a trial for the %s raid group.", self:ColorizeName(player), raidGroupName);
+    _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP Raid Group: %s"):format(raidGroupName));
 end
 
 function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)

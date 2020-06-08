@@ -51,7 +51,7 @@ end
 
 function ABGP:AddWidgetTooltip(widget, text)
     widget:SetCallback("OnEnter", function(widget)
-        _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT");
+        _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPRIGHT");
         _G.GameTooltip:SetText(text, nil, nil, nil, nil, true);
     end);
     widget:SetCallback("OnLeave", function(widget)
@@ -1660,7 +1660,7 @@ do
 
     local function Edit_OnFocusLost(frame)
         local self = frame.obj;
-        self:SetText(self:GetValue() or "");
+        self:SetValue(self:GetValue());
     end
 
     local function Edit_OnEnterPressed(widget, event, value)
@@ -1686,6 +1686,7 @@ do
             self:DisableButton(true);
 
             self:SetAutoCompleteSource(nil);
+            self:SetFormat(nil);
             self:SetValue(nil);
             self:SetCallback("OnEnterPressed", Edit_OnEnterPressed);
         end,
@@ -1696,11 +1697,20 @@ do
 
         ["SetValue"] = function(self, value)
             self.value = value;
-            self:SetText(value or "");
+            if self.formatStr then
+                self:SetText(self.formatStr:format(value or ""));
+            else
+                self:SetText(value or "");
+            end
         end,
 
         ["GetValue"] = function(self)
             return self.value;
+        end,
+
+        ["SetFormat"] = function(self, formatStr)
+            self.formatStr = formatStr;
+            self:SetValue(self:GetValue());
         end,
     }
 
@@ -1732,6 +1742,42 @@ do
 
         elt.type = Type;
         elt.EditBoxOnAcquire = elt.OnAcquire;
+        for method, func in pairs(methods) do
+            elt[method] = func;
+        end
+
+        return elt;
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_OpaqueWindow", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self:WindowOnAcquire();
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local elt = AceGUI:Create("Window");
+
+        local background = elt.frame:CreateTexture(nil, "BACKGROUND");
+		background:SetPoint("TOPLEFT", 8, -24);
+		background:SetPoint("BOTTOMRIGHT", -6, 8);
+        background:SetColorTexture(0, 0, 0, 1);
+
+        elt.type = Type;
+        elt.WindowOnAcquire = elt.OnAcquire;
         for method, func in pairs(methods) do
             elt[method] = func;
         end
