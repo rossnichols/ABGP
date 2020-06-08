@@ -492,6 +492,7 @@ ABGP.ItemHistoryType = {
     BONUS = 2,
     DECAY = 3,
     DELETE = 4,
+    RESET = 5,
 };
 ABGP.ItemHistoryIndex = {
     TYPE = 1,       -- from ABGP.ItemHistoryType
@@ -506,6 +507,7 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.BONUS
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp award (number)
+    NOTES = 6,      -- notes (string)
 
     -- ABGP.ItemHistoryType.DECAY
     VALUE = 4,      -- decay percentage (number)
@@ -513,6 +515,11 @@ ABGP.ItemHistoryIndex = {
 
     -- ABGP.ItemHistoryType.DELETE
     DELETEDID = 4,  -- from ABGP:GetHistoryId()
+
+    -- ABGP.ItemHistoryType.RESET
+    PLAYER = 4,     -- player name (string)
+    GP = 5,         -- new gp (number)
+    NOTES = 6,      -- notes (string)
 };
 
 function ABGP:GetHistoryId()

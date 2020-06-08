@@ -413,11 +413,12 @@ function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
 
     if p1ep ~= 0 and p1gp ~= 0 then
         table.insert(_G.ABGP_Data[self.Phases.p1].gpHistory, 1, {
-            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
             [self.ItemHistoryIndex.DATE] = GetServerTime(),
             [self.ItemHistoryIndex.PLAYER] = player,
             [self.ItemHistoryIndex.GP] = p1gp,
+            [self.ItemHistoryIndex.NOTES] = "New active raider",
         });
         table.insert(self.Priorities[self.Phases.p1], {
             player = player,
@@ -429,11 +430,12 @@ function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
 
     if p3ep ~= 0 and p3gp ~= 0 then
         table.insert(_G.ABGP_Data[self.Phases.p3].gpHistory, 1, {
-            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
             [self.ItemHistoryIndex.DATE] = GetServerTime(),
             [self.ItemHistoryIndex.PLAYER] = player,
             [self.ItemHistoryIndex.GP] = p3gp,
+            [self.ItemHistoryIndex.NOTES] = "New active raider",
         });
         table.insert(self.Priorities[self.Phases.p3], {
             player = player,
@@ -453,7 +455,7 @@ function ABGP:AddTrial(player, raidGroup)
     _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP Raid Group: %s"):format(raidGroupName));
 end
 
-function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
+function ABGP:ProcessItemHistory(gpHistory, includeNonItems)
     local processed = {};
     local deleted = {};
     for _, data in ipairs(gpHistory) do
@@ -461,12 +463,10 @@ function ABGP:ProcessItemHistory(gpHistory, includeBonus, includeDecay)
             local entryType = data[ABGP.ItemHistoryIndex.TYPE];
             if entryType == ABGP.ItemHistoryType.ITEM then
                 table.insert(processed, data);
-            elseif entryType == ABGP.ItemHistoryType.BONUS and includeBonus then
-                table.insert(processed, data);
-            elseif entryType == ABGP.ItemHistoryType.DECAY and includeDecay then
-                table.insert(processed, data);
             elseif entryType == ABGP.ItemHistoryType.DELETE then
                 deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
+            elseif includeNonItems then
+                table.insert(processed, data);
             end
         end
     end
@@ -480,7 +480,7 @@ end
 
 function ABGP:GetEffectiveCost(id, gp, phase)
     if gp == 0 then return 0, 0; end
-    local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, false, true);
+    local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
     local cost = 0;
     local decayCount = 0;
 
@@ -512,6 +512,7 @@ function ABGP:BreakdownHistory(history)
         self.ItemHistoryType.BONUS,
         self.ItemHistoryType.DECAY,
         self.ItemHistoryType.DELETE,
+        self.ItemHistoryType.RESET,
     };
 
     local typeNames = {
@@ -519,6 +520,7 @@ function ABGP:BreakdownHistory(history)
         [self.ItemHistoryType.BONUS] = "gp award(s)",
         [self.ItemHistoryType.DECAY] = "decay trigger(s)",
         [self.ItemHistoryType.DELETE] = "deletion(s)",
+        [self.ItemHistoryType.RESET] = "reset(s)",
     };
 
     local out = {};
@@ -542,27 +544,35 @@ function ABGP:HistoryOnUpdate()
     hasCompleteCached = false;
 end
 
+function ABGP:CalculateCurrentGP(player, phase, history)
+    history = history or self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
+    local gp = 0;
+    for i = #history, 1, -1 do
+        local entry = history[i];
+        local entryType = entry[self.ItemHistoryIndex.TYPE];
+        if (entryType == self.ItemHistoryType.ITEM or entryType == self.ItemHistoryType.BONUS) and
+           entry[self.ItemHistoryIndex.PLAYER] == player then
+            gp = gp + entry[self.ItemHistoryIndex.GP];
+        elseif entryType == self.ItemHistoryType.DECAY then
+            gp = gp * (1 - entry[self.ItemHistoryIndex.VALUE]);
+            gp = max(gp, entry[self.ItemHistoryIndex.FLOOR]);
+        elseif entryType == self.ItemHistoryType.RESET then
+            gp = entry[self.ItemHistoryIndex.GP];
+        end
+    end
+
+    return gp;
+end
+
 function ABGP:HasCompleteHistory(shouldPrint)
     if hasCompleteCached and not shouldPrint then return hasComplete; end
 
     hasComplete = true;
     for phase in pairs(self.Phases) do
-        local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true, true);
+        local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
         for player, epgp in pairs(self:GetActivePlayers()) do
             if epgp[phase] then
-                local calculated = 0;
-                for i = #history, 1, -1 do
-                    local entry = history[i];
-                    local entryType = entry[self.ItemHistoryIndex.TYPE];
-                    if (entryType == self.ItemHistoryType.ITEM or entryType == self.ItemHistoryType.BONUS) and
-                       entry[self.ItemHistoryIndex.PLAYER] == player then
-                        calculated = calculated + entry[self.ItemHistoryIndex.GP];
-                    elseif entryType == self.ItemHistoryType.DECAY then
-                        calculated = calculated * (1 - entry[self.ItemHistoryIndex.VALUE]);
-                        calculated = max(calculated, entry[self.ItemHistoryIndex.FLOOR]);
-                    end
-                end
-
+                local calculated = self:CalculateCurrentGP(player, phase, history);
                 if abs(calculated - epgp[phase].gp) > 0.0015 then
                     hasComplete = false;
                     if shouldPrint then

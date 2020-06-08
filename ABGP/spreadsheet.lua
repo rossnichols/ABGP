@@ -35,7 +35,7 @@ local gpMapping = {
     ["Item"] = ABGP.ItemHistoryIndex.NAME,
     ["Character"] = ABGP.ItemHistoryIndex.PLAYER,
     ["Date Won"] = ABGP.ItemHistoryIndex.DATE,
-    ["Boss"] = false,
+    ["Boss"] = "boss",
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
@@ -381,11 +381,16 @@ local function DrawGP(container)
 
                 rowTimes[rowTime] = true;
                 row[ABGP.ItemHistoryIndex.DATE] = rowTime;
-                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
+                row[ABGP.ItemHistoryIndex.ID] = ABGP:GetHistoryId();
+                local boss = row.boss;
+                row.boss = nil;
 
                 if row[ABGP.ItemHistoryIndex.NAME] == "Bonus GP" then
                     row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.BONUS;
-                    row[ABGP.ItemHistoryIndex.NAME] = nil;
+                    row[ABGP.ItemHistoryIndex.NOTES] = boss;
+                elseif row[ABGP.ItemHistoryIndex.NAME] == "Reset GP" then
+                    row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.RESET;
+                    row[ABGP.ItemHistoryIndex.NOTES] = boss;
                 else
                     row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM;
                 end
@@ -416,7 +421,7 @@ local function DrawGP(container)
     end
 
     local exportFunc = function()
-        local history = ABGP:ProcessItemHistory(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory, true, true);
+        local history = ABGP:ProcessItemHistory(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory, true);
 
         local text = "New Points\tItem\tCharacter\tDate Won\n";
         for i = #history, 1, -1 do
@@ -430,6 +435,9 @@ local function DrawGP(container)
             elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.BONUS then
                 text = text .. ("%s\t%s\t%s\t%s\n"):format(
                     item[ABGP.ItemHistoryIndex.GP], "Bonus GP", item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
+            elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.RESET then
+                text = text .. ("%s\t%s\t%s\t%s\n"):format(
+                    item[ABGP.ItemHistoryIndex.GP], "Reset GP", item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
             end
         end
 

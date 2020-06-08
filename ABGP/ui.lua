@@ -937,6 +937,7 @@ local function DrawAuditLog(container, options)
         [ABGP.ItemHistoryType.BONUS] = "Award",
         [ABGP.ItemHistoryType.DECAY] = "Decay",
         [ABGP.ItemHistoryType.DELETE] = "Delete",
+        [ABGP.ItemHistoryType.RESET] = "Reset",
     };
 
     local function getAuditMessage(entry)
@@ -965,6 +966,9 @@ local function DrawAuditLog(container, options)
             elseif entryType == ABGP.ItemHistoryType.DECAY then
                 entryMsg = ("GP decayed by %d%%"):format(
                     floor(entry[ABGP.ItemHistoryIndex.VALUE] * 100 + 0.5));
+            elseif entryType == ABGP.ItemHistoryType.RESET then
+                entryMsg = ("%s reset to %.3f GP"):format(
+                    entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
             end
         end
 
