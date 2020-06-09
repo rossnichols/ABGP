@@ -68,7 +68,7 @@ function QuestieStreamLib:GetStream(mode) -- returns a new stream
         self:reset()
         tinsert(StreamPool, self)
     end
-    
+
     stream:SetMode(mode)
 
     return stream
@@ -97,7 +97,7 @@ function QuestieStreamLib:SetMode(mode)
 end
 
 function QuestieStreamLib:_writeByte(val)
-    --print("Writing " .. val .. " at " .. self._pointer)
+    -- print("Writing " .. val .. " at " .. self._pointer)
     self._bin[self._pointer] = stringchar(val)
     --if val > 255 or val < 0 then
     --    stringchar(val) -- error
@@ -133,7 +133,7 @@ end
 
 function QuestieStreamLib:_WriteByte_b89(e)
     if e == nil then
-        return 
+        return
     end
     local level = math.floor(e / 86);
     if not (self._level == level) then
@@ -189,7 +189,7 @@ end
 
 function QuestieStreamLib:_ReadByte_raw()
     local val = stringbyte(self._bin, self._pointer)
-    --print("Read data at " .. self._pointer .. " = " .. val)
+    -- print("Read data at " .. self._pointer .. " = " .. val)
     self._pointer = self._pointer + 1
     return val
     --return self:_readByte()
@@ -243,7 +243,8 @@ function QuestieStreamLib:ReadInt()
 end
 
 function QuestieStreamLib:ReadLong()
-    return lshift(self:ReadByte(), 56) +lshift(self:ReadByte(), 48) +lshift(self:ReadByte(), 40) +lshift(self:ReadByte(), 32) +lshift(self:ReadByte(), 24) + lshift(self:ReadByte(), 16) + lshift(self:ReadByte(), 8) + self:ReadByte();
+    local topInt, bottomInt = self:ReadInt(), self:ReadInt();
+    return (topInt * 4294967296) + bottomInt;
 end
 
 function QuestieStreamLib:ReadTinyString()
@@ -291,7 +292,7 @@ function QuestieStreamLib:ReadShortString()
         return table.concat(ret)
     else
         for i = 1, length do
-            tinsert(ret, self:ReadByte()) 
+            tinsert(ret, self:ReadByte())
         end
         return stringchar(unpack(ret))
     end
@@ -343,14 +344,10 @@ function QuestieStreamLib:WriteInt12Pair(val1, val2)
 end
 
 function QuestieStreamLib:WriteLong(val)
-    self:WriteByte(mod(rshift(val, 56), 256));
-    self:WriteByte(mod(rshift(val, 48), 256));
-    self:WriteByte(mod(rshift(val, 40), 256));
-    self:WriteByte(mod(rshift(val, 32), 256));
-    self:WriteByte(mod(rshift(val, 24), 256));
-    self:WriteByte(mod(rshift(val, 16), 256));
-    self:WriteByte(mod(rshift(val, 8), 256));
-    self:WriteByte(mod(val, 256));
+    local bottomInt = mod(val, 4294967296);
+    local topInt = (val - bottomInt) / 4294967296;
+    self:WriteInt(topInt);
+    self:WriteInt(bottomInt);
 end
 
 function QuestieStreamLib:WriteTinyString(val)
