@@ -19,6 +19,7 @@ comm.lua
 widgets.lua
 version.lua
 data.lua
+sync.lua
 ui.lua
 options.lua
 event.lua
