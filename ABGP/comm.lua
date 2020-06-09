@@ -165,6 +165,7 @@ ABGP.CommTypes = {
     -- phase: from ABGP.Phases
     -- baseline: number
     -- history: table
+    -- requested: bool
 
     HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", priority = "NORMAL" },
     -- phase: from ABGP.Phases
@@ -204,7 +205,8 @@ function ABGP:Serialize(data, legacy)
         local compressed = LibCompress:Compress(serialized);
         return (AddonEncodeTable:Encode(compressed)), "ABGP";
     else
-        local serialized = LibQuestieSerializer:Serialize(data);
+        -- local serialized = LibQuestieSerializer:Serialize(data);
+        local serialized = AceSerializer:Serialize(data);
         local compressed = LibDeflate:CompressDeflate(serialized);
         return (LibDeflate:EncodeForWoWAddonChannel(compressed)), self:GetCommPrefix();
     end
@@ -213,12 +215,21 @@ end
 function ABGP:Deserialize(payload, legacy)
     if legacy then
         local compressed = AddonEncodeTable:Decode(payload);
+        if not compressed then return false; end
+
         local serialized = LibCompress:Decompress(compressed);
+        if not serialized then return false; end
+
         return AceSerializer:Deserialize(serialized);
     else
         local compressed = LibDeflate:DecodeForWoWAddonChannel(payload);
+        if not compressed then return false; end
+
         local serialized = LibDeflate:DecompressDeflate(compressed);
-        return LibQuestieSerializer:Deserialize(serialized);
+        if not serialized then return false; end
+
+        -- return LibQuestieSerializer:Deserialize(serialized);
+        return AceSerializer:Deserialize(serialized);
     end
 end
 
@@ -241,7 +252,19 @@ function ABGP:SendComm(type, data, distribution, target)
     end
 
     local logInCallback = false;
-    if not type.name:find("VERSION") and self:GetDebugOpt("DebugComms") then
+    if self:GetDebugOpt("Verbose") then
+        self:LogVerbose("COMM-SEND >>>");
+        self:LogVerbose("%s pri=%s dist=%s prefix=%s len=%d",
+            type.name,
+            priority,
+            target and ("%s:%s"):format(distribution, target) or distribution,
+            prefix,
+            strlen(payload));
+        for k, v in pairs(data) do
+            if k ~= "type" then self:LogVerbose("%s: %s", k, tostring(v)); end
+        end
+        self:LogVerbose("<<< COMM");
+    elseif not type.name:find("VERSION") and self:GetDebugOpt("DebugComms") then
         logInCallback = true;
         self:LogDebug("COMM-SEND: %s pri=%s dist=%s prefix=%s len=%d",
             type.name,
@@ -300,10 +323,10 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     end
 
     if self:GetDebugOpt("Verbose") then
-        self:LogVerbose("COMM >>>");
-        self:LogVerbose("Data from %s via %s using %s:", sender, distribution, prefix);
+        self:LogVerbose("COMM-RECV >>>");
+        self:LogVerbose("%s dist=%s sender=%s prefix=%s len=%s", data.type, distribution, sender, prefix, payload:len());
         for k, v in pairs(data) do
-            self:LogVerbose("%s: %s", k, tostring(v));
+            if k ~= "type" then self:LogVerbose("%s: %s", k, tostring(v)); end
         end
         self:LogVerbose("<<< COMM");
     elseif sender ~= UnitName("player") and not data.type:find("VERSION") and self:GetDebugOpt("DebugComms") then

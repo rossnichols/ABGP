@@ -1083,6 +1083,12 @@ ABGP.tCompare = _G.tCompare or function(lhsTable, rhsTable, depth)
     return true;
 end
 
+ABGP.tCopy = function(t)
+    local copy = {};
+    for k, v in pairs(t) do copy[k] = v; end
+    return copy;
+end
+
 local itemSlots = {
     INVTYPE_HEAD = { _G.INVSLOT_HEAD },
     INVTYPE_NECK = { _G.INVSLOT_NECK },

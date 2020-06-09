@@ -601,12 +601,224 @@ function ABGP:HasValidBaselines()
     return true;
 end
 
+local function GetHistory(phase)
+    return _G.ABGP_Data[phase].gpHistory;
+end
+
+local function SetHistory(phase, history)
+    _G.ABGP_Data[phase].gpHistory = history;
+end
+
+local function GetBaseline(phase)
+    return _G.ABGP_DataTimestamp.gpHistory[phase];
+end
+
+local function SetBaseline(phase, baseline)
+    _G.ABGP_DataTimestamp.gpHistory[phase] = baseline;
+end
+
+local function IsPrivileged()
+    return ABGP:CanEditOfficerNotes();
+end
+
+local function SenderIsPrivileged(sender)
+    return ABGP:CanEditOfficerNotes(sender);
+end
+
+local function MergeHistory(history, merge)
+    local mergeCount = 0;
+    for _, entry in pairs(merge) do
+        table.insert(history, 1, entry);
+        mergeCount = mergeCount + 1;
+    end
+
+    if mergeCount > 0 then
+        table.sort(history, function(a, b)
+            local _, aDate = ABGP:ParseHistoryId(a[ABGP.ItemHistoryIndex.ID]);
+            local _, bDate = ABGP:ParseHistoryId(b[ABGP.ItemHistoryIndex.ID]);
+
+            return aDate > bDate;
+        end);
+    end
+    return mergeCount;
+end
+
+-- local syncTesting = true;
+local syncTesting = false;
+local testUseLocalData = true;
+if syncTesting then
+    local localIsPrivileged, remoteIsPrivileged;
+    local localHistory, remoteHistory, localBaseline, remoteBaseline;
+
+    local privilegeCombinations = {
+        { false, false, "Neither is privileged" },
+        { false, true, "Remote is privileged" },
+        { true, false, "Local is privileged" },
+        { true, true, "Both are privileged" },
+    };
+    local historyCombinations = {
+        { "baseline=1 #recent=1 #archived=0", 1, {
+            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+        }},
+        { "baseline=1 #recent=1(v2) #archived=0", 1, {
+            { 1, "Xanido:1591322792", 1591322792, "Xanido", 0, "Item2" },
+        }},
+        { "baseline=1 #recent=1 #archived=1", 1, {
+            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+            { 1, "Xanido:0", 0, "Xanido", 0, "Item3" },
+        }},
+        { "baseline=2 #recent=1 #archived=0", 2, {
+            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+        }},
+        { "baseline=-1 #recent=1 #archived=0", -1, {
+            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+        }},
+    };
+    local testCases = {
+        -- Both sides have same data, just varying privilege levels
+        { 1, 1, 1, "Nothing should happen" }, -- 1
+        { 2, 1, 1, "Nothing should happen" }, -- 2
+        { 3, 1, 1, "Nothing should happen" }, -- 3
+        { 4, 1, 1, "Nothing should happen" }, -- 4
+
+        -- Each side has an entry the other side wants
+        { 1, 1, 2, "Nothing should happen" }, -- 5
+        { 2, 1, 2, "Local history should gain entry" }, -- 6
+        { 3, 1, 2, "Remote history should gain entry" }, --7
+        { 4, 1, 2, "Local and remote history should gain entry" }, --8
+
+        -- Remote has the same baseline but an extra archived entry
+        { 1, 1, 3, "Nothing should happen" }, -- 9
+        { 2, 1, 3, "Local history should be replaced" }, -- 10
+        { 3, 1, 3, "Nothing should happen" }, -- 11
+        { 4, 1, 3, "Local history should be replaced" }, -- 12
+
+        -- Local has the same baseline but an extra archived entry
+        { 1, 3, 1, "Nothing should happen" }, -- 13
+        { 2, 3, 1, "Nothing should happen" }, -- 14
+        { 3, 3, 1, "Remote history should be replaced" }, -- 15
+        { 4, 3, 1, "Remote history should be replaced" }, -- 16
+
+        -- Remote has updated baseline
+        { 1, 1, 4, "Nothing should happen" }, -- 17
+        { 2, 1, 4, "Local history should be replaced" }, -- 18
+        { 3, 1, 4, "Nothing should happen" }, -- 19
+        { 4, 1, 4, "Local history should be replaced" }, -- 20
+
+        -- Local has updated baseline
+        { 1, 4, 1, "Nothing should happen" }, -- 21
+        { 2, 4, 1, "Nothing should happen" }, -- 22
+        { 3, 4, 1, "Remote history should be replaced" }, -- 23
+        { 4, 4, 1, "Remote history should be replaced" }, -- 24
+
+        -- Remote has invalid baseline
+        { 1, 1, 5, "Nothing should happen" }, -- 25
+        { 2, 1, 5, "Nothing should happen" }, -- 26
+        { 3, 1, 5, "Remote history should be replaced" }, -- 27
+        { 4, 1, 5, "Remote history should be replaced" }, -- 28
+
+        -- Local has invalid baseline
+        { 1, 5, 1, "Nothing should happen" }, -- 29
+        { 2, 5, 1, "Local history should be replaced" }, --30
+        { 3, 5, 1, "Nothing should happen" }, --31
+        { 4, 5, 1, "Local history should be replaced" }, -- 32
+    };
+
+    function ABGP:TestSerialization()
+        local t = { hash = 2376185376 };
+
+        -- Test LQS's stabilization
+        -- local serialized = LibQuestieSerializer:Serialize(t);
+        -- local _, deserialized = LibQuestieSerializer:Deserialize(serialized);
+        -- print(t.hash, deserialized.hash);
+
+        -- Test deserialization error by mixing up legacy/nonlegacy
+        -- local serialized = self:Serialize(t, true);
+        -- local success, deserialized = self:Deserialize(serialized, false);
+        -- print(success);
+    end
+
+    function ABGP:RunHistorySyncTest(index)
+        local testCase = testCases[index];
+        local privIndex, localIndex, remoteIndex, outcome = unpack(testCase);
+        self:Notify("|cff00ff00SYNCTEST|r: Expected outcome: %s", outcome);
+
+        self:Notify("|cff00ff00SYNCTEST|r: %s", privilegeCombinations[privIndex][3]);
+        localIsPrivileged = privilegeCombinations[privIndex][1];
+        remoteIsPrivileged = privilegeCombinations[privIndex][2];
+
+        self:Notify("|cff00ff00SYNCTEST|r: Local history: %s", historyCombinations[localIndex][1]);
+        self:Notify("|cff00ff00SYNCTEST|r: Remote history: %s", historyCombinations[remoteIndex][1]);
+        localBaseline = historyCombinations[localIndex][2];
+        localHistory = self.tCopy(historyCombinations[localIndex][3]);
+        remoteBaseline = historyCombinations[remoteIndex][2];
+        remoteHistory = self.tCopy(historyCombinations[remoteIndex][3]);
+
+        table.wipe(warnedOutOfDate);
+        self:HistoryTriggerSync();
+    end
+
+    function ABGP:TestHistorySync(privIndex, localIndex, remoteIndex)
+    end
+
+    GetHistory = function(phase)
+        return testUseLocalData and localHistory or remoteHistory;
+    end
+
+    SetHistory = function(phase, history)
+        if testUseLocalData then
+            ABGP:Notify("|cff00ff00SYNCTEST|r: Replacing local history");
+            localHistory = history;
+        else
+            ABGP:Notify("|cff00ff00SYNCTEST|r: Replacing remote history");
+            remoteHistory = history;
+        end
+    end
+
+    GetBaseline = function(phase)
+        return testUseLocalData and localBaseline or remoteBaseline;
+    end
+
+    SetBaseline = function(phase, baseline)
+        if testUseLocalData then
+            ABGP:Notify("|cff00ff00SYNCTEST|r: Setting local baseline to %d", baseline);
+            localBaseline = baseline;
+        else
+            ABGP:Notify("|cff00ff00SYNCTEST|r: Setting remote baseline to %d", baseline);
+            remoteBaseline = baseline;
+        end
+    end
+
+    IsPrivileged = function()
+        if testUseLocalData then
+            return localIsPrivileged;
+        else
+            return remoteIsPrivileged;
+        end
+    end
+
+    SenderIsPrivileged = function(sender)
+        if testUseLocalData then
+            return remoteIsPrivileged;
+        else
+            return localIsPrivileged;
+        end
+    end
+
+    local OldMergeHistory = MergeHistory;
+    MergeHistory = function(history, merge)
+        local count = OldMergeHistory(history, merge);
+        ABGP:Notify("|cff00ff00SYNCTEST|r: Adding %d entries to %s history", count, testUseLocalData and "local" or "remote");
+        return count;
+    end
+end
+
 local function BuildSyncHashData(phase, now)
     local hash = 0;
     local syncCount = 0;
 
-    local gpHistory = _G.ABGP_Data[phase].gpHistory;
-    local baseline = _G.ABGP_DataTimestamp.gpHistory[phase];
+    local gpHistory = GetHistory(phase);
+    local baseline = GetBaseline(phase);
     if baseline == invalidBaseline then return hash, syncCount; end
 
     for _, entry in ipairs(gpHistory) do
@@ -626,14 +838,15 @@ function ABGP:HistoryOnEnteringWorld(isInitialLogin)
     if not isInitialLogin then checkedHistory = true; end
 end
 
-function ABGP:HistoryTriggerSync(target, token, now)
-    local privileged = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend");
+function ABGP:HistoryTriggerSync(target, token, now, remote)
+    if syncTesting then testUseLocalData = not remote; end
+    local privileged = IsPrivileged() and not self:GetDebugOpt("AvoidHistorySend");
     local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
 
     local now = now or GetServerTime();
     for phase in pairs(self.Phases) do
-        local gpHistory = _G.ABGP_Data[phase].gpHistory;
-        local baseline = _G.ABGP_DataTimestamp.gpHistory[phase];
+        local gpHistory = GetHistory(phase);
+        local baseline = GetBaseline(phase);
         local canSendHistory = privileged and baseline ~= invalidBaseline;
         local commData = {
             version = self:GetVersion(),
@@ -642,6 +855,7 @@ function ABGP:HistoryTriggerSync(target, token, now)
             baseline = baseline,
             archivedCount = 0,
             now = now,
+            remote = remote, -- for testing
         };
 
         local syncCount = 0;
@@ -667,15 +881,21 @@ function ABGP:HistoryTriggerSync(target, token, now)
         else
             self:LogDebug("Sending %s history sync: %d synced (%s), %d archived",
                 self.PhaseNames[phase], syncCount, commData.hash and "hash" or "ids", commData.archivedCount);
-            self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
+            if syncTesting then
+                self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", UnitName("player"));
+            else
+                self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
+            end
         end
+
+        if syncTesting then return; end
     end
 end
 
 function ABGP:HistoryTriggerRebuild()
     table.wipe(warnedOutOfDate);
     for phase in pairs(self.Phases) do
-        _G.ABGP_DataTimestamp.gpHistory[phase] = invalidBaseline;
+        SetHistory(phase, invalidBaseline);
     end
     self:HistoryTriggerSync();
 end
@@ -686,12 +906,13 @@ function ABGP:HistoryOnGuildRosterUpdate()
     checkedHistory = true;
     hasCompleteCached = false;
 
-    self:HistoryTriggerSync();
+    if not syncTesting then self:HistoryTriggerSync(); end
 end
 
 function ABGP:HistoryOnSync(data, distribution, sender)
+    if syncTesting then testUseLocalData = data.remote; end
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
-    if sender == UnitName("player") or InCombatLockdown() then return; end
+    if sender == UnitName("player") and not syncTesting then return; end
     if self:GetCompareVersion() ~= data.version then return; end
 
     if data.token ~= requestedHistoryToken then
@@ -699,10 +920,10 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         requestedHistoryToken = data.token;
     end
 
-    local senderIsPrivileged = self:CanEditOfficerNotes(sender) and not data.notPrivileged;
-    local history = _G.ABGP_Data[data.phase].gpHistory;
-    local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
-    local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
+    local senderIsPrivileged = SenderIsPrivileged(sender) and not data.notPrivileged;
+    local history = GetHistory(data.phase);
+    local baseline = GetBaseline(data.phase);
+    local canSendHistory = IsPrivileged() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
     local now = data.now;
 
     -- Compute the archivedCount and hash (if necessary).
@@ -731,6 +952,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
                 token = data.token,
+                remote = not data.remote, -- for testing
             }, "WHISPER", sender);
         elseif data.baseline == baseline and data.archivedCount < archivedCount then
             -- The sender has fewer archived entries than us. They need a history replacement.
@@ -739,6 +961,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             self:SendComm(self.CommTypes.HISTORY_REPLACE_INITIATION, {
                 phase = data.phase,
                 token = data.token,
+                remote = not data.remote, -- for testing
             }, "WHISPER", sender);
         end
     end
@@ -746,22 +969,24 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     if senderIsPrivileged then
         if data.baseline > baseline then
             -- The sender has a newer baseline. We need a history replacement.
-            _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
+            SetBaseline(data.phase, invalidBaseline);
             self:LogDebug("Updated baseline found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
                 phase = data.phase,
                 token = data.token,
-            }, "WHISPER", data.sender);
+                remote = not data.remote, -- for testing
+            }, "WHISPER", sender);
         elseif data.baseline == baseline and data.archivedCount > archivedCount then
             -- The sender has more archived entries than us. We need a history replacement.
-            _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
+            SetBaseline(data.phase, invalidBaseline);
             self:LogDebug("More archived entries found from %s [%s]",
                 self:ColorizeName(sender), self.PhaseNames[data.phase]);
             self:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
                 phase = data.phase,
                 token = data.token,
-            }, "WHISPER", data.sender);
+                remote = not data.remote, -- for testing
+            }, "WHISPER", sender);
         end
     end
 
@@ -773,7 +998,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         -- The sender sent a hash of their recent entries. If our hash is different,
         -- we'll deliver them a sync and they can request whatever they need.
         if data.hash ~= hash then
-            self:HistoryTriggerSync(sender, data.token, now);
+            self:HistoryTriggerSync(sender, data.token, now, not data.remote);
         end
     elseif data.ids and senderIsPrivileged then
         -- The sender sent ids. We'll go through them looking for entries we need,
@@ -818,17 +1043,19 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 merge = merge,
                 requested = data.ids,
                 now = now,
+                remote = not data.remote, -- for testing
             }, "WHISPER", sender);
         end
     end
 end
 
 function ABGP:HistoryOnReplaceInit(data, distribution, sender)
-    if not self:CanEditOfficerNotes(sender) then return; end
+    if syncTesting then testUseLocalData = data.remote; end
+    if not SenderIsPrivileged(sender) then return; end
 
     -- The sender has determined our history is out of date and wants to give us theirs.
     -- At this point our history should not be considered as valid for sending to others.
-    _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
+    SetBaseline(data.phase, invalidBaseline);
 
     self:LogDebug("History replace init received from %s [%s]",
         self:ColorizeName(sender), self.PhaseNames[data.phase]);
@@ -838,12 +1065,14 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
         _G.StaticPopup_Show("ABGP_HISTORY_OUT_OF_DATE", ABGP.PhaseNames[data.phase], ABGP:ColorizeName(sender), {
             phase = data.phase,
             sender = sender,
+            remote = data.remote, -- for testing
         });
     end
 end
 
 function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
     -- The sender is asking for our entire history.
+    if syncTesting then testUseLocalData = data.remote; end
     if self:GetDebugOpt("AvoidHistorySend") then return; end
 
     if data.token then
@@ -853,11 +1082,21 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
         replaceRequestTokens[data.phase] = data.token;
 
         self:LogDebug("Broadcasting history to guild [%s]", self.PhaseNames[data.phase]);
-        self:SendComm(self.CommTypes.HISTORY_REPLACE, {
-            phase = data.phase,
-            baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase],
-            history = _G.ABGP_Data[data.phase].gpHistory,
-        }, "GUILD");
+        if syncTesting then
+            self:SendComm(self.CommTypes.HISTORY_REPLACE, {
+                phase = data.phase,
+                baseline = GetBaseline(data.phase),
+                history = GetHistory(data.phase),
+                remote = not data.remote, -- for testing
+            }, "WHISPER", UnitName("player"));
+        else
+            self:SendComm(self.CommTypes.HISTORY_REPLACE, {
+                phase = data.phase,
+                baseline = GetBaseline(data.phase),
+                history = GetHistory(data.phase),
+                remote = not data.remote, -- for testing
+            }, "GUILD");
+        end
     else
         -- The sender is asking in response to our initiation, which was
         -- triggered by their sync. Send to them via WHISPER.
@@ -865,16 +1104,17 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
             self:ColorizeName(sender), self.PhaseNames[data.phase]);
         self:SendComm(self.CommTypes.HISTORY_REPLACE, {
             phase = data.phase,
-            baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase],
-            history = _G.ABGP_Data[data.phase].gpHistory,
+            baseline = GetBaseline(data.phase),
+            history = GetHistory(data.phase),
+            requested = true,
+            remote = not data.remote, -- for testing
         }, "WHISPER", sender);
     end
 end
 
 function ABGP:ApplyHistoryReplacement(phase, sender, baseline, history)
-
-    _G.ABGP_DataTimestamp.gpHistory[phase] = baseline;
-    _G.ABGP_Data[phase].gpHistory = history;
+    SetBaseline(phase, baseline);
+    SetHistory(phase, history);
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
 
     self:Notify("Received complete %s history from %s! Breakdown: %s.",
@@ -886,24 +1126,26 @@ function ABGP:ApplyHistoryReplacement(phase, sender, baseline, history)
 end
 
 function ABGP:HistoryOnReplace(data, distribution, sender)
-    if not self:CanEditOfficerNotes(sender) or not self:Get("syncEnabled") then return; end
+    if syncTesting then testUseLocalData = data.remote; end
+    if not SenderIsPrivileged(sender) or not self:Get("syncEnabled") then return; end
 
     -- Only accept newer baselines.
-    local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
+    local baseline = GetBaseline(data.phase);
     if data.baseline <= baseline then return; end
 
-    if distribution == "WHISPER" then
+    if data.requested then
         -- We already requested this one explicitly, so we can just directly apply it.
         self:ApplyHistoryReplacement(data.phase, sender, data.baseline, data.history);
     else
         -- Not explicit - ask before applying. Our baseline should be invalid now, though,
         -- since an updated history has been discovered.
-        _G.ABGP_DataTimestamp.gpHistory[data.phase] = invalidBaseline;
+        SetBaseline(data.phase, invalidBaseline);
         _G.StaticPopup_Show("ABGP_UPDATED_HISTORY", ABGP.PhaseNames[data.phase], ABGP:ColorizeName(sender), {
             phase = data.phase,
             sender = sender,
             baseline = data.baseline,
-            history = data.history
+            history = data.history,
+            remote = data.remote, -- for testing
         });
     end
 end
@@ -913,17 +1155,19 @@ local function RequestFullHistory(data)
 
     ABGP:SendComm(ABGP.CommTypes.HISTORY_REPLACE_REQUEST, {
         phase = data.phase,
+        remote = not data.remote, -- for testing
     }, "WHISPER", data.sender);
     ABGP:Notify("Requesting full item history for %s from %s! This could take a little while.",
         ABGP.PhaseNames[data.phase], ABGP:ColorizeName(data.sender));
 end
 
 function ABGP:HistoryOnMerge(data, distribution, sender)
-    local baseline = _G.ABGP_DataTimestamp.gpHistory[data.phase];
+    if syncTesting then testUseLocalData = data.remote; end
+    local baseline = GetBaseline(data.phase);
     if data.baseline ~= baseline then return; end
-    local canSendHistory = self:CanEditOfficerNotes() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
 
-    local history = _G.ABGP_Data[data.phase].gpHistory;
+    local canSendHistory = IsPrivileged() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
+    local history = GetHistory(data.phase);
     local now = data.now;
 
     if data.requested and next(data.requested) and canSendHistory then
@@ -946,11 +1190,12 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
                 baseline = baseline,
                 merge = merge,
                 now = now,
+                remote = not data.remote, -- for testing
             }, "WHISPER", sender);
         end
     end
 
-    if data.merge and next(data.merge) and self:CanEditOfficerNotes(sender) then
+    if data.merge and next(data.merge) and SenderIsPrivileged(sender) then
         -- The sender is sharing entries. First remove the ones we already have.
         for _, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID];
@@ -959,19 +1204,8 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
         -- At this point, data.merge contains entries we don't have.
         if next(data.merge) then
-            local mergeCount = 0;
-            for _, entry in pairs(data.merge) do
-                table.insert(history, 1, entry);
-                mergeCount = mergeCount + 1;
-            end
-
+            local mergeCount = MergeHistory(history, data.merge);
             if mergeCount > 0 then
-                table.sort(history, function(a, b)
-                    local _, aDate = self:ParseHistoryId(a[self.ItemHistoryIndex.ID]);
-                    local _, bDate = self:ParseHistoryId(b[self.ItemHistoryIndex.ID]);
-
-                    return aDate > bDate;
-                end);
                 self:Fire(self.InternalEvents.HISTORY_UPDATED);
 
                 self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
