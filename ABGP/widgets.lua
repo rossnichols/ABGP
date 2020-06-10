@@ -607,9 +607,6 @@ do
                 priorityEditor.frame:SetParent(self.frame);
 
                 self.currentPriorities = {};
-                for _, pri in ipairs(self.data[ABGP.ItemDataIndex.PRIORITY]) do self.currentPriorities[pri] = true; end
-
-                priorityEditor:SetValues(self.currentPriorities, false, ABGP:GetItemPriorities());
                 priorityEditor:SetCallback("OnClosed", function()
                     self.frame:SetHeight(20);
                     self.priority:Show();
@@ -624,9 +621,13 @@ do
                     self:SetData(self.data);
                     self:Fire("OnPrioritiesUpdated");
                 end);
-                priorityEditor:SetText(table.concat(self.data[ABGP.ItemDataIndex.PRIORITY], ", "));
                 self.priorityEditor = priorityEditor;
             end
+
+            table.wipe(self.currentPriorities);
+            for _, pri in ipairs(self.data[ABGP.ItemDataIndex.PRIORITY]) do self.currentPriorities[pri] = true; end
+            self.priorityEditor:SetValues(self.currentPriorities, false, ABGP:GetItemPriorities());
+            self.priorityEditor:SetText(table.concat(self.data[ABGP.ItemDataIndex.PRIORITY], ", "));
 
             self.priority:Hide();
             self.priorityEditor.frame:Show();
