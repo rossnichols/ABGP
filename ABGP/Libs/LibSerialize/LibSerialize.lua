@@ -19,9 +19,9 @@ Their original licenses shall be complied with when used.
 1. LibDeflate, by Haoqian He. https://github.com/SafeteeWoW/LibDeflate
     Licensed under GPLv3.
 2. lua-MessagePack, by François Perrad. https://framagit.org/fperrad/lua-MessagePack
-    No license.
+    Licensed under MIT.
 3. LibQuestieSerializer, by aero. https://github.com/AeroScripts/LibQuestieSerializer
-    No license.
+    Licensed under GPLv3.
 ]]
 
 local LibSerialize
@@ -115,14 +115,14 @@ local function GetRequiredBytes(value)
     return 8
 end
 
-local debugPrinting = false
--- local debugPrinting = true
-local function debugPrint(...)
-    if debugPrinting then
-        print(...)
-        -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
-    end
-end
+-- local debugPrinting = false
+-- -- local debugPrinting = true
+-- local function debugPrint(...)
+--     if debugPrinting then
+--         print(...)
+--         -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
+--     end
+-- end
 
 
 --[[---------------------------------------------------------------------------
@@ -207,7 +207,7 @@ local function CreateWriter()
     -- @param bitlen: The bit length of "value"
     -- @return nil
     local function WriteBits(value, bitlen)
-        debugPrint("Writing value", value, "bitlen", bitlen)
+        -- debugPrint("Writing value", value, "bitlen", bitlen)
         cache = cache + value * _pow2[cache_bitlen]
         cache_bitlen = cache_bitlen + bitlen
         total_bitlen = total_bitlen + bitlen
@@ -233,7 +233,7 @@ local function CreateWriter()
     -- @param str The string being written
     -- @return nil
     local function WriteString(str)
-        debugPrint("Writing string len", #str, "bitlen", #str * 8)
+        -- debugPrint("Writing string len", #str, "bitlen", #str * 8)
         for _ = 1, cache_bitlen, 8 do
             buffer_size = buffer_size + 1
             buffer[buffer_size] = string_char(cache % 256)
@@ -451,14 +451,14 @@ end
 --]]---------------------------------------------------------------------------
 
 function LibSerialize:_ReadByte()
-    debugPrint("Reading byte")
+    -- debugPrint("Reading byte")
 
     self._readBytes(1, self._readBuffer, 0)
     return string_byte(self._readBuffer[1])
 end
 
 function LibSerialize:_ReadInt16()
-    debugPrint("Reading int16")
+    -- debugPrint("Reading int16")
 
     self._readBytes(2, self._readBuffer, 0)
     return Pack(0,
@@ -468,7 +468,7 @@ function LibSerialize:_ReadInt16()
 end
 
 function LibSerialize:_ReadInt32()
-    debugPrint("Reading int32")
+    -- debugPrint("Reading int32")
 
     self._readBytes(4, self._readBuffer, 0)
     return Pack(string_byte(self._readBuffer[4]),
@@ -478,7 +478,7 @@ function LibSerialize:_ReadInt32()
 end
 
 function LibSerialize:_ReadInt64()
-    debugPrint("Reading int64")
+    -- debugPrint("Reading int64")
 
     local top, bottom = self:_ReadInt32(), self:_ReadInt32()
     return (top * 4294967296) + bottom
@@ -486,7 +486,7 @@ end
 
 function LibSerialize:_ReadObject()
     local typ = self:_ReadByte()
-    debugPrint("Found type", typ)
+    -- debugPrint("Found type", typ)
     if typ > 31 then
         -- The object was a number encoded in the type byte.
         return typ - 32
@@ -495,7 +495,7 @@ function LibSerialize:_ReadObject()
 end
 
 function LibSerialize:_ReadTable(entryCount, ret)
-    debugPrint("Extracting keys/values for table,", entryCount)
+    -- debugPrint("Extracting keys/values for table,", entryCount)
 
     ret = ret or {}
     for i = 1, entryCount do
@@ -513,7 +513,7 @@ function LibSerialize:_ReadTable(entryCount, ret)
 end
 
 function LibSerialize:_ReadArray(entryCount, ret)
-    debugPrint("Extracting values for array,", entryCount)
+    -- debugPrint("Extracting values for array,", entryCount)
 
     ret = ret or {}
     for i = 1, entryCount do
@@ -527,7 +527,7 @@ function LibSerialize:_ReadArray(entryCount, ret)
 end
 
 function LibSerialize:_ReadMixed(arrayCount, tableCount)
-    debugPrint("Extracting values for array,", arrayCount, tableCount)
+    -- debugPrint("Extracting values for array,", arrayCount, tableCount)
 
     local ret = {}
     self:_ReadArray(arrayCount, ret)
@@ -536,7 +536,7 @@ function LibSerialize:_ReadMixed(arrayCount, tableCount)
 end
 
 function LibSerialize:_ReadString(len)
-    debugPrint("Reading string,", len)
+    -- debugPrint("Reading string,", len)
 
     local size = self._readBytes(len, self._readBuffer, 0)
     return table_concat(self._readBuffer, "", 1, size)
@@ -680,7 +680,7 @@ LibSerialize.WriterTable = {
         if fract ~= 0 then
             self.WriterTable["float"](self, value)
         else
-            debugPrint("Serializing number:", value)
+            -- debugPrint("Serializing number:", value)
             if value >= 0 and value < 224 then
                 -- Pack the value into the type byte
                 self:_WriteByte(value + 32)
@@ -697,12 +697,12 @@ LibSerialize.WriterTable = {
         end
     end,
     ["float"] = function(self, value)
-        debugPrint("Serializing float:", value)
+        -- debugPrint("Serializing float:", value)
         self:_WriteByte(9)
         self:_WriteInt(FloatBitsToInt(value), 4)
     end,
     ["string"] = function(self, value)
-        debugPrint("Serializing string:", value)
+        -- debugPrint("Serializing string:", value)
         if self._stringHashes[value] and #value > 3 then
             -- A hash takes up four bytes, whereas a string takes up
             -- the number of bytes required for its len + its len.
@@ -719,7 +719,7 @@ LibSerialize.WriterTable = {
         end
     end,
     ["boolean"] = function(self, value)
-        debugPrint("Serializing bool:", value)
+        -- debugPrint("Serializing bool:", value)
         self:_WriteByte(value and 15 or 16)
     end,
     ["table"] = function(self, value)
@@ -728,7 +728,7 @@ LibSerialize.WriterTable = {
             count = count + 1
         end
         if count == arraySize then
-            debugPrint("Serializing array:", count)
+            -- debugPrint("Serializing array:", count)
             -- The table is effectively an array. We can avoid writing the keys.
             local required = GetRequiredBytes(count)
             self:_WriteByte(arrayIndices[required])
@@ -744,7 +744,7 @@ LibSerialize.WriterTable = {
                 end
             end
         elseif arraySize ~= 0 then
-            debugPrint("Serializing mixed array-table:", arraySize, count)
+            -- debugPrint("Serializing mixed array-table:", arraySize, count)
             count = count - arraySize;
 
             -- Use the max required bytes for the two counts.
@@ -772,7 +772,7 @@ LibSerialize.WriterTable = {
             end
             assert(mapCount == count)
         else
-            debugPrint("Serializing table:", count)
+            -- debugPrint("Serializing table:", count)
             local required = GetRequiredBytes(count)
             self:_WriteByte(tableIndices[required])
             self:_WriteInt(count, required)
