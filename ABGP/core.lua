@@ -378,7 +378,7 @@ function ABGP:WriteLogged(log, str, ...)
 
     _G.ABGP_MessageLog[log] = _G.ABGP_MessageLog[log] or {};
     log = _G.ABGP_MessageLog[log];
-    while #log >= 2000 do table.remove(log, 1); end
+    -- while #log >= 2000 do table.remove(log, 1); end
 
     local timestamp = date("%m/%d/%y %I:%M:%S%p", GetServerTime()); -- https://strftime.org/
     table.insert(log, ("%s: %s"):format(timestamp, formatted));

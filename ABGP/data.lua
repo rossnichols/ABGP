@@ -1,6 +1,5 @@
 local _G = _G;
 local ABGP = _G.ABGP;
-local LibQuestieSerializer = _G.LibStub("LibQuestieSerializer");
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;

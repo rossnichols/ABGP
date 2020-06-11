@@ -1,6 +1,7 @@
 local _G = _G;
 local ABGP = _G.ABGP;
 local LibQuestieSerializer = _G.LibStub("LibQuestieSerializer");
+local LibSerialize = _G.LibStub("LibSerialize");
 
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
@@ -62,8 +63,8 @@ local function MergeHistory(history, merge)
     return mergeCount;
 end
 
--- local syncTesting = true;
-local syncTesting = false;
+local syncTesting = true;
+-- local syncTesting = false;
 local testUseLocalData = true;
 if syncTesting then
     local localIsPrivileged, remoteIsPrivileged;
@@ -144,17 +145,28 @@ if syncTesting then
     };
 
     function ABGP:TestSerialization()
-        local t = { hash = 2376185376 };
+        local t = { hash = -7 };
 
         -- Test LQS's stabilization
-        -- local serialized = LibQuestieSerializer:Serialize(t);
-        -- local _, deserialized = LibQuestieSerializer:Deserialize(serialized);
-        -- print(t.hash, deserialized.hash);
+        local serialized = LibQuestieSerializer:Serialize(t);
+        local _, deserialized = LibQuestieSerializer:Deserialize(serialized);
+        print(t.hash, deserialized.hash);
 
         -- Test deserialization error by mixing up legacy/nonlegacy
         -- local serialized = self:Serialize(t, true);
         -- local success, deserialized = self:Deserialize(serialized, false);
         -- print(success);
+    end
+
+    function ABGP:CompareSerialization()
+        local history = _G.ABGP_Data.p1.gpHistory;
+        for i, entry in ipairs(history) do
+            local mine, theirs = (LibSerialize:Serialize(entry)):len(), (LibQuestieSerializer:Serialize(entry)):len();
+            if mine ~= theirs then
+                print(i);
+                break;
+            end
+        end
     end
 
     function ABGP:RunHistorySyncTest(index)
@@ -245,7 +257,7 @@ local function BuildSyncHashData(phase, now)
         local player, date = ABGP:ParseHistoryId(id);
         if now - date > syncThreshold then break; end
 
-        hash = bit.bxor(hash, LibQuestieSerializer:Hash(id));
+        hash = bit.bxor(hash, LibSerialize:Hash(id));
         syncCount = syncCount + 1;
     end
 

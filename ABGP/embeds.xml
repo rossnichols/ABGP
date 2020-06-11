@@ -17,6 +17,7 @@
   <Include file="Libs\AceHook-3.0\AceHook-3.0.xml"/>
   <Include file="Libs\LibDBIcon-1.0\lib.xml"/>
   <Include file="Libs\LibQuestieSerializer\lib.xml"/>
+  <Script file="Libs\LibSerialize\LibSerialize.lua"/>
   <Script file="Libs\LibCompress\LibCompress.lua"/>
   <Script file="Libs\LibDeflate\LibDeflate.lua"/>
 </Ui>
