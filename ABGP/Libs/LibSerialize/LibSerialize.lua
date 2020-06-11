@@ -527,8 +527,8 @@ end
 function LibSerialize:_ReadString(len)
     -- debugPrint("Reading string,", len)
 
-    local size = self._readBytes(len, self._readBuffer, 0)
-    local value = table_concat(self._readBuffer, "", 1, size)
+    self._readBytes(len, self._readBuffer, 0)
+    local value = table_concat(self._readBuffer, "", 1, len)
     self:_AddExisting(value)
     return value
 end
