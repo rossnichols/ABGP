@@ -41,7 +41,11 @@ do
 	local _MAJOR = "LibSerialize"
 
 	-- Update this whenever a new version, for LibStub version registration.
-	local _MINOR = 1
+    local _MINOR = 1
+
+    -- Update this if a breaking change is introduced in the compression,
+    -- so that older data can be identified and decoded properly.
+    local _COMPRESSION_VERSION = 1
 
 	local _COPYRIGHT =
 	"LibSerialize ".. _VERSION
@@ -67,7 +71,8 @@ do
 	LibSerialize._VERSION = _VERSION
 	LibSerialize._MAJOR = _MAJOR
 	LibSerialize._MINOR = _MINOR
-	LibSerialize._COPYRIGHT = _COPYRIGHT
+    LibSerialize._COPYRIGHT = _COPYRIGHT
+    LibSerialize._COMPRESSION_VERSION = _COMPRESSION_VERSION
 end
 
 -- localize Lua api for faster access.
@@ -424,25 +429,23 @@ function LibSerialize:Hash(value)
     return h
 end
 
--- As strings are serialized or deserialized, their hashes are stored
--- in a lookup table so that subsequent uses of the same string are
--- referenced by their hash instead of writing out the entire string.
-LibSerialize._stringHashes = {}
-LibSerialize._stringHashesReversed = {}
+-- As strings are serialized or deserialized, they are stored in this lookup
+-- table in case they're encountered again, at which point they can be referenced
+-- by their index into this table rather than repeating the string contents.
+LibSerialize._existingCount = 0
+LibSerialize._existingEntries = {}
+LibSerialize._existingEntriesReversed = {}
 
-function LibSerialize:_AddHash(str)
-    local hash = self:Hash(str)
-    if self._stringHashesReversed[hash] then
-        -- dont add, also prevents collissions
-        return
-    end
-    self._stringHashes[str] = hash
-    self._stringHashesReversed[hash] = str
+function LibSerialize:_AddExisting(value)
+    self._existingCount = self._existingCount + 1
+    self._existingEntries[value] = self._existingCount
+    self._existingEntriesReversed[self._existingCount] = value
 end
 
-function LibSerialize:_ClearHashes()
-    self._stringHashes = {}
-    self._stringHashesReversed = {}
+function LibSerialize:_ClearExisting()
+    self._existingCount = 0
+    self._existingEntries = {}
+    self._existingEntriesReversed = {}
 end
 
 
@@ -531,7 +534,7 @@ function LibSerialize:_ReadString(len)
 
     local size = self._readBytes(len, self._readBuffer, 0)
     local value = table_concat(self._readBuffer, "", 1, size)
-    self:_AddHash(value)
+    self:_AddExisting(value)
     return value
 end
 
@@ -553,29 +556,34 @@ LibSerialize.ReaderTable = {
     [11] = function(self) return self:_ReadString(self:_ReadInt16()) end,
     [12] = function(self) return self:_ReadString(self:_ReadInt32()) end,
     [13] = function(self) return self:_ReadString(self:_ReadInt64()) end,
-    [14] = function(self) return self._stringHashesReversed[self:_ReadInt32()] end,
 
     -- Booleans
-    [15] = function(self) return true end,
-    [16] = function(self) return false end,
+    [14] = function(self) return true end,
+    [15] = function(self) return false end,
 
     -- Tables (encoded as count + key/value pairs)
-    [17] = function(self) return self:_ReadTable(self:_ReadByte()) end,
-    [18] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
-    [19] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
-    [20] = function(self) return self:_ReadTable(self:_ReadInt64()) end,
+    [16] = function(self) return self:_ReadTable(self:_ReadByte()) end,
+    [17] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
+    [18] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
+    [19] = function(self) return self:_ReadTable(self:_ReadInt64()) end,
 
     -- Arrays (encoded as count + values)
-    [21] = function(self) return self:_ReadArray(self:_ReadByte()) end,
-    [22] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
-    [23] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
-    [24] = function(self) return self:_ReadArray(self:_ReadInt64()) end,
+    [20] = function(self) return self:_ReadArray(self:_ReadByte()) end,
+    [21] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
+    [22] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
+    [23] = function(self) return self:_ReadArray(self:_ReadInt64()) end,
 
     -- Mixed array/tables (encoded as arrayCount + tableCount + arrayValues + key/value pairs)
-    [25] = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
-    [26] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
-    [27] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
-    [28] = function(self) return self:_ReadMixed(self:_ReadInt64(), self:_ReadInt64()) end,
+    [24] = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
+    [25] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
+    [26] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
+    [27] = function(self) return self:_ReadMixed(self:_ReadInt64(), self:_ReadInt64()) end,
+
+    -- Existing entries previously added to bookkeeping
+    [28] = function(self) return self._existingEntriesReversed[self:_ReadByte()] end,
+    [29] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
+    [30] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
+    [31] = function(self) return self._existingEntriesReversed[self:_ReadInt64()] end,
 }
 
 
@@ -599,34 +607,41 @@ local stringIndices = {
     [8] = 13,
 }
 local tableIndices = {
-    [1] = 17,
-    [2] = 18,
-    [4] = 19,
-    [8] = 20,
+    [1] = 16,
+    [2] = 17,
+    [4] = 18,
+    [8] = 19,
 }
 local arrayIndices = {
-    [1] = 21,
-    [2] = 22,
-    [4] = 23,
-    [8] = 24,
+    [1] = 20,
+    [2] = 21,
+    [4] = 22,
+    [8] = 23,
 }
 local mixedIndices = {
-    [1] = 25,
-    [2] = 26,
-    [4] = 27,
-    [8] = 28,
+    [1] = 24,
+    [2] = 25,
+    [4] = 26,
+    [8] = 27,
 }
+local existingIndices = {
+    [1] = 28,
+    [2] = 29,
+    [4] = 30,
+    [8] = 31,
+}
+
+function LibSerialize:_WriteObject(obj)
+    local typ = type(obj)
+    local writeFn = self.WriterTable[typ] or error(("Unhandled type: %s"):format(typ))
+    writeFn(self, obj)
+end
 
 function LibSerialize:_WriteKeyValuePair(key, value)
     assert(key ~= nil and value ~= nil)
 
-    local keyType = type(key)
-    local valueType = type(value)
-    local writeKey = self.WriterTable[keyType] or error(("Unhandled key type: %s"):format(keyType))
-    local writeValue = self.WriterTable[valueType] or error(("Unhandled value type: %s"):format(valueType))
-
-    writeKey(self, key)
-    writeValue(self, value)
+    self:_WriteObject(key)
+    self:_WriteObject(value)
 end
 
 function LibSerialize:_WriteByte(value)
@@ -696,25 +711,27 @@ LibSerialize.WriterTable = {
     end,
     ["string"] = function(self, value)
         -- debugPrint("Serializing string:", value)
-        if self._stringHashes[value] and #value > 3 then
-            -- A hash takes up four bytes, whereas a string takes up
-            -- the number of bytes required for its len + its len.
-            -- For a 4-byte string, we thus need five bytes, so it's
-            -- better to use the hashes for anything with len >= 4.
-            self:_WriteByte(14)
-            self:_WriteInt(self._stringHashes[value], 4)
+        local existing = self._existingEntries[value]
+        -- Small strings get serialized into #value + 1 bytes,
+        -- with their length as the extra byte. If this string has
+        -- been seen before, we'll use the bookkeeping entry as
+        -- long as the number of bytes for it is smaller.
+        if existing and GetRequiredBytes(existing) < #value + 1 then
+            local required = GetRequiredBytes(existing)
+            self:_WriteByte(existingIndices[required])
+            self:_WriteInt(self._existingEntries[value], required)
         else
             local len = #value
             local required = GetRequiredBytes(len)
             self:_WriteByte(stringIndices[required])
             self:_WriteInt(len, required)
             self._writeString(value)
-            self:_AddHash(value)
+            self:_AddExisting(value)
         end
     end,
     ["boolean"] = function(self, value)
         -- debugPrint("Serializing bool:", value)
-        self:_WriteByte(value and 15 or 16)
+        self:_WriteByte(value and 14 or 15)
     end,
     ["table"] = function(self, value)
         local count, arraySize = 0, #value
@@ -729,10 +746,7 @@ LibSerialize.WriterTable = {
             self:_WriteInt(count, required)
 
             for _, v in ipairs(value) do
-                local valueType = type(v)
-                local writeValue = self.WriterTable[valueType] or error(("Unhandled value type: %s"):format(valueType))
-
-                writeValue(self, v)
+                self:_WriteObject(v)
             end
         elseif arraySize ~= 0 then
             -- debugPrint("Serializing mixed array-table:", arraySize, count)
@@ -745,10 +759,7 @@ LibSerialize.WriterTable = {
             self:_WriteInt(count, required)
 
             for _, v in ipairs(value) do
-                local valueType = type(v)
-                local writeValue = self.WriterTable[valueType] or error(("Unhandled value type: %s"):format(valueType))
-
-                writeValue(self, v)
+                self:_WriteObject(v)
             end
 
             local mapCount = 0
@@ -778,26 +789,31 @@ LibSerialize.WriterTable = {
 --]]---------------------------------------------------------------------------
 
 function LibSerialize:Serialize(input)
-    self:_ClearHashes()
+    self:_ClearExisting()
     local WriteBits, WriteString, FlushWriter = CreateWriter()
 
     self._writeBits = WriteBits
     self._writeString = WriteString
     self._flushWriter = FlushWriter
-    self:_WriteKeyValuePair(1, input)
+    self:_WriteByte(self._COMPRESSION_VERSION)
+    self:_WriteObject(input)
 
     local total_bitlen, result = FlushWriter(_FLUSH_MODE_OUTPUT)
     return result
 end
 
 function LibSerialize:_Deserialize(input)
-    self:_ClearHashes()
+    self:_ClearExisting()
     local ReadBytes = CreateReader(input)
 
     self._readBuffer = {}
     self._readBytes = ReadBytes
-    local data = self:_ReadTable(1)
-    return data[1]
+
+    -- Since there's only one compression version currently,
+    -- no extra work needs to be done to decode the data.
+    local version = self:_ReadByte()
+    assert(version == self._COMPRESSION_VERSION)
+    return self:_ReadObject()
 end
 
 function LibSerialize:Deserialize(input)
