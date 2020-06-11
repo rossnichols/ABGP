@@ -421,23 +421,12 @@ end
 
 
 --[[---------------------------------------------------------------------------
-    Hashing support: an implementation of the djb2 hash function.
-    See http://www.cs.yorku.ca/~oz/hash.html.
+    Object reuse:
+    As strings are serialized or deserialized, they are stored in this lookup
+    table in case they're encountered again, at which point they can be referenced
+    by their index into this table rather than repeating the string contents.
 --]]---------------------------------------------------------------------------
 
-function LibSerialize:Hash(value)
-    assert(type(value) == "string")
-
-    local h = 5381
-    for i = 1, #value do
-        h = bit_band((33 * h + string_byte(value, i)), 4294967295)
-    end
-    return h
-end
-
--- As strings are serialized or deserialized, they are stored in this lookup
--- table in case they're encountered again, at which point they can be referenced
--- by their index into this table rather than repeating the string contents.
 LibSerialize._existingCount = 0
 LibSerialize._existingEntries = {}
 LibSerialize._existingEntriesReversed = {}
@@ -849,4 +838,16 @@ end
 
 function LibSerialize:Deserialize(input)
     return pcall(LibSerialize._Deserialize, self, input)
+end
+
+function LibSerialize:Hash(value)
+    -- An implementation of the djb2 hash algorithm.
+    -- See http://www.cs.yorku.ca/~oz/hash.html.
+    assert(type(value) == "string")
+
+    local h = 5381
+    for i = 1, #value do
+        h = bit_band((33 * h + string_byte(value, i)), 4294967295)
+    end
+    return h
 end
