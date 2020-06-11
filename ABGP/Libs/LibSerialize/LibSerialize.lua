@@ -482,15 +482,39 @@ function LibSerialize:_ReadInt64()
 end
 
 function LibSerialize:_ReadObject()
-    local typ = self:_ReadByte()
+    local lower = self:_ReadByte()
+
+    -- Bit 1 indicates an encoded number.
+    if lower % 2 ~= 0 then
+        -- debugPrint("Found encoded number", lower)
+        -- If bit 2 is set, the encoded number used an additional byte.
+        -- So encoded numbers have access to either 6 or 14 bits.
+        if bit_band(lower, 2) ~= 0 then
+            local upper = self:_ReadByte()
+            return bit_rshift(Pack2(upper, lower), 2)
+        end
+        return bit_rshift(lower, 2)
+    end
+
+    -- Bits 2-4 indicate the object type.
+    local typ = bit_rshift(bit_band(lower, 14), 1)
     -- debugPrint("Found type", typ)
 
-    local numReaderIndices = #self.ReaderTable
-    if typ > numReaderIndices then
-        -- The object was a number encoded in the type byte.
-        return typ - numReaderIndices - 1
+    -- Bit 5 indicates an encoded count. Since the remaining bits can
+    -- only hold counts of 0-7, we'll always use an extra byte, so the
+    -- encoded count supports 11 bits of precision.
+    local count, countSize
+    if bit_band(lower, 16) ~= 0 then
+        local upper = self:_ReadByte()
+        count = bit_rshift(Pack2(upper, lower), 5) + 1
+        -- debugPrint("Embedded count:", count, lower, upper)
+    else
+        -- Bits 6-8 indicate the count size.
+        countSize = bit_rshift(bit_band(lower, 224), 5) + 1
+        -- debugPrint("Countsize:", countSize)
     end
-    return self.ReaderTable[typ](self)
+
+    return self.ReaderTable[typ](self, count, countSize)
 end
 
 function LibSerialize:_ReadTable(entryCount, ret)
@@ -533,122 +557,85 @@ function LibSerialize:_ReadString(len)
 end
 
 LibSerialize._ReaderIndex = {
-    NUM_8_POS = 1,
-    NUM_8_NEG = 2,
-    NUM_16_POS = 3,
-    NUM_16_NEG = 4,
-    NUM_32_POS = 5,
-    NUM_32_NEG = 6,
-    NUM_64_POS = 7,
-    NUM_64_NEG = 8,
-    NUM_FLOAT = 9,
-
-    STR_8 = 10,
-    STR_16 = 11,
-    STR_32 = 12,
-
-    BOOL_T = 13,
-    BOOL_F = 14,
-
-    TABLE_8 = 15,
-    TABLE_16 = 16,
-    TABLE_32 = 17,
-
-    ARRAY_8 = 18,
-    ARRAY_16 = 19,
-    ARRAY_32 = 20,
-
-    MIXED_8 = 21,
-    MIXED_16 = 22,
-    MIXED_32 = 23,
-
-    EXISTING_8 = 24,
-    EXISTING_16 = 25,
-    EXISTING_32 = 26,
+    NUM_INT = 0,
+    NUM_FLOAT = 1,
+    STRING = 2,
+    BOOL = 3,
+    TABLE = 4,
+    ARRAY = 5,
+    MIXED = 6,
+    EXISTING = 7,
+}
+LibSerialize._ReadFns = {
+    LibSerialize._ReadByte,
+    LibSerialize._ReadInt16,
+    LibSerialize._ReadInt32,
+    LibSerialize._ReadInt64,
 }
 
 -- NOTE: must not skip any indices, for number packing to work properly.
 LibSerialize.ReaderTable = {
     -- Numbers
-    [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
-    [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
-    [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt16() end,
-    [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt16() end,
-    [LibSerialize._ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt32() end,
-    [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
-    [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
-    [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
+    [LibSerialize._ReaderIndex.NUM_INT]  = function(self, count, countSize)
+        assert(count == nil)
+        local isNeg = false
+        if countSize > 4 then
+            isNeg = true
+            countSize = countSize - 4
+        end
+        local value = self._ReadFns[countSize](self)
+        return isNeg and -value or value
+    end,
     [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return IntBitsToFloat(self:_ReadInt32()) end,
 
     -- Strings (encoded as size + buffer)
-    [LibSerialize._ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.STR_32] = function(self) return self:_ReadString(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.STRING]  = function(self, count, countSize)
+        if count then
+            return self:_ReadString(count)
+        end
+        return self:_ReadString(self._ReadFns[countSize](self))
+    end,
 
     -- Booleans
-    [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
-    [LibSerialize._ReaderIndex.BOOL_F] = function(self) return false end,
+    [LibSerialize._ReaderIndex.BOOL] = function(self, count, countSize)
+        return (countSize ~= 1)
+    end,
 
     -- Tables (encoded as count + key/value pairs)
-    [LibSerialize._ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.TABLE_32] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.TABLE]  = function(self, count, countSize)
+        if count then
+            return self:_ReadTable(count)
+        end
+        return self:_ReadTable(self._ReadFns[countSize](self))
+    end,
 
     -- Arrays (encoded as count + values)
-    [LibSerialize._ReaderIndex.ARRAY_8]  = function(self) return self:_ReadArray(self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.ARRAY_32] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.ARRAY]  = function(self, count, countSize)
+        if count then
+            return self:_ReadArray(count)
+        end
+        return self:_ReadArray(self._ReadFns[countSize](self))
+    end,
 
     -- Mixed array/tables (encoded as arrayCount + tableCount + arrayValues + key/value pairs)
-    [LibSerialize._ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.MIXED]  = function(self, count, countSize)
+        assert(count == nil)
+        return self:_ReadMixed(self._ReadFns[countSize](self), self._ReadFns[countSize](self))
+    end,
 
     -- Existing entries previously added to bookkeeping
-    [LibSerialize._ReaderIndex.EXISTING_8]  = function(self) return self._existingEntriesReversed[self:_ReadByte()] end,
-    [LibSerialize._ReaderIndex.EXISTING_16] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.EXISTING_32] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
+    [LibSerialize._ReaderIndex.EXISTING]  = function(self, count, countSize)
+        if count then
+            return self._existingEntriesReversed[count]
+        end
+        return self._existingEntriesReversed[self._ReadFns[countSize](self)]
+    end,
 }
 
 
 --[[---------------------------------------------------------------------------
     Write (serialization) support.
 --]]---------------------------------------------------------------------------
-
--- Lookup tables to map the number of required bytes to the appropriate
--- reader table index. Note that for numbers, we leave space for the
--- negative versions of each level as well.
-local numberIndices = {
-    [1] = LibSerialize._ReaderIndex.NUM_8_POS,
-    [2] = LibSerialize._ReaderIndex.NUM_16_POS,
-    [4] = LibSerialize._ReaderIndex.NUM_32_POS,
-    [8] = LibSerialize._ReaderIndex.NUM_64_POS,
-}
-local stringIndices = {
-    [1] = LibSerialize._ReaderIndex.STR_8,
-    [2] = LibSerialize._ReaderIndex.STR_16,
-    [4] = LibSerialize._ReaderIndex.STR_32,
-}
-local tableIndices = {
-    [1] = LibSerialize._ReaderIndex.TABLE_8,
-    [2] = LibSerialize._ReaderIndex.TABLE_16,
-    [4] = LibSerialize._ReaderIndex.TABLE_32,
-}
-local arrayIndices = {
-    [1] = LibSerialize._ReaderIndex.ARRAY_8,
-    [2] = LibSerialize._ReaderIndex.ARRAY_16,
-    [4] = LibSerialize._ReaderIndex.ARRAY_32,
-}
-local mixedIndices = {
-    [1] = LibSerialize._ReaderIndex.MIXED_8,
-    [2] = LibSerialize._ReaderIndex.MIXED_16,
-    [4] = LibSerialize._ReaderIndex.MIXED_32,
-}
-local existingIndices = {
-    [1] = LibSerialize._ReaderIndex.EXISTING_8,
-    [2] = LibSerialize._ReaderIndex.EXISTING_16,
-    [4] = LibSerialize._ReaderIndex.EXISTING_32,
-}
 
 function LibSerialize:_WriteObject(obj)
     local typ = type(obj)
@@ -694,6 +681,29 @@ function LibSerialize:_WriteInt(value, threshold)
     end
 end
 
+function LibSerialize:_WriteType(typ, count, countSize)
+    local value = typ * 2
+    if count then
+        value = value + 16
+        value = value + (count - 1) * 32
+        local upper, lower = Unpack2(value)
+        -- debugPrint("Writing type with embedded count:", value, upper, lower)
+        self:_WriteByte(lower)
+        self:_WriteByte(upper)
+    else
+        -- debugPrint("Writing type with countSize:", value)
+        value = value + (countSize - 1) * 32
+        self:_WriteByte(value)
+    end
+end
+
+local requiredIndices = {
+    [1] = 1,
+    [2] = 2,
+    [4] = 3,
+    [8] = 4,
+}
+
 LibSerialize.WriterTable = {
     ["number"] = function(self, value)
         local _, fract = math_modf(value)
@@ -705,12 +715,16 @@ LibSerialize.WriterTable = {
             -- numbers for all the values that don't correspond to
             -- one with an actual meaning. Calculate how much space
             -- we have to work with.
-            local numReaderIndices = #self.ReaderTable
-            local maxPacked = 255 - numReaderIndices - 1
-
-            if value >= 0 and value <= maxPacked then
-                -- Pack the value into the type byte
-                self:_WriteByte(value + numReaderIndices + 1)
+            if value >= 0 and value < 16384 then
+                if value < 64 then
+                    value = value * 4 + 1
+                    self:_WriteByte(value)
+                else
+                    value = value * 4 + 3
+                    local upper, lower = Unpack2(value)
+                    self:_WriteByte(lower)
+                    self:_WriteByte(upper)
+                end
             else
                 local sign = 0
                 if value < 0 then
@@ -718,14 +732,14 @@ LibSerialize.WriterTable = {
                     sign = 1
                 end
                 local required = GetRequiredBytes(value, true)
-                self:_WriteByte(sign + numberIndices[required])
+                self:_WriteType(self._ReaderIndex.NUM_INT, nil, requiredIndices[required] + sign * 4)
                 self:_WriteInt(value, required)
             end
         end
     end,
     ["float"] = function(self, value)
         -- debugPrint("Serializing float:", value)
-        self:_WriteByte(self._ReaderIndex.NUM_FLOAT)
+        self:_WriteType(self._ReaderIndex.NUM_FLOAT, nil, requiredIndices[4])
         self:_WriteInt(FloatBitsToInt(value), 4)
     end,
     ["string"] = function(self, value)
@@ -735,22 +749,30 @@ LibSerialize.WriterTable = {
         -- with their length as the extra byte. If this string has
         -- been seen before, we'll use the bookkeeping entry as
         -- long as the number of bytes for it is smaller.
-        if existing and GetRequiredBytes(existing) < #value + 1 then
-            local required = GetRequiredBytes(existing)
-            self:_WriteByte(existingIndices[required])
-            self:_WriteInt(self._existingEntries[value], required)
+        if existing then
+            if existing <= 2048 then
+                self:_WriteType(self._ReaderIndex.EXISTING, existing)
+            else
+                local required = GetRequiredBytes(existing)
+                self:_WriteType(self._ReaderIndex.EXISTING, nil, requiredIndices[required])
+                self:_WriteInt(existing, required)
+            end
         else
             local len = #value
             local required = GetRequiredBytes(len)
-            self:_WriteByte(stringIndices[required])
-            self:_WriteInt(len, required)
+            if len <= 2048 then
+                self:_WriteType(self._ReaderIndex.STRING, len)
+            else
+                self:_WriteType(self._ReaderIndex.STRING, nil, requiredIndices[required])
+                self:_WriteInt(len, required)
+            end
             self._writeString(value)
             self:_AddExisting(value)
         end
     end,
     ["boolean"] = function(self, value)
         -- debugPrint("Serializing bool:", value)
-        self:_WriteByte(value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F)
+        self:_WriteType(self._ReaderIndex.BOOL, nil, value and 2 or 1)
     end,
     ["table"] = function(self, value)
         local count, arraySize = 0, #value
@@ -761,8 +783,12 @@ LibSerialize.WriterTable = {
             -- debugPrint("Serializing array:", count)
             -- The table is effectively an array. We can avoid writing the keys.
             local required = GetRequiredBytes(count)
-            self:_WriteByte(arrayIndices[required])
-            self:_WriteInt(count, required)
+            if count <= 2048 then
+                self:_WriteType(self._ReaderIndex.ARRAY, count)
+            else
+                self:_WriteType(self._ReaderIndex.ARRAY, nil, requiredIndices[required])
+                self:_WriteInt(count, required)
+            end
 
             for _, v in ipairs(value) do
                 self:_WriteObject(v)
@@ -773,7 +799,7 @@ LibSerialize.WriterTable = {
 
             -- Use the max required bytes for the two counts.
             local required = max(GetRequiredBytes(count), GetRequiredBytes(arraySize))
-            self:_WriteByte(mixedIndices[required])
+            self:_WriteType(self._ReaderIndex.MIXED, nil, requiredIndices[required])
             self:_WriteInt(arraySize, required)
             self:_WriteInt(count, required)
 
@@ -792,8 +818,12 @@ LibSerialize.WriterTable = {
         else
             -- debugPrint("Serializing table:", count)
             local required = GetRequiredBytes(count)
-            self:_WriteByte(tableIndices[required])
-            self:_WriteInt(count, required)
+            if count <= 2048 then
+                self:_WriteType(self._ReaderIndex.TABLE, count)
+            else
+                self:_WriteType(self._ReaderIndex.TABLE, nil, requiredIndices[required])
+                self:_WriteInt(count, required)
+            end
 
             for k, v in pairs(value) do
                 self:_WriteKeyValuePair(k, v)
