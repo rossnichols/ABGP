@@ -145,12 +145,25 @@ if syncTesting then
     };
 
     function ABGP:TestSerialization()
-        local t = { hash = -7 };
+        local history = _G.ABGP_Data.p1.gpHistory;
+        local LibDeflate = _G.LibStub("LibDeflate");
+
+        local serialized = LibSerialize:Serialize(history);
+        print("serialized len:", #serialized);
+        local compressed = LibDeflate:CompressDeflate(serialized);
+        print("compressed len:", #compressed);
+
+        local decompressed = LibDeflate:DecompressDeflate(compressed);
+        local success, deserialized = LibSerialize:Deserialize(decompressed);
+        print("deserialization success:", success);
+        print("matching:", self.tCompare(history, deserialized));
+
+        -- local t = { hash = -7 };
 
         -- Test LQS's stabilization
-        local serialized = LibQuestieSerializer:Serialize(t);
-        local _, deserialized = LibQuestieSerializer:Deserialize(serialized);
-        print(t.hash, deserialized.hash);
+        -- local serialized = LibQuestieSerializer:Serialize(t);
+        -- local _, deserialized = LibQuestieSerializer:Deserialize(serialized);
+        -- print(t.hash, deserialized.hash);
 
         -- Test deserialization error by mixing up legacy/nonlegacy
         -- local serialized = self:Serialize(t, true);
