@@ -136,8 +136,8 @@ local function GetRequiredBytes(value, allow8)
 end
 
 -- local debugPrinting = false
--- -- local debugPrinting = true
--- local function debugPrint(...)
+-- local debugPrinting = true
+-- local debugPrint = function(...)
 --     if debugPrinting then
 --         print(...)
 --         -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
@@ -231,10 +231,8 @@ local function CreateWriter()
         cache = cache + value * _pow2[cache_bitlen]
         cache_bitlen = cache_bitlen + bitlen
         total_bitlen = total_bitlen + bitlen
-        -- debugPrint("cache", cache, cache_bitlen)
         -- Only bulk to buffer every 4 bytes. This is quicker.
         if cache_bitlen >= 32 then
-            -- debugPrint("cacheflush", cache)
             buffer_size = buffer_size + 1
             buffer[buffer_size] =
                 _byte_to_char[cache % 256]
@@ -244,8 +242,6 @@ local function CreateWriter()
             local rshift_mask = _pow2[32 - cache_bitlen + bitlen]
             cache = (value - value%rshift_mask)/rshift_mask
             cache_bitlen = cache_bitlen - 32
-
-            -- debugPrint(buffer_size, total_bitlen, string_byte(buffer[buffer_size], 1, 4))
         end
     end
 
@@ -258,15 +254,11 @@ local function CreateWriter()
             buffer_size = buffer_size + 1
             buffer[buffer_size] = string_char(cache % 256)
             cache = (cache-cache%256)/256
-
-            -- debugPrint(buffer_size, total_bitlen, string_byte(buffer[buffer_size]))
         end
         cache_bitlen = 0
         buffer_size = buffer_size + 1
         buffer[buffer_size] = str
         total_bitlen = total_bitlen + #str*8
-
-        -- debugPrint(buffer_size, total_bitlen, buffer[buffer_size])
     end
 
     -- Flush current stuffs in the writer and return it.
