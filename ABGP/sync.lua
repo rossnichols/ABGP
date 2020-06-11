@@ -62,8 +62,8 @@ local function MergeHistory(history, merge)
     return mergeCount;
 end
 
--- local syncTesting = true;
 local syncTesting = false;
+-- syncTesting = true;
 local testUseLocalData = true;
 if syncTesting then
     local localIsPrivileged, remoteIsPrivileged;
@@ -148,14 +148,14 @@ if syncTesting then
         local LibDeflate = _G.LibStub("LibDeflate");
 
         local serialized = LibSerialize:Serialize(history);
-        print("serialized len:", #serialized);
+        self:Notify("serialized len: %d", #serialized);
         local compressed = LibDeflate:CompressDeflate(serialized);
-        print("compressed len:", #compressed);
+        self:Notify("compressed len: %d", #compressed);
 
         local decompressed = LibDeflate:DecompressDeflate(compressed);
         local success, deserialized = LibSerialize:Deserialize(decompressed);
-        print("deserialization success:", success);
-        print("matching:", self.tCompare(history, deserialized));
+        self:Notify("deserialization success: %s", success and "true" or "false");
+        self:Notify("matching: %s", self.tCompare(history, deserialized) and "yes" or "no");
     end
 
     function ABGP:RunHistorySyncTest(index)
