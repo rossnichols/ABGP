@@ -516,7 +516,7 @@ function LibSerialize:_ReadArray(entryCount, ret)
 end
 
 function LibSerialize:_ReadMixed(arrayCount, tableCount)
-    -- debugPrint("Extracting values for array,", arrayCount, tableCount)
+    -- debugPrint("Extracting values for mixed table,", arrayCount, tableCount)
 
     local ret = {}
     self:_ReadArray(arrayCount, ret)
