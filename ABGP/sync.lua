@@ -63,8 +63,8 @@ local function MergeHistory(history, merge)
     return mergeCount;
 end
 
-local syncTesting = true;
--- local syncTesting = false;
+-- local syncTesting = true;
+local syncTesting = false;
 local testUseLocalData = true;
 if syncTesting then
     local localIsPrivileged, remoteIsPrivileged;
