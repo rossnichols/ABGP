@@ -487,9 +487,11 @@ end
 function LibSerialize:_ReadObject()
     local typ = self:_ReadByte()
     -- debugPrint("Found type", typ)
-    if typ > 31 then
+
+    local numReaderIndices = #self.ReaderTable
+    if typ > numReaderIndices then
         -- The object was a number encoded in the type byte.
-        return typ - 32
+        return typ - numReaderIndices - 1
     end
     return self.ReaderTable[typ](self)
 end
@@ -666,9 +668,16 @@ LibSerialize.WriterTable = {
             self.WriterTable["float"](self, value)
         else
             -- debugPrint("Serializing number:", value)
-            if value >= 0 and value < 224 then
+            -- The type byte can be used to store small nonnegative
+            -- numbers for all the values that don't correspond to
+            -- one with an actual meaning. Calculate how much space
+            -- we have to work with.
+            local numReaderIndices = #self.ReaderTable
+            local maxPacked = 255 - numReaderIndices - 1
+
+            if value >= 0 and value <= maxPacked then
                 -- Pack the value into the type byte
-                self:_WriteByte(value + 32)
+                self:_WriteByte(value + numReaderIndices + 1)
             else
                 local sign = 0
                 if value < 0 then
