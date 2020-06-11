@@ -1,6 +1,5 @@
 local _G = _G;
 local ABGP = _G.ABGP;
-local LibQuestieSerializer = _G.LibStub("LibQuestieSerializer");
 local LibSerialize = _G.LibStub("LibSerialize");
 
 local UnitName = UnitName;
@@ -157,29 +156,6 @@ if syncTesting then
         local success, deserialized = LibSerialize:Deserialize(decompressed);
         print("deserialization success:", success);
         print("matching:", self.tCompare(history, deserialized));
-
-        -- local t = { hash = -7 };
-
-        -- Test LQS's stabilization
-        -- local serialized = LibQuestieSerializer:Serialize(t);
-        -- local _, deserialized = LibQuestieSerializer:Deserialize(serialized);
-        -- print(t.hash, deserialized.hash);
-
-        -- Test deserialization error by mixing up legacy/nonlegacy
-        -- local serialized = self:Serialize(t, true);
-        -- local success, deserialized = self:Deserialize(serialized, false);
-        -- print(success);
-    end
-
-    function ABGP:CompareSerialization()
-        local history = _G.ABGP_Data.p1.gpHistory;
-        for i, entry in ipairs(history) do
-            local mine, theirs = (LibSerialize:Serialize(entry)):len(), (LibQuestieSerializer:Serialize(entry)):len();
-            if mine ~= theirs then
-                print(i);
-                break;
-            end
-        end
     end
 
     function ABGP:RunHistorySyncTest(index)
