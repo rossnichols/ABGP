@@ -102,14 +102,23 @@ local print = print
     Helper functions.
 --]]---------------------------------------------------------------------------
 
-local function Pack(a, b, c, d)
+local function Pack2(a, b)
+    return bit_lshift(a, 8) + b
+end
+
+local function Pack4(a, b, c, d)
     return bit_lshift(a, 24) + bit_lshift(b, 16) + bit_lshift(c, 8) + d
 end
 
-local function Unpack(val)
-    return (bit_rshift(val % 24, 256)),
-           (bit_rshift(val % 16, 256)),
-           (bit_rshift(val % 8, 256)),
+local function Unpack2(val)
+    return (bit_rshift(val, 8) % 256),
+           (val % 256)
+end
+
+local function Unpack4(val)
+    return (bit_rshift(val, 24) % 256),
+           (bit_rshift(val, 16) % 256),
+           (bit_rshift(val, 8) % 256),
            (val % 256)
 end
 
@@ -378,24 +387,24 @@ local function FloatBitsToInt(n)
     end
     local mant, expo = frexp(n)
     if mant ~= mant then
-        return Pack(0xFF, 0x88, 0x00, 0x00) -- nan
+        return Pack4(0xFF, 0x88, 0x00, 0x00) -- nan
     elseif mant == math_huge or expo > 0x80 then
         if sign == 0 then
-            return Pack(0x7F, 0x80, 0x00, 0x00) -- inf
+            return Pack4(0x7F, 0x80, 0x00, 0x00) -- inf
         else
-            return Pack(0xFF, 0x80, 0x00, 0x00) -- -inf
+            return Pack4(0xFF, 0x80, 0x00, 0x00) -- -inf
         end
     elseif (mant == 0.0 and expo == 0) or expo < -0x7E then
-        return Pack(sign, 0x00, 0x00, 0x00)-- zero
+        return Pack4(sign, 0x00, 0x00, 0x00)-- zero
     else
         expo = expo + 0x7E
         mant = floor((mant * 2.0 - 1.0) * ldexp(0.5, 24))
-        return Pack(sign + floor(expo / 0x2), (expo % 0x2) * 0x80 + floor(mant / 0x10000), floor(mant / 0x100) % 0x100, mant % 0x100)
+        return Pack4(sign + floor(expo / 0x2), (expo % 0x2) * 0x80 + floor(mant / 0x10000), floor(mant / 0x100) % 0x100, mant % 0x100)
     end
 end
 
 local function IntBitsToFloat(int)
-    local b1, b2, b3, b4 = Unpack(int)
+    local b1, b2, b3, b4 = Unpack4(int)
     local sign = b1 > 0x7F
     local expo = (b1 % 0x80) * 0x2 + floor(b2 / 0x80)
     local mant = ((b2 % 0x80) * 0x100 + b3) * 0x100 + b4
@@ -459,20 +468,18 @@ function LibSerialize:_ReadInt16()
     -- debugPrint("Reading int16")
 
     self._readBytes(2, self._readBuffer, 0)
-    return Pack(0,
-                0,
-                string_byte(self._readBuffer[2]),
-                string_byte(self._readBuffer[1]))
+    return Pack2(string_byte(self._readBuffer[2]),
+                 string_byte(self._readBuffer[1]))
 end
 
 function LibSerialize:_ReadInt32()
     -- debugPrint("Reading int32")
 
     self._readBytes(4, self._readBuffer, 0)
-    return Pack(string_byte(self._readBuffer[4]),
-                string_byte(self._readBuffer[3]),
-                string_byte(self._readBuffer[2]),
-                string_byte(self._readBuffer[1]))
+    return Pack4(string_byte(self._readBuffer[4]),
+                 string_byte(self._readBuffer[3]),
+                 string_byte(self._readBuffer[2]),
+                 string_byte(self._readBuffer[1]))
 end
 
 function LibSerialize:_ReadInt64()
