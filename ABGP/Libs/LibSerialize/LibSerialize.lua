@@ -532,7 +532,7 @@ function LibSerialize:_ReadString(len)
     return value
 end
 
-LibSerialize.ReaderIndex = {
+LibSerialize._ReaderIndex = {
     NUM_8_POS = 1,
     NUM_8_NEG = 2,
     NUM_16_POS = 3,
@@ -570,44 +570,44 @@ LibSerialize.ReaderIndex = {
 -- NOTE: must not skip any indices, for number packing to work properly.
 LibSerialize.ReaderTable = {
     -- Numbers
-    [LibSerialize.ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
-    [LibSerialize.ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
-    [LibSerialize.ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt16() end,
-    [LibSerialize.ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt16() end,
-    [LibSerialize.ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt32() end,
-    [LibSerialize.ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
-    [LibSerialize.ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
-    [LibSerialize.ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
-    [LibSerialize.ReaderIndex.NUM_FLOAT]  = function(self) return IntBitsToFloat(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
+    [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
+    [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt16() end,
+    [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt16() end,
+    [LibSerialize._ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt32() end,
+    [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
+    [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
+    [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
+    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return IntBitsToFloat(self:_ReadInt32()) end,
 
     -- Strings (encoded as size + buffer)
-    [LibSerialize.ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
-    [LibSerialize.ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
-    [LibSerialize.ReaderIndex.STR_32] = function(self) return self:_ReadString(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
+    [LibSerialize._ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
+    [LibSerialize._ReaderIndex.STR_32] = function(self) return self:_ReadString(self:_ReadInt32()) end,
 
     -- Booleans
-    [LibSerialize.ReaderIndex.BOOL_T] = function(self) return true end,
-    [LibSerialize.ReaderIndex.BOOL_F] = function(self) return false end,
+    [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
+    [LibSerialize._ReaderIndex.BOOL_F] = function(self) return false end,
 
     -- Tables (encoded as count + key/value pairs)
-    [LibSerialize.ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
-    [LibSerialize.ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
-    [LibSerialize.ReaderIndex.TABLE_32] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
+    [LibSerialize._ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
+    [LibSerialize._ReaderIndex.TABLE_32] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
 
     -- Arrays (encoded as count + values)
-    [LibSerialize.ReaderIndex.ARRAY_8]  = function(self) return self:_ReadArray(self:_ReadByte()) end,
-    [LibSerialize.ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
-    [LibSerialize.ReaderIndex.ARRAY_32] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.ARRAY_8]  = function(self) return self:_ReadArray(self:_ReadByte()) end,
+    [LibSerialize._ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
+    [LibSerialize._ReaderIndex.ARRAY_32] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
 
     -- Mixed array/tables (encoded as arrayCount + tableCount + arrayValues + key/value pairs)
-    [LibSerialize.ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
-    [LibSerialize.ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
-    [LibSerialize.ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
+    [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
+    [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
 
     -- Existing entries previously added to bookkeeping
-    [LibSerialize.ReaderIndex.EXISTING_8]  = function(self) return self._existingEntriesReversed[self:_ReadByte()] end,
-    [LibSerialize.ReaderIndex.EXISTING_16] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
-    [LibSerialize.ReaderIndex.EXISTING_32] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
+    [LibSerialize._ReaderIndex.EXISTING_8]  = function(self) return self._existingEntriesReversed[self:_ReadByte()] end,
+    [LibSerialize._ReaderIndex.EXISTING_16] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
+    [LibSerialize._ReaderIndex.EXISTING_32] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
 }
 
 
@@ -619,35 +619,35 @@ LibSerialize.ReaderTable = {
 -- reader table index. Note that for numbers, we leave space for the
 -- negative versions of each level as well.
 local numberIndices = {
-    [1] = LibSerialize.ReaderIndex.NUM_8_POS,
-    [2] = LibSerialize.ReaderIndex.NUM_16_POS,
-    [4] = LibSerialize.ReaderIndex.NUM_32_POS,
-    [8] = LibSerialize.ReaderIndex.NUM_64_POS,
+    [1] = LibSerialize._ReaderIndex.NUM_8_POS,
+    [2] = LibSerialize._ReaderIndex.NUM_16_POS,
+    [4] = LibSerialize._ReaderIndex.NUM_32_POS,
+    [8] = LibSerialize._ReaderIndex.NUM_64_POS,
 }
 local stringIndices = {
-    [1] = LibSerialize.ReaderIndex.STR_8,
-    [2] = LibSerialize.ReaderIndex.STR_16,
-    [4] = LibSerialize.ReaderIndex.STR_32,
+    [1] = LibSerialize._ReaderIndex.STR_8,
+    [2] = LibSerialize._ReaderIndex.STR_16,
+    [4] = LibSerialize._ReaderIndex.STR_32,
 }
 local tableIndices = {
-    [1] = LibSerialize.ReaderIndex.TABLE_8,
-    [2] = LibSerialize.ReaderIndex.TABLE_16,
-    [4] = LibSerialize.ReaderIndex.TABLE_32,
+    [1] = LibSerialize._ReaderIndex.TABLE_8,
+    [2] = LibSerialize._ReaderIndex.TABLE_16,
+    [4] = LibSerialize._ReaderIndex.TABLE_32,
 }
 local arrayIndices = {
-    [1] = LibSerialize.ReaderIndex.ARRAY_8,
-    [2] = LibSerialize.ReaderIndex.ARRAY_16,
-    [4] = LibSerialize.ReaderIndex.ARRAY_32,
+    [1] = LibSerialize._ReaderIndex.ARRAY_8,
+    [2] = LibSerialize._ReaderIndex.ARRAY_16,
+    [4] = LibSerialize._ReaderIndex.ARRAY_32,
 }
 local mixedIndices = {
-    [1] = LibSerialize.ReaderIndex.MIXED_8,
-    [2] = LibSerialize.ReaderIndex.MIXED_16,
-    [4] = LibSerialize.ReaderIndex.MIXED_32,
+    [1] = LibSerialize._ReaderIndex.MIXED_8,
+    [2] = LibSerialize._ReaderIndex.MIXED_16,
+    [4] = LibSerialize._ReaderIndex.MIXED_32,
 }
 local existingIndices = {
-    [1] = LibSerialize.ReaderIndex.EXISTING_8,
-    [2] = LibSerialize.ReaderIndex.EXISTING_16,
-    [4] = LibSerialize.ReaderIndex.EXISTING_32,
+    [1] = LibSerialize._ReaderIndex.EXISTING_8,
+    [2] = LibSerialize._ReaderIndex.EXISTING_16,
+    [4] = LibSerialize._ReaderIndex.EXISTING_32,
 }
 
 function LibSerialize:_WriteObject(obj)
@@ -725,7 +725,7 @@ LibSerialize.WriterTable = {
     end,
     ["float"] = function(self, value)
         -- debugPrint("Serializing float:", value)
-        self:_WriteByte(self.ReaderIndex.NUM_FLOAT)
+        self:_WriteByte(self._ReaderIndex.NUM_FLOAT)
         self:_WriteInt(FloatBitsToInt(value), 4)
     end,
     ["string"] = function(self, value)
@@ -750,7 +750,7 @@ LibSerialize.WriterTable = {
     end,
     ["boolean"] = function(self, value)
         -- debugPrint("Serializing bool:", value)
-        self:_WriteByte(value and self.ReaderIndex.BOOL_T or self.ReaderIndex.BOOL_F)
+        self:_WriteByte(value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F)
     end,
     ["table"] = function(self, value)
         local count, arraySize = 0, #value
