@@ -499,14 +499,7 @@ function LibSerialize:_ReadTable(entryCount, ret)
 
     ret = ret or {}
     for i = 1, entryCount do
-        local key = self:_ReadObject()
-        if type(key) == "string" then
-            self:_AddHash(key)
-        end
-        local value = self:_ReadObject()
-        if type(value) == "string" then
-            self:_AddHash(value)
-        end
+        local key, value = self:_ReadObject(), self:_ReadObject()
         ret[key] = value
     end
     return ret
@@ -517,11 +510,7 @@ function LibSerialize:_ReadArray(entryCount, ret)
 
     ret = ret or {}
     for i = 1, entryCount do
-        local value = self:_ReadObject()
-        if type(value) == "string" then
-            self:_AddHash(value)
-        end
-        ret[i] = value
+        ret[i] = self:_ReadObject()
     end
     return ret
 end
@@ -539,7 +528,9 @@ function LibSerialize:_ReadString(len)
     -- debugPrint("Reading string,", len)
 
     local size = self._readBytes(len, self._readBuffer, 0)
-    return table_concat(self._readBuffer, "", 1, size)
+    local value = table_concat(self._readBuffer, "", 1, size)
+    self:_AddHash(value)
+    return value
 end
 
 LibSerialize.ReaderTable = {
@@ -634,13 +625,7 @@ function LibSerialize:_WriteKeyValuePair(key, value)
     local writeValue = self.WriterTable[valueType] or error(("Unhandled value type: %s"):format(valueType))
 
     writeKey(self, key)
-    if keyType == "string" then
-        self:_AddHash(key)
-    end
     writeValue(self, value)
-    if valueType == "string" then
-        self:_AddHash(value)
-    end
 end
 
 function LibSerialize:_WriteByte(value)
@@ -716,6 +701,7 @@ LibSerialize.WriterTable = {
             self:_WriteByte(stringIndices[required])
             self:_WriteInt(len, required)
             self._writeString(value)
+            self:_AddHash(value)
         end
     end,
     ["boolean"] = function(self, value)
@@ -739,9 +725,6 @@ LibSerialize.WriterTable = {
                 local writeValue = self.WriterTable[valueType] or error(("Unhandled value type: %s"):format(valueType))
 
                 writeValue(self, v)
-                if valueType == "string" then
-                    self:_AddHash(v)
-                end
             end
         elseif arraySize ~= 0 then
             -- debugPrint("Serializing mixed array-table:", arraySize, count)
@@ -758,9 +741,6 @@ LibSerialize.WriterTable = {
                 local writeValue = self.WriterTable[valueType] or error(("Unhandled value type: %s"):format(valueType))
 
                 writeValue(self, v)
-                if valueType == "string" then
-                    self:_AddHash(v)
-                end
             end
 
             local mapCount = 0
