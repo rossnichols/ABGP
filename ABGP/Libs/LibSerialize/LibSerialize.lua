@@ -116,7 +116,7 @@ end
 local function GetRequiredBytes(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
-    -- if value < 16777216 then return 3 end
+    if value < 16777216 then return 3 end
     if value < 4294967296 then return 4 end
     return 8
 end
@@ -471,6 +471,16 @@ function LibSerialize:_ReadInt16()
                 string_byte(self._readBuffer[1]))
 end
 
+function LibSerialize:_ReadInt24()
+    -- debugPrint("Reading int24")
+
+    self._readBytes(3, self._readBuffer, 0)
+    return Pack(0,
+                string_byte(self._readBuffer[3]),
+                string_byte(self._readBuffer[2]),
+                string_byte(self._readBuffer[1]))
+end
+
 function LibSerialize:_ReadInt32()
     -- debugPrint("Reading int32")
 
@@ -544,39 +554,46 @@ LibSerialize.ReaderIndex = {
     NUM_8_NEG = 2,
     NUM_16_POS = 3,
     NUM_16_NEG = 4,
-    NUM_32_POS = 5,
-    NUM_32_NEG = 6,
-    NUM_64_POS = 7,
-    NUM_64_NEG = 8,
-    NUM_FLOAT = 9,
+    NUM_24_POS = 5,
+    NUM_24_NEG = 6,
+    NUM_32_POS = 7,
+    NUM_32_NEG = 8,
+    NUM_64_POS = 9,
+    NUM_64_NEG = 10,
+    NUM_FLOAT = 11,
 
-    STR_8 = 10,
-    STR_16 = 11,
-    STR_32 = 12,
-    STR_64 = 13,
+    STR_8 = 12,
+    STR_16 = 13,
+    STR_24 = 14,
+    STR_32 = 15,
+    STR_64 = 16,
 
-    BOOL_T = 14,
-    BOOL_F = 15,
+    BOOL_T = 17,
+    BOOL_F = 18,
 
-    TABLE_8 = 16,
-    TABLE_16 = 17,
-    TABLE_32 = 18,
-    TABLE_64 = 19,
+    TABLE_8 = 19,
+    TABLE_16 = 20,
+    TABLE_24 = 21,
+    TABLE_32 = 22,
+    TABLE_64 = 23,
 
-    ARRAY_8 = 20,
-    ARRAY_16 = 21,
-    ARRAY_32 = 22,
-    ARRAY_64 = 23,
+    ARRAY_8 = 24,
+    ARRAY_16 = 25,
+    ARRAY_24 = 26,
+    ARRAY_32 = 27,
+    ARRAY_64 = 28,
 
-    MIXED_8 = 24,
-    MIXED_16 = 25,
-    MIXED_32 = 26,
-    MIXED_64 = 27,
+    MIXED_8 = 29,
+    MIXED_16 = 30,
+    MIXED_24 = 31,
+    MIXED_32 = 32,
+    MIXED_64 = 33,
 
-    EXISTING_8 = 28,
-    EXISTING_16 = 29,
-    EXISTING_32 = 30,
-    EXISTING_64 = 31,
+    EXISTING_8 = 34,
+    EXISTING_16 = 35,
+    EXISTING_24 = 36,
+    EXISTING_32 = 37,
+    EXISTING_64 = 38,
 }
 
 -- NOTE: must not skip any indices, for number packing to work properly.
@@ -586,6 +603,8 @@ LibSerialize.ReaderTable = {
     [LibSerialize.ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
     [LibSerialize.ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt16() end,
     [LibSerialize.ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt16() end,
+    [LibSerialize.ReaderIndex.NUM_24_POS] = function(self) return self:_ReadInt24() end,
+    [LibSerialize.ReaderIndex.NUM_24_NEG] = function(self) return -self:_ReadInt24() end,
     [LibSerialize.ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt32() end,
     [LibSerialize.ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
     [LibSerialize.ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
@@ -595,6 +614,7 @@ LibSerialize.ReaderTable = {
     -- Strings (encoded as size + buffer)
     [LibSerialize.ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
     [LibSerialize.ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
+    [LibSerialize.ReaderIndex.STR_24] = function(self) return self:_ReadString(self:_ReadInt24()) end,
     [LibSerialize.ReaderIndex.STR_32] = function(self) return self:_ReadString(self:_ReadInt32()) end,
     [LibSerialize.ReaderIndex.STR_64] = function(self) return self:_ReadString(self:_ReadInt64()) end,
 
@@ -605,24 +625,28 @@ LibSerialize.ReaderTable = {
     -- Tables (encoded as count + key/value pairs)
     [LibSerialize.ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
     [LibSerialize.ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
+    [LibSerialize.ReaderIndex.TABLE_24] = function(self) return self:_ReadTable(self:_ReadInt24()) end,
     [LibSerialize.ReaderIndex.TABLE_32] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
     [LibSerialize.ReaderIndex.TABLE_64] = function(self) return self:_ReadTable(self:_ReadInt64()) end,
 
     -- Arrays (encoded as count + values)
     [LibSerialize.ReaderIndex.ARRAY_8]  = function(self) return self:_ReadArray(self:_ReadByte()) end,
     [LibSerialize.ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
+    [LibSerialize.ReaderIndex.ARRAY_24] = function(self) return self:_ReadArray(self:_ReadInt24()) end,
     [LibSerialize.ReaderIndex.ARRAY_32] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
     [LibSerialize.ReaderIndex.ARRAY_64] = function(self) return self:_ReadArray(self:_ReadInt64()) end,
 
     -- Mixed array/tables (encoded as arrayCount + tableCount + arrayValues + key/value pairs)
     [LibSerialize.ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
     [LibSerialize.ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
+    [LibSerialize.ReaderIndex.MIXED_24] = function(self) return self:_ReadMixed(self:_ReadInt24(), self:_ReadInt24()) end,
     [LibSerialize.ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
     [LibSerialize.ReaderIndex.MIXED_64] = function(self) return self:_ReadMixed(self:_ReadInt64(), self:_ReadInt64()) end,
 
     -- Existing entries previously added to bookkeeping
     [LibSerialize.ReaderIndex.EXISTING_8]  = function(self) return self._existingEntriesReversed[self:_ReadByte()] end,
     [LibSerialize.ReaderIndex.EXISTING_16] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
+    [LibSerialize.ReaderIndex.EXISTING_24] = function(self) return self._existingEntriesReversed[self:_ReadInt24()] end,
     [LibSerialize.ReaderIndex.EXISTING_32] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
     [LibSerialize.ReaderIndex.EXISTING_64] = function(self) return self._existingEntriesReversed[self:_ReadInt64()] end,
 }
@@ -638,36 +662,42 @@ LibSerialize.ReaderTable = {
 local numberIndices = {
     [1] = LibSerialize.ReaderIndex.NUM_8_POS,
     [2] = LibSerialize.ReaderIndex.NUM_16_POS,
+    [3] = LibSerialize.ReaderIndex.NUM_24_POS,
     [4] = LibSerialize.ReaderIndex.NUM_32_POS,
     [8] = LibSerialize.ReaderIndex.NUM_64_POS,
 }
 local stringIndices = {
     [1] = LibSerialize.ReaderIndex.STR_8,
     [2] = LibSerialize.ReaderIndex.STR_16,
+    [3] = LibSerialize.ReaderIndex.STR_24,
     [4] = LibSerialize.ReaderIndex.STR_32,
     [8] = LibSerialize.ReaderIndex.STR_64,
 }
 local tableIndices = {
     [1] = LibSerialize.ReaderIndex.TABLE_8,
     [2] = LibSerialize.ReaderIndex.TABLE_16,
+    [3] = LibSerialize.ReaderIndex.TABLE_24,
     [4] = LibSerialize.ReaderIndex.TABLE_32,
     [8] = LibSerialize.ReaderIndex.TABLE_64,
 }
 local arrayIndices = {
     [1] = LibSerialize.ReaderIndex.ARRAY_8,
     [2] = LibSerialize.ReaderIndex.ARRAY_16,
+    [3] = LibSerialize.ReaderIndex.ARRAY_24,
     [4] = LibSerialize.ReaderIndex.ARRAY_32,
     [8] = LibSerialize.ReaderIndex.ARRAY_64,
 }
 local mixedIndices = {
     [1] = LibSerialize.ReaderIndex.MIXED_8,
     [2] = LibSerialize.ReaderIndex.MIXED_16,
+    [3] = LibSerialize.ReaderIndex.MIXED_24,
     [4] = LibSerialize.ReaderIndex.MIXED_32,
     [8] = LibSerialize.ReaderIndex.MIXED_64,
 }
 local existingIndices = {
     [1] = LibSerialize.ReaderIndex.EXISTING_8,
     [2] = LibSerialize.ReaderIndex.EXISTING_16,
+    [3] = LibSerialize.ReaderIndex.EXISTING_24,
     [4] = LibSerialize.ReaderIndex.EXISTING_32,
     [8] = LibSerialize.ReaderIndex.EXISTING_64,
 }
@@ -710,6 +740,11 @@ function LibSerialize:_WriteInt(value, threshold)
         local a = value % 65536
         local b = (value - a) / 65536
         self._writeBits(b, 16)
+        self._writeBits(a, 16)
+    elseif threshold == 3 then
+        local a = value % 65536
+        local b = (value - a) / 65536
+        self._writeBits(b, 8)
         self._writeBits(a, 16)
     else
         self._writeBits(value, threshold * 8)
