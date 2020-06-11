@@ -505,8 +505,8 @@ function LibSerialize:_ReadObject()
     -- encoded count supports 11 bits of precision.
     local count, countSize
     if bit_band(lower, 16) ~= 0 then
-        -- local upper = self:_ReadByte()
-        count = bit_rshift(lower, 5) + 1
+        local upper = self:_ReadByte()
+        count = bit_rshift(Pack2(upper, lower), 5) + 1
         -- debugPrint("Embedded count:", count, lower, upper)
     else
         -- Bits 6-8 indicate the count size.
@@ -686,10 +686,10 @@ function LibSerialize:_WriteType(typ, count, countSize)
     if count then
         value = value + 16
         value = value + (count - 1) * 32
-        -- local upper, lower = Unpack2(value)
+        local upper, lower = Unpack2(value)
         -- debugPrint("Writing type with embedded count:", value, upper, lower)
-        self:_WriteByte(value)
-        -- self:_WriteByte(upper)
+        self:_WriteByte(lower)
+        self:_WriteByte(upper)
     else
         -- debugPrint("Writing type with countSize:", value)
         value = value + (countSize - 1) * 32
@@ -750,7 +750,7 @@ LibSerialize.WriterTable = {
         -- been seen before, we'll use the bookkeeping entry as
         -- long as the number of bytes for it is smaller.
         if existing then
-            if existing <= 8 then
+            if existing <= 2048 then
                 self:_WriteType(self._ReaderIndex.EXISTING, existing)
             else
                 local required = GetRequiredBytes(existing)
@@ -760,7 +760,7 @@ LibSerialize.WriterTable = {
         else
             local len = #value
             local required = GetRequiredBytes(len)
-            if len <= 8 then
+            if len <= 2048 then
                 self:_WriteType(self._ReaderIndex.STRING, len)
             else
                 self:_WriteType(self._ReaderIndex.STRING, nil, requiredIndices[required])
@@ -783,7 +783,7 @@ LibSerialize.WriterTable = {
             -- debugPrint("Serializing array:", count)
             -- The table is effectively an array. We can avoid writing the keys.
             local required = GetRequiredBytes(count)
-            if count <= 8 then
+            if count <= 2048 then
                 self:_WriteType(self._ReaderIndex.ARRAY, count)
             else
                 self:_WriteType(self._ReaderIndex.ARRAY, nil, requiredIndices[required])
@@ -818,7 +818,7 @@ LibSerialize.WriterTable = {
         else
             -- debugPrint("Serializing table:", count)
             local required = GetRequiredBytes(count)
-            if count <= 8 then
+            if count <= 2048 then
                 self:_WriteType(self._ReaderIndex.TABLE, count)
             else
                 self:_WriteType(self._ReaderIndex.TABLE, nil, requiredIndices[required])
