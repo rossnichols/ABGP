@@ -535,6 +535,7 @@ function LibSerialize:_ReadString(len)
     return value
 end
 
+-- NOTE: must not skip any indices, for number packing to work properly.
 LibSerialize.ReaderTable = {
     -- Numbers
     [1]  = function(self) return self:_ReadByte() end,
@@ -575,8 +576,6 @@ LibSerialize.ReaderTable = {
     [26] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
     [27] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
     [28] = function(self) return self:_ReadMixed(self:_ReadInt64(), self:_ReadInt64()) end,
-
-    -- NOTE: max must be 31, to support the compact storage of small nonnegative numbers.
 }
 
 
