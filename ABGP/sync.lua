@@ -143,21 +143,6 @@ if syncTesting then
         { 4, 5, 1, "Local history should be replaced" }, -- 32
     };
 
-    function ABGP:TestSerialization()
-        local history = _G.ABGP_Data.p1.gpHistory;
-        local LibDeflate = _G.LibStub("LibDeflate");
-
-        local serialized = LibSerialize:Serialize(history);
-        self:Notify("serialized len: %d", #serialized);
-        local compressed = LibDeflate:CompressDeflate(serialized);
-        self:Notify("compressed len: %d", #compressed);
-
-        local decompressed = LibDeflate:DecompressDeflate(compressed);
-        local success, deserialized = LibSerialize:Deserialize(decompressed);
-        self:Notify("deserialization success: %s", success and "true" or "false");
-        self:Notify("matching: %s", self.tCompare(history, deserialized) and "yes" or "no");
-    end
-
     function ABGP:RunHistorySyncTest(index)
         local testCase = testCases[index];
         local privIndex, localIndex, remoteIndex, outcome = unpack(testCase);
@@ -684,6 +669,21 @@ function ABGP:CommitHistory(phase)
             history = _G.ABGP_Data[phase].gpHistory,
         }, "GUILD");
     end
+end
+
+function ABGP:TestSerialization()
+    local history = _G.ABGP_Data.p1.gpHistory;
+    local LibDeflate = _G.LibStub("LibDeflate");
+
+    local serialized = LibSerialize:Serialize(history);
+    self:Notify("serialized len: %d", #serialized);
+    local compressed = LibDeflate:CompressDeflate(serialized);
+    self:Notify("compressed len: %d", #compressed);
+
+    local decompressed = LibDeflate:DecompressDeflate(compressed);
+    local success, deserialized = LibSerialize:Deserialize(decompressed);
+    self:Notify("deserialization success: %s", success and "true" or "false");
+    self:Notify("matching: %s", self.tCompare(history, deserialized) and "yes" or "no");
 end
 
 StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {

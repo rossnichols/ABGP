@@ -135,14 +135,10 @@ local function GetRequiredBytes(value, allow8)
     return 8
 end
 
--- local debugPrinting = false
--- local debugPrinting = true
--- local debugPrint = function(...)
---     if debugPrinting then
---         print(...)
---         -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
---     end
--- end
+local debugPrint = function(...)
+    print(...)
+    -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
+end
 
 
 --[[---------------------------------------------------------------------------
@@ -700,7 +696,6 @@ LibSerialize.WriterTable = {
         if fract ~= 0 then
             self.WriterTable["float"](self, value)
         else
-            -- debugPrint("Serializing number:", value)
             -- The type byte can be used to store small nonnegative
             -- numbers for all the values that don't correspond to
             -- one with an actual meaning. Calculate how much space
@@ -710,8 +705,10 @@ LibSerialize.WriterTable = {
 
             if value >= 0 and value <= maxPacked then
                 -- Pack the value into the type byte
+                -- debugPrint("Serializing embedded number:", value)
                 self:_WriteByte(value + numReaderIndices + 1)
             else
+                -- debugPrint("Serializing number:", value)
                 local sign = 0
                 if value < 0 then
                     value = -value
@@ -729,18 +726,19 @@ LibSerialize.WriterTable = {
         self:_WriteInt(FloatBitsToInt(value), 4)
     end,
     ["string"] = function(self, value)
-        -- debugPrint("Serializing string:", value)
         local existing = self._existingEntries[value]
         -- Small strings get serialized into #value + 1 bytes,
         -- with their length as the extra byte. If this string has
         -- been seen before, we'll use the bookkeeping entry as
         -- long as the number of bytes for it is smaller.
         if existing and GetRequiredBytes(existing) < #value + 1 then
+            -- debugPrint("Serializing existing string:", value)
             local required = GetRequiredBytes(existing)
             self:_WriteByte(existingIndices[required])
             self:_WriteInt(self._existingEntries[value], required)
         else
             local len = #value
+            -- debugPrint("Serializing string:", value, len)
             local required = GetRequiredBytes(len)
             self:_WriteByte(stringIndices[required])
             self:_WriteInt(len, required)
