@@ -679,6 +679,7 @@ function ABGP:TestSerialization()
     self:Notify("serialized len: %d", #serialized);
     local compressed = LibDeflate:CompressDeflate(serialized);
     self:Notify("compressed len: %d", #compressed);
+    self:Notify("compared to legacy of %d", self:Serialize(history, true):len());
 
     local decompressed = LibDeflate:DecompressDeflate(compressed);
     local success, deserialized = LibSerialize:Deserialize(decompressed);
