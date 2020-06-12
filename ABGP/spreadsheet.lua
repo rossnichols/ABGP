@@ -32,7 +32,7 @@ local epColumns = {
 
 local gpMapping = {
     ["New Points"] = ABGP.ItemHistoryIndex.GP,
-    ["Item"] = ABGP.ItemHistoryIndex.NAME,
+    ["Item"] = ABGP.ItemHistoryIndex.ITEMID,
     ["Character"] = ABGP.ItemHistoryIndex.PLAYER,
     ["Date Won"] = ABGP.ItemHistoryIndex.DATE,
     ["Boss"] = "boss",
@@ -42,7 +42,7 @@ local gpColumns = {
     { value = ABGP.ItemHistoryIndex.PLAYER, text = "Character" },
     { value = ABGP.ItemHistoryIndex.DATE, text = "Date" },
     { value = ABGP.ItemHistoryIndex.GP, text = "Points" },
-    { value = ABGP.ItemHistoryIndex.NAME, text = "Item" },
+    { value = ABGP.ItemHistoryIndex.ITEMID, text = "Item" },
 };
 
 local itemPriorities = ABGP:GetItemPriorities();
@@ -385,10 +385,10 @@ local function DrawGP(container)
                 local boss = row.boss;
                 row.boss = nil;
 
-                if row[ABGP.ItemHistoryIndex.NAME] == "Bonus GP" then
+                if row[ABGP.ItemHistoryIndex.ITEMID] == "Bonus GP" then
                     row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.BONUS;
                     row[ABGP.ItemHistoryIndex.NOTES] = boss;
-                elseif row[ABGP.ItemHistoryIndex.NAME] == "Reset GP" then
+                elseif row[ABGP.ItemHistoryIndex.ITEMID] == "Reset GP" then
                     row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.RESET;
                     row[ABGP.ItemHistoryIndex.NOTES] = boss;
                 else
@@ -428,8 +428,9 @@ local function DrawGP(container)
             local item = history[i];
             local entryDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
             if item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.ITEM then
+                local value = ABGP:GetItemValue(item[ABGP.ItemHistoryIndex.ITEMID]);
                 text = text .. ("%s\t%s\t%s\t%s\n"):format(
-                    item[ABGP.ItemHistoryIndex.GP], item[ABGP.ItemHistoryIndex.NAME], item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
+                    item[ABGP.ItemHistoryIndex.GP], value.item, item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
             elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
                 text = text .. ("%s\t%s\t%s\t%s\n"):format("", "", "DECAY", entryDate);
             elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.BONUS then
@@ -607,20 +608,24 @@ function ABGP:FixupHistory()
     local p3 = _G.ABGP_Data.p3.gpHistory;
     for _, phase in ipairs({ p1, p3 }) do
         for _, entry in ipairs(phase) do
-            if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM then
-                if not lookup[entry[self.ItemHistoryIndex.NAME]] then
+            if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
+                -- NOTE: The ITEMID field is still the item name at this point.
+                if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
                     for name, link in pairs(lookup) do
-                        local lowered = entry[self.ItemHistoryIndex.NAME]:lower();
+                        local lowered = entry[self.ItemHistoryIndex.ITEMID]:lower();
                         if lowered:find(name:lower(), 1, true) then
-                            -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.NAME], name));
-                            entry[self.ItemHistoryIndex.NAME] = name;
+                            -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.ITEMID], name));
+                            entry[self.ItemHistoryIndex.ITEMID] = name;
                             break;
                         end
                     end
-                    if not lookup[entry[self.ItemHistoryIndex.NAME]] then
-                        self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.NAME]));
+                    if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
+                        self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
+                        return false;
                     end
                 end
+
+                entry[self.ItemHistoryIndex.ITEMID] = self:GetItemId(lookup[entry[self.ItemHistoryIndex.ITEMID]]);
             end
         end
     end

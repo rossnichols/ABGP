@@ -502,7 +502,7 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.ITEM
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp cost (number)
-    NAME = 6,       -- item name (string)
+    ITEMID = 6,       -- item id (number)
 
     -- ABGP.ItemHistoryType.BONUS
     PLAYER = 4,     -- player name (string)
@@ -538,8 +538,9 @@ end
 local function ValueFromItem(item, phase)
     return {
         item = item[ABGP.ItemDataIndex.NAME],
-        gp = item[ABGP.ItemDataIndex.GP],
         itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
+        itemId = ABGP:GetItemId(item[ABGP.ItemDataIndex.ITEMLINK]),
+        gp = item[ABGP.ItemDataIndex.GP],
         boss = item[ABGP.ItemDataIndex.BOSS],
         priority = item[ABGP.ItemDataIndex.PRIORITY],
         notes = item[ABGP.ItemDataIndex.NOTES],
@@ -551,10 +552,13 @@ function ABGP:RefreshItemValues()
     itemValues = {};
     for phase in pairs(self.PhasesAll) do
         for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
-            itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item, phase);
+            local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
+            local value = ValueFromItem(item, phase);
+            itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
+            itemValues[self:GetItemId(itemLink)] = value;
 
             -- Try to ensure info about the item is cached locally.
-            if item[ABGP.ItemDataIndex.ITEMLINK] then GetItemInfo(item[ABGP.ItemDataIndex.ITEMLINK]); end
+            GetItemInfo(itemLink);
         end
     end
 end
@@ -749,7 +753,7 @@ function ABGP:HasReceivedItem(itemName)
     if not value then return false; end
 
     for _, item in ipairs(_G.ABGP_Data[value.phase].gpHistory) do
-        if item[self.ItemHistoryIndex.NAME] == itemName and item[self.ItemHistoryIndex.PLAYER] == player then
+        if item[self.ItemHistoryIndex.ITEMID] == value.itemId and item[self.ItemHistoryIndex.PLAYER] == player then
             return true;
         end
     end

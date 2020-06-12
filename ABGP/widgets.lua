@@ -477,8 +477,8 @@ do
             local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
             self.date.text:SetText(entryDate);
 
-            local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.NAME]);
-            self.itemLink.text:SetText(value and value.itemLink or data[ABGP.ItemHistoryIndex.NAME]);
+            local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
+            self.itemLink.text:SetText(value and value.itemLink or data[ABGP.ItemHistoryIndex.ITEMID]);
         end,
 
         ["SetWidths"] = function(self, widths)

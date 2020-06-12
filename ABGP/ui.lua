@@ -232,11 +232,12 @@ local function DrawItemHistory(container, options)
                     local elt = history.children[i];
                     local data = elt.data;
 
-                    local item = data[ABGP.ItemHistoryIndex.NAME];
+                    local itemId = data[ABGP.ItemHistoryIndex.ITEMID];
+                    local value = ABGP:GetItemValue(itemId);
                     local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]);
 
                     text = text .. ("%s\t%s\t%s\t%s%s"):format(
-                        data[ABGP.ItemHistoryIndex.GP], item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
+                        data[ABGP.ItemHistoryIndex.GP], value.item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
                 end
 
                 local window = AceGUI:Create("ABGP_OpaqueWindow");
@@ -321,21 +322,22 @@ local function DrawItemHistory(container, options)
     local exact = searchText:match("^\"(.+)\"$");
     exact = exact and exact:lower() or exact;
     for _, data in ipairs(gpHistory) do
+        local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-        if (epgp and epgp[ABGP.CurrentPhase]) or not currentRaidGroup then
+        if value and ((epgp and epgp[ABGP.CurrentPhase]) or not currentRaidGroup) then
             if not currentRaidGroup or epgp[ABGP.CurrentPhase].gpRaidGroup == currentRaidGroup then
                 local class = epgp and epgp.class:lower() or "";
                 local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                 if exact then
                     if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
-                        data[ABGP.ItemHistoryIndex.NAME]:lower() == exact or
+                        value.item:lower() == exact or
                         class == exact or
                         entryDate == exact then
                         table.insert(filtered, data);
                     end
                 else
                     if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
-                        data[ABGP.ItemHistoryIndex.NAME]:lower():find(searchText, 1, true) or
+                        value.item:lower():find(searchText, 1, true) or
                         class:find(searchText, 1, true) or
                         entryDate:find(searchText, 1, true) then
                         table.insert(filtered, data);
@@ -358,6 +360,7 @@ local function DrawItemHistory(container, options)
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
+                local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
                 if button == "RightButton" then
                     local context = {
                         {
@@ -375,7 +378,7 @@ local function DrawItemHistory(container, options)
                             text = "Show item history",
                             func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetValue(("\"%s\""):format(arg1[ABGP.ItemHistoryIndex.NAME]));
+                                    search:SetValue(("\"%s\""):format(value.item));
                                     PopulateUI({ rebuild = false });
                                 end
                             end,
@@ -383,8 +386,7 @@ local function DrawItemHistory(container, options)
                             notCheckable = true
                         },
                     };
-                    local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.NAME]);
-                    if value and ABGP:CanFavoriteItems() then
+                    if ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsItemFavorited(value.itemLink);
                         table.insert(context, 1, {
                             text = faved and "Remove item favorite" or "Add item favorite",
@@ -395,7 +397,7 @@ local function DrawItemHistory(container, options)
                             notCheckable = true
                         });
                     end
-                    if value and data[ABGP.ItemHistoryIndex.ID] and ABGP:IsPrivileged() then
+                    if data[ABGP.ItemHistoryIndex.ID] and ABGP:IsPrivileged() then
                         table.insert(context, {
                             text = "Edit cost",
                             func = function(self, arg1)
@@ -957,7 +959,7 @@ local function DrawAuditLog(container, options)
             end
         else
             if entryType == ABGP.ItemHistoryType.ITEM then
-                local item = entry[ABGP.ItemHistoryIndex.NAME];
+                local item = entry[ABGP.ItemHistoryIndex.ITEMID];
                 local value = ABGP:GetItemValue(item);
                 if value then item = value.itemLink; end
                 entryMsg = ("%s to %s for %d GP"):format(
@@ -1033,7 +1035,7 @@ local function DrawAuditLog(container, options)
                         });
                     else
                         if entryType == ABGP.ItemHistoryType.ITEM then
-                            local value = ABGP:GetItemValue(entry[ABGP.ItemHistoryIndex.NAME]);
+                            local value = ABGP:GetItemValue(entry[ABGP.ItemHistoryIndex.ITEMID]);
                             if value then
                                 table.insert(context, {
                                     text = "Edit cost",

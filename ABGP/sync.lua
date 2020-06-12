@@ -673,6 +673,7 @@ function ABGP:BreakdownHistory(history)
 end
 
 function ABGP:CommitHistory(phase)
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
     if not self:GetDebugOpt("AvoidHistorySend") then
         _G.ABGP_DataTimestamp.gpHistory[phase] = GetServerTime();
 
