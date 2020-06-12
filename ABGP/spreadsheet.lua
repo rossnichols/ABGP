@@ -358,7 +358,7 @@ local function DrawGP(container)
 
                 rowTimes[rowTime] = true;
                 row[ABGP.ItemHistoryIndex.DATE] = rowTime;
-                row[ABGP.ItemHistoryIndex.ID] = ABGP:GetHistoryId();
+                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
 
                 local gpDecay, gpFloor = ABGP:GetGPDecayInfo();
                 row[ABGP.ItemHistoryIndex.VALUE] = gpDecay;
@@ -381,7 +381,7 @@ local function DrawGP(container)
 
                 rowTimes[rowTime] = true;
                 row[ABGP.ItemHistoryIndex.DATE] = rowTime;
-                row[ABGP.ItemHistoryIndex.ID] = ABGP:GetHistoryId();
+                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
                 local boss = row.boss;
                 row.boss = nil;
 
