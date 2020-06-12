@@ -466,7 +466,9 @@ local function DrawItems(container)
         DrawItems(container);
 
         if ABGP:FixupItems() then
-            ABGP:CommitItemData();
+            if ABGP.Phases[ABGP.CurrentPhase] then
+                ABGP:CommitItemData();
+            end
         else
             ABGP:Error("Couldn't find item links for some items! Unable to commit these updates.");
         end

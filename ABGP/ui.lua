@@ -752,7 +752,9 @@ local function DrawItems(container, options)
                 else
                     ABGP:Notify("Priorities for %s have been cleared.", widget.data[ABGP.ItemDataIndex.ITEMLINK]);
                 end
-                ABGP:CommitItemData();
+                if ABGP.Phases[ABGP.CurrentPhase] then
+                    ABGP:CommitItemData();
+                end
             end);
             itemList:AddChild(elt);
         end
@@ -1309,7 +1311,9 @@ StaticPopupDialogs["ABGP_UPDATE_GP"] = ABGP:StaticDialogTemplate(ABGP.StaticDial
         widget:SetData(widget.data);
 
         ABGP:Notify("Cost of %s is now %d.", widget.data[ABGP.ItemDataIndex.ITEMLINK], cost);
-        ABGP:CommitItemData();
+        if ABGP.Phases[ABGP.CurrentPhase] then
+            ABGP:CommitItemData();
+        end
     end,
 });
 StaticPopupDialogs["ABGP_UPDATE_NOTES"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
@@ -1327,6 +1331,8 @@ StaticPopupDialogs["ABGP_UPDATE_NOTES"] = ABGP:StaticDialogTemplate(ABGP.StaticD
         widget.data[ABGP.ItemDataIndex.NOTES] = text
         widget:SetData(widget.data);
 
-        ABGP:CommitItemData();
+        if ABGP.Phases[ABGP.CurrentPhase] then
+            ABGP:CommitItemData();
+        end
     end,
 });
