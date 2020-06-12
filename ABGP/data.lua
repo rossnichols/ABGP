@@ -317,7 +317,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                 table.insert(history, 1, {
                     [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
                     [ABGP.ItemHistoryIndex.ID] = data.updateId,
-                    [ABGP.ItemHistoryIndex.DATE] = deleteDate,
+                    [ABGP.ItemHistoryIndex.EFFECTIVE] = deleteDate,
                     [ABGP.ItemHistoryIndex.DELETEDID] = data.oldHistoryId,
                 });
 
@@ -342,7 +342,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         table.insert(history, 1, {
             [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
             [ABGP.ItemHistoryIndex.ID] = data.historyId,
-            [ABGP.ItemHistoryIndex.DATE] = awardDate,
+            [ABGP.ItemHistoryIndex.EFFECTIVE] = awardDate,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.ITEMID] = value.itemId,
             [ABGP.ItemHistoryIndex.GP] = data.cost,
@@ -358,7 +358,7 @@ function ABGP:HistoryTriggerDecay(decayTime)
         table.insert(_G.ABGP_Data[phase].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = decayTime,
+            [self.ItemHistoryIndex.EFFECTIVE] = decayTime,
             [self.ItemHistoryIndex.VALUE] = decayValue,
             [self.ItemHistoryIndex.FLOOR] = decayFloor,
         });
@@ -405,7 +405,7 @@ function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
         table.insert(_G.ABGP_Data[self.Phases.p1].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = GetServerTime(),
+            [self.ItemHistoryIndex.EFFECTIVE] = GetServerTime(),
             [self.ItemHistoryIndex.PLAYER] = player,
             [self.ItemHistoryIndex.GP] = p1gp,
             [self.ItemHistoryIndex.NOTES] = "New active raider",
@@ -422,7 +422,7 @@ function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
         table.insert(_G.ABGP_Data[self.Phases.p3].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = GetServerTime(),
+            [self.ItemHistoryIndex.EFFECTIVE] = GetServerTime(),
             [self.ItemHistoryIndex.PLAYER] = player,
             [self.ItemHistoryIndex.GP] = p3gp,
             [self.ItemHistoryIndex.NOTES] = "New active raider",
@@ -462,7 +462,7 @@ function ABGP:ProcessItemHistory(gpHistory, includeNonItems)
     end
 
     table.sort(processed, function(a, b)
-        return a[ABGP.ItemHistoryIndex.DATE] > b[ABGP.ItemHistoryIndex.DATE];
+        return a[ABGP.ItemHistoryIndex.EFFECTIVE] > b[ABGP.ItemHistoryIndex.EFFECTIVE];
     end);
 
     return processed;

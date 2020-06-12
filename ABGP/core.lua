@@ -497,7 +497,7 @@ ABGP.ItemHistoryType = {
 ABGP.ItemHistoryIndex = {
     TYPE = 1,       -- from ABGP.ItemHistoryType
     ID = 2,         -- from ABGP:GetHistoryId()
-    DATE = 3,       -- date applied (number)
+    EFFECTIVE = 3,  -- date effective (number)
 
     -- ABGP.ItemHistoryType.ITEM
     PLAYER = 4,     -- player name (string)

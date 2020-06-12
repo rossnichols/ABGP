@@ -66,7 +66,7 @@ function ABGP:HookTooltips()
                                             break;
                                         end
                                         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-                                        local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
+                                        local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.EFFECTIVE]); -- https://strftime.org/
                                         self:AddDoubleLine(" " .. ABGP:ColorizeName(epgp.player, epgp.class), entryDate, 1, 1, 1, 1, 1, 1);
                                     end
                                 end
