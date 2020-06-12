@@ -318,7 +318,7 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     local legacy = (prefix == "ABGP");
     local success, data = self:Deserialize(payload, legacy);
     if not success then
-        self:Error("Received an invalid addon comm!");
+        self:Error("Received an invalid addon comm from %s!", self:ColorizeName(sender));
         return;
     end
 
