@@ -868,7 +868,7 @@ StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.Static
         for phase in pairs(ABGP.Phases) do
             local history = ABGP:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
             for _, entry in ipairs(history) do
-                local entryDate = entry[ABGP.ItemHistoryIndex.EFFECTIVE];
+                local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
                 if entryDate < decayTime then break; end
 
                 if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then

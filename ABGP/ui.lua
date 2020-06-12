@@ -234,7 +234,7 @@ local function DrawItemHistory(container, options)
 
                     local itemId = data[ABGP.ItemHistoryIndex.ITEMID];
                     local value = ABGP:GetItemValue(itemId);
-                    local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.EFFECTIVE]);
+                    local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]);
 
                     text = text .. ("%s\t%s\t%s\t%s%s"):format(
                         data[ABGP.ItemHistoryIndex.GP], value.item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
@@ -327,7 +327,7 @@ local function DrawItemHistory(container, options)
         if value and ((epgp and epgp[ABGP.CurrentPhase]) or not currentRaidGroup) then
             if not currentRaidGroup or epgp[ABGP.CurrentPhase].gpRaidGroup == currentRaidGroup then
                 local class = epgp and epgp.class:lower() or "";
-                local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.EFFECTIVE]):lower(); -- https://strftime.org/
+                local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                 if exact then
                     if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
                         value.item:lower() == exact or
@@ -407,7 +407,7 @@ local function DrawItemHistory(container, options)
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                    awarded = arg1[ABGP.ItemHistoryIndex.EFFECTIVE],
+                                    awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                 });
                             end,
                             arg1 = data,
@@ -422,7 +422,7 @@ local function DrawItemHistory(container, options)
                                     itemLink = value.itemLink,
                                     player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                     gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                    awarded = arg1[ABGP.ItemHistoryIndex.EFFECTIVE],
+                                    awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                 });
                             end,
                             arg1 = data,
@@ -989,7 +989,7 @@ local function DrawAuditLog(container, options)
             local entryPlayer, entryDate = ABGP:ParseHistoryId(id);
             local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
 
-            local actionDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.EFFECTIVE]);
+            local actionDate = date("%m/%d/%y", entry[ABGP.ItemHistoryIndex.DATE]);
             local entryMsg = getAuditMessage(entry);
 
             local deleteRef;
@@ -1046,7 +1046,7 @@ local function DrawAuditLog(container, options)
                                             itemLink = value.itemLink,
                                             player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                             gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                            awarded = arg1[ABGP.ItemHistoryIndex.EFFECTIVE],
+                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                         });
                                     end,
                                     arg1 = entry,
@@ -1061,7 +1061,7 @@ local function DrawAuditLog(container, options)
                                             itemLink = value.itemLink,
                                             player = arg1[ABGP.ItemHistoryIndex.PLAYER],
                                             gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                            awarded = arg1[ABGP.ItemHistoryIndex.EFFECTIVE],
+                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
                                         });
                                     end,
                                     arg1 = entry,

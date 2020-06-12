@@ -474,7 +474,7 @@ do
 
             self.player.text:SetText(ABGP:ColorizeName(data[ABGP.ItemHistoryIndex.PLAYER] or ""));
             self.gp.text:SetText(data[ABGP.ItemHistoryIndex.GP]);
-            local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.EFFECTIVE]); -- https://strftime.org/
+            local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
             self.date.text:SetText(entryDate);
 
             local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);

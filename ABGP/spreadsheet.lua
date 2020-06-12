@@ -34,13 +34,13 @@ local gpMapping = {
     ["New Points"] = ABGP.ItemHistoryIndex.GP,
     ["Item"] = ABGP.ItemHistoryIndex.ITEMID,
     ["Character"] = ABGP.ItemHistoryIndex.PLAYER,
-    ["Date Won"] = ABGP.ItemHistoryIndex.EFFECTIVE,
+    ["Date Won"] = ABGP.ItemHistoryIndex.DATE,
     ["Boss"] = "boss",
 };
 local gpColumns = {
     weights = { 100, 75, 50, 1 },
     { value = ABGP.ItemHistoryIndex.PLAYER, text = "Character" },
-    { value = ABGP.ItemHistoryIndex.EFFECTIVE, text = "Date" },
+    { value = ABGP.ItemHistoryIndex.DATE, text = "Date" },
     { value = ABGP.ItemHistoryIndex.GP, text = "Points" },
     { value = ABGP.ItemHistoryIndex.ITEMID, text = "Item" },
 };
@@ -320,7 +320,7 @@ local function DrawGP(container)
     local rowTimes = {};
     local importFunc = function(widget, event)
         local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
-            if not row[ABGP.ItemHistoryIndex.EFFECTIVE] then
+            if not row[ABGP.ItemHistoryIndex.DATE] then
                 -- Only print an error if the row isn't completely blank.
                 local isError = false;
                 for _, v in pairs(row) do
@@ -332,20 +332,20 @@ local function DrawGP(container)
                 end
                 return false, isError;
             end
-            local rowDate =  row[ABGP.ItemHistoryIndex.EFFECTIVE];
+            local rowDate =  row[ABGP.ItemHistoryIndex.DATE];
             rowDate = rowDate:gsub("20(%d%d)", "%1");
             local m, d, y = rowDate:match("^(%d-)/(%d-)/(%d-)$");
             if not m then
-                ABGP:Error("Malformed date: %s", row[ABGP.ItemHistoryIndex.EFFECTIVE]);
+                ABGP:Error("Malformed date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                 return false, true;
             end
             local rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
             if rowTime < lastRowTime then
-                ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.EFFECTIVE]);
+                ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                 return false, true;
             end
             if rowTime == lastDecayTime then
-                ABGP:Error("Entry after decay on same date: %s", row[ABGP.ItemHistoryIndex.EFFECTIVE]);
+                ABGP:Error("Entry after decay on same date: %s", row[ABGP.ItemHistoryIndex.DATE]);
                 return false, true;
             end
 
@@ -357,7 +357,7 @@ local function DrawGP(container)
                 rowTime = rowTime + (24 * 60 * 60) - 1;
 
                 rowTimes[rowTime] = true;
-                row[ABGP.ItemHistoryIndex.EFFECTIVE] = rowTime;
+                row[ABGP.ItemHistoryIndex.DATE] = rowTime;
                 row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
 
                 local gpDecay, gpFloor = ABGP:GetGPDecayInfo();
@@ -369,18 +369,18 @@ local function DrawGP(container)
                 while rowTimes[rowTime] do rowTime = rowTime + 1; end
 
                 if not row[ABGP.ItemHistoryIndex.PLAYER] then
-                    ABGP:Error("Found row without player on %s!", row[ABGP.ItemHistoryIndex.EFFECTIVE]);
+                    ABGP:Error("Found row without player on %s!", row[ABGP.ItemHistoryIndex.DATE]);
                     return false, true;
                 end
 
                 row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
                 if row[ABGP.ItemHistoryIndex.GP] < 0 then
-                    ABGP:Error("Found row with negative gp on %s!", row[ABGP.ItemHistoryIndex.EFFECTIVE]);
+                    ABGP:Error("Found row with negative gp on %s!", row[ABGP.ItemHistoryIndex.DATE]);
                     return false, true;
                 end
 
                 rowTimes[rowTime] = true;
-                row[ABGP.ItemHistoryIndex.EFFECTIVE] = rowTime;
+                row[ABGP.ItemHistoryIndex.DATE] = rowTime;
                 row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
                 local boss = row.boss;
                 row.boss = nil;
@@ -426,7 +426,7 @@ local function DrawGP(container)
         local text = "New Points\tItem\tCharacter\tDate Won\n";
         for i = #history, 1, -1 do
             local item = history[i];
-            local entryDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.EFFECTIVE]); -- https://strftime.org/
+            local entryDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
             if item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.ITEM then
                 local value = ABGP:GetItemValue(item[ABGP.ItemHistoryIndex.ITEMID]);
                 text = text .. ("%s\t%s\t%s\t%s\n"):format(
