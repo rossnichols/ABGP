@@ -627,12 +627,13 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
 
     -- Reset to defaults, since we're given a diff from them.
     for phase in pairs(ABGP.PhasesAll) do
-        _G.ABGP_Data[phase].itemValues = self.initialData.itemValues[phase];
+        _G.ABGP_Data[phase].itemValues = self.tCopy(self.initialData.itemValues[phase]);
     end
     self:RefreshItemValues();
 
     for phase, items in pairs(data.itemValues) do
         for i, item in ipairs(items) do
+            -- self:LogDebug("Checking %s [%s]", item[self.ItemDataIndex.NAME], phase);
             self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item, phase), true);
         end
     end
@@ -641,7 +642,7 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
 end
 
 function ABGP:CommitItemData()
-    ABGP:RefreshItemValues();
+    self:RefreshItemValues();
     if not self:GetDebugOpt("IgnoreItemCommit") then
         _G.ABGP_DataTimestamp.itemValues = GetServerTime();
         self:BroadcastItemData();
@@ -665,6 +666,7 @@ function ABGP:BroadcastItemData(target)
 
             if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
                 table.insert(payload.itemValues[phase], item);
+                -- self:LogDebug("Broadcasting %s [%s]", name, phase);
             end
         end
     end
@@ -1055,7 +1057,7 @@ end
 -- Util
 --
 
-ABGP.tCompare = _G.tCompare or function(lhsTable, rhsTable, depth)
+ABGP.tCompare = function(lhsTable, rhsTable, depth)
     depth = depth or 1;
     for key, value in pairs(lhsTable) do
         if type(value) == "table" then
@@ -1085,7 +1087,13 @@ end
 
 ABGP.tCopy = function(t)
     local copy = {};
-    for k, v in pairs(t) do copy[k] = v; end
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            copy[k] = ABGP.tCopy(v)
+        else
+            copy[k] = v;
+        end
+    end
     return copy;
 end
 
