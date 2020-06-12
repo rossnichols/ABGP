@@ -626,7 +626,7 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp.itemValues)); -- https://strftime.org/
 
     -- Reset to defaults, since we're given a diff from them.
-    for phase in pairs(ABGP.PhasesAll) do
+    for phase in pairs(ABGP.Phases) do
         _G.ABGP_Data[phase].itemValues = self.tCopy(self.initialData.itemValues[phase]);
     end
     self:RefreshItemValues();
@@ -657,7 +657,7 @@ function ABGP:BroadcastItemData(target)
     };
 
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.PhasesAll) do
+    for phase in pairs(ABGP.Phases) do
         payload.itemValues[phase] = {};
         for i, item in ipairs(_G.ABGP_Data[phase].itemValues) do
             local name = item[self.ItemDataIndex.NAME];
@@ -680,7 +680,7 @@ end
 
 function ABGP:DumpItemDiffs()
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.PhasesAll) do
+    for phase in pairs(ABGP.Phases) do
         for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
             local name = item[self.ItemDataIndex.NAME];
             local defaultValue = defaultValues[name];
