@@ -137,10 +137,7 @@ end
 --]]
 local function CreateWriter()
     local buffer_size = 0
-    local total_bitlen = 0
     local buffer = {}
-    -- When buffer is big enough, flush into result_buffer to save memory.
-    local result_buffer = {}
 
     -- Write the entire string into the writer.
     -- @param str The string being written
@@ -149,7 +146,6 @@ local function CreateWriter()
         -- DebugPrint("Writing string len", #str, "bitlen", #str * 8)
         buffer_size = buffer_size + 1
         buffer[buffer_size] = str
-        total_bitlen = total_bitlen + #str * 8
     end
 
     -- Flush current stuffs in the writer and return it.
@@ -160,8 +156,7 @@ local function CreateWriter()
         local flushed = table_concat(buffer)
         buffer = {}
         buffer_size = 0
-        result_buffer[#result_buffer + 1] = flushed
-        return total_bitlen, table_concat(result_buffer)
+        return flushed
     end
 
     return WriteString, FlushWriter
@@ -179,20 +174,12 @@ local function CreateReader(input_string)
     local input_next_byte_pos = 1
 
     -- Read some bytes from the reader.
-    -- Assume reader is on the byte boundary.
     -- @param bytelen The number of bytes to be read.
-    -- @param buffer The byte read will be stored into this buffer.
-    -- @param buffer_size The buffer will be modified starting from
-    --    buffer[buffer_size+1], ending at buffer[buffer_size+bytelen-1]
-    -- @return the new buffer_size
-    local function ReadBytes(bytelen, buffer, buffer_size)
-        for i = input_next_byte_pos, input_next_byte_pos + bytelen - 1 do
-            buffer_size = buffer_size + 1
-            buffer[buffer_size] = string_sub(input, i, i)
-        end
-
+    -- @return the bytes as a string
+    local function ReadBytes(bytelen)
+        local result = string_sub(input, input_next_byte_pos, input_next_byte_pos + bytelen - 1)
         input_next_byte_pos = input_next_byte_pos + bytelen
-        return buffer_size
+        return result
     end
 
     local function ReaderBitlenLeft()
@@ -372,7 +359,7 @@ end
 function LibSerialize:_ReadString(len)
     -- DebugPrint("Reading string,", len)
 
-    local value = self:_ReadBytes(len)
+    local value = self._readBytes(len)
     if len > 2 then
         self:_AddExisting(value)
     end
@@ -382,14 +369,14 @@ end
 function LibSerialize:_ReadByte()
     -- DebugPrint("Reading byte")
 
-    local str = self:_ReadBytes(1)
+    local str = self._readBytes(1)
     return string_byte(str)
 end
 
 function LibSerialize:_ReadInt16()
     -- DebugPrint("Reading int16")
 
-    local str = self:_ReadBytes(2)
+    local str = self._readBytes(2)
     local b1, b2 = string_byte(str, 1, 2)
     return b1 * 0x100 + b2
 end
@@ -397,7 +384,7 @@ end
 function LibSerialize:_ReadInt32()
     -- DebugPrint("Reading int32")
 
-    local str = self:_ReadBytes(4)
+    local str = self._readBytes(4)
     local b1, b2, b3, b4 = string_byte(str, 1, 4)
     return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
 end
@@ -405,15 +392,9 @@ end
 function LibSerialize:_ReadInt64()
     -- DebugPrint("Reading int64")
 
-    local str = self:_ReadBytes(7)
+    local str = self._readBytes(7)
     local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
     return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
-end
-
-function LibSerialize:_ReadBytes(len)
-    self._readBytes(len, self._readBuffer, 0)
-    local value = table_concat(self._readBuffer, "", 1, len)
-    return value
 end
 
 local embeddedIndexShift = 4
@@ -486,7 +467,7 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
     [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
     [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
-    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self:_ReadBytes(8)) end,
+    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self._readBytes(8)) end,
 
     -- Booleans
     [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
@@ -762,8 +743,7 @@ function LibSerialize:Serialize(input)
     self:_WriteByte(self._SERIALIZATION_VERSION)
     self:_WriteObject(input)
 
-    local total_bitlen, result = FlushWriter()
-    return result
+    return FlushWriter()
 end
 
 function LibSerialize:_Deserialize(input)
