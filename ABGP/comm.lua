@@ -73,7 +73,7 @@ ABGP.CommTypes = {
     ITEM_PASS = { name = "ITEM_PASS", priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_REQUESTED = { name = "ITEM_REQUESTED", priority = "ALERT" },
+    ITEM_REQUESTCOUNT = { name = "ITEM_REQUESTCOUNT", priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
@@ -81,14 +81,14 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- count: number
 
-    ITEM_OPENED = { name = "ITEM_OPENED", priority = "ALERT" },
+    ITEM_DIST_OPENED = { name = "ITEM_DIST_OPENED", priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
     -- slots: array of strings
     -- count: number
 
-    ITEM_CLOSED = { name = "ITEM_CLOSED", priority = "ALERT" },
+    ITEM_DIST_CLOSED = { name = "ITEM_DIST_CLOSED", priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 

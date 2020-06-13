@@ -89,7 +89,7 @@ function ABGP:OnEnable()
         self:DistribOnItemPass(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_REQUESTED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_REQUESTCOUNT.name, function(self, event, data, distribution, sender)
         self:RequestOnItemRequestCount(data, distribution, sender);
         self:AnnounceOnItemRequestCount(data, distribution, sender);
     end, self);
@@ -99,14 +99,14 @@ function ABGP:OnEnable()
         self:AnnounceOnItemCount(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_OPENED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_DIST_OPENED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistOpened(data, distribution, sender);
         self:DistribOnDistOpened(data, distribution, sender);
         self:AnnounceOnDistOpened(data, distribution, sender);
         self:MinimapOnDistOpened(data, distribution, sender);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_CLOSED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_DIST_CLOSED.name, function(self, event, data, distribution, sender)
         self:RequestOnDistClosed(data, distribution, sender);
         self:AnnounceOnDistClosed(data, distribution, sender);
         self:MinimapOnDistClosed(data, distribution, sender);

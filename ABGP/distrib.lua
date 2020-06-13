@@ -260,7 +260,7 @@ local function RemoveRequest(sender, itemLink)
         if request.player == sender then
             table.remove(requests, i);
             ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), itemLink);
-            ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTED, {
+            ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
                 itemLink = itemLink,
                 count = #requests,
             }, "BROADCAST");
@@ -331,7 +331,7 @@ local function ProcessNewRequest(request)
 
     table.insert(requests, request);
     if not oldRequest then
-        ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTED, {
+        ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
             itemLink = request.itemLink,
             count = #requests,
         }, "BROADCAST");
@@ -425,7 +425,7 @@ local function RemoveActiveItem(itemLink, item)
         end
     end
 
-    ABGP:SendComm(ABGP.CommTypes.ITEM_CLOSED, {
+    ABGP:SendComm(ABGP.CommTypes.ITEM_DIST_CLOSED, {
         itemLink = itemLink,
         count = #item.distributions
     }, "BROADCAST");
@@ -561,7 +561,7 @@ function ABGP:DistribOnStateSync(data, distribution, sender)
     local activeItems = window and window:GetUserData("activeItems") or {};
 
     for _, item in pairs(activeItems) do
-        self:SendComm(self.CommTypes.ITEM_OPENED, item.data, "WHISPER", sender);
+        self:SendComm(self.CommTypes.ITEM_DIST_OPENED, item.data, "WHISPER", sender);
     end
 end
 
@@ -822,7 +822,7 @@ function ABGP:ShowDistrib(itemLink)
         end
     end
 
-    self:SendComm(self.CommTypes.ITEM_OPENED, data, "BROADCAST");
+    self:SendComm(self.CommTypes.ITEM_DIST_OPENED, data, "BROADCAST");
 end
 
 function ABGP:CreateDistribWindow()
