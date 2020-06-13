@@ -115,13 +115,6 @@ local function Unpack2(val)
            (val % 256)
 end
 
-local function Unpack4(val)
-    return (bit_rshift(val, 24) % 256),
-           (bit_rshift(val, 16) % 256),
-           (bit_rshift(val, 8) % 256),
-           (val % 256)
-end
-
 local function GetRequiredBytes(value, allow8)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
@@ -366,41 +359,46 @@ end
 
 
 --[[---------------------------------------------------------------------------
-    Code taken/modified from lua-MessagePack: FloatBitsToInt, IntBitsToFloat.
+    Code taken/modified from lua-MessagePack: FloatToString, StringToFloat.
     Used for serializing/deserializing floating point numbers.
-    NOTE: although Lua uses double precision floating point numbers (by default),
-    the serialization only uses single precision, for space saving.
 --]]---------------------------------------------------------------------------
 
-local function FloatBitsToInt(n)
+local function FloatToString(n)
     local sign = 0
     if n < 0.0 then
         sign = 0x80
         n = -n
     end
     local mant, expo = frexp(n)
-    if mant ~= mant then
-        return Pack4(0xFF, 0x88, 0x00, 0x00) -- nan
-    elseif mant == math_huge or expo > 0x80 then
-        if sign == 0 then
-            return Pack4(0x7F, 0x80, 0x00, 0x00) -- inf
-        else
-            return Pack4(0xFF, 0x80, 0x00, 0x00) -- -inf
+    if mant ~= mant then -- nan
+        return string_char(0xFF, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+    elseif mant == math_huge or expo > 0x400 then
+        if sign == 0 then -- inf
+            return string_char(0x7F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+        else -- -inf
+            return string_char(0xFF, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
         end
-    elseif (mant == 0.0 and expo == 0) or expo < -0x7E then
-        return Pack4(sign, 0x00, 0x00, 0x00)-- zero
+    elseif (mant == 0.0 and expo == 0) or expo < -0x3FE then -- zero
+        return string_char(sign, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
     else
-        expo = expo + 0x7E
-        mant = floor((mant * 2.0 - 1.0) * ldexp(0.5, 24))
-        return Pack4(sign + floor(expo / 0x2), (expo % 0x2) * 0x80 + floor(mant / 0x10000), floor(mant / 0x100) % 0x100, mant % 0x100)
+        expo = expo + 0x3FE
+        mant = floor((mant * 2.0 - 1.0) * ldexp(0.5, 53))
+        return string_char(sign + floor(expo / 0x10),
+                           (expo % 0x10) * 0x10 + floor(mant / 0x1000000000000),
+                           floor(mant / 0x10000000000) % 0x100,
+                           floor(mant / 0x100000000) % 0x100,
+                           floor(mant / 0x1000000) % 0x100,
+                           floor(mant / 0x10000) % 0x100,
+                           floor(mant / 0x100) % 0x100,
+                           mant % 0x100)
     end
 end
 
-local function IntBitsToFloat(int)
-    local b1, b2, b3, b4 = Unpack4(int)
+local function StringToFloat(str)
+    local b1, b2, b3, b4, b5, b6, b7, b8 = string_byte(str, 1, 8)
     local sign = b1 > 0x7F
-    local expo = (b1 % 0x80) * 0x2 + floor(b2 / 0x80)
-    local mant = ((b2 % 0x80) * 0x100 + b3) * 0x100 + b4
+    local expo = (b1 % 0x80) * 0x10 + floor(b2 / 0x10)
+    local mant = ((((((b2 % 0x10) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
     if sign then
         sign = -1
     else
@@ -409,14 +407,14 @@ local function IntBitsToFloat(int)
     local n
     if mant == 0 and expo == 0 then
         n = sign * 0.0
-    elseif expo == 0xFF then
+    elseif expo == 0x7FF then
         if mant == 0 then
             n = sign * math_huge
         else
             n = 0.0/0.0
         end
     else
-        n = sign * ldexp(1.0 + mant / 0x800000, expo - 0x7F)
+        n = sign * ldexp(1.0 + mant / 4503599627370496.0, expo - 0x3FF)
     end
     return n
 end
@@ -632,7 +630,7 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
     [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
     [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
-    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return IntBitsToFloat(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self:_ReadString(8)) end,
 
     -- Booleans
     [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
@@ -782,7 +780,7 @@ LibSerialize._WriterTable = {
     ["float"] = function(self, value)
         -- DebugPrint("Serializing float:", value)
         self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
-        self:_WriteInt(FloatBitsToInt(value), 4)
+        self._writeString(FloatToString(value))
     end,
     ["boolean"] = function(self, value)
         -- DebugPrint("Serializing bool:", value)
