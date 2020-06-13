@@ -1228,7 +1228,7 @@ function ABGP:StaticDialogTemplate(template, t)
             end
         end;
         t.EditBoxOnEnterPressed = function(self, data)
-            if t.button3 then return; end
+            if t.suppressEnterCommit then return; end
 
             local parent = self:GetParent();
             local text = self:GetText();
