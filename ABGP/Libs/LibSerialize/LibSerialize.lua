@@ -135,6 +135,11 @@ local function GetRequiredBytes(value, allow8)
     return 8
 end
 
+local function IsFractional(value)
+    local _, fract = math_modf(value)
+    return fract ~= 0
+end
+
 local debugPrint = function(...)
     print(...)
     -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
@@ -524,7 +529,7 @@ function LibSerialize:_ReadObject()
 end
 
 function LibSerialize:_ReadTable(entryCount, ret)
-    -- debugPrint("Extracting keys/values for table,", entryCount)
+    -- debugPrint("Extracting keys/values for table:", entryCount)
 
     ret = ret or {}
     for i = 1, entryCount do
@@ -535,7 +540,7 @@ function LibSerialize:_ReadTable(entryCount, ret)
 end
 
 function LibSerialize:_ReadArray(entryCount, ret)
-    -- debugPrint("Extracting values for array,", entryCount)
+    -- debugPrint("Extracting values for array:", entryCount)
 
     ret = ret or {}
     for i = 1, entryCount do
@@ -545,7 +550,7 @@ function LibSerialize:_ReadArray(entryCount, ret)
 end
 
 function LibSerialize:_ReadMixed(arrayCount, tableCount)
-    -- debugPrint("Extracting values for mixed table,", arrayCount, tableCount)
+    -- debugPrint("Extracting values for mixed table:", arrayCount, tableCount)
 
     local ret = {}
     self:_ReadArray(arrayCount, ret)
@@ -565,14 +570,20 @@ end
 local embeddedIndexShift = 4
 local embeddedCountShift = 16
 LibSerialize._EmbeddedIndex = {
-    STRING = 1,
-    TABLE = 2,
-    ARRAY = 3,
+    STRING = 0,
+    TABLE = 1,
+    ARRAY = 2,
+    MIXED = 3,
 }
 LibSerialize._EmbeddedReaderTable = {
     [LibSerialize._EmbeddedIndex.STRING] = function(self, count) return self:_ReadString(count) end,
     [LibSerialize._EmbeddedIndex.TABLE] =  function(self, count) return self:_ReadTable(count) end,
     [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, count) return self:_ReadArray(count) end,
+    [LibSerialize._EmbeddedIndex.MIXED] =  function(self, count)
+        local arrayCount = count % 4
+        local tableCount = (count - arrayCount) / 4
+        return self:_ReadMixed(arrayCount + 1, tableCount + 1)
+    end,
 }
 assert(#LibSerialize._EmbeddedReaderTable < 4) -- two bits reserved
 
@@ -740,8 +751,7 @@ end
 
 LibSerialize._WriterTable = {
     ["number"] = function(self, value)
-        local _, fract = math_modf(value)
-        if fract ~= 0 then
+        if IsFractional(value) then
             self._WriterTable["float"](self, value)
         else
             if value >= 0 and value < 8192 then
@@ -829,14 +839,24 @@ LibSerialize._WriterTable = {
         elseif arraySize ~= 0 then
             -- The table has both array and dictionary keys. We can still save space
             -- by writing the array values first without keys.
-            count = count - arraySize;
-            -- debugPrint("Serializing mixed array-table:", arraySize, count)
+            count = count - arraySize
 
-            -- Use the max required bytes for the two counts.
-            local required = max(GetRequiredBytes(count), GetRequiredBytes(arraySize))
-            self:_WriteByte(readerIndexShift * mixedIndices[required])
-            self:_WriteInt(arraySize, required)
-            self:_WriteInt(count, required)
+            if count < 5 and arraySize < 5 then
+                -- Short counts can be embedded directly into the type byte.
+                -- They have to be really short though, since we have two counts.
+                -- Since neither can be zero (this is a mixed table), though,
+                -- we can get away with not being able to represent 0.
+                -- debugPrint("Serializing mixed array-table, embedded counts:", arraySize, count)
+                local combined = (count - 1) * 4 + arraySize - 1
+                self:_WriteByte(embeddedCountShift * combined + embeddedIndexShift * self._EmbeddedIndex.MIXED + 2)
+            else
+                -- Use the max required bytes for the two counts.
+                -- debugPrint("Serializing mixed array-table:", arraySize, count)
+                local required = max(GetRequiredBytes(count), GetRequiredBytes(arraySize))
+                self:_WriteByte(readerIndexShift * mixedIndices[required])
+                self:_WriteInt(arraySize, required)
+                self:_WriteInt(count, required)
+            end
 
             for _, v in ipairs(value) do
                 self:_WriteObject(v)
@@ -844,7 +864,7 @@ LibSerialize._WriterTable = {
 
             local mapCount = 0
             for k, v in pairs(value) do
-                if type(k) ~= "number" or k < 1 or k > arraySize then
+                if type(k) ~= "number" or k < 1 or k > arraySize or IsFractional(k) then
                     mapCount = mapCount + 1
                     self:_WriteKeyValuePair(k, v)
                 end
