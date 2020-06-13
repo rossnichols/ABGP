@@ -313,6 +313,7 @@ end
     Create a reader to easily reader stuffs as the unit of bits.
     Return values:
     1. ReadBytes(bytelen, buffer, buffer_size)
+    2. ReaderBitlenLeft()
 --]]
 local function CreateReader(input_string)
     local input = input_string
@@ -354,7 +355,11 @@ local function CreateReader(input_string)
         return buffer_size
     end
 
-    return ReadBytes
+    local function ReaderBitlenLeft()
+        return (input_strlen - input_next_byte_pos + 1) * 8 + cache_bitlen
+    end
+
+    return ReadBytes, ReaderBitlenLeft
 end
 
 
@@ -909,7 +914,7 @@ end
 
 function LibSerialize:_Deserialize(input)
     self:_ClearExisting()
-    local ReadBytes = CreateReader(input)
+    local ReadBytes, ReaderBitlenLeft = CreateReader(input)
 
     self._readBuffer = {}
     self._readBytes = ReadBytes
@@ -918,7 +923,16 @@ function LibSerialize:_Deserialize(input)
     -- no extra work needs to be done to decode the data.
     local version = self:_ReadByte()
     assert(version == self._SERIALIZATION_VERSION)
-    return self:_ReadObject()
+    local obj = self:_ReadObject()
+
+    local remaining = ReaderBitlenLeft()
+    if remaining ~= 0 then
+        error(remaining > 0
+              and "Buffer contents not fully read"
+              or "Reader went past end of buffer")
+    end
+
+    return obj
 end
 
 function LibSerialize:Deserialize(input)
