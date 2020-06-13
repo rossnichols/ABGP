@@ -216,6 +216,13 @@ function ABGP:Serialize(data, legacy)
             self:LogDebug("Serialized payload %d compressed to %d.", #serialized, #compressed);
         end
 
+        if self:GetDebugOpt() then
+            local success, dataTest = LibSerialize:Deserialize(serialized);
+            if not success or type(dataTest) ~= "table" or not self.tCompare(data, dataTest) then
+                _G.error("Serialization failed!");
+            end
+        end
+
         return (LibDeflate:EncodeForWoWAddonChannel(compressed)), self:GetCommPrefix();
     end
 end
