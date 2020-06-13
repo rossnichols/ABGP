@@ -478,15 +478,49 @@ function LibSerialize:_ReadInt64()
 end
 
 function LibSerialize:_ReadObject()
-    local typ = self:_ReadByte()
-    -- debugPrint("Found type", typ)
+    --[[-----------------------------------------------------------------------
+        Encoding format:
+        The first byte supports the following formats:
+        * NNNN NNN1: a 7 bit non-negative int
+        * CCCC TT10: a 2 bit type index and 4 bit count (strlen, #tab, etc.)
+          * Followed by the type-dependent payload
+        * NNNN N100: the lower five bits of a 13 bit int
+          * Followed by a byte for the upper bits
+        * TTTT T000: a 5 bit type index
+          * Followed by the type-dependent payload, including count(s) if needed
+    --]]-----------------------------------------------------------------------
 
-    local numReaderIndices = #self.ReaderTable
-    if typ > numReaderIndices then
-        -- The object was a number encoded in the type byte.
-        return typ - numReaderIndices - 1
+    local value = self:_ReadByte()
+
+    if value % 2 == 1 then
+        -- Number encoded in the top 7 bits.
+        local num = (value - 1) / 2
+        -- debugPrint("Found embedded number (1byte):", value, num)
+        return num
     end
-    return self.ReaderTable[typ](self)
+
+    if value % 4 == 2 then
+        -- Type with encoded count. Extract both.
+        -- The type is in bits 3-4, count in 5-8.
+        local typ = (value - 2) / 4
+        local count = (typ - typ % 4) / 4
+        typ = typ % 4
+        -- debugPrint("Found type with embedded count:", value, typ, count)
+        return self._EmbeddedReaderTable[typ](self, count)
+    end
+
+    if value % 8 == 4 then
+        -- Number encoded in the top 5 bits, plus an additional byte's worth (so 13 bits).
+        local packed = Pack2(self:_ReadByte(), value)
+        local num = (packed - 4) / 8
+        -- debugPrint("Found embedded number (2bytes):", value, packed, num)
+        return num
+    end
+
+    -- Otherwise, the type index is encoded in the upper 5 bits.
+    local typ = value / 8
+    -- debugPrint("Found type:", value, typ)
+    return self._ReaderTable[typ](self)
 end
 
 function LibSerialize:_ReadTable(entryCount, ret)
@@ -528,6 +562,21 @@ function LibSerialize:_ReadString(len)
     return value
 end
 
+local embeddedIndexShift = 4
+local embeddedCountShift = 16
+LibSerialize._EmbeddedIndex = {
+    STRING = 1,
+    TABLE = 2,
+    ARRAY = 3,
+}
+assert(#LibSerialize._EmbeddedIndex < 4) -- two bits reserved
+LibSerialize._EmbeddedReaderTable = {
+    [LibSerialize._EmbeddedIndex.STRING] = function(self, count) return self:_ReadString(count) end,
+    [LibSerialize._EmbeddedIndex.TABLE] =  function(self, count) return self:_ReadTable(count) end,
+    [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, count) return self:_ReadArray(count) end,
+}
+
+local readerIndexShift = 8
 LibSerialize._ReaderIndex = {
     NUM_8_POS = 1,
     NUM_8_NEG = 2,
@@ -539,12 +588,12 @@ LibSerialize._ReaderIndex = {
     NUM_64_NEG = 8,
     NUM_FLOAT = 9,
 
-    STR_8 = 10,
-    STR_16 = 11,
-    STR_32 = 12,
+    BOOL_T = 10,
+    BOOL_F = 11,
 
-    BOOL_T = 13,
-    BOOL_F = 14,
+    STR_8 = 12,
+    STR_16 = 13,
+    STR_32 = 14,
 
     TABLE_8 = 15,
     TABLE_16 = 16,
@@ -562,9 +611,8 @@ LibSerialize._ReaderIndex = {
     EXISTING_16 = 25,
     EXISTING_32 = 26,
 }
-
--- NOTE: must not skip any indices, for number packing to work properly.
-LibSerialize.ReaderTable = {
+assert(#LibSerialize._ReaderIndex < 32) -- five bits reserved
+LibSerialize._ReaderTable = {
     -- Numbers
     [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
     [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
@@ -576,14 +624,14 @@ LibSerialize.ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
     [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return IntBitsToFloat(self:_ReadInt32()) end,
 
+    -- Booleans
+    [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
+    [LibSerialize._ReaderIndex.BOOL_F] = function(self) return false end,
+
     -- Strings (encoded as size + buffer)
     [LibSerialize._ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
     [LibSerialize._ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
     [LibSerialize._ReaderIndex.STR_32] = function(self) return self:_ReadString(self:_ReadInt32()) end,
-
-    -- Booleans
-    [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
-    [LibSerialize._ReaderIndex.BOOL_F] = function(self) return false end,
 
     -- Tables (encoded as count + key/value pairs)
     [LibSerialize._ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
@@ -648,7 +696,7 @@ local existingIndices = {
 
 function LibSerialize:_WriteObject(obj)
     local typ = type(obj)
-    local writeFn = self.WriterTable[typ] or error(("Unhandled type: %s"):format(typ))
+    local writeFn = self._WriterTable[typ] or error(("Unhandled type: %s"):format(typ))
     writeFn(self, obj)
 end
 
@@ -690,65 +738,72 @@ function LibSerialize:_WriteInt(value, threshold)
     end
 end
 
-LibSerialize.WriterTable = {
+LibSerialize._WriterTable = {
     ["number"] = function(self, value)
         local _, fract = math_modf(value)
         if fract ~= 0 then
-            self.WriterTable["float"](self, value)
+            self._WriterTable["float"](self, value)
         else
-            -- The type byte can be used to store small nonnegative
-            -- numbers for all the values that don't correspond to
-            -- one with an actual meaning. Calculate how much space
-            -- we have to work with.
-            local numReaderIndices = #self.ReaderTable
-            local maxPacked = 255 - numReaderIndices - 1
-
-            if value >= 0 and value <= maxPacked then
-                -- Pack the value into the type byte
-                -- debugPrint("Serializing embedded number:", value)
-                self:_WriteByte(value + numReaderIndices + 1)
+            if value >= 0 and value < 8192 then
+                -- The type byte supports two modes by which a number can be embedded:
+                -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 13-bit numbers.
+                if value < 128 then
+                    -- debugPrint("Serializing embedded number (1byte):", value)
+                    self:_WriteByte(value * 2 + 1)
+                else
+                    -- debugPrint("Serializing embedded number (2bytes):", value)
+                    local upper, lower = Unpack2(value * 8 + 4)
+                    self:_WriteByte(lower)
+                    self:_WriteByte(upper)
+                end
             else
                 -- debugPrint("Serializing number:", value)
                 local sign = 0
                 if value < 0 then
                     value = -value
-                    sign = 1
+                    sign = readerIndexShift
                 end
                 local required = GetRequiredBytes(value, true)
-                self:_WriteByte(sign + numberIndices[required])
+                self:_WriteByte(sign + readerIndexShift * numberIndices[required])
                 self:_WriteInt(value, required)
             end
         end
     end,
     ["float"] = function(self, value)
         -- debugPrint("Serializing float:", value)
-        self:_WriteByte(self._ReaderIndex.NUM_FLOAT)
+        self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
         self:_WriteInt(FloatBitsToInt(value), 4)
-    end,
-    ["string"] = function(self, value)
-        local existing = self._existingEntries[value]
-        -- Small strings get serialized into #value + 1 bytes,
-        -- with their length as the extra byte. If this string has
-        -- been seen before, we'll use the bookkeeping entry as
-        -- long as the number of bytes for it is smaller.
-        if existing and GetRequiredBytes(existing) < #value + 1 then
-            -- debugPrint("Serializing existing string:", value)
-            local required = GetRequiredBytes(existing)
-            self:_WriteByte(existingIndices[required])
-            self:_WriteInt(self._existingEntries[value], required)
-        else
-            local len = #value
-            -- debugPrint("Serializing string:", value, len)
-            local required = GetRequiredBytes(len)
-            self:_WriteByte(stringIndices[required])
-            self:_WriteInt(len, required)
-            self._writeString(value)
-            self:_AddExisting(value)
-        end
     end,
     ["boolean"] = function(self, value)
         -- debugPrint("Serializing bool:", value)
-        self:_WriteByte(value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F)
+        self:_WriteByte(readerIndexShift * (value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F))
+    end,
+    ["string"] = function(self, value)
+        local existing = self._existingEntries[value]
+        -- Small strings get serialized into #value bytes. If this string has
+        -- been seen before, we'll use the bookkeeping entry as long as the
+        -- number of bytes for it is smaller.
+        if existing and GetRequiredBytes(existing) < #value then
+            -- debugPrint("Serializing existing string:", value)
+            local required = GetRequiredBytes(existing)
+            self:_WriteByte(readerIndexShift * existingIndices[required])
+            self:_WriteInt(self._existingEntries[value], required)
+        else
+            local len = #value
+            if len < 16 then
+                -- Short lengths can be embedded directly into the type byte.
+                -- debugPrint("Serializing string, embedded count:", value, len)
+                self:_WriteByte(embeddedCountShift * len + embeddedIndexShift * self._EmbeddedIndex.STRING + 2)
+            else
+                -- debugPrint("Serializing string:", value, len)
+                local required = GetRequiredBytes(len)
+                self:_WriteByte(readerIndexShift * stringIndices[required])
+                self:_WriteInt(len, required)
+            end
+
+            self._writeString(value)
+            self:_AddExisting(value)
+        end
     end,
     ["table"] = function(self, value)
         local count, arraySize = 0, #value
@@ -756,22 +811,30 @@ LibSerialize.WriterTable = {
             count = count + 1
         end
         if count == arraySize then
-            -- debugPrint("Serializing array:", count)
-            -- The table is effectively an array. We can avoid writing the keys.
-            local required = GetRequiredBytes(count)
-            self:_WriteByte(arrayIndices[required])
-            self:_WriteInt(count, required)
+            -- The table is an array. We can avoid writing the keys.
+            if count < 16 then
+                -- Short counts can be embedded directly into the type byte.
+                -- debugPrint("Serializing array, embedded count:", count)
+                self:_WriteByte(embeddedCountShift * count + embeddedIndexShift * self._EmbeddedIndex.ARRAY + 2)
+            else
+                -- debugPrint("Serializing array:", count)
+                local required = GetRequiredBytes(count)
+                self:_WriteByte(readerIndexShift * arrayIndices[required])
+                self:_WriteInt(count, required)
+            end
 
             for _, v in ipairs(value) do
                 self:_WriteObject(v)
             end
         elseif arraySize ~= 0 then
-            -- debugPrint("Serializing mixed array-table:", arraySize, count)
+            -- The table has both array and dictionary keys. We can still save space
+            -- by writing the array values first without keys.
             count = count - arraySize;
+            -- debugPrint("Serializing mixed array-table:", arraySize, count)
 
             -- Use the max required bytes for the two counts.
             local required = max(GetRequiredBytes(count), GetRequiredBytes(arraySize))
-            self:_WriteByte(mixedIndices[required])
+            self:_WriteByte(readerIndexShift * mixedIndices[required])
             self:_WriteInt(arraySize, required)
             self:_WriteInt(count, required)
 
@@ -788,10 +851,17 @@ LibSerialize.WriterTable = {
             end
             assert(mapCount == count)
         else
-            -- debugPrint("Serializing table:", count)
-            local required = GetRequiredBytes(count)
-            self:_WriteByte(tableIndices[required])
-            self:_WriteInt(count, required)
+            -- The table has only dictionary keys, so we'll write them all.
+            if count < 16 then
+                -- Short counts can be embedded directly into the type byte.
+                -- debugPrint("Serializing table, embedded count:", count)
+                self:_WriteByte(embeddedCountShift * count + embeddedIndexShift * self._EmbeddedIndex.TABLE + 2)
+            else
+                -- debugPrint("Serializing table:", count)
+                local required = GetRequiredBytes(count)
+                self:_WriteByte(readerIndexShift * tableIndices[required])
+                self:_WriteInt(count, required)
+            end
 
             for k, v in pairs(value) do
                 self:_WriteKeyValuePair(k, v)
