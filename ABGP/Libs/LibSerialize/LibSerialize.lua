@@ -45,7 +45,7 @@ do
 
     -- Update this if a breaking change is introduced in the compression,
     -- so that older data can be identified and decoded properly.
-    local _COMPRESSION_VERSION = 1
+    local _SERIALIZATION_VERSION = 1
 
     local _COPYRIGHT =
     "LibSerialize ".. _VERSION
@@ -72,7 +72,7 @@ do
     LibSerialize._MAJOR = _MAJOR
     LibSerialize._MINOR = _MINOR
     LibSerialize._COPYRIGHT = _COPYRIGHT
-    LibSerialize._COMPRESSION_VERSION = _COMPRESSION_VERSION
+    LibSerialize._SERIALIZATION_VERSION = _SERIALIZATION_VERSION
 end
 
 -- localize Lua api for faster access.
@@ -900,7 +900,7 @@ function LibSerialize:Serialize(input)
     self._writeBits = WriteBits
     self._writeString = WriteString
     self._flushWriter = FlushWriter
-    self:_WriteByte(self._COMPRESSION_VERSION)
+    self:_WriteByte(self._SERIALIZATION_VERSION)
     self:_WriteObject(input)
 
     local total_bitlen, result = FlushWriter(_FLUSH_MODE_OUTPUT)
@@ -917,7 +917,7 @@ function LibSerialize:_Deserialize(input)
     -- Since there's only one compression version currently,
     -- no extra work needs to be done to decode the data.
     local version = self:_ReadByte()
-    assert(version == self._COMPRESSION_VERSION)
+    assert(version == self._SERIALIZATION_VERSION)
     return self:_ReadObject()
 end
 
