@@ -671,20 +671,20 @@ function LibSerialize:_WriteInt(value, threshold)
     -- still reasonable.
     if threshold == 8 then
         local bottom = value % 4294967296
-        local a = bottom % 65536
-        local b = (bottom - a) / 65536
+        local c = bottom % 65536
+        local d = (bottom - c) / 65536
         local top = (value - bottom) / 4294967296
-        local c = top % 65536
-        local d = (top - c) / 65536
-        self._writeBits(d, 16)
-        self._writeBits(c, 16)
-        self._writeBits(b, 16)
+        local a = top % 65536
+        local b = (top - a) / 65536
         self._writeBits(a, 16)
+        self._writeBits(b, 16)
+        self._writeBits(c, 16)
+        self._writeBits(d, 16)
     elseif threshold == 4 then
         local a = value % 65536
         local b = (value - a) / 65536
-        self._writeBits(b, 16)
         self._writeBits(a, 16)
+        self._writeBits(b, 16)
     else
         self._writeBits(value, threshold * 8)
     end
