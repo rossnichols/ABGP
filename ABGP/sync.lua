@@ -11,6 +11,7 @@ local max = max;
 local next = next;
 local bit = bit;
 local unpack = unpack;
+local type = type;
 
 local requestedHistoryToken;
 local requestedHistoryEntries = {};
@@ -670,21 +671,26 @@ function ABGP:CommitHistory(phase)
     end
 end
 
-function ABGP:TestSerialization()
-    local history = _G.ABGP_Data.p1.gpHistory;
-    -- local history = _G.ABGP_Data.p1.itemValues;
+function ABGP:TestSerialization(input)
+    input = input or _G.ABGP_Data.p1.gpHistory;
+    -- input = input or _G.ABGP_Data.p1.itemValues;
     local LibDeflate = _G.LibStub("LibDeflate");
 
-    local serialized = LibSerialize:Serialize(history);
+    local serialized = LibSerialize:Serialize(input);
     self:Notify("serialized len: %d", #serialized);
     local compressed = LibDeflate:CompressDeflate(serialized);
     self:Notify("compressed len: %d", #compressed);
-    self:Notify("compared to legacy of %d", self:Serialize(history, true):len());
+    self:Notify("compared to legacy of %d", self:Serialize(input, true):len());
 
     local decompressed = LibDeflate:DecompressDeflate(compressed);
     local success, deserialized = LibSerialize:Deserialize(decompressed);
     self:Notify("deserialization success: %s", success and "true" or "false");
-    self:Notify("matching: %s", self.tCompare(history, deserialized) and "yes" or "no");
+
+    if type(input) == "table" then
+        self:Notify("matching: %s", self.tCompare(input, deserialized) and "yes" or "no");
+    else
+        self:Notify("matching: %s", input == deserialized and "yes" or "no");
+    end
 end
 
 StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {

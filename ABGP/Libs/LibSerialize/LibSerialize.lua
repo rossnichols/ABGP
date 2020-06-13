@@ -719,13 +719,6 @@ function LibSerialize:_WriteObject(obj)
     writeFn(self, obj)
 end
 
-function LibSerialize:_WriteKeyValuePair(key, value)
-    assert(key ~= nil and value ~= nil)
-
-    self:_WriteObject(key)
-    self:_WriteObject(value)
-end
-
 function LibSerialize:_WriteByte(value)
     self:_WriteInt(value, 1)
 end
@@ -878,7 +871,8 @@ LibSerialize._WriterTable = {
             for k, v in pairs(value) do
                 if type(k) ~= "number" or k < 1 or k > arraySize or IsFractional(k) then
                     mapCount = mapCount + 1
-                    self:_WriteKeyValuePair(k, v)
+                    self:_WriteObject(k)
+                    self:_WriteObject(v)
                 end
             end
             assert(mapCount == count)
@@ -896,7 +890,8 @@ LibSerialize._WriterTable = {
             end
 
             for k, v in pairs(value) do
-                self:_WriteKeyValuePair(k, v)
+                self:_WriteObject(k)
+                self:_WriteObject(v)
             end
         end
     end,
