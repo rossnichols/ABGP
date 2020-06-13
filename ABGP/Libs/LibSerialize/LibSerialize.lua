@@ -85,8 +85,6 @@ local string_char = string.char
 local string_sub = string.sub
 local table_concat = table.concat
 local bit_band = bit.band
-local bit_lshift = bit.lshift
-local bit_rshift = bit.rshift
 local math_huge = math.huge
 local math_modf = math.modf
 local type = type
@@ -101,19 +99,6 @@ local print = print
 --[[---------------------------------------------------------------------------
     Helper functions.
 --]]---------------------------------------------------------------------------
-
-local function Pack2(a, b)
-    return bit_lshift(a, 8) + b
-end
-
-local function Pack4(a, b, c, d)
-    return bit_lshift(a, 24) + bit_lshift(b, 16) + bit_lshift(c, 8) + d
-end
-
-local function Unpack2(val)
-    return (bit_rshift(val, 8) % 256),
-           (val % 256)
-end
 
 local function GetRequiredBytes(value, allow8)
     if value < 256 then return 1 end
@@ -308,37 +293,6 @@ end
     Read (deserialization) support.
 --]]---------------------------------------------------------------------------
 
-function LibSerialize:_ReadByte()
-    -- DebugPrint("Reading byte")
-
-    local str = self:_ReadBytes(1)
-    return string_byte(str)
-end
-
-function LibSerialize:_ReadInt16()
-    -- DebugPrint("Reading int16")
-
-    local str = self:_ReadBytes(2)
-    local b1, b2 = string_byte(str, 1, 2)
-    return b1 * 0x100 + b2
-end
-
-function LibSerialize:_ReadInt32()
-    -- DebugPrint("Reading int32")
-
-    local str = self:_ReadBytes(4)
-    local b1, b2, b3, b4 = string_byte(str, 1, 4)
-    return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
-end
-
-function LibSerialize:_ReadInt64()
-    -- DebugPrint("Reading int64")
-
-    local str = self:_ReadBytes(7)
-    local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
-    return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
-end
-
 function LibSerialize:_ReadObject()
     --[[-----------------------------------------------------------------------
         Encoding format:
@@ -373,7 +327,7 @@ function LibSerialize:_ReadObject()
 
     if value % 8 == 4 then
         -- Number embedded in the top 5 bits, plus an additional byte's worth (so 13 bits).
-        local packed = Pack2(self:_ReadByte(), value)
+        local packed = self:_ReadByte() * 0x100 + value
         local num = (packed - 4) / 8
         -- DebugPrint("Found embedded number (2bytes):", value, packed, num)
         return num
@@ -415,14 +369,6 @@ function LibSerialize:_ReadMixed(arrayCount, tableCount)
     return ret
 end
 
-function LibSerialize:_ReadBytes(len)
-    -- DebugPrint("Reading string,", len)
-
-    self._readBytes(len, self._readBuffer, 0)
-    local value = table_concat(self._readBuffer, "", 1, len)
-    return value
-end
-
 function LibSerialize:_ReadString(len)
     -- DebugPrint("Reading string,", len)
 
@@ -430,6 +376,45 @@ function LibSerialize:_ReadString(len)
     if len > 2 then
         self:_AddExisting(value)
     end
+    return value
+end
+
+function LibSerialize:_ReadByte()
+    -- DebugPrint("Reading byte")
+
+    local str = self:_ReadBytes(1)
+    return string_byte(str)
+end
+
+function LibSerialize:_ReadInt16()
+    -- DebugPrint("Reading int16")
+
+    local str = self:_ReadBytes(2)
+    local b1, b2 = string_byte(str, 1, 2)
+    return b1 * 0x100 + b2
+end
+
+function LibSerialize:_ReadInt32()
+    -- DebugPrint("Reading int32")
+
+    local str = self:_ReadBytes(4)
+    local b1, b2, b3, b4 = string_byte(str, 1, 4)
+    return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
+end
+
+function LibSerialize:_ReadInt64()
+    -- DebugPrint("Reading int64")
+
+    local str = self:_ReadBytes(7)
+    local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
+    return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
+end
+
+function LibSerialize:_ReadBytes(len)
+    -- DebugPrint("Reading string,", len)
+
+    self._readBytes(len, self._readBuffer, 0)
+    local value = table_concat(self._readBuffer, "", 1, len)
     return value
 end
 
@@ -541,6 +526,42 @@ assert(#LibSerialize._ReaderTable < 32) -- five bits reserved
     Write (serialization) support.
 --]]---------------------------------------------------------------------------
 
+function LibSerialize:_WriteObject(obj)
+    local typ = type(obj)
+    local writeFn = self._WriterTable[typ] or error(("Unhandled type: %s"):format(typ))
+    writeFn(self, obj)
+end
+
+function LibSerialize:_WriteByte(value)
+    self:_WriteInt(value, 1)
+end
+
+function LibSerialize:_WriteInt(n, threshold)
+    local str
+    if threshold == 8 then
+        -- Since a double can only hold a 53 bit int,
+        -- we only need to write seven bytes.
+        str = string_char(floor(n / 0x1000000000000) % 0x100,
+                          floor(n / 0x10000000000) % 0x100,
+                          floor(n / 0x100000000) % 0x100,
+                          floor(n / 0x1000000) % 0x100,
+                          floor(n / 0x10000) % 0x100,
+                          floor(n / 0x100) % 0x100,
+                          n % 0x100)
+    elseif threshold == 4 then
+        str = string_char(floor(n / 0x1000000),
+                          floor(n / 0x10000) % 0x100,
+                          floor(n / 0x100) % 0x100,
+                          n % 0x100)
+    elseif threshold == 2 then
+        str = string_char(floor(n / 0x100),
+                          n % 0x100)
+    elseif threshold == 1 then
+        str = string_char(n)
+    end
+    self._writeString(str)
+end
+
 -- Lookup tables to map the number of required bytes to the appropriate
 -- reader table index. Note that for numbers, we leave space for the
 -- negative versions of each level as well.
@@ -576,42 +597,6 @@ local existingIndices = {
     [4] = LibSerialize._ReaderIndex.EXISTING_32,
 }
 
-function LibSerialize:_WriteObject(obj)
-    local typ = type(obj)
-    local writeFn = self._WriterTable[typ] or error(("Unhandled type: %s"):format(typ))
-    writeFn(self, obj)
-end
-
-function LibSerialize:_WriteByte(value)
-    self:_WriteInt(value, 1)
-end
-
-function LibSerialize:_WriteInt(n, threshold)
-    local str
-    if threshold == 8 then
-        -- Since a double can only hold a 53 bit whole number,
-        -- we only need to write seven bytes.
-        str = string_char(floor(n / 0x1000000000000) % 0x100,
-                          floor(n / 0x10000000000) % 0x100,
-                          floor(n / 0x100000000) % 0x100,
-                          floor(n / 0x1000000) % 0x100,
-                          floor(n / 0x10000) % 0x100,
-                          floor(n / 0x100) % 0x100,
-                          n % 0x100)
-    elseif threshold == 4 then
-        str = string_char(floor(n / 0x1000000),
-                          floor(n / 0x10000) % 0x100,
-                          floor(n / 0x100) % 0x100,
-                          n % 0x100)
-    elseif threshold == 2 then
-        str = string_char(floor(n / 0x100),
-                          n % 0x100)
-    elseif threshold == 1 then
-        str = string_char(n)
-    end
-    self._writeString(str)
-end
-
 LibSerialize._WriterTable = {
     ["nil"] = function(self)
         -- DebugPrint("Serializing nil")
@@ -619,37 +604,33 @@ LibSerialize._WriterTable = {
     end,
     ["number"] = function(self, value)
         if IsFractional(value) then
-            self._WriterTable["float"](self, value)
-        else
-            if value >= 0 and value < 8192 then
-                -- The type byte supports two modes by which a number can be embedded:
-                -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 13-bit numbers.
-                if value < 128 then
-                    -- DebugPrint("Serializing embedded number (1byte):", value)
-                    self:_WriteByte(value * 2 + 1)
-                else
-                    -- DebugPrint("Serializing embedded number (2bytes):", value)
-                    local upper, lower = Unpack2(value * 8 + 4)
-                    self:_WriteByte(lower)
-                    self:_WriteByte(upper)
-                end
+            -- DebugPrint("Serializing float:", value)
+            self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
+            self._writeString(FloatToString(value))
+        elseif value >= 0 and value < 8192 then
+            -- The type byte supports two modes by which a number can be embedded:
+            -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 13-bit numbers.
+            if value < 128 then
+                -- DebugPrint("Serializing embedded number (1byte):", value)
+                self:_WriteByte(value * 2 + 1)
             else
-                -- DebugPrint("Serializing number:", value)
-                local sign = 0
-                if value < 0 then
-                    value = -value
-                    sign = readerIndexShift
-                end
-                local required = GetRequiredBytes(value, true)
-                self:_WriteByte(sign + readerIndexShift * numberIndices[required])
-                self:_WriteInt(value, required)
+                -- DebugPrint("Serializing embedded number (2bytes):", value)
+                value = value * 8 + 4
+                local upper, lower = floor(value / 0x100), value % 0x100)
+                self:_WriteByte(lower)
+                self:_WriteByte(upper)
             end
+        else
+            -- DebugPrint("Serializing number:", value)
+            local sign = 0
+            if value < 0 then
+                value = -value
+                sign = readerIndexShift
+            end
+            local required = GetRequiredBytes(value, true)
+            self:_WriteByte(sign + readerIndexShift * numberIndices[required])
+            self:_WriteInt(value, required)
         end
-    end,
-    ["float"] = function(self, value)
-        -- DebugPrint("Serializing float:", value)
-        self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
-        self._writeString(FloatToString(value))
     end,
     ["boolean"] = function(self, value)
         -- DebugPrint("Serializing bool:", value)
