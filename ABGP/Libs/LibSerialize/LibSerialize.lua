@@ -140,7 +140,7 @@ local function IsFractional(value)
     return fract ~= 0
 end
 
-local debugPrint = function(...)
+local DebugPrint = function(...)
     print(...)
     -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
 end
@@ -228,7 +228,7 @@ local function CreateWriter()
     -- @param bitlen: The bit length of "value"
     -- @return nil
     local function WriteBits(value, bitlen)
-        -- debugPrint("Writing value", value, "bitlen", bitlen)
+        -- DebugPrint("Writing value", value, "bitlen", bitlen)
         cache = cache + value * _pow2[cache_bitlen]
         cache_bitlen = cache_bitlen + bitlen
         total_bitlen = total_bitlen + bitlen
@@ -250,7 +250,7 @@ local function CreateWriter()
     -- @param str The string being written
     -- @return nil
     local function WriteString(str)
-        -- debugPrint("Writing string len", #str, "bitlen", #str * 8)
+        -- DebugPrint("Writing string len", #str, "bitlen", #str * 8)
         for _ = 1, cache_bitlen, 8 do
             buffer_size = buffer_size + 1
             buffer[buffer_size] = string_char(cache % 256)
@@ -451,14 +451,14 @@ end
 --]]---------------------------------------------------------------------------
 
 function LibSerialize:_ReadByte()
-    -- debugPrint("Reading byte")
+    -- DebugPrint("Reading byte")
 
     self._readBytes(1, self._readBuffer, 0)
     return string_byte(self._readBuffer[1])
 end
 
 function LibSerialize:_ReadInt16()
-    -- debugPrint("Reading int16")
+    -- DebugPrint("Reading int16")
 
     self._readBytes(2, self._readBuffer, 0)
     return Pack2(string_byte(self._readBuffer[2]),
@@ -466,7 +466,7 @@ function LibSerialize:_ReadInt16()
 end
 
 function LibSerialize:_ReadInt32()
-    -- debugPrint("Reading int32")
+    -- DebugPrint("Reading int32")
 
     self._readBytes(4, self._readBuffer, 0)
     return Pack4(string_byte(self._readBuffer[4]),
@@ -476,7 +476,7 @@ function LibSerialize:_ReadInt32()
 end
 
 function LibSerialize:_ReadInt64()
-    -- debugPrint("Reading int64")
+    -- DebugPrint("Reading int64")
 
     local top, bottom = self:_ReadInt32(), self:_ReadInt32()
     return (top * 4294967296) + bottom
@@ -500,7 +500,7 @@ function LibSerialize:_ReadObject()
     if value % 2 == 1 then
         -- Number encoded in the top 7 bits.
         local num = (value - 1) / 2
-        -- debugPrint("Found embedded number (1byte):", value, num)
+        -- DebugPrint("Found embedded number (1byte):", value, num)
         return num
     end
 
@@ -510,7 +510,7 @@ function LibSerialize:_ReadObject()
         local typ = (value - 2) / 4
         local count = (typ - typ % 4) / 4
         typ = typ % 4
-        -- debugPrint("Found type with embedded count:", value, typ, count)
+        -- DebugPrint("Found type with embedded count:", value, typ, count)
         return self._EmbeddedReaderTable[typ](self, count)
     end
 
@@ -518,18 +518,18 @@ function LibSerialize:_ReadObject()
         -- Number encoded in the top 5 bits, plus an additional byte's worth (so 13 bits).
         local packed = Pack2(self:_ReadByte(), value)
         local num = (packed - 4) / 8
-        -- debugPrint("Found embedded number (2bytes):", value, packed, num)
+        -- DebugPrint("Found embedded number (2bytes):", value, packed, num)
         return num
     end
 
     -- Otherwise, the type index is encoded in the upper 5 bits.
     local typ = value / 8
-    -- debugPrint("Found type:", value, typ)
+    -- DebugPrint("Found type:", value, typ)
     return self._ReaderTable[typ](self)
 end
 
 function LibSerialize:_ReadTable(entryCount, ret)
-    -- debugPrint("Extracting keys/values for table:", entryCount)
+    -- DebugPrint("Extracting keys/values for table:", entryCount)
 
     ret = ret or {}
     for i = 1, entryCount do
@@ -540,7 +540,7 @@ function LibSerialize:_ReadTable(entryCount, ret)
 end
 
 function LibSerialize:_ReadArray(entryCount, ret)
-    -- debugPrint("Extracting values for array:", entryCount)
+    -- DebugPrint("Extracting values for array:", entryCount)
 
     ret = ret or {}
     for i = 1, entryCount do
@@ -550,7 +550,7 @@ function LibSerialize:_ReadArray(entryCount, ret)
 end
 
 function LibSerialize:_ReadMixed(arrayCount, tableCount)
-    -- debugPrint("Extracting values for mixed table:", arrayCount, tableCount)
+    -- DebugPrint("Extracting values for mixed table:", arrayCount, tableCount)
 
     local ret = {}
     self:_ReadArray(arrayCount, ret)
@@ -559,7 +559,7 @@ function LibSerialize:_ReadMixed(arrayCount, tableCount)
 end
 
 function LibSerialize:_ReadString(len)
-    -- debugPrint("Reading string,", len)
+    -- DebugPrint("Reading string,", len)
 
     self._readBytes(len, self._readBuffer, 0)
     local value = table_concat(self._readBuffer, "", 1, len)
@@ -758,16 +758,16 @@ LibSerialize._WriterTable = {
                 -- The type byte supports two modes by which a number can be embedded:
                 -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 13-bit numbers.
                 if value < 128 then
-                    -- debugPrint("Serializing embedded number (1byte):", value)
+                    -- DebugPrint("Serializing embedded number (1byte):", value)
                     self:_WriteByte(value * 2 + 1)
                 else
-                    -- debugPrint("Serializing embedded number (2bytes):", value)
+                    -- DebugPrint("Serializing embedded number (2bytes):", value)
                     local upper, lower = Unpack2(value * 8 + 4)
                     self:_WriteByte(lower)
                     self:_WriteByte(upper)
                 end
             else
-                -- debugPrint("Serializing number:", value)
+                -- DebugPrint("Serializing number:", value)
                 local sign = 0
                 if value < 0 then
                     value = -value
@@ -780,12 +780,12 @@ LibSerialize._WriterTable = {
         end
     end,
     ["float"] = function(self, value)
-        -- debugPrint("Serializing float:", value)
+        -- DebugPrint("Serializing float:", value)
         self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
         self:_WriteInt(FloatBitsToInt(value), 4)
     end,
     ["boolean"] = function(self, value)
-        -- debugPrint("Serializing bool:", value)
+        -- DebugPrint("Serializing bool:", value)
         self:_WriteByte(readerIndexShift * (value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F))
     end,
     ["string"] = function(self, value)
@@ -794,7 +794,7 @@ LibSerialize._WriterTable = {
         -- been seen before, we'll use the bookkeeping entry as long as the
         -- number of bytes for it is smaller.
         if existing and GetRequiredBytes(existing) < #value then
-            -- debugPrint("Serializing existing string:", value)
+            -- DebugPrint("Serializing existing string:", value)
             local required = GetRequiredBytes(existing)
             self:_WriteByte(readerIndexShift * existingIndices[required])
             self:_WriteInt(self._existingEntries[value], required)
@@ -802,10 +802,10 @@ LibSerialize._WriterTable = {
             local len = #value
             if len < 16 then
                 -- Short lengths can be embedded directly into the type byte.
-                -- debugPrint("Serializing string, embedded count:", value, len)
+                -- DebugPrint("Serializing string, embedded count:", value, len)
                 self:_WriteByte(embeddedCountShift * len + embeddedIndexShift * self._EmbeddedIndex.STRING + 2)
             else
-                -- debugPrint("Serializing string:", value, len)
+                -- DebugPrint("Serializing string:", value, len)
                 local required = GetRequiredBytes(len)
                 self:_WriteByte(readerIndexShift * stringIndices[required])
                 self:_WriteInt(len, required)
@@ -824,10 +824,10 @@ LibSerialize._WriterTable = {
             -- The table is an array. We can avoid writing the keys.
             if count < 16 then
                 -- Short counts can be embedded directly into the type byte.
-                -- debugPrint("Serializing array, embedded count:", count)
+                -- DebugPrint("Serializing array, embedded count:", count)
                 self:_WriteByte(embeddedCountShift * count + embeddedIndexShift * self._EmbeddedIndex.ARRAY + 2)
             else
-                -- debugPrint("Serializing array:", count)
+                -- DebugPrint("Serializing array:", count)
                 local required = GetRequiredBytes(count)
                 self:_WriteByte(readerIndexShift * arrayIndices[required])
                 self:_WriteInt(count, required)
@@ -846,12 +846,12 @@ LibSerialize._WriterTable = {
                 -- They have to be really short though, since we have two counts.
                 -- Since neither can be zero (this is a mixed table), though,
                 -- we can get away with not being able to represent 0.
-                -- debugPrint("Serializing mixed array-table, embedded counts:", arraySize, count)
+                -- DebugPrint("Serializing mixed array-table, embedded counts:", arraySize, count)
                 local combined = (count - 1) * 4 + arraySize - 1
                 self:_WriteByte(embeddedCountShift * combined + embeddedIndexShift * self._EmbeddedIndex.MIXED + 2)
             else
                 -- Use the max required bytes for the two counts.
-                -- debugPrint("Serializing mixed array-table:", arraySize, count)
+                -- DebugPrint("Serializing mixed array-table:", arraySize, count)
                 local required = max(GetRequiredBytes(count), GetRequiredBytes(arraySize))
                 self:_WriteByte(readerIndexShift * mixedIndices[required])
                 self:_WriteInt(arraySize, required)
@@ -874,10 +874,10 @@ LibSerialize._WriterTable = {
             -- The table has only dictionary keys, so we'll write them all.
             if count < 16 then
                 -- Short counts can be embedded directly into the type byte.
-                -- debugPrint("Serializing table, embedded count:", count)
+                -- DebugPrint("Serializing table, embedded count:", count)
                 self:_WriteByte(embeddedCountShift * count + embeddedIndexShift * self._EmbeddedIndex.TABLE + 2)
             else
-                -- debugPrint("Serializing table:", count)
+                -- DebugPrint("Serializing table:", count)
                 local required = GetRequiredBytes(count)
                 self:_WriteByte(readerIndexShift * tableIndices[required])
                 self:_WriteInt(count, required)
