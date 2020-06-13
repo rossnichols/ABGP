@@ -488,7 +488,7 @@ end
 function LibSerialize:_ReadObject()
     --[[-----------------------------------------------------------------------
         Encoding format:
-        The first byte supports the following formats:
+        The type byte supports the following formats:
         * NNNN NNN1: a 7 bit non-negative int
         * CCCC TT10: a 2 bit type index and 4 bit count (strlen, #tab, etc.)
           * Followed by the type-dependent payload
