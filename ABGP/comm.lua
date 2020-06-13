@@ -208,6 +208,14 @@ function ABGP:Serialize(data, legacy)
         local serialized = LibSerialize:Serialize(data);
         -- local serialized = AceSerializer:Serialize(data);
         local compressed = LibDeflate:CompressDeflate(serialized);
+
+        if #compressed > #serialized then
+            self:LogDebug("WARNING: compressing payload for %s increased size from %d to %d!",
+                data.type, #serialized, #compressed);
+        elseif self:GetDebugOpt("DebugComms") then
+            self:LogDebug("Serialized payload %d compressed to %d.", #serialized, #compressed);
+        end
+
         return (LibDeflate:EncodeForWoWAddonChannel(compressed)), self:GetCommPrefix();
     end
 end
@@ -317,7 +325,7 @@ end
 function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     local legacy = (prefix == "ABGP");
     local success, data = self:Deserialize(payload, legacy);
-    if not success then
+    if not success or type(data) ~= "table" then
         self:Error("Received an invalid addon comm from %s!", self:ColorizeName(sender));
         return;
     end
