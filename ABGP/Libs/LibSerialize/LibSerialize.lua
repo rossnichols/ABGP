@@ -411,8 +411,6 @@ function LibSerialize:_ReadInt64()
 end
 
 function LibSerialize:_ReadBytes(len)
-    -- DebugPrint("Reading string,", len)
-
     self._readBytes(len, self._readBuffer, 0)
     local value = table_concat(self._readBuffer, "", 1, len)
     return value
