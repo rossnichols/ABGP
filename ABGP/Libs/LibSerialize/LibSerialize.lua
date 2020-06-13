@@ -661,72 +661,83 @@ LibSerialize._WriterTable = {
         end
     end,
     ["table"] = function(self, value)
-        local count, arraySize = 0, #value
-        for key, v in pairs(value) do
-            count = count + 1
+        -- First determine the "proper" length of the array portion of the table,
+        -- which terminates at its first nil value.
+        local arrayCount = 0
+        for k, v in ipairs(value) do
+            arrayCount = k
         end
-        if count == arraySize then
+
+        -- Next determine the count of all entries in the table.
+        local mapCount = 0
+        for k, v in pairs(value) do
+            mapCount = mapCount + 1
+        end
+
+        -- The final map count is simply the total count minus the array count.
+        mapCount = mapCount - arrayCount
+
+        if mapCount == 0 then
             -- The table is an array. We can avoid writing the keys.
-            if count < 16 then
+            if arrayCount < 16 then
                 -- Short counts can be embedded directly into the type byte.
-                -- DebugPrint("Serializing array, embedded count:", count)
-                self:_WriteByte(embeddedCountShift * count + embeddedIndexShift * self._EmbeddedIndex.ARRAY + 2)
+                -- DebugPrint("Serializing array, embedded count:", arrayCount)
+                self:_WriteByte(embeddedCountShift * arrayCount + embeddedIndexShift * self._EmbeddedIndex.ARRAY + 2)
             else
-                -- DebugPrint("Serializing array:", count)
-                local required = GetRequiredBytes(count)
+                -- DebugPrint("Serializing array:", arrayCount)
+                local required = GetRequiredBytes(arrayCount)
                 self:_WriteByte(readerIndexShift * arrayIndices[required])
-                self:_WriteInt(count, required)
+                self:_WriteInt(arrayCount, required)
             end
 
             for _, v in ipairs(value) do
                 self:_WriteObject(v)
             end
-        elseif arraySize ~= 0 then
+        elseif arrayCount ~= 0 then
             -- The table has both array and dictionary keys. We can still save space
             -- by writing the array values first without keys.
-            count = count - arraySize
 
-            if count < 5 and arraySize < 5 then
+            if mapCount < 5 and arrayCount < 5 then
                 -- Short counts can be embedded directly into the type byte.
                 -- They have to be really short though, since we have two counts.
                 -- Since neither can be zero (this is a mixed table),
                 -- we can get away with not being able to represent 0.
-                -- DebugPrint("Serializing mixed array-table, embedded counts:", arraySize, count)
-                local combined = (count - 1) * 4 + arraySize - 1
+                -- DebugPrint("Serializing mixed array-table, embedded counts:", arrayCount, mapCount)
+                local combined = (mapCount - 1) * 4 + arrayCount - 1
                 self:_WriteByte(embeddedCountShift * combined + embeddedIndexShift * self._EmbeddedIndex.MIXED + 2)
             else
                 -- Use the max required bytes for the two counts.
-                -- DebugPrint("Serializing mixed array-table:", arraySize, count)
-                local required = max(GetRequiredBytes(count), GetRequiredBytes(arraySize))
+                -- DebugPrint("Serializing mixed array-table:", arrayCount, mapCount)
+                local required = max(GetRequiredBytes(mapCount), GetRequiredBytes(arrayCount))
                 self:_WriteByte(readerIndexShift * mixedIndices[required])
-                self:_WriteInt(arraySize, required)
-                self:_WriteInt(count, required)
+                self:_WriteInt(arrayCount, required)
+                self:_WriteInt(mapCount, required)
             end
 
             for _, v in ipairs(value) do
                 self:_WriteObject(v)
             end
 
-            local mapCount = 0
+            local mapCountWritten = 0
             for k, v in pairs(value) do
-                if type(k) ~= "number" or k < 1 or k > arraySize or IsFractional(k) then
-                    mapCount = mapCount + 1
+                if type(k) ~= "number" or k < 1 or k > arrayCount or IsFractional(k) then
+                    mapCountWritten = mapCountWritten + 1
                     self:_WriteObject(k)
                     self:_WriteObject(v)
                 end
             end
-            assert(mapCount == count)
+            assert(mapCount == mapCountWritten)
         else
             -- The table has only dictionary keys, so we'll write them all.
-            if count < 16 then
+            if mapCount < 16 then
                 -- Short counts can be embedded directly into the type byte.
-                -- DebugPrint("Serializing table, embedded count:", count)
-                self:_WriteByte(embeddedCountShift * count + embeddedIndexShift * self._EmbeddedIndex.TABLE + 2)
+                -- DebugPrint("Serializing table, embedded count:", mapCount)
+                self:_WriteByte(embeddedCountShift * mapCount + embeddedIndexShift * self._EmbeddedIndex.TABLE + 2)
             else
-                -- DebugPrint("Serializing table:", count)
-                local required = GetRequiredBytes(count)
+                -- DebugPrint("Serializing table:", mapCount)
+                local required = GetRequiredBytes(mapCount)
                 self:_WriteByte(readerIndexShift * tableIndices[required])
-                self:_WriteInt(count, required)
+                self:_WriteInt(mapCount, required)
             end
 
             for k, v in pairs(value) do
