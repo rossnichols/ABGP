@@ -4,7 +4,6 @@ local LibSerialize = _G.LibStub("LibSerialize");
 
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
-local GetTime = GetTime;
 local ipairs = ipairs;
 local pairs = pairs;
 local table = table;
@@ -263,7 +262,7 @@ function ABGP:HistoryTriggerSync(target, token, now, remote)
         local commData = {
             version = self:GetVersion(),
             phase = phase,
-            token = token or GetTime(),
+            token = token or GetServerTime(),
             baseline = baseline,
             archivedCount = 0,
             now = now,
@@ -673,6 +672,7 @@ end
 
 function ABGP:TestSerialization()
     local history = _G.ABGP_Data.p1.gpHistory;
+    -- local history = _G.ABGP_Data.p1.itemValues;
     local LibDeflate = _G.LibStub("LibDeflate");
 
     local serialized = LibSerialize:Serialize(history);

@@ -19,7 +19,6 @@ local C_GuildInfo = C_GuildInfo;
 local GetAddOnMetadata = GetAddOnMetadata;
 local GetServerTime = GetServerTime;
 local UnitIsGroupLeader = UnitIsGroupLeader;
-local GetTime = GetTime;
 local IsEquippableItem = IsEquippableItem;
 local IsAltKeyDown = IsAltKeyDown;
 local GetClassColor = GetClassColor;
@@ -45,7 +44,7 @@ local itemDataRequestToken = 0;
 
 local function OnGroupJoined()
     ABGP:SendComm(ABGP.CommTypes.STATE_SYNC, {
-        token = GetTime(),
+        token = GetServerTime(),
         itemDataTime = _G.ABGP_DataTimestamp.itemValues,
         itemDataBaseline = ABGP.initialData.itemValues.timestamp,
     }, "BROADCAST");
