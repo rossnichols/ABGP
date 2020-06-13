@@ -592,6 +592,8 @@ assert(#LibSerialize._EmbeddedReaderTable < 4) -- two bits reserved
 
 local readerIndexShift = 8
 LibSerialize._ReaderIndex = {
+    NIL = 0,
+
     NUM_8_POS = 1,
     NUM_8_NEG = 2,
     NUM_16_POS = 3,
@@ -626,6 +628,9 @@ LibSerialize._ReaderIndex = {
     EXISTING_32 = 26,
 }
 LibSerialize._ReaderTable = {
+    -- Nil (only expected as the entire input)
+    [LibSerialize._ReaderIndex.NIL]  = function(self) return nil end,
+
     -- Numbers
     [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
     [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
@@ -753,6 +758,10 @@ function LibSerialize:_WriteInt(value, threshold)
 end
 
 LibSerialize._WriterTable = {
+    ["nil"] = function(self)
+        -- DebugPrint("Serializing nil")
+        self:_WriteByte(readerIndexShift * self._ReaderIndex.NIL)
+    end,
     ["number"] = function(self, value)
         if IsFractional(value) then
             self._WriterTable["float"](self, value)
