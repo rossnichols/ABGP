@@ -125,7 +125,7 @@ end
 
 
 --[[---------------------------------------------------------------------------
-    Code taken from LibDeflate: CreateReader, CreateWriter.
+    Code taken/modified from LibDeflate: CreateReader, CreateWriter.
     Exposes a mechanism to read/write bytes from/to a buffer.
 --]]---------------------------------------------------------------------------
 
