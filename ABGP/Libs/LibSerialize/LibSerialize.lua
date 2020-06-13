@@ -569,12 +569,12 @@ LibSerialize._EmbeddedIndex = {
     TABLE = 2,
     ARRAY = 3,
 }
-assert(#LibSerialize._EmbeddedIndex < 4) -- two bits reserved
 LibSerialize._EmbeddedReaderTable = {
     [LibSerialize._EmbeddedIndex.STRING] = function(self, count) return self:_ReadString(count) end,
     [LibSerialize._EmbeddedIndex.TABLE] =  function(self, count) return self:_ReadTable(count) end,
     [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, count) return self:_ReadArray(count) end,
 }
+assert(#LibSerialize._EmbeddedReaderTable < 4) -- two bits reserved
 
 local readerIndexShift = 8
 LibSerialize._ReaderIndex = {
@@ -611,7 +611,6 @@ LibSerialize._ReaderIndex = {
     EXISTING_16 = 25,
     EXISTING_32 = 26,
 }
-assert(#LibSerialize._ReaderIndex < 32) -- five bits reserved
 LibSerialize._ReaderTable = {
     -- Numbers
     [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
@@ -653,6 +652,7 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.EXISTING_16] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
     [LibSerialize._ReaderIndex.EXISTING_32] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
 }
+assert(#LibSerialize._ReaderTable < 32) -- five bits reserved
 
 
 --[[---------------------------------------------------------------------------
