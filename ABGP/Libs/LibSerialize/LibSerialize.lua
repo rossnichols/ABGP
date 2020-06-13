@@ -689,7 +689,7 @@ LibSerialize._WriterTable = {
             if count < 5 and arraySize < 5 then
                 -- Short counts can be embedded directly into the type byte.
                 -- They have to be really short though, since we have two counts.
-                -- Since neither can be zero (this is a mixed table), though,
+                -- Since neither can be zero (this is a mixed table),
                 -- we can get away with not being able to represent 0.
                 -- DebugPrint("Serializing mixed array-table, embedded counts:", arraySize, count)
                 local combined = (count - 1) * 4 + arraySize - 1
