@@ -144,169 +144,42 @@ end
     Exposes a mechanism to read/write bytes from/to a buffer.
 --]]---------------------------------------------------------------------------
 
--- Converts i to 2^i, (0<=i<=32)
--- This is used to implement bit left shift and bit right shift.
--- "x >> y" in C:   "(x-x%_pow2[y])/_pow2[y]" in Lua
--- "x << y" in C:   "x*_pow2[y]" in Lua
-local _pow2 = {}
-
--- Converts any byte to a character, (0<=byte<=255)
-local _byte_to_char = {}
-
--- _reverseBitsTbl[len][val] stores the bit reverse of
--- the number with bit length "len" and value "val"
--- For example, decimal number 6 with bits length 5 is binary 00110
--- It's reverse is binary 01100,
--- which is decimal 12 and 12 == _reverseBitsTbl[5][6]
--- 1<=len<=9, 0<=val<=2^len-1
--- The reason for 1<=len<=9 is that the max of min bitlen of huffman code
--- of a huffman alphabet is 9?
-local _reverse_bits_tbl = {}
-
-for i = 0, 255 do
-    _byte_to_char[i] = string_char(i)
-end
-
-do
-    local pow = 1
-    for i = 0, 32 do
-        _pow2[i] = pow
-        pow = pow * 2
-    end
-end
-
-for i = 1, 9 do
-    _reverse_bits_tbl[i] = {}
-    for j=0, _pow2[i+1]-1 do
-        local reverse = 0
-        local value = j
-        for _ = 1, i do
-            -- The following line is equivalent to "res | (code %2)" in C.
-            reverse = reverse - reverse%2
-                + (((reverse%2==1) or (value % 2) == 1) and 1 or 0)
-            value = (value-value%2)/2
-            reverse = reverse * 2
-        end
-        _reverse_bits_tbl[i][j] = (reverse-reverse%2)/2
-    end
-end
-
--- partial flush to save memory
-local _FLUSH_MODE_MEMORY_CLEANUP = 0
--- full flush with partial bytes
-local _FLUSH_MODE_OUTPUT = 1
--- write bytes to get to byte boundary
-local _FLUSH_MODE_BYTE_BOUNDARY = 2
--- no flush, just get num of bits written so far
-local _FLUSH_MODE_NO_FLUSH = 3
-
 --[[
     Create an empty writer to easily write stuffs as the unit of bits.
     Return values:
-    1. WriteBits(code, bitlen):
-    2. WriteString(str):
-    3. Flush(mode):
+    1. WriteString(str)
+    2. Flush(mode)
 --]]
 local function CreateWriter()
     local buffer_size = 0
-    local cache = 0
-    local cache_bitlen = 0
     local total_bitlen = 0
     local buffer = {}
     -- When buffer is big enough, flush into result_buffer to save memory.
     local result_buffer = {}
-
-    -- Write bits with value "value" and bit length of "bitlen" into writer.
-    -- @param value: The value being written
-    -- @param bitlen: The bit length of "value"
-    -- @return nil
-    local function WriteBits(value, bitlen)
-        -- DebugPrint("Writing value", value, "bitlen", bitlen)
-        cache = cache + value * _pow2[cache_bitlen]
-        cache_bitlen = cache_bitlen + bitlen
-        total_bitlen = total_bitlen + bitlen
-        -- Only bulk to buffer every 4 bytes. This is quicker.
-        if cache_bitlen >= 32 then
-            buffer_size = buffer_size + 1
-            buffer[buffer_size] =
-                _byte_to_char[cache % 256]
-                .._byte_to_char[((cache-cache%256)/256 % 256)]
-                .._byte_to_char[((cache-cache%65536)/65536 % 256)]
-                .._byte_to_char[((cache-cache%16777216)/16777216 % 256)]
-            local rshift_mask = _pow2[32 - cache_bitlen + bitlen]
-            cache = (value - value%rshift_mask)/rshift_mask
-            cache_bitlen = cache_bitlen - 32
-        end
-    end
 
     -- Write the entire string into the writer.
     -- @param str The string being written
     -- @return nil
     local function WriteString(str)
         -- DebugPrint("Writing string len", #str, "bitlen", #str * 8)
-        for _ = 1, cache_bitlen, 8 do
-            buffer_size = buffer_size + 1
-            buffer[buffer_size] = string_char(cache % 256)
-            cache = (cache-cache%256)/256
-        end
-        cache_bitlen = 0
         buffer_size = buffer_size + 1
         buffer[buffer_size] = str
-        total_bitlen = total_bitlen + #str*8
+        total_bitlen = total_bitlen + #str * 8
     end
 
     -- Flush current stuffs in the writer and return it.
     -- This operation will free most of the memory.
-    -- @param mode See the descrtion of the constant and the source code.
     -- @return The total number of bits stored in the writer right now.
-    -- for byte boundary mode, it includes the padding bits.
-    -- for output mode, it does not include padding bits.
-    -- @return Return the outputs if mode is output.
-    local function FlushWriter(mode)
-        if mode == _FLUSH_MODE_NO_FLUSH then
-            return total_bitlen
-        end
-
-        if mode == _FLUSH_MODE_OUTPUT
-            or mode == _FLUSH_MODE_BYTE_BOUNDARY then
-            -- Full flush, also output cache.
-            -- Need to pad some bits if cache_bitlen is not multiple of 8.
-            local padding_bitlen = (8 - cache_bitlen % 8) % 8
-
-            if cache_bitlen > 0 then
-                -- padding with all 1 bits, mainly because "\000" is not
-                -- good to be tranmitted. I do this so "\000" is a little bit
-                -- less frequent.
-                cache = cache - _pow2[cache_bitlen]
-                    + _pow2[cache_bitlen+padding_bitlen]
-                for _ = 1, cache_bitlen, 8 do
-                    buffer_size = buffer_size + 1
-                    buffer[buffer_size] = _byte_to_char[cache % 256]
-                    cache = (cache-cache%256)/256
-                end
-
-                cache = 0
-                cache_bitlen = 0
-            end
-            if mode == _FLUSH_MODE_BYTE_BOUNDARY then
-                total_bitlen = total_bitlen + padding_bitlen
-                return total_bitlen
-            end
-        end
-
+    -- @return Return the output.
+    local function FlushWriter()
         local flushed = table_concat(buffer)
         buffer = {}
         buffer_size = 0
-        result_buffer[#result_buffer+1] = flushed
-
-        if mode == _FLUSH_MODE_MEMORY_CLEANUP then
-            return total_bitlen
-        else
-            return total_bitlen, table_concat(result_buffer)
-        end
+        result_buffer[#result_buffer + 1] = flushed
+        return total_bitlen, table_concat(result_buffer)
     end
 
-    return WriteBits, WriteString, FlushWriter
+    return WriteString, FlushWriter
 end
 
 --[[
@@ -319,8 +192,6 @@ local function CreateReader(input_string)
     local input = input_string
     local input_strlen = #input_string
     local input_next_byte_pos = 1
-    local cache_bitlen = 0
-    local cache = 0
 
     -- Read some bytes from the reader.
     -- Assume reader is on the byte boundary.
@@ -330,23 +201,7 @@ local function CreateReader(input_string)
     --    buffer[buffer_size+1], ending at buffer[buffer_size+bytelen-1]
     -- @return the new buffer_size
     local function ReadBytes(bytelen, buffer, buffer_size)
-        assert(cache_bitlen % 8 == 0)
-
-        local byte_from_cache = (cache_bitlen/8 < bytelen)
-            and (cache_bitlen/8) or bytelen
-        for _=1, byte_from_cache do
-            local byte = cache % 256
-            buffer_size = buffer_size + 1
-            buffer[buffer_size] = string_char(byte)
-            cache = (cache - byte) / 256
-        end
-        cache_bitlen = cache_bitlen - byte_from_cache*8
-        bytelen = bytelen - byte_from_cache
-        if (input_strlen - input_next_byte_pos - bytelen + 1) * 8
-            + cache_bitlen < 0 then
-            return -1 -- out of input
-        end
-        for i=input_next_byte_pos, input_next_byte_pos+bytelen-1 do
+        for i = input_next_byte_pos, input_next_byte_pos + bytelen - 1 do
             buffer_size = buffer_size + 1
             buffer[buffer_size] = string_sub(input, i, i)
         end
@@ -356,7 +211,7 @@ local function CreateReader(input_string)
     end
 
     local function ReaderBitlenLeft()
-        return (input_strlen - input_next_byte_pos + 1) * 8 + cache_bitlen
+        return (input_strlen - input_next_byte_pos + 1) * 8
     end
 
     return ReadBytes, ReaderBitlenLeft
@@ -456,33 +311,32 @@ end
 function LibSerialize:_ReadByte()
     -- DebugPrint("Reading byte")
 
-    self._readBytes(1, self._readBuffer, 0)
-    return string_byte(self._readBuffer[1])
+    local str = self:_ReadBytes(1)
+    return string_byte(str)
 end
 
 function LibSerialize:_ReadInt16()
     -- DebugPrint("Reading int16")
 
-    self._readBytes(2, self._readBuffer, 0)
-    return Pack2(string_byte(self._readBuffer[2]),
-                 string_byte(self._readBuffer[1]))
+    local str = self:_ReadBytes(2)
+    local b1, b2 = string_byte(str, 1, 2)
+    return b1 * 0x100 + b2
 end
 
 function LibSerialize:_ReadInt32()
     -- DebugPrint("Reading int32")
 
-    self._readBytes(4, self._readBuffer, 0)
-    return Pack4(string_byte(self._readBuffer[4]),
-                 string_byte(self._readBuffer[3]),
-                 string_byte(self._readBuffer[2]),
-                 string_byte(self._readBuffer[1]))
+    local str = self:_ReadBytes(4)
+    local b1, b2, b3, b4 = string_byte(str, 1, 4)
+    return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
 end
 
 function LibSerialize:_ReadInt64()
     -- DebugPrint("Reading int64")
 
-    local top, bottom = self:_ReadInt32(), self:_ReadInt32()
-    return (top * 4294967296) + bottom
+    local str = self:_ReadBytes(7)
+    local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
+    return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
 end
 
 function LibSerialize:_ReadObject()
@@ -561,12 +415,19 @@ function LibSerialize:_ReadMixed(arrayCount, tableCount)
     return ret
 end
 
-function LibSerialize:_ReadString(len, noReuse)
+function LibSerialize:_ReadBytes(len)
     -- DebugPrint("Reading string,", len)
 
     self._readBytes(len, self._readBuffer, 0)
     local value = table_concat(self._readBuffer, "", 1, len)
-    if len > 2 and not noReuse then
+    return value
+end
+
+function LibSerialize:_ReadString(len)
+    -- DebugPrint("Reading string,", len)
+
+    local value = self:_ReadBytes(len)
+    if len > 2 then
         self:_AddExisting(value)
     end
     return value
@@ -642,7 +503,7 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
     [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
     [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
-    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self:_ReadString(8, true)) end,
+    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self:_ReadBytes(8)) end,
 
     -- Booleans
     [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
@@ -725,31 +586,30 @@ function LibSerialize:_WriteByte(value)
     self:_WriteInt(value, 1)
 end
 
-function LibSerialize:_WriteInt(value, threshold)
-    -- NOTE: Due to LibDeflate's usage of a cache when writing bits,
-    -- it's possible to corrupt the cache if it's reaching its limit
-    -- and you then write a large number of bits. By writing only
-    -- 8 or 16 at a time, the max cached bits is only 40 which is
-    -- still reasonable.
+function LibSerialize:_WriteInt(n, threshold)
+    local str
     if threshold == 8 then
-        local bottom = value % 4294967296
-        local c = bottom % 65536
-        local d = (bottom - c) / 65536
-        local top = (value - bottom) / 4294967296
-        local a = top % 65536
-        local b = (top - a) / 65536
-        self._writeBits(a, 16)
-        self._writeBits(b, 16)
-        self._writeBits(c, 16)
-        self._writeBits(d, 16)
+        -- Since a double can only hold a 53 bit whole number,
+        -- we only need to write seven bytes.
+        str = string_char(floor(n / 0x1000000000000) % 0x100,
+                          floor(n / 0x10000000000) % 0x100,
+                          floor(n / 0x100000000) % 0x100,
+                          floor(n / 0x1000000) % 0x100,
+                          floor(n / 0x10000) % 0x100,
+                          floor(n / 0x100) % 0x100,
+                          n % 0x100)
     elseif threshold == 4 then
-        local a = value % 65536
-        local b = (value - a) / 65536
-        self._writeBits(a, 16)
-        self._writeBits(b, 16)
-    else
-        self._writeBits(value, threshold * 8)
+        str = string_char(floor(n / 0x1000000),
+                          floor(n / 0x10000) % 0x100,
+                          floor(n / 0x100) % 0x100,
+                          n % 0x100)
+    elseif threshold == 2 then
+        str = string_char(floor(n / 0x100),
+                          n % 0x100)
+    elseif threshold == 1 then
+        str = string_char(n)
     end
+    self._writeString(str)
 end
 
 LibSerialize._WriterTable = {
@@ -905,15 +765,14 @@ LibSerialize._WriterTable = {
 
 function LibSerialize:Serialize(input)
     self:_ClearExisting()
-    local WriteBits, WriteString, FlushWriter = CreateWriter()
+    local WriteString, FlushWriter = CreateWriter()
 
-    self._writeBits = WriteBits
     self._writeString = WriteString
     self._flushWriter = FlushWriter
     self:_WriteByte(self._SERIALIZATION_VERSION)
     self:_WriteObject(input)
 
-    local total_bitlen, result = FlushWriter(_FLUSH_MODE_OUTPUT)
+    local total_bitlen, result = FlushWriter()
     return result
 end
 
