@@ -614,7 +614,7 @@ LibSerialize._WriterTable = {
             else
                 -- DebugPrint("Serializing embedded number (2bytes):", value)
                 value = value * 8 + 4
-                local upper, lower = floor(value / 0x100), value % 0x100)
+                local upper, lower = floor(value / 0x100), value % 0x100
                 self:_WriteByte(lower)
                 self:_WriteByte(upper)
             end
