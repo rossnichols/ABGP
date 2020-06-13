@@ -561,12 +561,14 @@ function LibSerialize:_ReadMixed(arrayCount, tableCount)
     return ret
 end
 
-function LibSerialize:_ReadString(len)
+function LibSerialize:_ReadString(len, noReuse)
     -- DebugPrint("Reading string,", len)
 
     self._readBytes(len, self._readBuffer, 0)
     local value = table_concat(self._readBuffer, "", 1, len)
-    self:_AddExisting(value)
+    if len > 2 and not noReuse then
+        self:_AddExisting(value)
+    end
     return value
 end
 
@@ -640,7 +642,7 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
     [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
     [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
-    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self:_ReadString(8)) end,
+    [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self:_ReadString(8, true)) end,
 
     -- Booleans
     [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
@@ -795,10 +797,7 @@ LibSerialize._WriterTable = {
     end,
     ["string"] = function(self, value)
         local existing = self._existingEntries[value]
-        -- Small strings get serialized into #value bytes. If this string has
-        -- been seen before, we'll use the bookkeeping entry as long as the
-        -- number of bytes for it is smaller.
-        if existing and GetRequiredBytes(existing) < #value then
+        if existing then
             -- DebugPrint("Serializing existing string:", value)
             local required = GetRequiredBytes(existing)
             self:_WriteByte(readerIndexShift * existingIndices[required])
@@ -817,7 +816,9 @@ LibSerialize._WriterTable = {
             end
 
             self._writeString(value)
-            self:_AddExisting(value)
+            if len > 2 then
+                self:_AddExisting(value)
+            end
         end
     end,
     ["table"] = function(self, value)
