@@ -501,14 +501,14 @@ function LibSerialize:_ReadObject()
     local value = self:_ReadByte()
 
     if value % 2 == 1 then
-        -- Number encoded in the top 7 bits.
+        -- Number embedded in the top 7 bits.
         local num = (value - 1) / 2
         -- DebugPrint("Found embedded number (1byte):", value, num)
         return num
     end
 
     if value % 4 == 2 then
-        -- Type with encoded count. Extract both.
+        -- Type with embedded count. Extract both.
         -- The type is in bits 3-4, count in 5-8.
         local typ = (value - 2) / 4
         local count = (typ - typ % 4) / 4
@@ -518,14 +518,14 @@ function LibSerialize:_ReadObject()
     end
 
     if value % 8 == 4 then
-        -- Number encoded in the top 5 bits, plus an additional byte's worth (so 13 bits).
+        -- Number embedded in the top 5 bits, plus an additional byte's worth (so 13 bits).
         local packed = Pack2(self:_ReadByte(), value)
         local num = (packed - 4) / 8
         -- DebugPrint("Found embedded number (2bytes):", value, packed, num)
         return num
     end
 
-    -- Otherwise, the type index is encoded in the upper 5 bits.
+    -- Otherwise, the type index is embedded in the upper 5 bits.
     local typ = value / 8
     -- DebugPrint("Found type:", value, typ)
     return self._ReaderTable[typ](self)
