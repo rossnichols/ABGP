@@ -672,7 +672,7 @@ function ABGP:CommitHistory(phase)
 end
 
 function ABGP:TestSerialization(input)
-    input = input or _G.ABGP_Data.p1.gpHistory;
+    input = input or { _G.ABGP_Data.p1.gpHistory, _G.ABGP_Data.p1.gpHistory };
     -- input = input or _G.ABGP_Data.p1.itemValues;
     local LibDeflate = _G.LibStub("LibDeflate");
 
