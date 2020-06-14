@@ -37,7 +37,7 @@ local function SetBaseline(phase, baseline)
 end
 
 local function IsPrivileged()
-    return ABGP:CanEditOfficerNotes();
+    return ABGP:CanEditOfficerNotes() and not ABGP:GetDebugOpt("AvoidHistorySend");
 end
 
 local function SenderIsPrivileged(sender)
@@ -252,7 +252,7 @@ end
 
 function ABGP:HistoryTriggerSync(target, token, now, remote)
     if syncTesting then testUseLocalData = not remote; end
-    local privileged = IsPrivileged() and not self:GetDebugOpt("AvoidHistorySend");
+    local privileged = IsPrivileged();
     local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
 
     local now = now or GetServerTime();
@@ -319,7 +319,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     local senderIsPrivileged = SenderIsPrivileged(sender) and not data.notPrivileged;
     local history = GetHistory(data.phase);
     local baseline = GetBaseline(data.phase);
-    local canSendHistory = IsPrivileged() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
+    local canSendHistory = IsPrivileged() and baseline ~= invalidBaseline;
     local now = data.now;
 
     -- Compute the archivedCount and hash (if necessary).
@@ -563,7 +563,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
     local baseline = GetBaseline(data.phase);
     if data.baseline ~= baseline then return; end
 
-    local canSendHistory = IsPrivileged() and not self:GetDebugOpt("AvoidHistorySend") and baseline ~= invalidBaseline;
+    local canSendHistory = IsPrivileged() and baseline ~= invalidBaseline;
     local history = GetHistory(data.phase);
     local now = data.now;
 
