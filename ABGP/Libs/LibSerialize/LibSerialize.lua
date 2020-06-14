@@ -256,25 +256,23 @@ end
 
 --[[---------------------------------------------------------------------------
     Object reuse:
-    As strings are serialized or deserialized, they are stored in this lookup
+    As strings/tables are serialized or deserialized, they are stored in this lookup
     table in case they're encountered again, at which point they can be referenced
     by their index into this table rather than repeating the string contents.
 --]]---------------------------------------------------------------------------
 
-LibSerialize._existingCount = 0
-LibSerialize._existingEntries = {}
-LibSerialize._existingEntriesReversed = {}
+LibSerialize._stringRefs = {}
+LibSerialize._tableRefs = {}
 
-function LibSerialize:_AddExisting(value)
-    self._existingCount = self._existingCount + 1
-    self._existingEntries[value] = self._existingCount
-    self._existingEntriesReversed[self._existingCount] = value
+function LibSerialize:_AddReference(refs, value)
+    local ref = #refs + 1
+    refs[ref] = value
+    refs[value] = ref
 end
 
-function LibSerialize:_ClearExisting()
-    self._existingCount = 0
-    self._existingEntries = {}
-    self._existingEntriesReversed = {}
+function LibSerialize:_ClearReferences()
+    self._stringRefs = {}
+    self._tableRefs = {}
 end
 
 
@@ -328,52 +326,51 @@ function LibSerialize:_ReadObject()
     return self._ReaderTable[typ](self)
 end
 
-function LibSerialize:_ReadTable(entryCount, ret)
+function LibSerialize:_ReadTable(entryCount, value)
     -- DebugPrint("Extracting keys/values for table:", entryCount)
 
-    local addExisting = (ret == nil)
-    ret = ret or {}
+    local addRef = (value == nil)
+    value = value or {}
 
     for i = 1, entryCount do
         local key, value = self:_ReadObject(), self:_ReadObject()
-        ret[key] = value
+        value[key] = value
     end
 
-    if addExisting then
-        self:_AddExisting(ret)
+    if addRef then
+        self:_AddReference(self._tableRefs, value)
     end
 
-    return ret
+    return value
 end
 
-function LibSerialize:_ReadArray(entryCount, ret)
+function LibSerialize:_ReadArray(entryCount, value)
     -- DebugPrint("Extracting values for array:", entryCount)
 
-    local addExisting = (ret == nil)
-    ret = ret or {}
+    local addRef = (value == nil)
+    value = value or {}
 
     for i = 1, entryCount do
-        ret[i] = self:_ReadObject()
+        value[i] = self:_ReadObject()
     end
 
-    if addExisting then
-        self:_AddExisting(ret)
+    if addRef then
+        self:_AddReference(self._tableRefs, value)
     end
 
-    return ret
+    return value
 end
 
 function LibSerialize:_ReadMixed(arrayCount, tableCount)
     -- DebugPrint("Extracting values for mixed table:", arrayCount, tableCount)
 
-    local ret = {}
+    local value = {}
 
-    self:_ReadArray(arrayCount, ret)
-    self:_ReadTable(tableCount, ret)
+    self:_ReadArray(arrayCount, value)
+    self:_ReadTable(tableCount, value)
+    self:_AddReference(self._tableRefs, value)
 
-    self:_AddExisting(ret)
-
-    return ret
+    return value
 end
 
 function LibSerialize:_ReadString(len)
@@ -381,7 +378,7 @@ function LibSerialize:_ReadString(len)
 
     local value = self._readBytes(len)
     if len > 2 then
-        self:_AddExisting(value)
+        self:_AddReference(self._stringRefs, value)
     end
     return value
 end
@@ -480,9 +477,13 @@ LibSerialize._ReaderIndex = {
     MIXED_16 = 24,
     MIXED_32 = 25,
 
-    EXISTING_8 = 26,
-    EXISTING_16 = 27,
-    EXISTING_32 = 28,
+    STRINGREF_8 = 26,
+    STRINGREF_16 = 27,
+    STRINGREF_32 = 28,
+
+    TABLEREF_8 = 29,
+    TABLEREF_16 = 30,
+    TABLEREF_32 = 31,
 }
 LibSerialize._ReaderTable = {
     -- Nil (only expected as the entire input)
@@ -525,10 +526,15 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
     [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
 
-    -- Existing entries previously added to bookkeeping
-    [LibSerialize._ReaderIndex.EXISTING_8]  = function(self) return self._existingEntriesReversed[self:_ReadByte()] end,
-    [LibSerialize._ReaderIndex.EXISTING_16] = function(self) return self._existingEntriesReversed[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.EXISTING_32] = function(self) return self._existingEntriesReversed[self:_ReadInt32()] end,
+    -- Previously referenced strings
+    [LibSerialize._ReaderIndex.STRINGREF_8]  = function(self) return self._stringRefs[self:_ReadByte()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_16] = function(self) return self._stringRefs[self:_ReadInt16()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_32] = function(self) return self._stringRefs[self:_ReadInt32()] end,
+
+    -- Previously referenced tables
+    [LibSerialize._ReaderIndex.TABLEREF_8]  = function(self) return self._tableRefs[self:_ReadByte()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return self._tableRefs[self:_ReadInt16()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_32] = function(self) return self._tableRefs[self:_ReadInt32()] end,
 }
 assert(#LibSerialize._ReaderTable < 32) -- five bits reserved
 
@@ -607,10 +613,15 @@ local mixedIndices = {
     [2] = LibSerialize._ReaderIndex.MIXED_16,
     [4] = LibSerialize._ReaderIndex.MIXED_32,
 }
-local existingIndices = {
-    [1] = LibSerialize._ReaderIndex.EXISTING_8,
-    [2] = LibSerialize._ReaderIndex.EXISTING_16,
-    [4] = LibSerialize._ReaderIndex.EXISTING_32,
+local stringRefIndices = {
+    [1] = LibSerialize._ReaderIndex.STRINGREF_8,
+    [2] = LibSerialize._ReaderIndex.STRINGREF_16,
+    [4] = LibSerialize._ReaderIndex.STRINGREF_32,
+}
+local tableRefIndices = {
+    [1] = LibSerialize._ReaderIndex.TABLEREF_8,
+    [2] = LibSerialize._ReaderIndex.TABLEREF_16,
+    [4] = LibSerialize._ReaderIndex.TABLEREF_32,
 }
 
 LibSerialize._WriterTable = {
@@ -653,12 +664,12 @@ LibSerialize._WriterTable = {
         self:_WriteByte(readerIndexShift * (value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F))
     end,
     ["string"] = function(self, value)
-        local existing = self._existingEntries[value]
-        if existing then
-            -- DebugPrint("Serializing existing string:", value)
-            local required = GetRequiredBytes(existing)
-            self:_WriteByte(readerIndexShift * existingIndices[required])
-            self:_WriteInt(self._existingEntries[value], required)
+        local ref = self._stringRefs[value]
+        if ref then
+            -- DebugPrint("Serializing string ref:", value)
+            local required = GetRequiredBytes(ref)
+            self:_WriteByte(readerIndexShift * stringRefIndices[required])
+            self:_WriteInt(self._stringRefs[value], required)
         else
             local len = #value
             if len < 16 then
@@ -674,17 +685,17 @@ LibSerialize._WriterTable = {
 
             self._writeString(value)
             if len > 2 then
-                self:_AddExisting(value)
+                self:_AddReference(self._stringRefs, value)
             end
         end
     end,
     ["table"] = function(self, value)
-        local existing = self._existingEntries[value]
-        if existing then
-            -- DebugPrint("Serializing existing table:", value)
-            local required = GetRequiredBytes(existing)
-            self:_WriteByte(readerIndexShift * existingIndices[required])
-            self:_WriteInt(self._existingEntries[value], required)
+        local ref = self._tableRefs[value]
+        if ref then
+            -- DebugPrint("Serializing table ref:", value)
+            local required = GetRequiredBytes(ref)
+            self:_WriteByte(readerIndexShift * tableRefIndices[required])
+            self:_WriteInt(self._tableRefs[value], required)
         else
             -- First determine the "proper" length of the array portion of the table,
             -- which terminates at its first nil value.
@@ -771,7 +782,7 @@ LibSerialize._WriterTable = {
                 end
             end
 
-            self:_AddExisting(value)
+            self:_AddReference(self._tableRefs, value)
         end
     end,
 }
@@ -782,7 +793,7 @@ LibSerialize._WriterTable = {
 --]]---------------------------------------------------------------------------
 
 function LibSerialize:Serialize(input)
-    self:_ClearExisting()
+    self:_ClearReferences()
     local WriteString, FlushWriter = CreateWriter()
 
     self._writeString = WriteString
@@ -794,7 +805,7 @@ function LibSerialize:Serialize(input)
 end
 
 function LibSerialize:_Deserialize(input)
-    self:_ClearExisting()
+    self:_ClearReferences()
     local ReadBytes, ReaderBitlenLeft = CreateReader(input)
 
     self._readBuffer = {}
