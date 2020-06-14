@@ -333,8 +333,8 @@ function LibSerialize:_ReadTable(entryCount, value)
     value = value or {}
 
     for i = 1, entryCount do
-        local key, value = self:_ReadObject(), self:_ReadObject()
-        value[key] = value
+        local k, v = self:_ReadObject(), self:_ReadObject()
+        value[k] = v
     end
 
     if addRef then
