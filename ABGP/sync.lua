@@ -687,10 +687,12 @@ function ABGP:TestSerialization(input)
     local success, deserialized = LibSerialize:Deserialize(decompressed);
     self:Notify("deserialization success: %s %s", success and "true" or "false", success and "" or deserialized);
 
-    if type(input) == "table" then
-        self:Notify("matching: %s", self.tCompare(input, deserialized) and "yes" or "no");
-    else
-        self:Notify("matching: %s", input == deserialized and "yes" or "no");
+    if success then
+        if type(input) == "table" then
+            self:Notify("matching: %s", self.tCompare(input, deserialized) and "yes" or "no");
+        else
+            self:Notify("matching: %s", input == deserialized and "yes" or "no");
+        end
     end
 end
 
