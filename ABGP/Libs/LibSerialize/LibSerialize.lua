@@ -100,16 +100,18 @@ local print = print
     Helper functions.
 --]]---------------------------------------------------------------------------
 
-local function GetRequiredBytes(value, allow8)
+local function GetRequiredBytes(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
     if value < 4294967296 then return 4 end
+    error("Object limit exceeded")
+end
 
-    -- Most numbers (like counts) should fit into four bytes.
-    -- The caller has to explicitly opt into the larger size.
-    if not allow8 then
-        error("Object limit exceeded")
-    end
+local function GetRequiredBytesNumber(value)
+    if value < 256 then return 1 end
+    if value < 65536 then return 2 end
+    if value < 16777216 then return 3 end
+    if value < 4294967296 then return 4 end
     return 8
 end
 
@@ -381,6 +383,14 @@ function LibSerialize:_ReadInt16()
     return b1 * 0x100 + b2
 end
 
+function LibSerialize:_ReadInt24()
+    -- DebugPrint("Reading int24")
+
+    local str = self._readBytes(3)
+    local b1, b2, b3 = string_byte(str, 1, 3)
+    return (b1 * 0x100 + b2) * 0x100 + b3
+end
+
 function LibSerialize:_ReadInt32()
     -- DebugPrint("Reading int32")
 
@@ -425,34 +435,36 @@ LibSerialize._ReaderIndex = {
     NUM_8_NEG = 2,
     NUM_16_POS = 3,
     NUM_16_NEG = 4,
-    NUM_32_POS = 5,
-    NUM_32_NEG = 6,
-    NUM_64_POS = 7,
-    NUM_64_NEG = 8,
-    NUM_FLOAT = 9,
+    NUM_24_POS = 5,
+    NUM_24_NEG = 6,
+    NUM_32_POS = 7,
+    NUM_32_NEG = 8,
+    NUM_64_POS = 9,
+    NUM_64_NEG = 10,
+    NUM_FLOAT = 11,
 
-    BOOL_T = 10,
-    BOOL_F = 11,
+    BOOL_T = 12,
+    BOOL_F = 13,
 
-    STR_8 = 12,
-    STR_16 = 13,
-    STR_32 = 14,
+    STR_8 = 14,
+    STR_16 = 15,
+    STR_32 = 16,
 
-    TABLE_8 = 15,
-    TABLE_16 = 16,
-    TABLE_32 = 17,
+    TABLE_8 = 17,
+    TABLE_16 = 18,
+    TABLE_32 = 19,
 
-    ARRAY_8 = 18,
-    ARRAY_16 = 19,
-    ARRAY_32 = 20,
+    ARRAY_8 = 20,
+    ARRAY_16 = 21,
+    ARRAY_32 = 22,
 
-    MIXED_8 = 21,
-    MIXED_16 = 22,
-    MIXED_32 = 23,
+    MIXED_8 = 23,
+    MIXED_16 = 24,
+    MIXED_32 = 25,
 
-    EXISTING_8 = 24,
-    EXISTING_16 = 25,
-    EXISTING_32 = 26,
+    EXISTING_8 = 26,
+    EXISTING_16 = 27,
+    EXISTING_32 = 28,
 }
 LibSerialize._ReaderTable = {
     -- Nil (only expected as the entire input)
@@ -463,6 +475,8 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
     [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt16() end,
     [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt16() end,
+    [LibSerialize._ReaderIndex.NUM_24_POS] = function(self) return self:_ReadInt24() end,
+    [LibSerialize._ReaderIndex.NUM_24_NEG] = function(self) return -self:_ReadInt24() end,
     [LibSerialize._ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt32() end,
     [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
     [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
@@ -532,6 +546,10 @@ function LibSerialize:_WriteInt(n, threshold)
                           floor(n / 0x10000) % 0x100,
                           floor(n / 0x100) % 0x100,
                           n % 0x100)
+    elseif threshold == 3 then
+        str = string_char(floor(n / 0x10000),
+                          floor(n / 0x100) % 0x100,
+                          n % 0x100)
     elseif threshold == 2 then
         str = string_char(floor(n / 0x100),
                           n % 0x100)
@@ -547,6 +565,7 @@ end
 local numberIndices = {
     [1] = LibSerialize._ReaderIndex.NUM_8_POS,
     [2] = LibSerialize._ReaderIndex.NUM_16_POS,
+    [3] = LibSerialize._ReaderIndex.NUM_24_POS,
     [4] = LibSerialize._ReaderIndex.NUM_32_POS,
     [8] = LibSerialize._ReaderIndex.NUM_64_POS,
 }
@@ -606,7 +625,7 @@ LibSerialize._WriterTable = {
                 value = -value
                 sign = readerIndexShift
             end
-            local required = GetRequiredBytes(value, true)
+            local required = GetRequiredBytesNumber(value)
             self:_WriteByte(sign + readerIndexShift * numberIndices[required])
             self:_WriteInt(value, required)
         end
