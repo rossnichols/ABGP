@@ -333,7 +333,7 @@ function LibSerialize:_ReadTable(entryCount, value)
     value = value or {}
 
     for i = 1, entryCount do
-        local k, v = self:_ReadObject(), self:_ReadObject()
+        local k, v = self:_ReadPair(self._ReadObject)
         value[k] = v
     end
 
@@ -361,13 +361,13 @@ function LibSerialize:_ReadArray(entryCount, value)
     return value
 end
 
-function LibSerialize:_ReadMixed(arrayCount, tableCount)
-    -- DebugPrint("Extracting values for mixed table:", arrayCount, tableCount)
+function LibSerialize:_ReadMixed(arrayCount, mapCount)
+    -- DebugPrint("Extracting values for mixed table:", arrayCount, mapCount)
 
     local value = {}
 
     self:_ReadArray(arrayCount, value)
-    self:_ReadTable(tableCount, value)
+    self:_ReadTable(mapCount, value)
     self:_AddReference(self._tableRefs, value)
 
     return value
@@ -422,6 +422,12 @@ function LibSerialize:_ReadInt64()
     return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
 end
 
+function LibSerialize:_ReadPair(fn, ...)
+    local first = fn(self, ...)
+    local second = fn(self, ...)
+    return first, second
+end
+
 local embeddedIndexShift = 4
 local embeddedCountShift = 16
 LibSerialize._EmbeddedIndex = {
@@ -431,16 +437,11 @@ LibSerialize._EmbeddedIndex = {
     MIXED = 3,
 }
 LibSerialize._EmbeddedReaderTable = {
-    [LibSerialize._EmbeddedIndex.STRING] = function(self, count) return self:_ReadString(count) end,
-    [LibSerialize._EmbeddedIndex.TABLE] =  function(self, count) return self:_ReadTable(count) end,
-    [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, count) return self:_ReadArray(count) end,
-    [LibSerialize._EmbeddedIndex.MIXED] =  function(self, count)
-        local arrayCount = count % 4
-        local tableCount = (count - arrayCount) / 4
-        return self:_ReadMixed(arrayCount + 1, tableCount + 1)
-    end,
+    [LibSerialize._EmbeddedIndex.STRING] = function(self, c) return self:_ReadString(c) end,
+    [LibSerialize._EmbeddedIndex.TABLE] =  function(self, c) return self:_ReadTable(c) end,
+    [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, c) return self:_ReadArray(c) end,
+    [LibSerialize._EmbeddedIndex.MIXED] =  function(self, c) return self:_ReadMixed(c % 4 + 1, floor(c / 4) + 1) end,
 }
-assert(#LibSerialize._EmbeddedReaderTable < 4) -- two bits reserved
 
 local readerIndexShift = 8
 LibSerialize._ReaderIndex = {
@@ -521,10 +522,10 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
     [LibSerialize._ReaderIndex.ARRAY_32] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
 
-    -- Mixed array/tables (encoded as arrayCount + tableCount + arrayValues + key/value pairs)
-    [LibSerialize._ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadByte(), self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadInt16(), self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadInt32(), self:_ReadInt32()) end,
+    -- Mixed arrays/maps (encoded as arrayCount + mapCount + arrayValues + key/value pairs)
+    [LibSerialize._ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadByte)) end,
+    [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt16)) end,
+    [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt32)) end,
 
     -- Previously referenced strings
     [LibSerialize._ReaderIndex.STRINGREF_8]  = function(self) return self._stringRefs[self:_ReadByte()] end,
@@ -536,7 +537,6 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return self._tableRefs[self:_ReadInt16()] end,
     [LibSerialize._ReaderIndex.TABLEREF_32] = function(self) return self._tableRefs[self:_ReadInt32()] end,
 }
-assert(#LibSerialize._ReaderTable < 32) -- five bits reserved
 
 
 --[[---------------------------------------------------------------------------
