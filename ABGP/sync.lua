@@ -267,6 +267,7 @@ function ABGP:HistoryTriggerSync(target, token, now, remote)
             baseline = baseline,
             archivedCount = 0,
             now = now,
+            notPrivileged = not privileged,
             remote = remote, -- for testing
         };
 

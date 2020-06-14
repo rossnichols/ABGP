@@ -147,6 +147,7 @@ ABGP.CommTypes = {
     -- baseline: number
     -- archivedCount: number
     -- now: number
+    -- notPrivileged: bool
     -- ids: table OR hash: number
 
     HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", priority = "NORMAL" },
