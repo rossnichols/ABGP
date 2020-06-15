@@ -51,9 +51,14 @@ Three functions are provided:
     Returns:
     * result: the deserialized value
 
-Deserialize and DeserializeValue are equivalent, except the latter returns
-the deserialization result directly and will not catch any Lua errors
-that may occur when deserializing invalid input.
+Serialize() will cause a Lua error if the input cannot be serialized.
+This will occur if any unsupported types are encountered (e.g. functions),
+or if any of the following exceed 16777215: any string length, any table
+key count, number of unique strings, number of unique tables.
+
+Deserialize() and DeserializeValue() are equivalent, except the latter
+returns the deserialization result directly and will not catch any Lua
+errors that may occur when deserializing invalid input.
 
 
 Encoding format:
@@ -85,7 +90,10 @@ Strings and tables are also tracked as they are encountered, to detect reuse.
 If a string or table is reused, it is encoded instead as an index into the
 tracking table for that type. Strings must be >2 bytes in length to be tracked.
 
+
+Type byte:
 The type byte uses the following formats to implement the above:
+
 * NNNN NNN1: a 7 bit non-negative int
 * CCCC TT10: a 2 bit type index and 4 bit count (strlen, #tab, etc.)
     * Followed by the type-dependent payload
@@ -124,6 +132,8 @@ local print = print
     Helper functions.
 --]]---------------------------------------------------------------------------
 
+-- Returns the number of bytes required to store the value,
+-- up to a maximum of three. Errors if three bytes is insufficient.
 local function GetRequiredBytes(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
@@ -131,19 +141,27 @@ local function GetRequiredBytes(value)
     error("Object limit exceeded")
 end
 
+-- Returns the number of bytes required to store the value,
+-- though always returning seven if four bytes is insufficient.
+-- Doubles have room for 53bit numbers, so seven bits max.
 local function GetRequiredBytesNumber(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
     if value < 16777216 then return 3 end
     if value < 4294967296 then return 4 end
-    return 8
+    return 7
 end
 
+-- Returns whether the value (a number) is fractional,
+-- as opposed to a whole number.
 local function IsFractional(value)
     local _, fract = math_modf(value)
     return fract ~= 0
 end
 
+-- Prints args to the chat window. To enable debug statements,
+-- do a find/replace in this file with "-- DebugPrint(" for "DebugPrint(",
+-- or the reverse to disable them again.
 local DebugPrint = function(...)
     print(...)
     -- ABGP:WriteLogged("SERIALIZE", table_concat({tostringall(...)}, " "))
@@ -152,7 +170,8 @@ end
 
 --[[---------------------------------------------------------------------------
     Code taken/modified from LibDeflate: CreateReader, CreateWriter.
-    Exposes a mechanism to read/write bytes from/to a buffer.
+    Exposes a mechanism to read/write bytes from/to a buffer. The more
+    advanced functionality of reading/writing partial bytes has been removed.
 --]]---------------------------------------------------------------------------
 
 --[[
@@ -217,8 +236,8 @@ end
 
 
 --[[---------------------------------------------------------------------------
-    Code taken/modified from lua-MessagePack: FloatToString, StringToFloat.
-    Used for serializing/deserializing floating point numbers.
+    Code taken/modified from lua-MessagePack: FloatToString, StringToFloat,
+    IntToString, StringToInt. Used for serializing/deserializing numbers.
 --]]---------------------------------------------------------------------------
 
 local function FloatToString(n)
@@ -275,6 +294,54 @@ local function StringToFloat(str)
         n = sign * ldexp(1.0 + mant / 4503599627370496.0, expo - 0x3FF)
     end
     return n
+end
+
+local function IntToString(n, required)
+    if required == 1 then
+        return string_char(n)
+    elseif required == 2 then
+        return string_char(floor(n / 0x100),
+                           n % 0x100)
+    elseif required == 3 then
+        return string_char(floor(n / 0x10000),
+                           floor(n / 0x100) % 0x100,
+                           n % 0x100)
+    elseif required == 4 then
+        return string_char(floor(n / 0x1000000),
+                           floor(n / 0x10000) % 0x100,
+                           floor(n / 0x100) % 0x100,
+                           n % 0x100)
+    elseif required == 7 then
+        return string_char(floor(n / 0x1000000000000) % 0x100,
+                            floor(n / 0x10000000000) % 0x100,
+                            floor(n / 0x100000000) % 0x100,
+                            floor(n / 0x1000000) % 0x100,
+                            floor(n / 0x10000) % 0x100,
+                            floor(n / 0x100) % 0x100,
+                            n % 0x100)
+    end
+
+    error("Invalid required bytes: " .. required)
+end
+
+local function StringToInt(str, required)
+    if required == 1 then
+        return string_byte(str)
+    elseif required == 2 then
+        local b1, b2 = string_byte(str, 1, 2)
+        return b1 * 0x100 + b2
+    elseif required == 3 then
+        local b1, b2, b3 = string_byte(str, 1, 3)
+        return (b1 * 0x100 + b2) * 0x100 + b3
+    elseif required == 4 then
+        local b1, b2, b3, b4 = string_byte(str, 1, 4)
+        return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
+    elseif required == 7 then
+        local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
+        return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
+    end
+
+    error("Invalid required bytes: " .. required)
 end
 
 
@@ -403,40 +470,13 @@ end
 function LibSerialize:_ReadByte()
     -- DebugPrint("Reading byte")
 
-    local str = self._readBytes(1)
-    return string_byte(str)
+    return self:_ReadInt(1)
 end
 
-function LibSerialize:_ReadInt16()
-    -- DebugPrint("Reading int16")
+function LibSerialize:_ReadInt(required)
+    -- DebugPrint("Reading int", required)
 
-    local str = self._readBytes(2)
-    local b1, b2 = string_byte(str, 1, 2)
-    return b1 * 0x100 + b2
-end
-
-function LibSerialize:_ReadInt24()
-    -- DebugPrint("Reading int24")
-
-    local str = self._readBytes(3)
-    local b1, b2, b3 = string_byte(str, 1, 3)
-    return (b1 * 0x100 + b2) * 0x100 + b3
-end
-
-function LibSerialize:_ReadInt32()
-    -- DebugPrint("Reading int32")
-
-    local str = self._readBytes(4)
-    local b1, b2, b3, b4 = string_byte(str, 1, 4)
-    return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
-end
-
-function LibSerialize:_ReadInt64()
-    -- DebugPrint("Reading int64")
-
-    local str = self._readBytes(7)
-    local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
-    return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
+    return StringToInt(self._readBytes(required), required)
 end
 
 function LibSerialize:_ReadPair(fn, ...)
@@ -510,14 +550,14 @@ LibSerialize._ReaderTable = {
     -- Numbers
     [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
     [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
-    [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt16() end,
-    [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt16() end,
-    [LibSerialize._ReaderIndex.NUM_24_POS] = function(self) return self:_ReadInt24() end,
-    [LibSerialize._ReaderIndex.NUM_24_NEG] = function(self) return -self:_ReadInt24() end,
-    [LibSerialize._ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt32() end,
-    [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt32() end,
-    [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt64() end,
-    [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt64() end,
+    [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt(2) end,
+    [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt(2) end,
+    [LibSerialize._ReaderIndex.NUM_24_POS] = function(self) return self:_ReadInt(3) end,
+    [LibSerialize._ReaderIndex.NUM_24_NEG] = function(self) return -self:_ReadInt(3) end,
+    [LibSerialize._ReaderIndex.NUM_32_POS] = function(self) return self:_ReadInt(4) end,
+    [LibSerialize._ReaderIndex.NUM_32_NEG] = function(self) return -self:_ReadInt(4) end,
+    [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt(7) end,
+    [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt(7) end,
     [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self._readBytes(8)) end,
 
     -- Booleans
@@ -526,33 +566,33 @@ LibSerialize._ReaderTable = {
 
     -- Strings (encoded as size + buffer)
     [LibSerialize._ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.STR_24] = function(self) return self:_ReadString(self:_ReadInt24()) end,
+    [LibSerialize._ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt(2)) end,
+    [LibSerialize._ReaderIndex.STR_24] = function(self) return self:_ReadString(self:_ReadInt(3)) end,
 
     -- Tables (encoded as count + key/value pairs)
     [LibSerialize._ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.TABLE_24] = function(self) return self:_ReadTable(self:_ReadInt24()) end,
+    [LibSerialize._ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt(2)) end,
+    [LibSerialize._ReaderIndex.TABLE_24] = function(self) return self:_ReadTable(self:_ReadInt(3)) end,
 
     -- Arrays (encoded as count + values)
     [LibSerialize._ReaderIndex.ARRAY_8]  = function(self) return self:_ReadArray(self:_ReadByte()) end,
-    [LibSerialize._ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.ARRAY_24] = function(self) return self:_ReadArray(self:_ReadInt24()) end,
+    [LibSerialize._ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt(2)) end,
+    [LibSerialize._ReaderIndex.ARRAY_24] = function(self) return self:_ReadArray(self:_ReadInt(3)) end,
 
     -- Mixed arrays/maps (encoded as arrayCount + mapCount + arrayValues + key/value pairs)
     [LibSerialize._ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadByte)) end,
-    [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt16)) end,
-    [LibSerialize._ReaderIndex.MIXED_24] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt24)) end,
+    [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt, 2)) end,
+    [LibSerialize._ReaderIndex.MIXED_24] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt, 3)) end,
 
     -- Previously referenced strings
     [LibSerialize._ReaderIndex.STRINGREF_8]  = function(self) return stringRefs[self:_ReadByte()] end,
-    [LibSerialize._ReaderIndex.STRINGREF_16] = function(self) return stringRefs[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.STRINGREF_24] = function(self) return stringRefs[self:_ReadInt24()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_16] = function(self) return stringRefs[self:_ReadInt(2)] end,
+    [LibSerialize._ReaderIndex.STRINGREF_24] = function(self) return stringRefs[self:_ReadInt(3)] end,
 
     -- Previously referenced tables
     [LibSerialize._ReaderIndex.TABLEREF_8]  = function(self) return tableRefs[self:_ReadByte()] end,
-    [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return tableRefs[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.TABLEREF_24] = function(self) return tableRefs[self:_ReadInt24()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return tableRefs[self:_ReadInt(2)] end,
+    [LibSerialize._ReaderIndex.TABLEREF_24] = function(self) return tableRefs[self:_ReadInt(3)] end,
 }
 
 
@@ -571,33 +611,7 @@ function LibSerialize:_WriteByte(value)
 end
 
 function LibSerialize:_WriteInt(n, threshold)
-    local str
-    if threshold == 8 then
-        -- Since a double can only hold a 53 bit int,
-        -- we only need to write seven bytes.
-        str = string_char(floor(n / 0x1000000000000) % 0x100,
-                          floor(n / 0x10000000000) % 0x100,
-                          floor(n / 0x100000000) % 0x100,
-                          floor(n / 0x1000000) % 0x100,
-                          floor(n / 0x10000) % 0x100,
-                          floor(n / 0x100) % 0x100,
-                          n % 0x100)
-    elseif threshold == 4 then
-        str = string_char(floor(n / 0x1000000),
-                          floor(n / 0x10000) % 0x100,
-                          floor(n / 0x100) % 0x100,
-                          n % 0x100)
-    elseif threshold == 3 then
-        str = string_char(floor(n / 0x10000),
-                          floor(n / 0x100) % 0x100,
-                          n % 0x100)
-    elseif threshold == 2 then
-        str = string_char(floor(n / 0x100),
-                          n % 0x100)
-    elseif threshold == 1 then
-        str = string_char(n)
-    end
-    self._writeString(str)
+    self._writeString(IntToString(n, threshold))
 end
 
 -- Lookup tables to map the number of required bytes to the appropriate
@@ -608,7 +622,7 @@ local numberIndices = {
     [2] = LibSerialize._ReaderIndex.NUM_16_POS,
     [3] = LibSerialize._ReaderIndex.NUM_24_POS,
     [4] = LibSerialize._ReaderIndex.NUM_32_POS,
-    [8] = LibSerialize._ReaderIndex.NUM_64_POS,
+    [7] = LibSerialize._ReaderIndex.NUM_64_POS,
 }
 local stringIndices = {
     [1] = LibSerialize._ReaderIndex.STR_8,
