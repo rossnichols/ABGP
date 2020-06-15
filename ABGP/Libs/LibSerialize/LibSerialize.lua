@@ -27,6 +27,72 @@ Their original licenses shall be complied with when used.
     Licensed under GPLv3.
 ]]
 
+--[[
+LibSerialize is a library for efficiently serializing/deserializing arbitrary tables.
+It supports serializing nils, numbers, booleans, strings, and tables using these types.
+
+
+Three functions are provided:
+* LibSerialize:Serialize(input)
+    Arguments:
+    * input: any valid value (see above)
+    Returns:
+    * result: `input` serialized as a string
+* LibSerialize:Deserialize(input)
+    Arguments:
+    * input: a string previously returned from LibSerialize:Serialize()
+    Returns:
+    * success: a boolean indicating if deserialization was successful
+    * result: the deserialized value if successful, or a string containing the error
+* LibSerialize:DeserializeValue(input)
+    Arguments:
+    * input: a string previously returned from LibSerialize:Serialize()
+    Returns:
+    * result: the deserialized value
+
+Deserialize and DeserializeValue are equivalent, except the latter returns
+the deserialization result directly and will not swallow any Lua errors
+that may occur when deserializing invalid input.
+
+
+Encoding format:
+Every object is encoded as a type byte followed by type-dependent payload.
+
+For numbers, the payload is the number itself (with extra work for floats),
+using a number of bytes appropriate for the number. Small numbers can be
+ambedded directly into the type bit, optionally with an additional byte
+following for more possible values.
+
+For strings and tables, the length/count is also specified so that the
+payload doesn't need a special terminator between entries. Small counts
+can be embedded directly into the type byte, whereas larger counts are
+encoded directly following the type byte, before the payload.
+
+Strings are stored directly, with no transformations. Tables are stored
+in one of three ways, depending on their layout:
+* Array-like: all keys are numbers starting from 1 and increasing by 1.
+    Only the table's values are encoded.
+* Map-like: the table has no array-like keys.
+    The table is encoded as key-value pairs.
+* Mixed: the table has both map-like and array-like keys.
+    The table is encoded first with the values of the array-like keys,
+    followed by key-value pairs for the map-like keys. For this version,
+    two counts are encoded, one each for the two different portions.
+
+Strings and tables are also tracked as they are encountered, to detect reuse.
+If a string or table is reused, it is encoded instead as an index into the
+tracking table for that type. Strings must be >2 bytes in length to be tracked.
+
+The type byte uses the following formats to implement the above:
+* NNNN NNN1: a 7 bit non-negative int
+* CCCC TT10: a 2 bit type index and 4 bit count (strlen, #tab, etc.)
+    * Followed by the type-dependent payload
+* NNNN N100: the lower five bits of a 13 bit positive int
+    * Followed by a byte for the upper bits
+* TTTT T000: a 5 bit type index
+    * Followed by the type-dependent payload, including count(s) if needed
+--]]
+
 local LibSerialize
 local MAJOR, MINOR = "LibSerialize", 1
 local LibSerialize = LibStub and LibStub:NewLibrary(MAJOR, MINOR) or {}
@@ -242,18 +308,6 @@ end
 --]]---------------------------------------------------------------------------
 
 function LibSerialize:_ReadObject()
-    --[[-----------------------------------------------------------------------
-        Encoding format:
-        The type byte supports the following formats:
-        * NNNN NNN1: a 7 bit non-negative int
-        * CCCC TT10: a 2 bit type index and 4 bit count (strlen, #tab, etc.)
-          * Followed by the type-dependent payload
-        * NNNN N100: the lower five bits of a 13 bit int
-          * Followed by a byte for the upper bits
-        * TTTT T000: a 5 bit type index
-          * Followed by the type-dependent payload, including count(s) if needed
-    --]]-----------------------------------------------------------------------
-
     local value = self:_ReadByte()
 
     if value % 2 == 1 then
