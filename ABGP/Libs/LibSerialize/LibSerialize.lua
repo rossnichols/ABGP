@@ -217,18 +217,23 @@ end
     by their index into this table rather than repeating the string contents.
 --]]---------------------------------------------------------------------------
 
-LibSerialize._stringRefs = {}
-LibSerialize._tableRefs = {}
+local refsDirty = false
+local stringRefs = {}
+local tableRefs = {}
 
 function LibSerialize:_AddReference(refs, value)
+    refsDirty = true
+
     local ref = #refs + 1
     refs[ref] = value
     refs[value] = ref
 end
 
 function LibSerialize:_ClearReferences()
-    self._stringRefs = {}
-    self._tableRefs = {}
+    if refsDirty then
+        stringRefs = {}
+        tableRefs = {}
+    end
 end
 
 
@@ -294,7 +299,7 @@ function LibSerialize:_ReadTable(entryCount, value)
     end
 
     if addRef then
-        self:_AddReference(self._tableRefs, value)
+        self:_AddReference(tableRefs, value)
     end
 
     return value
@@ -311,7 +316,7 @@ function LibSerialize:_ReadArray(entryCount, value)
     end
 
     if addRef then
-        self:_AddReference(self._tableRefs, value)
+        self:_AddReference(tableRefs, value)
     end
 
     return value
@@ -324,7 +329,7 @@ function LibSerialize:_ReadMixed(arrayCount, mapCount)
 
     self:_ReadArray(arrayCount, value)
     self:_ReadTable(mapCount, value)
-    self:_AddReference(self._tableRefs, value)
+    self:_AddReference(tableRefs, value)
 
     return value
 end
@@ -334,7 +339,7 @@ function LibSerialize:_ReadString(len)
 
     local value = self._readBytes(len)
     if len > 2 then
-        self:_AddReference(self._stringRefs, value)
+        self:_AddReference(stringRefs, value)
     end
     return value
 end
@@ -484,14 +489,14 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt32)) end,
 
     -- Previously referenced strings
-    [LibSerialize._ReaderIndex.STRINGREF_8]  = function(self) return self._stringRefs[self:_ReadByte()] end,
-    [LibSerialize._ReaderIndex.STRINGREF_16] = function(self) return self._stringRefs[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.STRINGREF_32] = function(self) return self._stringRefs[self:_ReadInt32()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_8]  = function(self) return stringRefs[self:_ReadByte()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_16] = function(self) return stringRefs[self:_ReadInt16()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_32] = function(self) return stringRefs[self:_ReadInt32()] end,
 
     -- Previously referenced tables
-    [LibSerialize._ReaderIndex.TABLEREF_8]  = function(self) return self._tableRefs[self:_ReadByte()] end,
-    [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return self._tableRefs[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.TABLEREF_32] = function(self) return self._tableRefs[self:_ReadInt32()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_8]  = function(self) return tableRefs[self:_ReadByte()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return tableRefs[self:_ReadInt16()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_32] = function(self) return tableRefs[self:_ReadInt32()] end,
 }
 
 
@@ -620,12 +625,12 @@ LibSerialize._WriterTable = {
         self:_WriteByte(readerIndexShift * (value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F))
     end,
     ["string"] = function(self, value)
-        local ref = self._stringRefs[value]
+        local ref = stringRefs[value]
         if ref then
             -- DebugPrint("Serializing string ref:", value)
             local required = GetRequiredBytes(ref)
             self:_WriteByte(readerIndexShift * stringRefIndices[required])
-            self:_WriteInt(self._stringRefs[value], required)
+            self:_WriteInt(stringRefs[value], required)
         else
             local len = #value
             if len < 16 then
@@ -641,17 +646,17 @@ LibSerialize._WriterTable = {
 
             self._writeString(value)
             if len > 2 then
-                self:_AddReference(self._stringRefs, value)
+                self:_AddReference(stringRefs, value)
             end
         end
     end,
     ["table"] = function(self, value)
-        local ref = self._tableRefs[value]
+        local ref = tableRefs[value]
         if ref then
             -- DebugPrint("Serializing table ref:", value)
             local required = GetRequiredBytes(ref)
             self:_WriteByte(readerIndexShift * tableRefIndices[required])
-            self:_WriteInt(self._tableRefs[value], required)
+            self:_WriteInt(tableRefs[value], required)
         else
             -- First determine the "proper" length of the array portion of the table,
             -- which terminates at its first nil value.
@@ -738,7 +743,7 @@ LibSerialize._WriterTable = {
                 end
             end
 
-            self:_AddReference(self._tableRefs, value)
+            self:_AddReference(tableRefs, value)
         end
     end,
 }
@@ -753,9 +758,10 @@ function LibSerialize:Serialize(input)
     local WriteString, FlushWriter = CreateWriter()
 
     self._writeString = WriteString
-    self:_WriteByte(self._SERIALIZATION_VERSION)
+    self:_WriteByte(MINOR)
     self:_WriteObject(input)
 
+    self:_ClearReferences()
     return FlushWriter()
 end
 
@@ -769,7 +775,7 @@ function LibSerialize:DeserializeValue(input)
     -- Since there's only one compression version currently,
     -- no extra work needs to be done to decode the data.
     local version = self:_ReadByte()
-    assert(version == self._SERIALIZATION_VERSION)
+    assert(version == MINOR)
     local obj = self:_ReadObject()
 
     local remaining = ReaderBytesLeft()
@@ -779,9 +785,13 @@ function LibSerialize:DeserializeValue(input)
               or "Reader went past end of input")
     end
 
+    self:_ClearReferences()
     return obj
 end
 
 function LibSerialize:Deserialize(input)
-    return pcall(LibSerialize.DeserializeValue, self, input)
+    local success, output = pcall(LibSerialize.DeserializeValue, self, input)
+
+    self:_ClearReferences()
+    return success, output
 end
