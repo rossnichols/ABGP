@@ -127,7 +127,7 @@ local print = print
 local function GetRequiredBytes(value)
     if value < 256 then return 1 end
     if value < 65536 then return 2 end
-    if value < 4294967296 then return 4 end
+    if value < 16777216 then return 3 end
     error("Object limit exceeded")
 end
 
@@ -481,27 +481,27 @@ LibSerialize._ReaderIndex = {
 
     STR_8 = 14,
     STR_16 = 15,
-    STR_32 = 16,
+    STR_24 = 16,
 
     TABLE_8 = 17,
     TABLE_16 = 18,
-    TABLE_32 = 19,
+    TABLE_24 = 19,
 
     ARRAY_8 = 20,
     ARRAY_16 = 21,
-    ARRAY_32 = 22,
+    ARRAY_24 = 22,
 
     MIXED_8 = 23,
     MIXED_16 = 24,
-    MIXED_32 = 25,
+    MIXED_24 = 25,
 
     STRINGREF_8 = 26,
     STRINGREF_16 = 27,
-    STRINGREF_32 = 28,
+    STRINGREF_24 = 28,
 
     TABLEREF_8 = 29,
     TABLEREF_16 = 30,
-    TABLEREF_32 = 31,
+    TABLEREF_24 = 31,
 }
 LibSerialize._ReaderTable = {
     -- Nil (only expected as the entire input)
@@ -527,32 +527,32 @@ LibSerialize._ReaderTable = {
     -- Strings (encoded as size + buffer)
     [LibSerialize._ReaderIndex.STR_8]  = function(self) return self:_ReadString(self:_ReadByte()) end,
     [LibSerialize._ReaderIndex.STR_16] = function(self) return self:_ReadString(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.STR_32] = function(self) return self:_ReadString(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.STR_24] = function(self) return self:_ReadString(self:_ReadInt24()) end,
 
     -- Tables (encoded as count + key/value pairs)
     [LibSerialize._ReaderIndex.TABLE_8]  = function(self) return self:_ReadTable(self:_ReadByte()) end,
     [LibSerialize._ReaderIndex.TABLE_16] = function(self) return self:_ReadTable(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.TABLE_32] = function(self) return self:_ReadTable(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.TABLE_24] = function(self) return self:_ReadTable(self:_ReadInt24()) end,
 
     -- Arrays (encoded as count + values)
     [LibSerialize._ReaderIndex.ARRAY_8]  = function(self) return self:_ReadArray(self:_ReadByte()) end,
     [LibSerialize._ReaderIndex.ARRAY_16] = function(self) return self:_ReadArray(self:_ReadInt16()) end,
-    [LibSerialize._ReaderIndex.ARRAY_32] = function(self) return self:_ReadArray(self:_ReadInt32()) end,
+    [LibSerialize._ReaderIndex.ARRAY_24] = function(self) return self:_ReadArray(self:_ReadInt24()) end,
 
     -- Mixed arrays/maps (encoded as arrayCount + mapCount + arrayValues + key/value pairs)
     [LibSerialize._ReaderIndex.MIXED_8]  = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadByte)) end,
     [LibSerialize._ReaderIndex.MIXED_16] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt16)) end,
-    [LibSerialize._ReaderIndex.MIXED_32] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt32)) end,
+    [LibSerialize._ReaderIndex.MIXED_24] = function(self) return self:_ReadMixed(self:_ReadPair(self._ReadInt24)) end,
 
     -- Previously referenced strings
     [LibSerialize._ReaderIndex.STRINGREF_8]  = function(self) return stringRefs[self:_ReadByte()] end,
     [LibSerialize._ReaderIndex.STRINGREF_16] = function(self) return stringRefs[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.STRINGREF_32] = function(self) return stringRefs[self:_ReadInt32()] end,
+    [LibSerialize._ReaderIndex.STRINGREF_24] = function(self) return stringRefs[self:_ReadInt24()] end,
 
     -- Previously referenced tables
     [LibSerialize._ReaderIndex.TABLEREF_8]  = function(self) return tableRefs[self:_ReadByte()] end,
     [LibSerialize._ReaderIndex.TABLEREF_16] = function(self) return tableRefs[self:_ReadInt16()] end,
-    [LibSerialize._ReaderIndex.TABLEREF_32] = function(self) return tableRefs[self:_ReadInt32()] end,
+    [LibSerialize._ReaderIndex.TABLEREF_24] = function(self) return tableRefs[self:_ReadInt24()] end,
 }
 
 
@@ -613,32 +613,32 @@ local numberIndices = {
 local stringIndices = {
     [1] = LibSerialize._ReaderIndex.STR_8,
     [2] = LibSerialize._ReaderIndex.STR_16,
-    [4] = LibSerialize._ReaderIndex.STR_32,
+    [3] = LibSerialize._ReaderIndex.STR_24,
 }
 local tableIndices = {
     [1] = LibSerialize._ReaderIndex.TABLE_8,
     [2] = LibSerialize._ReaderIndex.TABLE_16,
-    [4] = LibSerialize._ReaderIndex.TABLE_32,
+    [3] = LibSerialize._ReaderIndex.TABLE_24,
 }
 local arrayIndices = {
     [1] = LibSerialize._ReaderIndex.ARRAY_8,
     [2] = LibSerialize._ReaderIndex.ARRAY_16,
-    [4] = LibSerialize._ReaderIndex.ARRAY_32,
+    [3] = LibSerialize._ReaderIndex.ARRAY_24,
 }
 local mixedIndices = {
     [1] = LibSerialize._ReaderIndex.MIXED_8,
     [2] = LibSerialize._ReaderIndex.MIXED_16,
-    [4] = LibSerialize._ReaderIndex.MIXED_32,
+    [3] = LibSerialize._ReaderIndex.MIXED_24,
 }
 local stringRefIndices = {
     [1] = LibSerialize._ReaderIndex.STRINGREF_8,
     [2] = LibSerialize._ReaderIndex.STRINGREF_16,
-    [4] = LibSerialize._ReaderIndex.STRINGREF_32,
+    [3] = LibSerialize._ReaderIndex.STRINGREF_24,
 }
 local tableRefIndices = {
     [1] = LibSerialize._ReaderIndex.TABLEREF_8,
     [2] = LibSerialize._ReaderIndex.TABLEREF_16,
-    [4] = LibSerialize._ReaderIndex.TABLEREF_32,
+    [3] = LibSerialize._ReaderIndex.TABLEREF_24,
 }
 
 LibSerialize._WriterTable = {
