@@ -34,22 +34,23 @@ It supports serializing nils, numbers, booleans, strings, and tables using these
 
 
 Three functions are provided:
-* LibSerialize:Serialize(input)
+* LibSerialize:Serialize(...)
     Arguments:
-    * input: any valid value (see above)
+    * ...: a variable number of serializable values (see above)
     Returns:
-    * result: `input` serialized as a string
+    * result: `...` serialized as a string
 * LibSerialize:Deserialize(input)
     Arguments:
     * input: a string previously returned from LibSerialize:Serialize()
     Returns:
     * success: a boolean indicating if deserialization was successful
-    * result: the deserialized value if successful, or a string containing the error
+    * result: if successful, the deserialized value(s) as multiple return values
+              if unsucessful, a string containing the error that was encountered
 * LibSerialize:DeserializeValue(input)
     Arguments:
     * input: a string previously returned from LibSerialize:Serialize()
     Returns:
-    * result: the deserialized value
+    * result: the deserialized value(s) as multiple return values
 
 Serialize() will cause a Lua error if the input cannot be serialized.
 This will occur if any unsupported types are encountered (e.g. functions),
@@ -59,6 +60,15 @@ key count, number of unique strings, number of unique tables.
 Deserialize() and DeserializeValue() are equivalent, except the latter
 returns the deserialization result directly and will not catch any Lua
 errors that may occur when deserializing invalid input.
+
+Example:
+local serialized = LibSerialize:Serialize({ "test", [false] = 5 }, "extra")
+local success, tab, str = LibSerialize:Deserialize(serialized)
+if success then
+    print(tab[1]) -- prints "test"
+    print(tab[false]) -- prints "5"
+    print(str) -- prints "extra"
+end
 
 
 Encoding format:
@@ -115,6 +125,8 @@ local pcall = pcall
 local print = print
 local pairs = pairs
 local ipairs = ipairs
+local select = select
+local unpack = unpack
 local type = type
 local max = max
 local frexp = frexp
@@ -124,6 +136,7 @@ local string_byte = string.byte
 local string_char = string.char
 local string_sub = string.sub
 local table_concat = table.concat
+local table_insert = table.insert
 local math_modf = math.modf
 local math_huge = math.huge
 
@@ -820,13 +833,17 @@ LibSerialize._WriterTable = {
     API support.
 --]]---------------------------------------------------------------------------
 
-function LibSerialize:Serialize(input)
+function LibSerialize:Serialize(...)
     self:_ClearReferences()
     local WriteString, FlushWriter = CreateWriter()
 
     self._writeString = WriteString
     self:_WriteByte(MINOR)
-    self:_WriteObject(input)
+
+    for i = 1, select("#", ...) do
+        local input = select(i, ...)
+        self:_WriteObject(input)
+    end
 
     self:_ClearReferences()
     return FlushWriter()
@@ -842,22 +859,26 @@ function LibSerialize:DeserializeValue(input)
     -- no extra work needs to be done to decode the data.
     local version = self:_ReadByte()
     assert(version == MINOR)
-    local output = self:_ReadObject()
 
-    local remaining = ReaderBytesLeft()
-    if remaining ~= 0 then
-        error(remaining > 0
-              and "Input not fully read"
-              or "Reader went past end of input")
+    local output = {}
+    while ReaderBytesLeft() > 0 do
+        table_insert(output, self:_ReadObject())
     end
 
     self:_ClearReferences()
-    return output
+
+    if ReaderBytesLeft() < 0 then
+        error("Reader went past end of input")
+    end
+
+    return unpack(output)
+end
+
+function LibSerialize:_PostDeserialize(...)
+    self:_ClearReferences()
+    return ...
 end
 
 function LibSerialize:Deserialize(input)
-    local success, output = pcall(self.DeserializeValue, self, input)
-
-    self:_ClearReferences()
-    return success, output
+    return self:_PostDeserialize(pcall(self.DeserializeValue, self, input))
 end
