@@ -12,70 +12,27 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/.
 
-Credits and Disclaimer:
+Credits:
 The following projects are used to help implement this project.
 Their original licenses shall be complied with when used.
 
 1. LibDeflate, by Haoqian He. https://github.com/SafeteeWoW/LibDeflate
+    For the CreateReader/CreateWriter functions.
     Licensed under GPLv3.
 2. lua-MessagePack, by François Perrad. https://framagit.org/fperrad/lua-MessagePack
+    For the mechanism for packing/unpacking floats and ints.
     Licensed under MIT.
 3. LibQuestieSerializer, by aero. https://github.com/AeroScripts/LibQuestieSerializer
+    For the general approach of "type byte, payload" for serializing.
     Licensed under GPLv3.
 ]]
 
 local LibSerialize
+local MAJOR, MINOR = "LibSerialize", 1
+local LibSerialize = LibStub and LibStub:NewLibrary(MAJOR, MINOR) or {}
 
-do
-    -- Semantic version. all lowercase.
-    -- Suffix can be alpha1, alpha2, beta1, beta2, rc1, rc2, etc.
-    -- NOTE: Two version numbers needs to modify.
-    -- 1. On the top of LibSerialize.lua
-    -- 2. _VERSION
-    -- 3. _MINOR
+if not LibSerialize then return end -- No Upgrade needed.
 
-    -- version to store the official version of LibSerialize
-    local _VERSION = "0.1.0-prerelease"
-
-    -- When MAJOR is changed, I should name it as LibSerialize2
-    local _MAJOR = "LibSerialize"
-
-    -- Update this whenever a new version, for LibStub version registration.
-    local _MINOR = 1
-
-    -- Update this if a breaking change is introduced in the compression,
-    -- so that older data can be identified and decoded properly.
-    local _SERIALIZATION_VERSION = 1
-
-    local _COPYRIGHT =
-    "LibSerialize ".. _VERSION
-    .. " Copyright (C) 2020 Ross Nichols."
-    .. " License LGPLv3+: GNU Lesser General Public License version 3 or later"
-
-    -- Register in the World of Warcraft library "LibStub" if detected.
-    if LibStub then
-        local lib, minor = LibStub:GetLibrary(_MAJOR, true)
-        if lib and minor and minor >= _MINOR then -- No need to update.
-            return lib
-        else -- Update or first time register
-            LibSerialize = LibStub:NewLibrary(_MAJOR, _MINOR)
-            -- NOTE: It is important that new version has implemented
-            -- all exported APIs and tables in the old version,
-            -- so the old library is fully garbage collected,
-            -- and we 100% ensure the backward compatibility.
-        end
-    else -- "LibStub" is not detected.
-        LibSerialize = {}
-    end
-
-    LibSerialize._VERSION = _VERSION
-    LibSerialize._MAJOR = _MAJOR
-    LibSerialize._MINOR = _MINOR
-    LibSerialize._COPYRIGHT = _COPYRIGHT
-    LibSerialize._SERIALIZATION_VERSION = _SERIALIZATION_VERSION
-end
-
--- localize Lua api for faster access.
 local assert = assert
 local error = error
 local pairs = pairs
@@ -84,7 +41,6 @@ local string_byte = string.byte
 local string_char = string.char
 local string_sub = string.sub
 local table_concat = table.concat
-local bit_band = bit.band
 local math_huge = math.huge
 local math_modf = math.modf
 local type = type
