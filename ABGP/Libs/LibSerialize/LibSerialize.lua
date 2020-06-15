@@ -313,12 +313,12 @@ local function IntToString(n, required)
                            n % 0x100)
     elseif required == 7 then
         return string_char(floor(n / 0x1000000000000) % 0x100,
-                            floor(n / 0x10000000000) % 0x100,
-                            floor(n / 0x100000000) % 0x100,
-                            floor(n / 0x1000000) % 0x100,
-                            floor(n / 0x10000) % 0x100,
-                            floor(n / 0x100) % 0x100,
-                            n % 0x100)
+                           floor(n / 0x10000000000) % 0x100,
+                           floor(n / 0x100000000) % 0x100,
+                           floor(n / 0x1000000) % 0x100,
+                           floor(n / 0x10000) % 0x100,
+                           floor(n / 0x100) % 0x100,
+                           n % 0x100)
     end
 
     error("Invalid required bytes: " .. required)
