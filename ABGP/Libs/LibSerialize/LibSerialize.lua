@@ -497,6 +497,7 @@ LibSerialize._EmbeddedReaderTable = {
     [LibSerialize._EmbeddedIndex.STRING] = function(self, c) return self:_ReadString(c) end,
     [LibSerialize._EmbeddedIndex.TABLE] =  function(self, c) return self:_ReadTable(c) end,
     [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, c) return self:_ReadArray(c) end,
+    -- For MIXED, the 4-bit count contains two 2-bit counts that are one less than the true count.
     [LibSerialize._EmbeddedIndex.MIXED] =  function(self, c) return self:_ReadMixed((c % 4) + 1, floor(c / 4) + 1) end,
 }
 
@@ -614,9 +615,8 @@ function LibSerialize:_WriteInt(n, threshold)
     self._writeString(IntToString(n, threshold))
 end
 
--- Lookup tables to map the number of required bytes to the appropriate
--- reader table index. Note that for numbers, we leave space for the
--- negative versions of each level as well.
+-- Lookup tables to map the number of required bytes to the
+-- appropriate reader table index.
 local numberIndices = {
     [1] = LibSerialize._ReaderIndex.NUM_8_POS,
     [2] = LibSerialize._ReaderIndex.NUM_16_POS,
@@ -787,6 +787,7 @@ LibSerialize._WriterTable = {
 
                 local mapCountWritten = 0
                 for k, v in pairs(value) do
+                    -- Exclude keys that have already been written via the previous loop.
                     if type(k) ~= "number" or k < 1 or k > arrayCount or IsFractional(k) then
                         mapCountWritten = mapCountWritten + 1
                         self:_WriteObject(k)
