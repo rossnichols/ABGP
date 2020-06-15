@@ -769,14 +769,13 @@ function LibSerialize:DeserializeValue(input)
     self:_ClearReferences()
     local ReadBytes, ReaderBytesLeft = CreateReader(input)
 
-    self._readBuffer = {}
     self._readBytes = ReadBytes
 
     -- Since there's only one compression version currently,
     -- no extra work needs to be done to decode the data.
     local version = self:_ReadByte()
     assert(version == MINOR)
-    local obj = self:_ReadObject()
+    local output = self:_ReadObject()
 
     local remaining = ReaderBytesLeft()
     if remaining ~= 0 then
@@ -786,7 +785,7 @@ function LibSerialize:DeserializeValue(input)
     end
 
     self:_ClearReferences()
-    return obj
+    return output
 end
 
 function LibSerialize:Deserialize(input)
