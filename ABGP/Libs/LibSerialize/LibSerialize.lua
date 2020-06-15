@@ -145,7 +145,7 @@ local function CreateWriter()
     -- @param str The string being written
     -- @return nil
     local function WriteString(str)
-        -- DebugPrint("Writing string len", #str, "bitlen", #str * 8)
+        -- DebugPrint("Writing string:", str, #str)
         buffer_size = buffer_size + 1
         buffer[buffer_size] = str
     end
@@ -168,7 +168,7 @@ end
     Create a reader to easily reader stuffs as the unit of bits.
     Return values:
     1. ReadBytes(bytelen, buffer, buffer_size)
-    2. ReaderBitlenLeft()
+    2. ReaderBytesLeft()
 --]]
 local function CreateReader(input_string)
     local input = input_string
@@ -184,11 +184,11 @@ local function CreateReader(input_string)
         return result
     end
 
-    local function ReaderBitlenLeft()
-        return (input_strlen - input_next_byte_pos + 1) * 8
+    local function ReaderBytesLeft()
+        return input_strlen - input_next_byte_pos + 1
     end
 
-    return ReadBytes, ReaderBitlenLeft
+    return ReadBytes, ReaderBytesLeft
 end
 
 
@@ -805,7 +805,7 @@ end
 
 function LibSerialize:DeserializeValue(input)
     self:_ClearReferences()
-    local ReadBytes, ReaderBitlenLeft = CreateReader(input)
+    local ReadBytes, ReaderBytesLeft = CreateReader(input)
 
     self._readBuffer = {}
     self._readBytes = ReadBytes
@@ -816,7 +816,7 @@ function LibSerialize:DeserializeValue(input)
     assert(version == self._SERIALIZATION_VERSION)
     local obj = self:_ReadObject()
 
-    local remaining = ReaderBitlenLeft()
+    local remaining = ReaderBytesLeft()
     if remaining ~= 0 then
         error(remaining > 0
               and "Input not fully read"
