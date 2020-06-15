@@ -27,6 +27,7 @@ Their original licenses shall be complied with when used.
     Licensed under GPLv3.
 ]]
 
+
 --[[
 LibSerialize is a library for efficiently serializing/deserializing arbitrary tables.
 It supports serializing nils, numbers, booleans, strings, and tables using these types.
@@ -51,7 +52,7 @@ Three functions are provided:
     * result: the deserialized value
 
 Deserialize and DeserializeValue are equivalent, except the latter returns
-the deserialization result directly and will not swallow any Lua errors
+the deserialization result directly and will not catch any Lua errors
 that may occur when deserializing invalid input.
 
 
@@ -61,12 +62,13 @@ Every object is encoded as a type byte followed by type-dependent payload.
 For numbers, the payload is the number itself (with extra work for floats),
 using a number of bytes appropriate for the number. Small numbers can be
 ambedded directly into the type bit, optionally with an additional byte
-following for more possible values.
+following for more possible values. Negative numbers are encoded as their
+absolute value, with the type byte indicating that it is negative.
 
 For strings and tables, the length/count is also specified so that the
-payload doesn't need a special terminator between entries. Small counts
-can be embedded directly into the type byte, whereas larger counts are
-encoded directly following the type byte, before the payload.
+payload doesn't need a special terminator. Small counts can be embedded
+directly into the type byte, whereas larger counts are encoded directly
+following the type byte, before the payload.
 
 Strings are stored directly, with no transformations. Tables are stored
 in one of three ways, depending on their layout:
