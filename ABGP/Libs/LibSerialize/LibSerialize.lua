@@ -194,12 +194,9 @@ local function CreateWriter()
     end
 
     -- Flush current stuffs in the writer and return it.
-    -- This operation will free most of the memory.
-    -- @return The total number of bits stored in the writer right now.
     -- @return Return the output.
     local function FlushWriter()
-        local flushed = table_concat(buffer)
-        buffer = {}
+        local flushed = table_concat(buffer, "", 1, buffer_size)
         buffer_size = 0
         return flushed
     end
