@@ -1,6 +1,5 @@
 local _G = _G;
 local ABGP = _G.ABGP;
-local LibSerialize = _G.LibStub("LibSerialize");
 
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
@@ -218,6 +217,17 @@ if syncTesting then
     end
 end
 
+local function Hash(value)
+    -- An implementation of the djb2 hash algorithm.
+    -- See http://www.cs.yorku.ca/~oz/hash.html.
+
+    local h = 5381
+    for i = 1, #value do
+        h = bit.band((33 * h + value:byte(i)), 4294967295)
+    end
+    return h
+end
+
 local function BuildSyncHashData(phase, now)
     local hash = 0;
     local syncCount = 0;
@@ -231,7 +241,7 @@ local function BuildSyncHashData(phase, now)
         local player, date = ABGP:ParseHistoryId(id);
         if now - date > syncThreshold then break; end
 
-        hash = bit.bxor(hash, LibSerialize:Hash(id));
+        hash = bit.bxor(hash, Hash(id));
         syncCount = syncCount + 1;
     end
 
@@ -669,30 +679,6 @@ function ABGP:CommitHistory(phase)
             baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
             history = _G.ABGP_Data[phase].gpHistory,
         }, "GUILD");
-    end
-end
-
-function ABGP:TestSerialization(input)
-    input = input or { _G.ABGP_Data.p1.gpHistory, _G.ABGP_Data.p1.gpHistory };
-    -- input = input or _G.ABGP_Data.p1.itemValues;
-    local LibDeflate = _G.LibStub("LibDeflate");
-
-    local serialized = LibSerialize:Serialize(input);
-    self:Notify("serialized len: %d", #serialized);
-    local compressed = LibDeflate:CompressDeflate(serialized);
-    self:Notify("compressed len: %d", #compressed);
-    self:Notify("compared to legacy of %d", self:Serialize(input, true):len());
-
-    local decompressed = LibDeflate:DecompressDeflate(compressed);
-    local success, deserialized = LibSerialize:Deserialize(decompressed);
-    self:Notify("deserialization success: %s %s", success and "true" or "false", success and "" or deserialized);
-
-    if success then
-        if type(input) == "table" then
-            self:Notify("matching: %s", self.tCompare(input, deserialized) and "yes" or "no");
-        else
-            self:Notify("matching: %s", input == deserialized and "yes" or "no");
-        end
     end
 end
 

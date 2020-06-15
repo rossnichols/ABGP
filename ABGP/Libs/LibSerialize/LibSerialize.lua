@@ -440,7 +440,7 @@ LibSerialize._EmbeddedReaderTable = {
     [LibSerialize._EmbeddedIndex.STRING] = function(self, c) return self:_ReadString(c) end,
     [LibSerialize._EmbeddedIndex.TABLE] =  function(self, c) return self:_ReadTable(c) end,
     [LibSerialize._EmbeddedIndex.ARRAY] =  function(self, c) return self:_ReadArray(c) end,
-    [LibSerialize._EmbeddedIndex.MIXED] =  function(self, c) return self:_ReadMixed(c % 4 + 1, floor(c / 4) + 1) end,
+    [LibSerialize._EmbeddedIndex.MIXED] =  function(self, c) return self:_ReadMixed((c % 4) + 1, floor(c / 4) + 1) end,
 }
 
 local readerIndexShift = 8
@@ -797,14 +797,13 @@ function LibSerialize:Serialize(input)
     local WriteString, FlushWriter = CreateWriter()
 
     self._writeString = WriteString
-    self._flushWriter = FlushWriter
     self:_WriteByte(self._SERIALIZATION_VERSION)
     self:_WriteObject(input)
 
     return FlushWriter()
 end
 
-function LibSerialize:_Deserialize(input)
+function LibSerialize:DeserializeValue(input)
     self:_ClearReferences()
     local ReadBytes, ReaderBitlenLeft = CreateReader(input)
 
@@ -820,25 +819,13 @@ function LibSerialize:_Deserialize(input)
     local remaining = ReaderBitlenLeft()
     if remaining ~= 0 then
         error(remaining > 0
-              and "Buffer contents not fully read"
-              or "Reader went past end of buffer")
+              and "Input not fully read"
+              or "Reader went past end of input")
     end
 
     return obj
 end
 
 function LibSerialize:Deserialize(input)
-    return pcall(LibSerialize._Deserialize, self, input)
-end
-
-function LibSerialize:Hash(value)
-    -- An implementation of the djb2 hash algorithm.
-    -- See http://www.cs.yorku.ca/~oz/hash.html.
-    assert(type(value) == "string")
-
-    local h = 5381
-    for i = 1, #value do
-        h = bit_band((33 * h + string_byte(value, i)), 4294967295)
-    end
-    return h
+    return pcall(LibSerialize.DeserializeValue, self, input)
 end
