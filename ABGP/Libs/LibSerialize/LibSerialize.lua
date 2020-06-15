@@ -790,7 +790,7 @@ function LibSerialize:DeserializeValue(input)
 end
 
 function LibSerialize:Deserialize(input)
-    local success, output = pcall(LibSerialize.DeserializeValue, self, input)
+    local success, output = pcall(self.DeserializeValue, self, input)
 
     self:_ClearReferences()
     return success, output
