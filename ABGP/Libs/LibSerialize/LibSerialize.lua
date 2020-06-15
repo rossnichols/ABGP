@@ -111,21 +111,21 @@ if not LibSerialize then return end -- No Upgrade needed.
 
 local assert = assert
 local error = error
+local pcall = pcall
+local print = print
 local pairs = pairs
 local ipairs = ipairs
-local string_byte = string.byte
-local string_char = string.char
-local string_sub = string.sub
-local table_concat = table.concat
-local math_huge = math.huge
-local math_modf = math.modf
 local type = type
 local max = max
 local frexp = frexp
 local ldexp = ldexp
 local floor = floor
-local pcall = pcall
-local print = print
+local string_byte = string.byte
+local string_char = string.char
+local string_sub = string.sub
+local table_concat = table.concat
+local math_modf = math.modf
+local math_huge = math.huge
 
 
 --[[---------------------------------------------------------------------------
