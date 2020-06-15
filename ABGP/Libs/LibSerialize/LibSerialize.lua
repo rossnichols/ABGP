@@ -410,16 +410,14 @@ end
 function LibSerialize:_ReadTable(entryCount, value)
     -- DebugPrint("Extracting keys/values for table:", entryCount)
 
-    local addRef = (value == nil)
-    value = value or {}
+    if value == nil then
+        value = {}
+        self:_AddReference(tableRefs, value)
+    end
 
     for i = 1, entryCount do
         local k, v = self:_ReadPair(self._ReadObject)
         value[k] = v
-    end
-
-    if addRef then
-        self:_AddReference(tableRefs, value)
     end
 
     return value
@@ -428,15 +426,13 @@ end
 function LibSerialize:_ReadArray(entryCount, value)
     -- DebugPrint("Extracting values for array:", entryCount)
 
-    local addRef = (value == nil)
-    value = value or {}
+    if value == nil then
+        value = {}
+        self:_AddReference(tableRefs, value)
+    end
 
     for i = 1, entryCount do
         value[i] = self:_ReadObject()
-    end
-
-    if addRef then
-        self:_AddReference(tableRefs, value)
     end
 
     return value
@@ -446,10 +442,10 @@ function LibSerialize:_ReadMixed(arrayCount, mapCount)
     -- DebugPrint("Extracting values for mixed table:", arrayCount, mapCount)
 
     local value = {}
+    self:_AddReference(tableRefs, value)
 
     self:_ReadArray(arrayCount, value)
     self:_ReadTable(mapCount, value)
-    self:_AddReference(tableRefs, value)
 
     return value
 end
@@ -725,6 +721,11 @@ LibSerialize._WriterTable = {
             self:_WriteByte(readerIndexShift * tableRefIndices[required])
             self:_WriteInt(tableRefs[value], required)
         else
+            -- Add a reference before trying to serialize the table's contents,
+            -- so that if the table recursively references itself, we can still
+            -- properly serialize it.
+            self:_AddReference(tableRefs, value)
+
             -- First determine the "proper" length of the array portion of the table,
             -- which terminates at its first nil value.
             local arrayCount = 0
@@ -810,8 +811,6 @@ LibSerialize._WriterTable = {
                     self:_WriteObject(v)
                 end
             end
-
-            self:_AddReference(tableRefs, value)
         end
     end,
 }
