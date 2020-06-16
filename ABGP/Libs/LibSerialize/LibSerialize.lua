@@ -118,7 +118,7 @@ Every object is encoded as a type byte followed by type-dependent payload.
 
 For numbers, the payload is the number itself (with extra work for floats),
 using a number of bytes appropriate for the number. Small numbers can be
-ambedded directly into the type bit, optionally with an additional byte
+embedded directly into the type bit, optionally with an additional byte
 following for more possible values. Negative numbers are encoded as their
 absolute value, with the type byte indicating that it is negative.
 
