@@ -96,10 +96,11 @@ the following possible keys:
 * filter: function(t, k, v) => boolean
     If this function is specified, it will be called for each serializable
     key/value pair with the table/key/value as its arguments. The function
-    must then return true for the pair to be serialized. NOTE: do not assume
-    that you can update t[k] to a new value when this is called and have
-    it affect the serialization. It may also be called multiple times for
-    the same key of a given table.
+    must then return true for the pair to be serialized. NOTE: the effect
+    on serialization of modifying `t` during this callout is unspecified
+    and should be avoided. You cannot call back into LibSerialize either,
+    as it does not support reentrancy. The function may be called multiple
+    times on a table for the same key/value pair.
 
 
 Examples:
@@ -857,7 +858,7 @@ LibSerialize._WriterTable = {
 
             local filter
             local mt = getmetatable(value)
-            if mt and mt.__LibSerialize then
+            if mt and type(mt) == "table" and mt.__LibSerialize then
                 filter = mt.__LibSerialize.filter
             end
 
