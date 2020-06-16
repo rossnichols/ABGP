@@ -816,101 +816,101 @@ LibSerialize._WriterTable = {
         -- DebugPrint("Serializing nil")
         self:_WriteByte(readerIndexShift * self._ReaderIndex.NIL)
     end,
-    ["number"] = function(self, value)
-        if IsFractional(value) then
-            -- DebugPrint("Serializing float:", value)
+    ["number"] = function(self, num)
+        if IsFractional(num) then
+            -- DebugPrint("Serializing float:", num)
             self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
-            self._writeString(FloatToString(value))
-        elseif value > -4096 and value < 4096 then
+            self._writeString(FloatToString(num))
+        elseif num > -4096 and num < 4096 then
             -- The type byte supports two modes by which a number can be embedded:
             -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 12-bit numbers.
-            if value >= 0 and value < 128 then
-                -- DebugPrint("Serializing embedded number (1byte):", value)
-                self:_WriteByte(value * 2 + 1)
+            if num >= 0 and num < 128 then
+                -- DebugPrint("Serializing embedded number (1byte):", num)
+                self:_WriteByte(num * 2 + 1)
             else
-                -- DebugPrint("Serializing embedded number (2bytes):", value)
+                -- DebugPrint("Serializing embedded number (2bytes):", num)
                 local sign = 0
-                if value < 0 then
+                if num < 0 then
                     sign = 8
-                    value = -value
+                    num = -num
                 end
-                value = value * 16 + sign + 4
-                local upper, lower = floor(value / 0x100), value % 0x100
+                num = num * 16 + sign + 4
+                local upper, lower = floor(num / 0x100), num % 0x100
                 self:_WriteByte(lower)
                 self:_WriteByte(upper)
             end
         else
-            -- DebugPrint("Serializing number:", value)
+            -- DebugPrint("Serializing number:", num)
             local sign = 0
-            if value < 0 then
-                value = -value
+            if num < 0 then
+                num = -num
                 sign = readerIndexShift
             end
-            local required = GetRequiredBytesNumber(value)
+            local required = GetRequiredBytesNumber(num)
             self:_WriteByte(sign + readerIndexShift * numberIndices[required])
-            self:_WriteInt(value, required)
+            self:_WriteInt(num, required)
         end
     end,
-    ["boolean"] = function(self, value)
-        -- DebugPrint("Serializing bool:", value)
-        self:_WriteByte(readerIndexShift * (value and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F))
+    ["boolean"] = function(self, bool)
+        -- DebugPrint("Serializing bool:", bool)
+        self:_WriteByte(readerIndexShift * (bool and self._ReaderIndex.BOOL_T or self._ReaderIndex.BOOL_F))
     end,
-    ["string"] = function(self, value)
-        local ref = stringRefs[value]
+    ["string"] = function(self, str)
+        local ref = stringRefs[str]
         if ref then
-            -- DebugPrint("Serializing string ref:", value)
+            -- DebugPrint("Serializing string ref:", str)
             local required = GetRequiredBytes(ref)
             self:_WriteByte(readerIndexShift * stringRefIndices[required])
-            self:_WriteInt(stringRefs[value], required)
+            self:_WriteInt(stringRefs[str], required)
         else
-            local len = #value
+            local len = #str
             if len < 16 then
                 -- Short lengths can be embedded directly into the type byte.
-                -- DebugPrint("Serializing string, embedded count:", value, len)
+                -- DebugPrint("Serializing string, embedded count:", str, len)
                 self:_WriteByte(embeddedCountShift * len + embeddedIndexShift * self._EmbeddedIndex.STRING + 2)
             else
-                -- DebugPrint("Serializing string:", value, len)
+                -- DebugPrint("Serializing string:", str, len)
                 local required = GetRequiredBytes(len)
                 self:_WriteByte(readerIndexShift * stringIndices[required])
                 self:_WriteInt(len, required)
             end
 
-            self._writeString(value)
+            self._writeString(str)
             if len > 2 then
-                self:_AddReference(stringRefs, value)
+                self:_AddReference(stringRefs, str)
             end
         end
     end,
-    ["table"] = function(self, value, opts)
-        local ref = tableRefs[value]
+    ["table"] = function(self, tab, opts)
+        local ref = tableRefs[tab]
         if ref then
-            -- DebugPrint("Serializing table ref:", value)
+            -- DebugPrint("Serializing table ref:", tab)
             local required = GetRequiredBytes(ref)
             self:_WriteByte(readerIndexShift * tableRefIndices[required])
-            self:_WriteInt(tableRefs[value], required)
+            self:_WriteInt(tableRefs[tab], required)
         else
             -- Add a reference before trying to serialize the table's contents,
             -- so that if the table recursively references itself, we can still
             -- properly serialize it.
-            self:_AddReference(tableRefs, value)
+            self:_AddReference(tableRefs, tab)
 
             local filter
-            local mt = getmetatable(value)
+            local mt = getmetatable(tab)
             if mt and type(mt) == "table" and mt.__LibSerialize then
                 filter = mt.__LibSerialize.filter
             end
 
             -- First determine the "proper" length of the array portion of the table,
-            -- which terminates at its first nil value. Note that some values in this
+            -- which terminates at its first nil tab. Note that some values in this
             -- range may not be serializable, which is fine - we'll handle them later.
             -- It's better to maximize the number of values that can be serialized
             -- without needing to also serialize their keys.
             local arrayCount, serializableArrayCount = 0, 0
             local allSerializable = true
             local totalSerializable = 0
-            for k, v in ipairs(value) do
+            for k, v in ipairs(tab) do
                 arrayCount = k
-                if self:_ShouldSerialize(value, k, v, opts, filter) then
+                if self:_ShouldSerialize(tab, k, v, opts, filter) then
                     totalSerializable = totalSerializable + 1
                     if allSerializable then
                         serializableArrayCount = k
@@ -934,9 +934,9 @@ LibSerialize._WriterTable = {
             -- Next determine the count of all entries in the table whose keys are not
             -- included in the array portion, only counting keys that are serializable.
             local mapCount = 0
-            for k, v in pairs(value) do
+            for k, v in pairs(tab) do
                 local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                if not isArrayKey and self:_ShouldSerialize(value, k, v, opts, filter) then
+                if not isArrayKey and self:_ShouldSerialize(tab, k, v, opts, filter) then
                     mapCount = mapCount + 1
                 end
             end
@@ -955,7 +955,7 @@ LibSerialize._WriterTable = {
                 end
 
                 for i = 1, arrayCount do
-                    if not self:_WriteObject(value[i], opts) then
+                    if not self:_WriteObject(tab[i], opts) then
                         -- Since the keys are being omitted, write a `nil` entry
                         -- for any values that couldn't be serialized.
                         self:_WriteObject(nil, opts)
@@ -983,17 +983,17 @@ LibSerialize._WriterTable = {
                 end
 
                 for i = 1, arrayCount do
-                    if not self:_WriteObject(value[i], opts) then
+                    if not self:_WriteObject(tab[i], opts) then
                         -- Since the keys are being omitted, write a `nil` entry
                         -- for any values that couldn't be serialized.
                         self:_WriteObject(nil, opts)
                     end
                 end
 
-                for k, v in pairs(value) do
+                for k, v in pairs(tab) do
                     -- Exclude keys that have already been written via the previous loop.
                     local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                    if not isArrayKey and self:_ShouldSerialize(value, k, v, opts, filter) then
+                    if not isArrayKey and self:_ShouldSerialize(tab, k, v, opts, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
@@ -1011,8 +1011,8 @@ LibSerialize._WriterTable = {
                     self:_WriteInt(mapCount, required)
                 end
 
-                for k, v in pairs(value) do
-                    if self:_ShouldSerialize(value, k, v, opts, filter) then
+                for k, v in pairs(tab) do
+                    if self:_ShouldSerialize(tab, k, v, opts, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
