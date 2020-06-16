@@ -149,7 +149,7 @@ The type byte uses the following formats to implement the above:
 * NNNN NNN1: a 7 bit non-negative int
 * CCCC TT10: a 2 bit type index and 4 bit count (strlen, #tab, etc.)
     * Followed by the type-dependent payload
-* NNNN N100: the lower five bits of a 13 bit positive int
+* NNNN S100: the lower four bits of a 12 bit int and 1 bit for its sign
     * Followed by a byte for the upper bits
 * TTTT T000: a 5 bit type index
     * Followed by the type-dependent payload, including count(s) if needed
@@ -459,9 +459,15 @@ function LibSerialize:_ReadObject()
     end
 
     if value % 8 == 4 then
-        -- Number embedded in the top 5 bits, plus an additional byte's worth (so 13 bits).
+        -- Number embedded in the top 4 bits, plus an additional byte's worth (so 12 bits).
+        -- If bit 4 is set, the number is negative.
         local packed = self:_ReadByte() * 0x100 + value
-        local num = (packed - 4) / 8
+        local num
+        if value % 16 == 12 then
+            num = -(packed - 12) / 16
+        else
+            num = (packed - 4) / 16
+        end
         -- DebugPrint("Found embedded number (2bytes):", value, packed, num)
         return num
     end
@@ -753,15 +759,20 @@ LibSerialize._WriterTable = {
             -- DebugPrint("Serializing float:", value)
             self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
             self._writeString(FloatToString(value))
-        elseif value >= 0 and value < 8192 then
+        elseif value > -4096 and value < 4096 then
             -- The type byte supports two modes by which a number can be embedded:
-            -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 13-bit numbers.
-            if value < 128 then
+            -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 12-bit numbers.
+            if value >= 0 and value < 128 then
                 -- DebugPrint("Serializing embedded number (1byte):", value)
                 self:_WriteByte(value * 2 + 1)
             else
                 -- DebugPrint("Serializing embedded number (2bytes):", value)
-                value = value * 8 + 4
+                local sign = 0
+                if value < 0 then
+                    sign = 8
+                    value = -value
+                end
+                value = value * 16 + sign + 4
                 local upper, lower = floor(value / 0x100), value % 0x100
                 self:_WriteByte(lower)
                 self:_WriteByte(upper)
