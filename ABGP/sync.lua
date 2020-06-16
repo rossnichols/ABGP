@@ -446,7 +446,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
             self:SendComm(self.CommTypes.HISTORY_MERGE, {
                 phase = data.phase,
                 baseline = baseline,
-                merge = merge,
+                merge = self:PrepareHistory(merge),
                 requested = data.ids,
                 now = now,
                 remote = not data.remote, -- for testing
@@ -492,14 +492,14 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
             self:SendComm(self.CommTypes.HISTORY_REPLACE, {
                 phase = data.phase,
                 baseline = GetBaseline(data.phase),
-                history = GetHistory(data.phase),
+                history = self:PrepareHistory(GetHistory(data.phase)),
                 remote = not data.remote, -- for testing
             }, "WHISPER", UnitName("player"));
         else
             self:SendComm(self.CommTypes.HISTORY_REPLACE, {
                 phase = data.phase,
                 baseline = GetBaseline(data.phase),
-                history = GetHistory(data.phase),
+                history = self:PrepareHistory(GetHistory(data.phase)),
                 remote = not data.remote, -- for testing
             }, "GUILD");
         end
@@ -511,7 +511,7 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
         self:SendComm(self.CommTypes.HISTORY_REPLACE, {
             phase = data.phase,
             baseline = GetBaseline(data.phase),
-            history = GetHistory(data.phase),
+            history = self:PrepareHistory(GetHistory(data.phase)),
             requested = true,
             remote = not data.remote, -- for testing
         }, "WHISPER", sender);
@@ -519,6 +519,7 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
 end
 
 local function ApplyHistoryReplacement(phase, sender, baseline, history)
+    ABGP:RebuildHistory(history);
     SetBaseline(phase, baseline);
     SetHistory(phase, history);
     ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
@@ -595,7 +596,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
             self:SendComm(self.CommTypes.HISTORY_MERGE, {
                 phase = data.phase,
                 baseline = baseline,
-                merge = merge,
+                merge = self:PrepareHistory(merge),
                 now = now,
                 remote = not data.remote, -- for testing
             }, "WHISPER", sender);
@@ -611,6 +612,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
         -- At this point, data.merge contains entries we don't have.
         if next(data.merge) then
+            self:RebuildHistory(data.merge);
             local mergeCount = MergeHistory(history, data.merge);
             if mergeCount > 0 then
                 self:Fire(self.InternalEvents.HISTORY_UPDATED);
@@ -677,8 +679,33 @@ function ABGP:CommitHistory(phase)
         self:SendComm(self.CommTypes.HISTORY_REPLACE, {
             phase = phase,
             baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
-            history = _G.ABGP_Data[phase].gpHistory,
+            history = self:PrepareHistory(_G.ABGP_Data[phase].gpHistory),
         }, "GUILD");
+    end
+end
+
+function ABGP:PrepareHistory(history)
+    local copy = self.tCopy(history);
+    -- Break down the history ids into their two parts.
+    -- Store the player in that slot, and the difference
+    -- between the date and applied date in a new key.
+    -- Performing these changes helps out with serialization,
+    -- which favors smaller numbers and repeated strings.
+    for _, entry in pairs(copy) do
+        local player, entryDate = self:ParseHistoryId(entry[self.ItemHistoryIndex.ID]);
+        entry[self.ItemHistoryIndex.ID] = player;
+        entry[0] = entryDate - entry[self.ItemHistoryIndex.DATE];
+    end
+
+    return copy;
+end
+
+function ABGP:RebuildHistory(history)
+    -- Undo the changes from PrepareHistory().
+    for _, entry in pairs(history) do
+        local entryDate = entry[self.ItemHistoryIndex.DATE] + entry[0];
+        entry[self.ItemHistoryIndex.ID] = ("%s:%d"):format(entry[self.ItemHistoryIndex.ID], entryDate);
+        entry[0] = nil;
     end
 end
 
