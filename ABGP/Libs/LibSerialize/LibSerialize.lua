@@ -106,24 +106,24 @@ Examples:
 local serialized = LibSerialize:Serialize({ "test", [false] = 5 }, "extra")
 local success, tab, str = LibSerialize:Deserialize(serialized)
 assert(success)
-print(tab[1]) -- prints "test"
-print(tab[false]) -- prints "5"
-print(str) -- prints "extra"
+print(tab[1]) -- "test"
+print(tab[false]) -- 5
+print(str) -- "extra"
 
 local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false },
                                             print, { a = 1, b = print })
 local success, fn, tab = LibSerialize:Deserialize(serialized)
 assert(success)
-print(fn) -- prints "nil"
-print(tab.a) -- prints "1"
-print(tab.b) -- prints "nil"
+print(fn) -- nil
+print(tab.a) -- 1
+print(tab.b) -- nil
 
 local t = { a = 1 }
 t.t = t
 local serialized = LibSerialize:Serialize(t)
 local success, tab = LibSerialize:Deserialize(serialized)
 assert(success)
-print(tab.t.t.t.t.t.t.a) -- prints "1"
+print(tab.t.t.t.t.t.t.a) -- 1
 
 local t = { a = 1, b = 2 }
 setmetatable(t, { __LibSerialize = {
@@ -141,7 +141,7 @@ Every object is encoded as a type byte followed by type-dependent payload.
 
 For numbers, the payload is the number itself (with extra work for floats),
 using a number of bytes appropriate for the number. Small numbers can be
-ambedded directly into the type bit, optionally with an additional byte
+embedded directly into the type bit, optionally with an additional byte
 following for more possible values. Negative numbers are encoded as their
 absolute value, with the type byte indicating that it is negative.
 
