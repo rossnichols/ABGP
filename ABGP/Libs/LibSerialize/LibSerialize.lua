@@ -62,6 +62,15 @@ The following methods are provided:
     Returns:
     * result: the deserialized value(s) as multiple return values
 
+* LibSerialize:IsSerializableType(...)
+    Arguments:
+    * ...: a variable number of values
+    Returns:
+    * result: true if all of the values' types are serializable.
+    Note that if you pass a table, it will be considered serializable
+    even if it contains unserializable keys or values. Only the types
+    of the arguments are checked.
+
 Serialize() will raise a Lua error if the input cannot be serialized.
 This will occur if any of the following exceed 16777215: any string length,
 any table key count, number of unique strings, number of unique tables.
@@ -72,18 +81,23 @@ Deserialize() and DeserializeValue() are equivalent, except the latter
 returns the deserialization result directly and will not catch any Lua
 errors that may occur when deserializing invalid input.
 
-Note that none of the methods support reentrancy. This is only a potential issue
-when serializing tables that have a metatable, as that is the only way that
-external code may run when performing serialization or deserialization.
+Note that none of the serialization/deseriazation methods support reentrancy,
+and modifying tables during the serialization process is unspecified and
+should be avoided.
 
 
 Options:
 The following serialization options are supported:
-* errorOnUnserializableType (default true)
+* errorOnUnserializableType: boolean (default true)
   * true: unserializable types will raise a Lua error
   * false: unserializable types will be ignored. If it's a table key or value,
      the key/value pair will be skipped. If it's one of the arguments to the
      call to SerializeEx(), it will be replaced with `nil`.
+* filter: function(t, k, v) => boolean (default nil)
+  * If specified, the function will be called on every key/value pair in every
+    table encountered during serialization. The function must return true for
+    the pair to be serialized. It may be called multiple times on a table for
+    the same key/value pair. See notes on reeentrancy and table modification.
 
 If an option is unspecified in the table, then its default will be used.
 This means that if an option `foo` defaults to true, then:
@@ -96,47 +110,63 @@ For any serialized table, LibSerialize will check for the presence of a
 metatable key `__LibSerialize`. It will be interpreted as a table with
 the following possible keys:
 * filter: function(t, k, v) => boolean
-    If this function is specified, it will be called for each serializable
-    key/value pair with the table/key/value as its arguments. The function
-    must then return true for the pair to be serialized. NOTE: the effect
-    on serialization of modifying `t` during this callout is unspecified
-    and should be avoided. You cannot call back into LibSerialize either,
-    as it does not support reentrancy. The function may be called multiple
-    times on a table for the same key/value pair.
+  * If specified, the function will be called on every key/value pair in every
+    table encountered during serialization. The function must return true for
+    the pair to be serialized. It may be called multiple times on a table for
+    the same key/value pair. See notes on reeentrancy and table modification.
+    If combined with the `filter` option, both functions must return true.
 
 
 Examples:
-local serialized = LibSerialize:Serialize({ "test", [false] = 5 }, "extra")
-local success, tab, str = LibSerialize:Deserialize(serialized)
-assert(success)
-print(tab[1]) -- "test"
-print(tab[false]) -- 5
-print(str) -- "extra"
+1. LibSerialize:Serialize() supports variadic arguments and arbitrary key types,
+   maintaining a consistent internal table identity.
+    local t = { "test", [false] = {} }
+    t[ t[false] ] = "hello"
+    local serialized = LibSerialize:Serialize(t, "extra")
+    local success, tab, str = LibSerialize:Deserialize(serialized)
+    assert(success)
+    print(tab[1]) -- "test"
+    print(tab[ tab[false] ]) -- "hello"
+    print(str) -- "extra"
 
-local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false },
-                                            print, { a = 1, b = print })
-local success, fn, tab = LibSerialize:Deserialize(serialized)
-assert(success)
-print(fn) -- nil
-print(tab.a) -- 1
-print(tab.b) -- nil
+2. Normally, unserializable types raise an error when encountered during serialization,
+   but that behavior can be disabled in order to silently ignore them instead.
+    local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false },
+                                                print, { a = 1, b = print })
+    local success, fn, tab = LibSerialize:Deserialize(serialized)
+    assert(success)
+    print(fn) -- nil
+    print(tab.a) -- 1
+    print(tab.b) -- nil
 
-local t = { a = 1 }
-t.t = t
-local serialized = LibSerialize:Serialize(t)
-local success, tab = LibSerialize:Deserialize(serialized)
-assert(success)
-print(tab.t.t.t.t.t.t.a) -- 1
+3. Tables may reference themselves recursively and will still be serialized properly.
+    local t = { a = 1 }
+    t.t = t
+    local serialized = LibSerialize:Serialize(t)
+    local success, tab = LibSerialize:Deserialize(serialized)
+    assert(success)
+    print(tab.t.t.t.t.t.t.a) -- 1
 
-local t = { a = 1, b = 2 }
-setmetatable(t, { __LibSerialize = {
-    filter = function(t, k, v) return k == "a" end
-}})
-local serialized = LibSerialize:Serialize(t)
-local success, tab = LibSerialize:Deserialize(serialized)
-assert(success)
-print(tab.a) -- 1
-print(tab.b) -- nil
+4. You may specify a global filter that applies to all tables encountered during
+   serialization, and to individual tables via their metatable.
+    local t = { a = 1, b = print, c = 3 }
+    local nested = { a = 1, b = print, c = 3 }
+    t.nested = nested
+    setmetatable(nested, { __LibSerialize = {
+        filter = function(t, k, v) return k ~= "c" end
+    }})
+    local opts = {
+        filter = function(t, k, v) return LibSerialize:IsSerializableType(k, v) end
+    }
+    local serialized = LibSerialize:SerializeEx(opts, t)
+    local success, tab = LibSerialize:Deserialize(serialized)
+    assert(success)
+    print(tab.a) -- 1
+    print(tab.b) -- nil
+    print(tab.c) -- 3
+    print(tab.nested.a) -- 1
+    print(tab.nested.b) -- nil
+    print(tab.nested.c) -- nil
 
 
 Encoding format:
@@ -211,6 +241,10 @@ local math_huge = math.huge
 
 local defaultOptions = {
     errorOnUnserializableType = true
+}
+
+local canSerializeFnOptions = {
+    errorOnUnserializableType = false
 }
 
 
@@ -713,8 +747,10 @@ function LibSerialize:_CanSerialize(opts, ...)
 end
 
 -- Returns true if the filter function doesn't exist or returns true.
-function LibSerialize:_ShouldSerialize(t, k, v, filterFn)
-    return not filterFn or filterFn(t, k, v)
+function LibSerialize:_ShouldSerialize(t, k, v, opts, filterFn)
+    return (not opts.filter or opts.filter(t, k, v)) and
+           (not filterFn or filterFn(t, k, v)) and
+           self:_CanSerialize(opts, k, v)
 end
 
 function LibSerialize:_WriteObject(obj, opts)
@@ -874,7 +910,7 @@ LibSerialize._WriterTable = {
             local totalSerializable = 0
             for k, v in ipairs(value) do
                 arrayCount = k
-                if self:_CanSerialize(opts, v) and self:_ShouldSerialize(value, k, v, filter) then
+                if self:_ShouldSerialize(value, k, v, opts, filter) then
                     totalSerializable = totalSerializable + 1
                     if allSerializable then
                         serializableArrayCount = k
@@ -900,7 +936,7 @@ LibSerialize._WriterTable = {
             local mapCount = 0
             for k, v in pairs(value) do
                 local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, filter) then
+                if not isArrayKey and self:_ShouldSerialize(value, k, v, opts, filter) then
                     mapCount = mapCount + 1
                 end
             end
@@ -957,7 +993,7 @@ LibSerialize._WriterTable = {
                 for k, v in pairs(value) do
                     -- Exclude keys that have already been written via the previous loop.
                     local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                    if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, filter) then
+                    if not isArrayKey and self:_ShouldSerialize(value, k, v, opts, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
@@ -976,7 +1012,7 @@ LibSerialize._WriterTable = {
                 end
 
                 for k, v in pairs(value) do
-                    if self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, filter) then
+                    if self:_ShouldSerialize(value, k, v, opts, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
@@ -990,6 +1026,10 @@ LibSerialize._WriterTable = {
 --[[---------------------------------------------------------------------------
     API support.
 --]]---------------------------------------------------------------------------
+
+function LibSerialize:IsSerializableType(...)
+    return self:_CanSerialize(canSerializeFnOptions, ...)
+end
 
 function LibSerialize:SerializeEx(opts, ...)
     self:_ClearReferences()
