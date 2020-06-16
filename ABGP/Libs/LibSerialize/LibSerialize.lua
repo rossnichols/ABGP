@@ -89,6 +89,19 @@ This means that if an option `foo` defaults to true, then:
 * myOpts.foo = nil: option `foo` is true
 
 
+Customizing table serialization:
+For any serialized table, LibSerialize will check for the presence of a
+metatable key `__LibSerialize`. It will be interpreted as a table with
+the following possible keys:
+* keyFilter: function(t, k, v) => boolean
+    If this function is specified, it will be called for each serializable
+    key/value pair with the table/key/value as its arguments. The function
+    must then return true for the pair to be serialized. NOTE: do not assume
+    that you can update t[k] to a new value when this is called and have
+    it affect the serialization. It may also be called multiple times for
+    the same key of a given table.
+
+
 Examples:
 local serialized = LibSerialize:Serialize({ "test", [false] = 5 }, "extra")
 local success, tab, str = LibSerialize:Deserialize(serialized)
@@ -111,6 +124,16 @@ local serialized = LibSerialize:Serialize(t)
 local success, tab = LibSerialize:Deserialize(serialized)
 assert(success)
 print(tab.t.t.t.t.t.t.a) -- prints "1"
+
+local t = { a = 1, b = 2 }
+setmetatable(t, { __LibSerialize = {
+    keyFilter = function(key) return key == "a" end
+}})
+local serialized = LibSerialize:Serialize(t)
+local success, tab = LibSerialize:Deserialize(serialized)
+assert(success)
+print(tab.a) -- 1
+print(tab.b) -- nil
 
 
 Encoding format:
@@ -165,6 +188,7 @@ local assert = assert
 local error = error
 local pcall = pcall
 local print = print
+local getmetatable = getmetatable
 local pairs = pairs
 local ipairs = ipairs
 local select = select
@@ -685,6 +709,11 @@ function LibSerialize:_CanSerialize(opts, ...)
     return true
 end
 
+-- Returns true if the filter function doesn't exist or returns true.
+function LibSerialize:_ShouldSerialize(t, k, v, filterFn)
+    return not filterFn or filterFn(t, k, v)
+end
+
 function LibSerialize:_WriteObject(obj, opts)
     local writeFn = self:_GetWriteFn(obj, opts)
     if not writeFn then
@@ -826,6 +855,12 @@ LibSerialize._WriterTable = {
             -- properly serialize it.
             self:_AddReference(tableRefs, value)
 
+            local keyFilter
+            local mt = getmetatable(value)
+            if mt and mt.__LibSerialize then
+                keyFilter = mt.__LibSerialize.keyFilter
+            end
+
             -- First determine the "proper" length of the array portion of the table,
             -- which terminates at its first nil value. Note that some values in this
             -- range may not be serializable, which is fine - we'll handle them later.
@@ -836,7 +871,7 @@ LibSerialize._WriterTable = {
             local totalSerializable = 0
             for k, v in ipairs(value) do
                 arrayCount = k
-                if self:_CanSerialize(opts, v) then
+                if self:_CanSerialize(opts, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
                     totalSerializable = totalSerializable + 1
                     if allSerializable then
                         serializableArrayCount = k
@@ -862,7 +897,7 @@ LibSerialize._WriterTable = {
             local mapCount = 0
             for k, v in pairs(value) do
                 local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                if not isArrayKey and self:_CanSerialize(opts, k, v) then
+                if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
                     mapCount = mapCount + 1
                 end
             end
@@ -919,7 +954,7 @@ LibSerialize._WriterTable = {
                 for k, v in pairs(value) do
                     -- Exclude keys that have already been written via the previous loop.
                     local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                    if not isArrayKey and self:_CanSerialize(opts, k, v) then
+                    if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
@@ -938,7 +973,7 @@ LibSerialize._WriterTable = {
                 end
 
                 for k, v in pairs(value) do
-                    if self:_CanSerialize(opts, k, v) then
+                    if self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
