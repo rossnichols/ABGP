@@ -30,15 +30,24 @@ Their original licenses shall be complied with when used.
 
 --[[
 LibSerialize is a library for efficiently serializing/deserializing arbitrary tables.
-It supports serializing nils, numbers, booleans, strings, and tables using these types.
+It supports serializing nils, numbers, booleans, strings, and tables containing these types.
 
 
-Three functions are provided:
-* LibSerialize:Serialize(...)
+The following methods are provided:
+* LibSerialize:SerializeEx(opts, ...)
     Arguments:
-    * ...: a variable number of serializable values (see above)
+    * opts: options (see below)
+    * ...: a variable number of serializable values
     Returns:
     * result: `...` serialized as a string
+
+* LibSerialize:Serialize(...)
+    Arguments:
+    * ...: a variable number of serializable values
+    Returns:
+    * result: `...` serialized as a string
+    Calls SerializeEx(opts, ...) with the default options (see below)
+
 * LibSerialize:Deserialize(input)
     Arguments:
     * input: a string previously returned from LibSerialize:Serialize()
@@ -46,29 +55,62 @@ Three functions are provided:
     * success: a boolean indicating if deserialization was successful
     * result: if successful, the deserialized value(s) as multiple return values
               if unsucessful, a string containing the error that was encountered
+
 * LibSerialize:DeserializeValue(input)
     Arguments:
     * input: a string previously returned from LibSerialize:Serialize()
     Returns:
     * result: the deserialized value(s) as multiple return values
 
-Serialize() will cause a Lua error if the input cannot be serialized.
-This will occur if any unsupported types are encountered (e.g. functions),
-or if any of the following exceed 16777215: any string length, any table
-key count, number of unique strings, number of unique tables.
+Serialize() will raise a Lua error if the input cannot be serialized.
+This will occur if any of the following exceed 16777215: any string length,
+any table key count, number of unique strings, number of unique tables.
+It may also occur if any unserializable types are encountered, though that
+behavior may be disabled (see options).
 
 Deserialize() and DeserializeValue() are equivalent, except the latter
 returns the deserialization result directly and will not catch any Lua
 errors that may occur when deserializing invalid input.
 
-Example:
+Note that none of the methods support reentrancy.
+
+
+Options:
+The following serialization options are supported:
+* errorOnUnserializableType (default true)
+  * true: unserializable types will raise a Lua error
+  * false: unserializable types will be ignored. If it's a table key or value,
+     the key/value pair will be skipped. If it's one of the arguments to the
+     call to SerializeEx(), it will be replaced with `nil`.
+
+If an option is unspecified in the table, then its default will be used.
+This means that if an option `foo` defaults to true, then:
+* myOpts.foo = false: option `foo` is false
+* myOpts.foo = nil: option `foo` is true
+
+
+Examples:
 local serialized = LibSerialize:Serialize({ "test", [false] = 5 }, "extra")
 local success, tab, str = LibSerialize:Deserialize(serialized)
-if success then
-    print(tab[1]) -- prints "test"
-    print(tab[false]) -- prints "5"
-    print(str) -- prints "extra"
-end
+assert(success)
+print(tab[1]) -- prints "test"
+print(tab[false]) -- prints "5"
+print(str) -- prints "extra"
+
+local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false },
+                                            print, { a = 1, b = print })
+local success, fn, tab = LibSerialize:Deserialize(serialized)
+assert(success)
+print(fn) -- prints "nil"
+print(tab.a) -- prints "1"
+print(tab.b) -- prints "nil"
+
+local t = { a = 1 }
+t.t = t
+local serialized = LibSerialize:Serialize(t)
+local success, tab = LibSerialize:Deserialize(serialized)
+assert(success)
+print(tab.t.t.t.t.t.t.a) -- prints "1"
 
 
 Encoding format:
@@ -144,6 +186,16 @@ local math_huge = math.huge
 --[[---------------------------------------------------------------------------
     Helper functions.
 --]]---------------------------------------------------------------------------
+
+local defaultOptions = {
+    errorOnUnserializableType = true
+}
+local function GetOption(options, opt)
+    if options[opt] == nil then
+        return defaultOptions[opt]
+    end
+    return options[opt]
+end
 
 -- Returns the number of bytes required to store the value,
 -- up to a maximum of three. Errors if three bytes is insufficient.
@@ -607,10 +659,40 @@ LibSerialize._ReaderTable = {
     Write (serialization) support.
 --]]---------------------------------------------------------------------------
 
-function LibSerialize:_WriteObject(obj)
+-- Returns the appropriate function from the writer table for the object's type.
+-- If the object's type isn't supported and opts.errorOnUnserializableType is true,
+-- then an error will be raised.
+function LibSerialize:_GetWriteFn(obj, opts)
     local typ = type(obj)
-    local writeFn = self._WriterTable[typ] or error(("Unhandled type: %s"):format(typ))
-    writeFn(self, obj)
+    local writeFn = self._WriterTable[typ]
+    if not writeFn and GetOption(opts, "errorOnUnserializableType") then
+        error(("Unhandled type: %s"):format(typ))
+    end
+
+    return writeFn
+end
+
+-- Returns true if all of the variadic arguments are serializable.
+function LibSerialize:_CanSerialize(opts, ...)
+    for i = 1, select("#", ...) do
+        local obj = select(i, ...)
+        local writeFn = self:_GetWriteFn(obj, opts)
+        if not writeFn then
+            return false
+        end
+    end
+
+    return true
+end
+
+function LibSerialize:_WriteObject(obj, opts)
+    local writeFn = self:_GetWriteFn(obj, opts)
+    if not writeFn then
+        return false
+    end
+
+    writeFn(self, obj, opts)
+    return true
 end
 
 function LibSerialize:_WriteByte(value)
@@ -726,7 +808,7 @@ LibSerialize._WriterTable = {
             end
         end
     end,
-    ["table"] = function(self, value)
+    ["table"] = function(self, value, opts)
         local ref = tableRefs[value]
         if ref then
             -- DebugPrint("Serializing table ref:", value)
@@ -740,16 +822,22 @@ LibSerialize._WriterTable = {
             self:_AddReference(tableRefs, value)
 
             -- First determine the "proper" length of the array portion of the table,
-            -- which terminates at its first nil value.
+            -- which terminates at its first nil (or nonserializable) value.
             local arrayCount = 0
             for k, v in ipairs(value) do
+                if not self:_CanSerialize(opts, v) then
+                    break
+                end
+
                 arrayCount = k
             end
 
             -- Next determine the count of all entries in the table.
             local mapCount = 0
             for k, v in pairs(value) do
-                mapCount = mapCount + 1
+                if self:_CanSerialize(opts, k, v) then
+                    mapCount = mapCount + 1
+                end
             end
 
             -- The final map count is simply the total count minus the array count.
@@ -768,8 +856,8 @@ LibSerialize._WriterTable = {
                     self:_WriteInt(arrayCount, required)
                 end
 
-                for _, v in ipairs(value) do
-                    self:_WriteObject(v)
+                for i = 1, arrayCount do
+                    self:_WriteObject(value[i])
                 end
             elseif arrayCount ~= 0 then
                 -- The table has both array and dictionary keys. We can still save space
@@ -792,14 +880,15 @@ LibSerialize._WriterTable = {
                     self:_WriteInt(mapCount, required)
                 end
 
-                for _, v in ipairs(value) do
-                    self:_WriteObject(v)
+                for i = 1, arrayCount do
+                    self:_WriteObject(value[i])
                 end
 
                 local mapCountWritten = 0
                 for k, v in pairs(value) do
                     -- Exclude keys that have already been written via the previous loop.
-                    if type(k) ~= "number" or k < 1 or k > arrayCount or IsFractional(k) then
+                    local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
+                    if not isArrayKey and self:_CanSerialize(opts, k, v) then
                         mapCountWritten = mapCountWritten + 1
                         self:_WriteObject(k)
                         self:_WriteObject(v)
@@ -820,8 +909,10 @@ LibSerialize._WriterTable = {
                 end
 
                 for k, v in pairs(value) do
-                    self:_WriteObject(k)
-                    self:_WriteObject(v)
+                    if self:_CanSerialize(opts, k, v) then
+                        self:_WriteObject(k)
+                        self:_WriteObject(v)
+                    end
                 end
             end
         end
@@ -833,7 +924,7 @@ LibSerialize._WriterTable = {
     API support.
 --]]---------------------------------------------------------------------------
 
-function LibSerialize:Serialize(...)
+function LibSerialize:SerializeEx(opts, ...)
     self:_ClearReferences()
     local WriteString, FlushWriter = CreateWriter()
 
@@ -842,11 +933,20 @@ function LibSerialize:Serialize(...)
 
     for i = 1, select("#", ...) do
         local input = select(i, ...)
-        self:_WriteObject(input)
+        if not self:_WriteObject(input, opts) then
+            -- A nonserializable object was passed as an argument.
+            -- Write nil into its slot so that we deserialize a
+            -- consistent number of objects from the resulting string.
+            self:_WriteObject(nil, opts)
+        end
     end
 
     self:_ClearReferences()
     return FlushWriter()
+end
+
+function LibSerialize:Serialize(...)
+    return self:SerializeEx(defaultOptions, ...)
 end
 
 function LibSerialize:DeserializeValue(input)
@@ -860,9 +960,15 @@ function LibSerialize:DeserializeValue(input)
     local version = self:_ReadByte()
     assert(version == MINOR)
 
+    -- Since the objects we read may be nil, we need to explicitly
+    -- track the number of results and assign by index so that we
+    -- can call unpack() successfully at the end.
     local output = {}
+    local outputSize = 0
+
     while ReaderBytesLeft() > 0 do
-        table_insert(output, self:_ReadObject())
+        outputSize = outputSize + 1
+        output[outputSize] = self:_ReadObject()
     end
 
     self:_ClearReferences()
@@ -871,7 +977,7 @@ function LibSerialize:DeserializeValue(input)
         error("Reader went past end of input")
     end
 
-    return unpack(output)
+    return unpack(output, 1, outputSize)
 end
 
 function LibSerialize:_PostDeserialize(...)
