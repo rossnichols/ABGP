@@ -72,7 +72,9 @@ Deserialize() and DeserializeValue() are equivalent, except the latter
 returns the deserialization result directly and will not catch any Lua
 errors that may occur when deserializing invalid input.
 
-Note that none of the methods support reentrancy.
+Note that none of the methods support reentrancy. This is only a potential issue
+when serializing tables that have a metatable, as that is the only way that
+external code may run when performing serialization or deserialization.
 
 
 Options:
