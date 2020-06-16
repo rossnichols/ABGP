@@ -735,6 +735,8 @@ function LibSerialize:_GetWriteFn(obj, opts)
 end
 
 -- Returns true if all of the variadic arguments are serializable.
+-- Note that _GetWriteFn will raise a Lua error if it finds an
+-- unserializable type, unless this behavior is suppressed via options.
 function LibSerialize:_CanSerialize(opts, ...)
     for i = 1, select("#", ...) do
         local obj = select(i, ...)
@@ -747,13 +749,19 @@ function LibSerialize:_CanSerialize(opts, ...)
     return true
 end
 
--- Returns true if the filter function doesn't exist or returns true.
+-- Returns true if the table's key/value pair should be serialized.
+-- Both filter functions (if present) must return true, and the
+-- key/value types must be serializable. Note that _CanSerialize
+-- will raise a Lua error if it finds an unserializable type, unless
+-- this behavior is suppressed via options.
 function LibSerialize:_ShouldSerialize(t, k, v, opts, filterFn)
     return (not opts.filter or opts.filter(t, k, v)) and
            (not filterFn or filterFn(t, k, v)) and
            self:_CanSerialize(opts, k, v)
 end
 
+-- Note that _GetWriteFn will raise a Lua error if it finds an
+-- unserializable type, unless this behavior is suppressed via options.
 function LibSerialize:_WriteObject(obj, opts)
     local writeFn = self:_GetWriteFn(obj, opts)
     if not writeFn then
