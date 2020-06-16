@@ -182,20 +182,14 @@ local table_insert = table.insert
 local math_modf = math.modf
 local math_huge = math.huge
 
+local defaultOptions = {
+    errorOnUnserializableType = true
+}
+
 
 --[[---------------------------------------------------------------------------
     Helper functions.
 --]]---------------------------------------------------------------------------
-
-local defaultOptions = {
-    errorOnUnserializableType = true
-}
-local function GetOption(options, opt)
-    if options[opt] == nil then
-        return defaultOptions[opt]
-    end
-    return options[opt]
-end
 
 -- Returns the number of bytes required to store the value,
 -- up to a maximum of three. Errors if three bytes is insufficient.
@@ -671,7 +665,7 @@ LibSerialize._ReaderTable = {
 function LibSerialize:_GetWriteFn(obj, opts)
     local typ = type(obj)
     local writeFn = self._WriterTable[typ]
-    if not writeFn and GetOption(opts, "errorOnUnserializableType") then
+    if not writeFn and opts.errorOnUnserializableType then
         error(("Unhandled type: %s"):format(typ))
     end
 
@@ -942,13 +936,23 @@ function LibSerialize:SerializeEx(opts, ...)
     self._writeString = WriteString
     self:_WriteByte(MINOR)
 
+    -- Create a combined options table, starting with the defaults
+    -- and then overwriting any user-supplied keys.
+    local combinedOpts = {}
+    for k, v in pairs(defaultOptions) do
+        combinedOpts[k] = v
+    end
+    for k, v in pairs(opts) do
+        combinedOpts[k] = v
+    end
+
     for i = 1, select("#", ...) do
         local input = select(i, ...)
-        if not self:_WriteObject(input, opts) then
+        if not self:_WriteObject(input, combinedOpts) then
             -- A nonserializable object was passed as an argument.
             -- Write nil into its slot so that we deserialize a
             -- consistent number of objects from the resulting string.
-            self:_WriteObject(nil, opts)
+            self:_WriteObject(nil, combinedOpts)
         end
     end
 
