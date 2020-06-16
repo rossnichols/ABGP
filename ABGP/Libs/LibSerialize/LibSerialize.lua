@@ -83,7 +83,8 @@ errors that may occur when deserializing invalid input.
 
 Note that none of the serialization/deseriazation methods support reentrancy,
 and modifying tables during the serialization process is unspecified and
-should be avoided.
+should be avoided. Table serialization is multi-phased and assumes a consistent
+state for the key/value pairs across the phases.
 
 
 Options:
