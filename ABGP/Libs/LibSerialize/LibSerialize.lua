@@ -603,7 +603,7 @@ LibSerialize._ReaderIndex = {
     TABLEREF_24 = 31,
 }
 LibSerialize._ReaderTable = {
-    -- Nil (only expected as the entire input)
+    -- Nil
     [LibSerialize._ReaderIndex.NIL]  = function(self) return nil end,
 
     -- Numbers
@@ -827,26 +827,45 @@ LibSerialize._WriterTable = {
             self:_AddReference(tableRefs, value)
 
             -- First determine the "proper" length of the array portion of the table,
-            -- which terminates at its first nil (or nonserializable) value.
-            local arrayCount = 0
+            -- which terminates at its first nil value. Note that some values in this
+            -- range may not be serializable, which is fine - we'll handle them later.
+            -- It's better to maximize the number of values that can be serialized
+            -- without needing to also serialize their keys.
+            local arrayCount, serializableArrayCount = 0, 0
+            local allSerializable = true
+            local totalSerializable = 0
             for k, v in ipairs(value) do
-                if not self:_CanSerialize(opts, v) then
-                    break
-                end
-
                 arrayCount = k
+                if self:_CanSerialize(opts, v) then
+                    totalSerializable = totalSerializable + 1
+                    if allSerializable then
+                        serializableArrayCount = k
+                    end
+                else
+                    allSerializable = false
+                end
             end
 
-            -- Next determine the count of all entries in the table.
+            -- Consider the array portion as a series of zero or more serializable
+            -- entries followed by zero or more entries that may or may not be
+            -- serializable. For the latter portion, we can either write them in
+            -- the array portion, padding the unserializable entries with nils,
+            -- or just write them as key/value pairs in the map portion. We'll choose
+            -- the former if there are more serializable entries in this portion than
+            -- unserializable, or the latter if more are unserializable.
+            if arrayCount - totalSerializable > totalSerializable - serializableArrayCount then
+                arrayCount = serializableArrayCount
+            end
+
+            -- Next determine the count of all entries in the table whose keys are not
+            -- included in the array portion, only counting keys that are serializable.
             local mapCount = 0
             for k, v in pairs(value) do
-                if self:_CanSerialize(opts, k, v) then
+                local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
+                if not isArrayKey and self:_CanSerialize(opts, k, v) then
                     mapCount = mapCount + 1
                 end
             end
-
-            -- The final map count is simply the total count minus the array count.
-            mapCount = mapCount - arrayCount
 
             if mapCount == 0 then
                 -- The table is an array. We can avoid writing the keys.
@@ -862,7 +881,11 @@ LibSerialize._WriterTable = {
                 end
 
                 for i = 1, arrayCount do
-                    self:_WriteObject(value[i])
+                    if not self:_WriteObject(value[i], opts) then
+                        -- Since the keys are being omitted, write a `nil` entry
+                        -- for any values that couldn't be serialized.
+                        self:_WriteObject(nil, opts)
+                    end
                 end
             elseif arrayCount ~= 0 then
                 -- The table has both array and dictionary keys. We can still save space
@@ -886,20 +909,21 @@ LibSerialize._WriterTable = {
                 end
 
                 for i = 1, arrayCount do
-                    self:_WriteObject(value[i])
+                    if not self:_WriteObject(value[i], opts) then
+                        -- Since the keys are being omitted, write a `nil` entry
+                        -- for any values that couldn't be serialized.
+                        self:_WriteObject(nil, opts)
+                    end
                 end
 
-                local mapCountWritten = 0
                 for k, v in pairs(value) do
                     -- Exclude keys that have already been written via the previous loop.
                     local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
                     if not isArrayKey and self:_CanSerialize(opts, k, v) then
-                        mapCountWritten = mapCountWritten + 1
-                        self:_WriteObject(k)
-                        self:_WriteObject(v)
+                        self:_WriteObject(k, opts)
+                        self:_WriteObject(v, opts)
                     end
                 end
-                assert(mapCount == mapCountWritten)
             else
                 -- The table has only dictionary keys, so we'll write them all.
                 if mapCount < 16 then
@@ -915,8 +939,8 @@ LibSerialize._WriterTable = {
 
                 for k, v in pairs(value) do
                     if self:_CanSerialize(opts, k, v) then
-                        self:_WriteObject(k)
-                        self:_WriteObject(v)
+                        self:_WriteObject(k, opts)
+                        self:_WriteObject(v, opts)
                     end
                 end
             end
@@ -949,7 +973,7 @@ function LibSerialize:SerializeEx(opts, ...)
     for i = 1, select("#", ...) do
         local input = select(i, ...)
         if not self:_WriteObject(input, combinedOpts) then
-            -- A nonserializable object was passed as an argument.
+            -- An unserializable object was passed as an argument.
             -- Write nil into its slot so that we deserialize a
             -- consistent number of objects from the resulting string.
             self:_WriteObject(nil, combinedOpts)
