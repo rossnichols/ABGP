@@ -93,7 +93,7 @@ Customizing table serialization:
 For any serialized table, LibSerialize will check for the presence of a
 metatable key `__LibSerialize`. It will be interpreted as a table with
 the following possible keys:
-* keyFilter: function(t, k, v) => boolean
+* filter: function(t, k, v) => boolean
     If this function is specified, it will be called for each serializable
     key/value pair with the table/key/value as its arguments. The function
     must then return true for the pair to be serialized. NOTE: do not assume
@@ -127,7 +127,7 @@ print(tab.t.t.t.t.t.t.a) -- 1
 
 local t = { a = 1, b = 2 }
 setmetatable(t, { __LibSerialize = {
-    keyFilter = function(key) return key == "a" end
+    filter = function(t, k, v) return k == "a" end
 }})
 local serialized = LibSerialize:Serialize(t)
 local success, tab = LibSerialize:Deserialize(serialized)
@@ -855,10 +855,10 @@ LibSerialize._WriterTable = {
             -- properly serialize it.
             self:_AddReference(tableRefs, value)
 
-            local keyFilter
+            local filter
             local mt = getmetatable(value)
             if mt and mt.__LibSerialize then
-                keyFilter = mt.__LibSerialize.keyFilter
+                filter = mt.__LibSerialize.filter
             end
 
             -- First determine the "proper" length of the array portion of the table,
@@ -871,7 +871,7 @@ LibSerialize._WriterTable = {
             local totalSerializable = 0
             for k, v in ipairs(value) do
                 arrayCount = k
-                if self:_CanSerialize(opts, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
+                if self:_CanSerialize(opts, v) and self:_ShouldSerialize(value, k, v, filter) then
                     totalSerializable = totalSerializable + 1
                     if allSerializable then
                         serializableArrayCount = k
@@ -897,7 +897,7 @@ LibSerialize._WriterTable = {
             local mapCount = 0
             for k, v in pairs(value) do
                 local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
+                if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, filter) then
                     mapCount = mapCount + 1
                 end
             end
@@ -954,7 +954,7 @@ LibSerialize._WriterTable = {
                 for k, v in pairs(value) do
                     -- Exclude keys that have already been written via the previous loop.
                     local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                    if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
+                    if not isArrayKey and self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
@@ -973,7 +973,7 @@ LibSerialize._WriterTable = {
                 end
 
                 for k, v in pairs(value) do
-                    if self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, keyFilter) then
+                    if self:_CanSerialize(opts, k, v) and self:_ShouldSerialize(value, k, v, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
