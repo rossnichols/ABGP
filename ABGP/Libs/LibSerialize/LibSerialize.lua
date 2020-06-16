@@ -907,17 +907,17 @@ LibSerialize._WriterTable = {
             -- It's better to maximize the number of values that can be serialized
             -- without needing to also serialize their keys.
             local arrayCount, serializableArrayCount = 0, 0
-            local allSerializable = true
-            local totalSerializable = 0
-            for k, v in ipairs(tab) do
-                arrayCount = k
-                if self:_ShouldSerialize(tab, k, v, opts, filter) then
-                    totalSerializable = totalSerializable + 1
-                    if allSerializable then
-                        serializableArrayCount = k
+            local entireArraySerializable = true
+            local totalArraySerializable = 0
+            for i, v in ipairs(tab) do
+                arrayCount = i
+                if self:_ShouldSerialize(tab, i, v, opts, filter) then
+                    totalArraySerializable = totalArraySerializable + 1
+                    if entireArraySerializable then
+                        serializableArrayCount = i
                     end
                 else
-                    allSerializable = false
+                    entireArraySerializable = false
                 end
             end
 
@@ -928,17 +928,23 @@ LibSerialize._WriterTable = {
             -- or just write them as key/value pairs in the map portion. We'll choose
             -- the former if there are more serializable entries in this portion than
             -- unserializable, or the latter if more are unserializable.
-            if arrayCount - totalSerializable > totalSerializable - serializableArrayCount then
+            if arrayCount - totalArraySerializable > totalArraySerializable - serializableArrayCount then
                 arrayCount = serializableArrayCount
+                entireArraySerializable = true
             end
 
             -- Next determine the count of all entries in the table whose keys are not
             -- included in the array portion, only counting keys that are serializable.
             local mapCount = 0
+            local entireMapSerializable = true
             for k, v in pairs(tab) do
                 local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                if not isArrayKey and self:_ShouldSerialize(tab, k, v, opts, filter) then
-                    mapCount = mapCount + 1
+                if not isArrayKey then
+                    if self:_ShouldSerialize(tab, k, v, opts, filter) then
+                        mapCount = mapCount + 1
+                    else
+                        entireMapSerializable = false
+                    end
                 end
             end
 
@@ -956,9 +962,12 @@ LibSerialize._WriterTable = {
                 end
 
                 for i = 1, arrayCount do
-                    if not self:_WriteObject(tab[i], opts) then
+                    local v = tab[i]
+                    if entireArraySerializable or self:_ShouldSerialize(tab, i, v, opts, filter) then
+                        self:_WriteObject(v, opts)
+                    else
                         -- Since the keys are being omitted, write a `nil` entry
-                        -- for any values that couldn't be serialized.
+                        -- for any values that shouldn't be serialized.
                         self:_WriteObject(nil, opts)
                     end
                 end
@@ -984,21 +993,27 @@ LibSerialize._WriterTable = {
                 end
 
                 for i = 1, arrayCount do
-                    if not self:_WriteObject(tab[i], opts) then
+                    local v = tab[i]
+                    if entireArraySerializable or self:_ShouldSerialize(tab, i, v, opts, filter) then
+                        self:_WriteObject(v, opts)
+                    else
                         -- Since the keys are being omitted, write a `nil` entry
-                        -- for any values that couldn't be serialized.
+                        -- for any values that shouldn't be serialized.
                         self:_WriteObject(nil, opts)
                     end
                 end
 
+                local mapCountWritten = 0
                 for k, v in pairs(tab) do
                     -- Exclude keys that have already been written via the previous loop.
                     local isArrayKey = type(k) == "number" and k >= 1 and k <= arrayCount and not IsFractional(k)
-                    if not isArrayKey and self:_ShouldSerialize(tab, k, v, opts, filter) then
+                    if not isArrayKey and (entireMapSerializable or self:_ShouldSerialize(tab, k, v, opts, filter)) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
+                        mapCountWritten = mapCountWritten + 1
                     end
                 end
+                assert(mapCount == mapCountWritten)
             else
                 -- The table has only dictionary keys, so we'll write them all.
                 if mapCount < 16 then
@@ -1013,7 +1028,7 @@ LibSerialize._WriterTable = {
                 end
 
                 for k, v in pairs(tab) do
-                    if self:_ShouldSerialize(tab, k, v, opts, filter) then
+                    if entireMapSerializable or self:_ShouldSerialize(tab, k, v, opts, filter) then
                         self:_WriteObject(k, opts)
                         self:_WriteObject(v, opts)
                     end
