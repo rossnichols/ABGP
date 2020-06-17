@@ -379,13 +379,13 @@ local function FloatToString(n)
         expo = expo + 0x3FE
         mant = floor((mant * 2.0 - 1.0) * ldexp(0.5, 53))
         return string_char(sign + floor(expo / 0x10),
-                           (expo % 0x10) * 0x10 + floor(mant / 0x1000000000000),
-                           floor(mant / 0x10000000000) % 0x100,
-                           floor(mant / 0x100000000) % 0x100,
-                           floor(mant / 0x1000000) % 0x100,
-                           floor(mant / 0x10000) % 0x100,
-                           floor(mant / 0x100) % 0x100,
-                           mant % 0x100)
+                           (expo % 0x10) * 0x10 + floor(mant / 281474976710656),
+                           floor(mant / 1099511627776) % 256,
+                           floor(mant / 4294967296) % 256,
+                           floor(mant / 16777216) % 256,
+                           floor(mant / 65536) % 256,
+                           floor(mant / 256) % 256,
+                           mant % 256)
     end
 end
 
@@ -393,7 +393,7 @@ local function StringToFloat(str)
     local b1, b2, b3, b4, b5, b6, b7, b8 = string_byte(str, 1, 8)
     local sign = b1 > 0x7F
     local expo = (b1 % 0x80) * 0x10 + floor(b2 / 0x10)
-    local mant = ((((((b2 % 0x10) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
+    local mant = ((((((b2 % 0x10) * 256 + b3) * 256 + b4) * 256 + b5) * 256 + b6) * 256 + b7) * 256 + b8
     if sign then
         sign = -1
     else
@@ -418,25 +418,25 @@ local function IntToString(n, required)
     if required == 1 then
         return string_char(n)
     elseif required == 2 then
-        return string_char(floor(n / 0x100),
-                           n % 0x100)
+        return string_char(floor(n / 256),
+                           n % 256)
     elseif required == 3 then
-        return string_char(floor(n / 0x10000),
-                           floor(n / 0x100) % 0x100,
-                           n % 0x100)
+        return string_char(floor(n / 65536),
+                           floor(n / 256) % 256,
+                           n % 256)
     elseif required == 4 then
-        return string_char(floor(n / 0x1000000),
-                           floor(n / 0x10000) % 0x100,
-                           floor(n / 0x100) % 0x100,
-                           n % 0x100)
+        return string_char(floor(n / 16777216),
+                           floor(n / 65536) % 256,
+                           floor(n / 256) % 256,
+                           n % 256)
     elseif required == 7 then
-        return string_char(floor(n / 0x1000000000000) % 0x100,
-                           floor(n / 0x10000000000) % 0x100,
-                           floor(n / 0x100000000) % 0x100,
-                           floor(n / 0x1000000) % 0x100,
-                           floor(n / 0x10000) % 0x100,
-                           floor(n / 0x100) % 0x100,
-                           n % 0x100)
+        return string_char(floor(n / 281474976710656) % 256,
+                           floor(n / 1099511627776) % 256,
+                           floor(n / 4294967296) % 256,
+                           floor(n / 16777216) % 256,
+                           floor(n / 65536) % 256,
+                           floor(n / 256) % 256,
+                           n % 256)
     end
 
     error("Invalid required bytes: " .. required)
@@ -447,16 +447,16 @@ local function StringToInt(str, required)
         return string_byte(str)
     elseif required == 2 then
         local b1, b2 = string_byte(str, 1, 2)
-        return b1 * 0x100 + b2
+        return b1 * 256 + b2
     elseif required == 3 then
         local b1, b2, b3 = string_byte(str, 1, 3)
-        return (b1 * 0x100 + b2) * 0x100 + b3
+        return (b1 * 256 + b2) * 256 + b3
     elseif required == 4 then
         local b1, b2, b3, b4 = string_byte(str, 1, 4)
-        return ((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4
+        return ((b1 * 256 + b2) * 256 + b3) * 256 + b4
     elseif required == 7 then
         local b1, b2, b3, b4, b5, b6, b7, b8 = 0, string_byte(str, 1, 7)
-        return ((((((b1 * 0x100 + b2) * 0x100 + b3) * 0x100 + b4) * 0x100 + b5) * 0x100 + b6) * 0x100 + b7) * 0x100 + b8
+        return ((((((b1 * 256 + b2) * 256 + b3) * 256 + b4) * 256 + b5) * 256 + b6) * 256 + b7) * 256 + b8
     end
 
     error("Invalid required bytes: " .. required)
@@ -517,7 +517,7 @@ function LibSerialize:_ReadObject()
     if value % 8 == 4 then
         -- Number embedded in the top 4 bits, plus an additional byte's worth (so 12 bits).
         -- If bit 4 is set, the number is negative.
-        local packed = self:_ReadByte() * 0x100 + value
+        local packed = self:_ReadByte() * 256 + value
         local num
         if value % 16 == 12 then
             num = -(packed - 12) / 16
@@ -844,7 +844,7 @@ LibSerialize._WriterTable = {
                     num = -num
                 end
                 num = num * 16 + sign + 4
-                local upper, lower = floor(num / 0x100), num % 0x100
+                local upper, lower = floor(num / 256), num % 256
                 self:_WriteByte(lower)
                 self:_WriteByte(upper)
             end
