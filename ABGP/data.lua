@@ -515,7 +515,8 @@ function ABGP:CalculateCurrentGP(player, phase, history)
         elseif entryType == self.ItemHistoryType.DECAY then
             gp = gp * (1 - entry[self.ItemHistoryIndex.VALUE]);
             gp = max(gp, entry[self.ItemHistoryIndex.FLOOR]);
-        elseif entryType == self.ItemHistoryType.RESET then
+        elseif entryType == self.ItemHistoryType.RESET and
+               entry[self.ItemHistoryIndex.PLAYER] == player then
             gp = entry[self.ItemHistoryIndex.GP];
         end
     end

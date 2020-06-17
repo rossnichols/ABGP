@@ -210,7 +210,7 @@ function ABGP:Serialize(data, legacy)
         -- local serialized = AceSerializer:Serialize(data);
         local compressed = LibDeflate:CompressDeflate(serialized);
 
-        if #compressed > #serialized then
+        if #compressed > #serialized + 10 then
             self:LogDebug("WARNING: compressing payload for %s increased size from %d to %d!",
                 data.type, #serialized, #compressed);
         elseif self:GetDebugOpt("DebugComms") then
