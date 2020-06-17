@@ -126,9 +126,9 @@ Examples:
     local serialized = LibSerialize:Serialize(t, "extra")
     local success, tab, str = LibSerialize:Deserialize(serialized)
     assert(success)
-    print(tab[1]) -- "test"
-    print(tab[ tab[false] ]) -- "hello"
-    print(str) -- "extra"
+    assert(tab[1] == "test")
+    assert(tab[ tab[false] ] == "hello")
+    assert(str == "extra")
 
 2. Normally, unserializable types raise an error when encountered during serialization,
    but that behavior can be disabled in order to silently ignore them instead.
@@ -136,9 +136,9 @@ Examples:
                                                 print, { a = 1, b = print })
     local success, fn, tab = LibSerialize:Deserialize(serialized)
     assert(success)
-    print(fn) -- nil
-    print(tab.a) -- 1
-    print(tab.b) -- nil
+    assert(fn == nil)
+    assert(tab.a == 1)
+    assert(tab.b == nil)
 
 3. Tables may reference themselves recursively and will still be serialized properly.
     local t = { a = 1 }
@@ -146,7 +146,7 @@ Examples:
     local serialized = LibSerialize:Serialize(t)
     local success, tab = LibSerialize:Deserialize(serialized)
     assert(success)
-    print(tab.t.t.t.t.t.t.a) -- 1
+    assert(tab.t.t.t.t.t.t.a == 1)
 
 4. You may specify a global filter that applies to all tables encountered during
    serialization, and to individual tables via their metatable.
@@ -162,12 +162,12 @@ Examples:
     local serialized = LibSerialize:SerializeEx(opts, t)
     local success, tab = LibSerialize:Deserialize(serialized)
     assert(success)
-    print(tab.a) -- 1
-    print(tab.b) -- nil
-    print(tab.c) -- 3
-    print(tab.nested.a) -- 1
-    print(tab.nested.b) -- nil
-    print(tab.nested.c) -- nil
+    assert(tab.a == 1)
+    assert(tab.b == nil)
+    assert(tab.c == 3)
+    assert(tab.nested.a == 1)
+    assert(tab.nested.b == nil)
+    assert(tab.nested.c == nil)
 
 
 Encoding format:
