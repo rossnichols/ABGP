@@ -1,30 +1,33 @@
 --[[
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
+Copyright (c) 2020 Ross Nichols
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-You should have received a copy of the GNU Lesser General Public License
-along with this program.  If not, see https://www.gnu.org/licenses/.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 Credits:
-The following projects are used to help implement this project.
-Their original licenses shall be complied with when used.
+The following projects served as inspiration for aspects of this project:
 
 1. LibDeflate, by Haoqian He. https://github.com/SafeteeWoW/LibDeflate
     For the CreateReader/CreateWriter functions.
-    Licensed under GPLv3.
 2. lua-MessagePack, by François Perrad. https://framagit.org/fperrad/lua-MessagePack
     For the mechanism for packing/unpacking floats and ints.
-    Licensed under MIT.
 3. LibQuestieSerializer, by aero. https://github.com/AeroScripts/LibQuestieSerializer
     For the general approach of "type byte, payload" for serializing.
-    Licensed under GPLv3.
 ]]
 
 
@@ -318,63 +321,54 @@ end
 
 
 --[[---------------------------------------------------------------------------
-    Code taken/modified from LibDeflate: CreateReader, CreateWriter.
-    Exposes a mechanism to read/write bytes from/to a buffer. The more
-    advanced functionality of reading/writing partial bytes has been removed.
+    Helpers for reading/writing streams of bytes from/to a string
 --]]---------------------------------------------------------------------------
 
---[[
-    Create an empty writer to easily write stuffs as the unit of bits.
-    Return values:
-    1. WriteString(str)
-    2. Flush(mode)
---]]
+-- Creates a writer to lazily construct a string over multiple writes.
+-- Return values:
+-- 1. WriteString(str)
+-- 2. Flush()
 local function CreateWriter()
-    local buffer_size = 0
+    local bufferSize = 0
     local buffer = {}
 
     -- Write the entire string into the writer.
-    -- @param str The string being written
-    -- @return nil
     local function WriteString(str)
         -- DebugPrint("Writing string:", str, #str)
-        buffer_size = buffer_size + 1
-        buffer[buffer_size] = str
+        bufferSize = bufferSize + 1
+        buffer[bufferSize] = str
     end
 
-    -- Flush current stuffs in the writer and return it.
-    -- @return Return the output.
+    -- Return a string built from the previous calls to WriteString.
     local function FlushWriter()
-        local flushed = table_concat(buffer, "", 1, buffer_size)
-        buffer_size = 0
+        local flushed = table_concat(buffer, "", 1, bufferSize)
+        bufferSize = 0
         return flushed
     end
 
     return WriteString, FlushWriter
 end
 
---[[
-    Create a reader to easily reader stuffs as the unit of bits.
-    Return values:
-    1. ReadBytes(bytelen, buffer, buffer_size)
-    2. ReaderBytesLeft()
---]]
-local function CreateReader(input_string)
-    local input = input_string
-    local input_strlen = #input_string
-    local input_next_byte_pos = 1
+-- Creates a reader to sequentially read bytes from the input string.
+-- Return values:
+-- 1. ReadBytes(bytelen)
+-- 2. ReaderBytesLeft()
+local function CreateReader(input)
+    local input = input
+    local inputLen = #input
+    local nextPos = 1
 
     -- Read some bytes from the reader.
     -- @param bytelen The number of bytes to be read.
     -- @return the bytes as a string
     local function ReadBytes(bytelen)
-        local result = string_sub(input, input_next_byte_pos, input_next_byte_pos + bytelen - 1)
-        input_next_byte_pos = input_next_byte_pos + bytelen
+        local result = string_sub(input, nextPos, nextPos + bytelen - 1)
+        nextPos = nextPos + bytelen
         return result
     end
 
     local function ReaderBytesLeft()
-        return input_strlen - input_next_byte_pos + 1
+        return inputLen - nextPos + 1
     end
 
     return ReadBytes, ReaderBytesLeft
@@ -382,8 +376,7 @@ end
 
 
 --[[---------------------------------------------------------------------------
-    Code taken/modified from lua-MessagePack: FloatToString, StringToFloat,
-    IntToString, StringToInt. Used for serializing/deserializing numbers.
+    Helpers for serializing/deserializing numbers (ints and floats)
 --]]---------------------------------------------------------------------------
 
 local function FloatToString(n)
