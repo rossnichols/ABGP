@@ -240,7 +240,6 @@ local floor = floor
 local string_byte = string.byte
 local string_char = string.char
 local string_sub = string.sub
-local string_match = string.match
 local table_concat = table.concat
 local table_insert = table.insert
 local math_modf = math.modf
@@ -674,7 +673,7 @@ LibSerialize._ReaderTable = {
     -- Nil
     [LibSerialize._ReaderIndex.NIL]  = function(self) return nil end,
 
-    -- Numbers
+    -- Numbers (ones requiring <=12 bits are handled separately)
     [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt(2) end,
     [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt(2) end,
     [LibSerialize._ReaderIndex.NUM_24_POS] = function(self) return self:_ReadInt(3) end,
@@ -843,7 +842,7 @@ LibSerialize._WriterTable = {
                 numAbs = -num
             end
             local asString = tostring(numAbs)
-            if #asString < 7 and string_match(asString, "^[0-9.]+$") then
+            if #asString < 7 and tonumber(asString) == numAbs then
                 self:_WriteByte(sign + readerIndexShift * self._ReaderIndex.NUM_FLOATSTR_POS)
                 self:_WriteByte(#asString, 1)
                 self._writeString(asString)
