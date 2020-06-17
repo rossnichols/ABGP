@@ -5,6 +5,7 @@ local type = type
 local tostring = tostring
 local assert = assert
 local unpack = unpack
+local pcall = pcall
 
 
 --[[---------------------------------------------------------------------------
@@ -202,6 +203,19 @@ do
     table.insert(testCases, { { { a = 1, b = 2 }, { a = 1, b = 2 }, { a = 1, b = 2 } }, 23 })
 end
 
-for i, testCase in ipairs(testCases) do
+for _, testCase in ipairs(testCases) do
     check(unpack(testCase))
+end
+
+-- Since all the above tests assume serialization success, try some failures now.
+local failCases = {
+    { print },
+    { [print] = true },
+    { [true] = print },
+    print,
+}
+
+for _, testCase in ipairs(failCases) do
+    local success = pcall(LibSerialize.Serialize, LibSerialize, testCase)
+    assert(success == false)
 end

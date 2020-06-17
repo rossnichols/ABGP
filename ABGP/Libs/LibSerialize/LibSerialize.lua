@@ -141,7 +141,6 @@ Examples:
     assert(tab.b == nil)
 
 3. Tables may reference themselves recursively and will still be serialized properly.
-   The keys of tables may also be tables themselves.
     local t = { a = 1 }
     t.t = t
     t[t] = "test"
