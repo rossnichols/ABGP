@@ -228,6 +228,8 @@ local ipairs = ipairs
 local select = select
 local unpack = unpack
 local type = type
+local tostring = tostring
+local tonumber = tonumber
 local max = max
 local frexp = frexp
 local ldexp = ldexp
@@ -235,6 +237,7 @@ local floor = floor
 local string_byte = string.byte
 local string_char = string.char
 local string_sub = string.sub
+local string_match = string.match
 local table_concat = table.concat
 local table_insert = table.insert
 local math_modf = math.modf
@@ -625,17 +628,17 @@ local readerIndexShift = 8
 LibSerialize._ReaderIndex = {
     NIL = 0,
 
-    NUM_8_POS = 1,
-    NUM_8_NEG = 2,
-    NUM_16_POS = 3,
-    NUM_16_NEG = 4,
-    NUM_24_POS = 5,
-    NUM_24_NEG = 6,
-    NUM_32_POS = 7,
-    NUM_32_NEG = 8,
-    NUM_64_POS = 9,
-    NUM_64_NEG = 10,
-    NUM_FLOAT = 11,
+    NUM_16_POS = 1,
+    NUM_16_NEG = 2,
+    NUM_24_POS = 3,
+    NUM_24_NEG = 4,
+    NUM_32_POS = 5,
+    NUM_32_NEG = 6,
+    NUM_64_POS = 7,
+    NUM_64_NEG = 8,
+    NUM_FLOAT = 9,
+    NUM_FLOATSTR_POS = 10,
+    NUM_FLOATSTR_NEG = 11,
 
     BOOL_T = 12,
     BOOL_F = 13,
@@ -669,8 +672,6 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NIL]  = function(self) return nil end,
 
     -- Numbers
-    [LibSerialize._ReaderIndex.NUM_8_POS]  = function(self) return self:_ReadByte() end,
-    [LibSerialize._ReaderIndex.NUM_8_NEG]  = function(self) return -self:_ReadByte() end,
     [LibSerialize._ReaderIndex.NUM_16_POS] = function(self) return self:_ReadInt(2) end,
     [LibSerialize._ReaderIndex.NUM_16_NEG] = function(self) return -self:_ReadInt(2) end,
     [LibSerialize._ReaderIndex.NUM_24_POS] = function(self) return self:_ReadInt(3) end,
@@ -680,6 +681,8 @@ LibSerialize._ReaderTable = {
     [LibSerialize._ReaderIndex.NUM_64_POS] = function(self) return self:_ReadInt(7) end,
     [LibSerialize._ReaderIndex.NUM_64_NEG] = function(self) return -self:_ReadInt(7) end,
     [LibSerialize._ReaderIndex.NUM_FLOAT]  = function(self) return StringToFloat(self._readBytes(8)) end,
+    [LibSerialize._ReaderIndex.NUM_FLOATSTR_POS]  = function(self) return tonumber(self._readBytes(self:_ReadByte())) end,
+    [LibSerialize._ReaderIndex.NUM_FLOATSTR_NEG]  = function(self) return -tonumber(self._readBytes(self:_ReadByte())) end,
 
     -- Booleans
     [LibSerialize._ReaderIndex.BOOL_T] = function(self) return true end,
@@ -828,8 +831,23 @@ LibSerialize._WriterTable = {
     ["number"] = function(self, num)
         if IsFractional(num) then
             -- DebugPrint("Serializing float:", num)
-            self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
-            self._writeString(FloatToString(num))
+            -- Normally a float takes 8 bytes. See if it's cheaper to encode as a string.
+            -- If we encode as a string, though, we'll need a byte for its length.
+            local sign = 0
+            local numAbs = num
+            if num < 0 then
+                sign = readerIndexShift
+                numAbs = -num
+            end
+            local asString = tostring(numAbs)
+            if #asString < 7 and string_match(asString, "^[0-9.]+$") then
+                self:_WriteByte(sign + readerIndexShift * self._ReaderIndex.NUM_FLOATSTR_POS)
+                self:_WriteByte(#asString, 1)
+                self._writeString(asString)
+            else
+                self:_WriteByte(readerIndexShift * self._ReaderIndex.NUM_FLOAT)
+                self._writeString(FloatToString(num))
+            end
         elseif num > -4096 and num < 4096 then
             -- The type byte supports two modes by which a number can be embedded:
             -- A 1-byte mode for 7-bit numbers, and a 2-byte mode for 12-bit numbers.
