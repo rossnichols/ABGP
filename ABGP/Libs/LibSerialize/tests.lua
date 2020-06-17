@@ -24,8 +24,9 @@ do
 end
 
 do
-    local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false },
-                                                print, { a = 1, b = print })
+    local serialized = LibSerialize:SerializeEx(
+        { errorOnUnserializableType = false },
+        print, { a = 1, b = print })
     local success, fn, tab = LibSerialize:Deserialize(serialized)
     assert(success)
     assert(fn == nil)
