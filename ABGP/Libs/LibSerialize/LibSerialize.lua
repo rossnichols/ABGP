@@ -929,7 +929,7 @@ LibSerialize._WriterTable = {
             end
 
             -- First determine the "proper" length of the array portion of the table,
-            -- which terminates at its first nil tab. Note that some values in this
+            -- which terminates at its first nil value. Note that some values in this
             -- range may not be serializable, which is fine - we'll handle them later.
             -- It's better to maximize the number of values that can be serialized
             -- without needing to also serialize their keys.
