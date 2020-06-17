@@ -252,8 +252,12 @@ function ABGP:TriggerInitialSync()
     if not syncTesting then self:HistoryTriggerSync(); end
 end
 
-function ABGP:HistoryTriggerRebuild()
+function ABGP:ClearSyncWarnings()
     table.wipe(warnedOutOfDate);
+end
+
+function ABGP:HistoryTriggerRebuild()
+    self:ClearSyncWarnings();
     for phase in pairs(self.Phases) do
         SetHistory(phase, invalidBaseline);
     end

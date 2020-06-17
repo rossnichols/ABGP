@@ -322,7 +322,7 @@ function ABGP:InitOptions()
                 desc = {
                     order = 2,
                     type = "description",
-                    name = "EPGP history is kept up to date by syncing new entries from officers when you log in. If your local history is more than 10 days out of date, it will need a complete rebuild.",
+                    name = "EPGP history is kept up to date by syncing new entries from officers on login. If your local history is more than 10 days out of date, it will need a complete rebuild.",
                 },
                 status = {
                     name = "",
@@ -385,10 +385,10 @@ function ABGP:InitOptions()
                         syncNow = {
                             name = "Sync",
                             order = 2,
-                            desc = "Trigger a sync now, for the last 10 days of history.",
+                            desc = "Trigger a sync.",
                             type = "execute",
                             disabled = function() return not self.db.char.syncEnabled; end,
-                            func = function() self:HistoryTriggerSync(); end,
+                            func = function() self:ClearSyncWarnings(); self:HistoryTriggerSync(); end,
                         },
                         rebuild = {
                             name = "Rebuild",
