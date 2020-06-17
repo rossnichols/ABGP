@@ -1129,3 +1129,5 @@ end
 function LibSerialize:Deserialize(input)
     return self:_PostDeserialize(pcall(self.DeserializeValue, self, input))
 end
+
+return LibSerialize
