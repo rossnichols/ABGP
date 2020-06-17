@@ -4114,9 +4114,9 @@ ABGP.initialData = {
 	},
 	gpHistory = {
 		timestamps = {
-			[ABGP.PhasesAll.p5] = 1592432166,
 			[ABGP.PhasesAll.p1] = 1592432166,
 			[ABGP.PhasesAll.p3] = 1592432166,
+			[ABGP.PhasesAll.p5] = 1592432166,
 		},
 		[ABGP.PhasesAll.p1] = {
 			{
