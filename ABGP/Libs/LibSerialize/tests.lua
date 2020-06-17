@@ -71,7 +71,6 @@ end
     Utilities
 --]]---------------------------------------------------------------------------
 
-
 local function tCompare(lhsTable, rhsTable, depth)
     depth = depth or 1
     for key, value in pairs(lhsTable) do
