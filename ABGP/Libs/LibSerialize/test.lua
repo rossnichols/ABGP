@@ -103,8 +103,8 @@ end
     Test cases for serialization
 --]]---------------------------------------------------------------------------
 
-local function assertion(value, desc)
-    return ("Test failed (%s): %s"):format(tostring(value), desc)
+local function fail(value, desc)
+    assert(false, ("Test failed (%s): %s"):format(tostring(value), desc))
 end
 
 local function testfilter(t, k, v)
@@ -114,19 +114,19 @@ end
 local function check(value, bytelen, cmp)
     local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false, filter = testfilter }, value)
     if #serialized ~= bytelen then
-        assert(false, assertion(value, ("Unexpected serialized length (%d, expected %d)"):format(#serialized, bytelen)))
+        fail(value, ("Unexpected serialized length (%d, expected %d)"):format(#serialized, bytelen))
     end
 
     local success, deserialized = LibSerialize:Deserialize(serialized)
     if not success then
-        assert(false, assertion(value, "Deserialization failed"))
+        fail(value, ("Deserialization failed: %s"):format(deserialized))
     end
 
     local typ = type(value)
     if typ == "table" and not tCompare(cmp or value, deserialized) then
-        assert(false, assertion(value, "Non-matching deserialization result"))
+        fail(value, "Non-matching deserialization result")
     elseif typ ~= "table" and value ~= deserialized then
-        assert(false, assertion(value, ("Non-matching deserialization result: %s"):format(tostring(deserialized))))
+        fail(value, ("Non-matching deserialization result: %s"):format(tostring(deserialized)))
     end
 end
 
