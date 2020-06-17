@@ -2,6 +2,9 @@ local LibSerialize = require("LibSerialize")
 
 local pairs = pairs
 local type = type
+local tostring = tostring
+local assert = assert
+local unpack = unpack
 
 
 --[[---------------------------------------------------------------------------
@@ -32,10 +35,12 @@ end
 do
     local t = { a = 1 }
     t.t = t
+    t[t] = "test"
     local serialized = LibSerialize:Serialize(t)
     local success, tab = LibSerialize:Deserialize(serialized)
     assert(success)
     assert(tab.t.t.t.t.t.t.a == 1)
+    assert(tab[tab.t] == "test")
 end
 
 do
@@ -93,27 +98,43 @@ local function tCompare(lhsTable, rhsTable, depth)
     return true
 end
 
-local function tCopy(t)
-    local copy = {}
-    for k, v in pairs(t) do
-        if type(v) == "table" then
-            copy[k] = tCopy(v)
-        else
-            copy[k] = v
-        end
-    end
-    return copy
-end
-
 
 --[[---------------------------------------------------------------------------
     Test cases for serialization
 --]]---------------------------------------------------------------------------
 
--- Format: each test case is { value, bytelen }. The value will be serialized
+local function assertion(value, desc)
+    return ("Test failed (%s): %s"):format(tostring(value), desc)
+end
+
+local function testfilter(t, k, v)
+    return k ~= "banned" and v ~= "banned"
+end
+
+local function check(value, bytelen, cmp)
+    local serialized = LibSerialize:SerializeEx({ errorOnUnserializableType = false, filter = testfilter }, value)
+    if #serialized ~= bytelen then
+        assert(false, assertion(value, ("Unexpected serialized length (%d, expected %d)"):format(#serialized, bytelen)))
+    end
+
+    local success, deserialized = LibSerialize:Deserialize(serialized)
+    if not success then
+        assert(false, assertion(value, "Deserialization failed"))
+    end
+
+    local typ = type(value)
+    if typ == "table" and not tCompare(cmp or value, deserialized) then
+        assert(false, assertion(value, "Non-matching deserialization result"))
+    elseif typ ~= "table" and value ~= deserialized then
+        assert(false, assertion(value, ("Non-matching deserialization result: %s"):format(tostring(deserialized))))
+    end
+end
+
+-- Format: each test case is { value, bytelen, cmp }. The value will be serialized
 -- and then deserialized, checking for success and equality, and the length of
--- the serialized string will be compared against bytelen. Note that the length
--- always contains one extra byte for the version number.
+-- the serialized string will be compared against bytelen. If `cmp` is provided,
+-- it will be used for comparison against the deserialized result instead of `value`.
+-- Note that the length always contains one extra byte for the version number.
 local testCases = {
     { nil, 2 },
     { true, 2 },
@@ -131,6 +152,10 @@ local testCases = {
     { 4294967295, 6 },
     { 4294967296, 9 },
     { 9007199254740992, 9 },
+    { 1.5, 6 },
+    { 27.32, 8 },
+    { 123.45678901235, 10 },
+    { 148921291233.23, 10 },
     { -1, 3 },
     { -4095, 3 },
     { -4096, 4 },
@@ -141,29 +166,42 @@ local testCases = {
     { -4294967295, 6 },
     { -4294967296, 9 },
     { -9007199254740992, 9 },
-    { 1.5, 6 },
-    { 123.45678901235, 10 },
-    { 148921291233.23, 10 },
     { -1.5, 6 },
     { -123.45678901235, 10 },
     { -148921291233.23, 10 },
+    { "", 2 },
+    { "a", 3 },
+    { "abcdefghijklmno", 17 },
+    { "abcdefghijklmnop", 19 },
+    { ("1234567890"):rep(30), 304 },
+    { {}, 2 },
+    { { 1 }, 3 },
+    { { 1, 2, 3, 4, 5 }, 7 },
+    { { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }, 17 },
+    { { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }, 19 },
+    { { 1, 2, 3, 4, a = 1, b = 2, [true] = 3, d = 4 }, 17 },
+    { { 1, 2, 3, 4, 5, a = 1, b = 2, c = true, d = 4 }, 21 },
+    { { 1, 2, 3, 4, 5, a = 1, b = 2, c = 3, d = 4, e = false }, 24 },
+    { { a = 1, b = 2, c = 3 }, 11 },
+    { { "aa", "bb", "aa", "bb" }, 14 },
+    { { "aa1", "bb2", "aa3", "bb4" }, 18 },
+    { { "aa1", "bb2", "aa1", "bb2" }, 14 },
+    { { "aa1", "bb2", "bb2", "aa1" }, 14 },
+    { { "abcdefghijklmno", "abcdefghijklmno", "abcdefghijklmno", "abcdefghijklmno" }, 24 },
+    { { "abcdefghijklmno", "abcdefghijklmno", "abcdefghijklmno", "abcdefghijklmnop" }, 40 },
+    { { 1, 2, 3, print, print, 6 }, 7, { 1, 2, 3, nil, nil, 6 } },
+    { { 1, 2, 3, print, 5, 6 }, 8, { 1, 2, 3, nil, 5, 6 } },
+    { { a = print, b = 1, c = print }, 5, { b = 1 } },
+    { { a = print, [print] = "a" }, 2, {} },
+    { { "banned", 1, 2, 3, banned = 4, test = "banned", a = 1 }, 9, { nil, 1, 2, 3, a = 1 } },
 }
 
-local function assertion(i, desc)
-    return ("Test case %d: %s"):format(i, desc)
+do
+    local t = { a = 1, b = 2 }
+    table.insert(testCases, { { t, t, t }, 13 })
+    table.insert(testCases, { { { a = 1, b = 2 }, { a = 1, b = 2 }, { a = 1, b = 2 } }, 23 })
 end
 
 for i, testCase in ipairs(testCases) do
-    local serialized = LibSerialize:Serialize(testCase[1])
-    assert(#serialized == testCase[2], assertion(i, ("Unexpected serialized length (%d)"):format(#serialized)))
-
-    local success, deserialized = LibSerialize:Deserialize(serialized)
-    assert(success, assertion(i, "Deserialization failed"))
-
-    if type(testCase[1]) == "table" then
-        assert(tCompare(testCase[1], deserialized), assertion(i, "Non-matching deserialization result (tables)"))
-    else
-        assert(testCase[1] == deserialized,
-            assertion(i, ("Non-matching deserialization result: %s, %s"):format(tostring(testCase[1]), tostring(deserialized))))
-    end
+    check(unpack(testCase))
 end

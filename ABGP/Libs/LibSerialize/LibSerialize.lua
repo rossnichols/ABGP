@@ -141,12 +141,15 @@ Examples:
     assert(tab.b == nil)
 
 3. Tables may reference themselves recursively and will still be serialized properly.
+   The keys of tables may also be tables themselves.
     local t = { a = 1 }
     t.t = t
+    t[t] = "test"
     local serialized = LibSerialize:Serialize(t)
     local success, tab = LibSerialize:Deserialize(serialized)
     assert(success)
     assert(tab.t.t.t.t.t.t.a == 1)
+    assert(tab[tab.t] == "test")
 
 4. You may specify a global filter that applies to all tables encountered during
    serialization, and to individual tables via their metatable.
