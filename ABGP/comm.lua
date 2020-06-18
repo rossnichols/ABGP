@@ -484,7 +484,8 @@ function ABGP:TestSerialization(input)
     local serialized = LibSerialize:Serialize(input);
     self:Notify("serialized len: %d", #serialized);
     local compressed = LibDeflate:CompressDeflate(serialized);
-    self:Notify("compressed len: %d", #compressed);
+    local encoded = LibDeflate:EncodeForWoWAddonChannel(compressed);
+    self:Notify("compressed/encoded lens: %d, %d", #compressed, #encoded);
     self:Notify("compared to legacy of %d", self:Serialize(input, true):len());
 
     local decompressed = LibDeflate:DecompressDeflate(compressed);
