@@ -6,7 +6,6 @@ local GetGuildRosterInfo = GetGuildRosterInfo;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
-local InCombatLockdown = InCombatLockdown;
 local date = date;
 local ipairs = ipairs;
 local table = table;
@@ -555,8 +554,7 @@ function ABGP:HistoryOnEnteringWorld(isInitialLogin)
 end
 
 function ABGP:HistoryOnGuildRosterUpdate()
-    if self:Get("outsider") or not self:Get("syncEnabled") then return; end
-    if checkedHistory or not hasActivePlayers or InCombatLockdown() then return; end
+    if checkedHistory or not hasActivePlayers then return; end
     checkedHistory = true;
     hasCompleteCached = false;
 

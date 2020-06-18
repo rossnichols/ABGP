@@ -265,6 +265,7 @@ function ABGP:HistoryTriggerRebuild()
 end
 
 function ABGP:HistoryTriggerSync(target, token, now, remote)
+    if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if syncTesting then testUseLocalData = not remote; end
     local privileged = IsPrivileged();
     local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
@@ -538,7 +539,8 @@ end
 
 function ABGP:HistoryOnReplace(data, distribution, sender)
     if syncTesting then testUseLocalData = data.remote; end
-    if not SenderIsPrivileged(sender) or not self:Get("syncEnabled") then return; end
+    if not SenderIsPrivileged(sender) then return; end
+    if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if sender == UnitName("player") and not syncTesting then return; end
 
     -- Only accept newer baselines.
