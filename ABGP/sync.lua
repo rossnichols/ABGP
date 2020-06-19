@@ -74,22 +74,23 @@ if syncTesting then
         { true, false, "Local is privileged" },
         { true, true, "Both are privileged" },
     };
+    local now = GetServerTime();
     local historyCombinations = {
         { "baseline=1 #recent=1 #archived=0", 1, {
-            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+            { 1, ("Xanido:%d"):format(now), now, "Xanido", 0, "Item1" },
         }},
         { "baseline=1 #recent=1(v2) #archived=0", 1, {
-            { 1, "Xanido:1591322792", 1591322792, "Xanido", 0, "Item2" },
+            { 1, ("Xanido:%d"):format(now - 1), now - 1, "Xanido", 0, "Item2" },
         }},
         { "baseline=1 #recent=1 #archived=1", 1, {
-            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+            { 1, ("Xanido:%d"):format(now), now, "Xanido", 0, "Item1" },
             { 1, "Xanido:0", 0, "Xanido", 0, "Item3" },
         }},
         { "baseline=2 #recent=1 #archived=0", 2, {
-            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+            { 1, ("Xanido:%d"):format(now), now, "Xanido", 0, "Item1" },
         }},
         { "baseline=-1 #recent=1 #archived=0", -1, {
-            { 1, "Xanido:1591322793", 1591322793, "Xanido", 0, "Item1" },
+            { 1, ("Xanido:%d"):format(now), now, "Xanido", 0, "Item1" },
         }},
     };
     local testCases = {
@@ -305,27 +306,30 @@ function ABGP:SyncPhaseHistory(phase, target, token, now, remote)
             commData.ids[id] = true;
             syncCount = syncCount + 1;
         end
+        commData.ids = self:PrepareIds(commData.ids, now);
     else
         commData.hash, syncCount = self:BuildSyncHashData(gpHistory, phase, now);
     end
 
     commData.archivedCount = #gpHistory - syncCount;
+    local prepared = self:PrepareSyncData(commData);
     if target then
         self:LogDebug("Sending %s history sync to %s: %d synced (ids), %d archived",
             self.PhaseNames[phase], self:ColorizeName(target), syncCount, commData.archivedCount);
-        self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", target);
+        self:SendComm(self.CommTypes.HISTORY_SYNC, prepared, "WHISPER", target);
     else
         self:LogDebug("Sending %s history sync: %d synced (%s), %d archived",
             self.PhaseNames[phase], syncCount, commData.hash and "hash" or "ids", commData.archivedCount);
         if syncTesting then
-            self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", UnitName("player"));
+            self:SendComm(self.CommTypes.HISTORY_SYNC, prepared, "WHISPER", UnitName("player"));
         else
-            self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
+            self:SendComm(self.CommTypes.HISTORY_SYNC, prepared, "GUILD");
         end
     end
 end
 
 function ABGP:HistoryOnSync(data, distribution, sender)
+    self:RebuildSyncData(data);
     if syncTesting then testUseLocalData = data.remote; end
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if sender == UnitName("player") and not syncTesting then return; end
@@ -422,6 +426,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     elseif data.ids and senderIsPrivileged then
         -- The sender sent ids. We'll go through them looking for entries we need,
         -- and entries to send if we're allowed to do so.
+        self:RebuildIds(data.ids, now);
         local merge = {};
         local sendCount, requestCount = 0, 0;
         for i, entry in ipairs(history) do
@@ -460,7 +465,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
                 phase = data.phase,
                 baseline = baseline,
                 merge = self:PrepareHistory(merge),
-                requested = data.ids,
+                requested = self:PrepareIds(data.ids, now),
                 now = now,
                 remote = not data.remote, -- for testing
             }, "WHISPER", sender);
@@ -594,6 +599,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender)
 
     if data.requested and next(data.requested) and canSendHistory then
         -- The sender is requesting history entries.
+        self:RebuildIds(data.requested, now);
         local merge = {};
         local sendCount = 0;
         for _, entry in ipairs(history) do
@@ -698,6 +704,46 @@ function ABGP:CommitHistory(phase)
     end
 end
 
+
+local syncDataMap = {
+    "phase",
+    "token",
+    "baseline",
+    "archivedCount",
+    "now",
+    "notPrivileged",
+    "remote",
+    "ids",
+    "hash",
+};
+local syncDataMapReversed = {};
+for i, v in ipairs(syncDataMap) do syncDataMapReversed[v] = i; end
+
+function ABGP:PrepareSyncData(data)
+    -- Convert the key/value pairs to index/value pairs.
+    -- Only convert the keys in the above table.
+    local prepared = {};
+    for k, v in pairs(data) do
+        if syncDataMapReversed[k] then
+            prepared[syncDataMapReversed[k]] = v;
+        else
+            prepared[k] = v;
+        end
+    end
+
+    return prepared;
+end
+
+function ABGP:RebuildSyncData(data)
+    -- Undo the changes from PrepareSyncData().
+    for i in ipairs(syncDataMap) do
+        if data[i] ~= nil then
+            data[syncDataMap[i]] = data[i];
+            data[i] = nil;
+        end
+    end
+end
+
 function ABGP:PrepareHistory(history)
     local copy = self.tCopy(history);
     -- Break down the history ids into their two parts.
@@ -720,6 +766,30 @@ function ABGP:RebuildHistory(history)
         local entryDate = entry[self.ItemHistoryIndex.DATE] + entry[0];
         entry[self.ItemHistoryIndex.ID] = ("%s:%d"):format(entry[self.ItemHistoryIndex.ID], entryDate);
         entry[0] = nil;
+    end
+end
+
+function ABGP:PrepareIds(ids, now)
+    local decomposed = {};
+    -- Break down the history ids into their two parts.
+    -- Store them as an array instead of a map, and store
+    -- the date as its delta from `now`.
+    for id in pairs(ids) do
+        local player, entryDate = self:ParseHistoryId(id);
+        table.insert(decomposed, player);
+        table.insert(decomposed, now - entryDate);
+    end
+
+    return decomposed;
+end
+
+function ABGP:RebuildIds(ids, now)
+    -- Undo the changes from PrepareIds().
+    for i = 1, #ids - 1 do
+        local id = ("%s:%d"):format(ids[i], now - ids[i + 1]);
+        ids[id] = true;
+        ids[i] = nil;
+        ids[i + 1] = nil;
     end
 end
 
