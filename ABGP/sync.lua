@@ -160,7 +160,7 @@ if syncTesting then
         remoteHistory = self.tCopy(historyCombinations[remoteIndex][3]);
 
         table.wipe(warnedOutOfDate);
-        self:HistoryTriggerSync();
+        self:SyncPhaseHistory("test");
     end
 
     function ABGP:TestHistorySync(privIndex, localIndex, remoteIndex)
@@ -272,7 +272,6 @@ function ABGP:HistoryTriggerSync()
 
     for phase in pairs(self.Phases) do
         self:SyncPhaseHistory(phase);
-        if syncTesting then return; end
     end
 end
 
