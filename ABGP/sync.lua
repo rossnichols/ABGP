@@ -221,18 +221,17 @@ local function Hash(value)
     -- An implementation of the djb2 hash algorithm.
     -- See http://www.cs.yorku.ca/~oz/hash.html.
 
-    local h = 5381
+    local h = 5381;
     for i = 1, #value do
-        h = bit.band((33 * h + value:byte(i)), 4294967295)
+        h = bit.band((33 * h + value:byte(i)), 4294967295);
     end
-    return h
+    return h;
 end
 
-local function BuildSyncHashData(phase, now)
+function ABGP:BuildSyncHashData(gpHistory, phase, now)
     local hash = 0;
     local syncCount = 0;
 
-    local gpHistory = GetHistory(phase);
     local baseline = GetBaseline(phase);
     if baseline == invalidBaseline then return hash, syncCount; end
 
@@ -300,7 +299,7 @@ function ABGP:HistoryTriggerSync(target, token, now, remote)
                 syncCount = syncCount + 1;
             end
         else
-            commData.hash, syncCount = BuildSyncHashData(phase, now);
+            commData.hash, syncCount = self:BuildSyncHashData(gpHistory, phase, now);
         end
 
         commData.archivedCount = #gpHistory - syncCount;
@@ -342,7 +341,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     -- Compute the archivedCount and hash (if necessary).
     local hash, syncCount = 0, 0;
     if data.hash and canSendHistory then
-        hash, syncCount = BuildSyncHashData(data.phase, now);
+        hash, syncCount = self:BuildSyncHashData(history, data.phase, now);
     else
         for _, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID];
@@ -411,6 +410,8 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         -- The sender sent a hash of their recent entries. If our hash is different,
         -- we'll deliver them a sync and they can request whatever they need.
         if data.hash ~= hash then
+            self:LogDebug("Mismatched hash from %s, %d vs. %d, now=%d [%s]",
+                self:ColorizeName(sender), data.hash, hash, now, self.PhaseNames[data.phase]);
             self:HistoryTriggerSync(sender, data.token, now, not data.remote);
         end
     elseif data.ids and senderIsPrivileged then
