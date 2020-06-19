@@ -101,7 +101,7 @@ function ABGP:AnnounceOnBossLoot(data)
     local name = data.name or source;
     lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
 
-    local bossSource = data.source;
+    local bossSource = data.bossSource;
     local bossSourceAnnounced = bossSource and lootAnnouncements[bossSource].announced;
 
     if not lootAnnouncements[source].announced and not bossSourceAnnounced then
