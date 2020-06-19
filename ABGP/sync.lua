@@ -249,7 +249,10 @@ local function BuildSyncHashData(phase, now)
 end
 
 function ABGP:TriggerInitialSync()
-    if not syncTesting then self:HistoryTriggerSync(); end
+    if not syncTesting then
+        local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
+        self:HistoryTriggerSync();
+    end
 end
 
 function ABGP:ClearSyncWarnings()
@@ -268,7 +271,6 @@ function ABGP:HistoryTriggerSync(target, token, now, remote)
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if syncTesting then testUseLocalData = not remote; end
     local privileged = IsPrivileged();
-    local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
 
     local now = now or GetServerTime();
     for phase in pairs(self.Phases) do
