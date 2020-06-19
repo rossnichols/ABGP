@@ -410,7 +410,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         -- The sender sent a hash of their recent entries. If our hash is different,
         -- we'll deliver them a sync and they can request whatever they need.
         if data.hash ~= hash then
-            self:LogDebug("Mismatched hash from %s, %d vs. %d, now=%d [%s]",
+            self:LogDebug("Mismatched hash from %s, %s vs. %s, now=%d [%s]",
                 self:ColorizeName(sender), data.hash, hash, now, self.PhaseNames[data.phase]);
             self:HistoryTriggerSync(sender, data.token, now, not data.remote);
         end
