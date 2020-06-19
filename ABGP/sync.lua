@@ -76,11 +76,13 @@ if syncTesting then
     };
     local now = GetServerTime();
     local historyCombinations = {
-        { "baseline=1 #recent=1 #archived=0", 1, {
+        { "baseline=1 #recent=2 #archived=0", 1, {
             { 1, ("Xanido:%d"):format(now), now, "Xanido", 0, "Item1" },
-        }},
-        { "baseline=1 #recent=1(v2) #archived=0", 1, {
             { 1, ("Xanido:%d"):format(now - 1), now - 1, "Xanido", 0, "Item2" },
+        }},
+        { "baseline=1 #recent=2(v2) #archived=0", 1, {
+            { 1, ("Xanido:%d"):format(now - 2), now - 2, "Xanido", 0, "Item3" },
+            { 1, ("Xanido:%d"):format(now - 3), now - 3, "Xanido", 0, "Item4" },
         }},
         { "baseline=1 #recent=1 #archived=1", 1, {
             { 1, ("Xanido:%d"):format(now), now, "Xanido", 0, "Item1" },
@@ -160,7 +162,7 @@ if syncTesting then
         remoteHistory = self.tCopy(historyCombinations[remoteIndex][3]);
 
         table.wipe(warnedOutOfDate);
-        self:SyncPhaseHistory("test");
+        self:SyncPhaseHistory(self.Phases.p1);
     end
 
     function ABGP:TestHistorySync(privIndex, localIndex, remoteIndex)
@@ -510,6 +512,7 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
                 phase = data.phase,
                 baseline = GetBaseline(data.phase),
                 history = self:PrepareHistory(GetHistory(data.phase)),
+                version = self:GetVersion(),
                 remote = not data.remote, -- for testing
             }, "WHISPER", UnitName("player"));
         else
@@ -517,6 +520,7 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
                 phase = data.phase,
                 baseline = GetBaseline(data.phase),
                 history = self:PrepareHistory(GetHistory(data.phase)),
+                version = self:GetVersion(),
                 remote = not data.remote, -- for testing
             }, "GUILD");
         end
@@ -530,6 +534,7 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
             baseline = GetBaseline(data.phase),
             history = self:PrepareHistory(GetHistory(data.phase)),
             requested = true,
+            version = self:GetVersion(),
             remote = not data.remote, -- for testing
         }, "WHISPER", sender);
     end
@@ -554,6 +559,7 @@ function ABGP:HistoryOnReplace(data, distribution, sender)
     if not SenderIsPrivileged(sender) then return; end
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if sender == UnitName("player") and not syncTesting then return; end
+    if self:GetCompareVersion() ~= data.version then return; end
 
     -- Only accept newer baselines.
     local baseline = GetBaseline(data.phase);
@@ -699,6 +705,7 @@ function ABGP:CommitHistory(phase)
             phase = phase,
             baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
             history = self:PrepareHistory(_G.ABGP_Data[phase].gpHistory),
+            version = self:GetVersion(),
         }, "GUILD");
     end
 end
@@ -784,7 +791,7 @@ end
 
 function ABGP:RebuildIds(ids, now)
     -- Undo the changes from PrepareIds().
-    for i = 1, #ids - 1 do
+    for i = 1, #ids - 1, 2 do
         local id = ("%s:%d"):format(ids[i], now - ids[i + 1]);
         ids[id] = true;
         ids[i] = nil;
