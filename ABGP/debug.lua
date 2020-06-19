@@ -15,7 +15,7 @@ local debugOpts = {
     -- TestLootFrame = true,
 
     -- If set, some extra logging will be printed for comms.
-    DebugComms = true,
+    -- DebugComms = true,
 
     -- If set, the raid window will have "Export" in an in-progress raid and "Restart" for a completed one.
     -- DebugRaidUI = true,
@@ -41,5 +41,5 @@ function ABGP:SetDebug(enable)
     self:Set("debug", enable);
 end
 
-ABGP.VersionOverride = "6.0.0";
-ABGP.VersionCmpOverride = "6.0.0";
+ABGP.VersionOverride = "6.0.1";
+ABGP.VersionCmpOverride = "6.0.1";
