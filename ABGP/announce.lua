@@ -99,11 +99,11 @@ end
 function ABGP:AnnounceOnBossLoot(data)
     local source = data.source;
     local name = data.name or source;
-    lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
-
     local bossSource = data.bossSource;
-    local bossSourceAnnounced = bossSource and lootAnnouncements[bossSource].announced;
+    lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
+    lootAnnouncements[bossSource] = lootAnnouncements[bossSource] or { name = name, announced = false };
 
+    local bossSourceAnnounced = bossSource and lootAnnouncements[bossSource].announced;
     if not lootAnnouncements[source].announced and not bossSourceAnnounced then
         self:LogDebug("Announcing loot: name=%s source=%s boss=%s", name, source, bossSource or "<none>");
         lootAnnouncements[source].announced = true;
