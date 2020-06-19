@@ -12,7 +12,7 @@ local bit = bit;
 local unpack = unpack;
 local type = type;
 
-local requestedHistoryToken;
+local requestedHistoryTokens = {};
 local requestedHistoryEntries = {};
 local replaceRequestTokens = {};
 local warnedOutOfDate = {};
@@ -266,58 +266,62 @@ function ABGP:HistoryTriggerRebuild()
     self:HistoryTriggerSync();
 end
 
-function ABGP:HistoryTriggerSync(target, token, now, remote)
+function ABGP:HistoryTriggerSync()
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
+
+    for phase in pairs(self.Phases) do
+        self:SyncPhaseHistory(phase);
+        if syncTesting then return; end
+    end
+end
+
+function ABGP:SyncPhaseHistory(phase, target, token, now, remote)
     if syncTesting then testUseLocalData = not remote; end
     local privileged = IsPrivileged();
-
     local now = now or GetServerTime();
-    for phase in pairs(self.Phases) do
-        local gpHistory = GetHistory(phase);
-        local baseline = GetBaseline(phase);
-        local canSendHistory = privileged and baseline ~= invalidBaseline;
-        local commData = {
-            version = self:GetVersion(),
-            phase = phase,
-            token = token or GetServerTime(),
-            baseline = baseline,
-            archivedCount = 0,
-            now = now,
-            notPrivileged = not privileged,
-            remote = remote, -- for testing
-        };
 
-        local syncCount = 0;
-        if canSendHistory then
-            commData.ids = {};
-            for _, entry in ipairs(gpHistory) do
-                local id = entry[self.ItemHistoryIndex.ID];
-                local player, date = self:ParseHistoryId(id);
-                if now - date > syncThreshold then break; end
+    local gpHistory = GetHistory(phase);
+    local baseline = GetBaseline(phase);
+    local canSendHistory = privileged and baseline ~= invalidBaseline;
+    local commData = {
+        version = self:GetVersion(),
+        phase = phase,
+        token = token or GetServerTime(),
+        baseline = baseline,
+        archivedCount = 0,
+        now = now,
+        notPrivileged = not privileged,
+        remote = remote, -- for testing
+    };
 
-                commData.ids[id] = true;
-                syncCount = syncCount + 1;
-            end
-        else
-            commData.hash, syncCount = self:BuildSyncHashData(gpHistory, phase, now);
+    local syncCount = 0;
+    if canSendHistory then
+        commData.ids = {};
+        for _, entry in ipairs(gpHistory) do
+            local id = entry[self.ItemHistoryIndex.ID];
+            local player, date = self:ParseHistoryId(id);
+            if now - date > syncThreshold then break; end
+
+            commData.ids[id] = true;
+            syncCount = syncCount + 1;
         end
+    else
+        commData.hash, syncCount = self:BuildSyncHashData(gpHistory, phase, now);
+    end
 
-        commData.archivedCount = #gpHistory - syncCount;
-        if target then
-            self:LogDebug("Sending %s history sync to %s: %d synced (ids), %d archived",
-                self.PhaseNames[phase], self:ColorizeName(target), syncCount, commData.archivedCount);
-            self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", target);
+    commData.archivedCount = #gpHistory - syncCount;
+    if target then
+        self:LogDebug("Sending %s history sync to %s: %d synced (ids), %d archived",
+            self.PhaseNames[phase], self:ColorizeName(target), syncCount, commData.archivedCount);
+        self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", target);
+    else
+        self:LogDebug("Sending %s history sync: %d synced (%s), %d archived",
+            self.PhaseNames[phase], syncCount, commData.hash and "hash" or "ids", commData.archivedCount);
+        if syncTesting then
+            self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", UnitName("player"));
         else
-            self:LogDebug("Sending %s history sync: %d synced (%s), %d archived",
-                self.PhaseNames[phase], syncCount, commData.hash and "hash" or "ids", commData.archivedCount);
-            if syncTesting then
-                self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "WHISPER", UnitName("player"));
-            else
-                self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
-            end
+            self:SendComm(self.CommTypes.HISTORY_SYNC, commData, "GUILD");
         end
-
-        if syncTesting then return; end
     end
 end
 
@@ -327,9 +331,10 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     if sender == UnitName("player") and not syncTesting then return; end
     if self:GetCompareVersion() ~= data.version then return; end
 
-    if data.token ~= requestedHistoryToken then
-        table.wipe(requestedHistoryEntries);
-        requestedHistoryToken = data.token;
+    requestedHistoryEntries[data.phase] = requestedHistoryEntries[data.phase] or {};
+    if data.token ~= requestedHistoryTokens[data.phase] then
+        table.wipe(requestedHistoryEntries[data.phase]);
+        requestedHistoryTokens[data.phase] = data.token;
     end
 
     local senderIsPrivileged = SenderIsPrivileged(sender) and not data.notPrivileged;
@@ -412,7 +417,7 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         if data.hash ~= hash then
             self:LogDebug("Mismatched hash from %s, %s vs. %s, now=%d [%s]",
                 self:ColorizeName(sender), data.hash, hash, now, self.PhaseNames[data.phase]);
-            self:HistoryTriggerSync(sender, data.token, now, not data.remote);
+            self:SyncPhaseHistory(data.phase, sender, data.token, now, not data.remote);
         end
     elseif data.ids and senderIsPrivileged then
         -- The sender sent ids. We'll go through them looking for entries we need,
@@ -439,12 +444,12 @@ function ABGP:HistoryOnSync(data, distribution, sender)
         -- and send any we have they're missing. Remove ones we've
         -- already requested for this token.
         for id in pairs(data.ids) do
-            if requestedHistoryEntries[id] then
+            if requestedHistoryEntries[data.phase][id] then
                 -- We already requested this entry from someone.
                 data.ids[id] = nil;
             else
                 -- We need to request this id.
-                requestedHistoryEntries[id] = true;
+                requestedHistoryEntries[data.phase][id] = true;
                 requestCount = requestCount + 1;
             end
         end
