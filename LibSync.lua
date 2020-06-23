@@ -1,52 +1,64 @@
 -- controller:
---     GetEntryInfo(entry): id, entryDate
---     GetSyncData(syncId): entries, baseline
---     GetSyncThreshold(): number
---     GetWorkingTable(syncId): table
---     IsProducer(player?): boolean
---     MergeEntries(syncId, merged): nil
---     PromptSetEntries(syncId, entries, baseline, sender): nil
---     PrepareEntries(entries): table
---     PrepareIds(ids, now): table
---     RebuildEntries(entries): table
---     RebuildIds(ids, now): table
---     SendComm(name, data, target?): nil
---     SetBaseline(syncId, baseline): nil
---     SetEntries(syncId, entries, baseline, sender): nil
---     WarnOutOfDate(syncId, sender): nil
+--  GetHistory(syncId): table
+--  GetBaseline(syncId): number
+--  GetEntryInfo(entry): id, entryDate
 
-local LibSync = {}
+--  SetHistory(syncId, history): nil
+--  SetBaseline(syncId, baseline): nil
+--  AddHistory(syncId, added): nil
+--  PromptSetSetHistory(syncId, history, baseline, sender): nil
 
-local GetTime = GetTime
-local GetServerTime = GetServerTime
+--  PrepareHistoryMap(history): table
+--  PrepareHistoryList(history): table
+--  PrepareIds(ids, now): table
+--  RebuildHistoryMap(history): table
+--  RebuildHistoryList(history): table
+--  RebuildIds(ids, now): table
+
+--  GetSyncThreshold(): number
+--  GetWorkingTable(syncId): table
+--  IsProducer(player?): boolean
+--  SendComm(typ, data, target?): nil
+--  WarnOutOfDate(syncId, sender): nil
+
+local LibHistorySync = {}
+
+local GetServerTime = GetServerTime or os.time
 local pairs = pairs
 local ipairs = ipairs
 local next = next
 local table = table
+local math = math
 
 
-function LibSync:Sync(controller, syncId, entries, baseline)
-    self:_SyncWorker(controller, syncId, entries, baseline, GetTime(), GetServerTime(), nil)
+function LibHistorySync:Sync(controller, syncId)
+    self:_SyncWorker(controller, syncId, math.random(), GetServerTime(), nil)
 end
 
-function LibSync:RequestEntries(controller, syncId, target)
-    -- We're asking the sender for their full entries.
+function LibHistorySync:RequestHistory(controller, syncId, target)
+    -- We're asking the target for their full history.
 
-    controller:SendComm("ENTRIES_REPLACE_REQUEST", {
+    self:_SendComm("HISTORY_REPLACE_REQUEST", {
         syncId = syncId
     }, target)
 end
 
-function LibSync:HandleComm(controller, name, data, sender)
-    self["_" .. name](self, controller, data, sender)
+function LibHistorySync:ConfirmSetHistory(controller, syncId, history, baseline)
+    controller:SetHistory(syncId, history)
+    controller:SetBaseline(syncId, baseline)
 end
 
-function LibSync:GetInvalidBaseline()
+function LibHistorySync:HandleComm(controller, typ, data, sender)
+    self["_" .. typ](self, controller, data, sender)
+end
+
+function LibHistorySync:GetInvalidBaseline()
     return self._invalidBaseline
 end
 
-function LibSync:_SyncWorker(controller, syncId, token, now, target)
-    local entries, baseline = controller:GetSyncData(syncId)
+function LibHistorySync:_SyncWorker(controller, syncId, token, now, target)
+    local history = controller:GetHistory(syncId)
+    local baseline = controller:GetBaseline(syncId)
     local isProducer = baseline ~= self._invalidBaseline and controller:IsProducer()
     local commData = {
         syncId = syncId,
@@ -56,11 +68,15 @@ function LibSync:_SyncWorker(controller, syncId, token, now, target)
         isProducer = isProducer,
     }
 
+    -- Producers send a sync with a table of all their entry ids within the sync threshold.
+    -- Consumers send a hash of those ids instead, to minimize the size of the sync comms
+    -- in the common state of being fully caught up. We'll also send an "archived count",
+    -- which is the number of entries older than the sync threshold.
     local syncCount = 0
     if isProducer then
         local ids = {}
         local syncThreshold = controller:GetSyncThreshold()
-        for _, entry in ipairs(entries) do
+        for _, entry in ipairs(history) do
             local id, entryDate = controller:GetEntryInfo(entry)
             if now - entryDate > syncThreshold then break end
 
@@ -69,17 +85,15 @@ function LibSync:_SyncWorker(controller, syncId, token, now, target)
         end
         commData.ids = controller:PrepareIds(ids, now)
     else
-        commData.hash, syncCount = self:_BuildSyncHashData(controller, entries, baseline, now)
+        commData.hash, syncCount = self:_BuildSyncHashData(controller, history, baseline, now)
     end
-    commData.archivedCount = #entries - syncCount
-
-    local prepared = self:_PrepareSyncData(commData)
-    controller:SendComm("ENTRIES_SYNC", prepared, target)
+    commData.archivedCount = #history - syncCount
+    self:_SendComm("HISTORY_SYNC", prepared, target)
 end
 
-function LibSync:_ENTRIES_SYNC(controller, data, sender)
-    self:_RebuildSyncData(data)
-    local entries, baseline = controller:GetSyncData(data.syncId)
+function LibHistorySync:_HISTORY_SYNC(controller, data, sender)
+    local history = controller:GetHistory(syncId)
+    local baseline = controller:GetBaseline(syncId)
     local isProducer = baseline ~= self._invalidBaseline and controller:IsProducer()
     local senderIsProducer = data.isProducer and controller:IsProducer(sender)
     local syncThreshold = controller:GetSyncThreshold()
@@ -90,29 +104,28 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
     -- the same data, keep track of the entries we end up requesting as a
     -- result of this sync's token.
     local wt = controller:GetWorkingTable(data.syncId)
-    wt.requestedEntries = wt.requestedEntries or {}
+    wt.requestedHistory = wt.requestedHistory or {}
     if data.token ~= wt.requestedToken then
-        table.wipe(wt.requestedEntries)
+        table.wipe(wt.requestedHistory)
         wt.requestedToken = data.token
     end
 
     -- Compute the archivedCount and hash (if necessary).
     local hash, syncCount = 0, 0
     if data.hash and isProducer then
-        hash, syncCount = self:_BuildSyncHashData(controller, entries, baseline, now)
+        hash, syncCount = self:_BuildSyncHashData(controller, history, baseline, now)
     else
-        for _, entry in ipairs(entries) do
+        for _, entry in ipairs(history) do
             local id, entryDate = controller:GetEntryInfo(entry)
             if now - entryDate > syncThreshold then break end
 
             syncCount = syncCount + 1
         end
     end
-    local archivedCount = #entries - syncCount
+    local archivedCount = #history - syncCount
 
-    -- First evaluate the baseline and archivedCount to see if the sender's entries are
-    -- out of date. We can only initiate entry replacements as producers, and we'll only
-    -- accept possible entry replacements from producers.
+    -- First evaluate the baseline and archivedCount to see if the sender's history is
+    -- out of date. We can only initiate history replacements as producers.
     if isProducer then
         local senderNeedsReplacement = false
         if data.baseline < baseline then
@@ -124,13 +137,16 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
         end
 
         if senderNeedsReplacement then
-            controller:SendComm("ENTRIES_REPLACE_INITIATION", {
+            self:_SendComm("HISTORY_REPLACE_INITIATION", {
                 syncId = data.syncId,
                 token = data.token,
             }, sender)
         end
     end
 
+    -- If the sender is a producer, evaluate the baseline and archivedCount to see
+    -- if our own history is out of date. , We'll only accept possible history replacements
+    -- from producers.
     if senderIsProducer then
         local needReplacement = false
         if data.baseline > baseline then
@@ -143,7 +159,7 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
 
         if needReplacement then
             controller:SetBaseline(data.syncId, self._invalidBaseline)
-            controller:SendComm("ENTRIES_REPLACE_REQUEST", {
+            self:_SendComm("HISTORY_REPLACE_REQUEST", {
                 syncId = data.syncId,
                 token = data.token,
             }, sender)
@@ -151,12 +167,11 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
     end
 
     -- A deeper sync check should only occur if the baselines and archivedCounts match.
-    local checkRecent = data.baseline == baseline and data.archivedCount == archivedCount
-    if not checkRecent then return end
+    if data.baseline ~= baseline or data.archivedCount ~= archivedCount then return end
 
     if data.hash and isProducer then
         -- The sender sent a hash of their recent entries. If our hash is different,
-        -- we'll deliver them a sync and they can request whatever they need.
+        -- we'll deliver them a sync with ids and they can request whatever they need.
         if data.hash ~= hash then
             self:_SyncWorker(controller, data.syncId, data.token, now, sender)
         end
@@ -164,9 +179,9 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
         -- The sender sent ids. We'll go through them looking for entries we need,
         -- and entries to send if we're allowed to do so.
         data.ids = controller:RebuildIds(data.ids, now)
-        local merge = {}
+        local send = {}
         local sendCount, requestCount = 0, 0
-        for _, entry in ipairs(entries) do
+        for _, entry in ipairs(history) do
             local id, entryDate = controller:GetEntryInfo(entry)
             if now - entryDate > syncThreshold then break end
 
@@ -175,7 +190,7 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
                 data.ids[id] = nil
             elseif isProducer then
                 -- Sender doesn't have this entry.
-                merge[id] = entry
+                send[id] = entry
                 sendCount = sendCount + 1
             end
         end
@@ -186,138 +201,139 @@ function LibSync:_ENTRIES_SYNC(controller, data, sender)
         -- already requested for this token.
         local wt = controller:GetWorkingTable(data.syncId)
         for id in pairs(data.ids) do
-            if wt.requestedEntries[id] then
+            if wt.requestedHistory[id] then
                 -- We already requested this entry from someone.
                 data.ids[id] = nil
             else
                 -- We need to request this id.
-                wt.requestedEntries[id] = true
+                wt.requestedHistory[id] = true
                 requestCount = requestCount + 1
             end
         end
 
         if sendCount > 0 or requestCount > 0 then
-            controller:SendComm("ENTRIES_MERGE", {
+            self:_SendComm("HISTORY_MERGE", {
                 syncId = data.syncId,
                 baseline = baseline,
-                merge = controller:PrepareEntries(merge),
-                requested = controller:PrepareIds(data.ids, now),
+                sent = sendCount > 0 and controller:PrepareHistoryMap(send, now) or nil,
+                requested = requestCount > 0 and controller:PrepareIds(data.ids, now) or nil,
                 now = now
             }, sender)
         end
     end
 end
 
-function LibSync:_ENTRIES_MERGE(controller, data, sender)
-    local entries, baseline = controller:GetSyncData(data.syncId)
+function LibHistorySync:_HISTORY_MERGE(controller, data, sender)
+    local history = controller:GetHistory(syncId)
+    local baseline = controller:GetBaseline(syncId)
     local isProducer = baseline ~= self._invalidBaseline and controller:IsProducer()
     local senderIsProducer = data.isProducer and controller:IsProducer(sender)
     local syncThreshold = controller:GetSyncThreshold()
     local now = data.now
 
-    if data.requested and next(data.requested) and isProducer then
+    if data.requested and isProducer then
         -- The sender is requesting entries from us.
         data.requested = controller:RebuildIds(data.requested, now)
-        local merge = {}
+        local send = {}
         local sendCount = 0
-        for _, entry in ipairs(entries) do
+        for _, entry in ipairs(history) do
             local id, entryDate = controller:GetEntryInfo(entry)
 
             if data.requested[id] then
                 -- Sender wants this entry.
-                merge[id] = entry
+                send[id] = entry
                 sendCount = sendCount + 1
             end
         end
 
         if sendCount > 0 then
-            controller:SendComm("ENTRIES_MERGE", {
+            self:_SendComm("HISTORY_MERGE", {
                 syncId = data.syncId,
                 baseline = baseline,
-                merge = controller:PrepareEntries(merge),
+                sent = controller:PrepareHistoryMap(send, now),
                 now = now
             }, sender)
         end
     end
 
-    if data.merge and next(data.merge) and senderIsProducer then
+    if data.sent and senderIsProducer then
         -- The sender is sharing entries. First remove the ones we already have.
-        data.merge = controller:RebuildEntries(data.merge)
-        for _, entry in ipairs(entries) do
+        data.sent = controller:RebuildHistoryMap(data.sent)
+        for _, entry in ipairs(history) do
             local id, entryDate = controller:GetEntryInfo(entry)
-            data.merge[id] = nil
+            data.sent[id] = nil
         end
 
-        -- At this point, data.merge contains entries we don't have.
-        if next(data.merge) then
-            controller:MergeEntries(data.syncId, data.merge)
+        -- At this point, data.sent contains entries we don't have.
+        if next(data.sent) then
+            controller:AddHistory(data.syncId, data.sent)
         end
     end
 end
 
-function LibSync:_ENTRIES_REPLACE_INITIATION(controller, data, sender)
+function LibHistorySync:_HISTORY_REPLACE_INITIATION(controller, data, sender)
     if not controller:IsProducer(sender) then return end
 
     -- The sender has determined our history is out of date and wants to give us theirs.
     -- At this point our history should not be considered as valid for sending to others.
-
     controller:SetBaseline(data.syncId, self._invalidBaseline)
     controller:WarnOutOfDate(data.syncId, sender)
 end
 
-function LibSync:_ENTRIES_REPLACE_REQUEST(controller, data, sender)
-    local entries, baseline = controller:GetSyncData(data.syncId)
+function LibHistorySync:_HISTORY_REPLACE_REQUEST(controller, data, sender)
+    local history = controller:GetHistory(syncId)
+    local baseline = controller:GetBaseline(syncId)
     local isProducer = baseline ~= self._invalidBaseline and controller:IsProducer()
     if not isProducer then return end
 
     -- The sender is asking for our entire history.
-
     if data.token then
         -- The sender is asking in response to our own sync. Broadcast them,
         -- so that anyone else who needs this baseline can get it. Make sure
         -- we only do this once per sync.
 
         local wt = controller:GetWorkingTable(data.syncId)
-        if wt.replaceRequestToken == data.token then
-            return
-        end
+        if wt.replaceRequestToken == data.token then return end
 
-        controller:SendComm("ENTRIES_REPLACE", {
+        self:_SendComm("HISTORY_REPLACE", {
             syncId = data.syncId,
             baseline = baseline,
-            entries = controller:PrepareEntries(entries)
+            history = controller:PrepareHistoryList(history)
         })
     else
         -- The sender is asking in response to our initiation, which was
         -- triggered by their sync. Send to them directly.
 
-        controller:SendComm("ENTRIES_REPLACE", {
+        self:_SendComm("HISTORY_REPLACE", {
             syncId = data.syncId,
             baseline = baseline,
-            entries = controller:PrepareEntries(entries),
+            history = controller:PrepareHistoryList(history),
             initiated = true
         }, sender)
     end
 end
 
-function LibSync:_ENTRIES_REPLACE(controller, data, sender)
+function LibHistorySync:_HISTORY_REPLACE(controller, data, sender)
     if not controller:IsProducer(sender) then return end
-    local _, baseline = self:GetSyncData(data.syncId)
+    local baseline = controller:GetBaseline(syncId)
 
     -- The sender is providing a replacement. Only accept it if it's a
     -- newer baseline (which is always the case if ours is invalid).
-    if data.baseline <= baseline then
-        return
-    end
+    if data.baseline <= baseline then return end
 
-    data.entries = controller:RebuildEntries(data.entries)
+    data.history = controller:RebuildHistoryList(data.history)
     if data.initiated then
         -- We already requested this one explicitly, so we can just directly apply it.
-        controller:SetEntries(data.syncId, data.entries, data.baseline, sender)
+        controller:SetHistory(data.syncId, data.history)
+        controller:SetBaseline(data.syncId, data.baseline)
     else
         -- Not explicit - ask before applying. Our baseline should be invalid now, though,
         -- since an updated history has been discovered.
         controller:SetBaseline(data.syncId, self._invalidBaseline)
-        controller:PromptSetEntries(data.syncId, data.entries, data.baseline, sender)
+        controller:PromptSetHistory(data.syncId, data.history, data.baseline, sender)
     end
+end
+
+function LibHistorySync:_SendComm(controller, typ, data, target)
+    self:_SendComm(typ, data, target)
 end
