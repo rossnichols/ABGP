@@ -30,7 +30,7 @@ local debugOpts = {
     -- AvoidHistorySend = true,
 
     -- If set, shows WIP UI for history modifications
-    -- HistoryUI = true,
+    HistoryUI = true,
 };
 
 function ABGP:GetDebugOpt(key)

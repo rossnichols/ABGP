@@ -312,13 +312,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         for i, entry in ipairs(history) do
             if entry[self.ItemHistoryIndex.ID] == data.oldHistoryId then
                 -- This is the entry being replaced.
-                local _, deleteDate = self:ParseHistoryId(data.updateId);
-                table.insert(history, 1, {
-                    [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
-                    [ABGP.ItemHistoryIndex.ID] = data.updateId,
-                    [ABGP.ItemHistoryIndex.DATE] = deleteDate,
-                    [ABGP.ItemHistoryIndex.DELETEDID] = data.oldHistoryId,
-                });
+                self:HistoryDeleteEntry(value.phase, entry, data.updateId);
 
                 -- If the previous award is for the same player, then the officer note will already
                 -- get updated to the proper value for the new award, and writing the officer note
@@ -597,7 +591,7 @@ function ABGP:HistoryUpdatePlayer(data, player)
     commData.value = data.value;
 end
 
-function ABGP:HistoryDelete(data)
+function ABGP:HistoryDeleteItemAward(data)
     local commData = {
         itemLink = data.itemLink,
         oldPlayer = data.player,
@@ -610,4 +604,19 @@ function ABGP:HistoryDelete(data)
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
     commData.value = data.value;
+end
+
+function ABGP:HistoryDeleteEntry(phase, entry, deleteId)
+    if not deleteId then deleteId = self:GetHistoryId(); end
+    local history = _G.ABGP_Data[phase].gpHistory;
+
+    local _, deleteDate = self:ParseHistoryId(deleteId);
+    table.insert(history, 1, {
+        [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
+        [ABGP.ItemHistoryIndex.ID] = deleteId,
+        [ABGP.ItemHistoryIndex.DATE] = deleteDate,
+        [ABGP.ItemHistoryIndex.DELETEDID] = entry[ABGP.ItemHistoryIndex.ID],
+    });
+
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end

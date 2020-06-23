@@ -1095,9 +1095,9 @@ local function DrawAuditLog(container, options)
                         end
 
                         table.insert(context, {
-                            text = "Delete entry [NYI]",
+                            text = "Delete entry",
                             func = function(self, arg1)
-
+                                ABGP:HistoryDeleteEntry(ABGP.CurrentPhase, arg1);
                             end,
                             arg1 = entry,
                             notCheckable = true
@@ -1297,7 +1297,7 @@ StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.Stat
     button1 = "Yes",
     button2 = "No",
     OnAccept = function(self, data)
-        ABGP:HistoryDelete(data);
+        ABGP:HistoryDeleteItemAward(data);
     end,
 });
 StaticPopupDialogs["ABGP_UPDATE_GP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
