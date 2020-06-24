@@ -15,6 +15,7 @@ local ipairs = ipairs;
 local table = table;
 local tonumber = tonumber;
 local type = type;
+local date = date;
 
 function ABGP:InitOptions()
     local defaults = {
@@ -644,6 +645,25 @@ function ABGP:ShowAddPlayerWindow()
     playerContainer:AddChild(proxyEdit);
     self:AddWidgetTooltip(proxyEdit, "If the player is not in the guild, enter the name of the character in the guild that will serve as their proxy.");
 
+    local dateEdit = AceGUI:Create("ABGP_EditBox");
+    dateEdit:SetLabel("Date");
+    dateEdit:SetCallback("OnValueChanged", function(widget, event, value)
+        value = value:gsub("20(%d%d)", "%1");
+        local m, d, y = value:match("^(%d+)/(%d+)/(%d+)$");
+        if not m then return true; end
+
+        local now = GetServerTime();
+        local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
+        if addTime > now then return true; end
+    end);
+    dateEdit:SetValue(date("%m/%d/%y", GetServerTime()));
+    playerContainer:AddChild(dateEdit);
+    self:AddWidgetTooltip(dateEdit, "Enter the date of their entry.");
+
+    local playerRank = AceGUI:Create("ABGP_Header");
+    playerRank:SetUserData("cell", { align = "BOTTOMLEFT" });
+    playerContainer:AddChild(playerRank);
+
     local label = AceGUI:Create("ABGP_Header");
     label:SetFullWidth(true);
     label:SetText("Enter a player to calculate the below values.");
@@ -705,7 +725,12 @@ function ABGP:ShowAddPlayerWindow()
         local p1gp = p1gpEdit:GetValue();
         local p3ep = p3epEdit:GetValue();
         local p3gp = p3gpEdit:GetValue();
-        self:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp);
+
+        local addDate = dateEdit:GetValue();
+        local m, d, y = addDate:match("^(%d+)/(%d+)/(%d+)$");
+        local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
+
+        self:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp);
         window:Hide();
     end);
     container:AddChild(done);
@@ -720,6 +745,7 @@ function ABGP:ShowAddPlayerWindow()
         p1gpEdit:SetDisabled(true);
         p3epEdit:SetDisabled(true);
         p3gpEdit:SetDisabled(true);
+        playerRank:SetText("");
 
         local player = playerEdit:GetValue();
         local proxy = proxyEdit:GetValue();
@@ -759,6 +785,7 @@ function ABGP:ShowAddPlayerWindow()
         p1gpEdit:SetDisabled(false);
         p3epEdit:SetDisabled(false);
         p3gpEdit:SetDisabled(false);
+        playerRank:SetText(rank);
 
         local calcP1, calcP3 = true, true;
         local active = self:GetActivePlayer(player);

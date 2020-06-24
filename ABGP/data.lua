@@ -382,7 +382,7 @@ function ABGP:HistoryTriggerDecay(decayTime)
     self:Notify("NOTE: this just adds the appropriate history entries for now. Officer notes are unchanged.");
 end
 
-function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
+function ABGP:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
     if proxy then
         self:Notify("Adding %s into the EPGP system, proxied by %s.", self:ColorizeName(player), self:ColorizeName(proxy));
         _G.GuildRosterSetPublicNote(self:GetGuildIndex(proxy), ("ABGP Proxy: %s"):format(player));
@@ -398,7 +398,7 @@ function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
         table.insert(_G.ABGP_Data[self.Phases.p1].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = GetServerTime(),
+            [self.ItemHistoryIndex.DATE] = addTime,
             [self.ItemHistoryIndex.PLAYER] = player,
             [self.ItemHistoryIndex.GP] = p1gp,
             [self.ItemHistoryIndex.NOTES] = "New active raider",
@@ -415,7 +415,7 @@ function ABGP:AddActivePlayer(player, proxy, p1ep, p1gp, p3ep, p3gp)
         table.insert(_G.ABGP_Data[self.Phases.p3].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = GetServerTime(),
+            [self.ItemHistoryIndex.DATE] = addTime,
             [self.ItemHistoryIndex.PLAYER] = player,
             [self.ItemHistoryIndex.GP] = p3gp,
             [self.ItemHistoryIndex.NOTES] = "New active raider",
