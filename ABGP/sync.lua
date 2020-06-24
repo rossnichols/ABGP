@@ -286,14 +286,13 @@ function ABGP:SyncPhaseHistory(phase, target, token, now, remote)
     local baseline = GetBaseline(phase);
     local canSendHistory = privileged and baseline ~= invalidBaseline;
     local commData = {
-        version = self:GetVersion(),
         phase = phase,
         token = token or GetServerTime(),
         baseline = baseline,
         archivedCount = 0,
         now = now,
-        notPrivileged = not privileged,
-        remote = remote, -- for testing
+        notPrivileged = (not privileged) or nil,
+        remote = remote or nil, -- for testing
     };
 
     local syncCount = 0;
@@ -329,12 +328,12 @@ function ABGP:SyncPhaseHistory(phase, target, token, now, remote)
     end
 end
 
-function ABGP:HistoryOnSync(data, distribution, sender)
+function ABGP:HistoryOnSync(data, distribution, sender, version)
+    if self:GetCompareVersion() ~= version then return; end
     self:RebuildSyncData(data);
     if syncTesting then testUseLocalData = data.remote; end
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if sender == UnitName("player") and not syncTesting then return; end
-    if self:GetCompareVersion() ~= data.version then return; end
 
     requestedHistoryEntries[data.phase] = requestedHistoryEntries[data.phase] or {};
     if data.token ~= requestedHistoryTokens[data.phase] then
@@ -474,7 +473,8 @@ function ABGP:HistoryOnSync(data, distribution, sender)
     end
 end
 
-function ABGP:HistoryOnReplaceInit(data, distribution, sender)
+function ABGP:HistoryOnReplaceInit(data, distribution, sender, version)
+    if self:GetCompareVersion() ~= version then return; end
     if syncTesting then testUseLocalData = data.remote; end
     if not SenderIsPrivileged(sender) then return; end
 
@@ -495,11 +495,12 @@ function ABGP:HistoryOnReplaceInit(data, distribution, sender)
     end
 end
 
-function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
-    -- The sender is asking for our entire history.
+function ABGP:HistoryOnReplaceRequest(data, distribution, sender, version)
+    if self:GetCompareVersion() ~= version then return; end
     if syncTesting then testUseLocalData = data.remote; end
     if self:GetDebugOpt("AvoidHistorySend") then return; end
 
+    -- The sender is asking for our entire history.
     if data.token then
         -- The sender is asking in response to our own sync. Send to GUILD,
         -- so that anyone else who needs this baseline can get it.
@@ -512,7 +513,6 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
                 phase = data.phase,
                 baseline = GetBaseline(data.phase),
                 history = self:PrepareHistory(GetHistory(data.phase)),
-                version = self:GetVersion(),
                 remote = not data.remote, -- for testing
             }, "WHISPER", UnitName("player"));
         else
@@ -520,7 +520,6 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
                 phase = data.phase,
                 baseline = GetBaseline(data.phase),
                 history = self:PrepareHistory(GetHistory(data.phase)),
-                version = self:GetVersion(),
                 remote = not data.remote, -- for testing
             }, "GUILD");
         end
@@ -534,7 +533,6 @@ function ABGP:HistoryOnReplaceRequest(data, distribution, sender)
             baseline = GetBaseline(data.phase),
             history = self:PrepareHistory(GetHistory(data.phase)),
             requested = true,
-            version = self:GetVersion(),
             remote = not data.remote, -- for testing
         }, "WHISPER", sender);
     end
@@ -554,12 +552,12 @@ local function ApplyHistoryReplacement(phase, sender, baseline, history)
     end
 end
 
-function ABGP:HistoryOnReplace(data, distribution, sender)
+function ABGP:HistoryOnReplace(data, distribution, sender, version)
+    if self:GetCompareVersion() ~= version then return; end
     if syncTesting then testUseLocalData = data.remote; end
     if not SenderIsPrivileged(sender) then return; end
     if self:Get("outsider") or not self:Get("syncEnabled") then return; end
     if sender == UnitName("player") and not syncTesting then return; end
-    if self:GetCompareVersion() ~= data.version then return; end
 
     -- Only accept newer baselines.
     local baseline = GetBaseline(data.phase);
@@ -593,7 +591,8 @@ local function RequestFullHistory(data)
         ABGP.PhaseNames[data.phase], ABGP:ColorizeName(data.sender));
 end
 
-function ABGP:HistoryOnMerge(data, distribution, sender)
+function ABGP:HistoryOnMerge(data, distribution, sender, version)
+    if self:GetCompareVersion() ~= version then return; end
     if syncTesting then testUseLocalData = data.remote; end
     local baseline = GetBaseline(data.phase);
     if data.baseline ~= baseline then return; end
@@ -705,7 +704,6 @@ function ABGP:CommitHistory(phase)
             phase = phase,
             baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
             history = self:PrepareHistory(_G.ABGP_Data[phase].gpHistory),
-            version = self:GetVersion(),
         }, "GUILD");
     end
 end
@@ -737,6 +735,9 @@ function ABGP:PrepareSyncData(data)
         end
     end
 
+    prepared[syncDataMapReversed.token] = prepared[syncDataMapReversed.now] - prepared[syncDataMapReversed.token];
+    prepared[syncDataMapReversed.baseline] = prepared[syncDataMapReversed.now] - prepared[syncDataMapReversed.baseline];
+
     return prepared;
 end
 
@@ -748,6 +749,9 @@ function ABGP:RebuildSyncData(data)
             data[i] = nil;
         end
     end
+
+    data.token = data.now - data.token;
+    data.baseline = data.now - data.baseline;
 end
 
 function ABGP:PrepareHistory(history)

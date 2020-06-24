@@ -80,66 +80,66 @@ function ABGP:OnEnable()
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
 
-    self:SetCallback(self.CommTypes.ITEM_REQUEST.name, function(self, event, data, distribution, sender)
-        self:DistribOnItemRequest(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_REQUEST.name, function(self, event, data, distribution, sender, version)
+        self:DistribOnItemRequest(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_PASS.name, function(self, event, data, distribution, sender)
-        self:DistribOnItemPass(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_PASS.name, function(self, event, data, distribution, sender, version)
+        self:DistribOnItemPass(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_REQUESTCOUNT.name, function(self, event, data, distribution, sender)
-        self:RequestOnItemRequestCount(data, distribution, sender);
-        self:AnnounceOnItemRequestCount(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_REQUESTCOUNT.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemRequestCount(data, distribution, sender, version);
+        self:AnnounceOnItemRequestCount(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_COUNT.name, function(self, event, data, distribution, sender)
-        self:RequestOnItemCount(data, distribution, sender);
-        self:AnnounceOnItemCount(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_COUNT.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemCount(data, distribution, sender, version);
+        self:AnnounceOnItemCount(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_DIST_OPENED.name, function(self, event, data, distribution, sender)
-        self:RequestOnDistOpened(data, distribution, sender);
-        self:DistribOnDistOpened(data, distribution, sender);
-        self:AnnounceOnDistOpened(data, distribution, sender);
-        self:MinimapOnDistOpened(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_DIST_OPENED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnDistOpened(data, distribution, sender, version);
+        self:DistribOnDistOpened(data, distribution, sender, version);
+        self:AnnounceOnDistOpened(data, distribution, sender, version);
+        self:MinimapOnDistOpened(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_DIST_CLOSED.name, function(self, event, data, distribution, sender)
-        self:RequestOnDistClosed(data, distribution, sender);
-        self:AnnounceOnDistClosed(data, distribution, sender);
-        self:MinimapOnDistClosed(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_DIST_CLOSED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnDistClosed(data, distribution, sender, version);
+        self:AnnounceOnDistClosed(data, distribution, sender, version);
+        self:MinimapOnDistClosed(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_AWARDED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.ITEM_AWARDED.name, function(self, event, data, distribution, sender, version)
         if sender ~= UnitName("player") then
-            self:HistoryOnItemAwarded(data, distribution, sender);
-            self:PriorityOnItemAwarded(data, distribution, sender);
+            self:HistoryOnItemAwarded(data, distribution, sender, version);
+            self:PriorityOnItemAwarded(data, distribution, sender, version);
         end
 
-        self:RequestOnItemAwarded(data, distribution, sender);
-        self:AnnounceOnItemAwarded(data, distribution, sender);
+        self:RequestOnItemAwarded(data, distribution, sender, version);
+        self:AnnounceOnItemAwarded(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_TRASHED.name, function(self, event, data, distribution, sender)
-        self:RequestOnItemTrashed(data, distribution, sender);
-        self:AnnounceOnItemTrashed(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_TRASHED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemTrashed(data, distribution, sender, version);
+        self:AnnounceOnItemTrashed(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.STATE_SYNC.name, function(self, event, data, distribution, sender)
-        self:DistribOnStateSync(data, distribution, sender);
-        self:ItemOnStateSync(data, distribution, sender);
+    self:SetCallback(self.CommTypes.STATE_SYNC.name, function(self, event, data, distribution, sender, version)
+        self:DistribOnStateSync(data, distribution, sender, version);
+        self:ItemOnStateSync(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.VERSION_REQUEST.name, function(self, event, data, distribution, sender)
-        self:OnVersionRequest(data, distribution, sender);
+    self:SetCallback(self.CommTypes.VERSION_REQUEST.name, function(self, event, data, distribution, sender, version)
+        self:OnVersionRequest(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.VERSION_RESPONSE.name, function(self, event, data, distribution, sender)
-        self:OnVersionResponse(data, distribution, sender);
+    self:SetCallback(self.CommTypes.VERSION_RESPONSE.name, function(self, event, data, distribution, sender, version)
+        self:OnVersionResponse(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.GUILD_NOTES_UPDATED.name, function(self, event, data, distribution, sender)
+    self:SetCallback(self.CommTypes.GUILD_NOTES_UPDATED.name, function(self, event, data, distribution, sender, version)
         if self:Get("outsider") then
             self:OutsiderOnOfficerNotesUpdated();
         elseif IsInGuild() then
@@ -148,49 +148,49 @@ function ABGP:OnEnable()
         end
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_ROLLED.name, function(self, event, data, distribution, sender)
-        self:RequestOnItemRolled(data, distribution, sender);
-        self:AnnounceOnItemRolled(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_ROLLED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemRolled(data, distribution, sender, version);
+        self:AnnounceOnItemRolled(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.REQUEST_PRIORITY_SYNC.name, function(self, event, data, distribution, sender)
-        self:OnPrioritySyncRequested(data, distribution, sender);
+    self:SetCallback(self.CommTypes.REQUEST_PRIORITY_SYNC.name, function(self, event, data, distribution, sender, version)
+        self:OnPrioritySyncRequested(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.PRIORITY_SYNC.name, function(self, event, data, distribution, sender)
-        self:OnPrioritySync(data, distribution, sender);
+    self:SetCallback(self.CommTypes.PRIORITY_SYNC.name, function(self, event, data, distribution, sender, version)
+        self:OnPrioritySync(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.BOSS_LOOT.name, function(self, event, data, distribution, sender)
-        self:AnnounceOnBossLoot(data, distribution, sender);
+    self:SetCallback(self.CommTypes.BOSS_LOOT.name, function(self, event, data, distribution, sender, version)
+        self:AnnounceOnBossLoot(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.REQUEST_ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender)
-        self:ItemOnRequestDataSync(data, distribution, sender);
+    self:SetCallback(self.CommTypes.REQUEST_ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender, version)
+        self:ItemOnRequestDataSync(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender)
-        self:ItemOnDataSync(data, distribution, sender);
+    self:SetCallback(self.CommTypes.ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender, version)
+        self:ItemOnDataSync(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.HISTORY_SYNC.name, function(self, event, data, distribution, sender)
-        self:HistoryOnSync(data, distribution, sender);
+    self:SetCallback(self.CommTypes.HISTORY_SYNC.name, function(self, event, data, distribution, sender, version)
+        self:HistoryOnSync(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.HISTORY_REPLACE_INITIATION.name, function(self, event, data, distribution, sender)
-        self:HistoryOnReplaceInit(data, distribution, sender);
+    self:SetCallback(self.CommTypes.HISTORY_REPLACE_INITIATION.name, function(self, event, data, distribution, sender, version)
+        self:HistoryOnReplaceInit(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.HISTORY_MERGE.name, function(self, event, data, distribution, sender)
-        self:HistoryOnMerge(data, distribution, sender);
+    self:SetCallback(self.CommTypes.HISTORY_MERGE.name, function(self, event, data, distribution, sender, version)
+        self:HistoryOnMerge(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.HISTORY_REPLACE.name, function(self, event, data, distribution, sender)
-        self:HistoryOnReplace(data, distribution, sender);
+    self:SetCallback(self.CommTypes.HISTORY_REPLACE.name, function(self, event, data, distribution, sender, version)
+        self:HistoryOnReplace(data, distribution, sender, version);
     end, self);
 
-    self:SetCallback(self.CommTypes.HISTORY_REPLACE_REQUEST.name, function(self, event, data, distribution, sender)
-        self:HistoryOnReplaceRequest(data, distribution, sender);
+    self:SetCallback(self.CommTypes.HISTORY_REPLACE_REQUEST.name, function(self, event, data, distribution, sender, version)
+        self:HistoryOnReplaceRequest(data, distribution, sender, version);
     end, self);
 
     self:SetCallback(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)

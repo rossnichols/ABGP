@@ -60,39 +60,39 @@ end
 
 -- The prefix can be revved to create a backwards-incompatible version.
 function ABGP:GetCommPrefix()
-    return "ABGP2";
+    return "ABGP3";
 end
 
 ABGP.CommTypes = {
-    ITEM_REQUEST = { name = "ITEM_REQUEST", priority = "INSTANT" },
+    ITEM_REQUEST = { name = "ITEM_REQUEST", id = 1, priority = "INSTANT" },
     -- itemLink: item link string
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings or nil
 
-    ITEM_PASS = { name = "ITEM_PASS", priority = "INSTANT" },
+    ITEM_PASS = { name = "ITEM_PASS", id = 2, priority = "INSTANT" },
     -- itemLink: item link string
 
-    ITEM_REQUESTCOUNT = { name = "ITEM_REQUESTCOUNT", priority = "ALERT" },
-    -- itemLink: item link string
-    -- count: number
-
-    ITEM_COUNT = { name = "ITEM_COUNT", priority = "ALERT" },
+    ITEM_REQUESTCOUNT = { name = "ITEM_REQUESTCOUNT", id = 3, priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
-    ITEM_DIST_OPENED = { name = "ITEM_DIST_OPENED", priority = "ALERT" },
+    ITEM_COUNT = { name = "ITEM_COUNT", id = 4, priority = "ALERT" },
+    -- itemLink: item link string
+    -- count: number
+
+    ITEM_DIST_OPENED = { name = "ITEM_DIST_OPENED", id = 5, priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
     -- requestType: string from ABGP.RequestTypes
     -- slots: array of strings
     -- count: number
 
-    ITEM_DIST_CLOSED = { name = "ITEM_DIST_CLOSED", priority = "ALERT" },
+    ITEM_DIST_CLOSED = { name = "ITEM_DIST_CLOSED", id = 6, priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
 
-    ITEM_AWARDED = { name = "ITEM_AWARDED", priority = "ALERT" },
+    ITEM_AWARDED = { name = "ITEM_AWARDED", id = 7, priority = "ALERT" },
     -- itemLink: item link string
     -- player: string
     -- cost: number
@@ -107,40 +107,40 @@ ABGP.CommTypes = {
     -- awarded: number
     -- oldHistoryId: string
 
-    ITEM_TRASHED = { name = "ITEM_TRASHED", priority = "ALERT" },
+    ITEM_TRASHED = { name = "ITEM_TRASHED", id = 8, priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
 
-    STATE_SYNC = { name = "STATE_SYNC", priority = "ALERT" },
+    STATE_SYNC = { name = "STATE_SYNC", id = 9, priority = "ALERT" },
     -- token: unique token for the message
     -- itemDataTime: number
 
-    ITEM_ROLLED = { name = "ITEM_ROLLED", priority = "ALERT" },
+    ITEM_ROLLED = { name = "ITEM_ROLLED", id = 10, priority = "ALERT" },
     -- itemLink: item link string
     -- roll: number
 
-    GUILD_NOTES_UPDATED = { name = "GUILD_NOTES_UPDATED", priority = "NORMAL" },
+    GUILD_NOTES_UPDATED = { name = "GUILD_NOTES_UPDATED", id = 11, priority = "NORMAL" },
     -- no payload
 
-    REQUEST_PRIORITY_SYNC = { name = "REQUEST_PRIORITY_SYNC", priority = "NORMAL" },
+    REQUEST_PRIORITY_SYNC = { name = "REQUEST_PRIORITY_SYNC", id = 12, priority = "NORMAL" },
     -- no payload
 
-    PRIORITY_SYNC = { name = "PRIORITY_SYNC", priority = "BULK" },
+    PRIORITY_SYNC = { name = "PRIORITY_SYNC", id = 13, priority = "BULK" },
     -- priorities: table
 
-    BOSS_LOOT = { name = "BOSS_LOOT", priority = "ALERT" },
+    BOSS_LOOT = { name = "BOSS_LOOT", id = 14, priority = "ALERT" },
     -- source: string
     -- items: table
 
-    REQUEST_ITEM_DATA_SYNC = { name = "REQUEST_ITEM_DATA_SYNC", priority = "NORMAL" },
+    REQUEST_ITEM_DATA_SYNC = { name = "REQUEST_ITEM_DATA_SYNC", id = 15, priority = "NORMAL" },
     -- token: value from STATE_SYNC
 
-    ITEM_DATA_SYNC = { name = "ITEM_DATA_SYNC", priority = "BULK" },
+    ITEM_DATA_SYNC = { name = "ITEM_DATA_SYNC", id = 16, priority = "BULK" },
     -- itemDataTime: number
     -- itemValues: table
 
-    HISTORY_SYNC = { name = "HISTORY_SYNC", priority = "BULK" },
+    HISTORY_SYNC = { name = "HISTORY_SYNC", id = 17, priority = "BULK" },
     -- version: from ABGP:GetVersion()
     -- phase: from ABGP.Phases
     -- token: unique token for the message
@@ -150,11 +150,11 @@ ABGP.CommTypes = {
     -- notPrivileged: bool
     -- ids: table OR hash: number
 
-    HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", priority = "NORMAL" },
+    HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", id = 18, priority = "NORMAL" },
     -- phase: from ABGP.Phases
     -- token: from HISTORY_SYNC
 
-    HISTORY_MERGE = { name = "HISTORY_MERGE", priority = "BULK" },
+    HISTORY_MERGE = { name = "HISTORY_MERGE", id = 19, priority = "BULK" },
     -- phase: from ABGP.Phases
     -- baseline: number
     -- now: number
@@ -162,22 +162,27 @@ ABGP.CommTypes = {
     -- requested: table
     -- now: number
 
-    HISTORY_REPLACE = { name = "HISTORY_REPLACE", priority = "BULK" },
+    HISTORY_REPLACE = { name = "HISTORY_REPLACE", id = 20, priority = "BULK" },
     -- phase: from ABGP.Phases
     -- baseline: number
     -- history: table
     -- requested: bool
 
-    HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", priority = "NORMAL" },
+    HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", id = 21, priority = "NORMAL" },
     -- phase: from ABGP.Phases
     -- token: from HISTORY_SYNC
 
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },
     -- reset: bool or nil
+    -- version: from ABGP:GetVersion()
     VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "NORMAL", legacy = true },
-    -- no payload
+    -- version: from ABGP:GetVersion()
 };
+local commIdMap = {};
+for _, typ in pairs(ABGP.CommTypes) do
+    if typ.id then commIdMap[typ.id] = typ.name; end
+end
 
 ABGP.InternalEvents = {
     ACTIVE_PLAYERS_REFRESHED = "ACTIVE_PLAYERS_REFRESHED",
@@ -200,14 +205,15 @@ function ABGP:CommCallback(sent, total, logInCallback)
     end
 end
 
-function ABGP:Serialize(data, legacy)
+function ABGP:Serialize(typ, data, legacy)
     if legacy then
+        data.type = typ.name;
+        _G.assert(data.version);
         local serialized = AceSerializer:Serialize(data);
         local compressed = LibCompress:Compress(serialized);
         return (AddonEncodeTable:Encode(compressed)), "ABGP";
     else
-        local serialized = LibSerialize:Serialize(data);
-        -- local serialized = AceSerializer:Serialize(data);
+        local serialized = LibSerialize:Serialize(typ.id, self:GetVersion(), data);
         local compressed = LibDeflate:CompressDeflate(serialized);
 
         if #compressed > #serialized + 10 then
@@ -218,7 +224,7 @@ function ABGP:Serialize(data, legacy)
         end
 
         if self:GetDebugOpt() then
-            local success, dataTest = LibSerialize:Deserialize(serialized);
+            local success, _, _, dataTest = LibSerialize:Deserialize(serialized);
             if not success or type(dataTest) ~= "table" or not self.tCompare(data, dataTest) then
                 _G.error("Serialization failed!");
             end
@@ -236,7 +242,13 @@ function ABGP:Deserialize(payload, legacy)
         local serialized = LibCompress:Decompress(compressed);
         if not serialized then return false; end
 
-        return AceSerializer:Deserialize(serialized);
+        local typ, version;
+        local success, data = AceSerializer:Deserialize(serialized);
+        if success then
+            typ = data.type;
+            version = data.version;
+        end
+        return success, typ, version, data;
     else
         local compressed = LibDeflate:DecodeForWoWAddonChannel(payload);
         if not compressed then return false; end
@@ -244,19 +256,18 @@ function ABGP:Deserialize(payload, legacy)
         local serialized = LibDeflate:DecompressDeflate(compressed);
         if not serialized then return false; end
 
-        return LibSerialize:Deserialize(serialized);
-        -- return AceSerializer:Deserialize(serialized);
+        local typ;
+        local success, id, version, data = LibSerialize:Deserialize(serialized);
+        if success then
+            typ = commIdMap[id];
+        end
+        return success, typ, version, data;
     end
 end
 
-function ABGP:SendComm(type, data, distribution, target)
-    _G.assert(data.type == nil);
-    data.type = type.name;
-
-    local priority = data.commPriority or type.priority;
-    data.commPriority = nil;
-
-    local payload, prefix = self:Serialize(data, type.legacy);
+function ABGP:SendComm(typ, data, distribution, target)
+    local priority = typ.priority;
+    local payload, prefix = self:Serialize(typ, data, typ.legacy);
 
     if distribution == "BROADCAST" then
         distribution, target = GetBroadcastChannel();
@@ -271,7 +282,7 @@ function ABGP:SendComm(type, data, distribution, target)
     if self:GetDebugOpt("Verbose") then
         self:LogVerbose("COMM-SEND >>>");
         self:LogVerbose("%s pri=%s dist=%s prefix=%s len=%d",
-            type.name,
+            typ.name,
             priority,
             target and ("%s:%s"):format(distribution, target) or distribution,
             prefix,
@@ -280,10 +291,10 @@ function ABGP:SendComm(type, data, distribution, target)
             if k ~= "type" then self:LogVerbose("%s: %s", k, tostring(v)); end
         end
         self:LogVerbose("<<< COMM");
-    elseif not type.name:find("VERSION") and self:GetDebugOpt("DebugComms") then
+    elseif not typ.name:find("VERSION") and self:GetDebugOpt("DebugComms") then
         logInCallback = true;
         self:LogDebug("COMM-SEND: %s pri=%s dist=%s prefix=%s len=%d",
-            type.name,
+            typ.name,
             priority,
             target and ("%s:%s"):format(distribution, target) or distribution,
             prefix,
@@ -327,13 +338,12 @@ function ABGP:SendComm(type, data, distribution, target)
         self:SendCommMessage(prefix, payload, distribution, target, priority, commCallback, self);
     end
 
-    data.type = nil;
     return synchronousCheck;
 end
 
 function ABGP:OnCommReceived(prefix, payload, distribution, sender)
     local legacy = (prefix == "ABGP");
-    local success, data = self:Deserialize(payload, legacy);
+    local success, typ, version, data = self:Deserialize(payload, legacy);
     if not success or type(data) ~= "table" then
         self:Error("Received an invalid addon comm from %s!", self:ColorizeName(sender));
         return;
@@ -341,16 +351,16 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
 
     if self:GetDebugOpt("Verbose") then
         self:LogVerbose("COMM-RECV >>>");
-        self:LogVerbose("%s dist=%s sender=%s prefix=%s len=%s", data.type, distribution, sender, prefix, payload:len());
+        self:LogVerbose("%s dist=%s sender=%s prefix=%s len=%s", typ, distribution, sender, prefix, payload:len());
         for k, v in pairs(data) do
-            if k ~= "type" then self:LogVerbose("%s: %s", k, tostring(v)); end
+            self:LogVerbose("%s: %s", k, tostring(v));
         end
         self:LogVerbose("<<< COMM");
-    elseif sender ~= UnitName("player") and not data.type:find("VERSION") and self:GetDebugOpt("DebugComms") then
-        self:LogDebug("COMM-RECV: %s dist=%s sender=%s prefix=%s len=%s", data.type, distribution, sender, prefix, payload:len());
+    elseif sender ~= UnitName("player") and not typ:find("VERSION") and self:GetDebugOpt("DebugComms") then
+        self:LogDebug("COMM-RECV: %s dist=%s sender=%s prefix=%s len=%s", typ, distribution, sender, prefix, payload:len());
     end
 
-    self:Fire(data.type, data, distribution, sender);
+    self:Fire(typ, data, distribution, sender, version);
 end
 
 local function GetSlot()

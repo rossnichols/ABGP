@@ -99,7 +99,6 @@ function ABGP:OnVersionRequest(data, distribution, sender)
         -- Reset the announced version if the sender requested so that the message will print again.
         showedNagPopup = false;
         self:SendComm(self.CommTypes.VERSION_RESPONSE, {
-            commPriority = "INSTANT",
             version = self:GetVersion()
         }, "WHISPER", sender);
     elseif self:VersionIsNewer(self:GetCompareVersion(), data.version) then
