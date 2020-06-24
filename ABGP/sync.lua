@@ -15,6 +15,8 @@ local type = type;
 local requestedHistoryTokens = {};
 local requestedHistoryEntries = {};
 local replaceRequestTokens = {};
+local broadcastTokens = {};
+local broadcastEntries = {};
 local warnedOutOfDate = {};
 local invalidBaseline = -1;
 local syncThreshold = 10 * 24 * 60 * 60;
@@ -320,6 +322,10 @@ function ABGP:SyncPhaseHistory(phase, target, token, now, remote)
     else
         self:LogDebug("Sending %s history sync: %d synced (%s), %d archived",
             self.PhaseNames[phase], syncCount, commData.hash and "hash" or "ids", commData.archivedCount);
+
+        broadcastTokens[phase] = commData.token;
+        broadcastEntries[phase] = broadcastEntries[phase] or {};
+        table.wipe(broadcastEntries[phase]);
         if syncTesting then
             self:SendComm(self.CommTypes.HISTORY_SYNC, prepared, "WHISPER", UnitName("player"));
         else
@@ -467,6 +473,7 @@ function ABGP:HistoryOnSync(data, distribution, sender, version)
                 merge = self:PrepareHistory(merge),
                 requested = self:PrepareIds(data.ids, now),
                 now = now,
+                token = data.token,
                 remote = not data.remote, -- for testing
             }, "WHISPER", sender);
         end
@@ -615,15 +622,55 @@ function ABGP:HistoryOnMerge(data, distribution, sender, version)
             end
         end
         if sendCount > 0 then
-            self:LogDebug("Sending %d history entries to %s [%s]",
-                sendCount, self:ColorizeName(sender), self.PhaseNames[data.phase]);
-            self:SendComm(self.CommTypes.HISTORY_MERGE, {
-                phase = data.phase,
-                baseline = baseline,
-                merge = self:PrepareHistory(merge),
-                now = now,
-                remote = not data.remote, -- for testing
-            }, "WHISPER", sender);
+            if data.token == broadcastTokens[data.phase] then
+                -- The sender is requesting entries due to our own sync broadcast.
+                -- Since there may be multiple people that all need these entries,
+                -- broadcast them instead of directly sending them. Keep track of
+                -- the broadcasted entries so we only send them once.
+                local broadcast = broadcastEntries[data.phase];
+                for id in pairs(merge) do
+                    if broadcast[id] then
+                        merge[id] = nil;
+                        sendCount = sendCount - 1;
+                    end
+                    broadcast[id] = true;
+                end
+
+                if sendCount > 0 then
+                    self:LogDebug("Sending %d history entries [%s]",
+                        sendCount, self:ColorizeName(sender), self.PhaseNames[data.phase]);
+                    if syncTesting then
+                        self:SendComm(self.CommTypes.HISTORY_MERGE, {
+                            phase = data.phase,
+                            baseline = baseline,
+                            merge = self:PrepareHistory(merge),
+                            now = now,
+                            token = data.token,
+                            remote = not data.remote, -- for testing
+                        }, "WHISPER", UnitName("player"));
+                    else
+                        self:SendComm(self.CommTypes.HISTORY_MERGE, {
+                            phase = data.phase,
+                            baseline = baseline,
+                            merge = self:PrepareHistory(merge),
+                            now = now,
+                            token = data.token,
+                            remote = not data.remote, -- for testing
+                        }, "GUILD");
+                    end
+                end
+            else
+                self:LogDebug("Sending %d history entries to %s [%s]",
+                    sendCount, self:ColorizeName(sender), self.PhaseNames[data.phase]);
+                self:SendComm(self.CommTypes.HISTORY_MERGE, {
+                    phase = data.phase,
+                    baseline = baseline,
+                    merge = self:PrepareHistory(merge),
+                    now = now,
+                    token = data.token,
+                    remote = not data.remote, -- for testing
+                }, "WHISPER", sender);
+            end
         end
     end
 

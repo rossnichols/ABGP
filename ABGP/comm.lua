@@ -161,6 +161,7 @@ ABGP.CommTypes = {
     -- merge: table
     -- requested: table
     -- now: number
+    -- token: from HISTORY_SYNC
 
     HISTORY_REPLACE = { name = "HISTORY_REPLACE", id = 20, priority = "BULK" },
     -- phase: from ABGP.Phases
