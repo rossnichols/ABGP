@@ -871,22 +871,10 @@ function ABGP:ExportRaid(windowRaid)
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
 
     local sortedPlayers = {};
-    local skippedPlayers = {};
     for player in pairs(windowRaid.awards) do
-        local epgp = self:GetActivePlayer(player);
-        if epgp then
-            table.insert(sortedPlayers, player);
-        else
-            table.insert(skippedPlayers, self:ColorizeName(player));
-        end
+        table.insert(sortedPlayers, player);
     end
     table.sort(sortedPlayers);
-
-    local skipped = AceGUI:Create("ABGP_Header");
-    skipped:SetFullWidth(true);
-    skipped:SetHeight(32);
-    skipped:SetWordWrap(true);
-    window:AddChild(skipped);
 
     local tableContainer = AceGUI:Create("SimpleGroup");
     tableContainer:SetFullWidth(true);
@@ -904,25 +892,43 @@ function ABGP:ExportRaid(windowRaid)
         for _, player in ipairs(sortedPlayers) do
             local award = windowRaid.awards[player];
             local epgp = self:GetActivePlayer(player);
-            -- Trials are tracked for attendance but don't earn EP.
-            if award.ep > 0 and epgp.trial then
-                self:AwardPlayerEP(windowRaid, player, -award.ep, awardCategories.TRIAL);
-            end
-            local raidGroup = epgp.epRaidGroup;
-            if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
-                if epgp[phase] then
-                    local breakdown = {};
-                    for _, cat in ipairs(awardCategoriesSorted) do
-                        if award.categories[cat] then
-                            table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
+
+            -- The player will be exported for this phase if:
+            -- a. They are active in this phase, and their raid group gives them EP for this phase, or
+            -- b. The phase matches the raid's phase (but their award will be 0)
+            local ep, info;
+            local exported = false;
+            if epgp and epgp[phase] then
+                local raidGroup = epgp.epRaidGroup;
+                if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
+                    exported = true;
+                    if epgp.trial then
+                        ep = 0;
+                        info = "No EP (trial)";
+                    else
+                        ep = award.ep;
+                        local breakdown = {};
+                        for _, cat in ipairs(awardCategoriesSorted) do
+                            if award.categories[cat] then
+                                table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
+                            end
                         end
+                        info = table.concat(breakdown, ", ");
                     end
-                    text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
-                        (i == 1 and "" or "\n"), award.ep, windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
-                    i = i + 1;
-                else
-                    table.insert(skippedPlayers, self:ColorizeName(player));
                 end
+            end
+            if not exported and windowRaid.phase == phase then
+                exported = true;
+                ep = 0;
+                info = "No EP (non-raider)";
+                self:Notify("%s earned %d EP but was exported as 0 (non-raider in %s).",
+                    self:ColorizeName(player), award.ep, self.PhaseNames[phase]);
+            end
+
+            if exported then
+                text = text .. ("%s%d\t%s\t%s\t%s\t\t%s"):format(
+                    (i == 1 and "" or "\n"), ep, windowRaid.name, player, raidDate, info);
+                i = i + 1;
             end
         end
 
@@ -938,15 +944,6 @@ function ABGP:ExportRaid(windowRaid)
         edit:SetCallback("OnEditFocusGained", function(widget)
             widget:HighlightText();
         end);
-    end
-
-    if #skippedPlayers > 0 then
-        local text = "The following players were skipped due to unknown raid group or missing phase EPGP:\n";
-        text = text .. table.concat(skippedPlayers, ", ");
-        skipped:SetText(text);
-    else
-        skipped:SetHeight(0);
-        window:DoLayout();
     end
 
     window.frame:Raise();
