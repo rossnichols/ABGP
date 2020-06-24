@@ -370,6 +370,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(AB
     button3 = "Pass",
     maxLetters = 255,
     notFocused = true,
+    noCancelOnEscape = true,
     suppressEnterCommit = true,
     Commit = function(text, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, text);
@@ -391,6 +392,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTe
     extraButton = "Pass and unfavorite",
     maxLetters = 255,
     notFocused = true,
+    noCancelOnEscape = true,
     suppressEnterCommit = true,
     Commit = function(text, data)
         ABGP:RequestItem(data.itemLink, ABGP.RequestTypes.MS, text);
