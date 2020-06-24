@@ -327,6 +327,7 @@ function ABGP:SendComm(type, data, distribution, target)
         self:SendCommMessage(prefix, payload, distribution, target, priority, commCallback, self);
     end
 
+    data.type = nil;
     return synchronousCheck;
 end
 
