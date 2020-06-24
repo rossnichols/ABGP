@@ -804,7 +804,7 @@ function ABGP:ShowAddPlayerWindow()
                 end
                 if calcP3 and active[self.Phases.p3] then
                     if active[self.Phases.p3].epRaidGroup == epGroup then
-                        p3epSum = p1epSum + active[self.Phases.p3].ep;
+                        p3epSum = p3epSum + active[self.Phases.p3].ep;
                         p3epCount = p3epCount + 1;
                     end
                     if active[self.Phases.p3].gpRaidGroup == gpGroupP3 then
