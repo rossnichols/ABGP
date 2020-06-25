@@ -688,11 +688,13 @@ function ABGP:HistoryOnMerge(data, distribution, sender, version)
             if mergeCount > 0 then
                 self:Fire(self.InternalEvents.HISTORY_UPDATED);
 
-                self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
-                    mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));
-                local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
-                if upToDate then
-                    self:Notify("You're now up to date!");
+                if self:Get("syncVerbose") then
+                    self:Notify("Received %d item history entries for %s from %s! Breakdown: %s.",
+                        mergeCount, self.PhaseNames[data.phase], self:ColorizeName(sender), self:BreakdownHistory(data.merge));
+                    local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
+                    if upToDate then
+                        self:Notify("You're now up to date!");
+                    end
                 end
             end
         end

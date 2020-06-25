@@ -35,6 +35,7 @@ function ABGP:InitOptions()
             minimapAlert = true,
             promptRaidStart = false,
             syncEnabled = true,
+            syncVerbose = true,
             minimap = {
                 hide = false,
             },
@@ -398,6 +399,15 @@ function ABGP:InitOptions()
                             type = "execute",
                             disabled = function() return not self.db.char.syncEnabled; end,
                             func = function() self:HistoryTriggerRebuild(); end,
+                        },
+                        verbose = {
+                            name = "Verbose",
+                            order = 4,
+                            desc = "When enabled, you'll see messages in your chat frame when you receive new synced entries.",
+                            type = "toggle",
+                            disabled = function() return not self.db.char.syncEnabled; end,
+                            get = function(info) return self.db.char.syncVerbose; end,
+                            set = function(info, v) self.db.char.syncVerbose = v; end,
                         },
                     },
                 },
