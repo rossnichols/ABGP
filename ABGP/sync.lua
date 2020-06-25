@@ -638,7 +638,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender, version)
 
                 if sendCount > 0 then
                     self:LogDebug("Sending %d history entries [%s]",
-                        sendCount, self:ColorizeName(sender), self.PhaseNames[data.phase]);
+                        sendCount, self.PhaseNames[data.phase]);
                     if syncTesting then
                         self:SendComm(self.CommTypes.HISTORY_MERGE, {
                             phase = data.phase,
