@@ -6,6 +6,7 @@ local GetItemInfo = GetItemInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
 local UnitExists = UnitExists;
 local PlaySoundFile = PlaySoundFile;
+local SendSystemMessage = SendSystemMessage;
 local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -275,6 +276,9 @@ function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
     if not activeItems[itemLink] then return; end
 
     if data.player == UnitName("player") then
+        SendSystemMessage("access: PERMISSION DENIED....and...");
+        SendSystemMessage("YOU DIDN'T SAY THE MAGIC WORD!");
+        PlaySoundFile("Interface\\AddOns\\ABGP\\Assets\\beep.ogg", "Master");
         PlaySoundFile("Interface\\AddOns\\ABGP\\Assets\\nedry.ogg", "Master");
         self:Alert("Your request for %s has been |cffff0000rejected|r!", itemLink);
         if data.reason then
@@ -288,6 +292,9 @@ function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
         });
     else
         self:Notify("%s's request for %s has been |cffff0000rejected|r!", self:ColorizeName(data.player), itemLink);
+        if data.reason then
+            self:Notify("Reason: %s", data.reason);
+        end
     end
 end
 

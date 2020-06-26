@@ -1229,33 +1229,42 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
 });
 StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Reject %s's request for %s? You can optionally add a reason below.",
-    button1 = "REJECT",
-    button2 = "Cancel",
+    button1 = "Reject (public)",
+    button2 = "Reject (private)",
+    button3 = "Cancel",
     maxLetters = 200,
     notFocused = true,
+    noCancelOnEscape = true,
     Commit = function(text, data)
-        ABGP:Notify("%s's request for %s has been rejected.", ABGP:ColorizeName(data.player), data.itemLink);
+        ABGP:Notify("%s's request for %s has been rejected (public).", ABGP:ColorizeName(data.player), data.itemLink);
         RemoveRequest(data.player, data.itemLink, true);
 
         if UnitExists(data.player) then
             local reason = text ~= "" and text or nil;
-
-            -- If the requester is running a version before ITEM_REQUEST_REJECTED was added,
-            -- fall back to normal chat channels.
-            if ABGP:VersionIsNewer("6.1.0", data.version) then
-                _G.SendChatMessage(("[ABGP] Your request for %s has been rejected!"):format(data.itemLink), "WHISPER", nil, data.player);
-                if reason then
-                    _G.SendChatMessage(("[ABGP] Reason: %s"):format(reason), "WHISPER", nil, data.player);
-                end
-                local dist, target = ABGP:GetBroadcastChannel();
-                _G.SendChatMessage(("[ABGP] %s's request for %s has been rejected!"):format(data.player, data.itemLink), dist, nil, target);
-            end
 
             ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_REJECTED, {
                 itemLink = data.itemLink,
                 reason = reason,
                 player = data.player,
             }, "BROADCAST");
+        end
+    end,
+    OnCancel = function(self, data, reason)
+        if not self then return; end
+        if reason == "override" then return; end
+        local text = self.editBox:GetText();
+
+        ABGP:Notify("%s's request for %s has been rejected (private).", ABGP:ColorizeName(data.player), data.itemLink);
+        RemoveRequest(data.player, data.itemLink, true);
+
+        if UnitExists(data.player) then
+            local reason = text ~= "" and text or nil;
+
+            ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_REJECTED, {
+                itemLink = data.itemLink,
+                reason = reason,
+                player = data.player,
+            }, "WHISPER", data.player);
         end
     end,
 });
