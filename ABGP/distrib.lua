@@ -1238,24 +1238,24 @@ StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.Stati
         RemoveRequest(data.player, data.itemLink, true);
 
         if UnitExists(data.player) then
+            local reason = text ~= "" and text or nil;
+
             -- If the requester is running a version before ITEM_REQUEST_REJECTED was added,
             -- fall back to normal chat channels.
-            local reason = text ~= "" and text or nil;
             if ABGP:VersionIsNewer("6.1.0", data.version) then
-            -- if ABGP:VersionIsNewer("6.0.3", data.version) then
                 _G.SendChatMessage(("[ABGP] Your request for %s has been rejected!"):format(data.itemLink), "WHISPER", nil, data.player);
                 if reason then
                     _G.SendChatMessage(("[ABGP] Reason: %s"):format(reason), "WHISPER", nil, data.player);
                 end
                 local dist, target = ABGP:GetBroadcastChannel();
                 _G.SendChatMessage(("[ABGP] %s's request for %s has been rejected!"):format(data.player, data.itemLink), dist, nil, target);
-            else
-                ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_REJECTED, {
-                    itemLink = data.itemLink,
-                    reason = reason,
-                    player = data.player,
-                }, "BROADCAST");
             end
+
+            ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_REJECTED, {
+                itemLink = data.itemLink,
+                reason = reason,
+                player = data.player,
+            }, "BROADCAST");
         end
     end,
 });
