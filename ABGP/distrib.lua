@@ -175,9 +175,9 @@ local function RebuildUI()
                         notCheckable = true
                     },
                     {
-                        text = "DENY",
+                        text = "REJECT",
                         func = function(self, request)
-                            _G.StaticPopup_Show("ABGP_CONFIRM_DENY", request.player, request.itemLink, request);
+                            _G.StaticPopup_Show("ABGP_CONFIRM_REJECT", request.player, request.itemLink, request);
                         end,
                         arg1 = elt.data,
                         notCheckable = true
@@ -671,7 +671,7 @@ local function RepopulateRequests()
     return needsUpdate;
 end
 
-function ABGP:DistribOnItemRequest(data, distribution, sender)
+function ABGP:DistribOnItemRequest(data, distribution, sender, version)
     local itemLink = data.itemLink;
     local window = activeDistributionWindow;
     if not window then return; end
@@ -690,7 +690,8 @@ function ABGP:DistribOnItemRequest(data, distribution, sender)
         player = sender,
         equipped = data.equipped,
         requestType = data.requestType,
-        notes = data.notes
+        notes = data.notes,
+        version = version
     };
     PopulateRequest(request, activeItems[itemLink].data.value);
 
@@ -818,6 +819,7 @@ function ABGP:ShowDistrib(itemLink)
                 "|cffff8000|Hitem:19019|h[Thunderfury, Blessed Blade of the Windseeker]|h|r",
                 "|cffff8000|Hitem:17182|h[Sulfuras, Hand of Ragnaros]|h|r"
             },
+            version = self:GetVersion(),
         };
         for i = 1, 9 do
             local entry = {};
@@ -1225,18 +1227,31 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
         DistributeItem(data);
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_DENY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Deny %s's request for %s?",
-    button1 = "DENY",
+StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+    text = "Reject %s's request for %s?",
+    button1 = "REJECT",
     button2 = "Cancel",
-    maxLetters = 255,
+    maxLetters = 240,
     notFocused = true,
     Commit = function(text, data)
-        ABGP:Notify("%s's request for %s has been DENIED.", ABGP:ColorizeName(data.player), data.itemLink);
+        ABGP:Notify("%s's request for %s has been rejected.", ABGP:ColorizeName(data.player), data.itemLink);
         RemoveRequest(data.player, data.itemLink, true);
-        ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_DENIED, {
-            itemLink = data.itemLink,
-            reason = text ~= "" and text or nil,
-        }, "WHISPER", data.player);
+
+        if UnitExists(data.player) then
+            -- If the requester is running a version before ITEM_REQUEST_REJECTED was added,
+            -- whisper them their rejection instead.
+            local reason = text ~= "" and text or nil;
+            if ABGP:VersionIsNewer("6.0.3", data.version) then
+                _G.SendChatMessage(("[ABGP] Your request for %s has been rejected%s"):format(data.itemLink, reason and ":" or "."), "WHISPER", nil, data.player);
+                if reason then
+                    _G.SendChatMessage(("[ABGP] %s."):format(reason), "WHISPER", nil, data.player);
+                end
+            else
+                ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_REJECTED, {
+                    itemLink = data.itemLink,
+                    reason = reason,
+                }, "WHISPER", data.player);
+            end
+        end
     end,
 });

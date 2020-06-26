@@ -63,6 +63,7 @@ function ABGP:GetCommPrefix()
     return "ABGP3";
 end
 
+-- Highest ID: 22
 ABGP.CommTypes = {
     ITEM_REQUEST = { name = "ITEM_REQUEST", id = 1, priority = "INSTANT" },
     -- itemLink: item link string
@@ -111,6 +112,10 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
+
+    ITEM_REQUEST_REJECTED = { name = "ITEM_REQUEST_REJECTED", id = 22, priority = "ALERT" },
+    -- itemLink: string
+    -- reason: string or nil
 
     STATE_SYNC = { name = "STATE_SYNC", id = 9, priority = "ALERT" },
     -- token: unique token for the message
@@ -172,10 +177,6 @@ ABGP.CommTypes = {
     HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", id = 21, priority = "NORMAL" },
     -- phase: from ABGP.Phases
     -- token: from HISTORY_SYNC
-
-    ITEM_REQUEST_DENIED = { name = "ITEM_REQUEST_DENIED", id = 22, priority = "ALERT" },
-    -- itemLink: string
-    -- reason: string or nil
 
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },

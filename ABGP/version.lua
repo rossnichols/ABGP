@@ -6,7 +6,6 @@ local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
 local UnitIsConnected = UnitIsConnected;
-local SendChatMessage = SendChatMessage;
 local GetAddOnMetadata = GetAddOnMetadata;
 local tonumber = tonumber;
 
@@ -199,15 +198,15 @@ function ABGP:VersionCheckCallback()
                 if versionCmp then
                     if self:VersionIsNewer(version, versionCmp, true) then
                         self:Notify("%s running an outdated version (%s)!", self:ColorizeName(player), ABGP:ColorizeText(versionCmp));
-                        SendChatMessage(
-                            ("You don't have the latest ABGP version installed! Please update it from Curse/Twitch so you can request loot. The latest version is %s, you have %s."):format(version, versionCmp),
+                        _G.SendChatMessage(
+                            ("[ABGP] You don't have the latest ABGP version installed! Please update it from Curse/Twitch so you can request loot. The latest version is %s, you have %s."):format(version, versionCmp),
                             "WHISPER", nil, player);
                         allUpToDate = false;
                     end
                 else
                     self:Notify("%s is missing the addon!", self:ColorizeName(player));
-                    SendChatMessage(
-                        "You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.",
+                    _G.SendChatMessage(
+                        "[ABGP] You don't have the ABGP addon installed! Please install it from Curse/Twitch so you can request loot.",
                         "WHISPER", nil, player);
                     allUpToDate = false;
                 end

@@ -126,6 +126,10 @@ function ABGP:OnEnable()
         self:AnnounceOnItemTrashed(data, distribution, sender, version);
     end, self);
 
+    self:SetCallback(self.CommTypes.ITEM_REQUEST_REJECTED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemRequestRejected(data, distribution, sender, version);
+    end, self);
+
     self:SetCallback(self.CommTypes.STATE_SYNC.name, function(self, event, data, distribution, sender, version)
         self:DistribOnStateSync(data, distribution, sender, version);
         self:ItemOnStateSync(data, distribution, sender, version);

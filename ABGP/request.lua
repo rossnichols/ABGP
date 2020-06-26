@@ -269,6 +269,24 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
     self:Notify("%s%s will be disenchanted%s.", itemLink, multiple, info);
 end
 
+function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
+    local itemLink = data.itemLink;
+
+    if activeItems[itemLink] then
+        self:Alert("Your request for %s has been rejected!", itemLink);
+        self:Notify("Your request for %s has been rejected%s", itemLink, data.reason and ":" or ".");
+        if data.reason then
+            self:Notify("%s.", data.reason);
+        end
+        activeItems[itemLink].sentComms = true;
+        activeItems[itemLink].sentRequestType = nil;
+
+        self:Fire(self.InternalEvents.ITEM_PASSED, {
+            itemLink = itemLink,
+        });
+    end
+end
+
 function ABGP:ShowItemRequests()
     if self:HasActiveItems() then
         for itemLink in pairs(activeItems) do
