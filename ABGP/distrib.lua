@@ -177,7 +177,7 @@ local function RebuildUI()
                     {
                         text = "REJECT",
                         func = function(self, request)
-                            _G.StaticPopup_Show("ABGP_CONFIRM_REJECT", request.player, request.itemLink, request);
+                            _G.StaticPopup_Show("ABGP_CONFIRM_REJECT", ABGP:ColorizeName(request.player), request.itemLink, request);
                         end,
                         arg1 = elt.data,
                         notCheckable = true
