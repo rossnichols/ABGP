@@ -35,7 +35,7 @@ local commMonitor = {};
 local currentEncounter;
 local events = {};
 
-local function GetBroadcastChannel()
+function ABGP:GetBroadcastChannel()
     if ABGP:GetDebugOpt("PrivateComms") then return "WHISPER", UnitName("player"); end
 
     if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
@@ -116,6 +116,7 @@ ABGP.CommTypes = {
     ITEM_REQUEST_REJECTED = { name = "ITEM_REQUEST_REJECTED", id = 22, priority = "ALERT" },
     -- itemLink: string
     -- reason: string or nil
+    -- player: string
 
     STATE_SYNC = { name = "STATE_SYNC", id = 9, priority = "ALERT" },
     -- token: unique token for the message
@@ -276,7 +277,7 @@ function ABGP:SendComm(typ, data, distribution, target)
     local payload, prefix = self:Serialize(typ, data, typ.legacy);
 
     if distribution == "BROADCAST" then
-        distribution, target = GetBroadcastChannel();
+        distribution, target = self:GetBroadcastChannel();
     end
     if not distribution then return; end
 

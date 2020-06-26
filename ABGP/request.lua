@@ -5,6 +5,7 @@ local UnitName = UnitName;
 local GetItemInfo = GetItemInfo;
 local GetInventoryItemLink = GetInventoryItemLink;
 local UnitExists = UnitExists;
+local PlaySoundFile = PlaySoundFile;
 local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -271,12 +272,13 @@ end
 
 function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
     local itemLink = data.itemLink;
+    if not activeItems[itemLink] then return; end
 
-    if activeItems[itemLink] then
-        self:Alert("Your request for %s has been rejected!", itemLink);
-        self:Notify("Your request for %s has been rejected%s", itemLink, data.reason and ":" or ".");
+    if data.player == UnitName("player") then
+        PlaySoundFile("Interface\\AddOns\\ABGP\\Assets\\nedry.ogg", "Master");
+        self:Alert("Your request for %s has been |cffff0000rejected|r!", itemLink);
         if data.reason then
-            self:Notify("%s.", data.reason);
+            self:Notify("Reason: %s", data.reason);
         end
         activeItems[itemLink].sentComms = true;
         activeItems[itemLink].sentRequestType = nil;
@@ -284,6 +286,8 @@ function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
         self:Fire(self.InternalEvents.ITEM_PASSED, {
             itemLink = itemLink,
         });
+    else
+        self:Notify("%s's request for %s has been |cffff0000rejected|r!", self:ColorizeName(data.player), itemLink);
     end
 end
 

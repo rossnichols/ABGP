@@ -1228,10 +1228,10 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
     end,
 });
 StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Reject %s's request for %s?",
+    text = "Reject %s's request for %s? You can optionally add a reason below.",
     button1 = "REJECT",
     button2 = "Cancel",
-    maxLetters = 240,
+    maxLetters = 200,
     notFocused = true,
     Commit = function(text, data)
         ABGP:Notify("%s's request for %s has been rejected.", ABGP:ColorizeName(data.player), data.itemLink);
@@ -1239,18 +1239,22 @@ StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.Stati
 
         if UnitExists(data.player) then
             -- If the requester is running a version before ITEM_REQUEST_REJECTED was added,
-            -- whisper them their rejection instead.
+            -- fall back to normal chat channels.
             local reason = text ~= "" and text or nil;
-            if ABGP:VersionIsNewer("6.0.3", data.version) then
-                _G.SendChatMessage(("[ABGP] Your request for %s has been rejected%s"):format(data.itemLink, reason and ":" or "."), "WHISPER", nil, data.player);
+            if ABGP:VersionIsNewer("6.1.0", data.version) then
+            -- if ABGP:VersionIsNewer("6.0.3", data.version) then
+                _G.SendChatMessage(("[ABGP] Your request for %s has been rejected!"):format(data.itemLink), "WHISPER", nil, data.player);
                 if reason then
-                    _G.SendChatMessage(("[ABGP] %s."):format(reason), "WHISPER", nil, data.player);
+                    _G.SendChatMessage(("[ABGP] Reason: %s"):format(reason), "WHISPER", nil, data.player);
                 end
+                local dist, target = ABGP:GetBroadcastChannel();
+                _G.SendChatMessage(("[ABGP] %s's request for %s has been rejected!"):format(data.player, data.itemLink), dist, nil, target);
             else
                 ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_REJECTED, {
                     itemLink = data.itemLink,
                     reason = reason,
-                }, "WHISPER", data.player);
+                    player = data.player,
+                }, "BROADCAST");
             end
         end
     end,
