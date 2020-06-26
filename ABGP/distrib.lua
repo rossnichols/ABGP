@@ -166,6 +166,22 @@ local function RebuildUI()
                         arg1 = elt.data,
                         notCheckable = true
                     },
+                    {
+                        text = "Whisper",
+                        func = function(self, request)
+                            _G.ChatFrame_OpenChat(("/t %s "):format(request.player));
+                        end,
+                        arg1 = elt.data,
+                        notCheckable = true
+                    },
+                    {
+                        text = "DENY",
+                        func = function(self, request)
+                            _G.StaticPopup_Show("ABGP_CONFIRM_DENY", request.player, request.itemLink, request);
+                        end,
+                        arg1 = elt.data,
+                        notCheckable = true
+                    },
                     { text = "Cancel", notCheckable = true },
                 });
             else
@@ -250,7 +266,7 @@ local function RebuildUI()
     ABGP:HideContextMenu();
 end
 
-local function RemoveRequest(sender, itemLink)
+local function RemoveRequest(sender, itemLink, silent)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
     local requests = activeItems[itemLink].requests;
@@ -259,7 +275,9 @@ local function RemoveRequest(sender, itemLink)
     for i, request in ipairs(requests) do
         if request.player == sender then
             table.remove(requests, i);
-            ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), itemLink);
+            if not silent then
+                ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), itemLink);
+            end
             ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
                 itemLink = itemLink,
                 count = #requests,
@@ -692,7 +710,7 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
         return;
     end
 
-    RemoveRequest(sender, itemLink);
+    self:RemoveRequest(sender, itemLink);
 end
 
 function ABGP:DistribOnActivePlayersRefreshed()
@@ -1205,5 +1223,20 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
     Commit = function(player, data)
         data.player = player;
         DistributeItem(data);
+    end,
+});
+StaticPopupDialogs["ABGP_CONFIRM_DENY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+    text = "Deny %s's request for %s?",
+    button1 = "DENY",
+    button2 = "Cancel",
+    maxLetters = 255,
+    notFocused = true,
+    Commit = function(text, data)
+        ABGP:Notify("%s's request for %s has been DENIED.", ABGP:ColorizeName(data.player), data.itemLink);
+        RemoveRequest(data.player, data.itemLink, true);
+        ABGP:SendComm(ABGP.CommTypes.ITEM_REQUEST_DENIED, {
+            itemLink = data.itemLink,
+            reason = text ~= "" and text or nil,
+        }, "WHISPER", data.player);
     end,
 });

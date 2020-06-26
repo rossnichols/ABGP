@@ -173,6 +173,10 @@ ABGP.CommTypes = {
     -- phase: from ABGP.Phases
     -- token: from HISTORY_SYNC
 
+    ITEM_REQUEST_DENIED = { name = "ITEM_REQUEST_DENIED", id = 22, priority = "ALERT" },
+    -- itemLink: string
+    -- reason: string or nil
+
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
     VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },
     -- reset: bool or nil
