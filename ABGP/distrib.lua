@@ -1235,6 +1235,7 @@ StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.Stati
     maxLetters = 200,
     notFocused = true,
     noCancelOnEscape = true,
+    suppressEnterCommit = true,
     Commit = function(text, data)
         ABGP:Notify("%s's request for %s has been rejected (public).", ABGP:ColorizeName(data.player), data.itemLink);
         RemoveRequest(data.player, data.itemLink, true);
