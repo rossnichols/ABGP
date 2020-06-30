@@ -379,24 +379,30 @@ end
 
 function ABGP:EventOnBossKilled(bossId, name)
     self:LogVerbose("%s defeated!", name);
-    local info = bossInfo[bossId];
-    if info then
-        self:LogVerbose("This boss is worth %d EP.", info.ep);
-        if info.ep > 0 then
-            self:AwardEP(info.ep, awardCategories.BOSS);
-        end
 
-        -- See if we killed the final boss of the current raid.
-        if self:IsRaidInProgress() then
-            local raidInstance = _G.ABGP_RaidInfo.currentRaid.instanceId;
-            if instanceInfo[raidInstance] then
-                local bosses = instanceInfo[raidInstance].bosses;
-                if bosses[#bosses] == bossId then
-                    self:UpdateRaid();
-                end
-            end
-        end
+    -- Check for info about the boss and an in-progress raid.
+    local info = bossInfo[bossId];
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not (currentRaid and info) then return; end
+
+    -- Check that the boss is for this raid.
+    local raidInstance = currentRaid.instanceId;
+    if info.instance ~= raidInstance then return; end
+
+    if info.ep > 0 then
+        self:LogVerbose("This boss is worth %d EP.", info.ep);
+        self:AwardEP(info.ep, awardCategories.BOSS);
     end
+
+    -- See if we killed the final boss of the current raid.
+    local bosses = instanceInfo[raidInstance].bosses;
+    if bosses[#bosses] == bossId then
+        self:UpdateRaid();
+    end
+end
+
+function ABGP:EventOnBossLoot(data, distribution, sender)
+
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)

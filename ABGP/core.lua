@@ -167,6 +167,7 @@ function ABGP:OnEnable()
 
     self:SetCallback(self.CommTypes.BOSS_LOOT.name, function(self, event, data, distribution, sender, version)
         self:AnnounceOnBossLoot(data, distribution, sender, version);
+        self:EventOnBossLoot(data, distribution, sender, version);
     end, self);
 
     self:SetCallback(self.CommTypes.REQUEST_ITEM_DATA_SYNC.name, function(self, event, data, distribution, sender, version)
