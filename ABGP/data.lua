@@ -380,6 +380,8 @@ function ABGP:HistoryTriggerDecay(decayTime)
     self:Notify("Applied a decay of %d%%%s to EPGP.",
         floor(decayValue * 100 + 0.5), floorText);
     self:Notify("NOTE: this just adds the appropriate history entries for now. Officer notes are unchanged.");
+
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
 function ABGP:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
@@ -430,6 +432,7 @@ function ABGP:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
 
     self:RefreshActivePlayers();
     self:RebuildOfficerNotes();
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
 function ABGP:AddTrial(player, raidGroup)
