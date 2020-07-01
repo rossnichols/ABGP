@@ -1028,7 +1028,7 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
                 table.remove(raids, i);
                 ABGP:Notify("Deleted the raid!");
                 if activeWindow then activeWindow:Hide(); end
-                ABGP:PopulateUI();
+                ABGP:RefreshUI();
                 break;
             end
         end
