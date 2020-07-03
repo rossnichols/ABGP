@@ -394,7 +394,7 @@ function ABGP:EventOnBossKilled(bossId, name)
     if info.ep > 0 and not currentRaid.bossKills[info.name] then
         self:LogDebug("This boss is worth %d EP [BossKill].", info.ep);
         self:AwardEP(info.ep, awardCategories.BOSS);
-        currentRaid.bossKills[info.name] = true;
+        currentRaid.bossKills[info.name] = GetServerTime();
     end
 
     -- See if we killed the final boss of the current raid.
@@ -423,7 +423,7 @@ function ABGP:EventOnBossLoot(data, distribution, sender)
     if info.ep > 0 and not currentRaid.bossKills[info.name] then
         self:LogDebug("This boss is worth %d EP [BossLoot].", info.ep);
         self:AwardEP(info.ep, awardCategories.BOSS);
-        currentRaid.bossKills[info.name] = true;
+        currentRaid.bossKills[info.name] = GetServerTime();
     end
 
     -- See if we killed the final boss of the current raid.
