@@ -98,7 +98,7 @@ end
 
 function ABGP:AnnounceOnBossLoot(data)
     local source = data.source;
-    local name = data.name or source;
+    local name = data.name;
     lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
 
     local bossSourceAnnounced = false;

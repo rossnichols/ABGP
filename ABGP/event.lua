@@ -391,9 +391,10 @@ function ABGP:EventOnBossKilled(bossId, name)
     local raidInstance = currentRaid.instanceId;
     if info.instance ~= raidInstance then return; end
 
-    if info.ep > 0 then
-        self:LogVerbose("This boss is worth %d EP.", info.ep);
+    if info.ep > 0 and not currentRaid.bossKills[info.name] then
+        self:LogDebug("This boss is worth %d EP [BossKill].", info.ep);
         self:AwardEP(info.ep, awardCategories.BOSS);
+        currentRaid.bossKills[info.name] = true;
     end
 
     -- See if we killed the final boss of the current raid.
@@ -404,7 +405,32 @@ function ABGP:EventOnBossKilled(bossId, name)
 end
 
 function ABGP:EventOnBossLoot(data, distribution, sender)
+    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    if not currentRaid then return; end
 
+    local instance = instanceInfo[currentRaid.instanceId];
+    if not instance then return; end
+
+    local info, bossId;
+    for _, id in ipairs(instance.bosses) do
+        if bossInfo[id].name == data.name then
+            bossId = id;
+            info = bossInfo[id];
+        end
+    end
+    if not info then return; end
+
+    if info.ep > 0 and not currentRaid.bossKills[info.name] then
+        self:LogDebug("This boss is worth %d EP [BossLoot].", info.ep);
+        self:AwardEP(info.ep, awardCategories.BOSS);
+        currentRaid.bossKills[info.name] = true;
+    end
+
+    -- See if we killed the final boss of the current raid.
+    local bosses = instance.bosses;
+    if bosses[#bosses] == bossId then
+        self:UpdateRaid();
+    end
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)
@@ -554,6 +580,7 @@ function ABGP:StartRaid()
             raidGroupEP = raidGroupEP,
             awards = {},
             standby = {},
+            bossKills = {},
             startTime = GetServerTime(),
             stopTime = GetServerTime(),
             disenchanter = nil,
