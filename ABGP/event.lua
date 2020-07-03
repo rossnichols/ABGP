@@ -83,6 +83,7 @@ local instanceInfo = {
             [ABGP.RaidGroups.RED] = { ABGP.Phases.p1, ABGP.Phases.p3 },
             [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p1 },
         },
+        onTimeBonus = 5,
     },
     [instanceIds.Onyxia] = {
         phase = ABGP.Phases.p1,
@@ -108,6 +109,7 @@ local instanceInfo = {
             [ABGP.RaidGroups.RED] = { ABGP.Phases.p3 },
             [ABGP.RaidGroups.BLUE] = { ABGP.Phases.p3 },
         },
+        onTimeBonus = 5,
     },
     [instanceIds.ZulGurub] = {
         phase = ABGP.Phases.p3,
@@ -559,6 +561,10 @@ function ABGP:StartRaid()
             mule = nil,
         };
         EnsureAwardsEntries();
+        if instanceInfo[raidInstance] and instanceInfo[raidInstance].onTimeBonus then
+            local bonus = instanceInfo[raidInstance].onTimeBonus;
+            _G.StaticPopup_Show("ABGP_CONFIRM_BONUS_EP", bonus, "on-time bonus", bonus);
+        end
         self:Notify("Starting a new raid!");
         window:Hide();
         self:UpdateRaid();
@@ -648,7 +654,7 @@ function ABGP:UpdateRaid(windowRaid)
             if value == epCustom then
                 _G.StaticPopup_Show("ABGP_AWARD_EP");
             else
-                self:AwardEP(value, awardCategories.BONUS);
+                _G.StaticPopup_Show("ABGP_CONFIRM_BONUS_EP", value, "manual", value);
             end
         end);
         window:AddChild(epSelector);
@@ -1044,5 +1050,14 @@ StaticPopupDialogs["ABGP_AWARD_EP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialo
     end,
     Commit = function(ep, data)
         ABGP:AwardEP(ep, awardCategories.BONUS);
+    end,
+});
+StaticPopupDialogs["ABGP_CONFIRM_BONUS_EP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+    text = "Award %d EP to the raid (%s)?",
+    button1 = "Yes",
+    button2 = "No",
+    showAlert = true,
+    OnAccept = function(self, data)
+        ABGP:AwardEP(data, awardCategories.BONUS);
     end,
 });
