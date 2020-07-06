@@ -283,7 +283,8 @@ local function RebuildUI()
     local related = ABGP:GetRelatedItems(currentItem.itemLink);
     local relatedElts = window:GetUserData("relatedItems");
     if related then
-        for i, itemId in ipairs(related) do
+        for i = #related, 1, -1 do
+            local itemId = related[i];
             local itemLink = ("item:%d"):format(itemId);
             local button = relatedElts[i] or AceGUI:Create("ABGP_ItemButton");
             relatedElts[i] = button;
@@ -291,7 +292,7 @@ local function RebuildUI()
             button.frame:SetParent(itemRef.frame);
             button.frame:SetScale(0.5);
 
-            if i == 1 then
+            if i == #related then
                 button.frame:SetPoint("TOPRIGHT", itemRef.frame, "BOTTOMRIGHT", -3, 0);
             else
                 button.frame:SetPoint("RIGHT", relatedElts[i-1].frame, "LEFT", -6, 0);
