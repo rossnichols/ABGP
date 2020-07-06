@@ -200,7 +200,14 @@ local function SetRequestInfo(elt, itemLink, activeItem)
         local value = ABGP:GetItemValue(itemName);
         local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(ABGP:ColorizeText(value.gp)) or "No GP Cost";
         local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
+        if value and value.gp == -1 then
+            valueText = nil;
+            valueTextCompact = "T";
+        end
         elt:SetSecondaryText(valueText, valueTextCompact);
+        if value then
+            elt:SetRelatedItems(ABGP:GetRelatedItems(itemLink));
+        end
     end
 
     elt:SetCount(count);
@@ -232,7 +239,14 @@ function ABGP:ShowLootFrame(itemLink)
     local value = ABGP:GetItemValue(itemName);
     local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(self:ColorizeText(value.gp)) or "No GP Cost";
     local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
+    if value and value.gp == -1 then
+        valueText = nil;
+        valueTextCompact = "T";
+    end
     elt:SetSecondaryText(valueText, valueTextCompact);
+    if value then
+        elt:SetRelatedItems(ABGP:GetRelatedItems(itemLink));
+    end
 
     -- Determine the first free slot for the frame.
     local i = 1;

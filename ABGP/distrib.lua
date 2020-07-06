@@ -39,7 +39,7 @@ local function CalculateCost(request)
     if request and request.override then
         return 0, false, request.override;
     end
-    local costBase = currentItem.costBase;
+    local costBase = currentItem.costBase == -1 and 0 or currentItem.costBase;
     if request then
         if request.requestType == ABGP.RequestTypes.MS then
             local related = ABGP:GetRelatedItems(currentItem.itemLink);
@@ -287,7 +287,7 @@ local function RebuildUI()
             local itemLink = ("item:%d"):format(itemId);
             local button = relatedElts[i] or AceGUI:Create("ABGP_ItemButton");
             relatedElts[i] = button;
-            button:SetItemLink(itemLink);
+            button:SetItemLink(itemLink, false);
             button.frame:SetParent(itemRef.frame);
             button.frame:SetScale(0.5);
 
@@ -752,7 +752,7 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
         return;
     end
 
-    self:RemoveRequest(sender, itemLink);
+    RemoveRequest(sender, itemLink);
 end
 
 function ABGP:DistribOnActivePlayersRefreshed()

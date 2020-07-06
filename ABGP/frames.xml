@@ -119,6 +119,23 @@
             </Layer>
         </Layers>
         <Frames>
+            <Frame parentKey="RelatedItems">
+                <Size>
+                    <AbsDimension x="0" y="14"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parentNameFrame" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="3" y="24"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parentNameFrame" relativePoint="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-75" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
             <Button parentKey="IconFrame" enableMouse="true">
                 <Size x="37" y="37"/>
                 <Anchors>

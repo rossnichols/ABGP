@@ -9,7 +9,7 @@ _G.ABGP_Data = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1594071708, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1594071710, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				"Aged Core Leather Gloves",
@@ -2612,7 +2612,7 @@ ABGP.initialData = {
 			},
 			{
 				"Head of Nefarian",
-				150,
+				-1,
 				"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 				"Nefarian",
 				{
@@ -2623,7 +2623,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"Prio for casters with BWL 1H as well. Casters pay 0gp.",
+				"Prio for casters with BWL 1H as well",
 			},
 			{
 				"Master Dragonslayer's Medallion",

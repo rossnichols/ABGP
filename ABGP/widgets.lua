@@ -179,7 +179,7 @@ do
             self.frame:SetParent(_G.UIParent);
         end,
 
-        ["SetItemLink"] = function(self, itemLink)
+        ["SetItemLink"] = function(self, itemLink, checkUsable)
             local button = self.frame;
             button.itemLink = itemLink;
             if not itemLink then return; end
@@ -189,7 +189,9 @@ do
 
             if rarity then
                 button:UnregisterEvent("GET_ITEM_INFO_RECEIVED");
-                usable = ABGP:IsItemUsable(itemLink);
+                if checkUsable then
+                    usable = ABGP:IsItemUsable(itemLink);
+                end
             else
                 rarity = LE_ITEM_QUALITY_COMMON;
                 button:RegisterEvent("GET_ITEM_INFO_RECEIVED");
@@ -753,17 +755,17 @@ do
         ["SetRelatedItems"] = function(self, items)
             if items then
                 self.icons:Show();
-                self.frame:SetHeight(40);
-                self.item.text:SetPoint("LEFT", self.item, 2, 12);
-                self.item.text:SetPoint("RIGHT", self.item, -2, 12);
+                self.frame:SetHeight(36);
+                self.item.text:SetPoint("LEFT", self.item, 2, 9);
+                self.item.text:SetPoint("RIGHT", self.item, -2, 9);
 
                 for i, itemId in ipairs(items) do
                     local itemLink = ("item:%d"):format(itemId);
                     local button = self.icons.buttons[i] or AceGUI:Create("ABGP_ItemButton");
                     self.icons.buttons[i] = button;
-                    button:SetItemLink(itemLink);
+                    button:SetItemLink(itemLink, true);
                     button.frame:SetParent(self.icons);
-                    button.frame:SetScale(0.5);
+                    button.frame:SetScale(0.4);
 
                     if i == 1 then
                         button.frame:SetPoint("BOTTOMLEFT", self.icons, 5, 11);
@@ -776,6 +778,10 @@ do
                 self.frame:SetHeight(20);
                 self.item.text:SetPoint("LEFT", self.item, 2, 1);
                 self.item.text:SetPoint("RIGHT", self.item, -2, 1);
+                for k, button in pairs(self.icons.buttons) do
+                    AceGUI:Release(button);
+                    self.icons.buttons[k] = nil;
+                end
             end
         end,
     }
@@ -1388,11 +1394,42 @@ do
             local alpha = 1 - (self.elapsed - self.duration) / self.fadeOut;
             frame:SetAlpha(alpha);
         end
+
+        if frame.checkLeave and not MouseIsOver(frame) then
+            frame:GetScript("OnLeave")(frame);
+        end
     end
 
     local function Frame_OnMouseDown(frame, button)
         if button == "LeftButton" then
             frame.obj:Fire("OnMouseDown");
+        end
+    end
+
+    local function Frame_OnEnter(frame)
+        if frame.relatedItems then
+            if frame.elvui then
+                frame.fsloot:Hide();
+                frame.relatedItems:Show();
+            else
+                frame.RelatedItems:Show();
+                frame.Cost:Hide();
+            end
+        end
+    end
+
+    local function Frame_OnLeave(frame)
+        if MouseIsOver(frame) then
+            frame.checkLeave = true;
+        else
+            frame.checkLeave = false;
+            if frame.elvui then
+                frame.fsloot:Show();
+                frame.relatedItems:Hide();
+            else
+                frame.RelatedItems:Hide();
+                frame.Cost:Show();
+            end
         end
     end
 
@@ -1492,6 +1529,7 @@ do
             self:SetItem(nil);
             self:SetCount(1);
             self:SetRequestCount(0);
+            self:SetRelatedItems();
 
             self.elapsed = 0;
             self.fadeIn = 0.2;
@@ -1601,6 +1639,18 @@ do
             else
                 frame.Cost:SetText(text);
             end
+
+            if not frame.elvui and frame.relatedItems and not frame.Cost:GetText() then
+                frame.RelatedItems:Show();
+                frame.Cost:Hide();
+                frame:SetScript("OnEnter", nil);
+                frame:SetScript("OnLeave", nil);
+            else
+                frame.RelatedItems:Hide();
+                frame.Cost:Show();
+                frame:SetScript("OnEnter", Frame_OnEnter);
+                frame:SetScript("OnLeave", Frame_OnLeave);
+            end
         end,
 
         ["SetDuration"] = function(self, duration, fadeOut)
@@ -1654,6 +1704,46 @@ do
         ["GetCount"] = function(self)
             return self.count;
         end,
+
+        ["SetRelatedItems"] = function(self, items)
+            local frame = self.frame;
+            frame.relatedItems = items;
+
+            local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
+            if items then
+                for i, itemId in ipairs(items) do
+                    local itemLink = ("item:%d"):format(itemId);
+                    local button = relatedFrame.buttons[i] or AceGUI:Create("ABGP_ItemButton");
+                    relatedFrame.buttons[i] = button;
+                    button:SetItemLink(itemLink, true);
+                    button.frame:SetParent(relatedFrame);
+                    button.frame:SetScale(0.4);
+
+                    if i == 1 then
+                        button.frame:SetPoint("BOTTOMLEFT", relatedFrame, 0, 0);
+                    else
+                        button.frame:SetPoint("LEFT", relatedFrame.buttons[i-1].frame, "RIGHT", 6, 0);
+                    end
+                end
+            else
+                for k, button in pairs(relatedFrame.buttons) do
+                    AceGUI:Release(button);
+                    relatedFrame.buttons[k] = nil;
+                end
+            end
+
+            if not frame.elvui and frame.relatedItems and not frame.Cost:GetText() then
+                frame.RelatedItems:Show();
+                frame.Cost:Hide();
+                frame:SetScript("OnEnter", nil);
+                frame:SetScript("OnLeave", nil);
+            else
+                frame.RelatedItems:Hide();
+                frame.Cost:Show();
+                frame:SetScript("OnEnter", Frame_OnEnter);
+                frame:SetScript("OnLeave", Frame_OnLeave);
+            end
+        end,
     }
 
     --[[-----------------------------------------------------------------------------
@@ -1702,12 +1792,25 @@ do
             frame.closeButton:SetAlpha(0.5);
             frame.closeButton:SetScale(0.8);
 
+            -- For related items
+            frame.relatedItems = CreateFrame("Frame", nil, frame);
+            frame.relatedItems:Point("LEFT", frame.fsbind, "RIGHT", 0, 0);
+            frame.relatedItems:Point("RIGHT", frame, "RIGHT", -5, 0);
+            frame.relatedItems:Size(200, 14);
+            frame.relatedItems:Hide();
+            frame.relatedItems.buttons = {};
+
             -- -- Dragon!
             -- local dragon = frame.button:CreateTexture(nil, "OVERLAY", nil, 1);
             -- dragon:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Dragon");
             -- dragon:SetSize(47, 47);
             -- dragon:SetPoint("TOPLEFT", -13, 9);
             -- frame.dragon = dragon;
+
+            frame.fsbind:Point("LEFT", frame.pass, "RIGHT");
+
+            frame:SetScript("OnEnter", Frame_OnEnter);
+            frame:SetScript("OnLeave", Frame_OnLeave);
 
             button = frame.button;
             need = frame.needbutt;
@@ -1718,6 +1821,8 @@ do
             button = frame.IconFrame;
             need = frame.NeedButton;
             close = frame.CloseButton;
+
+            frame.RelatedItems.buttons = {};
         end
 
         frame:SetScript("OnEvent", Frame_OnEvent);

@@ -159,10 +159,12 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     local value = data.value;
     if value then
         self:CheckUpdatedItem(itemLink, value);
-        if value.gp ~= 0 then
+        if value.gp == -1 then
+            gpCost = "Token (variable GP cost)";
+        elseif value.gp ~= 0 then
             gpCost = ("GP cost: %d"):format(value.gp);
         end
-        if value.priority then
+        if value.priority and next(value.priority) then
             priority = (", Priority: %s"):format(table.concat(value.priority, ", "));
         end
         if value.notes then
