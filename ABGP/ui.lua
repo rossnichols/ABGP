@@ -677,33 +677,35 @@ local function DrawItems(container, options)
         local exact = searchText:match("^\"(.+)\"$");
         exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
-            if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
-                if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
-                    local matchesSearch = false;
-                    if exact then
-                        if item[ABGP.ItemDataIndex.NAME]:lower() == exact or
-                            item[ABGP.ItemDataIndex.BOSS]:lower() == exact or
-                            (item[ABGP.ItemDataIndex.NOTES] or ""):lower() == exact then
-                            matchesSearch = true;
-                        end
-                    else
-                        if item[ABGP.ItemDataIndex.NAME]:lower():find(searchText, 1, true) or
-                            item[ABGP.ItemDataIndex.BOSS]:lower():find(searchText, 1, true) or
-                            (item[ABGP.ItemDataIndex.NOTES] or ""):lower():find(searchText, 1, true) then
-                            matchesSearch = true;
-                        end
-                    end
-
-                    if matchesSearch then
-                        if #item[ABGP.ItemDataIndex.PRIORITY] > 0 then
-                            for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do
-                                if allowedPriorities[pri] then
-                                    table.insert(filtered, item);
-                                    break;
-                                end
+            if not item[ABGP.ItemDataIndex.RELATED] then
+                if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
+                    if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
+                        local matchesSearch = false;
+                        if exact then
+                            if item[ABGP.ItemDataIndex.NAME]:lower() == exact or
+                                item[ABGP.ItemDataIndex.BOSS]:lower() == exact or
+                                (item[ABGP.ItemDataIndex.NOTES] or ""):lower() == exact then
+                                matchesSearch = true;
                             end
                         else
-                            table.insert(filtered, item);
+                            if item[ABGP.ItemDataIndex.NAME]:lower():find(searchText, 1, true) or
+                                item[ABGP.ItemDataIndex.BOSS]:lower():find(searchText, 1, true) or
+                                (item[ABGP.ItemDataIndex.NOTES] or ""):lower():find(searchText, 1, true) then
+                                matchesSearch = true;
+                            end
+                        end
+
+                        if matchesSearch then
+                            if #item[ABGP.ItemDataIndex.PRIORITY] > 0 then
+                                for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do
+                                    if allowedPriorities[pri] then
+                                        table.insert(filtered, item);
+                                        break;
+                                    end
+                                end
+                            else
+                                table.insert(filtered, item);
+                            end
                         end
                     end
                 end

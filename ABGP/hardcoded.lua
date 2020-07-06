@@ -9,7 +9,7 @@ _G.ABGP_Data = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1592432166, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1594071708, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				"Aged Core Leather Gloves",
@@ -2623,7 +2623,34 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"Casters with a BWL 1h also eligible",
+				"Prio for casters with BWL 1H as well. Casters pay 0gp.",
+			},
+			{
+				"Master Dragonslayer's Medallion",
+				150,
+				"|cffa335ee|Hitem:19383|h[Master Dragonslayer's Medallion]|h|r",
+				"Nefarian",
+				{},
+				nil,
+				"Head of Nefarian",
+			},
+			{
+				"Master Dragonslayer's Orb",
+				0,
+				"|cffa335ee|Hitem:19366|h[Master Dragonslayer's Orb]|h|r",
+				"Nefarian",
+				{},
+				nil,
+				"Head of Nefarian",
+			},
+			{
+				"Master Dragonslayer's Ring",
+				150,
+				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
+				"Nefarian",
+				{},
+				nil,
+				"Head of Nefarian",
 			},
 			{
 				"Lok'amir il Romathis",
@@ -2890,7 +2917,7 @@ ABGP.initialData = {
 			},
 			{
 				"Trance Stone",
-				80,
+				0,
 				"|cffa335ee|Hitem:20582|h[Trance Stone]|h|r",
 				"Green Dragons (Shared)",
 				{

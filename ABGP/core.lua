@@ -490,6 +490,7 @@ ABGP.ItemDataIndex = {
     BOSS = 4,
     PRIORITY = 5,
     NOTES = 6,
+    RELATED = 7,
 };
 ABGP.ItemHistoryType = {
     ITEM = 1,
@@ -548,6 +549,7 @@ local function ValueFromItem(item, phase)
         boss = item[ABGP.ItemDataIndex.BOSS],
         priority = item[ABGP.ItemDataIndex.PRIORITY],
         notes = item[ABGP.ItemDataIndex.NOTES],
+        related = item[ABGP.ItemDataIndex.RELATED],
         phase = phase
     };
 end

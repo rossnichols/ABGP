@@ -39,7 +39,22 @@ local function CalculateCost(request)
     if request and request.override then
         return 0, false, request.override;
     end
-    local costBase = (request and request.requestType ~= ABGP.RequestTypes.MS) and 0 or currentItem.costBase;
+    local costBase = currentItem.costBase;
+    if request then
+        if request.requestType == ABGP.RequestTypes.MS then
+            local related = ABGP:GetRelatedItems(currentItem.itemLink);
+            if related and request.class then
+                local relatedItem = ABGP:GetRelatedItemForClass(currentItem.itemLink, request.class);
+                local relatedValue = ABGP:GetItemValue(relatedItem);
+                if relatedValue then
+                    costBase = relatedValue.gp;
+                end
+            end
+        else
+            costBase = 0;
+        end
+    end
+
     return currentItem.costEdited or costBase, currentItem.data.value ~= nil;
 end
 
