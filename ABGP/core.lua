@@ -1150,12 +1150,12 @@ local itemOverrides = {
     [21237] = { slots = { "INVTYPE_WEAPONMAINHAND" }, related = { 21268, 21273, 21275 } }, -- Imperial Qiraji Regalia
     [20928] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, related = { 21333, 21330, 21359, 21361, 21349, 21350, 21365, 21367 } }, -- Qiraji Bindings of Command
     [20932] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, related = { 21388, 21391, 21338, 21335, 21344, 21345, 21355, 21354 } }, -- Qiraji Bindings of Dominance
-    [20929] = { slots = { "INVTYPE_CHEST" }, related = { 21389, 21331, 21364, 21374, 21370 } }, -- Carapace of the Old God
+    [20929] = { slots = { "INVTYPE_CHEST" }, related = { 21389, 21331, 21364, 21370 } }, -- Carapace of the Old God
     [20933] = { slots = { "INVTYPE_CHEST" }, related = { 21334, 21343, 21357, 21351 } }, -- Husk of the Old God
     [20926] = { slots = { "INVTYPE_HEAD" }, related = { 21329, 21337, 21347, 21348 } }, -- Vek'nilash's Circlet
-    [20930] = { slots = { "INVTYPE_HEAD" }, related = { 21387, 21360, 21353, 21372, 21366 } }, -- Vek'lor's Diadem
+    [20930] = { slots = { "INVTYPE_HEAD" }, related = { 21387, 21360, 21353, 21366 } }, -- Vek'lor's Diadem
     [20927] = { slots = { "INVTYPE_LEGS" }, related = { 21332, 21362, 21346, 21352 } }, -- Ouro's Intact Hide
-    [20931] = { slots = { "INVTYPE_LEGS" }, related = { 21390, 21336, 21356, 21375, 21368 } }, -- Skin of the Great Sandworm
+    [20931] = { slots = { "INVTYPE_LEGS" }, related = { 21390, 21336, 21356, 21368 } }, -- Skin of the Great Sandworm
 };
 
 function ABGP:GetRelatedItems(itemLink)

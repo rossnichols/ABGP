@@ -556,6 +556,39 @@ local function DrawItems(container, options)
                         item[ABGP.ItemDataIndex.BOSS] or "", item[ABGP.ItemDataIndex.NAME], table.concat(priorities, "\t"), item[ABGP.ItemDataIndex.GP], item[ABGP.ItemDataIndex.NOTES] or "", (i == #items and "" or "\n"));
                 end
 
+                -- Alternative export format
+                -- text = "";
+                -- for i, item in ipairs(items) do
+                --     local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
+                --     local related = ABGP:GetRelatedItems(itemLink);
+                --     local category = "";
+                --     local notesLower = (item[ABGP.ItemDataIndex.NOTES] or ""):lower();
+                --     if notesLower:find("silver") then category = "Silver"; end
+                --     if notesLower:find("gold") then category = "Gold"; end
+                --     if related then
+                --         for _, relatedItem in ipairs(related) do
+                --             local name = GetItemInfo(relatedItem);
+                --             text = text .. ("%s\t%s\t%s\t%s\t%s\t%s%s"):format(
+                --                 item[ABGP.ItemDataIndex.NAME],
+                --                 name,
+                --                 "",
+                --                 category,
+                --                 item[ABGP.ItemDataIndex.GP],
+                --                 table.concat(item[ABGP.ItemDataIndex.PRIORITY], ", "),
+                --                 "\n");
+                --         end
+                --     else
+                --         text = text .. ("%s\t%s\t%s\t%s\t%s\t%s%s"):format(
+                --             item[ABGP.ItemDataIndex.NAME],
+                --             "",
+                --             "",
+                --             category,
+                --             item[ABGP.ItemDataIndex.GP],
+                --             table.concat(item[ABGP.ItemDataIndex.PRIORITY], ", "),
+                --             "\n");
+                --     end
+                -- end
+
                 local window = AceGUI:Create("ABGP_OpaqueWindow");
                 window.frame:SetFrameStrata("DIALOG");
                 window:SetTitle("Export");
