@@ -31,6 +31,7 @@ local currentRaidGroup;
 
 ABGP.UICommands = {
     ShowItemHistory = "ShowItemHistory",
+    ShowItem = "ShowItem",
 };
 
 local function PopulateUI(options)
@@ -306,7 +307,7 @@ local function DrawItemHistory(container, options)
 
     if command then
         if command.command == ABGP.UICommands.ShowItemHistory then
-            container:GetUserData("search"):SetValue(command.args);
+            container:GetUserData("search"):SetValue(("\"%s\""):format(command.args));
         end
     end
 
@@ -459,7 +460,7 @@ local function DrawItems(container, options)
     local rebuild = options.rebuild;
     local reason = options.reason;
     local preserveScroll = options.preserveScroll;
-    -- local command = options.command;
+    local command = options.command;
     if not rebuild and reason then return; end
 
     local widths = { 225, 50, 50, 1.0 };
@@ -619,6 +620,12 @@ local function DrawItems(container, options)
         container:SetUserData("pagination", pagination);
     end
 
+    if command then
+        if command.command == ABGP.UICommands.ShowItem then
+            container:GetUserData("search"):SetValue(("\"%s\""):format(command.args));
+        end
+    end
+
     local itemList = container:GetUserData("itemList");
     local scrollValue = preserveScroll and itemList:GetUserData("statusTable").scrollvalue or 0;
     itemList:ReleaseChildren();
@@ -687,6 +694,7 @@ local function DrawItems(container, options)
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:SetFullWidth(true);
+            elt:SetRelatedItems(ABGP:GetRelatedItems(data[ABGP.ItemDataIndex.ITEMLINK]));
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
@@ -1242,6 +1250,8 @@ function ABGP:CreateMainWindow(command)
     local tab = 1;
     if command then
         if command.command == ABGP.UICommands.ShowItemHistory then
+            tab = 3;
+        elseif command.command == ABGP.UICommands.ShowItem then
             tab = 2;
         end
     end

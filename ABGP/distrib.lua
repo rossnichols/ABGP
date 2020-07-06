@@ -261,7 +261,33 @@ local function RebuildUI()
         or "Start recording rolls made by players who requested this item.");
 
     window:SetTitle(("Loot Distribution: |cffffffff%s|r"):format(ABGP:GetItemName(currentItem.itemLink)));
-    window:GetUserData("itemRef"):SetText(currentItem.itemLink);
+
+    local itemRef = window:GetUserData("itemRef");
+    itemRef:SetText(currentItem.itemLink);
+
+    local related = ABGP:GetRelatedItems(currentItem.itemLink);
+    local relatedElts = window:GetUserData("relatedItems");
+    if related then
+        for i, itemId in ipairs(related) do
+            local itemLink = ("item:%d"):format(itemId);
+            local button = relatedElts[i] or AceGUI:Create("ABGP_ItemButton");
+            relatedElts[i] = button;
+            button:SetItemLink(itemLink);
+            button.frame:SetParent(itemRef.frame);
+            button.frame:SetScale(0.5);
+
+            if i == 1 then
+                button.frame:SetPoint("TOPRIGHT", itemRef.frame, "BOTTOMRIGHT", -3, 0);
+            else
+                button.frame:SetPoint("RIGHT", relatedElts[i-1].frame, "LEFT", -6, 0);
+            end
+        end
+    else
+        for k, elt in pairs(relatedElts) do
+            AceGUI:Release(elt);
+            relatedElts[k] = nil;
+        end
+    end
 
     ABGP:HideContextMenu();
 end
@@ -873,6 +899,11 @@ function ABGP:CreateDistribWindow()
                 RemoveActiveItem(item.itemLink, item);
             end
 
+            local relatedElts = widget:GetUserData("relatedItems");
+            for _, elt in pairs(relatedElts) do
+                AceGUI:Release(elt);
+            end
+
             ABGP:EndWindowManagement(widget);
             AceGUI:Release(widget);
 
@@ -889,7 +920,7 @@ function ABGP:CreateDistribWindow()
     local topLine = AceGUI:Create("SimpleGroup");
     topLine:SetFullWidth(true);
     topLine:SetLayout("table");
-    topLine:SetUserData("table", { columns = { 0, 1.0 } });
+    topLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
     window:AddChild(topLine);
 
     local raidGroups, raidGroupNames = {}, {};
@@ -910,11 +941,17 @@ function ABGP:CreateDistribWindow()
     topLine:AddChild(groupSelector);
     self:AddWidgetTooltip(groupSelector, "The selected raid group receives priority for loot.");
 
+    local spacer = AceGUI:Create("ABGP_Header");
+    topLine:AddChild(spacer);
+
     local itemRef = AceGUI:Create("ABGP_Header");
     itemRef:SetJustifyH("RIGHT");
-    itemRef:SetFullWidth(true);
+    itemRef:SetJustifyV("TOP");
+    itemRef:SetWidth(itemRef.text:GetStringWidth());
+    itemRef:SetUserData("cell", { align = "TOPRIGHT" });
     topLine:AddChild(itemRef);
     window:SetUserData("itemRef", itemRef);
+    window:SetUserData("relatedItems", {});
 
     local tabGroup = AceGUI:Create("TabGroup");
     tabGroup:SetFullWidth(true);

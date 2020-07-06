@@ -563,6 +563,12 @@ function ABGP:RefreshItemValues()
 
             -- Try to ensure info about the item is cached locally.
             GetItemInfo(itemLink);
+            local related = self:GetRelatedItems(itemLink);
+            if related then
+                for _, item in ipairs(related) do
+                    GetItemInfo(item);
+                end
+            end
         end
     end
 end
@@ -775,6 +781,7 @@ function ABGP:GetItemName(itemLink)
 end
 
 function ABGP:GetItemId(itemLink)
+    if type(itemLink) == "number" then return itemLink; end
     return tonumber(itemLink:match("item:(%d+)") or "");
 end
 
@@ -1135,30 +1142,36 @@ local itemSlots = {
 };
 
 local itemOverrides = {
-    [18423] = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_TRINKET" }, -- Head of Onyxia
-    [19003] = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_HOLDABLE" }, -- Head of Nefarian
-    [22637] = { "INVTYPE_HEAD", "INVTYPE_LEGS" }, -- Primal Hakkari Idol
-    [21221] = { "INVTYPE_NECK", "INVTYPE_CLOAK", "INVTYPE_FINGER" }, -- Eye of C'Thun
-    [21232] = { "INVTYPE_WEAPONMAINHAND" }, -- Imperial Qiraji Armaments
-    [21237] = { "INVTYPE_WEAPONMAINHAND" }, -- Imperial Qiraji Regalia
-    [20928] = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, -- Qiraji Bindings of Command
-    [20932] = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, -- Qiraji Bindings of Dominance
-    [20929] = { "INVTYPE_CHEST" }, -- Carapace of the Old God
-    [20933] = { "INVTYPE_CHEST" }, -- Husk of the Old God
-    [20926] = { "INVTYPE_HEAD" }, -- Vek'nilash's Circlet
-    [20930] = { "INVTYPE_HEAD" }, -- Vek'lor's Diadem
-    [20927] = { "INVTYPE_LEGS" }, -- Ouro's Intact Hide
-    [20931] = { "INVTYPE_LEGS" }, -- Skin of the Great Sandworm
+    [18423] = { slots = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_TRINKET" }, related = { 18404, 18403, 18406 } }, -- Head of Onyxia
+    [19003] = { slots = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_HOLDABLE" }, related = { 19383, 19384, 19366 } }, -- Head of Nefarian
+    [22637] = { slots = { "INVTYPE_HEAD", "INVTYPE_LEGS" } }, -- Primal Hakkari Idol
+    [21221] = { slots = { "INVTYPE_NECK", "INVTYPE_CLOAK", "INVTYPE_FINGER" }, related = { 21712, 21710, 21709 } }, -- Eye of C'Thun
+    [21232] = { slots = { "INVTYPE_WEAPONMAINHAND" }, related = { 21242, 21244, 21272, 21269 } }, -- Imperial Qiraji Armaments
+    [21237] = { slots = { "INVTYPE_WEAPONMAINHAND" }, related = { 21268, 21273, 21275 } }, -- Imperial Qiraji Regalia
+    [20928] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, related = { 21333, 21330, 21359, 21361, 21349, 21350, 21365, 21367 } }, -- Qiraji Bindings of Command
+    [20932] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, related = { 21388, 21391, 21338, 21335, 21344, 21345, 21355, 21354 } }, -- Qiraji Bindings of Dominance
+    [20929] = { slots = { "INVTYPE_CHEST" }, related = { 21389, 21331, 21364, 21374, 21370 } }, -- Carapace of the Old God
+    [20933] = { slots = { "INVTYPE_CHEST" }, related = { 21334, 21343, 21357, 21351 } }, -- Husk of the Old God
+    [20926] = { slots = { "INVTYPE_HEAD" }, related = { 21329, 21337, 21347, 21348 } }, -- Vek'nilash's Circlet
+    [20930] = { slots = { "INVTYPE_HEAD" }, related = { 21387, 21360, 21353, 21372, 21366 } }, -- Vek'lor's Diadem
+    [20927] = { slots = { "INVTYPE_LEGS" }, related = { 21332, 21362, 21346, 21352 } }, -- Ouro's Intact Hide
+    [20931] = { slots = { "INVTYPE_LEGS" }, related = { 21390, 21336, 21356, 21375, 21368 } }, -- Skin of the Great Sandworm
 };
+
+function ABGP:GetRelatedItems(itemLink)
+    local itemId = self:GetItemId(itemLink);
+    if not itemOverrides[itemId] then return; end
+    return itemOverrides[itemId].related;
+end
 
 function ABGP:GetItemEquipSlots(itemLink)
     local itemId = self:GetItemId(itemLink);
-    if itemOverrides[itemId] then
-        if #itemOverrides[itemId] == 1 then
-            return itemSlots[itemOverrides[itemId][1]];
+    if itemOverrides[itemId] and itemOverrides[itemId].slots then
+        if #itemOverrides[itemId].slots == 1 then
+            return itemSlots[itemOverrides[itemId].slots[1]];
         else
             local slots = {};
-            for _, loc in ipairs(itemOverrides[itemId]) do
+            for _, loc in ipairs(itemOverrides[itemId].slots) do
                 for _, slot in ipairs(itemSlots[loc]) do
                     table.insert(slots, slot);
                 end

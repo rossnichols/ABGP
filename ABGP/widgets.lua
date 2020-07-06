@@ -130,6 +130,115 @@ local function CreateFontString(frame, y)
 end
 
 do
+    local Type, Version = "ABGP_ItemButton", 1;
+
+    local function ItemButton_OnEnter(self)
+        local itemLink = self.itemLink;
+        if not itemLink then return; end
+
+        _G.ShowUIPanel(_G.GameTooltip);
+        _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
+        _G.GameTooltip:ClearAllPoints();
+        _G.GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
+        _G.GameTooltip:SetHyperlink(itemLink);
+        _G.GameTooltip:Show();
+        self.hasItem = itemLink;
+        CursorUpdate(self);
+    end
+
+    local function ItemButton_OnLeave(self)
+        _G.GameTooltip:Hide();
+        self.hasItem = nil;
+        ResetCursor();
+    end
+
+    local function ItemButton_OnClick(self)
+        if self.itemLink and IsModifiedClick() then
+            _G.HandleModifiedItemClick(select(2, GetItemInfo(self.itemLink)));
+        end
+    end
+
+    local function ItemButton_OnUpdate(self)
+        if _G.GameTooltip:IsOwned(self) and self.hasItem then
+            _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
+            _G.GameTooltip:ClearAllPoints();
+            _G.GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
+            _G.GameTooltip:SetHyperlink(self.hasItem);
+            CursorUpdate(self);
+        end
+    end
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.frame:Show();
+            self:SetItemLink();
+            self.frame:ClearAllPoints();
+            self.frame:SetParent(_G.UIParent);
+        end,
+
+        ["SetItemLink"] = function(self, itemLink)
+            local button = self.frame;
+            button.itemLink = itemLink;
+            if not itemLink then return; end
+
+            local _, _, rarity = GetItemInfo(itemLink);
+            local usable = true;
+
+            if rarity then
+                button:UnregisterEvent("GET_ITEM_INFO_RECEIVED");
+                usable = ABGP:IsItemUsable(itemLink);
+            else
+                rarity = LE_ITEM_QUALITY_COMMON;
+                button:RegisterEvent("GET_ITEM_INFO_RECEIVED");
+            end
+            local r, g, b = GetItemQualityColor(rarity);
+
+            local name = button:GetName();
+            _G[name .. "NormalTexture"]:SetVertexColor(r, g, b);
+            _G[name .. "Icon"]:SetTexture(GetItemIcon(itemLink));
+            if usable then
+                _G[name .. "Icon"]:SetVertexColor(1, 1, 1);
+            else
+                _G[name .. "Icon"]:SetVertexColor(0.9, 0, 0);
+            end
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local widgetNum = AceGUI:GetNextWidgetNum(Type)
+
+        local frame = CreateFrame("CheckButton", "ABGPActionButton" .. widgetNum, _G.UIParent, "ActionButtonTemplate");
+        frame:RegisterForClicks("LeftButtonUp");
+        frame:SetPushedTexture(nil);
+        frame:SetCheckedTexture(nil);
+
+        frame:SetScript("OnEnter", ItemButton_OnEnter);
+        frame:SetScript("OnLeave", ItemButton_OnLeave);
+        frame:SetScript("OnClick", ItemButton_OnClick);
+        frame:SetScript("OnUpdate", ItemButton_OnUpdate);
+
+        -- create widget
+        local widget = {
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
     local Type, Version = "ABGP_Player", 1;
 
     local mainSpecFont = CreateFont("ABGPHighlight");
@@ -571,6 +680,8 @@ do
             self.frame:UnlockHighlight();
 
             self.background:Hide();
+
+            self:SetRelatedItems();
         end,
 
         ["SetData"] = function(self, data)
@@ -598,7 +709,10 @@ do
         end,
 
         ["EditPriorities"] = function(self)
-            self.frame:SetHeight(30);
+            local oldHeight = self.frame:GetHeight();
+            if oldHeight < 30 then
+                self.frame:SetHeight(30);
+            end
             if not self.priorityEditor then
                 local priorityEditor = AceGUI:Create("ABGP_Filter");
                 priorityEditor.frame:ClearAllPoints();
@@ -608,7 +722,9 @@ do
 
                 self.currentPriorities = {};
                 priorityEditor:SetCallback("OnClosed", function()
-                    self.frame:SetHeight(20);
+                    if oldHeight < 30 then
+                        self.frame:SetHeight(oldHeight);
+                    end
                     self.priority:Show();
                     self.priorityEditor.frame:Hide();
 
@@ -632,6 +748,35 @@ do
             self.priority:Hide();
             self.priorityEditor.frame:Show();
             self.priorityEditor.button:Click();
+        end,
+
+        ["SetRelatedItems"] = function(self, items)
+            if items then
+                self.icons:Show();
+                self.frame:SetHeight(40);
+                self.item.text:SetPoint("LEFT", self.item, 2, 12);
+                self.item.text:SetPoint("RIGHT", self.item, -2, 12);
+
+                for i, itemId in ipairs(items) do
+                    local itemLink = ("item:%d"):format(itemId);
+                    local button = self.icons.buttons[i] or AceGUI:Create("ABGP_ItemButton");
+                    self.icons.buttons[i] = button;
+                    button:SetItemLink(itemLink);
+                    button.frame:SetParent(self.icons);
+                    button.frame:SetScale(0.5);
+
+                    if i == 1 then
+                        button.frame:SetPoint("BOTTOMLEFT", self.icons, 5, 11);
+                    else
+                        button.frame:SetPoint("LEFT", self.icons.buttons[i-1].frame, "RIGHT", 6, 0);
+                    end
+                end
+            else
+                self.icons:Hide();
+                self.frame:SetHeight(20);
+                self.item.text:SetPoint("LEFT", self.item, 2, 1);
+                self.item.text:SetPoint("RIGHT", self.item, -2, 1);
+            end
         end,
     }
 
@@ -661,6 +806,11 @@ do
 
         local item = CreateElement(frame);
         item.text = CreateFontString(item);
+
+        local icons = CreateElement(frame);
+        icons:ClearAllPoints();
+        icons:SetAllPoints(item);
+        icons.buttons = {};
 
         local gp = CreateElement(frame, item);
         gp.text = CreateFontString(gp);
@@ -705,6 +855,7 @@ do
         -- create widget
         local widget = {
             item = item,
+            icons = icons,
             gp = gp,
             notes = notes,
             priority = priority,
