@@ -1142,26 +1142,85 @@ local itemSlots = {
 };
 
 local itemOverrides = {
-    [18423] = { slots = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_TRINKET" }, related = { 18404, 18403, 18406 } }, -- Head of Onyxia
-    [19003] = { slots = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_HOLDABLE" }, related = { 19383, 19384, 19366 } }, -- Head of Nefarian
-    [22637] = { slots = { "INVTYPE_HEAD", "INVTYPE_LEGS" } }, -- Primal Hakkari Idol
-    [21221] = { slots = { "INVTYPE_NECK", "INVTYPE_CLOAK", "INVTYPE_FINGER" }, related = { 21712, 21710, 21709 } }, -- Eye of C'Thun
-    [21232] = { slots = { "INVTYPE_WEAPONMAINHAND" }, related = { 21242, 21244, 21272, 21269 } }, -- Imperial Qiraji Armaments
-    [21237] = { slots = { "INVTYPE_WEAPONMAINHAND" }, related = { 21268, 21273, 21275 } }, -- Imperial Qiraji Regalia
-    [20928] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, related = { 21333, 21330, 21359, 21361, 21349, 21350, 21365, 21367 } }, -- Qiraji Bindings of Command
-    [20932] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" }, related = { 21388, 21391, 21338, 21335, 21344, 21345, 21355, 21354 } }, -- Qiraji Bindings of Dominance
-    [20929] = { slots = { "INVTYPE_CHEST" }, related = { 21389, 21331, 21364, 21370 } }, -- Carapace of the Old God
-    [20933] = { slots = { "INVTYPE_CHEST" }, related = { 21334, 21343, 21357, 21351 } }, -- Husk of the Old God
-    [20926] = { slots = { "INVTYPE_HEAD" }, related = { 21329, 21337, 21347, 21348 } }, -- Vek'nilash's Circlet
-    [20930] = { slots = { "INVTYPE_HEAD" }, related = { 21387, 21360, 21353, 21366 } }, -- Vek'lor's Diadem
-    [20927] = { slots = { "INVTYPE_LEGS" }, related = { 21332, 21362, 21346, 21352 } }, -- Ouro's Intact Hide
-    [20931] = { slots = { "INVTYPE_LEGS" }, related = { 21390, 21336, 21356, 21368 } }, -- Skin of the Great Sandworm
+    -- Head of Onyxia
+    [18423] = { slots = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_TRINKET" },
+                related = { 18404, 18403, 18406 },
+                classes = { DRUID = 18403, HUNTER = 18404, MAGE = 18403, PALADIN = 18403, PRIEST = 18403, ROGUE = 18404, WARLOCK = 18403, WARRIOR = 18406 } },
+
+    -- Head of Nefarian
+    [19003] = { slots = { "INVTYPE_NECK", "INVTYPE_FINGER", "INVTYPE_HOLDABLE" },
+                related = { 19383, 19384, 19366 },
+                classes = { DRUID = 19366, HUNTER = 19384, MAGE = 19366, PALADIN = 19366, PRIEST = 19366, ROGUE = 19384, WARLOCK = 19366, WARRIOR = 19384 } },
+
+    -- Primal Hakkari Idol
+    [22637] = { slots = { "INVTYPE_HEAD", "INVTYPE_LEGS" } },
+
+    -- Eye of C'Thun
+    [21221] = { slots = { "INVTYPE_NECK", "INVTYPE_CLOAK", "INVTYPE_FINGER" },
+                related = { 21712, 21710, 21709 },
+                classes = { DRUID = 21712, HUNTER = 21710, MAGE = 21709, PALADIN = 21712, PRIEST = 21712, ROGUE = 21710, WARLOCK = 21709, WARRIOR = 21710 } },
+
+    -- Imperial Qiraji Armaments
+    [21232] = { slots = { "INVTYPE_WEAPONMAINHAND" },
+                related = { 21242, 21244, 21272, 21269 },
+                classes = { ROGUE = 21244, WARRIOR = 21269 } },
+
+    -- Imperial Qiraji Regalia
+    [21237] = { slots = { "INVTYPE_WEAPONMAINHAND" },
+                related = { 21268, 21273, 21275 },
+                classes = { DRUID = 21275, MAGE = 21273, PRIEST = 21275, WARLOCK = 21273 }  },
+
+    -- Qiraji Bindings of Command
+    [20928] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" },
+                related = { 21333, 21330, 21359, 21361, 21349, 21350, 21365, 21367 },
+                classes = { HUNTER = 21367, PRIEST = 21350, ROGUE = 21361, WARRIOR = 21330 } },
+
+    -- Qiraji Bindings of Dominance
+    [20932] = { slots = { "INVTYPE_SHOULDER", "INVTYPE_FEET" },
+                related = { 21388, 21391, 21338, 21335, 21344, 21345, 21355, 21354 },
+                classes = { DRUID = 21354, MAGE = 21345, PALADIN = 21391, WARLOCK = 21335 }},
+
+    -- Carapace of the Old God
+    [20929] = { slots = { "INVTYPE_CHEST" },
+                related = { 21389, 21331, 21364, 21370 },
+                classes = { HUNTER = 21370, PALADIN = 21389, ROGUE = 21364, WARRIOR = 21331 } },
+
+    -- Husk of the Old God
+    [20933] = { slots = { "INVTYPE_CHEST" },
+                related = { 21334, 21343, 21357, 21351 },
+                classes = { DRUID = 21357, MAGE = 21343, PRIEST = 21351, WARLOCK = 21334 } },
+
+    -- Vek'nilash's Circlet
+    [20926] = { slots = { "INVTYPE_HEAD" },
+                related = { 21329, 21337, 21347, 21348 },
+                classes = { MAGE = 21347, PRIEST = 21348, WARLOCK = 21337, WARRIOR = 21329 } },
+
+    -- Vek'lor's Diadem
+    [20930] = { slots = { "INVTYPE_HEAD" },
+                related = { 21387, 21360, 21353, 21366 },
+                classes = { DRUID = 21353, HUNTER = 21366, PALADIN = 21387, ROGUE = 21360 } },
+
+    -- Ouro's Intact Hide
+    [20927] = { slots = { "INVTYPE_LEGS" },
+                related = { 21332, 21362, 21346, 21352 },
+                classes = { MAGE = 21346, PRIEST = 21352, ROGUE = 21362, WARRIOR = 21332 } },
+
+    -- Skin of the Great Sandworm
+    [20931] = { slots = { "INVTYPE_LEGS" },
+                related = { 21390, 21336, 21356, 21368 },
+                classes = { DRUID = 21356, HUNTER = 21368, PALADIN = 21390, WARLOCK = 21336 } },
 };
 
 function ABGP:GetRelatedItems(itemLink)
     local itemId = self:GetItemId(itemLink);
     if not itemOverrides[itemId] then return; end
     return itemOverrides[itemId].related;
+end
+
+function ABGP:GetRelatedItemForClass(itemLink, class)
+    local itemId = self:GetItemId(itemLink);
+    if not itemOverrides[itemId] then return; end
+    return itemOverrides[itemId].classes[class];
 end
 
 function ABGP:GetItemEquipSlots(itemLink)
