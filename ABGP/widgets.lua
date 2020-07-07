@@ -1424,7 +1424,7 @@ do
     end
 
     local function Frame_OnEnter(frame)
-        if frame.relatedItems then
+        if frame.relatedItemIds then
             if frame.elvui then
                 frame.fsloot:Hide();
                 frame.relatedItems:Show();
@@ -1657,16 +1657,18 @@ do
                 frame.Cost:SetText(text);
             end
 
-            if not frame.elvui and frame.relatedItems and not frame.Cost:GetText() then
-                frame.RelatedItems:Show();
-                frame.Cost:Hide();
-                frame:SetScript("OnEnter", nil);
-                frame:SetScript("OnLeave", nil);
-            else
-                frame.RelatedItems:Hide();
-                frame.Cost:Show();
-                frame:SetScript("OnEnter", Frame_OnEnter);
-                frame:SetScript("OnLeave", Frame_OnLeave);
+            if not frame.elvui then
+                if frame.relatedItemIds and not frame.Cost:GetText() then
+                    frame.RelatedItems:Show();
+                    frame.Cost:Hide();
+                    frame:SetScript("OnEnter", nil);
+                    frame:SetScript("OnLeave", nil);
+                else
+                    frame.RelatedItems:Hide();
+                    frame.Cost:Show();
+                    frame:SetScript("OnEnter", Frame_OnEnter);
+                    frame:SetScript("OnLeave", Frame_OnLeave);
+                end
             end
         end,
 
@@ -1724,7 +1726,7 @@ do
 
         ["SetRelatedItems"] = function(self, items)
             local frame = self.frame;
-            frame.relatedItems = items;
+            frame.relatedItemIds = items;
 
             local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
             if items then
@@ -1749,16 +1751,18 @@ do
                 end
             end
 
-            if not frame.elvui and frame.relatedItems and not frame.Cost:GetText() then
-                frame.RelatedItems:Show();
-                frame.Cost:Hide();
-                frame:SetScript("OnEnter", nil);
-                frame:SetScript("OnLeave", nil);
-            else
-                frame.RelatedItems:Hide();
-                frame.Cost:Show();
-                frame:SetScript("OnEnter", Frame_OnEnter);
-                frame:SetScript("OnLeave", Frame_OnLeave);
+            if not frame.elvui then
+                if frame.relatedItemIds and not frame.Cost:GetText() then
+                    frame.RelatedItems:Show();
+                    frame.Cost:Hide();
+                    frame:SetScript("OnEnter", nil);
+                    frame:SetScript("OnLeave", nil);
+                else
+                    frame.RelatedItems:Hide();
+                    frame.Cost:Show();
+                    frame:SetScript("OnEnter", Frame_OnEnter);
+                    frame:SetScript("OnLeave", Frame_OnLeave);
+                end
             end
         end,
     }
