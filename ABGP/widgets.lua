@@ -209,11 +209,12 @@ do
             local r, g, b = GetItemQualityColor(rarity);
 
             local name = button:GetName();
-            _G[name .. "NormalTexture"]:SetVertexColor(r, g, b);
             _G[name .. "Icon"]:SetTexture(GetItemIcon(itemLink));
             if usable then
+                _G[name .. "NormalTexture"]:SetVertexColor(r, g, b);
                 _G[name .. "Icon"]:SetVertexColor(1, 1, 1);
             else
+                _G[name .. "NormalTexture"]:SetVertexColor(0.9, 0, 0);
                 _G[name .. "Icon"]:SetVertexColor(0.9, 0, 0);
             end
         end,
@@ -235,6 +236,10 @@ do
         frame:SetScript("OnClick", ItemButton_OnClick);
         frame:SetScript("OnUpdate", ItemButton_OnUpdate);
         frame:SetScript("OnEvent", ItemButton_OnEvent);
+
+        -- _G[frame:GetName() .. "Border"]:Show();
+        _G[frame:GetName() .. "NormalTexture"]:SetSize(60, 60);
+        _G[frame:GetName() .. "NormalTexture"]:SetPoint("CENTER");
 
         -- create widget
         local widget = {
@@ -766,9 +771,9 @@ do
         ["SetRelatedItems"] = function(self, items)
             if items then
                 self.icons:Show();
-                self.frame:SetHeight(36);
-                self.item.text:SetPoint("LEFT", self.item, 2, 9);
-                self.item.text:SetPoint("RIGHT", self.item, -2, 9);
+                self.frame:SetHeight(40);
+                self.item.text:SetPoint("LEFT", self.item, 2, 12);
+                self.item.text:SetPoint("RIGHT", self.item, -2, 12);
 
                 for i, itemId in ipairs(items) do
                     local itemLink = ("item:%d"):format(itemId);
@@ -776,12 +781,12 @@ do
                     self.icons.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
                     button.frame:SetParent(self.icons);
-                    button.frame:SetScale(0.4);
+                    button.frame:SetScale(0.5);
 
                     if i == 1 then
                         button.frame:SetPoint("BOTTOMLEFT", self.icons, 5, 11);
                     else
-                        button.frame:SetPoint("LEFT", self.icons.buttons[i-1].frame, "RIGHT", 6, 0);
+                        button.frame:SetPoint("LEFT", self.icons.buttons[i-1].frame, "RIGHT", 8, 0);
                     end
                 end
             else
@@ -1733,7 +1738,7 @@ do
                     if i == 1 then
                         button.frame:SetPoint("BOTTOMLEFT", relatedFrame, 0, 0);
                     else
-                        button.frame:SetPoint("LEFT", relatedFrame.buttons[i-1].frame, "RIGHT", 6, 0);
+                        button.frame:SetPoint("LEFT", relatedFrame.buttons[i-1].frame, "RIGHT", 8, 0);
                     end
                 end
             else

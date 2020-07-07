@@ -295,7 +295,7 @@ local function RebuildUI()
             if i == #related then
                 button.frame:SetPoint("TOPRIGHT", itemRef.frame, "BOTTOMRIGHT", -3, 0);
             else
-                button.frame:SetPoint("RIGHT", relatedElts[i-1].frame, "LEFT", -6, 0);
+                button.frame:SetPoint("RIGHT", relatedElts[i+1].frame, "LEFT", -8, 0);
             end
         end
     else
