@@ -184,6 +184,10 @@ do
             self.frame:SetParent(_G.UIParent);
         end,
 
+        ["OnRelease"] = function(self)
+            self.frame:UnregisterAllEvents();
+        end,
+
         ["SetItemLink"] = function(self, itemLink, checkUsable)
             local button = self.frame;
             button.itemLink = itemLink;
