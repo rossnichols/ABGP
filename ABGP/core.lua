@@ -63,6 +63,9 @@ end
 function ABGP:OnEnable()
     if GetAddOnMetadata("ABGP", "Version") ~= version then
         self:NotifyVersionMismatch();
+        self:RegisterChatCommand("abgp", function()
+            self:Error("Please restart your game client!");
+        end);
         return;
     end
 
