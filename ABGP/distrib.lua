@@ -443,7 +443,7 @@ local function AddActiveItem(data)
         rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
         data = data,
         receivedComm = false,
-        testItem = not IsInGroup(),
+        testItem = not IsInRaid(),
         totalCount = data.count,
     };
 
