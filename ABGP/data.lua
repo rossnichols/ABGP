@@ -111,7 +111,7 @@ function ABGP:RefreshFromOfficerNotes()
                         trial = true
                     });
                 end
-            elseif note ~= "" then
+            elseif note ~= "" and self:GetEPRaidGroup(rank) then
                 local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
                 if p1ep then
                     p1ep = tonumber(p1ep) / 1000;

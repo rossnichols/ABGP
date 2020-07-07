@@ -266,7 +266,9 @@ local function DrawPriority(container)
                 end
             end
         else
-            PopulateSpreadsheet(widget:GetText(), ABGP.Priorities[ABGP.CurrentPhase], priMapping);
+            PopulateSpreadsheet(widget:GetText(), ABGP.Priorities[ABGP.CurrentPhase], priMapping, function(row)
+                return row.ep ~= 0 and row.gp ~= 0;
+            end);
         end
 
         ABGP:RefreshActivePlayers();

@@ -71,7 +71,6 @@ local rankData = {
     ["Blue Lobster"] =   { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
     ["Officer Alt"] =    { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
     ["Lobster Alt"] =    { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
-    ["Fiddler Crab"] =   { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
 };
 
 function ABGP:GetGPDecayInfo()
@@ -112,7 +111,7 @@ function ABGP:IsTrial(rank)
 end
 
 function ABGP:GetTrialRaidGroup(publicNote)
-    local noteGroup = publicNote:match("^ABGP Raid Group: (.+)$");
+    local noteGroup = publicNote:match("^ABGP Raid Group: (.+)$") or publicNote:match("^ABGP.+RG:([^%s]+)");
     if noteGroup then
         for raidGroup, raidGroupName in pairs(self.RaidGroupNames) do
             if noteGroup == raidGroupName then
@@ -125,7 +124,7 @@ function ABGP:GetTrialRaidGroup(publicNote)
 end
 
 function ABGP:CheckProxy(publicNote)
-    return publicNote:match("^ABGP Proxy: (.+)$");
+    return publicNote:match("^ABGP Proxy: (.+)$") or publicNote:match("^ABGP.+P:([^%s]+)");
 end
 
 local guildInfo = {};
