@@ -168,6 +168,11 @@ do
         end
     end
 
+    local function ItemButton_OnEvent(frame, event)
+        local self = frame.obj;
+        self:SetItemLink(frame.itemLink, frame.checkUsable);
+    end
+
     --[[-----------------------------------------------------------------------------
     Methods
     -------------------------------------------------------------------------------]]
@@ -182,6 +187,7 @@ do
         ["SetItemLink"] = function(self, itemLink, checkUsable)
             local button = self.frame;
             button.itemLink = itemLink;
+            button.checkUsable = checkUsable;
             if not itemLink then return; end
 
             local _, _, rarity = GetItemInfo(itemLink);
@@ -224,6 +230,7 @@ do
         frame:SetScript("OnLeave", ItemButton_OnLeave);
         frame:SetScript("OnClick", ItemButton_OnClick);
         frame:SetScript("OnUpdate", ItemButton_OnUpdate);
+        frame:SetScript("OnEvent", ItemButton_OnEvent);
 
         -- create widget
         local widget = {
