@@ -706,7 +706,8 @@ do
             self.data = data;
 
             self.item.text:SetText(data[ABGP.ItemDataIndex.ITEMLINK] or data[ABGP.ItemDataIndex.NAME]);
-            self.gp.text:SetText(data[ABGP.ItemDataIndex.GP]);
+            local gp = data[ABGP.ItemDataIndex.GP];
+            self.gp.text:SetText(gp == -1 and "" or gp);
             self.notes.text:SetText(data[ABGP.ItemDataIndex.NOTES] and "[Note]" or "");
             self.priority.text:SetText(table.concat(data[ABGP.ItemDataIndex.PRIORITY], ", "));
 
