@@ -478,10 +478,8 @@ function ABGP:StartRaid()
         minHeight = 300,
         maxHeight = 300
     });
-    self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
         ABGP:EndWindowManagement(widget);
-        ABGP:CloseWindow(widget);
         AceGUI:Release(widget);
         activeWindow = nil;
     end);
@@ -633,10 +631,8 @@ function ABGP:UpdateRaid(windowRaid)
         minHeight = 375,
         maxHeight = 450
     });
-    self:OpenWindow(window);
     window:SetCallback("OnClose", function(widget)
         ABGP:EndWindowManagement(widget);
-        ABGP:CloseWindow(widget);
         local popup = widget:GetUserData("popup");
         if popup then popup:Hide(); end
         AceGUI:Release(widget);
