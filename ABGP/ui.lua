@@ -146,7 +146,8 @@ local function DrawPriority(container, options)
                 lastPriority = data.priority;
                 order = count;
             end
-            elt:SetData(data, order, important);
+            local lowPrio = data.ep and data.ep < ABGP:GetMinEP(data.epRaidGroup, ABGP.CurrentPhase);
+            elt:SetData(data, order, important, lowPrio);
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)

@@ -281,7 +281,7 @@ do
             self.background:Hide();
         end,
 
-        ["SetData"] = function(self, data, equippable)
+        ["SetData"] = function(self, data, equippable, lowPrio)
             self.data = data;
 
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
@@ -289,8 +289,10 @@ do
             self.rank.text:SetFontObject((data.preferredGroup and data.group == data.preferredGroup) and "ABGPHighlight" or "GameFontNormal");
             if data.priority then
                 self.priority.text:SetText(("%.3f"):format(data.priority));
+                self.priority.text:SetFontObject(lowPrio and "GameFontDisable" or "GameFontNormal");
             else
                 self.priority.text:SetText("--");
+                self.priority.text:SetFontObject("GameFontNormal");
             end
 
             if equippable then
@@ -475,7 +477,7 @@ do
             self.background:Hide();
         end,
 
-        ["SetData"] = function(self, data, order, important)
+        ["SetData"] = function(self, data, order, important, lowPrio)
             self.data = data;
 
             self.order.text:SetText(order or "");
@@ -485,7 +487,7 @@ do
             self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
             self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
 
-            local specialFont = important and "ABGPHighlight" or "GameFontNormal";
+            local specialFont = important and "ABGPHighlight" or lowPrio and "GameFontDisable" or "GameFontNormal";
             self.order.text:SetFontObject(specialFont);
             self.player.text:SetFontObject(specialFont);
             self.rank.text:SetFontObject(specialFont);

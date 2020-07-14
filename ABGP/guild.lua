@@ -72,6 +72,14 @@ local rankData = {
     ["Officer Alt"] =    { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
     ["Lobster Alt"] =    { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
 };
+local epMins = {
+    [ABGP.RaidGroups.RED] = { [ABGP.PhasesAll.p1] = 125, [ABGP.PhasesAll.p3] = 315 },
+    [ABGP.RaidGroups.BLUE] = { [ABGP.PhasesAll.p1] = 125, [ABGP.PhasesAll.p3] = 190 },
+};
+
+function ABGP:GetMinEP(raidGroup, phase)
+    return epMins[raidGroup][phase] or 0;
+end
 
 function ABGP:GetGPDecayInfo()
     return 0.25, 0;

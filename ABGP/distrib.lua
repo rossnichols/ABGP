@@ -8,13 +8,13 @@ local GetItemInfo = GetItemInfo;
 local IsShiftKeyDown = IsShiftKeyDown;
 local IsControlKeyDown = IsControlKeyDown;
 local GetServerTime = GetServerTime;
-local IsInGroup = IsInGroup;
 local IsMasterLooter = IsMasterLooter;
 local GetNumGroupMembers = GetNumGroupMembers;
 local GiveMasterLoot = GiveMasterLoot;
 local GetMasterLootCandidate = GetMasterLootCandidate;
 local GetLootInfo = GetLootInfo;
 local GetNumLootItems = GetNumLootItems;
+local IsInRaid = IsInRaid;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -166,7 +166,12 @@ local function RebuildUI()
 
         local elt = AceGUI:Create("ABGP_Player");
         elt:SetFullWidth(true);
-        elt:SetData(request, ABGP:GetItemEquipSlots(currentItem.itemLink));
+        local lowPrio;
+        local active = ABGP:GetActivePlayer(request.player);
+        if active and request.ep and currentItem.data.value then
+            lowPrio = request.ep < ABGP:GetMinEP(active.epRaidGroup, currentItem.data.value.phase);
+        end
+        elt:SetData(request, ABGP:GetItemEquipSlots(currentItem.itemLink), lowPrio);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt, event, button)
