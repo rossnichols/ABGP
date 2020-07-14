@@ -829,8 +829,8 @@ function ABGP:ShowAddPlayerWindow()
         local p1gpSum, p1gpCount, p3gpSum, p3gpCount = 0, 0, 0, 0;
         for _, active in pairs(players) do
             if not active.trial then
-                if calcP1 and active[self.Phases.p1] then
-                    if active[self.Phases.p1].epRaidGroup == epGroup then
+                if calcP1 and active[self.Phases.p1] and active[self.Phases.p1].ep >= self:GetMinEP(active.epRaidGroup, self.Phases.p1) then
+                    if active.epRaidGroup == epGroup then
                         p1epSum = p1epSum + active[self.Phases.p1].ep;
                         p1epCount = p1epCount + 1;
                     end
@@ -839,8 +839,8 @@ function ABGP:ShowAddPlayerWindow()
                         p1gpCount = p1gpCount + 1;
                     end
                 end
-                if calcP3 and active[self.Phases.p3] then
-                    if active[self.Phases.p3].epRaidGroup == epGroup then
+                if calcP3 and active[self.Phases.p3] and active[self.Phases.p3].ep >= self:GetMinEP(active.epRaidGroup, self.Phases.p3) then
+                    if active.epRaidGroup == epGroup then
                         p3epSum = p3epSum + active[self.Phases.p3].ep;
                         p3epCount = p3epCount + 1;
                     end
