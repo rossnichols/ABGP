@@ -331,7 +331,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         end
     end
 
-    if data.player and self:GetActivePlayer(data.player) then
+    if data.player then
         table.insert(history, 1, {
             [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
             [ABGP.ItemHistoryIndex.ID] = data.historyId,
