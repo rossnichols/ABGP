@@ -2009,9 +2009,12 @@ do
         };
         for name, script in pairs(scripts) do
             local existing = elt.editbox:GetScript(name);
-            elt.editbox:SetScript(name, script);
             if existing then
-                elt.editbox:HookScript(name, existing);
+                elt.editbox:SetScript(name, function(...)
+                    return script(...) or existing(...);
+                end);
+            else
+                elt.editbox:SetScript(name, script);
             end
         end
 
