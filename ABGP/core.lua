@@ -21,7 +21,6 @@ local GetServerTime = GetServerTime;
 local UnitIsGroupLeader = UnitIsGroupLeader;
 local IsEquippableItem = IsEquippableItem;
 local IsAltKeyDown = IsAltKeyDown;
-local IsMouseButtonDown = IsMouseButtonDown;
 local GetClassColor = GetClassColor;
 local EasyMenu = EasyMenu;
 local ToggleDropDownMenu = ToggleDropDownMenu;
@@ -899,7 +898,7 @@ function ABGP:RegisterModifiedItemClickFn(fn)
 end
 
 ABGP:SecureHook("HandleModifiedItemClick", function(itemLink)
-    if not IsAltKeyDown() or not IsMouseButtonDown("LeftButton") or not ABGP:IsPrivileged() then return; end
+    if not IsAltKeyDown() or not ABGP:IsPrivileged() then return; end
 
     local _, fullLink = GetItemInfo(itemLink);
     if fullLink then
