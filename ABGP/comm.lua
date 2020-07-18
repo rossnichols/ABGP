@@ -77,6 +77,8 @@ ABGP.CommTypes = {
     ITEM_REQUESTCOUNT = { name = "ITEM_REQUESTCOUNT", id = 3, priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
+    -- main: number
+    -- off: number
 
     ITEM_COUNT = { name = "ITEM_COUNT", id = 4, priority = "ALERT" },
     -- itemLink: item link string

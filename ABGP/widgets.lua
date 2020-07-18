@@ -1722,6 +1722,22 @@ do
             end
         end,
 
+        ["SetRequestCounts"] = function(self, main, off)
+            if main == 0 and off == 0 then
+                self:SetRequestCount(0);
+                return;
+            end
+
+            local frame = self.frame;
+            if frame.elvui then
+                frame.requestcountstr:Show();
+                frame.requestcountstr:SetText(("%d/%d"):format(main, off));
+            else
+                frame.IconFrame.RequestCount:Show();
+                frame.IconFrame.RequestCount:SetText(("%d/%d"):format(main, off));
+            end
+        end,
+
         ["GetCount"] = function(self)
             return self.count;
         end,

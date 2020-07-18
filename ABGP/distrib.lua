@@ -313,6 +313,17 @@ local function RebuildUI()
     ABGP:HideContextMenu();
 end
 
+local function GetRequestCounts(requests)
+    local total, main, off = #requests, 0, 0;
+
+    for _, request in ipairs(requests) do
+        if request.requestType == ABGP.RequestTypes.MS then main = main + 1; end
+        if request.requestType == ABGP.RequestTypes.OS then off = off + 1; end
+    end
+
+    return total, main, off;
+end
+
 local function RemoveRequest(sender, itemLink, silent)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
@@ -325,9 +336,12 @@ local function RemoveRequest(sender, itemLink, silent)
             if not silent then
                 ABGP:Notify("%s is now passing on %s.", ABGP:ColorizeName(sender), itemLink);
             end
+            local total, main, off = GetRequestCounts(requests);
             ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
                 itemLink = itemLink,
-                count = #requests,
+                count = total,
+                main = main,
+                off = off,
             }, "BROADCAST");
             break;
         end
@@ -396,9 +410,12 @@ local function ProcessNewRequest(request)
 
     table.insert(requests, request);
     if not oldRequest then
+        local total, main, off = GetRequestCounts(requests);
         ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
             itemLink = request.itemLink,
-            count = #requests,
+            count = total,
+            main = main,
+            off = off,
         }, "BROADCAST");
     end
 

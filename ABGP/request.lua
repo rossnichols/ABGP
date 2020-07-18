@@ -118,6 +118,8 @@ function ABGP:RequestOnItemRequestCount(data, distribution, sender)
 
     if activeItems[itemLink] then
         activeItems[itemLink].requestCount = data.count;
+        activeItems[itemLink].msRequestCount = data.main or 0;
+        activeItems[itemLink].osRequestCount = data.off or 0;
     end
 end
 
@@ -153,6 +155,8 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         sentRequestType = nil,
         count = data.count or 1,
         requestCount = 0,
+        msRequestCount = 0,
+        osRequestCount = 0,
     };
 
     local gpCost, priority, notes = "No GP cost (rolled)", "", "";

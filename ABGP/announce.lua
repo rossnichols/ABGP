@@ -166,8 +166,6 @@ end
 local function SetRequestInfo(elt, itemLink, activeItem)
     local requestType = activeItem.sentRequestType;
     local roll = activeItem.roll;
-    local count = activeItem.count;
-    local requestCount = activeItem.requestCount;
 
     if requestType then
         elt:SetUserData("requested", true);
@@ -210,8 +208,12 @@ local function SetRequestInfo(elt, itemLink, activeItem)
         end
     end
 
-    elt:SetCount(count);
-    elt:SetRequestCount(requestCount);
+    elt:SetCount(activeItem.count);
+    if activeItem.msRequestCount > 0 or activeItem.osRequestCount > 0 then
+        elt:SetRequestCounts(activeItem.msRequestCount, activeItem.osRequestCount);
+    else
+        elt:SetRequestCount(activeItem.requestCount);
+    end
 end
 
 function ABGP:GetLootCount(itemLink)
