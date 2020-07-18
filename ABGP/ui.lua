@@ -1330,7 +1330,7 @@ StaticPopupDialogs["ABGP_UPDATE_PLAYER"] = ABGP:StaticDialogTemplate(ABGP.Static
     button2 = "Cancel",
     maxLetters = 31,
     autoCompleteSource = GetAutoCompleteResults,
-    autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+    autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_IN_GUILD), AUTOCOMPLETE_FLAG_NONE },
     Validate = function(text, data)
         return ABGP:DistribValidateRecipient(text, data.gp, data.value);
     end,
