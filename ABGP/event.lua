@@ -525,7 +525,7 @@ function ABGP:StartRaid()
         end
         phaseSelector:SetValue(phase);
         phaseSelector:Fire("OnValueChanged", phase);
-        window:GetUserData("nameEdit"):SetValue(("%s %s"):format(date("%m/%d/%y", GetServerTime()), shortName)); -- https://strftime.org/
+        window:GetUserData("nameEdit"):SetValue(instances[raidInstance]);
     end);
     window:AddChild(instanceSelector);
     self:AddWidgetTooltip(instanceSelector, "If a preset instance is chosen, EP will automatically be recorded for boss kills.");
@@ -600,6 +600,31 @@ function ABGP:StartRaid()
     local startingValue = instanceInfo[currentInstance] and currentInstance or custom;
     instanceSelector:SetValue(startingValue);
     instanceSelector:Fire("OnValueChanged", startingValue);
+
+    -- local addStandby = AceGUI:Create("Button");
+    -- addStandby:SetFullWidth(true);
+    -- addStandby:SetText("Add Standby");
+    -- addStandby:SetCallback("OnClick", function(widget)
+    --     _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
+    -- end);
+    -- window:AddChild(addStandby);
+    -- self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
+
+    -- local elt = AceGUI:Create("ABGP_Header");
+    -- elt:SetFullWidth(true);
+    -- elt:SetText("Current standby list:");
+    -- window:AddChild(elt);
+
+    -- local scrollContainer = AceGUI:Create("SimpleGroup");
+    -- scrollContainer:SetFullWidth(true);
+    -- scrollContainer:SetFullHeight(true);
+    -- scrollContainer:SetLayout("Fill");
+    -- window:AddChild(scrollContainer);
+
+    -- local scroll = AceGUI:Create("ScrollFrame");
+    -- scroll:SetLayout("List");
+    -- scrollContainer:AddChild(scroll);
+    -- window:SetUserData("standbyList", scroll);
 
     activeWindow = window;
     window.frame:Raise();
@@ -1040,7 +1065,7 @@ StaticPopupDialogs["ABGP_ADD_STANDBY"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
     button2 = "Cancel",
     maxLetters = 31,
     autoCompleteSource = GetAutoCompleteResults,
-    autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
+    autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH, AUTOCOMPLETE_FLAG_IN_GUILD), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
     Commit = function(text, data)
         ABGP:AddStandby(data, text);
     end,
