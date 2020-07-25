@@ -875,7 +875,8 @@ local function DrawRaidHistory(container, options)
             local raid = filtered[i];
             local elt = AceGUI:Create("ABGP_Header");
             elt:SetFullWidth(true);
-            elt:SetText(raid.name);
+            local raidDate = date("%m/%d/%y", raid.startTime); -- https://strftime.org/
+            elt:SetText(("%s (%s)"):format(raid.name, raidDate));
             elt:EnableHighlight(true);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
