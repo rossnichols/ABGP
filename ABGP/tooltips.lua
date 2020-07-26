@@ -14,8 +14,13 @@ function ABGP:HookTooltips()
             local itemName = self:GetItem();
             local value = ABGP:GetItemValue(itemName);
             if value then
-                local gp = value.gp == -1 and "Token" or value.gp;
-                self:AddDoubleLine(("%s Value:"):format(ABGP:ColorizeText("ABGP")), gp, 1, 1, 1, 1, 1, 1);
+                if value.gp ~= -1 then
+                    local category = "";
+                    if value.category == ABGP.ItemCategory.GOLD then category = "|cFFEBB400 [G]|r"; end
+                    if value.category == ABGP.ItemCategory.SILVER then category = "|cFF9BA4A8 [S]|r"; end
+                    local gp = ("%s%s"):format(value.gp, category);
+                    self:AddDoubleLine(("%s Value:"):format(ABGP:ColorizeText("ABGP")), gp, 1, 1, 1, 1, 1, 1);
+                end
 
                 if not value.related then
                     self:AddDoubleLine(("%s Priorities:"):format(ABGP:ColorizeText("ABGP")), table.concat(value.priority, ", "), 1, 1, 1, 1, 1, 1);

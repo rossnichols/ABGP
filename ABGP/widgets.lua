@@ -263,6 +263,14 @@ do
     mainSpecFont:CopyFontObject(GameFontHighlight);
     mainSpecFont:SetTextColor(unpack(ABGP.ColorTable));
 
+    local gold = CreateFont("ABGPGold");
+    gold:CopyFontObject(GameFontHighlight);
+    gold:SetTextColor(0xEB/0xFF, 0xB4/0xFF, 0x00/0xFF);
+
+    local silver = CreateFont("ABGPSilver");
+    silver:CopyFontObject(GameFontHighlight);
+    silver:SetTextColor(0x9B/0xFF, 0xA4/0xFF, 0xA8/0xFF);
+
     --[[-----------------------------------------------------------------------------
     Methods
     -------------------------------------------------------------------------------]]
@@ -713,10 +721,14 @@ do
             self.notes.text:SetText(data[ABGP.ItemDataIndex.NOTES] and "[Note]" or "");
             self.priority.text:SetText(table.concat(data[ABGP.ItemDataIndex.PRIORITY], ", "));
 
-            local font =ABGP:IsItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK]) and "ABGPHighlight" or "GameFontNormal";
-            self.gp.text:SetFontObject(font);
+            local font = ABGP:IsItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK]) and "ABGPHighlight" or "GameFontNormal";
             self.notes.text:SetFontObject(font);
             self.priority.text:SetFontObject(font);
+
+            local font = "GameFontNormal";
+            if data[ABGP.ItemDataIndex.CATEGORY] == ABGP.ItemCategory.GOLD then font = "ABGPGold"; end
+            if data[ABGP.ItemDataIndex.CATEGORY] == ABGP.ItemCategory.SILVER then font = "ABGPSilver"; end
+            self.gp.text:SetFontObject(font);
         end,
 
         ["SetWidths"] = function(self, widths)

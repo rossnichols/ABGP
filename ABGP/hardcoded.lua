@@ -9,7 +9,7 @@ _G.ABGP_Data = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1594071710, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1595730325, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				"Aged Core Leather Gloves",
@@ -1630,6 +1630,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Netherwind Bindings",
@@ -1639,6 +1640,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Nemesis Bracers",
@@ -1648,6 +1650,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Bloodfang Bracers",
@@ -1658,6 +1661,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Stormrage Bracers",
@@ -1667,6 +1671,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonstalker's Bracers",
@@ -1676,6 +1681,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"Judgement Bindings",
@@ -1685,6 +1691,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Bracelets of Wrath",
@@ -1694,6 +1701,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Arcane Infused Gem",
@@ -1703,6 +1711,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"The Black Book",
@@ -1712,6 +1721,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Mantle of the Blackwing Cabal",
@@ -1723,7 +1733,8 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
-				"Shadow Priest Super Priority",
+				"SILVER",
+				"Shadow Priest super-priority",
 			},
 			{
 				"Gloves of Rapid Evolution",
@@ -1733,6 +1744,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Spineshatter",
@@ -1745,7 +1757,8 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"Catch up Priority",
+				"SILVER",
+				"Catch-up",
 			},
 			{
 				"The Untamed Blade",
@@ -1755,6 +1768,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Belt of Transcendence",
@@ -1764,6 +1778,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Netherwind Belt",
@@ -1773,6 +1788,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Nemesis Belt",
@@ -1782,6 +1798,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Bloodfang Belt",
@@ -1792,6 +1809,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Stormrage Belt",
@@ -1801,6 +1819,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonstalker's Belt",
@@ -1810,6 +1829,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"Judgement Belt",
@@ -1819,6 +1839,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Waistband of Wrath",
@@ -1828,6 +1849,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Mind Quickening Gem",
@@ -1837,6 +1859,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Rune of Metamorphosis",
@@ -1846,6 +1869,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Helm of Endless Rage",
@@ -1855,6 +1879,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Pendant of the Fallen Dragon",
@@ -1866,6 +1891,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Red Dragonscale Protector",
@@ -1875,6 +1901,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonfang Blade",
@@ -1886,7 +1913,8 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"Catch up Priority",
+				"SILVER",
+				"Catch-up",
 			},
 			{
 				"Boots of Transcendence",
@@ -1896,6 +1924,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Nemesis Boots",
@@ -1905,6 +1934,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Netherwind Boots",
@@ -1914,6 +1944,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Bloodfang Boots",
@@ -1923,6 +1954,7 @@ ABGP.initialData = {
 				{
 					"Slicey Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Stormrage Boots",
@@ -1932,6 +1964,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonstalker's Greaves",
@@ -1941,6 +1974,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"Judgement Sabatons",
@@ -1950,6 +1984,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Sabatons of Wrath",
@@ -1959,6 +1994,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Lifegiving Gem",
@@ -1968,6 +2004,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Venomous Totem",
@@ -1978,6 +2015,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Black Brood Pauldrons",
@@ -1987,6 +2025,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Bracers of Arcane Accuracy",
@@ -1998,6 +2037,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Heartstriker",
@@ -2010,6 +2050,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Maladath, Runed Blade of the Black Flight",
@@ -2020,6 +2061,7 @@ ABGP.initialData = {
 					"Metal Rogue",
 					"Tank",
 				},
+				"SILVER",
 				"Non-Human Rogues also",
 			},
 			{
@@ -2030,6 +2072,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Netherwind Gloves",
@@ -2039,6 +2082,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Nemesis Gloves",
@@ -2048,6 +2092,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Bloodfang Gloves",
@@ -2057,6 +2102,7 @@ ABGP.initialData = {
 				{
 					"Slicey Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Stormrage Handguards",
@@ -2066,6 +2112,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonstalker's Gauntlets",
@@ -2075,6 +2122,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"Judgement Gauntlets",
@@ -2084,6 +2132,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Gauntlets of Wrath",
@@ -2093,6 +2142,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Scrolls of Blinding Light",
@@ -2102,6 +2152,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Drake Talon Pauldrons",
@@ -2112,6 +2163,7 @@ ABGP.initialData = {
 					"Metal Rogue",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Cloak of Firemaw",
@@ -2123,6 +2175,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Black Ash Robe",
@@ -2132,6 +2185,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Firemaw's Clutch",
@@ -2142,7 +2196,8 @@ ABGP.initialData = {
 					"Mage",
 					"Priest (Shadow)",
 				},
-				"Shadow Priest Super Priority",
+				"SILVER",
+				"Shadow Priest super-priority",
 			},
 			{
 				"Taut Dragonhide Belt",
@@ -2152,6 +2207,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Primalist's Linked Legguards",
@@ -2161,6 +2217,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Legguards of the Fallen Crusader",
@@ -2171,6 +2228,7 @@ ABGP.initialData = {
 					"Metal Rogue",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Claw of the Black Drake",
@@ -2180,6 +2238,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Drake Talon Cleaver",
@@ -2189,6 +2248,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Shadow Wing Focus Staff",
@@ -2200,7 +2260,8 @@ ABGP.initialData = {
 					"Mage",
 					"Warlock",
 				},
-				"Catch up Priority",
+				"SILVER",
+				"Catch-up",
 			},
 			{
 				"Ring of Blackrock",
@@ -2213,6 +2274,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 					"Priest (Shadow)",
 				},
+				"SILVER",
 			},
 			{
 				"Rejuvenating Gem",
@@ -2224,6 +2286,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Ebony Flame Gloves",
@@ -2234,6 +2297,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Malfurion's Blessed Bulwark",
@@ -2244,7 +2308,8 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Metal Rogue",
 				},
-				"Feral Druid Super Priority",
+				"SILVER",
+				"Feral Druid super-priority",
 			},
 			{
 				"Dragonbreath Hand Cannon",
@@ -2256,6 +2321,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Band of Forced Concentration",
@@ -2267,6 +2333,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Aegis of Preservation",
@@ -2276,6 +2343,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Drake Fang Talisman",
@@ -2287,7 +2355,9 @@ ABGP.initialData = {
 					"Metal Rogue",
 					"Slicey Rogue",
 					"Stabby Rogue",
+					"Tank",
 				},
+				"GOLD",
 				"Feral Druid prio unlocks after 4 drops",
 			},
 			{
@@ -2300,6 +2370,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Emberweave Leggings",
@@ -2309,6 +2380,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Dragon's Touch",
@@ -2318,6 +2390,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Herald of Woe",
@@ -2327,10 +2400,11 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Circle of Applied Force",
-				100,
+				200,
 				"|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r",
 				"Flamegor",
 				{
@@ -2340,6 +2414,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Styleen's Impeding Scarab",
@@ -2349,6 +2424,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Pauldrons of Transcendence",
@@ -2358,6 +2434,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Netherwind Mantle",
@@ -2367,6 +2444,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Nemesis Spaulders",
@@ -2376,6 +2454,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Bloodfang Spaulders",
@@ -2385,6 +2464,7 @@ ABGP.initialData = {
 				{
 					"Slicey Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Stormrage Pauldrons",
@@ -2394,6 +2474,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonstalker's Spaulders",
@@ -2403,6 +2484,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"Judgement Spaulders",
@@ -2412,6 +2494,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Pauldrons of Wrath",
@@ -2421,6 +2504,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Taut Dragonhide Shoulderpads",
@@ -2430,6 +2514,7 @@ ABGP.initialData = {
 				{
 					"KAT4FITE",
 				},
+				"SILVER",
 			},
 			{
 				"Elementium Threaded Cloak",
@@ -2440,6 +2525,7 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Taut Dragonhide Gloves",
@@ -2450,6 +2536,7 @@ ABGP.initialData = {
 					"Druid (Heal)",
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Angelista's Grasp",
@@ -2459,6 +2546,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Girdle of the Fallen Crusader",
@@ -2468,6 +2556,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Empowered Leggings",
@@ -2478,6 +2567,7 @@ ABGP.initialData = {
 					"Druid (Heal)",
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Shimmering Geta",
@@ -2489,6 +2579,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Chromatic Boots",
@@ -2498,6 +2589,7 @@ ABGP.initialData = {
 				{
 					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Ashjre'thul, Crossbow of Smiting",
@@ -2507,6 +2599,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"GOLD",
 			},
 			{
 				"Elementium Reinforced Bulwark",
@@ -2516,6 +2609,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Claw of Chromaggus",
@@ -2526,16 +2620,18 @@ ABGP.initialData = {
 					"Mage",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Chromatically Tempered Sword",
-				400,
+				500,
 				"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
 				"Chromaggus",
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Robes of Transcendence",
@@ -2545,6 +2641,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Netherwind Robes",
@@ -2554,6 +2651,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Nemesis Robes",
@@ -2563,6 +2661,7 @@ ABGP.initialData = {
 				{
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Bloodfang Chestpiece",
@@ -2573,6 +2672,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Stormrage Chestguard",
@@ -2582,6 +2682,7 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonstalker's Breastplate",
@@ -2591,6 +2692,7 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
+				"SILVER",
 			},
 			{
 				"Judgement Breastplate",
@@ -2600,6 +2702,7 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Breastplate of Wrath",
@@ -2609,6 +2712,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Head of Nefarian",
@@ -2623,6 +2727,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
+				"SILVER",
 				"Prio for casters with BWL 1H as well",
 			},
 			{
@@ -2630,17 +2735,16 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19383|h[Master Dragonslayer's Medallion]|h|r",
 				"Nefarian",
-				{},
-				nil,
-				"Head of Nefarian",
-			},
-			{
-				"Master Dragonslayer's Orb",
-				0,
-				"|cffa335ee|Hitem:19366|h[Master Dragonslayer's Orb]|h|r",
-				"Nefarian",
-				{},
-				nil,
+				{
+					"Hunter",
+					"KAT4FITE",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"SILVER",
+				"Prio for casters with BWL 1H as well",
 				"Head of Nefarian",
 			},
 			{
@@ -2648,8 +2752,33 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
 				"Nefarian",
-				{},
-				nil,
+				{
+					"Hunter",
+					"KAT4FITE",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"SILVER",
+				"Prio for casters with BWL 1H as well",
+				"Head of Nefarian",
+			},
+			{
+				"Master Dragonslayer's Orb",
+				0,
+				"|cffa335ee|Hitem:19366|h[Master Dragonslayer's Orb]|h|r",
+				"Nefarian",
+				{
+					"Hunter",
+					"KAT4FITE",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"SILVER",
+				"Prio for casters with BWL 1H as well",
 				"Head of Nefarian",
 			},
 			{
@@ -2661,6 +2790,7 @@ ABGP.initialData = {
 					"Druid (Heal)",
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Crul'shorukh, Edge of Chaos",
@@ -2670,6 +2800,7 @@ ABGP.initialData = {
 				{
 					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Ashkandi, Greatsword of the Brotherhood",
@@ -2679,6 +2810,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Staff of the Shadow Flame",
@@ -2689,21 +2821,22 @@ ABGP.initialData = {
 					"Mage",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Mish'undare, Circlet of the Mind Flayer",
-				300,
+				250,
 				"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
 				"Nefarian",
 				{
 					"Mage",
-					"Paladin (Holy)",
 					"Warlock",
 				},
+				"GOLD",
 			},
 			{
 				"Prestor's Talisman of Connivery",
-				200,
+				150,
 				"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
 				"Nefarian",
 				{
@@ -2712,6 +2845,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Cloak of the Brood Lord",
@@ -2723,6 +2857,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Therazane's Link",
@@ -2732,6 +2867,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of the Shadow Flame",
@@ -2742,6 +2878,7 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Archimtiros' Ring of Reckoning",
@@ -2752,17 +2889,18 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Pure Elementium Band",
-				200,
+				150,
 				"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
 				"Nefarian",
 				{
 					"Druid (Heal)",
-					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Neltharion's Tear",
@@ -2771,9 +2909,10 @@ ABGP.initialData = {
 				"Nefarian",
 				{
 					"Mage",
+					"Priest (Shadow)",
 					"Warlock",
 				},
-				"Shadow Priest Prio Unlocks after 4 drops",
+				"GOLD",
 			},
 			{
 				"Cloak of Draconic Might",
@@ -2784,6 +2923,7 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Interlaced Shadow Jerkin",
@@ -2793,10 +2933,11 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of Pure Thought",
-				200,
+				150,
 				"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r",
 				"Trash",
 				{
@@ -2804,6 +2945,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Ringo's Blizzard Boots",
@@ -2813,6 +2955,7 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Band of Dark Dominion",
@@ -2823,6 +2966,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Essence Gatherer",
@@ -2832,6 +2976,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Doom's Edge",
@@ -2842,6 +2987,7 @@ ABGP.initialData = {
 					"Hunter",
 					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Draconic Avenger",
@@ -2851,6 +2997,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Draconic Maul",
@@ -2860,6 +3007,7 @@ ABGP.initialData = {
 				{
 					"KAT4FITE",
 				},
+				"SILVER",
 			},
 			{
 				"Green Dragonskin Cloak",
@@ -2869,6 +3017,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonspur Wraps",
@@ -2878,6 +3027,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonbone Wristguards",
@@ -2887,6 +3037,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Gloves of Delusional Power",
@@ -2896,6 +3047,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Ancient Corroded Leggings",
@@ -2905,6 +3057,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Acid Inscribed Greaves",
@@ -2914,6 +3067,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Trance Stone",
@@ -2926,6 +3080,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Hammer of Bestial Fury",
@@ -2935,6 +3090,7 @@ ABGP.initialData = {
 				{
 					"KAT4FITE",
 				},
+				"SILVER",
 			},
 			{
 				"Staff of Rampant Growth",
@@ -2944,6 +3100,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Malfurion's Signet Ring",
@@ -2953,16 +3110,18 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Deviate Growth Cap",
-				300,
+				250,
 				"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r",
 				"Lethon",
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
 				},
+				"GOLD",
 			},
 			{
 				"Black Bark Wristbands",
@@ -2974,6 +3133,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Gauntlets of the Shining Light",
@@ -2983,6 +3143,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Belt of the Dark Bog",
@@ -2992,6 +3153,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Dark Heart Pants",
@@ -3002,6 +3164,7 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Malignant Footguards",
@@ -3011,6 +3174,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Circlet of Restless Dreams",
@@ -3020,6 +3184,7 @@ ABGP.initialData = {
 				{
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Dragonheart Necklace",
@@ -3029,6 +3194,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Ring of the Unliving",
@@ -3041,6 +3207,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of the Endless Moor",
@@ -3050,6 +3217,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Polished Ironwood Crossbow",
@@ -3059,6 +3227,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Unnatural Leather Spaulders",
@@ -3068,6 +3237,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Mendicant's Slippers",
@@ -3079,6 +3249,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of Fright",
@@ -3089,6 +3260,7 @@ ABGP.initialData = {
 					"Druid (Heal)",
 					"Paladin (Holy)",
 				},
+				"SILVER",
 			},
 			{
 				"Mindtear Band",
@@ -3099,6 +3271,7 @@ ABGP.initialData = {
 					"Mage",
 					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Nightmare Blade",
@@ -3110,6 +3283,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Acid Inscribed Pauldrons",
@@ -3119,6 +3293,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				"SILVER",
 			},
 			{
 				"Jade Inlaid Vestments",
@@ -3128,6 +3303,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Leggings of the Demented Mind",
@@ -3137,6 +3313,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Strangely Glyphed Legplates",
@@ -3146,6 +3323,7 @@ ABGP.initialData = {
 				{
 					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Hibernation Crystal",
@@ -3157,6 +3335,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Emerald Dragonfang",
@@ -3166,6 +3345,7 @@ ABGP.initialData = {
 				{
 					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 		},
 		[ABGP.PhasesAll.p5] = {
@@ -3175,15 +3355,20 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21699|h[Barrage Shoulders]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Breastplate of Annihilation",
-				0,
+				200,
 				"|cffa335ee|Hitem:21814|h[Breastplate of Annihilation]|h|r",
 				"The Prophet Skeram",
 				{
+					"Metal Rogue",
+					"Paladin (Ret)",
 				},
+				"GOLD",
 			},
 			{
 				"Beetle Scaled Wristguards",
@@ -3191,7 +3376,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21708|h[Beetle Scaled Wristguards]|h|r",
 				"The Prophet Skeram",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Leggings of Immersion",
@@ -3199,7 +3386,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21698|h[Leggings of Immersion]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of the Fallen Prophet",
@@ -3207,7 +3396,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21705|h[Boots of the Fallen Prophet]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of the Redeemed Prophecy",
@@ -3215,7 +3406,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21704|h[Boots of the Redeemed Prophecy]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Boots of the Unwavering Will",
@@ -3223,7 +3416,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21706|h[Boots of the Unwavering Will]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Amulet of Foul Warding",
@@ -3231,7 +3426,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21702|h[Amulet of Foul Warding]|h|r",
 				"The Prophet Skeram",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Pendant of the Qiraji Guardian",
@@ -3239,15 +3436,20 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21700|h[Pendant of the Qiraji Guardian]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Cloak of Concentrated Hatred",
-				0,
+				200,
 				"|cffa335ee|Hitem:21701|h[Cloak of Concentrated Hatred]|h|r",
 				"The Prophet Skeram",
 				{
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Ring of Swarming Thought",
@@ -3255,7 +3457,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21707|h[Ring of Swarming Thought]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Hammer of Ji'zhi",
@@ -3263,7 +3467,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21703|h[Hammer of Ji'zhi]|h|r",
 				"The Prophet Skeram",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Staff of the Qiraji Prophets",
@@ -3271,23 +3477,29 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21128|h[Staff of the Qiraji Prophets]|h|r",
 				"The Prophet Skeram",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Guise of the Devourer",
-				0,
+				250,
 				"|cffa335ee|Hitem:21693|h[Guise of the Devourer]|h|r",
 				"Bug Trio",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Ternary Mantle",
-				0,
+				250,
 				"|cffa335ee|Hitem:21694|h[Ternary Mantle]|h|r",
 				"Bug Trio",
 				{
+					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Cape of the Trinity",
@@ -3295,7 +3507,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21697|h[Cape of the Trinity]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Robes of the Triumvirate",
@@ -3303,31 +3517,41 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21696|h[Robes of the Triumvirate]|h|r",
 				"Bug Trio",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Triad Girdle",
-				0,
+				150,
 				"|cffa335ee|Hitem:21692|h[Triad Girdle]|h|r",
 				"Bug Trio",
 				{
+					"Metal Rogue",
+					"Tank",
 				},
+				"SILVER",
 			},
 			{
 				"Angelista's Touch",
-				0,
+				150,
 				"|cffa335ee|Hitem:21695|h[Angelista's Touch]|h|r",
 				"Bug Trio",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Vest of Swift Execution",
-				0,
+				200,
 				"|cffa335ee|Hitem:21680|h[Vest of Swift Execution]|h|r",
 				"Bug Trio",
 				{
+					"KAT4FITE",
+					"Metal Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Ring of the Devoured",
@@ -3335,7 +3559,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21681|h[Ring of the Devoured]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Petrified Scarab",
@@ -3343,7 +3569,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21685|h[Petrified Scarab]|h|r",
 				"Bug Trio",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Wand of Qiraji Nobility",
@@ -3351,7 +3579,10 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21603|h[Wand of Qiraji Nobility]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
+				"Lower prio if you have Touch of Chaos",
 			},
 			{
 				"Angelista's Charm",
@@ -3359,7 +3590,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21690|h[Angelista's Charm]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Gloves of Ebru",
@@ -3367,7 +3600,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21689|h[Gloves of Ebru]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Ooze-ridden Gauntlets",
@@ -3375,23 +3610,30 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21691|h[Ooze-ridden Gauntlets]|h|r",
 				"Bug Trio",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Boots of the Fallen Hero",
-				0,
+				175,
 				"|cffa335ee|Hitem:21688|h[Boots of the Fallen Hero]|h|r",
 				"Bug Trio",
 				{
+					"Metal Rogue",
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Mantle of Phrenic Power",
-				0,
+				100,
 				"|cffa335ee|Hitem:21686|h[Mantle of Phrenic Power]|h|r",
 				"Bug Trio",
 				{
+					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Mantle of the Desert's Fury",
@@ -3399,7 +3641,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21684|h[Mantle of the Desert's Fury]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Mantle of the Desert Crusade",
@@ -3407,7 +3651,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21683|h[Mantle of the Desert Crusade]|h|r",
 				"Bug Trio",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Bile-Covered Gauntlets",
@@ -3415,7 +3661,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21682|h[Bile-Covered Gauntlets]|h|r",
 				"Bug Trio",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Ukko's Ring of Darkness",
@@ -3423,15 +3671,21 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21687|h[Ukko's Ring of Darkness]|h|r",
 				"Bug Trio",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Creeping Vine Helm",
-				0,
+				200,
 				"|cffa335ee|Hitem:21669|h[Creeping Vine Helm]|h|r",
 				"Battleguard Sartura",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
 				},
+				"SILVER",
+				"Druid super-priority, catch-up",
 			},
 			{
 				"Necklace of Purity",
@@ -3439,7 +3693,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21678|h[Necklace of Purity]|h|r",
 				"Battleguard Sartura",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Robes of the Battleguard",
@@ -3447,39 +3703,49 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21671|h[Robes of the Battleguard]|h|r",
 				"Battleguard Sartura",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Gloves of Enforcement",
-				0,
+				200,
 				"|cffa335ee|Hitem:21672|h[Gloves of Enforcement]|h|r",
 				"Battleguard Sartura",
 				{
+					"KAT4FITE",
 				},
+				"GOLD",
 			},
 			{
 				"Gauntlets of Steadfast Determination",
-				0,
+				175,
 				"|cffa335ee|Hitem:21674|h[Gauntlets of Steadfast Determination]|h|r",
 				"Battleguard Sartura",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Thick Qirajihide Belt",
-				0,
+				150,
 				"|cffa335ee|Hitem:21675|h[Thick Qirajihide Belt]|h|r",
 				"Battleguard Sartura",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Leggings of the Festering Swarm",
-				0,
+				100,
 				"|cffa335ee|Hitem:21676|h[Leggings of the Festering Swarm]|h|r",
 				"Battleguard Sartura",
 				{
+					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Scaled Leggings of Qiraji Fury",
@@ -3487,7 +3753,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21668|h[Scaled Leggings of Qiraji Fury]|h|r",
 				"Battleguard Sartura",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Legplates of Blazing Light",
@@ -3495,7 +3763,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21667|h[Legplates of Blazing Light]|h|r",
 				"Battleguard Sartura",
 				{
+					"Paladin (Holy)",
 				},
+				"GOLD",
 			},
 			{
 				"Recomposed Boots",
@@ -3503,23 +3773,33 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21648|h[Recomposed Boots]|h|r",
 				"Battleguard Sartura",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Badge of the Swarmguard",
-				0,
+				300,
 				"|cffa335ee|Hitem:21670|h[Badge of the Swarmguard]|h|r",
 				"Battleguard Sartura",
 				{
+					"Hunter",
+					"KAT4FITE",
+					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Sartura's Might",
-				0,
+				300,
 				"|cffa335ee|Hitem:21666|h[Sartura's Might]|h|r",
 				"Battleguard Sartura",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Silithid Claw",
@@ -3527,15 +3807,19 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21673|h[Silithid Claw]|h|r",
 				"Battleguard Sartura",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Mantle of Wicked Revenge",
-				0,
+				200,
 				"|cffa335ee|Hitem:21665|h[Mantle of Wicked Revenge]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"KAT4FITE",
 				},
+				"GOLD",
 			},
 			{
 				"Pauldrons of the Unrelenting",
@@ -3543,7 +3827,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21639|h[Pauldrons of the Unrelenting]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Cloak of Untold Secrets",
@@ -3551,15 +3837,21 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21627|h[Cloak of Untold Secrets]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Robes of the Guardian Saint",
-				0,
+				200,
 				"|cffa335ee|Hitem:21663|h[Robes of the Guardian Saint]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Silithid Carapace Chestguard",
@@ -3567,15 +3859,20 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21652|h[Silithid Carapace Chestguard]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Scaled Sand Reaver Leggings",
-				0,
+				300,
 				"|cffa335ee|Hitem:21651|h[Scaled Sand Reaver Leggings]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Metal Rogue",
+					"Paladin (Ret)",
 				},
+				"GOLD",
 			},
 			{
 				"Hive Tunneler's Boots",
@@ -3583,15 +3880,20 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21645|h[Hive Tunneler's Boots]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Ancient Qiraji Ripper",
-				0,
+				400,
 				"|cffa335ee|Hitem:21650|h[Ancient Qiraji Ripper]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Barb of the Sand Reaver",
@@ -3599,23 +3901,33 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21635|h[Barb of the Sand Reaver]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Hunter",
 				},
+				"GOLD",
 			},
 			{
 				"Barbed Choker",
-				0,
+				100,
 				"|cffa335ee|Hitem:21664|h[Barbed Choker]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Hunter",
+					"Metal Rogue",
+					"Paladin (Ret)",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Fetish of the Sand Reaver",
-				0,
+				200,
 				"|cffa335ee|Hitem:21647|h[Fetish of the Sand Reaver]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Libram of Grace",
@@ -3623,7 +3935,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:22402|h[Libram of Grace]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Totem of Life",
@@ -3631,7 +3945,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:22396|h[Totem of Life]|h|r",
 				"Fankriss the Unyielding",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Gauntlets of Kalimdor",
@@ -3639,7 +3955,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21624|h[Gauntlets of Kalimdor]|h|r",
 				"Viscidus",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Gauntlets of the Righteous Champion",
@@ -3647,7 +3965,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21623|h[Gauntlets of the Righteous Champion]|h|r",
 				"Viscidus",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Slime-coated Leggings",
@@ -3655,31 +3975,43 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21626|h[Slime-coated Leggings]|h|r",
 				"Viscidus",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Sharpened Silithid Femur",
-				0,
+				450,
 				"|cffa335ee|Hitem:21622|h[Sharpened Silithid Femur]|h|r",
 				"Viscidus",
 				{
+					"Mage",
+					"Warlock",
 				},
+				"GOLD",
 			},
 			{
 				"Ring of the Qiraji Fury",
-				0,
+				100,
 				"|cffa335ee|Hitem:21677|h[Ring of the Qiraji Fury]|h|r",
 				"Viscidus",
 				{
+					"Metal Rogue",
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Scarab Brooch",
-				0,
+				50,
 				"|cffa335ee|Hitem:21625|h[Scarab Brooch]|h|r",
 				"Viscidus",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Idol of Health",
@@ -3687,87 +4019,385 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:22399|h[Idol of Health]|h|r",
 				"Viscidus",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Qiraji Bindings of Command",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20928|h[Qiraji Bindings of Command]|h|r",
 				"Viscidus, Princess Huhuran",
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
 				},
+				"GOLD",
+			},
+			{
+				"Conqueror's Greaves",
+				300,
+				"|cffa335ee|Hitem:21333|h[Conqueror's Greaves]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Conqueror's Spaulders",
+				300,
+				"|cffa335ee|Hitem:21330|h[Conqueror's Spaulders]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Deathdealer's Boots",
+				300,
+				"|cffa335ee|Hitem:21359|h[Deathdealer's Boots]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Deathdealer's Spaulders",
+				300,
+				"|cffa335ee|Hitem:21361|h[Deathdealer's Spaulders]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Footwraps of the Oracle",
+				300,
+				"|cffa335ee|Hitem:21349|h[Footwraps of the Oracle]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Mantle of the Oracle",
+				300,
+				"|cffa335ee|Hitem:21350|h[Mantle of the Oracle]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Striker's Footguards",
+				300,
+				"|cffa335ee|Hitem:21365|h[Striker's Footguards]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
+			},
+			{
+				"Striker's Pauldrons",
+				300,
+				"|cffa335ee|Hitem:21367|h[Striker's Pauldrons]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Qiraji Bindings of Command",
 			},
 			{
 				"Qiraji Bindings of Dominance",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20932|h[Qiraji Bindings of Dominance]|h|r",
 				"Viscidus, Princess Huhuran",
 				{
+					"Mage",
+					"Warlock",
 				},
+				"GOLD",
+			},
+			{
+				"Avenger's Greaves",
+				250,
+				"|cffa335ee|Hitem:21388|h[Avenger's Greaves]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Avenger's Pauldrons",
+				250,
+				"|cffa335ee|Hitem:21391|h[Avenger's Pauldrons]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Doomcaller's Footwraps",
+				250,
+				"|cffa335ee|Hitem:21338|h[Doomcaller's Footwraps]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Doomcaller's Mantle",
+				250,
+				"|cffa335ee|Hitem:21335|h[Doomcaller's Mantle]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Enigma Boots",
+				250,
+				"|cffa335ee|Hitem:21344|h[Enigma Boots]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Enigma Shoulderpads",
+				250,
+				"|cffa335ee|Hitem:21345|h[Enigma Shoulderpads]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Genesis Boots",
+				250,
+				"|cffa335ee|Hitem:21355|h[Genesis Boots]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
+			},
+			{
+				"Genesis Shoulderpads",
+				250,
+				"|cffa335ee|Hitem:21354|h[Genesis Shoulderpads]|h|r",
+				"Viscidus, Princess Huhuran",
+				{
+					"Mage",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Qiraji Bindings of Dominance",
 			},
 			{
 				"Cloak of the Golden Hive",
-				0,
+				125,
 				"|cffa335ee|Hitem:21621|h[Cloak of the Golden Hive]|h|r",
 				"Princess Huhuran",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Hive Defiler Wristguards",
-				0,
+				250,
 				"|cffa335ee|Hitem:21618|h[Hive Defiler Wristguards]|h|r",
 				"Princess Huhuran",
 				{
+					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Gloves of the Messiah",
-				0,
+				75,
 				"|cffa335ee|Hitem:21619|h[Gloves of the Messiah]|h|r",
 				"Princess Huhuran",
 				{
+					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Wasphide Gauntlets",
-				0,
+				100,
 				"|cffa335ee|Hitem:21617|h[Wasphide Gauntlets]|h|r",
 				"Princess Huhuran",
 				{
+					"Druid (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Ring of the Martyr",
-				0,
+				150,
 				"|cffa335ee|Hitem:21620|h[Ring of the Martyr]|h|r",
 				"Princess Huhuran",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
 				},
+				"GOLD",
 			},
 			{
 				"Huhuran's Stinger",
-				0,
+				50,
 				"|cffa335ee|Hitem:21616|h[Huhuran's Stinger]|h|r",
 				"Princess Huhuran",
 				{
+					"Metal Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Vek'lor's Diadem",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20930|h[Vek'lor's Diadem]|h|r",
 				"Twin Emperors",
 				{
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"GOLD",
+			},
+			{
+				"Avenger's Crown",
+				100,
+				"|cffa335ee|Hitem:21387|h[Avenger's Crown]|h|r",
+				"Twin Emperors",
+				{
+					"Slicey Rogue",
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Vek'lor's Diadem",
+			},
+			{
+				"Deathdealer's Helm",
+				100,
+				"|cffa335ee|Hitem:21360|h[Deathdealer's Helm]|h|r",
+				"Twin Emperors",
+				{
+					"Slicey Rogue",
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Vek'lor's Diadem",
+			},
+			{
+				"Genesis Helm",
+				100,
+				"|cffa335ee|Hitem:21353|h[Genesis Helm]|h|r",
+				"Twin Emperors",
+				{
+					"Slicey Rogue",
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Vek'lor's Diadem",
+			},
+			{
+				"Striker's Diadem",
+				100,
+				"|cffa335ee|Hitem:21366|h[Striker's Diadem]|h|r",
+				"Twin Emperors",
+				{
+					"Slicey Rogue",
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Vek'lor's Diadem",
 			},
 			{
 				"Qiraji Execution Bracers",
-				0,
+				150,
 				"|cffa335ee|Hitem:21602|h[Qiraji Execution Bracers]|h|r",
 				"Twin Emperors",
 				{
+					"KAT4FITE",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Vek'lor's Gloves of Devastation",
@@ -3775,71 +4405,157 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21599|h[Vek'lor's Gloves of Devastation]|h|r",
 				"Twin Emperors",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Royal Qiraji Belt",
-				0,
+				200,
 				"|cffa335ee|Hitem:21598|h[Royal Qiraji Belt]|h|r",
 				"Twin Emperors",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Boots of Epiphany",
-				0,
+				75,
 				"|cffa335ee|Hitem:21600|h[Boots of Epiphany]|h|r",
 				"Twin Emperors",
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Ring of Emperor Vek'lor",
-				0,
+				100,
 				"|cffa335ee|Hitem:21601|h[Ring of Emperor Vek'lor]|h|r",
 				"Twin Emperors",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Royal Scepter of Vek'lor",
-				0,
+				200,
 				"|cffa335ee|Hitem:21597|h[Royal Scepter of Vek'lor]|h|r",
 				"Twin Emperors",
 				{
+					"Mage",
+					"Warlock",
 				},
+				"GOLD",
 			},
 			{
 				"Vek'nilash's Circlet",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20926|h[Vek'nilash's Circlet]|h|r",
 				"Twin Emperors",
 				{
+					"Mage",
+					"Metal Rogue",
+					"Priest (Shadow)",
+					"Tank",
+					"Warlock",
 				},
+				"GOLD",
+			},
+			{
+				"Conqueror's Crown",
+				250,
+				"|cffa335ee|Hitem:21329|h[Conqueror's Crown]|h|r",
+				"Twin Emperors",
+				{
+					"Mage",
+					"Metal Rogue",
+					"Priest (Shadow)",
+					"Tank",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Vek'nilash's Circlet",
+			},
+			{
+				"Doomcaller's Circlet",
+				250,
+				"|cffa335ee|Hitem:21337|h[Doomcaller's Circlet]|h|r",
+				"Twin Emperors",
+				{
+					"Mage",
+					"Metal Rogue",
+					"Priest (Shadow)",
+					"Tank",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Vek'nilash's Circlet",
+			},
+			{
+				"Enigma Circlet",
+				250,
+				"|cffa335ee|Hitem:21347|h[Enigma Circlet]|h|r",
+				"Twin Emperors",
+				{
+					"Mage",
+					"Metal Rogue",
+					"Priest (Shadow)",
+					"Tank",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Vek'nilash's Circlet",
+			},
+			{
+				"Tiara of the Oracle",
+				250,
+				"|cffa335ee|Hitem:21348|h[Tiara of the Oracle]|h|r",
+				"Twin Emperors",
+				{
+					"Mage",
+					"Metal Rogue",
+					"Priest (Shadow)",
+					"Tank",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Vek'nilash's Circlet",
 			},
 			{
 				"Amulet of Vek'nilash",
-				0,
+				250,
 				"|cffa335ee|Hitem:21608|h[Amulet of Vek'nilash]|h|r",
 				"Twin Emperors",
 				{
+					"Mage",
+					"Warlock",
 				},
+				"GOLD",
 			},
 			{
 				"Bracelets of Royal Redemption",
-				0,
+				150,
 				"|cffa335ee|Hitem:21604|h[Bracelets of Royal Redemption]|h|r",
 				"Twin Emperors",
 				{
+					"Paladin (Holy)",
 				},
+				"GOLD",
 			},
 			{
 				"Gloves of the Hidden Temple",
-				0,
+				200,
 				"|cffa335ee|Hitem:21605|h[Gloves of the Hidden Temple]|h|r",
 				"Twin Emperors",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Regenerating Belt of Vek'nilash",
@@ -3847,7 +4563,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21609|h[Regenerating Belt of Vek'nilash]|h|r",
 				"Twin Emperors",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Grasp of the Fallen Emperor",
@@ -3855,7 +4573,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21607|h[Grasp of the Fallen Emperor]|h|r",
 				"Twin Emperors",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Belt of the Fallen Emperor",
@@ -3863,7 +4583,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21606|h[Belt of the Fallen Emperor]|h|r",
 				"Twin Emperors",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Kalimdor's Revenge",
@@ -3871,23 +4593,33 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21679|h[Kalimdor's Revenge]|h|r",
 				"Twin Emperors",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Don Rigoberto's Lost Hat",
-				0,
+				250,
 				"|cffa335ee|Hitem:21615|h[Don Rigoberto's Lost Hat]|h|r",
 				"Ouro",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Burrower Bracers",
-				0,
+				100,
 				"|cffa335ee|Hitem:21611|h[Burrower Bracers]|h|r",
 				"Ouro",
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"The Burrower's Shell",
@@ -3895,15 +4627,20 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:23558|h[The Burrower's Shell]|h|r",
 				"Ouro",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Jom Gabbar",
-				0,
+				200,
 				"|cffa335ee|Hitem:23570|h[Jom Gabbar]|h|r",
 				"Ouro",
 				{
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Wormscale Blocker",
@@ -3911,103 +4648,250 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21610|h[Wormscale Blocker]|h|r",
 				"Ouro",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Larvae of the Great Worm",
-				0,
+				300,
 				"|cffa335ee|Hitem:23557|h[Larvae of the Great Worm]|h|r",
 				"Ouro",
 				{
+					"Hunter",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"SILVER",
 			},
 			{
 				"Ouro's Intact Hide",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20927|h[Ouro's Intact Hide]|h|r",
 				"Ouro",
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
 				},
+				"GOLD",
+			},
+			{
+				"Conqueror's Legguards",
+				250,
+				"|cffa335ee|Hitem:21332|h[Conqueror's Legguards]|h|r",
+				"Ouro",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Ouro's Intact Hide",
+			},
+			{
+				"Deathdealer's Leggings",
+				250,
+				"|cffa335ee|Hitem:21362|h[Deathdealer's Leggings]|h|r",
+				"Ouro",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Ouro's Intact Hide",
+			},
+			{
+				"Enigma Leggings",
+				250,
+				"|cffa335ee|Hitem:21346|h[Enigma Leggings]|h|r",
+				"Ouro",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Ouro's Intact Hide",
+			},
+			{
+				"Trousers of the Oracle",
+				250,
+				"|cffa335ee|Hitem:21352|h[Trousers of the Oracle]|h|r",
+				"Ouro",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				[8] = "Ouro's Intact Hide",
 			},
 			{
 				"Skin of the Great Sandworm",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20931|h[Skin of the Great Sandworm]|h|r",
 				"Ouro",
 				{
+					"Garbage",
 				},
+				"SILVER",
+			},
+			{
+				"Avenger's Legguards",
+				0,
+				"|cffa335ee|Hitem:21390|h[Avenger's Legguards]|h|r",
+				"Ouro",
+				{
+					"Garbage",
+				},
+				"SILVER",
+				nil,
+				"Skin of the Great Sandworm",
+			},
+			{
+				"Doomcaller's Trousers",
+				0,
+				"|cffa335ee|Hitem:21336|h[Doomcaller's Trousers]|h|r",
+				"Ouro",
+				{
+					"Garbage",
+				},
+				"SILVER",
+				nil,
+				"Skin of the Great Sandworm",
+			},
+			{
+				"Genesis Trousers",
+				0,
+				"|cffa335ee|Hitem:21356|h[Genesis Trousers]|h|r",
+				"Ouro",
+				{
+					"Garbage",
+				},
+				"SILVER",
+				nil,
+				"Skin of the Great Sandworm",
+			},
+			{
+				"Striker's Leggings",
+				0,
+				"|cffa335ee|Hitem:21368|h[Striker's Leggings]|h|r",
+				"Ouro",
+				{
+					"Garbage",
+				},
+				"SILVER",
+				nil,
+				"Skin of the Great Sandworm",
 			},
 			{
 				"Mark of C'Thun",
-				0,
+				100,
 				"|cffa335ee|Hitem:22732|h[Mark of C'Thun]|h|r",
 				"C'Thun",
 				{
+					"Tank",
 				},
+				"GOLD",
 			},
 			{
 				"Cloak of Clarity",
-				0,
+				150,
 				"|cffa335ee|Hitem:21583|h[Cloak of Clarity]|h|r",
 				"C'Thun",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"SILVER",
 			},
 			{
 				"Cloak of the Devoured",
-				0,
+				150,
 				"|cffa335ee|Hitem:22731|h[Cloak of the Devoured]|h|r",
 				"C'Thun",
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
+				"SILVER",
 			},
 			{
 				"Eyestalk Waist Cord",
-				0,
+				350,
 				"|cffa335ee|Hitem:22730|h[Eyestalk Waist Cord]|h|r",
 				"C'Thun",
 				{
+					"Mage",
+					"Warlock",
 				},
+				"GOLD",
+				"Mage super-priority",
 			},
 			{
 				"Grasp of the Old God",
-				0,
+				250,
 				"|cffa335ee|Hitem:21582|h[Grasp of the Old God]|h|r",
 				"C'Thun",
 				{
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Belt of Never-ending Agony",
-				0,
+				300,
 				"|cffa335ee|Hitem:21586|h[Belt of Never-ending Agony]|h|r",
 				"C'Thun",
 				{
+					"KAT4FITE",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Dark Storm Gauntlets",
-				0,
+				350,
 				"|cffa335ee|Hitem:21585|h[Dark Storm Gauntlets]|h|r",
 				"C'Thun",
 				{
+					"Mage",
+					"Warlock",
 				},
+				"GOLD",
+				"Warlock super-priority",
 			},
 			{
 				"Gauntlets of Annihilation",
-				0,
+				450,
 				"|cffa335ee|Hitem:21581|h[Gauntlets of Annihilation]|h|r",
 				"C'Thun",
 				{
+					"Metal Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Ring of the Godslayer",
-				0,
+				250,
 				"|cffa335ee|Hitem:21596|h[Ring of the Godslayer]|h|r",
 				"C'Thun",
 				{
+					"Hunter",
 				},
+				"GOLD",
 			},
 			{
 				"Vanquished Tentacle of C'Thun",
@@ -4015,23 +4899,31 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21579|h[Vanquished Tentacle of C'Thun]|h|r",
 				"C'Thun",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Scepter of the False Prophet",
-				0,
+				500,
 				"|cffa335ee|Hitem:21839|h[Scepter of the False Prophet]|h|r",
 				"C'Thun",
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
+				"GOLD",
 			},
 			{
 				"Death's Sting",
-				0,
+				600,
 				"|cffa335ee|Hitem:21126|h[Death's Sting]|h|r",
 				"C'Thun",
 				{
+					"Stabby Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Dark Edge of Insanity",
@@ -4039,31 +4931,205 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21134|h[Dark Edge of Insanity]|h|r",
 				"C'Thun",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Carapace of the Old God",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20929|h[Carapace of the Old God]|h|r",
 				"C'Thun",
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
 				},
+				"GOLD",
+				"Tank super-priority",
+			},
+			{
+				"Avenger's Breastplate",
+				300,
+				"|cffa335ee|Hitem:21389|h[Avenger's Breastplate]|h|r",
+				"C'Thun",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				"Tank super-priority",
+				"Carapace of the Old God",
+			},
+			{
+				"Conqueror's Breastplate",
+				300,
+				"|cffa335ee|Hitem:21331|h[Conqueror's Breastplate]|h|r",
+				"C'Thun",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				"Tank super-priority",
+				"Carapace of the Old God",
+			},
+			{
+				"Deathdealer's Vest",
+				300,
+				"|cffa335ee|Hitem:21364|h[Deathdealer's Vest]|h|r",
+				"C'Thun",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				"Tank super-priority",
+				"Carapace of the Old God",
+			},
+			{
+				"Striker's Hauberk",
+				300,
+				"|cffa335ee|Hitem:21370|h[Striker's Hauberk]|h|r",
+				"C'Thun",
+				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
+				},
+				"GOLD",
+				"Tank super-priority",
+				"Carapace of the Old God",
 			},
 			{
 				"Husk of the Old God",
-				0,
+				-1,
 				"|cffa335ee|Hitem:20933|h[Husk of the Old God]|h|r",
 				"C'Thun",
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
+				"SILVER",
+			},
+			{
+				"Doomcaller's Robes",
+				100,
+				"|cffa335ee|Hitem:21334|h[Doomcaller's Robes]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"SILVER",
+				nil,
+				"Husk of the Old God",
+			},
+			{
+				"Enigma Robes",
+				100,
+				"|cffa335ee|Hitem:21343|h[Enigma Robes]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"SILVER",
+				nil,
+				"Husk of the Old God",
+			},
+			{
+				"Genesis Vest",
+				100,
+				"|cffa335ee|Hitem:21357|h[Genesis Vest]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"SILVER",
+				nil,
+				"Husk of the Old God",
+			},
+			{
+				"Vestments of the Oracle",
+				100,
+				"|cffa335ee|Hitem:21351|h[Vestments of the Oracle]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"SILVER",
+				nil,
+				"Husk of the Old God",
 			},
 			{
 				"Eye of C'Thun",
-				0,
+				-1,
 				"|cffa335ee|Hitem:21221|h[Eye of C'Thun]|h|r",
 				"C'Thun",
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
+				"GOLD",
+			},
+			{
+				"Amulet of the Fallen God",
+				350,
+				"|cffa335ee|Hitem:21712|h[Amulet of the Fallen God]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Eye of C'Thun",
+			},
+			{
+				"Cloak of the Fallen God",
+				350,
+				"|cffa335ee|Hitem:21710|h[Cloak of the Fallen God]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Eye of C'Thun",
+			},
+			{
+				"Ring of the Fallen God",
+				350,
+				"|cffa335ee|Hitem:21709|h[Ring of the Fallen God]|h|r",
+				"C'Thun",
+				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
+				},
+				"GOLD",
+				nil,
+				"Eye of C'Thun",
 			},
 			{
 				"Garb of Royal Ascension",
@@ -4071,7 +5137,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21838|h[Garb of Royal Ascension]|h|r",
 				"Trash",
 				{
+					"Progression",
 				},
+				"GOLD",
 			},
 			{
 				"Gloves of the Immortal",
@@ -4079,7 +5147,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21888|h[Gloves of the Immortal]|h|r",
 				"Trash",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Gloves of the Redeemed Prophecy",
@@ -4087,7 +5157,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21889|h[Gloves of the Redeemed Prophecy]|h|r",
 				"Trash",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Neretzek, The Blood Drinker",
@@ -4095,23 +5167,29 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21856|h[Neretzek, The Blood Drinker]|h|r",
 				"Trash",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Anubisath Warhammer",
-				0,
+				500,
 				"|cffa335ee|Hitem:21837|h[Anubisath Warhammer]|h|r",
 				"Trash",
 				{
+					"Metal Rogue",
 				},
+				"GOLD",
 			},
 			{
 				"Ritssyn's Ring of Chaos",
-				0,
+				250,
 				"|cffa335ee|Hitem:21836|h[Ritssyn's Ring of Chaos]|h|r",
 				"Trash",
 				{
+					"Mage",
 				},
+				"SILVER",
 			},
 			{
 				"Shard of the Fallen Star",
@@ -4119,23 +5197,122 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21891|h[Shard of the Fallen Star]|h|r",
 				"Trash",
 				{
+					"Garbage",
 				},
+				"SILVER",
 			},
 			{
 				"Imperial Qiraji Regalia",
-				0,
+				-1,
 				"|cffa335ee|Hitem:21237|h[Imperial Qiraji Regalia]|h|r",
 				"Shared",
 				{
+					"KAT4FITE",
+					"Mage",
+					"Priest (Heal)",
+					"Warlock",
 				},
+				"GOLD",
+			},
+			{
+				"Blessed Qiraji War Hammer",
+				450,
+				"|cffa335ee|Hitem:21268|h[Blessed Qiraji War Hammer]|h|r",
+				"Shared",
+				{
+					"KAT4FITE",
+					"Mage",
+					"Priest (Heal)",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Imperial Qiraji Regalia",
+			},
+			{
+				"Blessed Qiraji Acolyte Staff",
+				450,
+				"|cffa335ee|Hitem:21273|h[Blessed Qiraji Acolyte Staff]|h|r",
+				"Shared",
+				{
+					"KAT4FITE",
+					"Mage",
+					"Priest (Heal)",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Imperial Qiraji Regalia",
+			},
+			{
+				"Blessed Qiraji Augur Staff",
+				450,
+				"|cffa335ee|Hitem:21275|h[Blessed Qiraji Augur Staff]|h|r",
+				"Shared",
+				{
+					"KAT4FITE",
+					"Mage",
+					"Priest (Heal)",
+					"Warlock",
+				},
+				"GOLD",
+				[8] = "Imperial Qiraji Regalia",
 			},
 			{
 				"Imperial Qiraji Armaments",
-				0,
+				-1,
 				"|cffa335ee|Hitem:21232|h[Imperial Qiraji Armaments]|h|r",
 				"Shared",
 				{
+					"Stabby Rogue",
 				},
+				"GOLD",
+			},
+			{
+				"Blessed Qiraji War Axe",
+				400,
+				"|cffa335ee|Hitem:21242|h[Blessed Qiraji War Axe]|h|r",
+				"Shared",
+				{
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Imperial Qiraji Armaments",
+			},
+			{
+				"Blessed Qiraji Pugio",
+				400,
+				"|cffa335ee|Hitem:21244|h[Blessed Qiraji Pugio]|h|r",
+				"Shared",
+				{
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Imperial Qiraji Armaments",
+			},
+			{
+				"Blessed Qiraji Musket",
+				400,
+				"|cffa335ee|Hitem:21272|h[Blessed Qiraji Musket]|h|r",
+				"Shared",
+				{
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Imperial Qiraji Armaments",
+			},
+			{
+				"Blessed Qiraji Bulwark",
+				400,
+				"|cffa335ee|Hitem:21269|h[Blessed Qiraji Bulwark]|h|r",
+				"Shared",
+				{
+					"Stabby Rogue",
+				},
+				"GOLD",
+				nil,
+				"Imperial Qiraji Armaments",
 			},
 		},
 	},

@@ -492,8 +492,9 @@ ABGP.ItemDataIndex = {
     ITEMLINK = 3,
     BOSS = 4,
     PRIORITY = 5,
-    NOTES = 6,
-    RELATED = 7,
+    CATEGORY = 6,
+    NOTES = 7,
+    RELATED = 8,
 };
 ABGP.ItemHistoryType = {
     ITEM = 1,
@@ -529,6 +530,10 @@ ABGP.ItemHistoryIndex = {
     GP = 5,         -- new gp (number)
     NOTES = 6,      -- notes (string)
 };
+ABGP.ItemCategory = {
+    SILVER = "SILVER",
+    GOLD = "GOLD",
+};
 
 function ABGP:GetHistoryId()
     local nextId = max(lastHistoryId, GetServerTime());
@@ -553,6 +558,7 @@ local function ValueFromItem(item, phase)
         priority = item[ABGP.ItemDataIndex.PRIORITY],
         notes = item[ABGP.ItemDataIndex.NOTES],
         related = item[ABGP.ItemDataIndex.RELATED],
+        category = item[ABGP.ItemDataIndex.CATEGORY],
         phase = phase
     };
 end
@@ -567,11 +573,13 @@ function ABGP:RefreshItemValues()
             itemValues[self:GetItemId(itemLink)] = value;
 
             -- Try to ensure info about the item is cached locally.
-            GetItemInfo(itemLink);
-            local related = self:GetRelatedItems(itemLink);
-            if related then
-                for _, item in ipairs(related) do
-                    GetItemInfo(item);
+            if itemLink then
+                GetItemInfo(itemLink);
+                local related = self:GetRelatedItems(itemLink);
+                if related then
+                    for _, item in ipairs(related) do
+                        GetItemInfo(item);
+                    end
                 end
             end
         end
@@ -786,6 +794,7 @@ function ABGP:GetItemName(itemLink)
 end
 
 function ABGP:GetItemId(itemLink)
+    if not itemLink then return 0; end
     if type(itemLink) == "number" then return itemLink; end
     return tonumber(itemLink:match("item:(%d+)") or "");
 end

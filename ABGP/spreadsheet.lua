@@ -47,11 +47,16 @@ local gpColumns = {
 
 local itemPriorities = ABGP:GetItemPriorities();
 local itemMapping = {
-    ["Item"] = ABGP.ItemDataIndex.NAME,
-    ["GP Cost"] = ABGP.ItemDataIndex.GP,
     ["Boss"] = ABGP.ItemDataIndex.BOSS,
+    ["Item"] = ABGP.ItemDataIndex.NAME,
+    ["Category"] = ABGP.ItemDataIndex.CATEGORY,
+    ["GP"] = ABGP.ItemDataIndex.GP,
     ["Notes"] = ABGP.ItemDataIndex.NOTES,
     -- ABGP.ItemDataIndex.ITEMLINK and ABGP.ItemDataIndex.PRIORITY populated elsewhere
+};
+local catMapping = {
+    ["Silver"] = ABGP.ItemCategory.SILVER,
+    ["Gold"] = ABGP.ItemCategory.GOLD,
 };
 for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;
@@ -227,7 +232,7 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
             end
             local insert, isError = true, false;
             if filter then
-                insert, isError = filter(row);
+                insert, isError = filter(row, newData);
             end
             if isError then
                 ABGP:Notify("Cancelling import!");
@@ -451,8 +456,9 @@ local function DrawGP(container)
 end
 
 local function DrawItems(container)
+    local insertedTokens = {};
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row, newData)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
@@ -461,6 +467,27 @@ local function DrawItems(container)
                 end
             end
             table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
+
+            row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+
+            local name = row[ABGP.ItemDataIndex.NAME];
+            local token, related = name:match("^(.+) %((.+)%)$");
+            if token then
+                if not insertedTokens[token] then
+                    insertedTokens[token] = true;
+                    table.insert(newData, {
+                        [ABGP.ItemDataIndex.BOSS] = row[ABGP.ItemDataIndex.BOSS],
+                        [ABGP.ItemDataIndex.NAME] = token,
+                        [ABGP.ItemDataIndex.CATEGORY] = row[ABGP.ItemDataIndex.CATEGORY],
+                        [ABGP.ItemDataIndex.GP] = -1,
+                        [ABGP.ItemDataIndex.PRIORITY] = ABGP.tCopy(row[ABGP.ItemDataIndex.PRIORITY]),
+                        [ABGP.ItemDataIndex.NOTES] = row[ABGP.ItemDataIndex.NOTES]
+                    });
+                end
+                row[ABGP.ItemDataIndex.NAME] = related;
+                row[ABGP.ItemDataIndex.RELATED] = token;
+            end
+
             return true;
         end);
 
@@ -469,6 +496,7 @@ local function DrawItems(container)
         DrawItems(container);
 
         if ABGP:FixupItems() then
+            ABGP:RefreshItemValues();
             if ABGP.Phases[ABGP.CurrentPhase] then
                 ABGP:CommitItemData();
             end
@@ -559,6 +587,7 @@ function ABGP:BuildItemLookup(shouldPrint)
     local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair.items;
     -- local aq20 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheRuinsofAhnQiraj.items;
     local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj.items;
+    local token = _G.AtlasLoot.Data.Token;
     for _, collection in ipairs({ mc, ony, wb, bwl, aq40 }) do
         for _, sub in ipairs(collection) do
             if sub[1] then
@@ -569,6 +598,20 @@ function ABGP:BuildItemLookup(shouldPrint)
                             lookup[name] = ABGP:ShortenLink(link);
                         else
                             succeeded = false;
+                        end
+
+                        local tokenData = token.GetTokenData(item[2]);
+                        if tokenData then
+                            for _, v in ipairs(tokenData) do
+                                if type(v) ~= "table" then
+                                    local name, link = GetItemInfo(v);
+                                    if name then
+                                        lookup[name] = ABGP:ShortenLink(link);
+                                    else
+                                        succeeded = false;
+                                    end
+                                end
+                            end
                         end
                     end
                 end
@@ -584,7 +627,7 @@ function ABGP:BuildItemLookup(shouldPrint)
 end
 
 function ABGP:FixupItems()
-    if not self:BuildItemLookup(true) then return false; end
+    self:BuildItemLookup();
 
     local p1 = _G.ABGP_Data.p1.itemValues;
     local p3 = _G.ABGP_Data.p3.itemValues;
@@ -595,6 +638,7 @@ function ABGP:FixupItems()
                 entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
             else
                 self:Notify(("FAILED TO FIND [%s]"):format(entry[ABGP.ItemDataIndex.NAME]));
+                return false;
             end
         end
     end

@@ -5,6 +5,7 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local UnitName = UnitName;
 local UnitExists = UnitExists;
 local IsInGroup = IsInGroup;
+local GetItemInfo = GetItemInfo;
 local date = date;
 local table = table;
 local ipairs = ipairs;
@@ -543,52 +544,44 @@ local function DrawItems(container, options)
             export:SetWidth(100);
             export:SetText("Export");
             export:SetCallback("OnClick", function(widget, event)
-                local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
                 local _, sortedPriorities = ABGP:GetItemPriorities();
-                local text = ("Boss\tItem\t%s\tGP Cost\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
-                for i, item in ipairs(items) do
+                local function buildPrioString(prio)
                     local itemPriorities = {};
-                    for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do itemPriorities[pri] = true; end
+                    for _, pri in ipairs(prio) do itemPriorities[pri] = true; end
                     local priorities = {};
                     for _, pri in ipairs(sortedPriorities) do
                         table.insert(priorities, itemPriorities[pri] and "TRUE" or "");
                     end
-                    text = text .. ("%s\t%s\t%s\t%s\t%s%s"):format(
-                        item[ABGP.ItemDataIndex.BOSS] or "", item[ABGP.ItemDataIndex.NAME], table.concat(priorities, "\t"), item[ABGP.ItemDataIndex.GP], item[ABGP.ItemDataIndex.NOTES] or "", (i == #items and "" or "\n"));
+                    return table.concat(priorities, "\t");
                 end
 
-                -- Alternative export format
-                -- text = "";
-                -- for i, item in ipairs(items) do
-                --     local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
-                --     local related = ABGP:GetRelatedItems(itemLink);
-                --     local category = "";
-                --     local notesLower = (item[ABGP.ItemDataIndex.NOTES] or ""):lower();
-                --     if notesLower:find("silver") then category = "Silver"; end
-                --     if notesLower:find("gold") then category = "Gold"; end
-                --     if related then
-                --         for _, relatedItem in ipairs(related) do
-                --             local name = GetItemInfo(relatedItem);
-                --             text = text .. ("%s\t%s\t%s\t%s\t%s\t%s%s"):format(
-                --                 item[ABGP.ItemDataIndex.NAME],
-                --                 name,
-                --                 "",
-                --                 category,
-                --                 item[ABGP.ItemDataIndex.GP],
-                --                 table.concat(item[ABGP.ItemDataIndex.PRIORITY], ", "),
-                --                 "\n");
-                --         end
-                --     else
-                --         text = text .. ("%s\t%s\t%s\t%s\t%s\t%s%s"):format(
-                --             item[ABGP.ItemDataIndex.NAME],
-                --             "",
-                --             "",
-                --             category,
-                --             item[ABGP.ItemDataIndex.GP],
-                --             table.concat(item[ABGP.ItemDataIndex.PRIORITY], ", "),
-                --             "\n");
-                --     end
-                -- end
+                local tokens = {};
+                local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
+                local text = ("Boss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
+                for i, item in ipairs(items) do
+                    if item[ABGP.ItemDataIndex.GP] == -1 then
+                        tokens[item[ABGP.ItemDataIndex.NAME]] = item;
+                    elseif item[ABGP.ItemDataIndex.RELATED] then
+                        local token = tokens[item[ABGP.ItemDataIndex.RELATED]];
+                        text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+                            token[ABGP.ItemDataIndex.BOSS] or "",
+                            ("%s (%s)"):format(item[ABGP.ItemDataIndex.RELATED], item[ABGP.ItemDataIndex.NAME]),
+                            item[ABGP.ItemDataIndex.CATEGORY],
+                            item[ABGP.ItemDataIndex.GP],
+                            buildPrioString(token[ABGP.ItemDataIndex.PRIORITY]),
+                            token[ABGP.ItemDataIndex.NOTES] or "",
+                            "\n");
+                    else
+                        text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+                            item[ABGP.ItemDataIndex.BOSS] or "",
+                            item[ABGP.ItemDataIndex.NAME],
+                            item[ABGP.ItemDataIndex.CATEGORY],
+                            item[ABGP.ItemDataIndex.GP],
+                            buildPrioString(item[ABGP.ItemDataIndex.PRIORITY]),
+                            item[ABGP.ItemDataIndex.NOTES] or "",
+                            "\n");
+                    end
+                end
 
                 local window = AceGUI:Create("ABGP_OpaqueWindow");
                 window.frame:SetFrameStrata("DIALOG");
@@ -672,7 +665,9 @@ local function DrawItems(container, options)
 
     if selector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
         for i, item in ipairs(items) do
-            table.insert(filtered, item)
+            if not item[ABGP.ItemDataIndex.RELATED] then
+                table.insert(filtered, item);
+            end
         end
     else
         local exact = searchText:match("^\"(.+)\"$");
@@ -1197,8 +1192,8 @@ function ABGP:CreateMainWindow(command)
     window:AddChild(mainLine);
 
     local phases, phaseNames = {}, {};
-    for i, v in ipairs(ABGP:IsPrivileged() and ABGP.PhasesSortedAll or ABGP.PhasesSorted) do phases[i] = v; end
-    for k, v in pairs(ABGP:IsPrivileged() and ABGP.PhaseNamesAll or ABGP.PhaseNames) do phaseNames[k] = v; end
+    for i, v in ipairs(ABGP.PhasesSortedAll) do phases[i] = v; end
+    for k, v in pairs(ABGP.PhaseNamesAll) do phaseNames[k] = v; end
     local phaseSelector = AceGUI:Create("Dropdown");
     phaseSelector:SetWidth(110);
     phaseSelector:SetList(phaseNames, phases);
