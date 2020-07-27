@@ -286,11 +286,15 @@ local function RebuildUI()
 
     local related = ABGP:GetTokenItems(currentItem.itemLink);
     local relatedElts = window:GetUserData("relatedItems");
+    for k, elt in pairs(relatedElts) do
+        AceGUI:Release(elt);
+        relatedElts[k] = nil;
+    end
     if related then
         for i = #related, 1, -1 do
             local itemId = related[i];
             local itemLink = ("item:%d"):format(itemId);
-            local button = relatedElts[i] or AceGUI:Create("ABGP_ItemButton");
+            local button = AceGUI:Create("ABGP_ItemButton");
             relatedElts[i] = button;
             button:SetItemLink(itemLink, false);
             button.frame:SetParent(itemRef.frame);
@@ -301,11 +305,6 @@ local function RebuildUI()
             else
                 button.frame:SetPoint("RIGHT", relatedElts[i+1].frame, "LEFT", -8, 0);
             end
-        end
-    else
-        for k, elt in pairs(relatedElts) do
-            AceGUI:Release(elt);
-            relatedElts[k] = nil;
         end
     end
 

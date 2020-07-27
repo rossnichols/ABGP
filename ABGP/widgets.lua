@@ -821,6 +821,10 @@ do
         end,
 
         ["SetRelatedItems"] = function(self, items)
+            for k, button in pairs(self.icons.buttons) do
+                AceGUI:Release(button);
+                self.icons.buttons[k] = nil;
+            end
             if items then
                 self.icons:Show();
                 self.frame:SetHeight(40);
@@ -829,7 +833,7 @@ do
 
                 for i, itemId in ipairs(items) do
                     local itemLink = ("item:%d"):format(itemId);
-                    local button = self.icons.buttons[i] or AceGUI:Create("ABGP_ItemButton");
+                    local button = AceGUI:Create("ABGP_ItemButton");
                     self.icons.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
                     button.frame:SetParent(self.icons);
@@ -846,10 +850,6 @@ do
                 self.frame:SetHeight(20);
                 self.item.text:SetPoint("LEFT", self.item, 2, 1);
                 self.item.text:SetPoint("RIGHT", self.item, -2, 1);
-                for k, button in pairs(self.icons.buttons) do
-                    AceGUI:Release(button);
-                    self.icons.buttons[k] = nil;
-                end
             end
         end,
     }
@@ -1810,10 +1810,14 @@ do
             frame.relatedItemIds = items;
 
             local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
+            for k, button in pairs(relatedFrame.buttons) do
+                AceGUI:Release(button);
+                relatedFrame.buttons[k] = nil;
+            end
             if items then
                 for i, itemId in ipairs(items) do
                     local itemLink = ("item:%d"):format(itemId);
-                    local button = relatedFrame.buttons[i] or AceGUI:Create("ABGP_ItemButton");
+                    local button = AceGUI:Create("ABGP_ItemButton");
                     button:SetUserData("lootFrame", self);
                     relatedFrame.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
@@ -1827,11 +1831,6 @@ do
                     else
                         button.frame:SetPoint("LEFT", relatedFrame.buttons[i-1].frame, "RIGHT", 8, 0);
                     end
-                end
-            else
-                for k, button in pairs(relatedFrame.buttons) do
-                    AceGUI:Release(button);
-                    relatedFrame.buttons[k] = nil;
                 end
             end
 
