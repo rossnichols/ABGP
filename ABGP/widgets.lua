@@ -152,9 +152,14 @@ do
         ResetCursor();
     end
 
-    local function ItemButton_OnClick(self)
-        if self.itemLink and IsModifiedClick() then
-            _G.HandleModifiedItemClick(select(2, GetItemInfo(self.itemLink)));
+    local function ItemButton_OnClick(frame)
+        local self = frame.obj;
+        if not frame.itemLink then return; end
+
+        if IsModifiedClick() then
+            _G.HandleModifiedItemClick(select(2, GetItemInfo(frame.itemLink)));
+        elseif self.clickable then
+            self:Fire("OnClick", frame.itemLink);
         end
     end
 
@@ -182,6 +187,9 @@ do
             self:SetItemLink();
             self.frame:ClearAllPoints();
             self.frame:SetParent(_G.UIParent);
+
+            self:SetClickable(false);
+            self.frame:SetChecked(false);
         end,
 
         ["OnRelease"] = function(self)
@@ -218,6 +226,17 @@ do
                 _G[name .. "Icon"]:SetVertexColor(0.9, 0, 0);
             end
         end,
+
+        ["SetClickable"] = function(self, clickable)
+            self.clickable = clickable;
+            if clickable then
+                self.frame:GetCheckedTexture():SetAlpha(1);
+                self.frame:GetPushedTexture():SetAlpha(1);
+            else
+                self.frame:GetCheckedTexture():SetAlpha(0);
+                self.frame:GetPushedTexture():SetAlpha(0);
+            end
+        end,
     }
 
     --[[-----------------------------------------------------------------------------
@@ -228,8 +247,6 @@ do
 
         local frame = CreateFrame("CheckButton", "ABGPActionButton" .. widgetNum, _G.UIParent, "ActionButtonTemplate");
         frame:RegisterForClicks("LeftButtonUp");
-        frame:SetPushedTexture(nil);
-        frame:SetCheckedTexture(nil);
 
         frame:SetScript("OnEnter", ItemButton_OnEnter);
         frame:SetScript("OnLeave", ItemButton_OnLeave);
@@ -311,6 +328,16 @@ do
             else
                 self.frame:SetHeight(22);
                 self.equipped.text:SetText("");
+            end
+
+            if data.selectedItem then
+                self.frame:SetHeight(36);
+                self.selectedItem:SetItemLink(data.selectedItem);
+                self.selectedItem.frame:Show();
+                self.selectedContainer:SetWidth((self.selectedItem.frame:GetWidth() - 8) * self.selectedItem.frame:GetScale());
+            else
+                self.selectedItem.frame:Hide();
+                self.selectedContainer:SetWidth(1);
             end
 
             local requestTypes = {
@@ -397,11 +424,19 @@ do
             self:GetParent():RequestHighlight(false);
         end);
 
+        local selectedContainer = CreateFrame("Frame");
+        selectedContainer:SetPoint("BOTTOMLEFT", frame, 0, 3);
+        local selectedItem = AceGUI:Create("ABGP_ItemButton");
+        selectedItem.frame:SetParent(frame);
+        selectedItem.frame:SetScale(0.4);
+        selectedItem.frame:SetPoint("BOTTOMLEFT", selectedContainer, 6, 3);
+        selectedContainer:SetHeight(1);
+
         local equipped = CreateElement(frame);
         equipped.text = CreateFontString(equipped);
         equipped.text:SetTextHeight(11);
         equipped:ClearAllPoints();
-        equipped:SetPoint("BOTTOMLEFT", frame, 0, 3);
+        equipped:SetPoint("BOTTOMLEFT", selectedContainer, "BOTTOMRIGHT");
         equipped:SetPoint("BOTTOMRIGHT", frame, 0, 3);
         equipped:SetHeight(16);
 
@@ -449,6 +484,8 @@ do
             requestType = requestType,
             roll = roll,
             notes = notes,
+            selectedItem = selectedItem,
+            selectedContainer = selectedContainer,
 
             background = background,
 
@@ -1546,6 +1583,20 @@ do
         parent:Hide();
     end
 
+    local function RelatedItem_OnClick(widget, event, itemLink)
+        local self = widget:GetUserData("lootFrame");
+        local frame = self.frame;
+        local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
+
+        for _, button in pairs(relatedFrame.buttons) do
+            if button ~= widget then
+                button.frame:SetChecked(false);
+            end
+        end
+
+        self:Fire("OnRelatedItemSelected", widget.frame:GetChecked() and itemLink or nil);
+    end
+
     local frameCount = 0;
 
     --[[-----------------------------------------------------------------------------
@@ -1763,10 +1814,13 @@ do
                 for i, itemId in ipairs(items) do
                     local itemLink = ("item:%d"):format(itemId);
                     local button = relatedFrame.buttons[i] or AceGUI:Create("ABGP_ItemButton");
+                    button:SetUserData("lootFrame", self);
                     relatedFrame.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
                     button.frame:SetParent(relatedFrame);
                     button.frame:SetScale(0.4);
+                    button:SetClickable(true);
+                    button:SetCallback("OnClick", RelatedItem_OnClick);
 
                     if i == 1 then
                         button.frame:SetPoint("BOTTOMLEFT", relatedFrame, 0, 0);
@@ -1795,12 +1849,26 @@ do
                 end
             end
         end,
+
+        ["SetAlert"] = function(self, alert)
+            local frame = self.frame;
+            local tooltip = frame.tooltip;
+            local need = frame.elvui and frame.needbutt or frame.NeedButton;
+            if alert then
+                tooltip:SetOwner(need, "ANCHOR_BOTTOMRIGHT");
+                tooltip:SetText(alert, 1, 1, 1);
+            else
+                tooltip:Hide();
+            end
+        end,
     }
 
     --[[-----------------------------------------------------------------------------
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
+        local widgetNum = AceGUI:GetNextWidgetNum(Type);
+
         local frame, button, need, close;
         if ABGP:Get("lootElvUI") and _G.ElvUI then
             frame = _G.ElvUI[1]:GetModule("Misc"):CreateRollFrame();
@@ -1940,6 +2008,10 @@ do
         fadeOut:SetOrder(2);
         frame.glow = glow;
         glow.animIn = animIn;
+
+        local tooltipName = "ABGPLootFrameTooltip" .. widgetNum;
+        frame.tooltip = CreateFrame("GameTooltip", tooltipName, _G.UIParent, "GameTooltipTemplate");
+        _G[tooltipName .. "TextLeft1"]:SetFontObject("GameFontNormalSmall");
 
         -- create widget
         local widget = {

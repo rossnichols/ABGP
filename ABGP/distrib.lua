@@ -42,12 +42,10 @@ local function CalculateCost(request)
     local costBase = currentItem.costBase == -1 and 0 or currentItem.costBase;
     if request then
         if request.requestType == ABGP.RequestTypes.MS then
-            local related = ABGP:GetRelatedItems(currentItem.itemLink);
-            if related and request.class then
-                local relatedItem = ABGP:GetRelatedItemForClass(currentItem.itemLink, request.class);
-                local relatedValue = ABGP:GetItemValue(relatedItem);
-                if relatedValue then
-                    costBase = relatedValue.gp;
+            if request.selectedItem then
+                local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(request.selectedItem));
+                if selectedValue then
+                    costBase = selectedValue.gp;
                 end
             end
         else
@@ -171,7 +169,8 @@ local function RebuildUI()
         if active and request.ep and currentItem.data.value then
             lowPrio = request.ep < ABGP:GetMinEP(active.epRaidGroup, currentItem.data.value.phase);
         end
-        elt:SetData(request, ABGP:GetItemEquipSlots(currentItem.itemLink), lowPrio);
+        local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.data.value and currentItem.data.value.token);
+        elt:SetData(request, equippable, lowPrio);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
         elt:SetCallback("OnClick", function(elt, event, button)
@@ -285,7 +284,7 @@ local function RebuildUI()
     local itemRef = window:GetUserData("itemRef");
     itemRef:SetText(currentItem.itemLink);
 
-    local related = ABGP:GetRelatedItems(currentItem.itemLink);
+    local related = ABGP:GetTokenItems(currentItem.itemLink);
     local relatedElts = window:GetUserData("relatedItems");
     if related then
         for i = #related, 1, -1 do
@@ -392,7 +391,7 @@ local function ProcessNewRequest(request)
     end
 
     -- Persist the equipped items (for requests that come in without them)
-    if oldRequest and oldRequest.equipped then
+    if oldRequest and oldRequest.equipped and not request.equipped then
         request.equipped = oldRequest.equipped;
     end
 
@@ -754,6 +753,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender, version)
         player = sender,
         equipped = data.equipped,
         requestType = data.requestType,
+        selectedItem = data.selectedItem,
         notes = data.notes,
         version = version
     };

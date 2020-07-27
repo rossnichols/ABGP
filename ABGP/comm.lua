@@ -70,6 +70,7 @@ ABGP.CommTypes = {
     -- requestType: string from ABGP.RequestTypes
     -- notes: string or nil
     -- equipped: array of item link strings or nil
+    -- selectedItem: item link string
 
     ITEM_PASS = { name = "ITEM_PASS", id = 2, priority = "INSTANT" },
     -- itemLink: item link string

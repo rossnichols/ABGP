@@ -725,7 +725,7 @@ local function DrawItems(container, options)
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:SetFullWidth(true);
-            elt:SetRelatedItems(ABGP:GetRelatedItems(data[ABGP.ItemDataIndex.ITEMLINK]));
+            elt:SetRelatedItems(ABGP:GetTokenItems(data[ABGP.ItemDataIndex.ITEMLINK]));
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then

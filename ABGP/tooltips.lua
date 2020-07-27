@@ -14,7 +14,7 @@ function ABGP:HookTooltips()
             local itemName = self:GetItem();
             local value = ABGP:GetItemValue(itemName);
             if value then
-                if value.gp ~= -1 then
+                if not value.token then
                     local category = "";
                     if value.category == ABGP.ItemCategory.GOLD then category = "|cFFEBB400 [G]|r"; end
                     if value.category == ABGP.ItemCategory.SILVER then category = "|cFF9BA4A8 [S]|r"; end

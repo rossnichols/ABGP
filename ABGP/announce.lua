@@ -198,14 +198,13 @@ local function SetRequestInfo(elt, itemLink, activeItem)
         local value = ABGP:GetItemValue(itemName);
         local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(ABGP:ColorizeText(value.gp)) or "No GP Cost";
         local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
-        if value and value.gp == -1 then
+        if value and value.token then
+            elt:SetUserData("isToken", true);
             valueText = nil;
             valueTextCompact = "T";
+            elt:SetRelatedItems(ABGP:GetTokenItems(itemLink));
         end
         elt:SetSecondaryText(valueText, valueTextCompact);
-        if value then
-            elt:SetRelatedItems(ABGP:GetRelatedItems(itemLink));
-        end
     end
 
     elt:SetCount(activeItem.count);
@@ -241,14 +240,13 @@ function ABGP:ShowLootFrame(itemLink)
     local value = ABGP:GetItemValue(itemName);
     local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(self:ColorizeText(value.gp)) or "No GP Cost";
     local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
-    if value and value.gp == -1 then
+    if value and value.token then
+        elt:SetUserData("isToken", true);
         valueText = nil;
         valueTextCompact = "T";
+        elt:SetRelatedItems(ABGP:GetTokenItems(itemLink));
     end
     elt:SetSecondaryText(valueText, valueTextCompact);
-    if value then
-        elt:SetRelatedItems(ABGP:GetRelatedItems(itemLink));
-    end
 
     -- Determine the first free slot for the frame.
     local i = 1;
@@ -299,7 +297,17 @@ function ABGP:ShowLootFrame(itemLink)
     end);
     elt:SetCallback("OnRequest", function(widget)
         local itemLink = widget:GetItem();
-        ABGP:ShowRequestPopup(itemLink);
+        if widget:GetUserData("isToken") then
+            local tokenItem = widget:GetUserData("tokenItem");
+            if tokenItem then
+                ABGP:ShowRequestPopup(itemLink, tokenItem);
+            else
+                self:Notify("Please select one of the token's items before requesting!");
+                widget:SetAlert("Choose an item first!");
+            end
+        else
+            ABGP:ShowRequestPopup(itemLink);
+        end
     end);
     elt:SetCallback("OnMouseDown", function(widget)
         GetLootAnchor():StartMoving();
@@ -332,6 +340,10 @@ function ABGP:ShowLootFrame(itemLink)
 
         AceGUI:Release(widget);
         self:Fire(self.InternalEvents.LOOT_FRAME_CLOSED);
+    end);
+    elt:SetCallback("OnRelatedItemSelected", function(widget, event, itemLink)
+        widget:SetAlert(nil);
+        widget:SetUserData("tokenItem", itemLink and self:GetItemId(itemLink) or nil);
     end);
 
     self:Fire(self.InternalEvents.LOOT_FRAME_OPENED);
