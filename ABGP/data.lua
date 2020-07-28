@@ -57,8 +57,8 @@ function ABGP:AddDataHooks()
 end
 
 local function PrioritySort(a, b)
-    if a.priority ~= b.priority then
-        return a.priority > b.priority;
+    if a.priority[ABGP.ItemCategory.GOLD] ~= b.priority[ABGP.ItemCategory.GOLD] then
+        return a.priority[ABGP.ItemCategory.GOLD] > b.priority[ABGP.ItemCategory.GOLD];
     else
         return a.player < b.player;
     end
@@ -66,9 +66,7 @@ end
 
 function ABGP:RefreshFromOfficerNotes()
     local p1Old = self.Priorities[self.Phases.p1];
-    local p3Old = self.Priorities[self.Phases.p3];
     local p1 = {};
-    local p3 = {};
 
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, publicNote, note, _, _, class = GetGuildRosterInfo(i);
@@ -92,70 +90,39 @@ function ABGP:RefreshFromOfficerNotes()
                         player = player,
                         rank = rank,
                         class = class,
-                        epRaidGroup = trialGroup,
-                        gpRaidGroup = trialGroup,
+                        raidGroup = trialGroup,
                         ep = 0,
-                        gp = 0,
-                        priority = 0,
-                        trial = true
-                    });
-                    table.insert(p3, {
-                        player = player,
-                        rank = rank,
-                        class = class,
-                        epRaidGroup = trialGroup,
-                        gpRaidGroup = trialGroup,
-                        ep = 0,
-                        gp = 0,
-                        priority = 0,
+                        gp = { [self.ItemCategory.GOLD] = 0, [self.ItemCategory.SILVER] = 0 },
+                        priority = { [self.ItemCategory.GOLD] = 0, [self.ItemCategory.SILVER] = 0 },
                         trial = true
                     });
                 end
-            elseif note ~= "" and self:GetEPRaidGroup(rank) then
-                local p1ep, p1gp, p3ep, p3gp = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
-                if p1ep then
-                    p1ep = tonumber(p1ep) / 1000;
-                    p1gp = tonumber(p1gp) / 1000;
-                    p3ep = tonumber(p3ep) / 1000;
-                    p3gp = tonumber(p3gp) / 1000;
+            elseif note ~= "" and self:GetRaidGroup(rank) then
+                local ep, gpS, _, gpG = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
+                if ep then
+                    ep = tonumber(ep) / 1000;
+                    gpS = tonumber(gpS) / 1000;
+                    gpG = tonumber(gpG) / 1000;
 
-                    if p1gp ~= 0 then
-                        table.insert(p1, {
-                            player = player,
-                            proxy = proxy,
-                            rank = rank,
-                            class = class,
-                            epRaidGroup = self:GetEPRaidGroup(rank),
-                            gpRaidGroup = self:GetGPRaidGroup(rank, self.Phases.p1),
-                            ep = p1ep,
-                            gp = p1gp,
-                            priority = p1ep * 10 / p1gp
-                        });
-                    end
-                    if p3gp ~= 0 then
-                        table.insert(p3, {
-                            player = player,
-                            proxy = proxy,
-                            rank = rank,
-                            class = class,
-                            epRaidGroup = self:GetEPRaidGroup(rank),
-                            gpRaidGroup = self:GetGPRaidGroup(rank, self.Phases.p3),
-                            ep = p3ep,
-                            gp = p3gp,
-                            priority = p3ep * 10 / p3gp
-                        });
-                    end
+                    table.insert(p1, {
+                        player = player,
+                        proxy = proxy,
+                        rank = rank,
+                        class = class,
+                        raidGroup = self:GetRaidGroup(rank),
+                        ep = ep,
+                        gp = { [self.ItemCategory.GOLD] = gpG, [self.ItemCategory.SILVER] = gpS },
+                        priority = { [self.ItemCategory.GOLD] = ep * 10 / gpG, [self.ItemCategory.SILVER] = ep * 10 / gpS },
+                    });
                 end
             end
         end
     end
 
     table.sort(p1, PrioritySort);
-    table.sort(p3, PrioritySort);
 
-    if not self.tCompare(p1Old, p1, 2) or not self.tCompare(p3Old, p3, 2) then
+    if not self.tCompare(p1Old, p1, 2) then
         self.Priorities[self.Phases.p1] = p1;
-        self.Priorities[self.Phases.p3] = p3;
         self:RefreshActivePlayers();
     end
 end
@@ -217,20 +184,16 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
     local note = "";
     if epgp and not epgp.trial then
         local p1 = epgp[ABGP.Phases.p1];
-        local p3 = epgp[ABGP.Phases.p3];
-        local p1ep, p1gp, p3ep, p3gp = 0, 0, 0, 0;
+        local ep, gpS, gpG = 0, 0, 0;
         if p1 then
-            p1ep = floor(p1.ep * 1000 + 0.5);
-            p1gp = floor(p1.gp * 1000 + 0.5);
+            ep = floor(p1.ep * 1000 + 0.5);
+            gpS = floor(p1.gp[self.ItemCategory.SILVER] * 1000 + 0.5);
+            gpG = floor(p1.gp[self.ItemCategory.GOLD] * 1000 + 0.5);
         end
-        if p3 then
-            p3ep = floor(p3.ep * 1000 + 0.5);
-            p3gp = floor(p3.gp * 1000 + 0.5);
-        end
-        note = ("%d:%d:%d:%d"):format(p1ep, p1gp, p3ep, p3gp);
+        note = ("%d:%d:%d:%d"):format(ep, gpS, 0, gpG);
 
         -- Sanity check: all ranks here must be in a raid group.
-        if not self:GetEPRaidGroup(rank) then
+        if not self:GetRaidGroup(rank) then
             self:Error("%s is rank %s which is not part of a raid group!", player, rank);
             note = "";
         end
@@ -255,11 +218,11 @@ local function UpdateEPGP(itemLink, player, cost, sender, phase, skipOfficerNote
     if epgp and epgp[phase] then
         local phaseEPGP = epgp[phase];
         if not epgp.trial then
-            phaseEPGP.gp = phaseEPGP.gp + cost;
-            phaseEPGP.priority = phaseEPGP.ep * 10 / phaseEPGP.gp;
+            phaseEPGP.gp[cost.category] = phaseEPGP.gp[cost.category] + cost.cost;
+            phaseEPGP.priority[cost.category] = phaseEPGP.ep * 10 / phaseEPGP.gp[cost.category];
             local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
             ABGP:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-                phase, player, proxy, phaseEPGP.ep, phaseEPGP.gp, cost, phaseEPGP.priority);
+                cost.category, player, proxy, phaseEPGP.ep, phaseEPGP.gp[cost.category], cost.cost, phaseEPGP.priority);
             table.sort(ABGP.Priorities[phase], PrioritySort);
 
             ABGP:RefreshActivePlayers();
@@ -294,7 +257,7 @@ function ABGP:PriorityOnItemUnawarded(data)
     if not value then return; end
 
     local cost = self:GetEffectiveCost(data.historyId, data.cost, value.phase) or data.cost;
-    cost = -cost; -- negative because we're undoing the GP adjustment
+    cost.cost = -cost.cost; -- negative because we're undoing the GP adjustment
     UpdateEPGP(data.itemLink, data.player, cost, data.sender, value.phase, data.skipOfficerNote);
 end
 
@@ -306,7 +269,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
-    local history = _G.ABGP_Data[value.phase].gpHistory;
+    local history = _G.ABGP_Data2[value.phase].gpHistory;
 
     if data.oldHistoryId then
         for i, entry in ipairs(history) do
@@ -317,12 +280,12 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
                 -- If the previous award is for the same player, then the officer note will already
                 -- get updated to the proper value for the new award, and writing the officer note
                 -- twice for the same player with no delay will fail.
-                self:Fire(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, {
+                self:Fire(self.InternalEvents.ITEM_UNAWARDED, {
                     itemLink = value.itemLink,
                     historyId = data.oldHistoryId,
                     phase = value.phase,
                     player = entry[ABGP.ItemHistoryIndex.PLAYER],
-                    cost = entry[ABGP.ItemHistoryIndex.GP],
+                    cost = { cost = entry[ABGP.ItemHistoryIndex.GP], category = entry[ABGP.ItemHistoryIndex.CATEGORY] },
                     skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
                     sender = sender,
                 });
@@ -338,7 +301,8 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
             [ABGP.ItemHistoryIndex.DATE] = awardDate,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.ITEMID] = value.itemId,
-            [ABGP.ItemHistoryIndex.GP] = data.cost,
+            [ABGP.ItemHistoryIndex.GP] = data.cost.cost,
+            [ABGP.ItemHistoryIndex.CATEGORY] = data.cost.category,
         });
     end
 
@@ -348,7 +312,7 @@ end
 function ABGP:HistoryTriggerDecay(decayTime)
     local decayValue, decayFloor = self:GetGPDecayInfo();
     for phase in pairs(self.Phases) do
-        table.insert(_G.ABGP_Data[phase].gpHistory, 1, {
+        table.insert(_G.ABGP_Data2[phase].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
             [self.ItemHistoryIndex.DATE] = decayTime,
@@ -384,7 +348,7 @@ function ABGP:HistoryTriggerDecay(decayTime)
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
-function ABGP:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
+function ABGP:AddActivePlayerXXX(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
     if proxy then
         self:Notify("Adding %s into the EPGP system, proxied by %s.", self:ColorizeName(player), self:ColorizeName(proxy));
         _G.GuildRosterSetPublicNote(self:GetGuildIndex(proxy), ("ABGP Proxy: %s"):format(player));
@@ -397,7 +361,7 @@ function ABGP:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
     end
 
     if p1ep ~= 0 and p1gp ~= 0 then
-        table.insert(_G.ABGP_Data[self.Phases.p1].gpHistory, 1, {
+        table.insert(_G.ABGP_Data2[self.Phases.p1].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
             [self.ItemHistoryIndex.DATE] = addTime,
@@ -414,7 +378,7 @@ function ABGP:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
     end
 
     if p3ep ~= 0 and p3gp ~= 0 then
-        table.insert(_G.ABGP_Data[self.Phases.p3].gpHistory, 1, {
+        table.insert(_G.ABGP_Data2[self.Phases.p3].gpHistory, 1, {
             [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
             [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
             [self.ItemHistoryIndex.DATE] = addTime,
@@ -464,27 +428,27 @@ function ABGP:ProcessItemHistory(gpHistory, includeNonItems)
     return processed;
 end
 
-function ABGP:GetEffectiveCost(id, gp, phase)
-    if gp == 0 then return 0, 0; end
-    local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
-    local cost = 0;
+function ABGP:GetEffectiveCost(id, cost, phase)
+    if cost.cost == 0 then return cost, 0; end
+    local history = self:ProcessItemHistory(_G.ABGP_Data2[phase].gpHistory, true);
+    local effectiveCost = 0;
     local decayCount = 0;
 
     for i = #history, 1, -1 do
         local entry = history[i];
         if entry[self.ItemHistoryIndex.ID] == id then
-            cost = gp;
+            effectiveCost = cost.cost;
         elseif cost ~= 0 and entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.DECAY then
-            cost = cost * (1 - entry[self.ItemHistoryIndex.VALUE]);
-            cost = max(cost, entry[self.ItemHistoryIndex.FLOOR]);
+            effectiveCost = effectiveCost * (1 - entry[self.ItemHistoryIndex.VALUE]);
+            effectiveCost = max(effectiveCost, entry[self.ItemHistoryIndex.FLOOR]);
             decayCount = decayCount + 1;
         end
     end
 
-    if cost == 0 then
+    if effectiveCost == 0 then
         return false;
     end
-    return cost, decayCount;
+    return { cost = effectiveCost, category = cost.category }, decayCount;
 end
 
 function ABGP:HistoryOnActivePlayersRefreshed()
@@ -499,20 +463,22 @@ function ABGP:HistoryOnUpdate()
     hasCompleteCached = false;
 end
 
-function ABGP:CalculateCurrentGP(player, phase, history)
-    history = history or self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
+function ABGP:CalculateCurrentGP(player, phase, category, history)
+    history = history or self:ProcessItemHistory(_G.ABGP_Data2[phase].gpHistory, true);
     local gp = 0;
     for i = #history, 1, -1 do
         local entry = history[i];
         local entryType = entry[self.ItemHistoryIndex.TYPE];
         if (entryType == self.ItemHistoryType.ITEM or entryType == self.ItemHistoryType.BONUS) and
-           entry[self.ItemHistoryIndex.PLAYER] == player then
+           entry[self.ItemHistoryIndex.PLAYER] == player and
+           entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = gp + entry[self.ItemHistoryIndex.GP];
         elseif entryType == self.ItemHistoryType.DECAY then
             gp = gp * (1 - entry[self.ItemHistoryIndex.VALUE]);
             gp = max(gp, entry[self.ItemHistoryIndex.FLOOR]);
         elseif entryType == self.ItemHistoryType.RESET and
-               entry[self.ItemHistoryIndex.PLAYER] == player then
+               entry[self.ItemHistoryIndex.PLAYER] == player and
+               entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = entry[self.ItemHistoryIndex.GP];
         end
     end
@@ -525,15 +491,17 @@ function ABGP:HasCompleteHistory(shouldPrint)
 
     hasComplete = true;
     for phase in pairs(self.Phases) do
-        local history = self:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
-        for player, epgp in pairs(self:GetActivePlayers()) do
-            if epgp[phase] then
-                local calculated = self:CalculateCurrentGP(player, phase, history);
-                if abs(calculated - epgp[phase].gp) > 0.0015 then
-                    hasComplete = false;
-                    if shouldPrint then
-                        self:Notify("Incomplete %s history for %s: expected %.3f, calculated %.3f.",
-                            self.PhaseNames[phase], self:ColorizeName(player), epgp[phase].gp, calculated);
+        local history = self:ProcessItemHistory(_G.ABGP_Data2[phase].gpHistory, true);
+        for category in pairs(self.ItemCategory) do
+            for player, epgp in pairs(self:GetActivePlayers()) do
+                if epgp[phase] then
+                    local calculated = self:CalculateCurrentGP(player, phase, category, history);
+                    if abs(calculated - epgp[phase].gp[category]) > 0.0015 then
+                        hasComplete = false;
+                        if shouldPrint then
+                            self:Notify("Incomplete %s history for %s: expected %.3f, calculated %.3f.",
+                                self.PhaseNames[phase], self:ColorizeName(player), epgp[phase].gp[category], calculated);
+                        end
                     end
                 end
             end
@@ -558,7 +526,7 @@ function ABGP:HistoryOnGuildRosterUpdate()
     self:TriggerInitialSync();
 end
 
-function ABGP:HistoryUpdateCost(data, cost)
+function ABGP:HistoryUpdateCostXXX(data, cost)
     local commData = {
         itemLink = data.itemLink,
         player = data.player,
@@ -576,7 +544,7 @@ function ABGP:HistoryUpdateCost(data, cost)
     commData.value = data.value;
 end
 
-function ABGP:HistoryUpdatePlayer(data, player)
+function ABGP:HistoryUpdatePlayerXXX(data, player)
     local commData = {
         itemLink = data.itemLink,
         player = player,
@@ -594,7 +562,7 @@ function ABGP:HistoryUpdatePlayer(data, player)
     commData.value = data.value;
 end
 
-function ABGP:HistoryDeleteItemAward(data)
+function ABGP:HistoryDeleteItemAwardXXX(data)
     local commData = {
         itemLink = data.itemLink,
         oldPlayer = data.player,
@@ -611,7 +579,7 @@ end
 
 function ABGP:HistoryDeleteEntry(phase, entry, deleteId)
     if not deleteId then deleteId = self:GetHistoryId(); end
-    local history = _G.ABGP_Data[phase].gpHistory;
+    local history = _G.ABGP_Data2[phase].gpHistory;
 
     local _, deleteDate = self:ParseHistoryId(deleteId);
     table.insert(history, 1, {

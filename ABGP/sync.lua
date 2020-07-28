@@ -22,11 +22,11 @@ local invalidBaseline = -1;
 local syncThreshold = 10 * 24 * 60 * 60;
 
 local function GetHistory(phase)
-    return _G.ABGP_Data[phase].gpHistory;
+    return _G.ABGP_Data2[phase].gpHistory;
 end
 
 local function SetHistory(phase, history)
-    _G.ABGP_Data[phase].gpHistory = history;
+    _G.ABGP_Data2[phase].gpHistory = history;
 end
 
 local function GetBaseline(phase)
@@ -758,7 +758,7 @@ function ABGP:CommitHistory(phase)
         self:SendComm(self.CommTypes.HISTORY_REPLACE, {
             phase = phase,
             baseline = _G.ABGP_DataTimestamp.gpHistory[phase],
-            history = self:PrepareHistory(_G.ABGP_Data[phase].gpHistory),
+            history = self:PrepareHistory(_G.ABGP_Data2[phase].gpHistory),
         }, "GUILD");
     end
 end

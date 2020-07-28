@@ -12,6 +12,7 @@ local ipairs = ipairs;
 local pairs = pairs;
 local unpack = unpack;
 local floor = floor;
+local select = select;
 
 local activeWindow;
 local allowedClasses = {
@@ -55,7 +56,7 @@ local function DrawPriority(container, options)
     -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
-    local widths = { 35, 120, 110, 75, 75, 75 };
+    local widths = { 35, 120, 110, 75, 75, 75, 75, 75 };
     if rebuild then
         local classSelector = AceGUI:Create("ABGP_Filter");
         classSelector:SetWidth(110);
@@ -104,7 +105,16 @@ local function DrawPriority(container, options)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "", "Player", "Rank", "EP", "GP", "Priority", weights = { unpack(widths) } };
+        local columns = {
+            { canSort = false, name = "" },
+            { canSort = true, defaultAsc = true, name = "Player" },
+            { canSort = true, defaultAsc = true, name = "Rank" },
+            { canSort = true, defaultAsc = false, name = "EP" },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("GP", ABGP.ItemCategory.SILVER) },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("Prio", ABGP.ItemCategory.SILVER) },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("GP", ABGP.ItemCategory.GOLD) },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("Prio", ABGP.ItemCategory.GOLD) },
+            weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -113,7 +123,22 @@ local function DrawPriority(container, options)
 
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
-            desc:SetText(columns[i]);
+            desc:SetFullWidth(true);
+            desc:SetFont(_G.GameFontHighlightSmall);
+            desc:SetText(columns[i].name);
+            if columns[i].canSort then
+                desc:EnableHighlight(true);
+                desc:SetCallback("OnClick", function()
+                    local current = container:GetUserData("sortCol");
+                    if current == i then
+                        container:SetUserData("sortAsc", not container:GetUserData("sortAsc"));
+                    else
+                        container:SetUserData("sortAsc", columns[i].defaultAsc);
+                    end
+                    container:SetUserData("sortCol", i);
+                    PopulateUI({ rebuild = false });
+                end);
+            end
             header:AddChild(desc);
         end
 
@@ -125,55 +150,83 @@ local function DrawPriority(container, options)
         scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("priorities", scroll);
+
+        container:SetUserData("sortCol", 8);
+        container:SetUserData("sortAsc", false);
     end
 
     local priorities = container:GetUserData("priorities");
     local scrollValue = preserveScroll and priorities:GetUserData("statusTable").scrollvalue or 0;
     priorities:ReleaseChildren();
 
-    local count = 0;
-    local order = 0;
-    local lastPriority = -1;
     local priority = ABGP.Priorities[ABGP.CurrentPhase];
+    local filtered = {};
     for i, data in ipairs(priority) do
-        local inRaidGroup = not currentRaidGroup or data.gpRaidGroup == currentRaidGroup;
+        local inRaidGroup = not currentRaidGroup or data.raidGroup == currentRaidGroup;
         local isGrouped = not onlyGrouped or UnitExists(data.player);
         if allowedClasses[data.class] and inRaidGroup and isGrouped then
-            count = count + 1;
-            local elt = AceGUI:Create("ABGP_Priority");
-            elt:SetFullWidth(true);
-            local important = (data.player == UnitName("player"));
-            if data.priority ~= lastPriority then
-                lastPriority = data.priority;
-                order = count;
-            end
-            local lowPrio = data.ep and data.ep < ABGP:GetMinEP(data.epRaidGroup, ABGP.CurrentPhase);
-            elt:SetData(data, order, important, lowPrio);
-            elt:SetWidths(widths);
-            elt:ShowBackground((count % 2) == 0);
-            elt:SetCallback("OnClick", function(widget, event, button)
-                if button == "RightButton" then
-                    ABGP:ShowContextMenu({
-                        {
-                            text = "Show player history",
-                            func = function(self, data)
-                                if activeWindow then
-                                    local container = activeWindow:GetUserData("container");
-                                    container:SelectTab("gp");
-                                    container:GetUserData("search"):SetValue(("\"%s\""):format(data.player));
-                                    PopulateUI({ rebuild = false });
-                                end
-                            end,
-                            arg1 = elt.data,
-                            notCheckable = true
-                        },
-                        { text = "Cancel", notCheckable = true },
-                    });
-                end
-            end);
-
-            priorities:AddChild(elt);
+            table.insert(filtered, data);
         end
+    end
+
+    local sorts = {
+        nil,
+        function(a, b) return a.player < b.player, a.player == b.player; end,
+        function(a, b) return a.rank < b.rank, a.rank == b.rank; end,
+        function(a, b) return a.ep < b.ep, a.ep == b.ep; end,
+        function(a, b) return a.gp[ABGP.ItemCategory.SILVER] < b.gp[ABGP.ItemCategory.SILVER], a.gp[ABGP.ItemCategory.SILVER] == b.gp[ABGP.ItemCategory.SILVER]; end,
+        function(a, b) return a.priority[ABGP.ItemCategory.SILVER] < b.priority[ABGP.ItemCategory.SILVER], a.priority[ABGP.ItemCategory.SILVER] == b.priority[ABGP.ItemCategory.SILVER]; end,
+        function(a, b) return a.gp[ABGP.ItemCategory.GOLD] < b.gp[ABGP.ItemCategory.GOLD], a.gp[ABGP.ItemCategory.GOLD] == b.gp[ABGP.ItemCategory.GOLD]; end,
+        function(a, b) return a.priority[ABGP.ItemCategory.GOLD] < b.priority[ABGP.ItemCategory.GOLD], a.priority[ABGP.ItemCategory.GOLD] == b.priority[ABGP.ItemCategory.GOLD]; end,
+    };
+
+    local sortCol = container:GetUserData("sortCol");
+    local sortAsc = container:GetUserData("sortAsc");
+    table.sort(filtered, function(a, b)
+        local lt, eq = sorts[sortCol](a, b);
+        if eq then
+            return sorts[2](a, b);
+        elseif sortAsc then
+            return lt;
+        else
+            return not lt;
+        end
+    end);
+
+    local order = 1;
+    for i, data in ipairs(filtered) do
+        local elt = AceGUI:Create("ABGP_Priority");
+        elt:SetFullWidth(true);
+        local important = (data.player == UnitName("player"));
+        if i > 1 and not select(2, sorts[sortCol](data, filtered[i - 1])) then
+            order = i;
+        end
+        local lowPrio = data.ep and data.ep < ABGP:GetMinEP(data.raidGroup);
+        elt:SetData(data, order, important, lowPrio);
+        elt:SetWidths(widths);
+        elt:ShowBackground((i % 2) == 0);
+        elt:SetCallback("OnClick", function(widget, event, button)
+            if button == "RightButton" then
+                ABGP:ShowContextMenu({
+                    {
+                        text = "Show player history",
+                        func = function(self, data)
+                            if activeWindow then
+                                local container = activeWindow:GetUserData("container");
+                                container:SelectTab("gp");
+                                container:GetUserData("search"):SetValue(("\"%s\""):format(data.player));
+                                PopulateUI({ rebuild = false });
+                            end
+                        end,
+                        arg1 = elt.data,
+                        notCheckable = true
+                    },
+                    { text = "Cancel", notCheckable = true },
+                });
+            end
+        end);
+
+        priorities:AddChild(elt);
     end
 
     priorities:SetScroll(scrollValue);
@@ -281,6 +334,8 @@ local function DrawItemHistory(container, options)
 
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
+            desc:SetFullWidth(true);
+            desc:SetFont(_G.GameFontHighlightSmall);
             desc:SetText(columns[i]);
             if columns[i] == "GP" then
                 desc:SetJustifyH("RIGHT");
@@ -320,7 +375,7 @@ local function DrawItemHistory(container, options)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory);
+    local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2[ABGP.CurrentPhase].gpHistory);
     local filtered = {};
     local exact = searchText:match("^\"(.+)\"$");
     exact = exact and exact:lower() or exact;
@@ -328,7 +383,7 @@ local function DrawItemHistory(container, options)
         local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
         if value and ((epgp and epgp[ABGP.CurrentPhase]) or not currentRaidGroup) then
-            if not currentRaidGroup or epgp[ABGP.CurrentPhase].gpRaidGroup == currentRaidGroup then
+            if not currentRaidGroup or epgp.raidGroup == currentRaidGroup then
                 local class = epgp and epgp.class:lower() or "";
                 local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                 if exact then
@@ -556,7 +611,7 @@ local function DrawItems(container, options)
                 end
 
                 local tokens = {};
-                local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
+                local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
                 local text = ("Boss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
                 for i, item in ipairs(items) do
                     if item[ABGP.ItemDataIndex.GP] == -1 then
@@ -612,7 +667,12 @@ local function DrawItems(container, options)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Item", "GP", "Notes", "Priority", weights = { unpack(widths) } };
+        local columns = {
+            { canSort = true, defaultAsc = true, name = "Item" },
+            { canSort = true, defaultAsc = false, name = "GP" },
+            { canSort = false, name = "Notes" },
+            { canSort = false, name = "Priority" },
+            weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -621,10 +681,25 @@ local function DrawItems(container, options)
 
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
-            desc:SetText(columns[i]);
-            if columns[i] == "GP" then
+            desc:SetFullWidth(true);
+            desc:SetFont(_G.GameFontHighlightSmall);
+            desc:SetText(columns[i].name);
+            if columns[i].name == "GP" then
                 desc:SetJustifyH("RIGHT");
                 desc:SetPadding(2, -10);
+            end
+            if columns[i].canSort then
+                desc:EnableHighlight(true);
+                desc:SetCallback("OnClick", function()
+                    local current = container:GetUserData("sortCol");
+                    if current == i then
+                        container:SetUserData("sortAsc", not container:GetUserData("sortAsc"));
+                    else
+                        container:SetUserData("sortAsc", columns[i].defaultAsc);
+                    end
+                    container:SetUserData("sortCol", i);
+                    PopulateUI({ rebuild = false });
+                end);
             end
             header:AddChild(desc);
         end
@@ -645,6 +720,9 @@ local function DrawItems(container, options)
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
+
+        container:SetUserData("sortCol", 1);
+        container:SetUserData("sortAsc", true);
     end
 
     if command then
@@ -657,7 +735,7 @@ local function DrawItems(container, options)
     local scrollValue = preserveScroll and itemList:GetUserData("statusTable").scrollvalue or 0;
     itemList:ReleaseChildren();
 
-    local items = _G.ABGP_Data[ABGP.CurrentPhase].itemValues;
+    local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
     local filtered = {};
     local selector = container:GetUserData("priSelector");
     local search = container:GetUserData("search");
@@ -711,6 +789,32 @@ local function DrawItems(container, options)
 
     table.sort(filtered, function(a, b)
         return a[ABGP.ItemDataIndex.NAME] < b[ABGP.ItemDataIndex.NAME];
+    end);
+
+    local sorts = {
+        function(a, b) return a[ABGP.ItemDataIndex.NAME] < b[ABGP.ItemDataIndex.NAME], a[ABGP.ItemDataIndex.NAME] == b[ABGP.ItemDataIndex.NAME]; end,
+        function(a, b)
+            local acat, bcat = a[ABGP.ItemDataIndex.CATEGORY], b[ABGP.ItemDataIndex.CATEGORY];
+            local acost, bcost = a[ABGP.ItemDataIndex.GP], b[ABGP.ItemDataIndex.GP];
+            if acat == bcat then
+                return acost < bcost, acost == bcost;
+            else
+                return acat == ABGP.ItemCategory.SILVER, false;
+            end
+        end,
+    };
+
+    local sortCol = container:GetUserData("sortCol");
+    local sortAsc = container:GetUserData("sortAsc");
+    table.sort(filtered, function(a, b)
+        local lt, eq = sorts[sortCol](a, b);
+        if eq then
+            return sorts[1](a, b);
+        elseif sortAsc then
+            return lt;
+        else
+            return not lt;
+        end
     end);
 
     local pagination = container:GetUserData("pagination");
@@ -836,6 +940,8 @@ local function DrawRaidHistory(container, options)
 
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
+            desc:SetFullWidth(true);
+            desc:SetFont(_G.GameFontHighlightSmall);
             desc:SetText(columns[i]);
             header:AddChild(desc);
         end
@@ -931,6 +1037,8 @@ local function DrawAuditLog(container, options)
 
         for i = 1, #columns do
             local desc = AceGUI:Create("ABGP_Header");
+            desc:SetFullWidth(true);
+            desc:SetFont(_G.GameFontHighlightSmall);
             desc:SetText(columns[i]);
             desc:SetFullWidth(true);
             header:AddChild(desc);
@@ -958,7 +1066,7 @@ local function DrawAuditLog(container, options)
     local scrollValue = preserveScroll and auditLog:GetUserData("statusTable").scrollvalue or 0;
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_Data[ABGP.CurrentPhase].gpHistory;
+    local entries = _G.ABGP_Data2[ABGP.CurrentPhase].gpHistory;
     local deletedEntries = {};
     local deleteReferences = {};
     for i, entry in ipairs(entries) do
@@ -1170,8 +1278,8 @@ function ABGP:CreateMainWindow(command)
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
         version = 2,
-        defaultWidth = 650,
-        minWidth = 625,
+        defaultWidth = 700,
+        minWidth = 700,
         maxWidth = 850,
         defaultHeight = 500,
         minHeight = 300,
@@ -1188,28 +1296,8 @@ function ABGP:CreateMainWindow(command)
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
     window:AddChild(mainLine);
-
-    local phases, phaseNames = {}, {};
-    for i, v in ipairs(ABGP.PhasesSortedAll) do phases[i] = v; end
-    for k, v in pairs(ABGP.PhaseNamesAll) do phaseNames[k] = v; end
-    local phaseSelector = AceGUI:Create("Dropdown");
-    phaseSelector:SetWidth(110);
-    phaseSelector:SetList(phaseNames, phases);
-    phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        ABGP.CurrentPhase = value;
-
-        if activeWindow then
-            local container = activeWindow:GetUserData("container");
-            local pagination = container:GetUserData("pagination");
-            if pagination then
-                pagination:SetPage(1);
-            end
-        end
-        PopulateUI({ rebuild = false });
-    end);
-    mainLine:AddChild(phaseSelector);
 
     local raidGroups, raidGroupNames = {}, {};
     for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
@@ -1234,11 +1322,6 @@ function ABGP:CreateMainWindow(command)
     currentRaidGroup = ABGP:GetPreferredRaidGroup();
     groupSelector:SetValue(currentRaidGroup);
     mainLine:AddChild(groupSelector);
-
-    if command then
-        ABGP.CurrentPhase = command.phase;
-    end
-    phaseSelector:SetValue(ABGP.CurrentPhase);
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);

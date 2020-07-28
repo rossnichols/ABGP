@@ -207,7 +207,7 @@ function ABGP:OnEnable()
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
     end, self);
 
-    self:SetCallback(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, function(self, event, data)
+    self:SetCallback(self.InternalEvents.ITEM_UNAWARDED, function(self, event, data)
         self:PriorityOnItemUnawarded(data);
         self:RequestOnItemUnawarded(data);
     end, self);
@@ -511,12 +511,14 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.ITEM
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp cost (number)
-    ITEMID = 6,       -- item id (number)
+    CATEGORY = 6,   -- from ABGP.ItemCategory
+    ITEMID = 7,     -- item id (number)
 
     -- ABGP.ItemHistoryType.BONUS
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp award (number)
-    NOTES = 6,      -- notes (string)
+    CATEGORY = 6,   -- from ABGP.ItemCategory
+    NOTES = 7,      -- notes (string)
 
     -- ABGP.ItemHistoryType.DECAY
     VALUE = 4,      -- decay percentage (number)
@@ -528,12 +530,33 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.RESET
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- new gp (number)
-    NOTES = 6,      -- notes (string)
+    CATEGORY = 6,   -- from ABGP.ItemCategory
+    NOTES = 7,      -- notes (string)
 };
 ABGP.ItemCategory = {
     SILVER = "SILVER",
     GOLD = "GOLD",
 };
+ABGP.ItemCategoryNames = {
+    [ABGP.ItemCategory.SILVER] = "Silver",
+    [ABGP.ItemCategory.GOLD] = "Gold",
+};
+ABGP.ItemCategoriesSorted = {
+    ABGP.ItemCategory.SILVER,
+    ABGP.ItemCategory.GOLD
+};
+
+function ABGP:FormatCost(cost, category, fmt)
+    if type(cost) == "table" then
+        category = cost.category;
+        cost = cost.cost;
+    end
+
+    local suffix = "";
+    if category == self.ItemCategory.GOLD then suffix = "|cFFEBB400[G]|r"; end
+    if category == self.ItemCategory.SILVER then suffix = "|cFF9BA4A8[S]|r"; end
+    return (fmt or "%s %s"):format(cost, suffix);
+end
 
 function ABGP:GetHistoryId()
     local nextId = max(lastHistoryId, GetServerTime());
@@ -567,7 +590,7 @@ end
 function ABGP:RefreshItemValues()
     itemValues = {};
     for phase in pairs(self.PhasesAll) do
-        for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
+        for _, item in ipairs(_G.ABGP_Data2[phase].itemValues) do
             local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
             local value = ValueFromItem(item, phase);
             itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
@@ -575,7 +598,7 @@ function ABGP:RefreshItemValues()
 
             if value.related then
                 local token = self:GetItemValue(value.related);
-                table.insert(token.token, self:GetItemId(itemLink));
+                table.insert(token.token, itemLink);
             end
 
             -- Try to ensure info about the item is cached locally.
@@ -652,7 +675,7 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
 
     -- Reset to defaults, since we're given a diff from them.
     for phase in pairs(ABGP.Phases) do
-        _G.ABGP_Data[phase].itemValues = self.tCopy(self.initialData.itemValues[phase]);
+        _G.ABGP_Data2[phase].itemValues = self.tCopy(self.initialData.itemValues[phase]);
     end
     self:RefreshItemValues();
 
@@ -684,7 +707,7 @@ function ABGP:BroadcastItemData(target)
     local defaultValues = self:BuildDefaultItemValues();
     for phase in pairs(ABGP.Phases) do
         payload.itemValues[phase] = {};
-        for i, item in ipairs(_G.ABGP_Data[phase].itemValues) do
+        for i, item in ipairs(_G.ABGP_Data2[phase].itemValues) do
             local name = item[self.ItemDataIndex.NAME];
             local defaultValue = defaultValues[name];
             local currentValue = self:GetItemValue(name);
@@ -706,7 +729,7 @@ end
 function ABGP:DumpItemDiffs()
     local defaultValues = self:BuildDefaultItemValues();
     for phase in pairs(ABGP.Phases) do
-        for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
+        for i, item in ipairs( _G.ABGP_Data2[phase].itemValues) do
             local name = item[self.ItemDataIndex.NAME];
             local defaultValue = defaultValues[name];
             local currentValue = self:GetItemValue(name);
@@ -721,7 +744,7 @@ end
 function ABGP:CheckUpdatedItem(itemLink, value, bulk)
     if IsValueUpdated(value) then
         local found = false;
-        local items = _G.ABGP_Data[value.phase].itemValues;
+        local items = _G.ABGP_Data2[value.phase].itemValues;
         for i, item in ipairs(items) do
             if item[ABGP.ItemDataIndex.NAME] == value.item then
                 item[ABGP.ItemDataIndex.GP] = value.gp;
@@ -739,7 +762,7 @@ function ABGP:CheckUpdatedItem(itemLink, value, bulk)
         if not found then
             local oldValue = self:GetItemValue(value.item);
             if oldValue then
-                local items = _G.ABGP_Data[oldValue.phase].itemValues;
+                local items = _G.ABGP_Data2[oldValue.phase].itemValues;
                 for i, item in ipairs(items) do
                     if item[ABGP.ItemDataIndex.NAME] == value.item then
                         table.remove(items, i);
@@ -773,7 +796,7 @@ function ABGP:HasReceivedItem(itemName)
     local value = self:GetItemValue(itemName);
     if not value then return false; end
 
-    for _, item in ipairs(_G.ABGP_Data[value.phase].gpHistory) do
+    for _, item in ipairs(_G.ABGP_Data2[value.phase].gpHistory) do
         if item[self.ItemHistoryIndex.ITEMID] == value.itemId and item[self.ItemHistoryIndex.PLAYER] == player then
             return true;
         end
@@ -804,6 +827,14 @@ end
 local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
 scanner:SetOwner(UIParent, "ANCHOR_NONE");
 function ABGP:IsItemUsable(itemLink)
+    local value = self:GetItemValue(self:GetItemId(itemLink));
+    if value and value.token then
+        for _, item in ipairs(value.token) do
+            if self:IsItemUsable(item) then return true; end
+        end
+        return false;
+    end
+
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
     -- self:LogVerbose("%s:%d", itemLink, select("#", scanner:GetRegions()));
@@ -866,7 +897,7 @@ function ABGP:RefreshActivePlayers()
             activePlayers[pri.player].rank = pri.rank;
             activePlayers[pri.player].class = pri.class;
             activePlayers[pri.player].trial = pri.trial;
-            activePlayers[pri.player].epRaidGroup = pri.epRaidGroup;
+            activePlayers[pri.player].raidGroup = pri.raidGroup;
         end
     end
 

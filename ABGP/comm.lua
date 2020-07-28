@@ -196,7 +196,7 @@ end
 
 ABGP.InternalEvents = {
     ACTIVE_PLAYERS_REFRESHED = "ACTIVE_PLAYERS_REFRESHED",
-    ITEM_DISTRIBUTION_UNAWARDED = "ITEM_DISTRIBUTION_UNAWARDED",
+    ITEM_UNAWARDED = "ITEM_UNAWARDED",
     ITEM_CLOSED = "ITEM_CLOSED",
     ITEM_REQUESTED = "ITEM_REQUESTED",
     ITEM_PASSED = "ITEM_PASSED",
@@ -498,8 +498,8 @@ function ABGP:CommOnEnteringWorld()
 end
 
 function ABGP:TestSerialization(input)
-    input = input or self:PrepareHistory(_G.ABGP_Data.p1.gpHistory);
-    -- input = input or _G.ABGP_Data.p1.itemValues;
+    input = input or self:PrepareHistory(_G.ABGP_Data2.p1.gpHistory);
+    -- input = input or _G.ABGP_Data2.p1.itemValues;
     local LibDeflate = _G.LibStub("LibDeflate");
 
     local serialized = LibSerialize:Serialize(input);

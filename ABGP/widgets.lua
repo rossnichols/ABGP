@@ -313,7 +313,7 @@ do
             self.rank.text:SetText(data.rank or "");
             self.rank.text:SetFontObject((data.preferredGroup and data.group == data.preferredGroup) and "ABGPHighlight" or "GameFontNormal");
             if data.priority then
-                self.priority.text:SetText(("%.3f"):format(data.priority));
+                self.priority.text:SetText(ABGP:FormatCost(data.priority, data.category, "%.3f %s"));
                 self.priority.text:SetFontObject(lowPrio and "GameFontDisable" or "GameFontNormal");
             else
                 self.priority.text:SetText("--");
@@ -529,16 +529,20 @@ do
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
             self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");
-            self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
-            self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
+            self.silvergp.text:SetText(data.gp[ABGP.ItemCategory.SILVER] and ("%.3f"):format(data.gp[ABGP.ItemCategory.SILVER]) or "--");
+            self.silverprio.text:SetText(data.priority[ABGP.ItemCategory.SILVER] and ("%.3f"):format(data.priority[ABGP.ItemCategory.SILVER]) or "--");
+            self.goldgp.text:SetText(data.gp[ABGP.ItemCategory.GOLD] and ("%.3f"):format(data.gp[ABGP.ItemCategory.GOLD]) or "--");
+            self.goldprio.text:SetText(data.priority[ABGP.ItemCategory.GOLD] and ("%.3f"):format(data.priority[ABGP.ItemCategory.GOLD]) or "--");
 
             local specialFont = important and "ABGPHighlight" or lowPrio and "GameFontDisable" or "GameFontNormal";
             self.order.text:SetFontObject(specialFont);
             self.player.text:SetFontObject(specialFont);
             self.rank.text:SetFontObject(specialFont);
             self.ep.text:SetFontObject(specialFont);
-            self.gp.text:SetFontObject(specialFont);
-            self.priority.text:SetFontObject(specialFont);
+            self.silvergp.text:SetFontObject(specialFont);
+            self.silverprio.text:SetFontObject(specialFont);
+            self.goldgp.text:SetFontObject(specialFont);
+            self.goldprio.text:SetFontObject(specialFont);
         end,
 
         ["SetWidths"] = function(self, widths)
@@ -546,8 +550,10 @@ do
             self.player:SetWidth(widths[2] or 0);
             self.rank:SetWidth(widths[3] or 0);
             self.ep:SetWidth(widths[4] or 0);
-            self.gp:SetWidth(widths[5] or 0);
-            self.priority:SetWidth(widths[6] or 0);
+            self.silvergp:SetWidth(widths[5] or 0);
+            self.silverprio:SetWidth(widths[6] or 0);
+            self.goldgp:SetWidth(widths[7] or 0);
+            self.goldprio:SetWidth(widths[8] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -594,11 +600,17 @@ do
         local ep = CreateElement(frame, rank);
         ep.text = CreateFontString(ep);
 
-        local gp = CreateElement(frame, ep);
-        gp.text = CreateFontString(gp);
+        local silvergp = CreateElement(frame, ep);
+        silvergp.text = CreateFontString(silvergp);
 
-        local priority = CreateElement(frame, gp);
-        priority.text = CreateFontString(priority);
+        local silverprio = CreateElement(frame, silvergp);
+        silverprio.text = CreateFontString(silverprio);
+
+        local goldgp = CreateElement(frame, silverprio);
+        goldgp.text = CreateFontString(goldgp);
+
+        local goldprio = CreateElement(frame, goldgp);
+        goldprio.text = CreateFontString(goldprio);
 
         -- create widget
         local widget = {
@@ -606,8 +618,10 @@ do
             player = player,
             rank = rank,
             ep = ep,
-            gp = gp,
-            priority = priority,
+            silvergp = silvergp,
+            goldgp = goldgp,
+            silverprio = silverprio,
+            goldprio = goldprio,
 
             background = background,
 
@@ -831,8 +845,7 @@ do
                 self.item.text:SetPoint("LEFT", self.item, 2, 12);
                 self.item.text:SetPoint("RIGHT", self.item, -2, 12);
 
-                for i, itemId in ipairs(items) do
-                    local itemLink = ("item:%d"):format(itemId);
+                for i, itemLink in ipairs(items) do
                     local button = AceGUI:Create("ABGP_ItemButton");
                     self.icons.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
@@ -1198,10 +1211,16 @@ do
             self.text:SetPoint("RIGHT", self.frame, -2, 1);
             self.text:SetWordWrap(false);
             self.highlight:Hide();
+
+            self:SetFont(_G.GameFontHighlight);
         end,
 
         ["EnableHighlight"] = function(self, enable)
             self.highlight[enable and "Show" or "Hide"](self.highlight);
+        end,
+
+        ["SetFont"] = function(self, font)
+            self.text:SetFontObject(font);
         end,
 
         ["SetText"] = function(self, text)
@@ -1272,10 +1291,9 @@ do
         end);
 
         local text = CreateFontString(frame);
-        text:SetFontObject(_G.GameFontHighlight);
 
         local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
-        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetTexture("Interface\\Buttons\\UI-Listbox-Highlight");
         highlight:SetAllPoints();
         highlight:SetBlendMode("ADD");
         highlight:SetTexCoord(0, 1, 0, 0.578125);
@@ -1815,8 +1833,7 @@ do
                 relatedFrame.buttons[k] = nil;
             end
             if items then
-                for i, itemId in ipairs(items) do
-                    local itemLink = ("item:%d"):format(itemId);
+                for i, itemLink in ipairs(items) do
                     local button = AceGUI:Create("ABGP_ItemButton");
                     button:SetUserData("lootFrame", self);
                     relatedFrame.buttons[i] = button;

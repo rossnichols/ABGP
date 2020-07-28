@@ -617,7 +617,7 @@ function ABGP:ShowAddTrialWindow()
     });
 end
 
-function ABGP:ShowAddPlayerWindow()
+function ABGP:ShowAddPlayerWindowXXX()
     local width = 400;
 
     local window = AceGUI:Create("ABGP_OpaqueWindow");
@@ -783,9 +783,7 @@ function ABGP:ShowAddPlayerWindow()
 
         local guildInfo = self:GetGuildInfo(player);
         local rank = guildInfo[2];
-        local epGroup = self:GetEPRaidGroup(rank);
-        local gpGroupP1 = self:GetGPRaidGroup(rank, self.Phases.p1);
-        local gpGroupP3 = self:GetGPRaidGroup(rank, self.Phases.p3);
+        local raidGroup = self:GetRaidGroup(rank);
         if not epGroup then
             label:SetText("The player's guild rank is invalid!");
             return true;
@@ -829,8 +827,8 @@ function ABGP:ShowAddPlayerWindow()
         local p1gpSum, p1gpCount, p3gpSum, p3gpCount = 0, 0, 0, 0;
         for _, active in pairs(players) do
             if not active.trial then
-                if calcP1 and active[self.Phases.p1] and active[self.Phases.p1].ep >= self:GetMinEP(active.epRaidGroup, self.Phases.p1) then
-                    if active.epRaidGroup == epGroup then
+                if calcP1 and active[self.Phases.p1] and active[self.Phases.p1].ep >= self:GetMinEP(active.raidGroup) then
+                    if active.raidGroup == epGroup then
                         p1epSum = p1epSum + active[self.Phases.p1].ep;
                         p1epCount = p1epCount + 1;
                     end
@@ -839,8 +837,8 @@ function ABGP:ShowAddPlayerWindow()
                         p1gpCount = p1gpCount + 1;
                     end
                 end
-                if calcP3 and active[self.Phases.p3] and active[self.Phases.p3].ep >= self:GetMinEP(active.epRaidGroup, self.Phases.p3) then
-                    if active.epRaidGroup == epGroup then
+                if calcP3 and active[self.Phases.p3] and active[self.Phases.p3].ep >= self:GetMinEP(active.raidGroup) then
+                    if active.raidGroup == epGroup then
                         p3epSum = p3epSum + active[self.Phases.p3].ep;
                         p3epCount = p3epCount + 1;
                     end
@@ -903,7 +901,7 @@ StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.Static
         if decayTime > now then return false, "Date must be before today"; end
 
         for phase in pairs(ABGP.Phases) do
-            local history = ABGP:ProcessItemHistory(_G.ABGP_Data[phase].gpHistory, true);
+            local history = ABGP:ProcessItemHistory(_G.ABGP_Data2[phase].gpHistory, true);
             for _, entry in ipairs(history) do
                 local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
                 if entryDate < decayTime then break; end

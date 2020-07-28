@@ -299,7 +299,7 @@ end
 
 local function DrawEP(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].epHistory, epMapping, function(row)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].epHistory, epMapping, function(row)
             return ABGP:GetActivePlayer(row.player);
         end);
 
@@ -310,7 +310,7 @@ local function DrawEP(container)
 
     local exportFunc = function()
         local text = "Points Earned,Action Taken,Character,Date\n";
-        for _, item in ipairs(_G.ABGP_Data[ABGP.CurrentPhase].epHistory) do
+        for _, item in ipairs(_G.ABGP_Data2[ABGP.CurrentPhase].epHistory) do
             text = text .. ("%s,%s,%s,%s\n"):format(
                 item.ep, item.action, item.player, item.date);
         end
@@ -318,7 +318,7 @@ local function DrawEP(container)
         return text;
     end
 
-    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].epHistory, epColumns, importFunc, exportFunc);
+    DrawTable(container, _G.ABGP_Data2[ABGP.CurrentPhase].epHistory, epColumns, importFunc, exportFunc);
 end
 
 local function DrawGP(container)
@@ -326,7 +326,7 @@ local function DrawGP(container)
     local lastDecayTime = 0;
     local rowTimes = {};
     local importFunc = function(widget, event)
-        local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
+        local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
             if not row[ABGP.ItemHistoryIndex.DATE] then
                 -- Only print an error if the row isn't completely blank.
                 local isError = false;
@@ -415,7 +415,7 @@ local function DrawGP(container)
                     j = j - 1;
                 end
             end
-            reverse(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory);
+            reverse(_G.ABGP_Data2[ABGP.CurrentPhase].gpHistory);
 
             widget:GetUserData("window"):Hide();
             container:ReleaseChildren();
@@ -428,7 +428,7 @@ local function DrawGP(container)
     end
 
     local exportFunc = function()
-        local history = ABGP:ProcessItemHistory(_G.ABGP_Data[ABGP.CurrentPhase].gpHistory, true);
+        local history = ABGP:ProcessItemHistory(_G.ABGP_Data2[ABGP.CurrentPhase].gpHistory, true);
 
         local text = "New Points\tItem\tCharacter\tDate Won\n";
         for i = #history, 1, -1 do
@@ -452,13 +452,13 @@ local function DrawGP(container)
         return text;
     end
 
-    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].gpHistory, gpColumns, importFunc, exportFunc);
+    DrawTable(container, _G.ABGP_Data2[ABGP.CurrentPhase].gpHistory, gpColumns, importFunc, exportFunc);
 end
 
 local function DrawItems(container)
     local insertedTokens = {};
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemMapping, function(row, newData)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].itemValues, itemMapping, function(row, newData)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
@@ -511,7 +511,7 @@ local function DrawItems(container)
         end
     end
 
-    DrawTable(container, _G.ABGP_Data[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
+    DrawTable(container, _G.ABGP_Data2[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
 end
 
 function ABGP:ShowImportWindow()
@@ -635,17 +635,12 @@ end
 function ABGP:FixupItems()
     self:BuildItemLookup();
 
-    local p1 = _G.ABGP_Data.p1.itemValues;
-    local p3 = _G.ABGP_Data.p3.itemValues;
-    local p5 = _G.ABGP_Data.p5.itemValues;
-    for _, phase in ipairs({ p1, p3, p5 }) do
-        for _, entry in ipairs(phase) do
-            if lookup[entry[ABGP.ItemDataIndex.NAME]] then
-                entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
-            else
-                self:Notify(("FAILED TO FIND [%s]"):format(entry[ABGP.ItemDataIndex.NAME]));
-                return false;
-            end
+    for _, entry in ipairs(_G.ABGP_Data2.p1.itemValues) do
+        if lookup[entry[ABGP.ItemDataIndex.NAME]] then
+            entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
+        else
+            self:Notify(("FAILED TO FIND [%s]"):format(entry[ABGP.ItemDataIndex.NAME]));
+            return false;
         end
     end
 
@@ -656,29 +651,25 @@ end
 function ABGP:FixupHistory()
     if not self:BuildItemLookup(true) then return false; end
 
-    local p1 = _G.ABGP_Data.p1.gpHistory;
-    local p3 = _G.ABGP_Data.p3.gpHistory;
-    for _, phase in ipairs({ p1, p3 }) do
-        for _, entry in ipairs(phase) do
-            if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
-                -- NOTE: The ITEMID field is still the item name at this point.
-                if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
-                    for name, link in pairs(lookup) do
-                        local lowered = entry[self.ItemHistoryIndex.ITEMID]:lower();
-                        if lowered:find(name:lower(), 1, true) then
-                            -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.ITEMID], name));
-                            entry[self.ItemHistoryIndex.ITEMID] = name;
-                            break;
-                        end
-                    end
-                    if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
-                        self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
-                        return false;
+    for _, entry in ipairs(_G.ABGP_Data2.p1.gpHistory) do
+        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
+            -- NOTE: The ITEMID field is still the item name at this point.
+            if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
+                for name, link in pairs(lookup) do
+                    local lowered = entry[self.ItemHistoryIndex.ITEMID]:lower();
+                    if lowered:find(name:lower(), 1, true) then
+                        -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.ITEMID], name));
+                        entry[self.ItemHistoryIndex.ITEMID] = name;
+                        break;
                     end
                 end
-
-                entry[self.ItemHistoryIndex.ITEMID] = self:GetItemId(lookup[entry[self.ItemHistoryIndex.ITEMID]]);
+                if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
+                    self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
+                    return false;
+                end
             end
+
+            entry[self.ItemHistoryIndex.ITEMID] = self:GetItemId(lookup[entry[self.ItemHistoryIndex.ITEMID]]);
         end
     end
 

@@ -500,27 +500,13 @@ function ABGP:StartRaid()
         raidInstance = value;
 
         local shortName = "Raid";
-        local raidGroupEP = window:GetUserData("raidGroupEP");
-        local selectors = window:GetUserData("raidGroupSelectors");
         local phaseSelector = window:GetUserData("phaseSelector");
         local phase;
 
         if instanceInfo[value] then
             shortName = instanceInfo[value].shortName;
-            for raidGroup, awards in pairs(instanceInfo[value].awards) do
-                table.wipe(raidGroupEP[raidGroup]);
-                for _, phase in ipairs(awards) do
-                    raidGroupEP[raidGroup][phase] = true;
-                end
-                selectors[raidGroup]:UpdateCheckboxes();
-            end
             phase = instanceInfo[value].phase;
         else
-            for raidGroup in pairs(self.RaidGroups) do
-                table.wipe(raidGroupEP[raidGroup]);
-                raidGroupEP[raidGroup][self.CurrentPhase] = true;
-                selectors[raidGroup]:UpdateCheckboxes();
-            end
             phase = self.CurrentPhase;
         end
         phaseSelector:SetValue(phase);
@@ -548,25 +534,6 @@ function ABGP:StartRaid()
     window:SetUserData("phaseSelector", phaseSelector);
     self:AddWidgetTooltip(phaseSelector, "Choose the phase in which this raid will be displayed in the main window.");
 
-    local raidGroupSelectors = {};
-    window:SetUserData("raidGroupSelectors", raidGroupSelectors);
-    local raidGroupEP = {};
-    window:SetUserData("raidGroupEP", raidGroupEP);
-    for _, raidGroup in ipairs(self.RaidGroupsSorted) do
-        raidGroupEP[raidGroup] = {};
-
-        local epSelector = AceGUI:Create("ABGP_Filter");
-        epSelector:SetFullWidth(true);
-        epSelector:SetValues(raidGroupEP[raidGroup], false, self.PhaseNamesShort, self.PhasesSorted);
-        epSelector:SetCallback("OnFilterUpdated", function()
-
-        end);
-        epSelector:SetLabel(("%s EP"):format(self.RaidGroupNames[raidGroup]));
-        window:AddChild(epSelector);
-        raidGroupSelectors[raidGroup] = epSelector;
-        self:AddWidgetTooltip(epSelector, "Choose the phase(s) into which EP should be awarded for this raid group.");
-    end
-
     local start = AceGUI:Create("Button");
     start:SetFullWidth(true);
     start:SetText("Start");
@@ -575,7 +542,6 @@ function ABGP:StartRaid()
             instanceId = raidInstance,
             phase = raidPhase,
             name = name:GetText(),
-            raidGroupEP = raidGroupEP,
             awards = {},
             standby = {},
             bossKills = {},
@@ -959,22 +925,19 @@ function ABGP:ExportRaid(windowRaid)
             local ep, info;
             local exported = false;
             if epgp and epgp[phase] then
-                local raidGroup = epgp.epRaidGroup;
-                if windowRaid.raidGroupEP[raidGroup] and windowRaid.raidGroupEP[raidGroup][phase] then
-                    exported = true;
-                    if epgp.trial then
-                        ep = 0;
-                        info = "No EP (trial)";
-                    else
-                        ep = award.ep;
-                        local breakdown = {};
-                        for _, cat in ipairs(awardCategoriesSorted) do
-                            if award.categories[cat] then
-                                table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
-                            end
+                exported = true;
+                if epgp.trial then
+                    ep = 0;
+                    info = "No EP (trial)";
+                else
+                    ep = award.ep;
+                    local breakdown = {};
+                    for _, cat in ipairs(awardCategoriesSorted) do
+                        if award.categories[cat] then
+                            table.insert(breakdown, ("%d (%s)"):format(award.categories[cat], awardCategoryNames[cat]));
                         end
-                        info = table.concat(breakdown, ", ");
                     end
+                    info = table.concat(breakdown, ", ");
                 end
             end
             if not exported and windowRaid.phase == phase then
