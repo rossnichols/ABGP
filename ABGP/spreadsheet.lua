@@ -468,7 +468,13 @@ local function DrawItems(container)
             end
             table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
 
-            row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+            if row[ABGP.ItemDataIndex.CATEGORY] ~= "" then
+                if not catMapping[row[ABGP.ItemDataIndex.CATEGORY]] then
+                    ABGP:Notify("Bad category %s. Canceling import!", row[ABGP.ItemDataIndex.CATEGORY]);
+                    return false;
+                end
+                row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+            end
 
             local name = row[ABGP.ItemDataIndex.NAME];
             local token, related = name:match("^(.+) %((.+)%)$");

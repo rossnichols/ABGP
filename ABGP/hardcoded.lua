@@ -9,7 +9,7 @@ _G.ABGP_Data = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1595730325, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1596325066, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				"Aged Core Leather Gloves",
@@ -156,6 +156,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
+				nil,
 				"Tank Super Prio, Red Reserved",
 			},
 			{
@@ -379,6 +380,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				nil,
 				"Red Reserved",
 			},
 			{
@@ -1268,6 +1270,7 @@ ABGP.initialData = {
 					"Paladin (Ret)",
 					"Tank",
 				},
+				nil,
 				"Red Reserved",
 			},
 			{
@@ -1328,6 +1331,7 @@ ABGP.initialData = {
 				{
 					"Metal Rogue",
 				},
+				nil,
 				"Red Reserved",
 			},
 			{
@@ -1469,6 +1473,7 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 					"Warlock",
 				},
+				nil,
 				"Shadow Priest Super Prio",
 			},
 			{
@@ -1569,6 +1574,7 @@ ABGP.initialData = {
 				{
 					"Progression",
 				},
+				nil,
 				"Red Reserved",
 			},
 			{
@@ -1641,6 +1647,7 @@ ABGP.initialData = {
 					"Mage",
 				},
 				"SILVER",
+				"P5 cost: 0",
 			},
 			{
 				"Nemesis Bracers",
@@ -1651,6 +1658,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
+				"P5 cost: 0",
 			},
 			{
 				"Bloodfang Bracers",
@@ -2404,7 +2412,7 @@ ABGP.initialData = {
 			},
 			{
 				"Circle of Applied Force",
-				200,
+				100,
 				"|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r",
 				"Flamegor",
 				{
@@ -2415,6 +2423,7 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"SILVER",
+				"P5 cost: 200",
 			},
 			{
 				"Styleen's Impeding Scarab",
@@ -2624,7 +2633,7 @@ ABGP.initialData = {
 			},
 			{
 				"Chromatically Tempered Sword",
-				500,
+				400,
 				"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
 				"Chromaggus",
 				{
@@ -2632,6 +2641,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 				},
 				"GOLD",
+				"P5 cost: 500",
 			},
 			{
 				"Robes of Transcendence",
@@ -2735,33 +2745,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19383|h[Master Dragonslayer's Medallion]|h|r",
 				"Nefarian",
-				{
-					"Hunter",
-					"KAT4FITE",
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-					"Tank",
-				},
+				{},
 				"SILVER",
-				"Prio for casters with BWL 1H as well",
-				"Head of Nefarian",
-			},
-			{
-				"Master Dragonslayer's Ring",
-				150,
-				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
-				"Nefarian",
-				{
-					"Hunter",
-					"KAT4FITE",
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-					"Tank",
-				},
-				"SILVER",
-				"Prio for casters with BWL 1H as well",
+				nil,
 				"Head of Nefarian",
 			},
 			{
@@ -2769,16 +2755,19 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19366|h[Master Dragonslayer's Orb]|h|r",
 				"Nefarian",
-				{
-					"Hunter",
-					"KAT4FITE",
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-					"Tank",
-				},
+				{},
 				"SILVER",
-				"Prio for casters with BWL 1H as well",
+				nil,
+				"Head of Nefarian",
+			},
+			{
+				"Master Dragonslayer's Ring",
+				150,
+				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
+				"Nefarian",
+				{},
+				"SILVER",
+				nil,
 				"Head of Nefarian",
 			},
 			{
@@ -2825,7 +2814,7 @@ ABGP.initialData = {
 			},
 			{
 				"Mish'undare, Circlet of the Mind Flayer",
-				250,
+				300,
 				"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
 				"Nefarian",
 				{
@@ -2833,10 +2822,11 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
+				"P5 cost: 250",
 			},
 			{
 				"Prestor's Talisman of Connivery",
-				150,
+				200,
 				"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
 				"Nefarian",
 				{
@@ -2846,6 +2836,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
+				"P5 cost: 150",
 			},
 			{
 				"Cloak of the Brood Lord",
@@ -2893,7 +2884,7 @@ ABGP.initialData = {
 			},
 			{
 				"Pure Elementium Band",
-				150,
+				200,
 				"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
 				"Nefarian",
 				{
@@ -2901,6 +2892,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
+				"P5 cost: 150",
 			},
 			{
 				"Neltharion's Tear",
@@ -2909,7 +2901,6 @@ ABGP.initialData = {
 				"Nefarian",
 				{
 					"Mage",
-					"Priest (Shadow)",
 					"Warlock",
 				},
 				"GOLD",
@@ -2937,7 +2928,7 @@ ABGP.initialData = {
 			},
 			{
 				"Boots of Pure Thought",
-				150,
+				200,
 				"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r",
 				"Trash",
 				{
@@ -2946,6 +2937,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
+				"P5 cost: 150"
 			},
 			{
 				"Ringo's Blizzard Boots",
@@ -3114,7 +3106,7 @@ ABGP.initialData = {
 			},
 			{
 				"Deviate Growth Cap",
-				250,
+				300,
 				"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r",
 				"Lethon",
 				{
@@ -3122,6 +3114,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 				},
 				"GOLD",
+				"P5 cost: 250",
 			},
 			{
 				"Black Bark Wristbands",
@@ -3134,6 +3127,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
+				"P5 cost: 75",
 			},
 			{
 				"Gauntlets of the Shining Light",
