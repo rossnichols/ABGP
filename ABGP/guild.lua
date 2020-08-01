@@ -68,7 +68,7 @@ local epMins = {
 };
 
 function ABGP:GetMinEP(raidGroup)
-    return epMins[raidGroup] or 0;
+    return self:IsPrivileged() and epMins[raidGroup] or 0;
 end
 
 function ABGP:GetGPDecayInfo()
