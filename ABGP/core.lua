@@ -888,17 +888,8 @@ local activePlayers = {};
 
 function ABGP:RefreshActivePlayers()
     table.wipe(activePlayers);
-    for phase in pairs(self.Phases) do
-        for _, pri in ipairs(self.Priorities[phase]) do
-            activePlayers[pri.player] = activePlayers[pri.player] or {};
-            activePlayers[pri.player][phase] = pri;
-            activePlayers[pri.player].player = pri.player;
-            activePlayers[pri.player].proxy = pri.proxy;
-            activePlayers[pri.player].rank = pri.rank;
-            activePlayers[pri.player].class = pri.class;
-            activePlayers[pri.player].trial = pri.trial;
-            activePlayers[pri.player].raidGroup = pri.raidGroup;
-        end
+    for _, pri in ipairs(self.Priorities) do
+        activePlayers[pri.player] = pri;
     end
 
     self:Fire(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED);

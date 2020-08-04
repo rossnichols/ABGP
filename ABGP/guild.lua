@@ -36,9 +36,6 @@ ABGP.PhasesSortedAll = {
 };
 ABGP.CurrentPhase = ABGP.Phases.p1;
 ABGP.Priorities = {};
-for phase in pairs(ABGP.PhasesAll) do
-    ABGP.Priorities[phase] = {};
-end
 
 ABGP.RaidGroups = {
     RED = "RED",
@@ -202,9 +199,7 @@ local function CheckSync(force)
     ABGP:LogDebug("Sync target: %s", target or "<none>");
     if not target then
         lastSyncTarget = nil;
-        for phase, data in pairs(ABGP.Priorities) do
-            table.wipe(data);
-        end
+        table.wipe(ABGP.Priorities);
         ABGP:RefreshActivePlayers();
         return;
     end

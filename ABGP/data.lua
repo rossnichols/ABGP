@@ -65,8 +65,8 @@ local function PrioritySort(a, b)
 end
 
 function ABGP:RefreshFromOfficerNotes()
-    local p1Old = self.Priorities[self.Phases.p1];
-    local p1 = {};
+    local prioOld = self.Priorities;
+    local prio = {};
 
     for i = 1, GetNumGuildMembers() do
         local name, rank, _, _, _, _, publicNote, note, _, _, class = GetGuildRosterInfo(i);
@@ -86,7 +86,7 @@ function ABGP:RefreshFromOfficerNotes()
             if self:IsTrial(rank) then
                 local trialGroup = self:GetTrialRaidGroup(publicNote);
                 if trialGroup then
-                    table.insert(p1, {
+                    table.insert(prio, {
                         player = player,
                         rank = rank,
                         class = class,
@@ -104,7 +104,7 @@ function ABGP:RefreshFromOfficerNotes()
                     gpS = tonumber(gpS) / 1000;
                     gpG = tonumber(gpG) / 1000;
 
-                    table.insert(p1, {
+                    table.insert(prio, {
                         player = player,
                         proxy = proxy,
                         rank = rank,
@@ -119,10 +119,10 @@ function ABGP:RefreshFromOfficerNotes()
         end
     end
 
-    table.sort(p1, PrioritySort);
+    table.sort(prio, PrioritySort);
 
-    if not self.tCompare(p1Old, p1, 2) then
-        self.Priorities[self.Phases.p1] = p1;
+    if not self.tCompare(prioOld, prio, 2) then
+        self.Priorities = prio;
         self:RefreshActivePlayers();
     end
 end

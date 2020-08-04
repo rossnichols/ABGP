@@ -256,7 +256,7 @@ local function DrawPriority(container)
             if PopulateSpreadsheet(widget:GetText(), newPriorities, priMapping) then
                 for _, newPri in ipairs(newPriorities) do
                     local found = false;
-                    for _, existingPri in ipairs(ABGP.Priorities[ABGP.CurrentPhase]) do
+                    for _, existingPri in ipairs(ABGP.Priorities) do
                         if existingPri.player == newPri.player then
                             found = true;
                             existingPri.ep = newPri.ep;
@@ -266,12 +266,12 @@ local function DrawPriority(container)
                     end
 
                     if not found then
-                        table.insert(ABGP.Priorities[ABGP.CurrentPhase], newPri);
+                        table.insert(ABGP.Priorities, newPri);
                     end
                 end
             end
         else
-            PopulateSpreadsheet(widget:GetText(), ABGP.Priorities[ABGP.CurrentPhase], priMapping, function(row)
+            PopulateSpreadsheet(widget:GetText(), ABGP.Priorities, priMapping, function(row)
                 return row.ep ~= 0 and row.gp ~= 0;
             end);
         end
@@ -286,7 +286,7 @@ local function DrawPriority(container)
 
     local exportFunc = function()
         local text = "Character,Rank,Class,Spec,Effort Points,Gear Points,Ratio\n";
-        for _, item in ipairs(ABGP.Priorities[ABGP.CurrentPhase]) do
+        for _, item in ipairs(ABGP.Priorities) do
             text = text .. ("%s,%s,%s,%s,%s,%s,%s\n"):format(
                 item.player, item.rank, item.class, item.role, item.ep, item.gp, item.priority);
         end
@@ -294,7 +294,7 @@ local function DrawPriority(container)
         return text;
     end
 
-    DrawTable(container, ABGP.Priorities[ABGP.CurrentPhase], priColumns, importFunc, exportFunc, true);
+    DrawTable(container, ABGP.Priorities, priColumns, importFunc, exportFunc, true);
 end
 
 local function DrawEP(container)

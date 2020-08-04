@@ -159,7 +159,7 @@ local function DrawPriority(container, options)
     local scrollValue = preserveScroll and priorities:GetUserData("statusTable").scrollvalue or 0;
     priorities:ReleaseChildren();
 
-    local priority = ABGP.Priorities[ABGP.CurrentPhase];
+    local priority = ABGP.Priorities;
     local filtered = {};
     for i, data in ipairs(priority) do
         local inRaidGroup = not currentRaidGroup or data.raidGroup == currentRaidGroup;
