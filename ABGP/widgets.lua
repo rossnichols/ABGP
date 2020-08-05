@@ -2125,11 +2125,12 @@ do
             OnEscapePressed = _G.AutoCompleteEditBox_OnEscapePressed,
             OnArrowPressed = _G.AutoCompleteEditBox_OnArrowPressed,
         };
+        local alwaysExisting = { OnEnterPressed = true };
         for name, script in pairs(scripts) do
             local existing = elt.editbox:GetScript(name);
             if existing then
                 elt.editbox:SetScript(name, function(...)
-                    return script(...) or existing(...);
+                    return (script(...) and not alwaysExisting[name]) or existing(...);
                 end);
             else
                 elt.editbox:SetScript(name, script);
