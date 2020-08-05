@@ -882,7 +882,7 @@ function ABGP:RestartRaid(i)
     self:UpdateRaid();
 end
 
-function ABGP:ExportRaid(windowRaid)
+function ABGP:ExportRaidXXX(windowRaid)
     local window = AceGUI:Create("ABGP_OpaqueWindow");
     window.frame:SetFrameStrata("DIALOG");
     window:SetTitle("Export");

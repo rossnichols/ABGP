@@ -183,13 +183,9 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
     local epgp = self:GetActivePlayer(player);
     local note = "";
     if epgp and not epgp.trial then
-        local p1 = epgp[ABGP.Phases.p1];
-        local ep, gpS, gpG = 0, 0, 0;
-        if p1 then
-            ep = floor(p1.ep * 1000 + 0.5);
-            gpS = floor(p1.gp[self.ItemCategory.SILVER] * 1000 + 0.5);
-            gpG = floor(p1.gp[self.ItemCategory.GOLD] * 1000 + 0.5);
-        end
+        local ep = floor(epgp.ep * 1000 + 0.5);
+        local gpS = floor(epgp.gp[self.ItemCategory.SILVER] * 1000 + 0.5);
+        local gpG = floor(epgp.gp[self.ItemCategory.GOLD] * 1000 + 0.5);
         note = ("%d:%d:%d:%d"):format(ep, gpS, 0, gpG);
 
         -- Sanity check: all ranks here must be in a raid group.
@@ -213,25 +209,22 @@ function ABGP:PriorityOnGuildRosterUpdate()
     self:RefreshFromOfficerNotes();
 end
 
-local function UpdateEPGP(itemLink, player, cost, sender, phase, skipOfficerNote)
+local function UpdateEPGP(itemLink, player, cost, sender, skipOfficerNote)
     local epgp = ABGP:GetActivePlayer(player);
-    if epgp and epgp[phase] then
-        local phaseEPGP = epgp[phase];
-        if not epgp.trial then
-            phaseEPGP.gp[cost.category] = phaseEPGP.gp[cost.category] + cost.cost;
-            phaseEPGP.priority[cost.category] = phaseEPGP.ep * 10 / phaseEPGP.gp[cost.category];
-            local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
-            ABGP:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
-                cost.category, player, proxy, phaseEPGP.ep, phaseEPGP.gp[cost.category], cost.cost, phaseEPGP.priority);
-            table.sort(ABGP.Priorities[phase], PrioritySort);
+    if epgp and not epgp.trial then
+        epgp.gp[cost.category] = epgp.gp[cost.category] + cost.cost;
+        epgp.priority[cost.category] = epgp.ep * 10 / epgp.gp[cost.category];
+        local proxy = epgp.proxy and ("[%s]"):format(epgp.proxy) or "";
+        ABGP:LogVerbose("EPGP[%s] for %s%s: EP=%.3f GP=%.3f(+%d) PRIORITY=%.3f",
+            cost.category, player, proxy, epgp.ep, epgp.gp[cost.category], cost.cost, epgp.priority);
+        table.sort(ABGP.Priorities, PrioritySort);
 
-            ABGP:RefreshActivePlayers();
+        ABGP:RefreshActivePlayers();
 
-            if sender == UnitName("player") and not ABGP:GetDebugOpt("SkipOfficerNote") and not skipOfficerNote then
-                -- UpdateOfficerNote expects the name of the guild member
-                -- that is being updated, which is the proxy if it's set.
-                ABGP:UpdateOfficerNote(epgp.proxy or player);
-            end
+        if sender == UnitName("player") and not ABGP:GetDebugOpt("SkipOfficerNote") and not skipOfficerNote then
+            -- UpdateOfficerNote expects the name of the guild member
+            -- that is being updated, which is the proxy if it's set.
+            ABGP:UpdateOfficerNote(epgp.proxy or player);
         end
     end
 end
@@ -245,7 +238,7 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
     if not value then return; end
 
     local cost = self:GetEffectiveCost(data.historyId, data.cost, value.phase) or data.cost;
-    UpdateEPGP(data.itemLink, data.player, cost, sender, value.phase);
+    UpdateEPGP(data.itemLink, data.player, cost, sender);
 end
 
 function ABGP:PriorityOnItemUnawarded(data)
@@ -258,7 +251,7 @@ function ABGP:PriorityOnItemUnawarded(data)
 
     local cost = self:GetEffectiveCost(data.historyId, data.cost, value.phase) or data.cost;
     cost.cost = -cost.cost; -- negative because we're undoing the GP adjustment
-    UpdateEPGP(data.itemLink, data.player, cost, data.sender, value.phase, data.skipOfficerNote);
+    UpdateEPGP(data.itemLink, data.player, cost, data.sender, data.skipOfficerNote);
 end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
@@ -320,22 +313,6 @@ function ABGP:HistoryTriggerDecay(decayTime)
             [self.ItemHistoryIndex.FLOOR] = decayFloor,
         });
     end
-
-    -- TODO: this code is flawed because it doesn't handle
-    -- any EP/GP awarded after the decay date.
-    -- for phase, prio in pairs(self.Priorities) do
-    --     for _, epgp in ipairs(prio) do
-    --         if not epgp.trial then
-    --             epgp.ep = epgp.ep * (1 - decayValue);
-    --             epgp.ep = max(epgp.ep, decayFloor);
-    --             epgp.gp = epgp.gp * (1 - decayValue);
-    --             epgp.gp = max(epgp.gp, decayFloor);
-    --         end
-    --     end
-    -- end
-
-    -- self:RefreshActivePlayers();
-    -- self:RebuildOfficerNotes();
 
     local floorText = "";
     if decayFloor ~= 0 then

@@ -382,7 +382,7 @@ local function DrawItemHistory(container, options)
     for _, data in ipairs(gpHistory) do
         local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-        if value and ((epgp and epgp[ABGP.CurrentPhase]) or not currentRaidGroup) then
+        if value and (epgp or not currentRaidGroup) then
             if not currentRaidGroup or epgp.raidGroup == currentRaidGroup then
                 local class = epgp and epgp.class:lower() or "";
                 local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/

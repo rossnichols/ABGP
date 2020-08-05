@@ -541,9 +541,8 @@ local function ChooseRecipient()
 end
 
 function ABGP:DistribValidateRecipient(player, cost, value)
-    local epgp = self:GetActivePlayer(player);
-    if cost and cost ~= 0 and not (epgp and epgp[value.phase]) then
-        return false, "The player must have EPGP for this phase";
+    if cost and cost ~= 0 and not self:GetActivePlayer(player) then
+        return false, "The player must have EPGP";
     end
 
     return player;
@@ -556,9 +555,8 @@ function ABGP:DistribValidateCost(cost, player, value)
     if math.floor(cost) ~= cost then return false, "Must be a whole number"; end
 
     if player then
-        local epgp = self:GetActivePlayer(player);
-        if cost ~= 0 and not (epgp and epgp[value.phase]) then
-            return false, "The player doesn't have EPGP for this phase";
+        if cost ~= 0 and not self:GetActivePlayer(player) then
+            return false, "The player must have EPGP";
         end
     end
 
@@ -672,18 +670,18 @@ local function PopulateRequest(request, value)
 
         if value then
             priority, ep, gp = 0, 0, 0;
-            if epgp and epgp[value.phase] then
-                ep = epgp[value.phase].ep;
-                gp = epgp[value.phase].gp[value.category];
+            if epgp then
+                ep = epgp.ep;
+                gp = epgp.gp[value.category];
                 category = value.category;
-                priority = epgp[value.phase].priority[value.category];
+                priority = epgp.priority[value.category];
                 raidGroup = epgp.raidGroup;
 
                 if request.selectedItem then
                     local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(request.selectedItem));
                     if selectedValue then
-                        priority = epgp[selectedValue.phase].priority[selectedValue.category];
-                        gp = epgp[selectedValue.phase].gp[selectedValue.category];
+                        priority = epgp.priority[selectedValue.category];
+                        gp = epgp.gp[selectedValue.category];
                         category = selectedValue.category;
                     end
                 end
