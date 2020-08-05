@@ -325,7 +325,7 @@ function ABGP:HistoryTriggerDecay(decayTime)
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
-function ABGP:AddActivePlayerXXX(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
+function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
     if proxy then
         self:Notify("Adding %s into the EPGP system, proxied by %s.", self:ColorizeName(player), self:ColorizeName(proxy));
         _G.GuildRosterSetPublicNote(self:GetGuildIndex(proxy), ("ABGP Proxy: %s"):format(player));
@@ -337,39 +337,30 @@ function ABGP:AddActivePlayerXXX(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp)
         end
     end
 
-    if p1ep ~= 0 and p1gp ~= 0 then
-        table.insert(_G.ABGP_Data2[self.Phases.p1].gpHistory, 1, {
-            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
-            [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = addTime,
-            [self.ItemHistoryIndex.PLAYER] = player,
-            [self.ItemHistoryIndex.GP] = p1gp,
-            [self.ItemHistoryIndex.NOTES] = "New active raider",
-        });
-        table.insert(self.Priorities[self.Phases.p1], {
-            player = player,
-            ep = p1ep,
-            gp = p1gp,
-        });
-        self:Notify("Inserted into %s at EP=%f and GP=%f.", self.PhaseNames[self.Phases.p1], p1ep, p1gp);
-    end
-
-    if p3ep ~= 0 and p3gp ~= 0 then
-        table.insert(_G.ABGP_Data2[self.Phases.p3].gpHistory, 1, {
-            [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
-            [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
-            [self.ItemHistoryIndex.DATE] = addTime,
-            [self.ItemHistoryIndex.PLAYER] = player,
-            [self.ItemHistoryIndex.GP] = p3gp,
-            [self.ItemHistoryIndex.NOTES] = "New active raider",
-        });
-        table.insert(self.Priorities[self.Phases.p3], {
-            player = player,
-            ep = p3ep,
-            gp = p3gp,
-        });
-        self:Notify("Inserted into %s at EP=%f and GP=%f.", self.PhaseNames[self.Phases.p3], p3ep, p3gp);
-    end
+    table.insert(_G.ABGP_Data2[self.Phases.p1].gpHistory, 1, {
+        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+        [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+        [self.ItemHistoryIndex.DATE] = addTime,
+        [self.ItemHistoryIndex.PLAYER] = player,
+        [self.ItemHistoryIndex.GP] = gpS,
+        [self.ItemHistoryIndex.CATEGORY] = self.ItemCategory.SILVER,
+        [self.ItemHistoryIndex.NOTES] = "New active raider",
+    });
+    table.insert(_G.ABGP_Data2[self.Phases.p1].gpHistory, 1, {
+        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+        [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+        [self.ItemHistoryIndex.DATE] = addTime,
+        [self.ItemHistoryIndex.PLAYER] = player,
+        [self.ItemHistoryIndex.GP] = gpG,
+        [self.ItemHistoryIndex.CATEGORY] = self.ItemCategory.GOLD,
+        [self.ItemHistoryIndex.NOTES] = "New active raider",
+    });
+    table.insert(self.Priorities, {
+        player = player,
+        ep = ep,
+        gp = { [self.ItemCategory.GOLD] = gpG, [self.ItemCategory.SILVER] = gpS },
+    });
+    self:Notify("Inserted into EPGP system at EP=%.2f, GP[S]=%.2f, GP[G]=%.2f.", ep, gpS, gpG);
 
     self:RefreshActivePlayers();
     self:RebuildOfficerNotes();

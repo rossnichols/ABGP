@@ -16,6 +16,7 @@ local table = table;
 local tonumber = tonumber;
 local type = type;
 local date = date;
+local math = math;
 
 function ABGP:InitOptions()
     local defaults = {
@@ -617,7 +618,7 @@ function ABGP:ShowAddTrialWindow()
     });
 end
 
-function ABGP:ShowAddPlayerWindowXXX()
+function ABGP:ShowAddPlayerWindow()
     local width = 400;
 
     local window = AceGUI:Create("ABGP_OpaqueWindow");
@@ -698,29 +699,26 @@ function ABGP:ShowAddPlayerWindowXXX()
         widget:SetValue(value);
     end
 
-    local p1epEdit = AceGUI:Create("ABGP_EditBox");
-    p1epEdit:SetLabel(("%s EP"):format(self.PhaseNames[self.Phases.p1]));
-    p1epEdit:SetCallback("OnValueChanged", checkNumber);
-    epgpContainer:AddChild(p1epEdit);
-    self:AddWidgetTooltip(p1epEdit, ("Starting EP for %s."):format(self.PhaseNames[self.Phases.p1]));
+    local epEdit = AceGUI:Create("ABGP_EditBox");
+    epEdit:SetLabel("EP");
+    epEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(epEdit);
+    self:AddWidgetTooltip(epEdit, "Starting EP.");
 
-    local p3epEdit = AceGUI:Create("ABGP_EditBox");
-    p3epEdit:SetLabel(("%s EP"):format(self.PhaseNames[self.Phases.p3]));
-    p3epEdit:SetCallback("OnValueChanged", checkNumber);
-    epgpContainer:AddChild(p3epEdit);
-    self:AddWidgetTooltip(p3epEdit, ("Starting EP for %s."):format(self.PhaseNames[self.Phases.p3]));
+    local spacer = AceGUI:Create("Label");
+    epgpContainer:AddChild(spacer);
 
-    local p1gpEdit = AceGUI:Create("ABGP_EditBox");
-    p1gpEdit:SetLabel(("%s GP"):format(self.PhaseNames[self.Phases.p1]));
-    p1gpEdit:SetCallback("OnValueChanged", checkNumber);
-    epgpContainer:AddChild(p1gpEdit);
-    self:AddWidgetTooltip(p1gpEdit, ("Starting GP for %s."):format(self.PhaseNames[self.Phases.p1]));
+    local gpsEdit = AceGUI:Create("ABGP_EditBox");
+    gpsEdit:SetLabel("Silver GP");
+    gpsEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(gpsEdit);
+    self:AddWidgetTooltip(gpsEdit, "Starting Silver GP.");
 
-    local p3gpEdit = AceGUI:Create("ABGP_EditBox");
-    p3gpEdit:SetLabel(("%s GP"):format(self.PhaseNames[self.Phases.p3]));
-    p3gpEdit:SetCallback("OnValueChanged", checkNumber);
-    epgpContainer:AddChild(p3gpEdit);
-    self:AddWidgetTooltip(p3gpEdit, ("Starting GP for %s."):format(self.PhaseNames[self.Phases.p3]));
+    local gpgEdit = AceGUI:Create("ABGP_EditBox");
+    gpgEdit:SetLabel("Gold GP");
+    gpgEdit:SetCallback("OnValueChanged", checkNumber);
+    epgpContainer:AddChild(gpgEdit);
+    self:AddWidgetTooltip(gpgEdit, "Starting Gold GP.");
 
     local done = AceGUI:Create("Button");
     done:SetWidth(100);
@@ -731,30 +729,27 @@ function ABGP:ShowAddPlayerWindowXXX()
         local proxy = proxyEdit:GetValue();
         player = player ~= "" and player or nil;
         proxy = proxy ~= "" and proxy or nil;
-        local p1ep = p1epEdit:GetValue();
-        local p1gp = p1gpEdit:GetValue();
-        local p3ep = p3epEdit:GetValue();
-        local p3gp = p3gpEdit:GetValue();
+        local ep = epEdit:GetValue();
+        local gpS = gpsEdit:GetValue();
+        local gpG = gpgEdit:GetValue();
 
         local addDate = dateEdit:GetValue();
         local m, d, y = addDate:match("^(%d+)/(%d+)/(%d+)$");
         local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
 
-        self:AddActivePlayer(player, proxy, addTime, p1ep, p1gp, p3ep, p3gp);
+        self:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG);
         window:Hide();
     end);
     container:AddChild(done);
 
     local function processPlayer()
         done:SetDisabled(true);
-        p1epEdit:SetValue(0);
-        p1gpEdit:SetValue(0);
-        p3epEdit:SetValue(0);
-        p3gpEdit:SetValue(0);
-        p1epEdit:SetDisabled(true);
-        p1gpEdit:SetDisabled(true);
-        p3epEdit:SetDisabled(true);
-        p3gpEdit:SetDisabled(true);
+        epEdit:SetValue(0);
+        gpsEdit:SetValue(0);
+        gpgEdit:SetValue(0);
+        epEdit:SetDisabled(true);
+        gpsEdit:SetDisabled(true);
+        gpgEdit:SetDisabled(true);
         playerRank:SetText("");
 
         local player = playerEdit:GetValue();
@@ -784,90 +779,39 @@ function ABGP:ShowAddPlayerWindowXXX()
         local guildInfo = self:GetGuildInfo(player);
         local rank = guildInfo[2];
         local raidGroup = self:GetRaidGroup(rank);
-        if not epGroup then
+        if not raidGroup then
             label:SetText("The player's guild rank is invalid!");
             return true;
         end
 
-        p1epEdit:SetDisabled(false);
-        p1gpEdit:SetDisabled(false);
-        p3epEdit:SetDisabled(false);
-        p3gpEdit:SetDisabled(false);
-        playerRank:SetText(rank);
-
-        local calcP1, calcP3 = true, true;
-        local active = self:GetActivePlayer(player);
-        if active then
-            if active[self.Phases.p1] then
-                p1epEdit:SetDisabled(true);
-                p1gpEdit:SetDisabled(true);
-                calcP1 = false;
-            end
-            if active[self.Phases.p3] then
-                p3epEdit:SetDisabled(true);
-                p3gpEdit:SetDisabled(true);
-                calcP3 = false;
-            end
-        end
-
-        if not calcP1 and not calcP3 then
+        if self:GetActivePlayer(player) then
             label:SetText("The player is already active!");
             return true;
         end
 
-        label:SetText(("EP=%s, GP[%s]=%s, GP[%s]=%s"):format(
-            self.RaidGroupNames[epGroup],
-            self.PhaseNamesShort[self.Phases.p1],
-            self.RaidGroupNames[gpGroupP1],
-            self.PhaseNamesShort[self.Phases.p3],
-            self.RaidGroupNames[gpGroupP3]));
+        epEdit:SetDisabled(false);
+        gpsEdit:SetDisabled(false);
+        gpgEdit:SetDisabled(false);
+        playerRank:SetText(rank);
+        label:SetText(("Raid Group: %s"):format(self.RaidGroupNames[raidGroup]));
 
         local players = self:GetActivePlayers();
-        local p1epSum, p1epCount, p3epSum, p3epCount = 0, 0, 0, 0;
-        local p1gpSum, p1gpCount, p3gpSum, p3gpCount = 0, 0, 0, 0;
+        local epSum, gpsSum, gpgSum, count = 0, 0, 0, 0;
         for _, active in pairs(players) do
-            if not active.trial then
-                if calcP1 and active[self.Phases.p1] and active[self.Phases.p1].ep >= self:GetMinEP(active.raidGroup) then
-                    if active.raidGroup == epGroup then
-                        p1epSum = p1epSum + active[self.Phases.p1].ep;
-                        p1epCount = p1epCount + 1;
-                    end
-                    if active[self.Phases.p1].gpRaidGroup == gpGroupP1 then
-                        p1gpSum = p1gpSum + active[self.Phases.p1].gp;
-                        p1gpCount = p1gpCount + 1;
-                    end
-                end
-                if calcP3 and active[self.Phases.p3] and active[self.Phases.p3].ep >= self:GetMinEP(active.raidGroup) then
-                    if active.raidGroup == epGroup then
-                        p3epSum = p3epSum + active[self.Phases.p3].ep;
-                        p3epCount = p3epCount + 1;
-                    end
-                    if active[self.Phases.p3].gpRaidGroup == gpGroupP3 then
-                        p3gpSum = p3gpSum + active[self.Phases.p3].gp;
-                        p3gpCount = p3gpCount + 1;
-                    end
-                end
+            if not active.trial and active.raidGroup == raidGroup and active.ep >= self:GetMinEP(active.raidGroup) then
+                count = count + 1;
+                epSum = epSum + active.ep;
+                gpsSum = gpsSum + active.gp[self.ItemCategory.SILVER];
+                gpgSum = gpgSum + active.gp[self.ItemCategory.GOLD];
             end
         end
 
         local epMult, gpMult = self:GetEPGPMultipliers();
-        if calcP1 then
-            p1epEdit:SetValue(epMult * p1epSum / p1epCount);
-            p1gpEdit:SetValue(gpMult * p1gpSum / p1gpCount);
-            self:Notify("EP for %s calculated by averaging %d active players and multiplying by %.2f.",
-                self.PhaseNames[self.Phases.p1], p1epCount, epMult);
-            self:Notify("GP for %s calculated by averaging %d active players and multiplying by %.2f.",
-                self.PhaseNames[self.Phases.p1], p1gpCount, gpMult);
-        end
-        if calcP3 then
-            p3epEdit:SetValue(epMult * p3epSum / p3epCount);
-            p3gpEdit:SetValue(gpMult * p3gpSum / p3gpCount);
-            self:Notify("EP for %s calculated by averaging %d active players and multiplying by %.2f.",
-                self.PhaseNames[self.Phases.p3], p3epCount, epMult);
-            self:Notify("GP for %s calculated by averaging %d active players and multiplying by %.2f.",
-                self.PhaseNames[self.Phases.p3], p3gpCount, gpMult);
-        end
-        self:Notify("NOTE: since an active player may have their GP associated with different raid groups based on phase, the counts for a given phase may vary.");
+        self:Notify("EPGP calculated by averaging %d active players in raid group %s and multiplying by %.2f (EP), %.2f (GP).",
+            count, self.RaidGroupNames[raidGroup], epMult, gpMult);
+        epEdit:SetValue(math.floor((epMult * epSum / count) + 0.5));
+        gpsEdit:SetValue(math.floor((gpMult * gpsSum / count) + 0.5));
+        gpgEdit:SetValue(math.floor((gpMult * gpgSum / count) + 0.5));
         done:SetDisabled(false);
     end
     playerEdit:SetCallback("OnValueChanged", processPlayer);
