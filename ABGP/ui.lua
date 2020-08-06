@@ -377,7 +377,7 @@ local function DrawItemHistory(container, options)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2[ABGP.CurrentPhase].gpHistory);
+    local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data);
     local filtered = {};
     local exact = searchText:match("^\"(.+)\"$");
     exact = exact and exact:lower() or exact;
@@ -543,7 +543,7 @@ local function DrawItems(container, options)
         mainLine:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
 
-        local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
+        local items = _G.ABGP_Data2.itemValues.data;
         local sources, sourcesSorted = {}, {};
         local lastRaid;
         for _, item in ipairs(items) do
@@ -637,7 +637,7 @@ local function DrawItems(container, options)
                     return table.concat(priorities, "\t");
                 end
 
-                local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
+                local items = _G.ABGP_Data2.itemValues.data;
                 local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
                 for i, item in ipairs(items) do
                     if item[ABGP.ItemDataIndex.RELATED] then
@@ -695,8 +695,8 @@ local function DrawItems(container, options)
         local columns = {
             { canSort = true, defaultAsc = true, name = "Item" },
             { canSort = true, defaultAsc = false, name = "GP" },
-            { canSort = false, name = "Notes" },
-            { canSort = false, name = "Priority" },
+            { canSort = true, defaultAsc = false, name = "Notes" },
+            { canSort = true, defaultAsc = true, name = "Priority" },
             weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
@@ -760,7 +760,7 @@ local function DrawItems(container, options)
     local scrollValue = preserveScroll and itemList:GetUserData("statusTable").scrollvalue or 0;
     itemList:ReleaseChildren();
 
-    local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
+    local items = _G.ABGP_Data2.itemValues.data;
     local filtered = {};
     local priSelector = container:GetUserData("priSelector");
     local sourceSelector = container:GetUserData("sourceSelector");
@@ -846,6 +846,35 @@ local function DrawItems(container, options)
                 end
             else
                 return acat == ABGP.ItemCategory.SILVER, false;
+            end
+        end,
+        function(a, b)
+            local anotes, bnotes = a[ABGP.ItemDataIndex.NOTES], b[ABGP.ItemDataIndex.NOTES];
+            if type(anotes) == "string" and type(bnotes) == "string" then
+                return anotes < bnotes, anotes == bnotes;
+            else
+                return type(bnotes) == "string", anotes == bnotes;
+            end
+        end,
+        function(a, b)
+            local apri, bpri = a[ABGP.ItemDataIndex.PRIORITY], b[ABGP.ItemDataIndex.PRIORITY];
+            local firstDiff, lastA;
+            for i, pri in ipairs(apri) do
+                lastA = i;
+                if bpri[i] ~= pri then
+                    firstDiff = i;
+                    break;
+                end
+            end
+
+            if firstDiff then
+                if bpri[firstDiff] then
+                    return apri[firstDiff] < bpri[firstDiff], false;
+                else
+                    return false, false;
+                end
+            else
+                return bpri[lastA + 1] ~= nil, bpri[lastA + 1] == nil;
             end
         end,
     };
@@ -1117,12 +1146,10 @@ local function DrawRaidHistory(container, options)
     local scrollValue = preserveScroll and raidList:GetUserData("statusTable").scrollvalue or 0;
     raidList:ReleaseChildren();
 
-    local raids = _G.ABGP_RaidInfo.pastRaids;
+    local raids = _G.ABGP_RaidInfo2.pastRaids;
     local filtered = {};
     for _, raid in ipairs(raids) do
-        if raid.phase == ABGP.CurrentPhase then
-            table.insert(filtered, raid);
-        end
+        table.insert(filtered, raid);
     end
 
     local pagination = container:GetUserData("pagination");
@@ -1223,7 +1250,7 @@ local function DrawAuditLog(container, options)
     local scrollValue = preserveScroll and auditLog:GetUserData("statusTable").scrollvalue or 0;
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_Data2[ABGP.CurrentPhase].gpHistory;
+    local entries = _G.ABGP_Data2.history.data;
     local deletedEntries = {};
     local deleteReferences = {};
     for i, entry in ipairs(entries) do
@@ -1376,7 +1403,7 @@ local function DrawAuditLog(container, options)
                                     table.insert(context, {
                                         text = "Effective cost",
                                         func = function(self, arg1)
-                                            local cost, decayCount = ABGP:GetEffectiveCost(entry[ABGP.ItemHistoryIndex.ID], entry[ABGP.ItemHistoryIndex.GP], ABGP.CurrentPhase);
+                                            local cost, decayCount = ABGP:GetEffectiveCost(entry[ABGP.ItemHistoryIndex.ID], entry[ABGP.ItemHistoryIndex.GP]);
                                             if cost then
                                                 ABGP:LogDebug("Effective cost is %.3f after %d decays.", cost, decayCount);
                                             else
@@ -1402,7 +1429,7 @@ local function DrawAuditLog(container, options)
                         table.insert(context, {
                             text = "Delete entry",
                             func = function(self, arg1)
-                                ABGP:HistoryDeleteEntry(ABGP.CurrentPhase, arg1);
+                                ABGP:HistoryDeleteEntry(arg1);
                             end,
                             arg1 = entry,
                             notCheckable = true
@@ -1497,7 +1524,7 @@ function ABGP:CreateMainWindow(command)
         { value = "items", text = "Items", draw = DrawItems },
         { value = "gp", text = "Item History", draw = DrawItemHistory },
     };
-    if _G.ABGP_RaidInfo.pastRaids and #_G.ABGP_RaidInfo.pastRaids > 0 then
+    if _G.ABGP_RaidInfo2.pastRaids and #_G.ABGP_RaidInfo2.pastRaids > 0 then
         table.insert(tabs, { value = "ep", text = "Raid History", draw = DrawRaidHistory });
     end
     if self:IsPrivileged() then

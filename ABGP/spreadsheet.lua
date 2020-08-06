@@ -298,36 +298,12 @@ local function DrawPriority(container)
     DrawTable(container, ABGP.Priorities, priColumns, importFunc, exportFunc, true);
 end
 
-local function DrawEP(container)
-    local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].epHistory, epMapping, function(row)
-            return ABGP:GetActivePlayer(row.player);
-        end);
-
-        widget:GetUserData("window"):Hide();
-        container:ReleaseChildren();
-        DrawEP(container);
-    end
-
-    local exportFunc = function()
-        local text = "Points Earned,Action Taken,Character,Date\n";
-        for _, item in ipairs(_G.ABGP_Data2[ABGP.CurrentPhase].epHistory) do
-            text = text .. ("%s,%s,%s,%s\n"):format(
-                item.ep, item.action, item.player, item.date);
-        end
-
-        return text;
-    end
-
-    DrawTable(container, _G.ABGP_Data2[ABGP.CurrentPhase].epHistory, epColumns, importFunc, exportFunc);
-end
-
 local function DrawGP(container)
     local lastRowTime = 0;
     local lastDecayTime = 0;
     local rowTimes = {};
     local importFunc = function(widget, event)
-        local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].gpHistory, gpMapping, function(row)
+        local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2.history.data, gpMapping, function(row)
             if not row[ABGP.ItemHistoryIndex.DATE] then
                 -- Only print an error if the row isn't completely blank.
                 local isError = false;
@@ -416,20 +392,20 @@ local function DrawGP(container)
                     j = j - 1;
                 end
             end
-            reverse(_G.ABGP_Data2[ABGP.CurrentPhase].gpHistory);
+            reverse(_G.ABGP_Data2.history.data);
 
             widget:GetUserData("window"):Hide();
             container:ReleaseChildren();
             DrawGP(container);
 
             if ABGP:FixupHistory() then
-                ABGP:CommitHistory(ABGP.CurrentPhase);
+                ABGP:CommitHistory();
             end
         end
     end
 
     local exportFunc = function()
-        local history = ABGP:ProcessItemHistory(_G.ABGP_Data2[ABGP.CurrentPhase].gpHistory, true);
+        local history = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
 
         local text = "New Points\tItem\tCharacter\tDate Won\n";
         for i = #history, 1, -1 do
@@ -453,12 +429,12 @@ local function DrawGP(container)
         return text;
     end
 
-    DrawTable(container, _G.ABGP_Data2[ABGP.CurrentPhase].gpHistory, gpColumns, importFunc, exportFunc);
+    DrawTable(container, _G.ABGP_Data2.history.data, gpColumns, importFunc, exportFunc);
 end
 
 local function DrawItems(container)
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2.itemValues.data, itemMapping, function(row)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
@@ -484,7 +460,7 @@ local function DrawItems(container)
                 row[ABGP.ItemDataIndex.NAME] = item;
                 row[ABGP.ItemDataIndex.RELATED] = token;
                 row[ABGP.ItemDataIndex.NOTES] = nil;
-                row[ABGP.ItemDataIndex.PRIORITY] = nil;
+                row[ABGP.ItemDataIndex.PRIORITY] = {};
             end
 
             return true;
@@ -496,15 +472,13 @@ local function DrawItems(container)
 
         if ABGP:FixupItems() then
             ABGP:RefreshItemValues();
-            if ABGP.Phases[ABGP.CurrentPhase] then
-                ABGP:CommitItemData();
-            end
+            ABGP:CommitItemData();
         else
             ABGP:Error("Couldn't find item links for some items! Unable to commit these updates.");
         end
     end
 
-    DrawTable(container, _G.ABGP_Data2[ABGP.CurrentPhase].itemValues, itemColumns, importFunc, nil);
+    DrawTable(container, _G.ABGP_Data2.itemValues.data, itemColumns, importFunc, nil);
 end
 
 function ABGP:ShowImportWindow()
@@ -530,24 +504,10 @@ function ABGP:ShowImportWindow()
 
     local tabs = {
         { value = "priority", text = "Priority", selected = DrawPriority },
-        { value = "ep", text = "Effort Points", selected = DrawEP },
         { value = "gp", text = "Gear Points", selected = DrawGP },
         { value = "items", text = "Items", selected = DrawItems },
     };
     local selectedTab = tabs[1].value;
-
-    local phases, phaseNames = {}, {};
-    for i, v in ipairs(ABGP:IsPrivileged() and ABGP.PhasesSortedAll or ABGP.PhasesSorted) do phases[i] = v; end
-    for k, v in pairs(ABGP:IsPrivileged() and ABGP.PhaseNamesAll or ABGP.PhaseNames) do phaseNames[k] = v; end
-    local phaseSelector = AceGUI:Create("Dropdown");
-    phaseSelector:SetWidth(110);
-    phaseSelector:SetList(phaseNames, phases);
-    phaseSelector:SetValue(ABGP.CurrentPhase);
-    phaseSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        ABGP.CurrentPhase = value;
-        widget:GetUserData("tabGroup"):SelectTab(selectedTab);
-    end);
-    window:AddChild(phaseSelector);
 
     local tabGroup = AceGUI:Create("TabGroup");
     tabGroup:SetFullWidth(true);
@@ -564,7 +524,6 @@ function ABGP:ShowImportWindow()
         end
     end);
     tabGroup:SelectTab(selectedTab);
-    phaseSelector:SetUserData("tabGroup", tabGroup);
     window:AddChild(tabGroup);
     window.frame:Raise();
     activeWindow = window;
@@ -628,7 +587,7 @@ end
 function ABGP:FixupItems()
     self:BuildItemLookup();
 
-    for _, entry in ipairs(_G.ABGP_Data2.p1.itemValues) do
+    for _, entry in ipairs(_G.ABGP_Data2.itemValues.data) do
         if lookup[entry[ABGP.ItemDataIndex.NAME]] then
             entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
         else
@@ -644,7 +603,7 @@ end
 function ABGP:FixupHistory()
     if not self:BuildItemLookup(true) then return false; end
 
-    for _, entry in ipairs(_G.ABGP_Data2.p1.gpHistory) do
+    for _, entry in ipairs(_G.ABGP_Data2.history.data) do
         if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
             -- NOTE: The ITEMID field is still the item name at this point.
             if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then

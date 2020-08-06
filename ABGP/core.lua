@@ -45,7 +45,7 @@ local itemDataRequestToken = 0;
 local function OnGroupJoined()
     ABGP:SendComm(ABGP.CommTypes.STATE_SYNC, {
         token = GetServerTime(),
-        itemDataTime = _G.ABGP_DataTimestamp.itemValues,
+        itemDataTime = _G.ABGP_Data2.itemValues.timestamp,
         itemDataBaseline = ABGP.initialData.itemValues.timestamp,
     }, "BROADCAST");
     ABGP:VersionOnGroupJoined();
@@ -572,7 +572,7 @@ function ABGP:ParseHistoryId(id)
     return player, date;
 end
 
-local function ValueFromItem(item, phase)
+local function ValueFromItem(item)
     return {
         item = item[ABGP.ItemDataIndex.NAME],
         itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
@@ -586,36 +586,31 @@ local function ValueFromItem(item, phase)
         related = item[ABGP.ItemDataIndex.RELATED],
         category = item[ABGP.ItemDataIndex.CATEGORY],
         dataStore = item,
-        phase = phase
     };
 end
 
 function ABGP:RefreshItemValues()
     itemValues = {};
-    for phase in pairs(self.PhasesAll) do
-        for _, item in ipairs(_G.ABGP_Data2[phase].itemValues) do
-            local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
-            local value = ValueFromItem(item, phase);
-            itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
-            itemValues[self:GetItemId(itemLink)] = value;
+    for _, item in ipairs(_G.ABGP_Data2.itemValues.data) do
+        local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
+        local value = ValueFromItem(item);
+        itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
+        itemValues[self:GetItemId(itemLink)] = value;
 
-            if value.related then
-                local token = self:GetItemValue(value.related);
-                table.insert(token.token, itemLink);
-            end
-
-            -- Try to ensure info about the item is cached locally.
-            if itemLink then GetItemInfo(itemLink); end
+        if value.related then
+            local token = self:GetItemValue(value.related);
+            table.insert(token.token, itemLink);
         end
+
+        -- Try to ensure info about the item is cached locally.
+        if itemLink then GetItemInfo(itemLink); end
     end
 end
 
 function ABGP:BuildDefaultItemValues()
     local itemValues = {};
-    for phase in pairs(self.PhasesAll) do
-        for _, item in ipairs(self.initialData.itemValues[phase]) do
-            itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item, phase);
-        end
+    for _, item in ipairs(self.initialData.itemValues.data) do
+        itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item);
     end
 
     return itemValues;
@@ -628,10 +623,7 @@ local function IsValueUpdated(value, oldValue)
         isUpdated =
             oldValue.gp ~= value.gp or
             oldValue.category ~= value.category or
-            oldValue.raid ~= value.raid or
-            oldValue.boss ~= value.boss or
             oldValue.notes ~= value.notes or
-            oldValue.phase ~= value.phase or
             #oldValue.priority ~= #value.priority;
 
         if not isUpdated then
@@ -651,12 +643,12 @@ function ABGP:ItemOnStateSync(data, distribution, sender)
     -- Ignore state syncs with a mismatched baseline.
     if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
-    if data.itemDataTime > _G.ABGP_DataTimestamp.itemValues then
+    if data.itemDataTime > _G.ABGP_Data2.itemValues.timestamp then
         -- This person has newer item data. Request a sync.
         self:SendComm(self.CommTypes.REQUEST_ITEM_DATA_SYNC, {
             token = data.token,
         }, "WHISPER", sender);
-    elseif data.itemDataTime < _G.ABGP_DataTimestamp.itemValues and UnitIsGroupLeader("player") then
+    elseif data.itemDataTime < _G.ABGP_Data2.itemValues.timestamp and UnitIsGroupLeader("player") then
         -- This person has older item data. Send them the latest.
         self:BroadcastItemData(sender);
     end
@@ -671,24 +663,20 @@ end
 
 function ABGP:ItemOnDataSync(data, distribution, sender)
     -- Ignore data syncs that don't have a newer timestamp or have a mismatched baseline.
-    if data.itemDataTime <= _G.ABGP_DataTimestamp.itemValues then return; end
+    if data.itemDataTime <= _G.ABGP_Data2.itemValues.timestamp then return; end
     if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
-    _G.ABGP_DataTimestamp.itemValues = data.itemDataTime;
+    _G.ABGP_Data2.itemValues.timestamp = data.itemDataTime;
     self:LogDebug("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
-    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp.itemValues)); -- https://strftime.org/
+    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_Data2.itemValues.timestamp)); -- https://strftime.org/
 
     -- Reset to defaults, since we're given a diff from them.
-    for phase in pairs(ABGP.Phases) do
-        _G.ABGP_Data2[phase].itemValues = self.tCopy(self.initialData.itemValues[phase]);
-    end
+    _G.ABGP_Data2.itemValues.data = self.tCopy(self.initialData.itemValues.data);
     self:RefreshItemValues();
 
-    for phase, items in pairs(data.itemValues) do
-        for i, item in ipairs(items) do
-            -- self:LogDebug("Checking %s [%s]", item[self.ItemDataIndex.NAME], phase);
-            self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item, phase), true);
-        end
+    for _, item in ipairs(data.itemValues) do
+        -- self:LogDebug("Checking %s", item[self.ItemDataIndex.NAME]);
+        self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item), true);
     end
 
     self:RefreshItemValues();
@@ -697,30 +685,27 @@ end
 function ABGP:CommitItemData()
     self:RefreshItemValues();
     if not self:GetDebugOpt("IgnoreItemCommit") then
-        _G.ABGP_DataTimestamp.itemValues = GetServerTime();
+        _G.ABGP_Data2.itemValues.timestamp = GetServerTime();
         self:BroadcastItemData();
     end
 end
 
 function ABGP:BroadcastItemData(target)
     local payload = {
-        itemDataTime = _G.ABGP_DataTimestamp.itemValues,
+        itemDataTime = _G.ABGP_Data2.itemValues.timestamp,
         itemDataBaseline = self.initialData.itemValues.timestamp,
         itemValues = {},
     };
 
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.Phases) do
-        payload.itemValues[phase] = {};
-        for i, item in ipairs(_G.ABGP_Data2[phase].itemValues) do
-            local name = item[self.ItemDataIndex.NAME];
-            local defaultValue = defaultValues[name];
-            local currentValue = self:GetItemValue(name);
+    for _, item in ipairs(_G.ABGP_Data2.itemValues.data) do
+        local name = item[self.ItemDataIndex.NAME];
+        local defaultValue = defaultValues[name];
+        local currentValue = self:GetItemValue(name);
 
-            if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
-                table.insert(payload.itemValues[phase], item);
-                -- self:LogDebug("Broadcasting %s [%s]", name, phase);
-            end
+        if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
+            table.insert(payload.itemValues, item);
+            -- self:LogDebug("Broadcasting %s", name);
         end
     end
 
@@ -733,15 +718,13 @@ end
 
 function ABGP:DumpItemDiffs()
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.Phases) do
-        for i, item in ipairs( _G.ABGP_Data2[phase].itemValues) do
-            local name = item[self.ItemDataIndex.NAME];
-            local defaultValue = defaultValues[name];
-            local currentValue = self:GetItemValue(name);
+    for _, item in ipairs( _G.ABGP_Data2.itemValues.data) do
+        local name = item[self.ItemDataIndex.NAME];
+        local defaultValue = defaultValues[name];
+        local currentValue = self:GetItemValue(name);
 
-            if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
-                self:LogDebug("%s:%s", phase, name);
-            end
+        if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
+            self:LogDebug(name);
         end
     end
 end
@@ -749,46 +732,18 @@ end
 function ABGP:CheckUpdatedItem(itemLink, value, bulk)
     if IsValueUpdated(value) then
         local found = false;
-        local items = _G.ABGP_Data2[value.phase].itemValues;
-        for i, item in ipairs(items) do
+        local items = _G.ABGP_Data2.itemValues.data;
+        for _, item in ipairs(items) do
             if item[ABGP.ItemDataIndex.NAME] == value.item then
                 item[ABGP.ItemDataIndex.GP] = value.gp;
-                item[ABGP.ItemDataIndex.BOSS] = value.boss;
+                item[ABGP.ItemDataIndex.CATEGORY] = value.category;
                 item[ABGP.ItemDataIndex.NOTES] = value.notes;
-                item[ABGP.ItemDataIndex.PRIORITY] = value.priority;
+                item[ABGP.ItemDataIndex.PRIORITY] = self.tCopy(value.priority);
                 found = true;
                 if not bulk then
                     self:Notify("%s's EPGP data was updated!", itemLink);
                 end
                 break;
-            end
-        end
-
-        if not found then
-            local oldValue = self:GetItemValue(value.item);
-            if oldValue then
-                local items = _G.ABGP_Data2[oldValue.phase].itemValues;
-                for i, item in ipairs(items) do
-                    if item[ABGP.ItemDataIndex.NAME] == value.item then
-                        table.remove(items, i);
-                        if not bulk then
-                            self:Notify("%s's EPGP data was removed from %s!", itemLink, self.PhaseNamesAll[oldValue.phase]);
-                        end
-                        break;
-                    end
-                end
-            end
-
-            table.insert(items, {
-                [ABGP.ItemDataIndex.NAME] = value.item,
-                [ABGP.ItemDataIndex.GP] = value.gp,
-                [ABGP.ItemDataIndex.ITEMLINK] = self:ShortenLink(itemLink),
-                [ABGP.ItemDataIndex.BOSS] = value.boss,
-                [ABGP.ItemDataIndex.PRIORITY] = value.priority,
-                [ABGP.ItemDataIndex.NOTES] = value.notes,
-            });
-            if not bulk then
-                self:Notify("%s's EPGP data has been added to %s!", itemLink, self.PhaseNamesAll[value.phase]);
             end
         end
 
@@ -801,8 +756,10 @@ function ABGP:HasReceivedItem(itemName)
     local value = self:GetItemValue(itemName);
     if not value then return false; end
 
-    for _, item in ipairs(_G.ABGP_Data2[value.phase].gpHistory) do
-        if item[self.ItemHistoryIndex.ITEMID] == value.itemId and item[self.ItemHistoryIndex.PLAYER] == player then
+    for _, item in ipairs(_G.ABGP_Data2.history.data) do
+        if item[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and
+           item[self.ItemHistoryIndex.ITEMID] == value.itemId and
+           item[self.ItemHistoryIndex.PLAYER] == player then
             return true;
         end
     end

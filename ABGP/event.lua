@@ -24,7 +24,7 @@ local type = type;
 local tonumber = tonumber;
 local next = next;
 
-_G.ABGP_RaidInfo = {};
+_G.ABGP_RaidInfo2 = {};
 
 -- https://wow.gamepedia.com/InstanceID
 local instanceIds = {
@@ -69,6 +69,29 @@ local bossIds = {
     Jindo       = 792,
     Hakkar      = 793,
 };
+
+ABGP.Phases = {
+    p1 = "p1",
+};
+ABGP.PhaseNames = {
+    [ABGP.Phases.p1] = "Phase 1/2",
+};
+ABGP.PhaseNamesShort = {
+    [ABGP.Phases.p1] = "P1/2",
+};
+ABGP.PhasesSorted = {
+    ABGP.Phases.p1,
+};
+ABGP.PhasesAll = {
+    [ABGP.Phases.p1] = ABGP.Phases.p1,
+};
+ABGP.PhaseNamesAll = {
+    [ABGP.PhasesAll.p1] = "Phase 1/2",
+};
+ABGP.PhasesSortedAll = {
+    ABGP.PhasesAll.p1,
+};
+ABGP.CurrentPhase = ABGP.Phases.p1;
 
 local instanceInfo = {
     [instanceIds.MoltenCore]  = {
@@ -186,7 +209,7 @@ local pendingLootMethod;
 local checkCombatWhilePending;
 
 local function IsInProgress(raid)
-    return (raid and raid == _G.ABGP_RaidInfo.currentRaid);
+    return (raid and raid == _G.ABGP_RaidInfo2.currentRaid);
 end
 
 local function PopulateUI()
@@ -239,7 +262,7 @@ local function PopulateUI()
 end
 
 local function EnsureAwardsEntries()
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     local player = UnitName("player");
@@ -260,7 +283,7 @@ local function EnsureAwardsEntries()
 end
 
 function ABGP:IsRaidInProgress()
-    return _G.ABGP_RaidInfo.currentRaid ~= nil;
+    return _G.ABGP_RaidInfo2.currentRaid ~= nil;
 end
 
 function ABGP:AwardPlayerEP(raid, player, ep, category)
@@ -270,7 +293,7 @@ function ABGP:AwardPlayerEP(raid, player, ep, category)
 end
 
 function ABGP:AwardEP(ep, category)
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     self:Alert("Awarding %d EP to the current raid and standby!", ep);
@@ -331,7 +354,7 @@ function ABGP:RemoveStandby(raid, player)
 end
 
 function ABGP:SetDisenchanter(player)
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     if player == "" then
@@ -345,14 +368,14 @@ function ABGP:SetDisenchanter(player)
 end
 
 function ABGP:GetRaidDisenchanter()
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     return currentRaid.disenchanter;
 end
 
 function ABGP:SetMule(player)
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     if player == "" then
@@ -366,14 +389,14 @@ function ABGP:SetMule(player)
 end
 
 function ABGP:GetRaidMule()
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     return currentRaid.mule;
 end
 
 function ABGP:ShouldAutoDistribute()
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     return currentRaid.autoDistribute;
@@ -384,7 +407,7 @@ function ABGP:EventOnBossKilled(bossId, name)
 
     -- Check for info about the boss and an in-progress raid.
     local info = bossInfo[bossId];
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not (currentRaid and info) then return; end
 
     -- Check that the boss is for this raid.
@@ -405,7 +428,7 @@ function ABGP:EventOnBossKilled(bossId, name)
 end
 
 function ABGP:EventOnBossLoot(data, distribution, sender)
-    local currentRaid = _G.ABGP_RaidInfo.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
     if not currentRaid then return; end
 
     local instance = instanceInfo[currentRaid.instanceId];
@@ -538,7 +561,7 @@ function ABGP:StartRaid()
     start:SetFullWidth(true);
     start:SetText("Start");
     start:SetCallback("OnClick", function(widget)
-        _G.ABGP_RaidInfo.currentRaid = {
+        _G.ABGP_RaidInfo2.currentRaid = {
             instanceId = raidInstance,
             phase = raidPhase,
             name = name:GetText(),
@@ -597,7 +620,7 @@ function ABGP:StartRaid()
 end
 
 function ABGP:UpdateRaid(windowRaid)
-    windowRaid = windowRaid or _G.ABGP_RaidInfo.currentRaid;
+    windowRaid = windowRaid or _G.ABGP_RaidInfo2.currentRaid;
     if not windowRaid then return; end
 
     if activeWindow then activeWindow:Hide(); end
@@ -635,16 +658,16 @@ function ABGP:UpdateRaid(windowRaid)
         stop:SetFullWidth(true);
         stop:SetText("Stop");
         stop:SetCallback("OnClick", function(widget)
-            _G.ABGP_RaidInfo.pastRaids = _G.ABGP_RaidInfo.pastRaids or {};
+            _G.ABGP_RaidInfo2.pastRaids = _G.ABGP_RaidInfo2.pastRaids or {};
 
-            local currentRaid = _G.ABGP_RaidInfo.currentRaid;
-            _G.ABGP_RaidInfo.currentRaid = nil;
+            local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+            _G.ABGP_RaidInfo2.currentRaid = nil;
             for player, award in pairs(currentRaid.awards) do
                 if award.ep == 0 then currentRaid.awards[player] = nil; end
             end
             if next(currentRaid.awards) then
                 self:Notify("Stopping the raid!");
-                table.insert(_G.ABGP_RaidInfo.pastRaids, 1, currentRaid);
+                table.insert(_G.ABGP_RaidInfo2.pastRaids, 1, currentRaid);
                 window:Hide();
                 self:UpdateRaid(windowRaid);
             else
@@ -714,7 +737,7 @@ function ABGP:UpdateRaid(windowRaid)
         restart:SetFullWidth(true);
         restart:SetText("Restart");
         restart:SetCallback("OnClick", function(widget)
-            local past = _G.ABGP_RaidInfo.pastRaids;
+            local past = _G.ABGP_RaidInfo2.pastRaids;
             for i, raid in ipairs(past) do
                 if raid == windowRaid then
                     self:Notify("Restarting the raid!");
@@ -874,10 +897,10 @@ function ABGP:UpdateRaid(windowRaid)
 end
 
 function ABGP:RestartRaid(i)
-    local past = _G.ABGP_RaidInfo.pastRaids;
+    local past = _G.ABGP_RaidInfo2.pastRaids;
     local raid = past[i];
     table.remove(past, i);
-    _G.ABGP_RaidInfo.currentRaid = raid;
+    _G.ABGP_RaidInfo2.currentRaid = raid;
     if activeWindow then activeWindow:Hide(); end
     self:UpdateRaid();
 end
@@ -1039,7 +1062,7 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
     button2 = "No",
     showAlert = true,
     OnAccept = function(self, data)
-        local raids = _G.ABGP_RaidInfo.pastRaids;
+        local raids = _G.ABGP_RaidInfo2.pastRaids;
         for i, raid in ipairs(raids) do
             if raid == data then
                 table.remove(raids, i);

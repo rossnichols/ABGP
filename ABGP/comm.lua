@@ -151,7 +151,6 @@ ABGP.CommTypes = {
 
     HISTORY_SYNC = { name = "HISTORY_SYNC", id = 17, priority = "BULK" },
     -- version: from ABGP:GetVersion()
-    -- phase: from ABGP.Phases
     -- token: unique token for the message
     -- baseline: number
     -- archivedCount: number
@@ -160,11 +159,9 @@ ABGP.CommTypes = {
     -- ids: table OR hash: number
 
     HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", id = 18, priority = "NORMAL" },
-    -- phase: from ABGP.Phases
     -- token: from HISTORY_SYNC
 
     HISTORY_MERGE = { name = "HISTORY_MERGE", id = 19, priority = "BULK" },
-    -- phase: from ABGP.Phases
     -- baseline: number
     -- now: number
     -- merge: table
@@ -173,13 +170,11 @@ ABGP.CommTypes = {
     -- token: from HISTORY_SYNC
 
     HISTORY_REPLACE = { name = "HISTORY_REPLACE", id = 20, priority = "BULK" },
-    -- phase: from ABGP.Phases
     -- baseline: number
     -- history: table
     -- requested: bool
 
     HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", id = 21, priority = "NORMAL" },
-    -- phase: from ABGP.Phases
     -- token: from HISTORY_SYNC
 
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
@@ -498,7 +493,7 @@ function ABGP:CommOnEnteringWorld()
 end
 
 function ABGP:TestSerialization(input)
-    input = input or self:PrepareHistory(_G.ABGP_Data2.p1.gpHistory);
+    input = input or self:PrepareHistory(_G.ABGP_Data2.history.data);
     -- input = input or _G.ABGP_Data2.p1.itemValues;
     local LibDeflate = _G.LibStub("LibDeflate");
 

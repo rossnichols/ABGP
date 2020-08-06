@@ -36,6 +36,7 @@ local function CalculateCost(request)
     if not currentItem.data.value then
         return returnedCost, false, "no value";
     end
+    returnedCost.category = currentItem.data.value.category;
 
     if request and request.override then
         return returnedCost, false, request.override;

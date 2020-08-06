@@ -13,28 +13,6 @@ local UnitIsUnit = UnitIsUnit;
 local table = table;
 local pairs = pairs;
 
-ABGP.Phases = {
-    p1 = "p1",
-};
-ABGP.PhaseNames = {
-    [ABGP.Phases.p1] = "Phase 1/2",
-};
-ABGP.PhaseNamesShort = {
-    [ABGP.Phases.p1] = "P1/2",
-};
-ABGP.PhasesSorted = {
-    ABGP.Phases.p1,
-};
-ABGP.PhasesAll = {
-    [ABGP.Phases.p1] = ABGP.Phases.p1,
-};
-ABGP.PhaseNamesAll = {
-    [ABGP.PhasesAll.p1] = "Phase 1/2",
-};
-ABGP.PhasesSortedAll = {
-    ABGP.PhasesAll.p1,
-};
-ABGP.CurrentPhase = ABGP.Phases.p1;
 ABGP.Priorities = {};
 
 ABGP.RaidGroups = {

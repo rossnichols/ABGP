@@ -354,20 +354,12 @@ function ABGP:InitOptions()
                     type = "group",
                     inline = true,
                     order = 4,
-                    hidden = function() return self:HasValidBaselines(); end,
+                    hidden = function() return self:HasValidBaseline(); end,
                     args = {
                         status = {
                             order = 1,
                             type = "description",
-                            name = function()
-                                local invalidBaselines = {};
-                                for _, phase in ipairs(self.PhasesSorted) do
-                                    if not self:HasValidBaseline(phase) then
-                                        table.insert(invalidBaselines, self.PhaseNames[phase]);
-                                    end
-                                end
-                                return ("You currently need a full history rebuild for these phase(s): %s"):format(table.concat(invalidBaselines, ", "));
-                            end,
+                            name = "You currently need a full history rebuild.",
                         },
                     },
                 },
@@ -837,15 +829,13 @@ StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.Static
         decayTime = decayTime + (24 * 60 * 60) - 1;
         if decayTime > now then return false, "Date must be before today"; end
 
-        for phase in pairs(ABGP.Phases) do
-            local history = ABGP:ProcessItemHistory(_G.ABGP_Data2[phase].gpHistory, true);
-            for _, entry in ipairs(history) do
-                local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
-                if entryDate < decayTime then break; end
+        local history = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
+        for _, entry in ipairs(history) do
+            local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
+            if entryDate < decayTime then break; end
 
-                if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
-                    return false, "A more recent decay already exists";
-                end
+            if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
+                return false, "A more recent decay already exists";
             end
         end
 

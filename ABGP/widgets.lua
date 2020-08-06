@@ -1063,6 +1063,7 @@ do
             self:DropdownOnAcquire();
             self:SetMultiselect(true);
             self:SetCallback("OnOpened", self.UpdateCheckboxes);
+            self:SetCallback("OnClosed", self.CheckDefaultText);
         end,
 
         ["SetValues"] = function(self, allowed, showAllButton, values, sorted)
@@ -1134,8 +1135,16 @@ do
         end,
 
         ["SetDefaultText"] = function(self, text)
-            self._text = text;
+            self:SetUserData("_defaultText", text);
             self:SetText(text);
+        end,
+
+        ["CheckDefaultText"] = function(self)
+            self:Fire("OnFilterClosed");
+            local text = self:GetUserData("_defaultText");
+            if text and self:ShowingAll() then
+                self:SetText(text);
+            end
         end,
     }
 
@@ -1150,13 +1159,6 @@ do
         for method, func in pairs(methods) do
             dropdown[method] = func;
         end
-
-        dropdown:SetCallback("OnClosed", function(self)
-            self:Fire("OnFilterClosed");
-            if self:ShowingAll() and self._text then
-                self:SetText(self._text);
-            end
-        end);
 
         return dropdown;
     end

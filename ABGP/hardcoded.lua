@@ -9,8 +9,8 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1596567505, -- https://www.epochconverter.com/ or GetServerTime() ingame
-		[ABGP.PhasesAll.p1] = {
+		timestamp = 1596567506, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		data = {
 			{
 				"Barrage Shoulders",
 				0,
@@ -770,7 +770,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21333|h[Conqueror's Greaves]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -779,7 +781,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21330|h[Conqueror's Spaulders]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -788,7 +792,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21359|h[Deathdealer's Boots]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -797,7 +803,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21361|h[Deathdealer's Spaulders]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -806,7 +814,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21349|h[Footwraps of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -815,7 +825,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21350|h[Mantle of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -824,7 +836,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21365|h[Striker's Footguards]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -833,7 +847,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21367|h[Striker's Pauldrons]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -854,7 +870,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21388|h[Avenger's Greaves]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -863,7 +881,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21391|h[Avenger's Pauldrons]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -872,7 +892,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21338|h[Doomcaller's Footwraps]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -881,7 +903,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21335|h[Doomcaller's Mantle]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -890,7 +914,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21344|h[Enigma Boots]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -899,7 +925,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21345|h[Enigma Shoulderpads]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -908,7 +936,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21355|h[Genesis Boots]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -917,7 +947,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21354|h[Genesis Shoulderpads]|h|r",
 				"Ahn'Qiraj",
 				"Viscidus, Princess Huhuran",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Qiraji Bindings of Dominance",
 			},
 			{
@@ -1005,7 +1037,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21387|h[Avenger's Crown]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'lor",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'lor's Diadem",
 			},
 			{
@@ -1014,7 +1048,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21360|h[Deathdealer's Helm]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'lor",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'lor's Diadem",
 			},
 			{
@@ -1023,7 +1059,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21353|h[Genesis Helm]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'lor",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'lor's Diadem",
 			},
 			{
@@ -1032,7 +1070,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21366|h[Striker's Diadem]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'lor",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'lor's Diadem",
 			},
 			{
@@ -1127,7 +1167,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21329|h[Conqueror's Crown]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'nilash",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
@@ -1136,7 +1178,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21337|h[Doomcaller's Circlet]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'nilash",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
@@ -1145,7 +1189,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21347|h[Enigma Circlet]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'nilash",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
@@ -1154,7 +1200,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21348|h[Tiara of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				"Emperor Vek'nilash",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
@@ -1329,7 +1377,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21332|h[Conqueror's Legguards]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Ouro's Intact Hide",
 			},
 			{
@@ -1338,7 +1388,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21362|h[Deathdealer's Leggings]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Ouro's Intact Hide",
 			},
 			{
@@ -1347,7 +1399,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21346|h[Enigma Leggings]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Ouro's Intact Hide",
 			},
 			{
@@ -1356,7 +1410,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21352|h[Trousers of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Ouro's Intact Hide",
 			},
 			{
@@ -1376,7 +1432,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21390|h[Avenger's Legguards]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Skin of the Great Sandworm",
 			},
 			{
@@ -1385,7 +1443,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21336|h[Doomcaller's Trousers]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Skin of the Great Sandworm",
 			},
 			{
@@ -1394,7 +1454,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21356|h[Genesis Trousers]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Skin of the Great Sandworm",
 			},
 			{
@@ -1403,7 +1465,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21368|h[Striker's Leggings]|h|r",
 				"Ahn'Qiraj",
 				"Ouro",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Skin of the Great Sandworm",
 			},
 			{
@@ -1583,7 +1647,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21389|h[Avenger's Breastplate]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -1592,7 +1658,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21331|h[Conqueror's Breastplate]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -1601,7 +1669,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21364|h[Deathdealer's Vest]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -1610,7 +1680,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21370|h[Striker's Hauberk]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -1632,7 +1704,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21334|h[Doomcaller's Robes]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Husk of the Old God",
 			},
 			{
@@ -1641,7 +1715,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21343|h[Enigma Robes]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Husk of the Old God",
 			},
 			{
@@ -1650,7 +1726,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21357|h[Genesis Vest]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Husk of the Old God",
 			},
 			{
@@ -1659,7 +1737,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21351|h[Vestments of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Husk of the Old God",
 			},
 			{
@@ -1681,7 +1761,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21712|h[Amulet of the Fallen God]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Eye of C'Thun",
 			},
 			{
@@ -1690,7 +1772,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21710|h[Cloak of the Fallen God]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Eye of C'Thun",
 			},
 			{
@@ -1699,7 +1783,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21709|h[Ring of the Fallen God]|h|r",
 				"Ahn'Qiraj",
 				"C'Thun",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Eye of C'Thun",
 			},
 			{
@@ -1799,7 +1885,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21268|h[Blessed Qiraji War Hammer]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Regalia",
 			},
 			{
@@ -1808,7 +1896,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21273|h[Blessed Qiraji Acolyte Staff]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Regalia",
 			},
 			{
@@ -1817,7 +1907,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21275|h[Blessed Qiraji Augur Staff]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Regalia",
 			},
 			{
@@ -1837,7 +1929,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21242|h[Blessed Qiraji War Axe]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Armaments",
 			},
 			{
@@ -1846,7 +1940,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21244|h[Blessed Qiraji Pugio]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Armaments",
 			},
 			{
@@ -1855,7 +1951,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21272|h[Blessed Qiraji Musket]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Armaments",
 			},
 			{
@@ -1864,7 +1962,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:21269|h[Blessed Qiraji Bulwark]|h|r",
 				"Ahn'Qiraj",
 				"Shared",
-				[7] = "GOLD",
+				{
+				},
+				"GOLD",
 				[9] = "Imperial Qiraji Armaments",
 			},
 			{
@@ -3086,7 +3186,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:19383|h[Master Dragonslayer's Medallion]|h|r",
 				"Blackwing Lair",
 				"Nefarian",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Head of Nefarian",
 			},
 			{
@@ -3095,7 +3197,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
 				"Blackwing Lair",
 				"Nefarian",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Head of Nefarian",
 			},
 			{
@@ -3104,7 +3208,9 @@ ABGP.initialData = {
 				"|cffa335ee|Hitem:19366|h[Master Dragonslayer's Orb]|h|r",
 				"Blackwing Lair",
 				"Nefarian",
-				[7] = "SILVER",
+				{
+				},
+				"SILVER",
 				[9] = "Head of Nefarian",
 			},
 			{
@@ -3729,58 +3835,19 @@ ABGP.initialData = {
 			},
 		},
 	},
-	gpHistory = {
-		timestamps = {
-			[ABGP.PhasesAll.p1] = 1594071710,
-		},
-		[ABGP.PhasesAll.p1] = {},
+	history = {
+		timestamp = 1596567505,
+		data = {},
 	},
 };
 
 function ABGP:CheckHardcodedData()
-	-- _G.ABGP_DataTimestamp was previously a flat number, converted later to a table.
-	if _G.ABGP_DataTimestamp == nil then
-		_G.ABGP_DataTimestamp = { itemValues = 0, gpHistory = {
-			[ABGP.PhasesAll.p1] = 0,
-		}};
-	elseif type(_G.ABGP_DataTimestamp) == "number" then
-		_G.ABGP_DataTimestamp = { itemValues = _G.ABGP_DataTimestamp, gpHistory = {
-			[ABGP.PhasesAll.p1] = 0,
-		}};
-	elseif type(_G.ABGP_DataTimestamp.gpHistory) == "number" then
-		_G.ABGP_DataTimestamp.gpHistory = {
-			[ABGP.PhasesAll.p1] = 0,
-		};
-	end
-
 	for key, initialData in pairs(self.initialData) do
-		if initialData.timestamp then
-			local updateBaseline = false;
-			if _G.ABGP_DataTimestamp[key] < initialData.timestamp then
-				_G.ABGP_DataTimestamp[key] = initialData.timestamp;
-				updateBaseline = true;
-			end
+		_G.ABGP_Data2[key] = _G.ABGP_Data2[key] or { timestamp = 0, data = {} };
 
-			for phase in pairs(ABGP.PhasesAll) do
-				_G.ABGP_Data2[phase] = _G.ABGP_Data2[phase] or {};
-				_G.ABGP_Data2[phase][key] = _G.ABGP_Data2[phase][key] or {};
-				if updateBaseline then
-					_G.ABGP_Data2[phase][key] = initialData[phase];
-				end
-			end
-		end
-	end
-
-	for key, initialData in pairs(self.initialData) do
-		if initialData.timestamps then
-			for phase in pairs(ABGP.PhasesAll) do
-				_G.ABGP_Data2[phase] = _G.ABGP_Data2[phase] or {};
-				_G.ABGP_Data2[phase][key] = _G.ABGP_Data2[phase][key] or {};
-				if _G.ABGP_DataTimestamp[key][phase] < initialData.timestamps[phase] then
-					_G.ABGP_DataTimestamp[key][phase] = initialData.timestamps[phase];
-					_G.ABGP_Data2[phase][key] = initialData[phase];
-				end
-			end
+		if _G.ABGP_Data2[key].timestamp < initialData.timestamp then
+			_G.ABGP_Data2[key].timestamp = initialData.timestamp;
+			_G.ABGP_Data2[key].data = self.tCopy(initialData.data);
 		end
 	end
 end

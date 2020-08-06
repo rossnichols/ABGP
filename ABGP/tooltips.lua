@@ -28,7 +28,7 @@ function ABGP:HookTooltips()
                     if limit > 0 then
                         if IsAltKeyDown() then
                             local player = UnitName("player");
-                            local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2[value.phase].gpHistory);
+                            local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data);
 
                             local raidGroup = ABGP:GetPreferredRaidGroup();
                             local function shouldShowEntry(entry)
