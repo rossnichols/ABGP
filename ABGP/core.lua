@@ -554,9 +554,9 @@ function ABGP:FormatCost(cost, category, fmt)
     end
 
     local suffix = "";
-    if category == self.ItemCategory.GOLD then suffix = "|cFFEBB400[G]|r"; end
-    if category == self.ItemCategory.SILVER then suffix = "|cFF9BA4A8[S]|r"; end
-    return (fmt or "%s %s"):format(cost, suffix);
+    if category == self.ItemCategory.GOLD then suffix = " |cFFEBB400[G]|r"; end
+    if category == self.ItemCategory.SILVER then suffix = " |cFF9BA4A8[S]|r"; end
+    return (fmt or "%s%s GP"):format(cost, suffix);
 end
 
 function ABGP:GetHistoryId()

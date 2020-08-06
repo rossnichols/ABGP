@@ -15,7 +15,7 @@ function ABGP:HookTooltips()
             local value = ABGP:GetItemValue(itemName);
             if value then
                 if not value.token then
-                    self:AddDoubleLine(("%s Value:"):format(ABGP:ColorizeText("ABGP")), ABGP:FormatCost(value.gp, value.category), 1, 1, 1, 1, 1, 1);
+                    self:AddDoubleLine(("%s Cost:"):format(ABGP:ColorizeText("ABGP")), ABGP:FormatCost(value.gp, value.category, "%s%s"), 1, 1, 1, 1, 1, 1);
                 end
 
                 if not value.related then

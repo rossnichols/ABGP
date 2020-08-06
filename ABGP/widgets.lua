@@ -313,7 +313,7 @@ do
             self.rank.text:SetText(data.rank or "");
             self.rank.text:SetFontObject((data.preferredGroup and data.group == data.preferredGroup) and "ABGPHighlight" or "GameFontNormal");
             if data.priority then
-                self.priority.text:SetText(ABGP:FormatCost(data.priority, data.category, "%.3f %s"));
+                self.priority.text:SetText(ABGP:FormatCost(data.priority, data.category, "%.3f%s"));
                 self.priority.text:SetFontObject(lowPrio and "GameFontDisable" or "GameFontNormal");
             else
                 self.priority.text:SetText("--");

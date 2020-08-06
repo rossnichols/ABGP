@@ -178,7 +178,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         if value.token then
             gpCost = "Token (variable GP cost)";
         elseif value.gp ~= 0 then
-            gpCost = ("GP cost: %s"):format(self:FormatCost(value.gp, value.category));
+            gpCost = ("Cost: %s"):format(self:FormatCost(value.gp, value.category));
         end
         if value.priority and next(value.priority) then
             priority = (", Priority: %s"):format(table.concat(value.priority, ", "));
@@ -224,7 +224,7 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     if value then
         local effective = self:GetEffectiveCost(data.historyId, data.cost);
         effective = (effective and effective.cost ~= data.cost.cost) and (" (%.3f effective)"):format(effective.cost) or "";
-        cost = (" for %s GP%s"):format(self:FormatCost(data.cost), effective);
+        cost = (" for %s%s"):format(self:FormatCost(data.cost), effective);
     end
 
     local requestTypes = {
@@ -270,7 +270,7 @@ function ABGP:RequestOnItemUnawarded(data)
     local player = (data.player == UnitName("player")) and "you" or self:ColorizeName(data.player);
     local effective = self:GetEffectiveCost(data.historyId, data.cost);
     effective = (effective and effective.cost ~= data.cost.cost) and (" (%.3f effective)"):format(effective.cost) or "";
-    self:Notify("Award of %s to %s for %s GP%s was removed.",
+    self:Notify("Award of %s to %s for %s%s was removed.",
         data.itemLink, player, self:FormatCost(data.cost), effective);
 end
 
@@ -412,7 +412,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Request %s for %s GP? You may provide an optional note.",
+    text = "Request %s for %s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",
@@ -433,7 +433,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(AB
     end,
 });
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Request %s for %s GP? You may provide an optional note.",
+    text = "Request %s for %s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",

@@ -112,10 +112,10 @@ local function DrawPriority(container, options)
             { canSort = true, defaultAsc = true, name = "Player" },
             { canSort = true, defaultAsc = true, name = "Rank" },
             { canSort = true, defaultAsc = false, name = "EP" },
-            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("GP", ABGP.ItemCategory.SILVER) },
-            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("Prio", ABGP.ItemCategory.SILVER) },
-            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("GP", ABGP.ItemCategory.GOLD) },
-            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("Prio", ABGP.ItemCategory.GOLD) },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("GP", ABGP.ItemCategory.SILVER, "%s%s") },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("Prio", ABGP.ItemCategory.SILVER, "%s%s") },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("GP", ABGP.ItemCategory.GOLD, "%s%s") },
+            { canSort = true, defaultAsc = false, name = ABGP:FormatCost("Prio", ABGP.ItemCategory.GOLD, "%s%s") },
             weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
