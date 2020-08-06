@@ -768,7 +768,7 @@ do
 
             self.item.text:SetText(data[ABGP.ItemDataIndex.ITEMLINK] or data[ABGP.ItemDataIndex.NAME]);
             local gp = data[ABGP.ItemDataIndex.GP];
-            self.gp.text:SetText(gp == -1 and "" or gp);
+            self.gp.text:SetText(gp);
             self.notes.text:SetText(data[ABGP.ItemDataIndex.NOTES] and "[Note]" or "");
             self.priority.text:SetText(table.concat(data[ABGP.ItemDataIndex.PRIORITY], ", "));
 
@@ -805,7 +805,7 @@ do
                 priorityEditor.frame:SetParent(self.frame);
 
                 self.currentPriorities = {};
-                priorityEditor:SetCallback("OnClosed", function()
+                priorityEditor:SetCallback("OnFilterClosed", function()
                     if oldHeight < 30 then
                         self.frame:SetHeight(oldHeight);
                     end
@@ -1174,6 +1174,11 @@ do
 
             return true;
         end,
+
+        ["SetDefaultText"] = function(self, text)
+            self._text = text;
+            self:SetText(text);
+        end,
     }
 
     --[[-----------------------------------------------------------------------------
@@ -1187,6 +1192,13 @@ do
         for method, func in pairs(methods) do
             dropdown[method] = func;
         end
+
+        dropdown:SetCallback("OnClosed", function(self)
+            self:Fire("OnFilterClosed");
+            if self:ShowingAll() and self._text then
+                self:SetText(self._text);
+            end
+        end);
 
         return dropdown;
     end

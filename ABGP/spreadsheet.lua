@@ -47,6 +47,7 @@ local gpColumns = {
 
 local itemPriorities = ABGP:GetItemPriorities();
 local itemMapping = {
+    ["Raid"] = ABGP.ItemDataIndex.RAID,
     ["Boss"] = ABGP.ItemDataIndex.BOSS,
     ["Item"] = ABGP.ItemDataIndex.NAME,
     ["Category"] = ABGP.ItemDataIndex.CATEGORY,
@@ -456,9 +457,8 @@ local function DrawGP(container)
 end
 
 local function DrawItems(container)
-    local insertedTokens = {};
     local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].itemValues, itemMapping, function(row, newData)
+        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2[ABGP.CurrentPhase].itemValues, itemMapping, function(row)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
@@ -468,30 +468,23 @@ local function DrawItems(container)
             end
             table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
 
-            if row[ABGP.ItemDataIndex.CATEGORY] ~= "" then
-                if not catMapping[row[ABGP.ItemDataIndex.CATEGORY]] then
-                    ABGP:Notify("Bad category %s. Canceling import!", row[ABGP.ItemDataIndex.CATEGORY]);
-                    return false;
-                end
-                row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+            if not catMapping[row[ABGP.ItemDataIndex.CATEGORY]] then
+                ABGP:Notify("Bad category %s. Canceling import!", row[ABGP.ItemDataIndex.CATEGORY]);
+                return false;
+            end
+            row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+
+            if row[ABGP.ItemDataIndex.GP] == "T" then
+                return true;
             end
 
             local name = row[ABGP.ItemDataIndex.NAME];
-            local token, related = name:match("^(.+) %((.+)%)$");
+            local item, token = name:match("^(.+) %((.+)%)$");
             if token then
-                if not insertedTokens[token] then
-                    insertedTokens[token] = true;
-                    table.insert(newData, {
-                        [ABGP.ItemDataIndex.BOSS] = row[ABGP.ItemDataIndex.BOSS],
-                        [ABGP.ItemDataIndex.NAME] = token,
-                        [ABGP.ItemDataIndex.CATEGORY] = row[ABGP.ItemDataIndex.CATEGORY],
-                        [ABGP.ItemDataIndex.GP] = -1,
-                        [ABGP.ItemDataIndex.PRIORITY] = ABGP.tCopy(row[ABGP.ItemDataIndex.PRIORITY]),
-                        [ABGP.ItemDataIndex.NOTES] = row[ABGP.ItemDataIndex.NOTES]
-                    });
-                end
-                row[ABGP.ItemDataIndex.NAME] = related;
+                row[ABGP.ItemDataIndex.NAME] = item;
                 row[ABGP.ItemDataIndex.RELATED] = token;
+                row[ABGP.ItemDataIndex.NOTES] = nil;
+                row[ABGP.ItemDataIndex.PRIORITY] = nil;
             end
 
             return true;

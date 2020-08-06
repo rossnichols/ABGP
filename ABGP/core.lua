@@ -490,11 +490,12 @@ ABGP.ItemDataIndex = {
     NAME = 1,
     GP = 2,
     ITEMLINK = 3,
-    BOSS = 4,
-    PRIORITY = 5,
-    CATEGORY = 6,
-    NOTES = 7,
-    RELATED = 8,
+    RAID = 4,
+    BOSS = 5,
+    PRIORITY = 6,
+    CATEGORY = 7,
+    NOTES = 8,
+    RELATED = 9,
 };
 ABGP.ItemHistoryType = {
     ITEM = 1,
@@ -580,7 +581,7 @@ local function ValueFromItem(item, phase)
         boss = item[ABGP.ItemDataIndex.BOSS],
         priority = item[ABGP.ItemDataIndex.PRIORITY],
         notes = item[ABGP.ItemDataIndex.NOTES],
-        token = (item[ABGP.ItemDataIndex.GP] == -1) and {},
+        token = (item[ABGP.ItemDataIndex.GP] == "T") and {},
         related = item[ABGP.ItemDataIndex.RELATED],
         category = item[ABGP.ItemDataIndex.CATEGORY],
         phase = phase

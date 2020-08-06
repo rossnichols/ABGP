@@ -13,6 +13,7 @@ local pairs = pairs;
 local unpack = unpack;
 local floor = floor;
 local select = select;
+local type = type;
 
 local activeWindow;
 local allowedClasses = {
@@ -26,6 +27,7 @@ local allowedClasses = {
     WARRIOR = "Warrior",
 };
 local allowedPriorities = ABGP:GetItemPriorities();
+local allowedSources;
 local onlyUsable = false;
 local onlyFaved = false;
 local onlyGrouped = false;
@@ -82,7 +84,7 @@ local function DrawPriority(container, options)
         classSelector:SetCallback("OnFilterUpdated", function()
             PopulateUI({ rebuild = false });
         end);
-        classSelector:SetText("Classes");
+        classSelector:SetDefaultText("Classes");
         container:AddChild(classSelector);
 
         if IsInGroup() then
@@ -520,7 +522,7 @@ local function DrawItems(container, options)
     local command = options.command;
     if not rebuild and reason then return; end
 
-    local widths = { 225, 50, 50, 1.0 };
+    local widths = { 250, 50, 50, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0, 0 } });
@@ -528,7 +530,7 @@ local function DrawItems(container, options)
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0 } });
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0 } });
         container:AddChild(mainLine);
 
         local priSelector = AceGUI:Create("ABGP_Filter");
@@ -537,9 +539,34 @@ local function DrawItems(container, options)
         priSelector:SetCallback("OnFilterUpdated", function()
             PopulateUI({ rebuild = false });
         end);
-        priSelector:SetText("Priorities");
+        priSelector:SetDefaultText("Priorities");
         mainLine:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
+
+        local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
+        local sources, sourcesSorted = {}, {};
+        local lastRaid;
+        for _, item in ipairs(items) do
+            local raid = item[ABGP.ItemDataIndex.RAID];
+            local boss = item[ABGP.ItemDataIndex.BOSS];
+            if raid ~= lastRaid then
+                local entry = raid;
+                sources[entry] = entry;
+                table.insert(sourcesSorted, entry);
+                lastRaid = raid;
+            end
+        end
+        allowedSources = ABGP.tCopy(sources);
+
+        local sourceSelector = AceGUI:Create("ABGP_Filter");
+        sourceSelector:SetWidth(125);
+        sourceSelector:SetValues(allowedSources, true, sources, sourcesSorted);
+        sourceSelector:SetCallback("OnFilterUpdated", function()
+            PopulateUI({ rebuild = false });
+        end);
+        sourceSelector:SetDefaultText("Source");
+        mainLine:AddChild(sourceSelector);
+        container:SetUserData("sourceSelector", sourceSelector);
 
         local search = AceGUI:Create("ABGP_EditBox");
         search:SetWidth(120);
@@ -551,7 +578,7 @@ local function DrawItems(container, options)
             _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
             _G.GameTooltip:ClearLines();
             _G.GameTooltip:AddLine("Help");
-            _G.GameTooltip:AddLine("Search by item name, source, or notes. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
+            _G.GameTooltip:AddLine("Search by item, raid, boss, or notes. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
             _G.GameTooltip:Show();
         end);
         search:SetCallback("OnLeave", function(widget)
@@ -610,25 +637,23 @@ local function DrawItems(container, options)
                     return table.concat(priorities, "\t");
                 end
 
-                local tokens = {};
                 local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
-                local text = ("Boss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
+                local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
                 for i, item in ipairs(items) do
-                    if item[ABGP.ItemDataIndex.GP] == -1 then
-                        tokens[item[ABGP.ItemDataIndex.NAME]] = item;
-                    elseif item[ABGP.ItemDataIndex.RELATED] then
-                        local token = tokens[item[ABGP.ItemDataIndex.RELATED]];
+                    if item[ABGP.ItemDataIndex.RELATED] then
                         text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
-                            token[ABGP.ItemDataIndex.BOSS] or "",
-                            ("%s (%s)"):format(item[ABGP.ItemDataIndex.RELATED], item[ABGP.ItemDataIndex.NAME]),
+                            item[ABGP.ItemDataIndex.RAID],
+                            item[ABGP.ItemDataIndex.BOSS],
+                            ("%s (%s)"):format(item[ABGP.ItemDataIndex.NAME], item[ABGP.ItemDataIndex.RELATED]),
                             item[ABGP.ItemDataIndex.CATEGORY],
                             item[ABGP.ItemDataIndex.GP],
-                            buildPrioString(token[ABGP.ItemDataIndex.PRIORITY]),
-                            token[ABGP.ItemDataIndex.NOTES] or "",
+                            buildPrioString({}),
+                            "",
                             "\n");
                     else
                         text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
-                            item[ABGP.ItemDataIndex.BOSS] or "",
+                            item[ABGP.ItemDataIndex.RAID],
+                            item[ABGP.ItemDataIndex.BOSS],
                             item[ABGP.ItemDataIndex.NAME],
                             item[ABGP.ItemDataIndex.CATEGORY],
                             item[ABGP.ItemDataIndex.GP],
@@ -737,11 +762,12 @@ local function DrawItems(container, options)
 
     local items = _G.ABGP_Data2[ABGP.CurrentPhase].itemValues;
     local filtered = {};
-    local selector = container:GetUserData("priSelector");
+    local priSelector = container:GetUserData("priSelector");
+    local sourceSelector = container:GetUserData("sourceSelector");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
 
-    if selector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
+    if priSelector:ShowingAll() and sourceSelector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
         for i, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
                 table.insert(filtered, item);
@@ -752,33 +778,49 @@ local function DrawItems(container, options)
         exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
-                if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
-                    if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
-                        local matchesSearch = false;
-                        if exact then
-                            if item[ABGP.ItemDataIndex.NAME]:lower() == exact or
-                                item[ABGP.ItemDataIndex.BOSS]:lower() == exact or
-                                (item[ABGP.ItemDataIndex.NOTES] or ""):lower() == exact then
-                                matchesSearch = true;
-                            end
-                        else
-                            if item[ABGP.ItemDataIndex.NAME]:lower():find(searchText, 1, true) or
-                                item[ABGP.ItemDataIndex.BOSS]:lower():find(searchText, 1, true) or
-                                (item[ABGP.ItemDataIndex.NOTES] or ""):lower():find(searchText, 1, true) then
-                                matchesSearch = true;
-                            end
-                        end
-
-                        if matchesSearch then
-                            if #item[ABGP.ItemDataIndex.PRIORITY] > 0 then
-                                for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do
-                                    if allowedPriorities[pri] then
-                                        table.insert(filtered, item);
-                                        break;
-                                    end
+                if allowedSources[item[ABGP.ItemDataIndex.RAID]] then
+                    if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
+                        if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
+                            local matchesSearch = false;
+                            if exact then
+                                if item[ABGP.ItemDataIndex.NAME]:lower() == exact or
+                                    item[ABGP.ItemDataIndex.BOSS]:lower() == exact or
+                                    item[ABGP.ItemDataIndex.RAID]:lower() == exact or
+                                    (item[ABGP.ItemDataIndex.NOTES] or ""):lower() == exact then
+                                    matchesSearch = true;
                                 end
                             else
-                                table.insert(filtered, item);
+                                if item[ABGP.ItemDataIndex.NAME]:lower():find(searchText, 1, true) or
+                                    item[ABGP.ItemDataIndex.BOSS]:lower():find(searchText, 1, true) or
+                                    item[ABGP.ItemDataIndex.RAID]:lower():find(searchText, 1, true) or
+                                    (item[ABGP.ItemDataIndex.NOTES] or ""):lower():find(searchText, 1, true) then
+                                    matchesSearch = true;
+                                end
+                            end
+
+                            if not matchesSearch and item[ABGP.ItemDataIndex.GP] == "T" then
+                                local value = ABGP:GetItemValue(item[ABGP.ItemDataIndex.NAME]);
+                                for _, itemLink in ipairs(value.token) do
+                                    local name = ABGP:GetItemName(itemLink);
+                                    if exact then
+                                        if name:lower() == exact then matchesSearch = true; end
+                                    else
+                                        if name:lower():find(searchText, 1, true) then matchesSearch = true; end
+                                    end
+                                end
+                            end
+
+                            if matchesSearch then
+                                if #item[ABGP.ItemDataIndex.PRIORITY] > 0 then
+                                    for _, pri in ipairs(item[ABGP.ItemDataIndex.PRIORITY]) do
+                                        if allowedPriorities[pri] then
+                                            table.insert(filtered, item);
+                                            break;
+                                        end
+                                    end
+                                else
+                                    table.insert(filtered, item);
+                                end
                             end
                         end
                     end
@@ -797,7 +839,11 @@ local function DrawItems(container, options)
             local acat, bcat = a[ABGP.ItemDataIndex.CATEGORY], b[ABGP.ItemDataIndex.CATEGORY];
             local acost, bcost = a[ABGP.ItemDataIndex.GP], b[ABGP.ItemDataIndex.GP];
             if acat == bcat then
-                return acost < bcost, acost == bcost;
+                if type(acost) == "number" and type(bcost) == "number" then
+                    return acost < bcost, acost == bcost;
+                else
+                    return type(bcost) == "number", acost == bcost;
+                end
             else
                 return acat == ABGP.ItemCategory.SILVER, false;
             end
@@ -1278,8 +1324,8 @@ function ABGP:CreateMainWindow(command)
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
         version = 2,
-        defaultWidth = 700,
-        minWidth = 700,
+        defaultWidth = 750,
+        minWidth = 750,
         maxWidth = 850,
         defaultHeight = 500,
         minHeight = 300,
