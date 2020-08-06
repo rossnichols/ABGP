@@ -1598,6 +1598,7 @@ do
             self.frame:Show();
             self.frame.glow:Hide();
 
+            self:SetAlert(nil);
             self:SetItem(nil);
             self:SetCount(1);
             self:SetRequestCount(0);
@@ -1611,6 +1612,7 @@ do
 
         ["OnRelease"] = function(self)
             self.frame:UnregisterAllEvents();
+            self:SetAlert(nil);
         end,
 
         ["GetItem"] = function(self)
