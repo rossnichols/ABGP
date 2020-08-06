@@ -511,10 +511,7 @@ function ABGP:OptionsOnHistoryUpdate()
 end
 
 function ABGP:ShowAddTrialWindow()
-    local width = 400;
-
     local window = AceGUI:Create("ABGP_OpaqueWindow");
-    window:SetWidth(width);
     window:SetLayout("Flow");
     window:SetTitle("Add Player");
     self:OpenPopup(window);
@@ -609,12 +606,8 @@ function ABGP:ShowAddTrialWindow()
 
     local height = container.frame:GetHeight() + 57;
     self:BeginWindowManagement(window, "popup", {
-        defaultWidth = width,
-        minWidth = width,
-        maxWidth = width,
+        defaultWidth = 400,
         defaultHeight = height,
-        minHeight = height,
-        maxHeight = height
     });
 end
 

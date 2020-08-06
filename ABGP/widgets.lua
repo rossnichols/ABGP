@@ -792,48 +792,6 @@ do
             self.background[show and "Show" or "Hide"](self.background);
         end,
 
-        ["EditPriorities"] = function(self)
-            local oldHeight = self.frame:GetHeight();
-            if oldHeight < 30 then
-                self.frame:SetHeight(30);
-            end
-            if not self.priorityEditor then
-                local priorityEditor = AceGUI:Create("ABGP_Filter");
-                priorityEditor.frame:ClearAllPoints();
-                priorityEditor.frame:SetPoint("TOPLEFT", self.notes, "TOPRIGHT");
-                priorityEditor.frame:SetPoint("TOPRIGHT", self.frame);
-                priorityEditor.frame:SetParent(self.frame);
-
-                self.currentPriorities = {};
-                priorityEditor:SetCallback("OnFilterClosed", function()
-                    if oldHeight < 30 then
-                        self.frame:SetHeight(oldHeight);
-                    end
-                    self.priority:Show();
-                    self.priorityEditor.frame:Hide();
-
-                    self.data[ABGP.ItemDataIndex.PRIORITY] = {};
-                    for pri, value in pairs(self.currentPriorities) do
-                        if value then table.insert(self.data[ABGP.ItemDataIndex.PRIORITY], pri); end
-                    end
-                    table.sort(self.data[ABGP.ItemDataIndex.PRIORITY]);
-
-                    self:SetData(self.data);
-                    self:Fire("OnPrioritiesUpdated");
-                end);
-                self.priorityEditor = priorityEditor;
-            end
-
-            table.wipe(self.currentPriorities);
-            for _, pri in ipairs(self.data[ABGP.ItemDataIndex.PRIORITY]) do self.currentPriorities[pri] = true; end
-            self.priorityEditor:SetValues(self.currentPriorities, false, ABGP:GetItemPriorities());
-            self.priorityEditor:SetText(table.concat(self.data[ABGP.ItemDataIndex.PRIORITY], ", "));
-
-            self.priority:Hide();
-            self.priorityEditor.frame:Show();
-            self.priorityEditor.button:Click();
-        end,
-
         ["SetRelatedItems"] = function(self, items)
             for k, button in pairs(self.icons.buttons) do
                 AceGUI:Release(button);

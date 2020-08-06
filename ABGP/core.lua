@@ -579,11 +579,13 @@ local function ValueFromItem(item, phase)
         itemId = ABGP:GetItemId(item[ABGP.ItemDataIndex.ITEMLINK]),
         gp = item[ABGP.ItemDataIndex.GP],
         boss = item[ABGP.ItemDataIndex.BOSS],
+        raid = item[ABGP.ItemDataIndex.RAID],
         priority = item[ABGP.ItemDataIndex.PRIORITY],
         notes = item[ABGP.ItemDataIndex.NOTES],
         token = (item[ABGP.ItemDataIndex.GP] == "T") and {},
         related = item[ABGP.ItemDataIndex.RELATED],
         category = item[ABGP.ItemDataIndex.CATEGORY],
+        dataStore = item,
         phase = phase
     };
 end
@@ -625,6 +627,8 @@ local function IsValueUpdated(value, oldValue)
     if oldValue then
         isUpdated =
             oldValue.gp ~= value.gp or
+            oldValue.category ~= value.category or
+            oldValue.raid ~= value.raid or
             oldValue.boss ~= value.boss or
             oldValue.notes ~= value.notes or
             oldValue.phase ~= value.phase or
@@ -999,6 +1003,11 @@ function ABGP:BeginWindowManagement(window, name, defaults)
         table.wipe(saved);
         saved.version = defaults.version;
     end
+
+    defaults.minWidth = defaults.minWidth or defaults.defaultWidth;
+    defaults.maxWidth = defaults.maxWidth or defaults.defaultWidth;
+    defaults.minHeight = defaults.minHeight or defaults.defaultHeight;
+    defaults.maxHeight = defaults.maxHeight or defaults.defaultHeight;
 
     local management = { name = name, defaults = defaults };
     window:SetUserData("windowManagement", management);

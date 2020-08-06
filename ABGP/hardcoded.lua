@@ -9,7 +9,7 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1596567504, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1596567505, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		[ABGP.PhasesAll.p1] = {
 			{
 				"Barrage Shoulders",

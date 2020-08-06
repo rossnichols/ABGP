@@ -908,43 +908,154 @@ local function DrawItems(container, options)
                     end
                     if ABGP:IsPrivileged() then
                         table.insert(context, {
-                            text = "Edit GP",
-                            func = function(self, widget)
-                                _G.StaticPopup_Show("ABGP_UPDATE_GP", widget.data[ABGP.ItemDataIndex.ITEMLINK], nil, widget);
+                            text = "Edit item",
+                            func = function(self, data)
+                                local value = ABGP:GetItemValue(data[ABGP.ItemDataIndex.NAME]);
+                                local priorities = {};
+
+                                local window = AceGUI:Create("ABGP_OpaqueWindow");
+                                window:SetLayout("Flow");
+                                window:SetTitle(("Edit %s"):format(value.itemLink));
+                                ABGP:OpenPopup(window);
+                                window:SetCallback("OnClose", function(widget)
+                                    ABGP:ClosePopup(widget);
+                                    ABGP:EndWindowManagement(widget);
+                                    AceGUI:Release(widget);
+                                end);
+
+                                local container = AceGUI:Create("SimpleGroup");
+                                container:SetFullWidth(true);
+                                container:SetLayout("Table");
+                                container:SetUserData("table", { columns = { 1.0 }});
+                                window:AddChild(container);
+
+                                local costContainer = AceGUI:Create("InlineGroup");
+                                costContainer:SetTitle("Cost");
+                                costContainer:SetFullWidth(true);
+                                costContainer:SetLayout("Table");
+                                costContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
+                                container:AddChild(costContainer);
+
+                                local cost;
+                                if value.token then
+                                    local desc = AceGUI:Create("ABGP_Header");
+                                    desc:SetFullWidth(true);
+                                    desc:SetText("Token");
+                                    costContainer:AddChild(desc);
+                                else
+                                    cost = AceGUI:Create("ABGP_EditBox");
+                                    cost:SetFullWidth(true);
+                                    cost:SetValue(value.gp);
+                                    cost:SetCallback("OnValueChanged", function(widget, event, value)
+                                        return not ABGP:DistribValidateCost(value);
+                                    end);
+                                    costContainer:AddChild(cost);
+                                    ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
+                                end
+
+                                local catSelector = AceGUI:Create("Dropdown");
+                                catSelector:SetFullWidth(true);
+                                catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
+                                catSelector:SetValue(value.category);
+                                costContainer:AddChild(catSelector);
+                                ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
+
+                                for _, pri in ipairs(value.priority) do priorities[pri] = true; end
+                                local priorityEditor = AceGUI:Create("ABGP_Filter");
+                                priorityEditor:SetLabel("Priorities");
+                                priorityEditor:SetFullWidth(true);
+                                priorityEditor:SetValues(priorities, false, ABGP:GetItemPriorities());
+                                container:AddChild(priorityEditor);
+                                ABGP:AddWidgetTooltip(priorityEditor, "Edit the class/spec priorities of this item.");
+
+                                local notes = AceGUI:Create("ABGP_EditBox");
+                                notes:SetLabel("Notes");
+                                notes:SetFullWidth(true);
+                                notes:SetValue(value.notes);
+                                notes:SetCallback("OnValueChanged", function(widget, event, value)
+                                    if value == "" then widget:SetValue(nil); end
+                                end);
+                                container:AddChild(notes);
+                                ABGP:AddWidgetTooltip(notes, "Edit the notes for this item.");
+
+                                local tokenPrices = {};
+                                if value.token then
+                                    local itemsContainer = AceGUI:Create("InlineGroup");
+                                    itemsContainer:SetTitle("Item Costs");
+                                    itemsContainer:SetFullWidth(true);
+                                    itemsContainer:SetLayout("Table");
+                                    itemsContainer:SetUserData("table", { columns = { 0, 1.0, 1.0 }});
+                                    container:AddChild(itemsContainer);
+
+                                    for _, itemLink in ipairs(value.token) do
+                                        local itemValue = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
+                                        local button = AceGUI:Create("ABGP_ItemButton");
+                                        button:SetItemLink(itemLink);
+                                        itemsContainer:AddChild(button);
+
+                                        local cost = AceGUI:Create("ABGP_EditBox");
+                                        cost:SetFullWidth(true);
+                                        cost:SetValue(itemValue.gp);
+                                        cost:SetCallback("OnValueChanged", function(widget, event, value)
+                                            return not ABGP:DistribValidateCost(value);
+                                        end);
+                                        itemsContainer:AddChild(cost);
+                                        ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
+
+                                        local catSelector = AceGUI:Create("Dropdown");
+                                        catSelector:SetFullWidth(true);
+                                        catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
+                                        catSelector:SetValue(itemValue.category);
+                                        itemsContainer:AddChild(catSelector);
+                                        ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
+
+                                        tokenPrices[itemLink] = { cost = cost, category = catSelector, value = itemValue };
+                                    end
+                                end
+
+                                local done = AceGUI:Create("Button");
+                                done:SetWidth(100);
+                                done:SetText("Done");
+                                done:SetUserData("cell", { align = "CENTERRIGHT" });
+                                done:SetCallback("OnClick", function(widget)
+                                    if cost then
+                                        value.dataStore[ABGP.ItemDataIndex.GP] = cost:GetValue();
+                                    end
+                                    value.dataStore[ABGP.ItemDataIndex.CATEGORY] = catSelector:GetValue();
+                                    value.dataStore[ABGP.ItemDataIndex.NOTES] = notes:GetValue();
+
+                                    value.dataStore[ABGP.ItemDataIndex.PRIORITY] = {};
+                                    for pri, checked in pairs(priorities) do
+                                        if checked then table.insert(value.dataStore[ABGP.ItemDataIndex.PRIORITY], pri); end
+                                    end
+                                    table.sort(value.dataStore[ABGP.ItemDataIndex.PRIORITY]);
+
+                                    for itemLink, info in pairs(tokenPrices) do
+                                        info.value.dataStore[ABGP.ItemDataIndex.GP] = info.cost:GetValue();
+                                        info.value.dataStore[ABGP.ItemDataIndex.CATEGORY] = info.category:GetValue();
+                                    end
+
+                                    ABGP:Notify("%s has been updated!", value.itemLink);
+                                    elt:SetData(elt.data);
+                                    ABGP:CommitItemData();
+
+                                    window:Hide();
+                                end);
+                                container:AddChild(done);
+
+                                container:DoLayout();
+                                local height = container.frame:GetHeight() + 57;
+                                ABGP:BeginWindowManagement(window, "popup", {
+                                    defaultWidth = 300,
+                                    defaultHeight = height,
+                                });
                             end,
-                            arg1 = widget,
-                            notCheckable = true
-                        });
-                        table.insert(context, {
-                            text = "Edit notes",
-                            func = function(self, widget)
-                                _G.StaticPopup_Show("ABGP_UPDATE_NOTES", widget.data[ABGP.ItemDataIndex.ITEMLINK], nil, widget);
-                            end,
-                            arg1 = widget,
-                            notCheckable = true
-                        });
-                        table.insert(context, {
-                            text = "Edit priority",
-                            func = function(self, widget)
-                                widget:EditPriorities();
-                            end,
-                            arg1 = widget,
+                            arg1 = data,
                             notCheckable = true
                         });
                     end
                     table.insert(context, { text = "Cancel", notCheckable = true });
                     ABGP:ShowContextMenu(context);
-                end
-            end);
-            elt:SetCallback("OnPrioritiesUpdated", function(widget, event)
-                local pri = widget.data[ABGP.ItemDataIndex.PRIORITY];
-                if #pri > 0 then
-                    ABGP:Notify("Priorities for %s: %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK], table.concat(pri, ", "));
-                else
-                    ABGP:Notify("Priorities for %s have been cleared.", widget.data[ABGP.ItemDataIndex.ITEMLINK]);
-                end
-                if ABGP.Phases[ABGP.CurrentPhase] then
-                    ABGP:CommitItemData();
                 end
             end);
             itemList:AddChild(elt);
@@ -1469,43 +1580,5 @@ StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.Stat
     button2 = "No",
     OnAccept = function(self, data)
         ABGP:HistoryDeleteItemAward(data);
-    end,
-});
-StaticPopupDialogs["ABGP_UPDATE_GP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Update the cost of %s:",
-    button1 = "Done",
-    button2 = "Cancel",
-    maxLetters = 31,
-    Validate = function(text, widget)
-        return ABGP:DistribValidateCost(text);
-    end,
-    Commit = function(cost, widget)
-        widget.data[ABGP.ItemDataIndex.GP] = cost;
-        widget:SetData(widget.data);
-
-        ABGP:Notify("Cost of %s is now %d.", widget.data[ABGP.ItemDataIndex.ITEMLINK], cost);
-        if ABGP.Phases[ABGP.CurrentPhase] then
-            ABGP:CommitItemData();
-        end
-    end,
-});
-StaticPopupDialogs["ABGP_UPDATE_NOTES"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Update the notes for %s:",
-    button1 = "Done",
-    button2 = "Cancel",
-    maxLetters = 100,
-    Commit = function(text, widget)
-        if text == "" then
-            ABGP:Notify("Cleared note for %s.", widget.data[ABGP.ItemDataIndex.ITEMLINK]);
-            text = nil;
-        else
-            ABGP:Notify("Notes for %s is now '%s'.", widget.data[ABGP.ItemDataIndex.ITEMLINK], text);
-        end
-        widget.data[ABGP.ItemDataIndex.NOTES] = text
-        widget:SetData(widget.data);
-
-        if ABGP.Phases[ABGP.CurrentPhase] then
-            ABGP:CommitItemData();
-        end
     end,
 });

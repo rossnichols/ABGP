@@ -1133,7 +1133,7 @@ function ABGP:CreateDistribWindow()
     end);
     secondLine:AddChild(catSelector);
     window:SetUserData("categorySelector", catSelector);
-    self:AddWidgetTooltip(cost, "Edit the GP category of this item.");
+    self:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
 
     local desc = AceGUI:Create("Label");
     desc:SetWidth(45);
