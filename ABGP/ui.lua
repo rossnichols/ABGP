@@ -522,7 +522,7 @@ local function DrawItems(container, options)
     local command = options.command;
     if not rebuild and reason then return; end
 
-    local widths = { 250, 50, 50, 1.0 };
+    local widths = { 275, 50, 50, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0, 0 } });
