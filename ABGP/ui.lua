@@ -313,6 +313,9 @@ local function DrawItemHistory(container, options)
                 window.frame:Raise();
                 edit:SetFocus();
                 edit:HighlightText();
+                edit:SetCallback("OnEditFocusGained", function(widget)
+                    widget:HighlightText();
+                end);
                 edit:SetCallback("OnEnterPressed", function()
                     window:Hide();
                 end);
@@ -678,6 +681,9 @@ local function DrawItems(container, options)
                 window.frame:Raise();
                 edit:SetFocus();
                 edit:HighlightText();
+                edit:SetCallback("OnEditFocusGained", function(widget)
+                    widget:HighlightText();
+                end);
                 edit:SetCallback("OnEnterPressed", function()
                     window:Hide();
                 end);
@@ -1178,6 +1184,14 @@ local function DrawRaidHistory(container, options)
                             text = "Manage",
                             func = function(self, raid)
                                 ABGP:UpdateRaid(raid);
+                            end,
+                            arg1 = raid,
+                            notCheckable = true
+                        },
+                        {
+                            text = "Delete",
+                            func = function(self, raid)
+                                ABGP:DeleteRaid(raid);
                             end,
                             arg1 = raid,
                             notCheckable = true
