@@ -542,14 +542,18 @@ local function ChooseRecipient()
 end
 
 function ABGP:DistribValidateRecipient(player, cost, value)
-    if cost and cost ~= 0 and not self:GetActivePlayer(player) then
+    if cost and cost.cost ~= 0 and not self:GetActivePlayer(player) then
         return false, "The player must have EPGP";
+    end
+
+    if not player or player == "" then
+        return false, "Must enter a player";
     end
 
     return player;
 end
 
-function ABGP:DistribValidateCost(cost, player, value)
+function ABGP:DistribValidateCost(cost, player)
     cost = tonumber(cost);
     if type(cost) ~= "number" then return false, "Not a number"; end
     if cost < 0 then return false, "Can't be negative"; end

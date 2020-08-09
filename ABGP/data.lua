@@ -250,15 +250,14 @@ function ABGP:PriorityOnItemUnawarded(data)
     if not value then return; end
 
     local cost = self:GetEffectiveCost(data.historyId, data.cost) or data.cost;
-    cost.cost = -cost.cost; -- negative because we're undoing the GP adjustment
-    UpdateEPGP(data.itemLink, data.player, cost, data.sender, data.skipOfficerNote);
+    local adjustedCost = { cost = -cost.cost, category = cost.category }; -- negative because we're undoing the GP adjustment
+    UpdateEPGP(data.itemLink, data.player, adjustedCost, data.sender, data.skipOfficerNote);
 end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
 
     local itemLink = data.itemLink;
-    local awardDate = data.awarded;
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end
@@ -290,7 +289,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
         table.insert(history, 1, {
             [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
             [ABGP.ItemHistoryIndex.ID] = data.historyId,
-            [ABGP.ItemHistoryIndex.DATE] = awardDate,
+            [ABGP.ItemHistoryIndex.DATE] = data.awarded,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
             [ABGP.ItemHistoryIndex.ITEMID] = value.itemId,
             [ABGP.ItemHistoryIndex.GP] = data.cost.cost,
@@ -487,55 +486,31 @@ function ABGP:HistoryOnGuildRosterUpdate()
     self:TriggerInitialSync();
 end
 
-function ABGP:HistoryUpdateCostXXX(data, cost)
+function ABGP:HistoryUpdateItemAward(data, player, cost)
     local commData = {
         itemLink = data.itemLink,
-        player = data.player,
+        oldHistoryId = data.historyId,
+        awarded = data.awarded,
+        player = player,
         cost = cost,
         requestType = self.RequestTypes.MANUAL,
-        oldHistoryId = data.historyId,
-        awarded = data.awarded,
         updateId = ABGP:GetHistoryId(),
         historyId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
-
-    commData.value = data.value;
 end
 
-function ABGP:HistoryUpdatePlayerXXX(data, player)
+function ABGP:HistoryDeleteItemAward(data)
     local commData = {
         itemLink = data.itemLink,
-        player = player,
-        cost = data.gp,
-        requestType = self.RequestTypes.MANUAL,
-        oldHistoryId = data.historyId,
-        awarded = data.awarded,
-        updateId = ABGP:GetHistoryId(),
-        historyId = ABGP:GetHistoryId(),
-    };
-    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
-    self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
-    self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
-
-    commData.value = data.value;
-end
-
-function ABGP:HistoryDeleteItemAwardXXX(data)
-    local commData = {
-        itemLink = data.itemLink,
-        oldPlayer = data.player,
-        cost = data.gp,
         oldHistoryId = data.historyId,
         updateId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
     self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
     self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
-
-    commData.value = data.value;
 end
 
 function ABGP:HistoryDeleteEntry(entry, deleteId)

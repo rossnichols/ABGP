@@ -6,6 +6,9 @@ local UnitName = UnitName;
 local UnitExists = UnitExists;
 local IsInGroup = IsInGroup;
 local GetItemInfo = GetItemInfo;
+local GetAutoCompleteResults = GetAutoCompleteResults;
+local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
+local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local date = date;
 local table = table;
 local ipairs = ipairs;
@@ -460,32 +463,110 @@ local function DrawItemHistory(container, options)
                             notCheckable = true
                         });
                     end
-                    if data[ABGP.ItemHistoryIndex.ID] and ABGP:IsPrivileged() then
+                    if ABGP:IsPrivileged() then
                         table.insert(context, {
-                            text = "Edit cost",
+                            text = "Edit entry",
                             func = function(self, arg1)
-                                _G.StaticPopup_Show("ABGP_UPDATE_COST", value.itemLink, ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), {
-                                    value = value,
-                                    historyId = arg1[ABGP.ItemHistoryIndex.ID],
-                                    itemLink = value.itemLink,
-                                    player = arg1[ABGP.ItemHistoryIndex.PLAYER],
-                                    gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                    awarded = arg1[ABGP.ItemHistoryIndex.DATE],
-                                });
-                            end,
-                            arg1 = data,
-                            notCheckable = true
-                        });
-                        table.insert(context, {
-                            text = "Edit player",
-                            func = function(self, arg1)
-                                _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", value.itemLink, arg1[ABGP.ItemHistoryIndex.GP], {
-                                    value = value,
-                                    historyId = arg1[ABGP.ItemHistoryIndex.ID],
-                                    itemLink = value.itemLink,
-                                    player = arg1[ABGP.ItemHistoryIndex.PLAYER],
-                                    gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                    awarded = arg1[ABGP.ItemHistoryIndex.DATE],
+                                local window = AceGUI:Create("ABGP_OpaqueWindow");
+                                window:SetLayout("Flow");
+                                window:SetTitle("Edit Award");
+                                ABGP:OpenPopup(window);
+                                window:SetCallback("OnClose", function(widget)
+                                    ABGP:ClosePopup(widget);
+                                    ABGP:EndWindowManagement(widget);
+                                    AceGUI:Release(widget);
+                                end);
+
+                                local container = AceGUI:Create("SimpleGroup");
+                                container:SetFullWidth(true);
+                                container:SetLayout("Table");
+                                container:SetUserData("table", { columns = { 1.0 }});
+                                window:AddChild(container);
+
+                                local item = AceGUI:Create("ABGP_Header");
+                                item:SetFullWidth(true);
+                                item:SetText(value.itemLink);
+                                container:AddChild(item);
+
+                                local awarded = AceGUI:Create("ABGP_Header");
+                                awarded:SetFullWidth(true);
+                                local entryDate = date("%m/%d/%y", arg1[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
+                                awarded:SetText(entryDate);
+                                container:AddChild(awarded);
+
+                                local cost, catSelector;
+                                local playerEdit = AceGUI:Create("ABGP_EditBox");
+                                playerEdit:SetWidth(150);
+                                playerEdit:SetLabel("Player");
+                                playerEdit:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
+                                playerEdit:SetValue(arg1[ABGP.ItemHistoryIndex.PLAYER]);
+                                playerEdit:SetCallback("OnValueChanged", function(widget, event, value)
+                                    local currentCost = { cost = cost:GetValue(), category = catSelector:GetValue() };
+                                    local player, errorText = ABGP:DistribValidateRecipient(value, currentCost);
+                                    if not player then
+                                        ABGP:Error("Invalid input! %s.", errorText);
+                                        return true;
+                                    end
+                                    playerEdit:SetValue(player);
+                                end);
+                                container:AddChild(playerEdit);
+                                ABGP:AddWidgetTooltip(playerEdit, "Enter the player receiving the award.");
+
+                                local costContainer = AceGUI:Create("InlineGroup");
+                                costContainer:SetTitle("Cost");
+                                costContainer:SetFullWidth(true);
+                                costContainer:SetLayout("Table");
+                                costContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
+                                container:AddChild(costContainer);
+
+                                cost = AceGUI:Create("ABGP_EditBox");
+                                cost:SetFullWidth(true);
+                                cost:SetValue(arg1[ABGP.ItemHistoryIndex.GP]);
+                                cost:SetCallback("OnValueChanged", function(widget, event, value)
+                                    local gp, errorText = ABGP:DistribValidateCost(value, playerEdit:GetValue());
+                                    if not gp then
+                                        ABGP:Error("Invalid input! %s.", errorText);
+                                        return true;
+                                    end
+                                    cost:SetValue(gp);
+                                end);
+                                costContainer:AddChild(cost);
+                                ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this award.");
+
+                                catSelector = AceGUI:Create("Dropdown");
+                                catSelector:SetFullWidth(true);
+                                catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
+                                catSelector:SetValue(arg1[ABGP.ItemHistoryIndex.CATEGORY]);
+                                costContainer:AddChild(catSelector);
+                                ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this award.");
+
+                                local done = AceGUI:Create("Button");
+                                done:SetWidth(100);
+                                done:SetText("Done");
+                                done:SetUserData("cell", { align = "CENTERRIGHT" });
+                                done:SetCallback("OnClick", function(widget, event)
+                                    local player = playerEdit:GetValue();
+                                    local gp = cost:GetValue();
+                                    local cat = catSelector:GetValue();
+
+                                    if player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
+                                       gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
+                                       cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY] then
+                                        ABGP:HistoryUpdateItemAward({
+                                            itemLink = value.itemLink,
+                                            historyId = arg1[ABGP.ItemHistoryIndex.ID],
+                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
+                                        }, player, { cost = gp, category = cat });
+                                    end
+
+                                    window:Hide();
+                                end);
+                                container:AddChild(done);
+
+                                container:DoLayout();
+                                ABGP:BeginWindowManagement(window, "popup", {
+                                    defaultWidth = 300,
+                                    defaultHeight = container.frame:GetHeight() + 57,
                                 });
                             end,
                             arg1 = data,
@@ -494,13 +575,12 @@ local function DrawItemHistory(container, options)
                         table.insert(context, {
                             text = "Delete entry",
                             func = function(self, arg1)
-                                local award = ("%s for %d GP"):format(ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), arg1[ABGP.ItemHistoryIndex.GP]);
+                                local award = ("%s for %s"):format(
+                                    ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]),
+                                    ABGP:FormatCost(arg1[ABGP.ItemHistoryIndex.GP], arg1[ABGP.ItemHistoryIndex.CATEGORY]));
                                 _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", value.itemLink, award, {
-                                    value = value,
                                     historyId = arg1[ABGP.ItemHistoryIndex.ID],
                                     itemLink = value.itemLink,
-                                    player = arg1[ABGP.ItemHistoryIndex.PLAYER],
-                                    gp = arg1[ABGP.ItemHistoryIndex.GP],
                                 });
                             end,
                             arg1 = data,
@@ -982,7 +1062,12 @@ local function DrawItems(container, options)
                                     cost:SetFullWidth(true);
                                     cost:SetValue(value.gp);
                                     cost:SetCallback("OnValueChanged", function(widget, event, value)
-                                        return not ABGP:DistribValidateCost(value);
+                                        local gp, errorText = ABGP:DistribValidateCost(value);
+                                        if not gp then
+                                            ABGP:Error("Invalid input! %s.", errorText);
+                                            return true;
+                                        end
+                                        cost:SetValue(gp);
                                     end);
                                     costContainer:AddChild(cost);
                                     ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
@@ -1032,7 +1117,12 @@ local function DrawItems(container, options)
                                         cost:SetFullWidth(true);
                                         cost:SetValue(itemValue.gp);
                                         cost:SetCallback("OnValueChanged", function(widget, event, value)
-                                            return not ABGP:DistribValidateCost(value);
+                                            local gp, errorText = ABGP:DistribValidateCost(value);
+                                            if not gp then
+                                                ABGP:Error("Invalid input! %s.", errorText);
+                                                return true;
+                                            end
+                                            cost:SetValue(gp);
                                         end);
                                         itemsContainer:AddChild(cost);
                                         ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
@@ -1308,17 +1398,17 @@ local function DrawAuditLog(container, options)
                 local item = entry[ABGP.ItemHistoryIndex.ITEMID];
                 local value = ABGP:GetItemValue(item);
                 if value then item = value.itemLink; end
-                entryMsg = ("%s to %s for %d GP"):format(
-                    item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), entry[ABGP.ItemHistoryIndex.GP]);
+                entryMsg = ("%s to %s for %s"):format(
+                    item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
             elseif entryType == ABGP.ItemHistoryType.BONUS then
-                entryMsg = ("%s awarded %.3f GP"):format(
-                    entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
+                entryMsg = ("%s awarded %s"):format(
+                    entry[ABGP.ItemHistoryIndex.PLAYER], ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], "%.3f%s GP"));
             elseif entryType == ABGP.ItemHistoryType.DECAY then
                 entryMsg = ("GP decayed by %d%%"):format(
                     floor(entry[ABGP.ItemHistoryIndex.VALUE] * 100 + 0.5));
             elseif entryType == ABGP.ItemHistoryType.RESET then
-                entryMsg = ("%s reset to %.3f GP"):format(
-                    entry[ABGP.ItemHistoryIndex.PLAYER], entry[ABGP.ItemHistoryIndex.GP]);
+                entryMsg = ("%s reset to %s"):format(
+                    entry[ABGP.ItemHistoryIndex.PLAYER], ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], "%.3f%s GP"));
             end
         end
 
@@ -1383,36 +1473,6 @@ local function DrawAuditLog(container, options)
                         if entryType == ABGP.ItemHistoryType.ITEM then
                             local value = ABGP:GetItemValue(entry[ABGP.ItemHistoryIndex.ITEMID]);
                             if value then
-                                table.insert(context, {
-                                    text = "Edit cost",
-                                    func = function(self, arg1)
-                                        _G.StaticPopup_Show("ABGP_UPDATE_COST", value.itemLink, ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]), {
-                                            value = value,
-                                            historyId = arg1[ABGP.ItemHistoryIndex.ID],
-                                            itemLink = value.itemLink,
-                                            player = arg1[ABGP.ItemHistoryIndex.PLAYER],
-                                            gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
-                                        });
-                                    end,
-                                    arg1 = entry,
-                                    notCheckable = true
-                                });
-                                table.insert(context, {
-                                    text = "Edit player",
-                                    func = function(self, arg1)
-                                        _G.StaticPopup_Show("ABGP_UPDATE_PLAYER", value.itemLink, arg1[ABGP.ItemHistoryIndex.GP], {
-                                            value = value,
-                                            historyId = arg1[ABGP.ItemHistoryIndex.ID],
-                                            itemLink = value.itemLink,
-                                            player = arg1[ABGP.ItemHistoryIndex.PLAYER],
-                                            gp = arg1[ABGP.ItemHistoryIndex.GP],
-                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
-                                        });
-                                    end,
-                                    arg1 = entry,
-                                    notCheckable = true
-                                });
                                 if ABGP:GetDebugOpt() then
                                     table.insert(context, {
                                         text = "Effective cost",
@@ -1589,32 +1649,6 @@ function ABGP:ShowMainWindow(command)
     PopulateUI({ rebuild = true, command = command });
 end
 
-StaticPopupDialogs["ABGP_UPDATE_COST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Update the cost of %s to %s:",
-    button1 = "Done",
-    button2 = "Cancel",
-    maxLetters = 31,
-    Validate = function(text, data)
-        return ABGP:DistribValidateCost(text, data.player, data.value);
-    end,
-    Commit = function(cost, data)
-        ABGP:HistoryUpdateCost(data, cost);
-    end,
-});
-StaticPopupDialogs["ABGP_UPDATE_PLAYER"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Update the recipient of %s for %d GP:",
-    button1 = "Done",
-    button2 = "Cancel",
-    maxLetters = 31,
-    autoCompleteSource = GetAutoCompleteResults,
-    autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_IN_GUILD), AUTOCOMPLETE_FLAG_NONE },
-    Validate = function(text, data)
-        return ABGP:DistribValidateRecipient(text, data.gp, data.value);
-    end,
-    Commit = function(player, data)
-        ABGP:HistoryUpdatePlayer(data, player);
-    end,
-});
 StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Remove award of %s to %s?",
     button1 = "Yes",

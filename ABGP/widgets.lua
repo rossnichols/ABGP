@@ -667,6 +667,11 @@ do
 
             local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
             self.itemLink.text:SetText(value and value.itemLink or data[ABGP.ItemHistoryIndex.ITEMID]);
+
+            local font = "GameFontNormal";
+            if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.GOLD then font = "ABGPGold"; end
+            if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.SILVER then font = "ABGPSilver"; end
+            self.gp.text:SetFontObject(font);
         end,
 
         ["SetWidths"] = function(self, widths)
