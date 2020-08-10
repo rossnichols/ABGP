@@ -21,7 +21,7 @@ local debugOpts = {
     -- DebugRaidUI = true,
 
     -- If set, item awards/updates will avoid editing the officer note.
-    -- SkipOfficerNote = true,
+    SkipOfficerNote = true,
 
     -- If set, changing item EPGP data will not "commit" them for propagation.
     IgnoreItemCommit = true,

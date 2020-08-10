@@ -3,6 +3,7 @@ local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetItemInfo = GetItemInfo;
+local tContains = tContains;
 local pairs = pairs;
 local ipairs = ipairs;
 local strupper = strupper;
@@ -20,14 +21,6 @@ local epMapping = {
     ["Action Taken"] = "action",
     ["Character"] = "player",
     ["Date"] = "date",
-    ["Notes"] = false,
-};
-local epColumns = {
-    weights = { 100, 75, 50, 1 },
-    { value = "player", text = "Character" },
-    { value = "date", text = "Date" },
-    { value = "ep", text = "Points" },
-    { value = "action", text = "Action Taken" },
 };
 
 local gpMapping = {
@@ -36,13 +29,6 @@ local gpMapping = {
     ["Character"] = ABGP.ItemHistoryIndex.PLAYER,
     ["Date Won"] = ABGP.ItemHistoryIndex.DATE,
     ["Boss"] = "boss",
-};
-local gpColumns = {
-    weights = { 100, 75, 50, 1 },
-    { value = ABGP.ItemHistoryIndex.PLAYER, text = "Character" },
-    { value = ABGP.ItemHistoryIndex.DATE, text = "Date" },
-    { value = ABGP.ItemHistoryIndex.GP, text = "Points" },
-    { value = ABGP.ItemHistoryIndex.ITEMID, text = "Item" },
 };
 
 local itemPriorities = ABGP:GetItemPriorities();
@@ -62,145 +48,71 @@ local catMapping = {
 for value, text in pairs(itemPriorities) do
     itemMapping[text] = value;
 end
-local itemColumns = {
-    weights = { 200, 50, 350 },
-    { value = ABGP.ItemDataIndex.NAME, text = "Item" },
-    { value = ABGP.ItemDataIndex.GP, text = "GP" },
-    { value = "priority", text = "Priority" },
-};
 
 local priMapping = {
-    ["Character"] = "player",
-    ["Rank"] = false,
-    ["Class"] = false,
-    ["Spec"] = false,
-    ["Effort Points"] = "ep",
-    ["Gear Points"] = "gp",
-    ["Ratio"] = false,
-};
-local priColumns = {
-    weights = { 110, 90, 60, 60, 60, 60 },
-    { value = "player", text = "Character" },
-    { value = "rank", text = "Rank" },
-    { value = "class", text = "Class" },
-    { value = "ep", text = "EP" },
-    { value = "gp", text = "GP" },
-    { value = "priority", text = "Ratio" },
+    ["Player"] = "player",
+    ["EP"] = "ep",
+    ["Silver GP"] = "gpS",
+    ["Gold GP"] = "gpG",
 };
 
-local function DrawTable(container, spreadsheet, columns, importFunc, exportFunc, canBeDelta)
-    spreadsheet = spreadsheet or {};
-    container:SetLayout("Flow");
+local function OpenImportWindow(importFunc, canBeDelta)
+    local window = AceGUI:Create("ABGP_OpaqueWindow");
+    window.frame:SetFrameStrata("DIALOG");
+    window:SetTitle("Import");
+    window:SetLayout("Flow");
+    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
+    ABGP:OpenPopup(window);
 
-    if importFunc then
-        local import = AceGUI:Create("Button");
-        import:SetText("Import");
-        import:SetCallback("OnClick", function(widget, event)
-            local window = AceGUI:Create("ABGP_OpaqueWindow");
-            window:SetTitle("Import");
-            window:SetLayout("Flow");
-            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
-            ABGP:OpenPopup(window);
-
-            local edit = AceGUI:Create("MultiLineEditBox");
-            if canBeDelta then
-                local delta = AceGUI:Create("CheckBox");
-                delta:SetLabel("Delta Import");
-                delta:SetWidth(110);
-                ABGP:AddWidgetTooltip(delta, "If checked, the import process will only consider the data to be an update, rather than a replacement of existing data.");
-                delta:SetCallback("OnValueChanged", function(widget, event, value)
-                    edit:SetUserData("deltaImport", value);
-                end);
-                window:AddChild(delta);
-            end
-
-            edit:SetFullWidth(true);
-            edit:SetFullHeight(true);
-            edit:SetLabel("Copy the data from the ABP spreadsheet");
-            edit:SetCallback("OnEnterPressed", importFunc);
-            window:AddChild(edit);
-            window.frame:Raise();
-            edit:SetFocus();
-            edit:SetUserData("window", window);
+    local edit = AceGUI:Create("MultiLineEditBox");
+    if canBeDelta then
+        local delta = AceGUI:Create("CheckBox");
+        delta:SetLabel("Delta Import");
+        delta:SetWidth(110);
+        ABGP:AddWidgetTooltip(delta, "If checked, the import process will only consider the data to be an update, rather than a replacement of existing data.");
+        delta:SetCallback("OnValueChanged", function(widget, event, value)
+            edit:SetUserData("deltaImport", value);
         end);
-        container:AddChild(import);
+        window:AddChild(delta);
     end
 
-    if exportFunc then
-        local export = AceGUI:Create("Button");
-        export:SetText("Export");
-        export:SetCallback("OnClick", function(widget, event)
-            local window = AceGUI:Create("ABGP_OpaqueWindow");
-            window:SetTitle("Export");
-            window:SetLayout("Fill");
-            window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
-            ABGP:OpenPopup(window);
+    edit:SetFullWidth(true);
+    edit:SetFullHeight(true);
+    edit:SetLabel("Copy the data from the ABP spreadsheet");
+    edit:SetCallback("OnEnterPressed", importFunc);
+    edit:SetUserData("window", window);
+    window:AddChild(edit);
 
-            local edit = AceGUI:Create("MultiLineEditBox");
-            edit:SetLabel("Export the data");
-
-            edit:SetText(exportFunc());
-            edit.button:Enable();
-            window:AddChild(edit);
-            window.frame:Raise();
-            edit:SetFocus();
-            edit:SetUserData("window", window);
-        end);
-        container:AddChild(export);
-    end
-
-    local header = AceGUI:Create("SimpleGroup");
-    header:SetFullWidth(true);
-    header:SetLayout("Table");
-    header:SetUserData("table", { columns = columns.weights});
-    container:AddChild(header);
-
-    for i = 1, #columns do
-        local desc = AceGUI:Create("Label");
-        desc:SetText(strupper(columns[i].text));
-        header:AddChild(desc);
-    end
-
-    local scrollContainer = AceGUI:Create("SimpleGroup");
-    scrollContainer:SetFullWidth(true);
-    scrollContainer:SetFullHeight(true);
-    scrollContainer:SetLayout("Fill");
-    container:AddChild(scrollContainer);
-
-    local scroll = AceGUI:Create("ScrollFrame");
-    scroll:SetFullWidth(true);
-    scroll:SetLayout("List");
-    scrollContainer:AddChild(scroll);
-
-    local group = AceGUI:Create("SimpleGroup");
-    group:SetFullWidth(true);
-    group:SetLayout("Table");
-    group:SetUserData("table", { columns = columns.weights });
-    scroll:AddChild(group);
-
-    group:PauseLayout();
-    for i = 1, #spreadsheet do
-        for j = 1, #columns do
-            local desc = AceGUI:Create("Label");
-            local data = spreadsheet[i][columns[j].value];
-            if type(data) == "number" then
-                data = (floor(data) == data and "%d" or "%.3f"):format(data);
-            end
-            if type(data) == "table" then
-                data = table.concat(data, ", ");
-            end
-            desc:SetText(data);
-            desc:SetWidth(0);
-            desc:SetFullWidth(true);
-            group:AddChild(desc);
-        end
-    end
-    group:ResumeLayout();
-    group:DoLayout();
-    scroll:DoLayout();
+    window.frame:Raise();
+    edit:SetFocus();
 end
 
-local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
+function ABGP:OpenExportWindow(text)
+    local window = AceGUI:Create("ABGP_OpaqueWindow");
+    window.frame:SetFrameStrata("DIALOG");
+    window:SetTitle("Export");
+    window:SetLayout("Fill");
+    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
+    ABGP:OpenPopup(window);
+
+    local edit = AceGUI:Create("MultiLineEditBox");
+    edit:SetLabel("Export the data");
+
+    edit:SetText(text);
+    edit:DisableButton(true);
+    edit:SetCallback("OnEditFocusGained", function(widget)
+        widget:HighlightText();
+    end);
+    edit:SetCallback("OnEnterPressed", function()
+        window:Hide();
+    end);
+    window:AddChild(edit);
+
+    window.frame:Raise();
+    edit:SetFocus();
+end
+
+local function ImportSpreadsheetText(text, spreadsheet, mapping, filter)
     local newData = {};
     local labels;
     for line in text:gmatch("[^\n]+") do
@@ -218,9 +130,9 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
         end
         if not labels then
             labels = values;
-            for j = 1, #labels do
-                if mapping[labels[j]] == nil then
-                    ABGP:Notify("No mapping for column: %s. Cancelling import!", labels[j]);
+            for colName in pairs(mapping) do
+                if not tContains(labels, colName) then
+                    ABGP:Notify("Expected column '%s' not found. Canceling import!", colName);
                     return false;
                 end
             end
@@ -236,7 +148,7 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
                 insert, isError = filter(row, newData);
             end
             if isError then
-                ABGP:Notify("Cancelling import!");
+                ABGP:Notify("Canceling import!");
                 return false;
             end
             if insert then
@@ -250,60 +162,168 @@ local function PopulateSpreadsheet(text, spreadsheet, mapping, filter)
     return true;
 end
 
-local function DrawPriority(container)
+function ABGP:ImportPriority()
     local importFunc = function(widget, event)
         if widget:GetUserData("deltaImport") then
             local newPriorities = {};
-            if PopulateSpreadsheet(widget:GetText(), newPriorities, priMapping) then
+            if ImportSpreadsheetText(widget:GetText(), newPriorities, priMapping) then
                 for _, newPri in ipairs(newPriorities) do
                     local found = false;
-                    for _, existingPri in ipairs(ABGP.Priorities) do
+                    for _, existingPri in ipairs(self.Priorities) do
                         if existingPri.player == newPri.player then
                             found = true;
                             existingPri.ep = newPri.ep;
-                            existingPri.gp = newPri.gp;
+                            existingPri.gp = { [self.ItemCategory.GOLD] = newPri.gpG, [self.ItemCategory.SILVER] = newPri.gpS };
                             break;
                         end
                     end
 
                     if not found then
-                        table.insert(ABGP.Priorities, newPri);
+                        newPri.gp = { [self.ItemCategory.GOLD] = newPri.gpG, [self.ItemCategory.SILVER] = newPri.gpS };
+                        newPri.gpG = nil;
+                        newPri.gpS = nil;
+                        table.insert(self.Priorities, newPri);
                     end
                 end
             end
         else
-            PopulateSpreadsheet(widget:GetText(), ABGP.Priorities, priMapping, function(row)
-                return row.ep ~= 0 and row.gp ~= 0;
+            ImportSpreadsheetText(widget:GetText(), self.Priorities, priMapping, function(row)
+                if row.ep ~= 0 and row.gpS and row.gpS ~= 0 and row.gpG and row.gpG ~= 0 then
+                    row.gp = { [self.ItemCategory.GOLD] = row.gpG, [self.ItemCategory.SILVER] = row.gpS };
+                    row.gpG = nil;
+                    row.gpS = nil;
+                    return true;
+                else
+                    return false;
+                end
             end);
         end
 
-        ABGP:RefreshActivePlayers();
-        ABGP:RebuildOfficerNotes();
-
-        widget:GetUserData("window"):Hide();
-        container:ReleaseChildren();
-        DrawPriority(container);
-    end
-
-    local exportFunc = function()
-        local text = "Character,Rank,Class,Spec,Effort Points,Gear Points,Ratio\n";
-        for _, item in ipairs(ABGP.Priorities) do
-            text = text .. ("%s,%s,%s,%s,%s,%s,%s\n"):format(
-                item.player, item.rank, item.class, item.role, item.ep, item.gp, item.priority);
+        self:RefreshActivePlayers();
+        if not self:GetDebugOpt("SkipOfficerNote") then
+            self:RebuildOfficerNotes();
         end
 
-        return text;
+        widget:GetUserData("window"):Hide();
     end
 
-    DrawTable(container, ABGP.Priorities, priColumns, importFunc, exportFunc, true);
+    OpenImportWindow(importFunc, true);
 end
 
-local function DrawGP(container)
+function ABGP:ImportItems()
+    if not (_G.AtlasLoot and
+            _G.AtlasLoot.ItemDB and
+            _G.AtlasLoot.ItemDB.Storage and
+            _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids) then
+        self:Error("You must have AtlasLoot installed to show this window!");
+        return;
+    end
+
+    self:BuildItemLookup();
+
+    local importFunc = function(widget, event)
+        ImportSpreadsheetText(widget:GetText(), _G.ABGP_Data2.itemValues.data, itemMapping, function(row)
+            row[ABGP.ItemDataIndex.PRIORITY] = {};
+            for k, v in pairs(row) do
+                if itemPriorities[k] then
+                    table.insert(row[ABGP.ItemDataIndex.PRIORITY], itemPriorities[k]);
+                    row[k] = nil;
+                end
+            end
+            table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
+
+            if not catMapping[row[ABGP.ItemDataIndex.CATEGORY]] then
+                ABGP:Notify("Bad category %s. Canceling import!", row[ABGP.ItemDataIndex.CATEGORY]);
+                return false;
+            end
+            row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+
+            if row[ABGP.ItemDataIndex.GP] == "T" then
+                return true;
+            end
+
+            local name = row[ABGP.ItemDataIndex.NAME];
+            local item, token = name:match("^(.+) %((.+)%)$");
+            if token then
+                row[ABGP.ItemDataIndex.NAME] = item;
+                row[ABGP.ItemDataIndex.RELATED] = token;
+                row[ABGP.ItemDataIndex.NOTES] = nil;
+                row[ABGP.ItemDataIndex.PRIORITY] = {};
+            end
+
+            return true;
+        end);
+
+        widget:GetUserData("window"):Hide();
+
+        if ABGP:FixupItems() then
+            ABGP:RefreshItemValues();
+            ABGP:CommitItemData();
+        else
+            ABGP:Error("Couldn't find item links for some items! Unable to commit these updates.");
+        end
+    end
+
+    OpenImportWindow(importFunc);
+end
+
+function ABGP:ExportItems()
+    local _, sortedPriorities = self:GetItemPriorities();
+    local function buildPrioString(prio)
+        local itemPriorities = {};
+        for _, pri in ipairs(prio) do itemPriorities[pri] = true; end
+        local priorities = {};
+        for _, pri in ipairs(sortedPriorities) do
+            table.insert(priorities, itemPriorities[pri] and "TRUE" or "");
+        end
+        return table.concat(priorities, "\t");
+    end
+
+    local items = _G.ABGP_Data2.itemValues.data;
+    local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
+    for i, item in ipairs(items) do
+        if item[self.ItemDataIndex.RELATED] then
+            text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+                item[self.ItemDataIndex.RAID],
+                item[self.ItemDataIndex.BOSS],
+                ("%s (%s)"):format(item[self.ItemDataIndex.NAME], item[self.ItemDataIndex.RELATED]),
+                item[self.ItemDataIndex.CATEGORY],
+                item[self.ItemDataIndex.GP],
+                buildPrioString({}),
+                "",
+                "\n");
+        else
+            text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+                item[self.ItemDataIndex.RAID],
+                item[self.ItemDataIndex.BOSS],
+                item[self.ItemDataIndex.NAME],
+                item[self.ItemDataIndex.CATEGORY],
+                item[self.ItemDataIndex.GP],
+                buildPrioString(item[self.ItemDataIndex.PRIORITY]),
+                item[self.ItemDataIndex.NOTES] or "",
+                "\n");
+        end
+    end
+
+    self:OpenExportWindow(text);
+end
+
+function ABGP:ImportItemHistory()
+    if not (_G.AtlasLoot and
+            _G.AtlasLoot.ItemDB and
+            _G.AtlasLoot.ItemDB.Storage and
+            _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids) then
+        self:Error("You must have AtlasLoot installed to show this window!");
+        return;
+    end
+
+    self:BuildItemLookup();
+
     local lastRowTime = 0;
     local lastDecayTime = 0;
     local rowTimes = {};
     local importFunc = function(widget, event)
-        local success = PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2.history.data, gpMapping, function(row)
+        local success = ImportSpreadsheetText(widget:GetText(), _G.ABGP_Data2.history.data, gpMapping, function(row)
             if not row[ABGP.ItemHistoryIndex.DATE] then
                 -- Only print an error if the row isn't completely blank.
                 local isError = false;
@@ -395,8 +415,6 @@ local function DrawGP(container)
             reverse(_G.ABGP_Data2.history.data);
 
             widget:GetUserData("window"):Hide();
-            container:ReleaseChildren();
-            DrawGP(container);
 
             if ABGP:FixupHistory() then
                 ABGP:CommitHistory();
@@ -404,153 +422,42 @@ local function DrawGP(container)
         end
     end
 
-    local exportFunc = function()
-        local history = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
-
-        local text = "New Points\tItem\tCharacter\tDate Won\n";
-        for i = #history, 1, -1 do
-            local item = history[i];
-            local entryDate = date("%m/%d/%y", item[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
-            if item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.ITEM then
-                local value = ABGP:GetItemValue(item[ABGP.ItemHistoryIndex.ITEMID]);
-                text = text .. ("%s\t%s\t%s\t%s\n"):format(
-                    item[ABGP.ItemHistoryIndex.GP], value.item, item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
-            elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
-                text = text .. ("%s\t%s\t%s\t%s\n"):format("", "", "DECAY", entryDate);
-            elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.BONUS then
-                text = text .. ("%s\t%s\t%s\t%s\n"):format(
-                    item[ABGP.ItemHistoryIndex.GP], "Bonus GP", item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
-            elseif item[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.RESET then
-                text = text .. ("%s\t%s\t%s\t%s\n"):format(
-                    item[ABGP.ItemHistoryIndex.GP], "Reset GP", item[ABGP.ItemHistoryIndex.PLAYER], entryDate);
-            end
-        end
-
-        return text;
-    end
-
-    DrawTable(container, _G.ABGP_Data2.history.data, gpColumns, importFunc, exportFunc);
+    OpenImportWindow(importFunc);
 end
 
-local function DrawItems(container)
-    local importFunc = function(widget, event)
-        PopulateSpreadsheet(widget:GetText(), _G.ABGP_Data2.itemValues.data, itemMapping, function(row)
-            row[ABGP.ItemDataIndex.PRIORITY] = {};
-            for k, v in pairs(row) do
-                if itemPriorities[k] then
-                    table.insert(row[ABGP.ItemDataIndex.PRIORITY], itemPriorities[k]);
-                    row[k] = nil;
-                end
-            end
-            table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
+function ABGP:ExportItemHistory(history)
+    local text = "";
+    for i = #history, 1, -1 do
+        local data = history[i];
+        local itemId = data[self.ItemHistoryIndex.ITEMID];
+        local value = self:GetItemValue(itemId);
+        local itemDate = date("%m/%d/%y", data[self.ItemHistoryIndex.DATE]);
 
-            if not catMapping[row[ABGP.ItemDataIndex.CATEGORY]] then
-                ABGP:Notify("Bad category %s. Canceling import!", row[ABGP.ItemDataIndex.CATEGORY]);
-                return false;
-            end
-            row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
-
-            if row[ABGP.ItemDataIndex.GP] == "T" then
-                return true;
-            end
-
-            local name = row[ABGP.ItemDataIndex.NAME];
-            local item, token = name:match("^(.+) %((.+)%)$");
-            if token then
-                row[ABGP.ItemDataIndex.NAME] = item;
-                row[ABGP.ItemDataIndex.RELATED] = token;
-                row[ABGP.ItemDataIndex.NOTES] = nil;
-                row[ABGP.ItemDataIndex.PRIORITY] = {};
-            end
-
-            return true;
-        end);
-
-        widget:GetUserData("window"):Hide();
-        container:ReleaseChildren();
-        DrawItems(container);
-
-        if ABGP:FixupItems() then
-            ABGP:RefreshItemValues();
-            ABGP:CommitItemData();
-        else
-            ABGP:Error("Couldn't find item links for some items! Unable to commit these updates.");
-        end
+        text = text .. ("%s\t%s\t%s\t%s%s"):format(
+            data[self.ItemHistoryIndex.GP], value.item, data[self.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
     end
 
-    DrawTable(container, _G.ABGP_Data2.itemValues.data, itemColumns, importFunc, nil);
+    self:OpenExportWindow(text);
 end
 
-function ABGP:ShowImportWindow()
-    if activeWindow then return; end
-    if not (_G.AtlasLoot and
-            _G.AtlasLoot.ItemDB and
-            _G.AtlasLoot.ItemDB.Storage and
-            _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids) then
-        self:Error("You must have AtlasLoot installed to show this window!");
-        return;
-    end
-
-    self:BuildItemLookup();
-
-    local window = AceGUI:Create("ABGP_OpaqueWindow");
-    window.frame:SetFrameStrata("MEDIUM");
-    window:SetTitle(("%s Spreadsheet Interop"):format(self:ColorizeText("ABGP")));
-    window:SetWidth(650);
-    window:SetHeight(400);
-    window:SetLayout("Flow");
-    window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); activeWindow = nil; end);
-    ABGP:OpenPopup(window);
-
-    local tabs = {
-        { value = "priority", text = "Priority", selected = DrawPriority },
-        { value = "gp", text = "Gear Points", selected = DrawGP },
-        { value = "items", text = "Items", selected = DrawItems },
-    };
-    local selectedTab = tabs[1].value;
-
-    local tabGroup = AceGUI:Create("TabGroup");
-    tabGroup:SetFullWidth(true);
-    tabGroup:SetFullHeight(true);
-    tabGroup:SetTabs(tabs);
-    tabGroup:SetCallback("OnGroupSelected", function(container, event, tab)
-        selectedTab = tab;
-        container:ReleaseChildren();
-        for i, v in ipairs(tabs) do
-            if v.value == selectedTab then
-                v.selected(container);
-                break;
-            end
-        end
-    end);
-    tabGroup:SelectTab(selectedTab);
-    window:AddChild(tabGroup);
-    window.frame:Raise();
-    activeWindow = window;
-end
-
-
-local blacklist = {
-    [17012] = true, -- Core Leather
-};
 
 local lookup = {};
 
 function ABGP:BuildItemLookup(shouldPrint)
     local succeeded = true;
 
-    local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore.items;
-    local ony = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia.items;
+    -- local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore.items;
+    -- local ony = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia.items;
     local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses.items;
     local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair.items;
     -- local aq20 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheRuinsofAhnQiraj.items;
     local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj.items;
     local token = _G.AtlasLoot.Data.Token;
-    for _, collection in ipairs({ mc, ony, wb, bwl, aq40 }) do
+    for _, collection in ipairs({ wb, bwl, aq40 }) do
         for _, sub in ipairs(collection) do
             if sub[1] then
                 for _, item in ipairs(sub[1]) do
-                    if type(item[2]) == "number" and not blacklist[item[2]] then
+                    if type(item[2]) == "number" then
                         local name, link = GetItemInfo(item[2]);
                         if name then
                             lookup[name] = ABGP:ShortenLink(link);
@@ -607,18 +514,8 @@ function ABGP:FixupHistory()
         if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
             -- NOTE: The ITEMID field is still the item name at this point.
             if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
-                for name, link in pairs(lookup) do
-                    local lowered = entry[self.ItemHistoryIndex.ITEMID]:lower();
-                    if lowered:find(name:lower(), 1, true) then
-                        -- print(("Updating [%s] to [%s]"):format(entry[self.ItemHistoryIndex.ITEMID], name));
-                        entry[self.ItemHistoryIndex.ITEMID] = name;
-                        break;
-                    end
-                end
-                if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
-                    self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
-                    return false;
-                end
+                self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
+                return false;
             end
 
             entry[self.ItemHistoryIndex.ITEMID] = self:GetItemId(lookup[entry[self.ItemHistoryIndex.ITEMID]]);

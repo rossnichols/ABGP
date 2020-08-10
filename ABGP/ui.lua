@@ -63,6 +63,15 @@ local function DrawPriority(container, options)
 
     local widths = { 35, 120, 110, 75, 75, 75, 75, 75 };
     if rebuild then
+        container:SetLayout("ABGP_Table");
+        container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0 } });
+
+        local mainLine = AceGUI:Create("SimpleGroup");
+        mainLine:SetFullWidth(true);
+        mainLine:SetLayout("table");
+        mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
+        container:AddChild(mainLine);
+
         local classSelector = AceGUI:Create("ABGP_Filter");
         classSelector:SetWidth(110);
         classSelector:SetValues(allowedClasses, true, {
@@ -88,7 +97,7 @@ local function DrawPriority(container, options)
             PopulateUI({ rebuild = false });
         end);
         classSelector:SetDefaultText("Classes");
-        container:AddChild(classSelector);
+        mainLine:AddChild(classSelector);
 
         if IsInGroup() then
             local grouped = AceGUI:Create("CheckBox");
@@ -99,12 +108,28 @@ local function DrawPriority(container, options)
                 onlyGrouped = value;
                 PopulateUI({ rebuild = false });
             end);
-            container:AddChild(grouped);
+            mainLine:AddChild(grouped);
         else
             onlyGrouped = false;
+            local spacer = AceGUI:Create("Label");
+            mainLine:AddChild(spacer);
+        end
+
+        if ABGP:IsPrivileged() then
+            local spacer = AceGUI:Create("Label");
+            mainLine:AddChild(spacer);
+
+            local import = AceGUI:Create("Button");
+            import:SetWidth(75);
+            import:SetText("Import");
+            import:SetCallback("OnClick", function(widget, event)
+                ABGP:ImportPriority();
+            end);
+            mainLine:AddChild(import);
         end
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
         scrollContainer:SetLayout("Flow");
@@ -252,7 +277,7 @@ local function DrawItemHistory(container, options)
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
+        mainLine:SetUserData("table", { columns = { 0, 1.0, 0, 0 } });
         container:AddChild(mainLine);
 
         local search = AceGUI:Create("ABGP_EditBox");
@@ -264,7 +289,7 @@ local function DrawItemHistory(container, options)
             _G.ShowUIPanel(_G.GameTooltip);
             _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
             _G.GameTooltip:ClearLines();
-            _G.GameTooltip:AddLine("Help");
+            _G.GameTooltip:AddLine("Search");
             _G.GameTooltip:AddLine("Search by player, class, item, or date. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
             _G.GameTooltip:Show();
         end);
@@ -274,56 +299,26 @@ local function DrawItemHistory(container, options)
         mainLine:AddChild(search);
         container:SetUserData("search", search);
 
-        local desc = AceGUI:Create("Label");
-        desc:SetWidth(50);
-        desc:SetText(" Search");
-        mainLine:AddChild(desc);
-
         if ABGP:IsPrivileged() then
             local spacer = AceGUI:Create("Label");
             mainLine:AddChild(spacer);
 
             local export = AceGUI:Create("Button");
-            export:SetWidth(100);
+            export:SetWidth(75);
             export:SetText("Export");
             export:SetCallback("OnClick", function(widget, event)
-                local history = container:GetUserData("itemHistory");
-                local text = "";
-                for i = #history.children, 1, -1 do
-                    local elt = history.children[i];
-                    local data = elt.data;
-
-                    local itemId = data[ABGP.ItemHistoryIndex.ITEMID];
-                    local value = ABGP:GetItemValue(itemId);
-                    local itemDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]);
-
-                    text = text .. ("%s\t%s\t%s\t%s%s"):format(
-                        data[ABGP.ItemHistoryIndex.GP], value.item, data[ABGP.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
-                end
-
-                local window = AceGUI:Create("ABGP_OpaqueWindow");
-                window.frame:SetFrameStrata("DIALOG");
-                window:SetTitle("Export");
-                window:SetLayout("Fill");
-                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
-                ABGP:OpenPopup(window);
-
-                local edit = AceGUI:Create("MultiLineEditBox");
-                edit:SetLabel("Paste the following into the spreadsheet.");
-                edit:SetText(text);
-                edit.button:Enable();
-                window:AddChild(edit);
-                window.frame:Raise();
-                edit:SetFocus();
-                edit:HighlightText();
-                edit:SetCallback("OnEditFocusGained", function(widget)
-                    widget:HighlightText();
-                end);
-                edit:SetCallback("OnEnterPressed", function()
-                    window:Hide();
-                end);
+                local filtered = container:GetUserData("filteredItemHistory");
+                ABGP:ExportItemHistory(filtered);
             end);
             mainLine:AddChild(export);
+
+            local import = AceGUI:Create("Button");
+            import:SetWidth(75);
+            import:SetText("Import");
+            import:SetCallback("OnClick", function(widget, event)
+                ABGP:ImportItemHistory();
+            end);
+            mainLine:AddChild(import);
         end
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
@@ -412,6 +407,7 @@ local function DrawItemHistory(container, options)
             end
         end
     end
+    container:SetUserData("filteredItemHistory", filtered);
 
     pagination:SetValues(#filtered, 50);
     if #filtered > 0 then
@@ -613,7 +609,7 @@ local function DrawItems(container, options)
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0 } });
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0, 0 } });
         container:AddChild(mainLine);
 
         local priSelector = AceGUI:Create("ABGP_Filter");
@@ -660,7 +656,7 @@ local function DrawItems(container, options)
             _G.ShowUIPanel(_G.GameTooltip);
             _G.GameTooltip:SetOwner(widget.frame, "ANCHOR_TOPLEFT");
             _G.GameTooltip:ClearLines();
-            _G.GameTooltip:AddLine("Help");
+            _G.GameTooltip:AddLine("Search");
             _G.GameTooltip:AddLine("Search by item, raid, boss, or notes. Enclose your search in \"quotes\" for an exact match. All searches are case-insensitive.", 1, 1, 1, true);
             _G.GameTooltip:Show();
         end);
@@ -669,11 +665,6 @@ local function DrawItems(container, options)
         end);
         mainLine:AddChild(search);
         container:SetUserData("search", search);
-
-        local desc = AceGUI:Create("Label");
-        desc:SetWidth(50);
-        desc:SetText(" Search");
-        mainLine:AddChild(desc);
 
         local usable = AceGUI:Create("CheckBox");
         usable:SetWidth(80);
@@ -706,69 +697,20 @@ local function DrawItems(container, options)
             mainLine:AddChild(spacer);
 
             local export = AceGUI:Create("Button");
-            export:SetWidth(100);
+            export:SetWidth(75);
             export:SetText("Export");
             export:SetCallback("OnClick", function(widget, event)
-                local _, sortedPriorities = ABGP:GetItemPriorities();
-                local function buildPrioString(prio)
-                    local itemPriorities = {};
-                    for _, pri in ipairs(prio) do itemPriorities[pri] = true; end
-                    local priorities = {};
-                    for _, pri in ipairs(sortedPriorities) do
-                        table.insert(priorities, itemPriorities[pri] and "TRUE" or "");
-                    end
-                    return table.concat(priorities, "\t");
-                end
-
-                local items = _G.ABGP_Data2.itemValues.data;
-                local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
-                for i, item in ipairs(items) do
-                    if item[ABGP.ItemDataIndex.RELATED] then
-                        text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
-                            item[ABGP.ItemDataIndex.RAID],
-                            item[ABGP.ItemDataIndex.BOSS],
-                            ("%s (%s)"):format(item[ABGP.ItemDataIndex.NAME], item[ABGP.ItemDataIndex.RELATED]),
-                            item[ABGP.ItemDataIndex.CATEGORY],
-                            item[ABGP.ItemDataIndex.GP],
-                            buildPrioString({}),
-                            "",
-                            "\n");
-                    else
-                        text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
-                            item[ABGP.ItemDataIndex.RAID],
-                            item[ABGP.ItemDataIndex.BOSS],
-                            item[ABGP.ItemDataIndex.NAME],
-                            item[ABGP.ItemDataIndex.CATEGORY],
-                            item[ABGP.ItemDataIndex.GP],
-                            buildPrioString(item[ABGP.ItemDataIndex.PRIORITY]),
-                            item[ABGP.ItemDataIndex.NOTES] or "",
-                            "\n");
-                    end
-                end
-
-                local window = AceGUI:Create("ABGP_OpaqueWindow");
-                window.frame:SetFrameStrata("DIALOG");
-                window:SetTitle("Export");
-                window:SetLayout("Fill");
-                window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
-                ABGP:OpenPopup(window);
-
-                local edit = AceGUI:Create("MultiLineEditBox");
-                edit:SetLabel("In the spreadsheet, select all, press <delete>, select A1, then paste.");
-                edit:SetText(text);
-                edit.button:Enable();
-                window:AddChild(edit);
-                window.frame:Raise();
-                edit:SetFocus();
-                edit:HighlightText();
-                edit:SetCallback("OnEditFocusGained", function(widget)
-                    widget:HighlightText();
-                end);
-                edit:SetCallback("OnEnterPressed", function()
-                    window:Hide();
-                end);
+                ABGP:ExportItems();
             end);
             mainLine:AddChild(export);
+
+            local import = AceGUI:Create("Button");
+            import:SetWidth(75);
+            import:SetText("Import");
+            import:SetCallback("OnClick", function(widget, event)
+                ABGP:ImportItems();
+            end);
+            mainLine:AddChild(import);
         end
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
@@ -1535,11 +1477,11 @@ function ABGP:CreateMainWindow(command)
     window:SetTitle(("%s v%s"):format(self:ColorizeText("ABGP"), self:GetVersion()));
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
-        version = 2,
+        version = 3,
         defaultWidth = 750,
         minWidth = 750,
         maxWidth = 850,
-        defaultHeight = 500,
+        defaultHeight = 600,
         minHeight = 300,
         maxHeight = 700
     });

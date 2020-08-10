@@ -103,8 +103,6 @@ function ABGP:OnIconClick(frame, button)
             self:ShowOptionsWindow();
         elseif IsControlKeyDown() and self:IsPrivileged() then
             self:ShowRaidWindow();
-        elseif IsAltKeyDown() and self:IsPrivileged() then
-            self:ShowImportWindow();
         elseif ShouldOverride() then
             self:ShowItemRequests();
         else
@@ -134,11 +132,6 @@ function ABGP:OnIconClick(frame, button)
             table.insert(context, {
                 text = self:IsRaidInProgress() and "Manage Raid" or "Start Raid",
                 func = function() self:ShowRaidWindow(); end,
-                notCheckable = true
-            });
-            table.insert(context, {
-                text = "Show Import",
-                func = function() self:ShowImportWindow(); end,
                 notCheckable = true
             });
             table.insert(context, {

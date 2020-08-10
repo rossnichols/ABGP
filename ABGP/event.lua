@@ -933,22 +933,7 @@ function ABGP:ExportRaid(windowRaid)
             ep, "EP", windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
     end
 
-    local edit = AceGUI:Create("MultiLineEditBox");
-    edit:SetFullWidth(true);
-    edit:SetFullHeight(true);
-    edit:SetText(text);
-    edit:DisableButton(true);
-    window:AddChild(edit);
-    edit:SetFocus();
-    edit:HighlightText();
-    edit:SetCallback("OnEditFocusGained", function(widget)
-        widget:HighlightText();
-    end);
-    edit:SetCallback("OnEnterPressed", function()
-        window:Hide();
-    end);
-
-    window.frame:Raise();
+    self:OpenExportWindow(text);
 end
 
 function ABGP:EventOnGroupJoined()

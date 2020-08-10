@@ -68,14 +68,6 @@ function ABGP:InitOptions()
             type = "execute",
             func = function() self:ShowItemRequests(); end
         },
-        import = {
-            name = "Data Import",
-            desc = "shows the import window",
-            type = "execute",
-            hidden = function() return not self:IsPrivileged(); end,
-            validate = function() if not self:IsPrivileged() then return "|cffff0000not privileged|r"; end end,
-            func = function() self:ShowImportWindow(); end
-        },
         versioncheck = {
             name = "Version Check",
             desc = "checks the raid for an outdated or missing addon versions (alias: vc)",
