@@ -3,6 +3,7 @@ local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetItemInfo = GetItemInfo;
+local GuildRoster = GuildRoster;
 local tContains = tContains;
 local pairs = pairs;
 local ipairs = ipairs;
@@ -14,21 +15,17 @@ local tonumber = tonumber;
 local time = time;
 local date = date;
 
-local activeWindow;
-
-local epMapping = {
-    ["Points Earned"] = "ep",
-    ["Action Taken"] = "action",
-    ["Character"] = "player",
-    ["Date"] = "date",
+local priMapping = {
+    ["Player"] = "player",
+    ["EP"] = "ep",
+    ["Silver GP"] = "gpS",
+    ["Gold GP"] = "gpG",
 };
 
-local gpMapping = {
-    ["New Points"] = ABGP.ItemHistoryIndex.GP,
-    ["Item"] = ABGP.ItemHistoryIndex.ITEMID,
-    ["Character"] = ABGP.ItemHistoryIndex.PLAYER,
-    ["Date Won"] = ABGP.ItemHistoryIndex.DATE,
-    ["Boss"] = "boss",
+local historyMapping = {
+    ["Action"] = "action",
+    ["Date"] = "date",
+    ["Info"] = "info",
 };
 
 local itemPriorities = ABGP:GetItemPriorities();
@@ -41,19 +38,21 @@ local itemMapping = {
     ["Notes"] = ABGP.ItemDataIndex.NOTES,
     -- ABGP.ItemDataIndex.ITEMLINK and ABGP.ItemDataIndex.PRIORITY populated elsewhere
 };
+for value, text in pairs(itemPriorities) do
+    itemMapping[text] = value;
+end
 local catMapping = {
     ["Silver"] = ABGP.ItemCategory.SILVER,
     ["Gold"] = ABGP.ItemCategory.GOLD,
 };
-for value, text in pairs(itemPriorities) do
-    itemMapping[text] = value;
-end
-
-local priMapping = {
-    ["Player"] = "player",
-    ["EP"] = "ep",
-    ["Silver GP"] = "gpS",
-    ["Gold GP"] = "gpG",
+local catMappingHistory = {
+    ["S"] = ABGP.ItemCategory.SILVER,
+    ["G"] = ABGP.ItemCategory.GOLD,
+    ["SG"] = ABGP.ItemCategory.GOLD,
+};
+local catMappingHistoryExport = {
+    [ABGP.ItemCategory.SILVER] = "GP-S",
+    [ABGP.ItemCategory.GOLD] = "GP-G",
 };
 
 local function OpenImportWindow(importFunc, canBeDelta)
@@ -112,7 +111,7 @@ function ABGP:OpenExportWindow(text)
     edit:SetFocus();
 end
 
-local function ImportSpreadsheetText(text, spreadsheet, mapping, filter)
+local function ImportSpreadsheetText(text, spreadsheet, mapping, filter, postProcess)
     local newData = {};
     local labels;
     for line in text:gmatch("[^\n]+") do
@@ -157,9 +156,15 @@ local function ImportSpreadsheetText(text, spreadsheet, mapping, filter)
         end
     end
 
-    table.wipe(spreadsheet);
-    for k, v in pairs(newData) do spreadsheet[k] = v; end
-    return true;
+    local success = not postProcess or postProcess(newData);
+    if success then
+        table.wipe(spreadsheet);
+        for k, v in pairs(newData) do spreadsheet[k] = v; end
+        return true;
+    else
+        ABGP:Notify("Canceling import!");
+        return false;
+    end
 end
 
 function ABGP:ImportPriority()
@@ -199,9 +204,14 @@ function ABGP:ImportPriority()
             end);
         end
 
+        -- This is a bit hacky - basically we've trashed the "real" active players list
+        -- with a rebuilt one that only contains EPGP, and then we trigger a mass-rebuild
+        -- of officer notes from the data, which only needs those fields. The proper list
+        -- will be reconstructed when we process the next GUILD_ROSTER_UPDATE event.
         self:RefreshActivePlayers();
         if not self:GetDebugOpt("SkipOfficerNote") then
             self:RebuildOfficerNotes();
+            GuildRoster();
         end
 
         widget:GetUserData("window"):Hide();
@@ -222,7 +232,7 @@ function ABGP:ImportItems()
     self:BuildItemLookup();
 
     local importFunc = function(widget, event)
-        ImportSpreadsheetText(widget:GetText(), _G.ABGP_Data2.itemValues.data, itemMapping, function(row)
+        local success = ImportSpreadsheetText(widget:GetText(), _G.ABGP_Data2.itemValues.data, itemMapping, function(row)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
@@ -233,8 +243,8 @@ function ABGP:ImportItems()
             table.sort(row[ABGP.ItemDataIndex.PRIORITY]);
 
             if not catMapping[row[ABGP.ItemDataIndex.CATEGORY]] then
-                ABGP:Notify("Bad category %s. Canceling import!", row[ABGP.ItemDataIndex.CATEGORY]);
-                return false;
+                ABGP:Notify("Bad category '%s' for %s.", row[ABGP.ItemDataIndex.CATEGORY], row[ABGP.ItemDataIndex.NAME]);
+                return false, true;
             end
             row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
 
@@ -252,16 +262,20 @@ function ABGP:ImportItems()
             end
 
             return true;
+        end, function(newData)
+            if not ABGP:FixupItems(newData) then
+                ABGP:Error("Couldn't find item links for some items!");
+                return false;
+            end
+
+            return true;
         end);
 
-        widget:GetUserData("window"):Hide();
-
-        if ABGP:FixupItems() then
-            ABGP:RefreshItemValues();
+        if success then
             ABGP:CommitItemData();
-        else
-            ABGP:Error("Couldn't find item links for some items! Unable to commit these updates.");
         end
+
+        widget:GetUserData("window"):Hide();
     end
 
     OpenImportWindow(importFunc);
@@ -283,25 +297,23 @@ function ABGP:ExportItems()
     local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
     for i, item in ipairs(items) do
         if item[self.ItemDataIndex.RELATED] then
-            text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+            text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
                 item[self.ItemDataIndex.RAID],
                 item[self.ItemDataIndex.BOSS],
                 ("%s (%s)"):format(item[self.ItemDataIndex.NAME], item[self.ItemDataIndex.RELATED]),
                 item[self.ItemDataIndex.CATEGORY],
                 item[self.ItemDataIndex.GP],
                 buildPrioString({}),
-                "",
-                "\n");
+                "");
         else
-            text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+            text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
                 item[self.ItemDataIndex.RAID],
                 item[self.ItemDataIndex.BOSS],
                 item[self.ItemDataIndex.NAME],
                 item[self.ItemDataIndex.CATEGORY],
                 item[self.ItemDataIndex.GP],
                 buildPrioString(item[self.ItemDataIndex.PRIORITY]),
-                item[self.ItemDataIndex.NOTES] or "",
-                "\n");
+                item[self.ItemDataIndex.NOTES] or "");
         end
     end
 
@@ -321,103 +333,110 @@ function ABGP:ImportItemHistory()
 
     local lastRowTime = 0;
     local lastDecayTime = 0;
-    local rowTimes = {};
     local importFunc = function(widget, event)
-        local success = ImportSpreadsheetText(widget:GetText(), _G.ABGP_Data2.history.data, gpMapping, function(row)
-            if not row[ABGP.ItemHistoryIndex.DATE] then
-                -- Only print an error if the row isn't completely blank.
-                local isError = false;
-                for _, v in pairs(row) do
-                    if v then
-                        ABGP:Error("Found row without date!");
-                        isError = true;
-                        break;
-                    end
-                end
-                return false, isError;
-            end
-            local rowDate =  row[ABGP.ItemHistoryIndex.DATE];
+        local imported = {};
+        local success = ImportSpreadsheetText(widget:GetText(), imported, historyMapping, function(row)
+            local rowDate =  row.date;
             rowDate = rowDate:gsub("20(%d%d)", "%1");
             local m, d, y = rowDate:match("^(%d-)/(%d-)/(%d-)$");
             if not m then
-                ABGP:Error("Malformed date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                ABGP:Error("Malformed date: %s", row.date);
                 return false, true;
             end
             local rowTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
             if rowTime < lastRowTime then
-                ABGP:Error("Out of order date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                ABGP:Error("Out of order date: %s", row.date);
                 return false, true;
             end
             if rowTime == lastDecayTime then
-                ABGP:Error("Entry after decay on same date: %s", row[ABGP.ItemHistoryIndex.DATE]);
+                ABGP:Error("Entry after decay on same date: %s", row.date);
                 return false, true;
             end
 
-            if row[ABGP.ItemHistoryIndex.PLAYER] == "DECAY" then
-                row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DECAY;
+            if row.action == "DECAY" then
                 lastDecayTime = rowTime;
-
-                -- Set the time to the last second of the day, to give room for backdating other entries.
+                -- Set the time to the last second of the day, to ensure it's processed as the last entry.
                 rowTime = rowTime + (24 * 60 * 60) - 1;
-
-                rowTimes[rowTime] = true;
-                row[ABGP.ItemHistoryIndex.DATE] = rowTime;
-                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
-
-                local gpDecay, gpFloor = ABGP:GetGPDecayInfo();
-                row[ABGP.ItemHistoryIndex.VALUE] = gpDecay;
-                row[ABGP.ItemHistoryIndex.FLOOR] = gpFloor;
-
-                return true;
-            else
-                while rowTimes[rowTime] do rowTime = rowTime + 1; end
-
-                if not row[ABGP.ItemHistoryIndex.PLAYER] then
-                    ABGP:Error("Found row without player on %s!", row[ABGP.ItemHistoryIndex.DATE]);
-                    return false, true;
-                end
-
-                row[ABGP.ItemHistoryIndex.GP] = row[ABGP.ItemHistoryIndex.GP] or 0;
-                if row[ABGP.ItemHistoryIndex.GP] < 0 then
-                    ABGP:Error("Found row with negative gp on %s!", row[ABGP.ItemHistoryIndex.DATE]);
-                    return false, true;
-                end
-
-                rowTimes[rowTime] = true;
-                row[ABGP.ItemHistoryIndex.DATE] = rowTime;
-                row[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", rowTime);
-                local boss = row.boss;
-                row.boss = nil;
-
-                if row[ABGP.ItemHistoryIndex.ITEMID] == "Bonus GP" then
-                    row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.BONUS;
-                    row[ABGP.ItemHistoryIndex.NOTES] = boss;
-                elseif row[ABGP.ItemHistoryIndex.ITEMID] == "Reset GP" then
-                    row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.RESET;
-                    row[ABGP.ItemHistoryIndex.NOTES] = boss;
-                else
-                    row[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM;
-                end
-
-                return ABGP:GetActivePlayer(row[ABGP.ItemHistoryIndex.PLAYER]);
             end
+
+            lastRowTime = rowTime;
+            row.time = rowTime;
+            return true;
         end);
 
         if success then
-            local function reverse(arr)
-                local i, j = 1, #arr;
-                while i < j do
-                    arr[i], arr[j] = arr[j], arr[i];
-                    i = i + 1;
-                    j = j - 1;
+            local newGPHistory = {};
+            for _, entry in ipairs(imported) do
+                if entry.action == "DECAY" then
+                    local epDecay, gpDecay = entry.info:match("(%d+):(%d+)");
+                    table.insert(newGPHistory, {
+                        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
+                        [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entry.time),
+                        [self.ItemHistoryIndex.DATE] = entry.time,
+                        [self.ItemHistoryIndex.VALUE] = tonumber(gpDecay),
+                        [self.ItemHistoryIndex.FLOOR] = 0,
+                    });
+                elseif entry.action == "GP Awards" then
+                    local entryTime = entry.time;
+                    for player, item, cat, gp in entry.info:gmatch("(.-):(.-):(.-):(.-) ") do
+                        if item == "Reset GP" then
+                            table.insert(newGPHistory, {
+                                [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+                                [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                [self.ItemHistoryIndex.DATE] = entryTime,
+                                [self.ItemHistoryIndex.PLAYER] = player,
+                                [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
+                            });
+                            entryTime = entryTime + 1;
+                        elseif item == "Bonus GP" then
+                            table.insert(newGPHistory, {
+                                [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+                                [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                [self.ItemHistoryIndex.DATE] = entryTime,
+                                [self.ItemHistoryIndex.PLAYER] = player,
+                                [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
+                            });
+                            entryTime = entryTime + 1;
+                        else
+                            table.insert(newGPHistory, {
+                                [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.ITEM,
+                                [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                [self.ItemHistoryIndex.DATE] = entryTime,
+                                [self.ItemHistoryIndex.PLAYER] = player,
+                                [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
+                                [self.ItemHistoryIndex.ITEMID] = item,
+                            });
+                            entryTime = entryTime + 1;
+                            if cat == "SG" then
+                                -- Any "SG" awards are first processed as gold, then the same amount
+                                -- of gp is awarded as bonus silver.
+                                table.insert(newGPHistory, {
+                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+                                    [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                    [self.ItemHistoryIndex.DATE] = entryTime,
+                                    [self.ItemHistoryIndex.PLAYER] = player,
+                                    [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                    [self.ItemHistoryIndex.CATEGORY] = ABGP.ItemCategory.SILVER,
+                                });
+                                entryTime = entryTime + 1;
+                            end
+                        end
+                    end
                 end
             end
-            reverse(_G.ABGP_Data2.history.data);
 
             widget:GetUserData("window"):Hide();
 
-            if ABGP:FixupHistory() then
-                ABGP:CommitHistory();
+            if self:FixupHistory(newGPHistory) then
+                self.reverse(newGPHistory);
+                table.wipe(_G.ABGP_Data2.history.data);
+                for k, v in pairs(newGPHistory) do _G.ABGP_Data2.history.data[k] = v; end
+                self:CommitHistory();
+            else
+                self:Error("Couldn't find item links for some items! Unable to commit this data.");
             end
         end
     end
@@ -435,6 +454,14 @@ function ABGP:ExportItemHistory(history)
 
         text = text .. ("%s\t%s\t%s\t%s%s"):format(
             data[self.ItemHistoryIndex.GP], value.item, data[self.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
+
+        text = text .. ("%d\t%s\t%s\t%s\t%s\t\t%s\n"):format(
+            data[self.ItemHistoryIndex.GP],
+            catMappingHistoryExport[data[self.ItemHistoryIndex.GP]],
+            value.item,
+            data[self.ItemHistoryIndex.PLAYER],
+            itemDate,
+            "");
     end
 
     self:OpenExportWindow(text);
@@ -463,17 +490,23 @@ function ABGP:BuildItemLookup(shouldPrint)
                             lookup[name] = ABGP:ShortenLink(link);
                         else
                             succeeded = false;
+                            if shouldPrint then
+                                self:Notify("Failed to query %s!", item[2]);
+                            end
                         end
 
                         local tokenData = token.GetTokenData(item[2]);
-                        if tokenData then
+                        if tokenData and type(tokenData) == "table" then
                             for _, v in ipairs(tokenData) do
-                                if type(v) ~= "table" then
+                                if type(v) == "number" and v ~= 0 then
                                     local name, link = GetItemInfo(v);
                                     if name then
                                         lookup[name] = ABGP:ShortenLink(link);
                                     else
                                         succeeded = false;
+                                        if shouldPrint then
+                                            self:Notify("Failed to query %s [token:%s]!", v, item[2]);
+                                        end
                                     end
                                 end
                             end
@@ -491,10 +524,10 @@ function ABGP:BuildItemLookup(shouldPrint)
     return succeeded;
 end
 
-function ABGP:FixupItems()
+function ABGP:FixupItems(items)
     self:BuildItemLookup();
 
-    for _, entry in ipairs(_G.ABGP_Data2.itemValues.data) do
+    for _, entry in ipairs(items) do
         if lookup[entry[ABGP.ItemDataIndex.NAME]] then
             entry[ABGP.ItemDataIndex.ITEMLINK] = lookup[entry[ABGP.ItemDataIndex.NAME]];
         else
@@ -507,10 +540,10 @@ function ABGP:FixupItems()
     return true;
 end
 
-function ABGP:FixupHistory()
+function ABGP:FixupHistory(history)
     if not self:BuildItemLookup(true) then return false; end
 
-    for _, entry in ipairs(_G.ABGP_Data2.history.data) do
+    for _, entry in ipairs(history) do
         if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
             -- NOTE: The ITEMID field is still the item name at this point.
             if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
@@ -522,5 +555,6 @@ function ABGP:FixupHistory()
         end
     end
 
+    self:Notify("Done fixing up history!");
     return true;
 end

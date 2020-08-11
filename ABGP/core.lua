@@ -1113,6 +1113,15 @@ ABGP.tCopy = function(t)
     return copy;
 end
 
+ABGP.reverse = function(arr)
+    local i, j = 1, #arr;
+    while i < j do
+        arr[i], arr[j] = arr[j], arr[i];
+        i = i + 1;
+        j = j - 1;
+    end
+end
+
 local itemSlots = {
     INVTYPE_HEAD = { _G.INVSLOT_HEAD },
     INVTYPE_NECK = { _G.INVSLOT_NECK },
