@@ -316,8 +316,7 @@ function ABGP:HistoryTriggerDecay(decayTime)
     if decayFloor ~= 0 then
         floorText = (" (floor: %d"):format(decayFloor);
     end
-    self:Notify("Applied a decay of %d%%%s to EPGP.",
-        floor(decayValue * 100 + 0.5), floorText);
+    self:Notify("Applied a decay of %d%%%s to EPGP.", decayValue, floorText);
     self:Notify("NOTE: this just adds the appropriate history entries for now. Officer notes are unchanged.");
 
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
