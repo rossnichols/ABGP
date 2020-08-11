@@ -98,22 +98,24 @@ function ABGP:RefreshFromOfficerNotes()
                     });
                 end
             elseif note ~= "" and self:GetRaidGroup(rank) then
-                local ep, gpS, _, gpG = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
+                local _, gpG, ep, gpS = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
                 if ep then
                     ep = tonumber(ep) / 1000;
                     gpS = tonumber(gpS) / 1000;
                     gpG = tonumber(gpG) / 1000;
 
-                    table.insert(prio, {
-                        player = player,
-                        proxy = proxy,
-                        rank = rank,
-                        class = class,
-                        raidGroup = self:GetRaidGroup(rank),
-                        ep = ep,
-                        gp = { [self.ItemCategory.GOLD] = gpG, [self.ItemCategory.SILVER] = gpS },
-                        priority = { [self.ItemCategory.GOLD] = ep * 10 / gpG, [self.ItemCategory.SILVER] = ep * 10 / gpS },
-                    });
+                    if ep ~= 0 and gpS ~= 0 and gpG ~= 0 then
+                        table.insert(prio, {
+                            player = player,
+                            proxy = proxy,
+                            rank = rank,
+                            class = class,
+                            raidGroup = self:GetRaidGroup(rank),
+                            ep = ep,
+                            gp = { [self.ItemCategory.GOLD] = gpG, [self.ItemCategory.SILVER] = gpS },
+                            priority = { [self.ItemCategory.GOLD] = ep * 10 / gpG, [self.ItemCategory.SILVER] = ep * 10 / gpS },
+                        });
+                    end
                 end
             end
         end
@@ -186,7 +188,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
         local ep = floor(epgp.ep * 1000 + 0.5);
         local gpS = floor(epgp.gp[self.ItemCategory.SILVER] * 1000 + 0.5);
         local gpG = floor(epgp.gp[self.ItemCategory.GOLD] * 1000 + 0.5);
-        note = ("%d:%d:%d:%d"):format(ep, gpS, 0, gpG);
+        note = ("%d:%d:%d:%d"):format(0, gpG, ep, gpS);
 
         -- Sanity check: all ranks here must be in a raid group.
         if not self:GetRaidGroup(rank) then
@@ -403,7 +405,7 @@ function ABGP:GetEffectiveCost(id, cost)
         if entry[self.ItemHistoryIndex.ID] == id then
             effectiveCost = cost.cost;
         elseif cost ~= 0 and entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.DECAY then
-            effectiveCost = effectiveCost * (1 - entry[self.ItemHistoryIndex.VALUE]);
+            effectiveCost = effectiveCost * (1 - (entry[self.ItemHistoryIndex.VALUE] * 0.01));
             effectiveCost = max(effectiveCost, entry[self.ItemHistoryIndex.FLOOR]);
             decayCount = decayCount + 1;
         end
@@ -437,13 +439,16 @@ function ABGP:CalculateCurrentGP(player, category, history)
            entry[self.ItemHistoryIndex.PLAYER] == player and
            entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = gp + entry[self.ItemHistoryIndex.GP];
+            -- print("adding", entry[self.ItemHistoryIndex.GP]);
         elseif entryType == self.ItemHistoryType.DECAY then
-            gp = gp * (1 - entry[self.ItemHistoryIndex.VALUE]);
+            gp = gp * (1 - (entry[self.ItemHistoryIndex.VALUE] * 0.01));
             gp = max(gp, entry[self.ItemHistoryIndex.FLOOR]);
+            -- print("decaying");
         elseif entryType == self.ItemHistoryType.RESET and
                entry[self.ItemHistoryIndex.PLAYER] == player and
                entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = entry[self.ItemHistoryIndex.GP];
+            -- print("resetting", entry[self.ItemHistoryIndex.GP]);
         end
     end
 

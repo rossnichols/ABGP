@@ -47,7 +47,7 @@ function ABGP:GetMinEP(raidGroup)
 end
 
 function ABGP:GetGPDecayInfo()
-    return 0.25, 0;
+    return 25, 0;
 end
 
 function ABGP:GetEPGPMultipliers()

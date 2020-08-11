@@ -1347,7 +1347,7 @@ local function DrawAuditLog(container, options)
                     entry[ABGP.ItemHistoryIndex.PLAYER], ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], "%.3f%s GP"));
             elseif entryType == ABGP.ItemHistoryType.DECAY then
                 entryMsg = ("GP decayed by %d%%"):format(
-                    floor(entry[ABGP.ItemHistoryIndex.VALUE] * 100 + 0.5));
+                    entry[ABGP.ItemHistoryIndex.VALUE]);
             elseif entryType == ABGP.ItemHistoryType.RESET then
                 entryMsg = ("%s reset to %s"):format(
                     entry[ABGP.ItemHistoryIndex.PLAYER], ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], "%.3f%s GP"));

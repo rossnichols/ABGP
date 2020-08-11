@@ -378,7 +378,7 @@ function ABGP:ImportItemHistory()
                     });
                 elseif entry.action == "GP Awards" then
                     local entryTime = entry.time;
-                    for player, item, cat, gp in entry.info:gmatch("(.-):(.-):(.-):(.-) ") do
+                    for player, item, cat, gp in entry.info:gmatch("(.-):(.-):(.-):([0-9.]+)%s*") do
                         if item == "Reset GP" then
                             table.insert(newGPHistory, {
                                 [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
