@@ -25,7 +25,6 @@ local type = type;
 local max = max;
 
 local activeDistributionWindow;
-local currentRaidGroup;
 local widths = { 110, 100, 90, 40, 40, 1.0 };
 
 local function CalculateCost(request)
@@ -129,8 +128,6 @@ local function RebuildUI()
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
-        elseif a.group ~= b.group then
-            return a.group and (not b.group or a.group == currentRaidGroup);
         elseif a.category ~= b.category and a.requestType ~= ABGP.RequestTypes.ROLL then
             return a.category == ABGP.ItemCategory.GOLD;
         elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
@@ -156,13 +153,7 @@ local function RebuildUI()
     local currentHeading;
     local maxRolls = {};
     for i, request in ipairs(requests) do
-        local heading;
-        if currentItem.data.value then
-            local group = request.group and ABGP.RaidGroupNames[request.group] or "Other";
-            heading = ("%s (%s)"):format(typeHeadings[request.requestType], group);
-        else
-            heading = typeHeadings[request.requestType];
-        end
+        local heading = typeHeadings[request.requestType];
         if currentHeading ~= heading then
             currentHeading = heading;
             local elt = AceGUI:Create("Heading");
@@ -645,9 +636,6 @@ local function PopulateRequest(request, value)
     local rank, class;
     local priority, ep, gp;
     local category;
-    local raidGroup;
-    local requestGroup;
-    local preferredGroup = currentRaidGroup;
 
     if request.testContent then
         priority = request.priority;
@@ -656,7 +644,6 @@ local function PopulateRequest(request, value)
         rank = request.rank;
         class = request.class;
         override = request.override;
-        raidGroup = value and ABGP:GetRaidGroup(rank);
     else
         local epgp = ABGP:GetActivePlayer(request.player);
         if epgp then
@@ -680,7 +667,6 @@ local function PopulateRequest(request, value)
                 gp = epgp.gp[value.category];
                 category = value.category;
                 priority = epgp.priority[value.category];
-                raidGroup = epgp.raidGroup;
 
                 if request.selectedItem then
                     local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(request.selectedItem));
@@ -694,10 +680,6 @@ local function PopulateRequest(request, value)
                 override = "non-raider";
             end
         end
-    end
-
-    if rank and value and not override then
-        requestGroup = raidGroup;
     end
 
     local needsUpdate = false;
@@ -716,8 +698,6 @@ local function PopulateRequest(request, value)
     checkValue(request, "rank", rank);
     checkValue(request, "class", class);
     checkValue(request, "override", override);
-    checkValue(request, "group", requestGroup);
-    checkValue(request, "preferredGroup", preferredGroup);
     return needsUpdate;
 end
 
@@ -964,23 +944,8 @@ function ABGP:CreateDistribWindow()
     local topLine = AceGUI:Create("SimpleGroup");
     topLine:SetFullWidth(true);
     topLine:SetLayout("table");
-    topLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
+    topLine:SetUserData("table", { columns = { 1.0, 0 } });
     window:AddChild(topLine);
-
-    local groupSelector = AceGUI:Create("Dropdown");
-    groupSelector:SetWidth(110);
-    groupSelector:SetList(self.RaidGroupNames, self.RaidGroupsSorted);
-    groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        currentRaidGroup = value;
-        RepopulateRequests();
-        RebuildUI();
-    end);
-    if not currentRaidGroup then
-        currentRaidGroup = ABGP:GetPreferredRaidGroup();
-    end
-    groupSelector:SetValue(currentRaidGroup);
-    topLine:AddChild(groupSelector);
-    self:AddWidgetTooltip(groupSelector, "The selected raid group receives priority for loot.");
 
     local spacer = AceGUI:Create("ABGP_Header");
     topLine:AddChild(spacer);
