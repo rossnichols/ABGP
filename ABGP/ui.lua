@@ -1513,13 +1513,13 @@ local function DrawAuditLog(container, options)
                     item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
             elseif entryType == ABGP.ItemHistoryType.BONUS then
                 entryMsg = ("%s awarded %s"):format(
-                    entry[ABGP.ItemHistoryIndex.PLAYER], ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], "%.3f%s GP"));
+                    ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
             elseif entryType == ABGP.ItemHistoryType.DECAY then
                 entryMsg = ("GP decayed by %d%%"):format(
                     entry[ABGP.ItemHistoryIndex.VALUE]);
             elseif entryType == ABGP.ItemHistoryType.RESET then
                 entryMsg = ("%s reset to %s"):format(
-                    entry[ABGP.ItemHistoryIndex.PLAYER], ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], "%.3f%s GP"));
+                    ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
             end
         end
 
