@@ -144,7 +144,7 @@ local function DrawPriority(container, options)
     -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
-    local widths = { 35, 120, 110, 75, 75, 75, 75, 1.0 };
+    local widths = { 35, 120, 110, 75, 75, 85, 75, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0 } });
