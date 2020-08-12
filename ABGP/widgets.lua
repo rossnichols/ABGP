@@ -553,7 +553,6 @@ do
             self.silvergp:SetWidth(widths[5] or 0);
             self.silverprio:SetWidth(widths[6] or 0);
             self.goldgp:SetWidth(widths[7] or 0);
-            self.goldprio:SetWidth(widths[8] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -611,6 +610,7 @@ do
 
         local goldprio = CreateElement(frame, goldgp);
         goldprio.text = CreateFontString(goldprio);
+        goldprio:SetPoint("TOPRIGHT", frame);
 
         -- create widget
         local widget = {
