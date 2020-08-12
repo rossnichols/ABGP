@@ -54,6 +54,7 @@ local infoText = [[
     <br/>• Every time a player is on time for a raid, participates in progression, or is present for a boss kill (or on standby), they will gain EP (effort points).
     <br/>• Raiders gain GP (gear points) based on the piece of gear they receive. Off-spec items are valued at 0 GP.
     <br/>• Only active raiders gain EP and GP. Trials and non-raiders are still tracked for attendance, but they do not gain GP for any items they receive.
+    <br/>• Every week, EP and GP values decay by a certain percentage, to value more recent gains higher than older gains.
     <br/>
     <br/>Each raid group may earn up to 100 EP per week from attending raids, though the relative values of each raid differ. Raids are worth the following EP amounts:
     <br/>• AQ: 4 on-time, 4 per-boss (Weekday raid group), 8 per-boss (Weekend raid group)
@@ -65,7 +66,7 @@ local infoText = [[
     <br/>• GP Value: the amount of GP gained when the item is awarded for main-spec.
     <br/>• Priority: a list of classes/specs that will be given main-spec priority for the item.
     <br/>
-    <br/>EP/GP is read as a ratio, which determines priority. The person with the highest priority ratio of those requesting a given item will receive it, after evaluating their eligibility for loot and the specific item. The final decision is at the discretion of the loot distributor (the guild leader or an officer), but deviations from this procedure are rare.
+    <br/>EP/GP is read as a ratio, determining priority. The person with the highest priority ratio of those requesting a given item will receive it, after evaluating their eligibility for loot and the specific item. The final decision is at the discretion of the loot distributor (the guild leader or an officer), but deviations from this procedure are rare.
     </p>
 
     <h2><br/>When am I eligible for loot?</h2>
@@ -88,15 +89,15 @@ local infoText = [[
     </p>
 
     <h2><br/>Can my EP or GP decrease?</h2>
-    <p>At the individual level, EP and GP is only awarded, never removed. However, each week, everyone's current EP and GP will decay by a flat percentage: 25% for EP, and 15% for GP. This means that a given EP or GP award has a higher impact to your current EP/GP the more recent it is. For EP, this means that more recent attendance is weighted higher, and the impact of missing a raid lessens over time. For GP, this encourages requesting items as they drop instead of waiting for a specific item, since the earlier you are awarded an item, the sooner its GP cost begins decaying.
+    <p>For a player, EP and GP is only awarded, never removed. However, each week, everyone's current EP and GP will decay by a flat percentage: 25% for EP, and 15% for GP. This means that a given EP or GP award has a higher impact to your current EP/GP the more recent it is. For EP, this means that more recent attendance is weighted higher, and the impact of missing a raid lessens over time. For GP, this encourages requesting items as they drop instead of waiting for a specific item, since the earlier you are awarded an item, the sooner the GP gained begins decaying.
     </p>
 
     <h2><br/>How is my initial priority determined?</h2>
-    <p>When a player becomes a new active raider (either with an alt, or by passing their trial), their initial EP and GP will be calculated using the values of the other players in the raid group, to insert them into the middle-bottom of overall priority. This system ensures that newly-active players with no item awards are not placed at the top end of priority.
+    <p>When a player becomes a new active raider (either with an alt, or by passing their trial), their initial EP and GP are calculated using the values of the other players in the raid group, to insert them into the middle-bottom of overall priority. This system ensures that newly-active players with no item awards are not placed at the top end of priority.
     </p>
 
-    <h2><br/>When do EP and GP awards take effect?</h2>
-    <p>GP awards take effect immediately upon receiving an item. EP is updated once per week, at the end of the weekly raid reset (Monday). When EP is updated, EP and GP decay is also applied, with a one-week lag (i.e., when the current week's EP is applied, the EP and GP values from the previous week are decayed).
+    <h2><br/>When do EP and GP gains take effect?</h2>
+    <p>GP gains take effect immediately upon receiving an item. EP is updated once per week, at the end of the weekly raid reset (Monday). When EP is updated, EP and GP decay is also applied, with a one-week lag (i.e., when the current week's EP is applied, the EP and GP values from the previous week are decayed).
     </p>
 </body></html>
 ]];
