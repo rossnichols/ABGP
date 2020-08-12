@@ -107,6 +107,7 @@ local function PopulateUI(options)
     if options.rebuild then
         container:ReleaseChildren();
         container:SetLayout("Flow");
+        table.wipe(container:GetUserDataTable());
     end
 
     local drawFunc = activeWindow:GetUserData("drawFunc");
@@ -143,7 +144,7 @@ local function DrawPriority(container, options)
     -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
-    local widths = { 35, 120, 110, 75, 75, 75, 75, 75 };
+    local widths = { 35, 120, 110, 75, 75, 75, 75, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0 } });
@@ -282,13 +283,28 @@ local function DrawPriority(container, options)
     end
 
     local sorts = {
+        -- Rank
         nil,
+
+        -- Player
         function(a, b) return a.player < b.player, a.player == b.player; end,
+
+        -- Rank
         function(a, b) return a.rank < b.rank, a.rank == b.rank; end,
+
+        -- EP
         function(a, b) return a.ep < b.ep, a.ep == b.ep; end,
+
+        -- GP[S]
         function(a, b) return a.gp[ABGP.ItemCategory.SILVER] < b.gp[ABGP.ItemCategory.SILVER], a.gp[ABGP.ItemCategory.SILVER] == b.gp[ABGP.ItemCategory.SILVER]; end,
+
+        -- Prio[G]
         function(a, b) return a.priority[ABGP.ItemCategory.SILVER] < b.priority[ABGP.ItemCategory.SILVER], a.priority[ABGP.ItemCategory.SILVER] == b.priority[ABGP.ItemCategory.SILVER]; end,
+
+        -- GP[G]
         function(a, b) return a.gp[ABGP.ItemCategory.GOLD] < b.gp[ABGP.ItemCategory.GOLD], a.gp[ABGP.ItemCategory.GOLD] == b.gp[ABGP.ItemCategory.GOLD]; end,
+
+        -- Prio[G]
         function(a, b) return a.priority[ABGP.ItemCategory.GOLD] < b.priority[ABGP.ItemCategory.GOLD], a.priority[ABGP.ItemCategory.GOLD] == b.priority[ABGP.ItemCategory.GOLD]; end,
     };
 
@@ -612,7 +628,10 @@ local function DrawItems(container, options)
     end);
 
     local sorts = {
+        -- Item
         function(a, b) return a[ABGP.ItemDataIndex.NAME] < b[ABGP.ItemDataIndex.NAME], a[ABGP.ItemDataIndex.NAME] == b[ABGP.ItemDataIndex.NAME]; end,
+
+        -- GP
         function(a, b)
             local acat, bcat = a[ABGP.ItemDataIndex.CATEGORY], b[ABGP.ItemDataIndex.CATEGORY];
             local acost, bcost = a[ABGP.ItemDataIndex.GP], b[ABGP.ItemDataIndex.GP];
@@ -626,6 +645,8 @@ local function DrawItems(container, options)
                 return acat == ABGP.ItemCategory.SILVER, false;
             end
         end,
+
+        -- Notes
         function(a, b)
             local anotes, bnotes = a[ABGP.ItemDataIndex.NOTES], b[ABGP.ItemDataIndex.NOTES];
             if type(anotes) == "string" and type(bnotes) == "string" then
@@ -634,6 +655,8 @@ local function DrawItems(container, options)
                 return type(bnotes) == "string", anotes == bnotes;
             end
         end,
+
+        -- Priority
         function(a, b)
             local apri, bpri = a[ABGP.ItemDataIndex.PRIORITY], b[ABGP.ItemDataIndex.PRIORITY];
             local firstDiff, lastA;
@@ -948,7 +971,12 @@ local function DrawItemHistory(container, options)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Player", "Date", "GP", "Item", weights = { unpack(widths) } };
+        local columns = {
+            { canSort = true, defaultAsc = true, name = "Player" },
+            { canSort = true, defaultAsc = false, name = "Date" },
+            { canSort = true, defaultAsc = false, name = "GP" },
+            { canSort = true, defaultAsc = true, name = "Item" },
+            weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -959,10 +987,23 @@ local function DrawItemHistory(container, options)
             local desc = AceGUI:Create("ABGP_Header");
             desc:SetFullWidth(true);
             desc:SetFont(_G.GameFontHighlightSmall);
-            desc:SetText(columns[i]);
-            if columns[i] == "GP" then
+            desc:SetText(columns[i].name);
+            if columns[i].name == "GP" then
                 desc:SetJustifyH("RIGHT");
                 desc:SetPadding(2, -10);
+            end
+            if columns[i].canSort then
+                desc:EnableHighlight(true);
+                desc:SetCallback("OnClick", function()
+                    local current = container:GetUserData("sortCol");
+                    if current == i then
+                        container:SetUserData("sortAsc", not container:GetUserData("sortAsc"));
+                    else
+                        container:SetUserData("sortAsc", columns[i].defaultAsc);
+                    end
+                    container:SetUserData("sortCol", i);
+                    PopulateUI({ rebuild = false });
+                end);
             end
             header:AddChild(desc);
         end
@@ -983,6 +1024,9 @@ local function DrawItemHistory(container, options)
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
+
+        container:SetUserData("sortCol", 2);
+        container:SetUserData("sortAsc", false);
     end
 
     if command then
@@ -1028,6 +1072,49 @@ local function DrawItemHistory(container, options)
         end
     end
     container:SetUserData("filteredItemHistory", filtered);
+
+    local sorts = {
+        -- Player
+        function(a, b) return a[ABGP.ItemHistoryIndex.PLAYER] < b[ABGP.ItemHistoryIndex.PLAYER], a[ABGP.ItemHistoryIndex.PLAYER] == b[ABGP.ItemHistoryIndex.PLAYER]; end,
+
+        -- Date
+        function(a, b) return a[ABGP.ItemHistoryIndex.DATE] < b[ABGP.ItemHistoryIndex.DATE], a[ABGP.ItemHistoryIndex.DATE] == b[ABGP.ItemHistoryIndex.DATE]; end,
+
+        -- GP
+        function(a, b)
+            local acat, bcat = a[ABGP.ItemHistoryIndex.CATEGORY], b[ABGP.ItemHistoryIndex.CATEGORY];
+            local acost, bcost = a[ABGP.ItemHistoryIndex.GP], b[ABGP.ItemHistoryIndex.GP];
+            if acat == bcat then
+                if type(acost) == "number" and type(bcost) == "number" then
+                    return acost < bcost, acost == bcost;
+                else
+                    return type(bcost) == "number", acost == bcost;
+                end
+            else
+                return acat == ABGP.ItemCategory.SILVER, false;
+            end
+        end,
+
+        -- Item
+        function(a, b)
+            local avalue = ABGP:GetItemValue(a[ABGP.ItemHistoryIndex.ITEMID]);
+            local bvalue = ABGP:GetItemValue(b[ABGP.ItemHistoryIndex.ITEMID]);
+            return avalue.item < bvalue.item, avalue.item == bvalue.item;
+        end,
+    };
+
+    local sortCol = container:GetUserData("sortCol");
+    local sortAsc = container:GetUserData("sortAsc");
+    table.sort(filtered, function(a, b)
+        local lt, eq = sorts[sortCol](a, b);
+        if eq then
+            return sorts[1](a, b);
+        elseif sortAsc then
+            return lt;
+        else
+            return not lt;
+        end
+    end);
 
     pagination:SetValues(#filtered, 50);
     if #filtered > 0 then
