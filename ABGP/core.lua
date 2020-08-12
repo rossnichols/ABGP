@@ -39,6 +39,7 @@ local version = "${ADDON_VERSION}";
 
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show items currently opened for distribution";
+_G.BINDING_NAME_ABGP_OPENMAINWINDOW = "Open the main window";
 
 local itemDataRequestToken = 0;
 
