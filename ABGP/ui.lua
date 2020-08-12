@@ -41,6 +41,66 @@ ABGP.UICommands = {
     ShowItem = "ShowItem",
 };
 
+local infoText = [[
+<html><body>
+    <h1 align="center">|cFF94E4FFABGP|r: Always Be Pulling Loot System</h1>
+
+    <p><br/>Always Be Pulling uses a modified EPGP loot system. Unlike most EPGP systems, the GP values in ABGP are priced individually and are based on their real value and learned knowledge from 15 years of min-maxing by the community.
+    </p>
+
+    <h2><br/>How does the EPGP system work?</h2>
+    <p>EPGP is a simplistic system designed to take all effort put into raiding and all gear received to generate a single value that shows your priority for loot.
+    <br/>
+    <br/>• Every time a player is on time for a raid, participates in progression, or is present for a boss kill (or on standby), they will gain EP (effort points).
+    <br/>• Raiders gain GP (gear points) based on the piece of gear they receive. Off-spec items are valued at 0 GP.
+    <br/>• Only active raiders gain EP and GP. Trials and non-raiders are still tracked for attendance, but they do not gain GP for any items they receive.
+    <br/>
+    <br/>Each raid group may earn up to 100 EP per week from attending raids, though the relative values of each raid differ. Raids are worth the following EP amounts:
+    <br/>• AQ: 4 on-time, 4 per-boss (Weekday raid group), 8 per-boss (Weekend raid group)
+    <br/>• BWL: 4 on-time, 3 per-boss (Weekday), 1 per-boss (Weekend)
+    <br/>• MC binding runs: 4 on-time, 14 per-boss (Weekday), 4 per-boss (Weekend)
+    <br/>
+    <br/>Each item tracked by ABGP has the following info associated with it:
+    <br/>• Category: Gold or Silver. GP and priority are tracked separately for each category.
+    <br/>• GP Value: the amount of GP gained when the item is awarded for main-spec.
+    <br/>• Priority: a list of classes/specs that will be given main-spec priority for the item.
+    <br/>
+    <br/>EP/GP is read as a ratio, which determines priority. The person with the highest priority ratio of those requesting a given item will receive it, after evaluating their eligibility for loot and the specific item. The final decision is at the discretion of the loot distributor (the guild leader or an officer), but deviations from this procedure are rare.
+    </p>
+
+    <h2><br/>When am I eligible for loot?</h2>
+    <p>Players are considered eligible for loot in the following priority order:
+    <br/>• Raiders above the minimum EP threshold
+    <br/>• Raiders below the minimum EP threshold
+    <br/>• Trial raiders
+    <br/>• Non-raiders
+    </p>
+
+    <h2><br/>What items am I eligible for?</h2>
+    <p>Players are considered eligible for a given item in the following priority order:
+    <br/>• Main-spec requests, when the player meets the item's class/spec priority
+    <br/>• Main-spec requests, when the player does not meet that priority
+    <br/>• Off-spec requests
+    </p>
+
+    <h2><br/>Is there a limit on loot I can receive?</h2>
+    <p>No, there is no limit.
+    </p>
+
+    <h2><br/>Can my EP or GP decrease?</h2>
+    <p>At the individual level, EP and GP is only awarded, never removed. However, each week, everyone's current EP and GP will decay by a flat percentage: 25% for EP, and 15% for GP. This means that a given EP or GP award has a higher impact to your current EP/GP the more recent it is. For EP, this means that more recent attendance is weighted higher, and the impact of missing a raid lessens over time. For GP, this encourages requesting items as they drop instead of waiting for a specific item, since the earlier you are awarded an item, the sooner its GP cost begins decaying.
+    </p>
+
+    <h2><br/>How is my initial priority determined?</h2>
+    <p>When a player becomes a new active raider (either with an alt, or by passing their trial), their initial EP and GP will be calculated using the values of the other players in the raid group, to insert them into the middle-bottom of overall priority. This system ensures that newly-active players with no item awards are not placed at the top end of priority.
+    </p>
+
+    <h2><br/>When do EP and GP awards take effect?</h2>
+    <p>GP awards take effect immediately upon receiving an item. EP is updated once per week, at the end of the weekly raid reset (Monday). When EP is updated, EP and GP decay is also applied, with a one-week lag (i.e., when the current week's EP is applied, the EP and GP values from the previous week are decayed).
+    </p>
+</body></html>
+]];
+
 local function PopulateUI(options)
     if not activeWindow then return; end
     local container = activeWindow:GetUserData("container");
@@ -52,6 +112,28 @@ local function PopulateUI(options)
     local drawFunc = activeWindow:GetUserData("drawFunc");
     drawFunc(container, options);
     ABGP:HideContextMenu();
+end
+
+local function DrawInfo(container, options)
+    local rebuild = options.rebuild;
+    local reason = options.reason;
+    -- local preserveScroll = options.preserveScroll;
+    -- local command = options.command;
+    if not rebuild and reason then return; end
+
+    if rebuild then
+        container:SetFullWidth(true);
+        container:SetFullHeight(true);
+        container:SetLayout("Fill");
+
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetLayout("Fill");
+        container:AddChild(scroll);
+
+        local html = AceGUI:Create("ABGP_SimpleHTML");
+        html:SetText(infoText);
+        scroll:AddChild(html);
+    end
 end
 
 local function DrawPriority(container, options)
@@ -1536,6 +1618,7 @@ function ABGP:CreateMainWindow(command)
     mainLine:AddChild(opts);
 
     local tabs = {
+        { value = "info", text = "Info", draw = DrawInfo },
         { value = "priority", text = "Priority", draw = DrawPriority },
         { value = "items", text = "Items", draw = DrawItems },
         { value = "gp", text = "Item History", draw = DrawItemHistory },
@@ -1562,12 +1645,12 @@ function ABGP:CreateMainWindow(command)
     window:AddChild(tabGroup);
     window:SetUserData("container", tabGroup);
 
-    local tab = 1;
+    local tab = 2;
     if command then
         if command.command == ABGP.UICommands.ShowItemHistory then
-            tab = 3;
+            tab = 4;
         elseif command.command == ABGP.UICommands.ShowItem then
-            tab = 2;
+            tab = 3;
         end
     end
     tabGroup:SelectTab(tabs[tab].value);

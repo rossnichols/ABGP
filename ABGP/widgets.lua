@@ -2167,6 +2167,52 @@ do
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
 end
 
+do
+    local Type, Version = "ABGP_SimpleHTML", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self:SetText("");
+        end,
+
+        ["OnWidthSet"] = function(self, width)
+            self.frame:SetText(self:GetUserData("text"));
+        end,
+
+        ["SetText"] = function(self, text)
+            self:SetUserData("text", text);
+            self.frame:SetText(text);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("SimpleHTML");
+        frame:SetFontObject(_G.GameFontHighlight);
+        frame:SetFontObject("h1", _G.GameFontNormalHuge);
+        frame:SetFontObject("h2", _G.GameFontNormalLarge);
+
+        -- create widget
+        local widget = {
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
 -- Get alignment method and value. Possible alignment methods are a callback, a number, "start", "middle", "end", "fill" or "TOPLEFT", "BOTTOMRIGHT" etc.
 local GetCellAlign = function (dir, tableObj, colObj, cellObj, cell, child)
     local fn = cellObj and (cellObj["align" .. dir] or cellObj.align)
@@ -2437,5 +2483,5 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
     for _,v in pairs(layoutCache) do wipe(v) end
 
     safecall(obj.LayoutFinished, obj, nil, totalV)
-obj:ResumeLayout()
+    obj:ResumeLayout()
 end)
