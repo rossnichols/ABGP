@@ -874,17 +874,6 @@ function ABGP:DeleteRaid(raid)
 end
 
 function ABGP:ExportRaid(windowRaid)
-    local window = AceGUI:Create("ABGP_OpaqueWindow");
-    window.frame:SetFrameStrata("DIALOG");
-    window:SetTitle("Export");
-    window:SetHeight(450);
-    window:SetLayout("Fill");
-    window:SetCallback("OnClose", function(widget)
-        AceGUI:Release(widget);
-        ABGP:ClosePopup(widget);
-    end);
-    ABGP:OpenPopup(window);
-
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
 
     local sortedPlayers = {};
