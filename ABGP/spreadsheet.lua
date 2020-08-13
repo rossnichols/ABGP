@@ -301,7 +301,7 @@ function ABGP:ExportItems()
                 item[self.ItemDataIndex.RAID],
                 item[self.ItemDataIndex.BOSS],
                 ("%s (%s)"):format(item[self.ItemDataIndex.NAME], item[self.ItemDataIndex.RELATED]),
-                item[self.ItemDataIndex.CATEGORY],
+                self.ItemCategoryNames[item[self.ItemDataIndex.CATEGORY]],
                 item[self.ItemDataIndex.GP],
                 buildPrioString({}),
                 "");
@@ -310,7 +310,7 @@ function ABGP:ExportItems()
                 item[self.ItemDataIndex.RAID],
                 item[self.ItemDataIndex.BOSS],
                 item[self.ItemDataIndex.NAME],
-                item[self.ItemDataIndex.CATEGORY],
+                self.ItemCategoryNames[item[self.ItemDataIndex.CATEGORY]],
                 item[self.ItemDataIndex.GP],
                 buildPrioString(item[self.ItemDataIndex.PRIORITY]),
                 item[self.ItemDataIndex.NOTES] or "");
