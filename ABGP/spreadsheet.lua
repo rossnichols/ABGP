@@ -86,17 +86,22 @@ local function OpenImportWindow(importFunc, canBeDelta)
     edit:SetFocus();
 end
 
-function ABGP:OpenExportWindow(text)
+function ABGP:OpenExportWindow(text, extra)
     local window = AceGUI:Create("ABGP_OpaqueWindow");
     window.frame:SetFrameStrata("DIALOG");
     window:SetTitle("Export");
-    window:SetLayout("Fill");
+    window:SetLayout("Flow");
     window:SetCallback("OnClose", function(widget) AceGUI:Release(widget); ABGP:ClosePopup(widget); end);
     ABGP:OpenPopup(window);
 
-    local edit = AceGUI:Create("MultiLineEditBox");
-    edit:SetLabel("Export the data");
+    if extra then
+        window:AddChild(extra);
+    end
 
+    local edit = AceGUI:Create("MultiLineEditBox");
+    edit:SetFullWidth(true);
+    edit:SetFullHeight(true);
+    edit:SetLabel("Export the data");
     edit:SetText(text);
     edit:DisableButton(true);
     edit:SetCallback("OnEditFocusGained", function(widget)
@@ -109,6 +114,8 @@ function ABGP:OpenExportWindow(text)
 
     window.frame:Raise();
     edit:SetFocus();
+
+    return edit;
 end
 
 local function ImportSpreadsheetText(text, spreadsheet, mapping, filter, postProcess)

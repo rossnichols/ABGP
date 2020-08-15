@@ -57,9 +57,10 @@ local infoText = [[
     <br/>• Every week, EP and GP values decay by a certain percentage, to value more recent gains higher than older gains.
     <br/>
     <br/>Each raid group may earn up to 100 EP per week from attending raids, though the relative values of each raid differ. Raids are worth the following EP amounts:
-    <br/>• AQ: 4 on-time, 4 per-boss (Weekday raid group), 8 per-boss (Weekend raid group)
-    <br/>• BWL: 4 on-time, 3 per-boss (Weekday), 1 per-boss (Weekend)
-    <br/>• MC binding runs: 4 on-time, 14 per-boss (Weekday), 4 per-boss (Weekend)
+    <br/>• AQ: 4 on-time, 36 for bosses (Weekday raid group), 72 for bosses (Weekend raid group)
+    <br/>• BWL: 4 on-time, 24 for bosses (Weekday), 8 for bosses (Weekend)
+    <br/>• MC binding runs: 4 on-time, 28 for bosses (Weekday), 8 for bosses (Weekend)
+    <br/>If a raid is skipped in a given week, its EP will be made up from the other raids of the week, to meet the 100EP/week criteria.
     <br/>
     <br/>Each item tracked by ABGP has the following info associated with it:
     <br/>• Category: Gold or Silver. GP and priority are tracked separately for each category.
