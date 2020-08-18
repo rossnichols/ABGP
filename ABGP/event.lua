@@ -7,6 +7,8 @@ local GetNumGroupMembers = GetNumGroupMembers;
 local UnitIsGroupLeader = UnitIsGroupLeader;
 local GetLootMethod = GetLootMethod;
 local SetLootMethod = SetLootMethod;
+local GetLootThreshold = GetLootThreshold;
+local SetLootThreshold = SetLootThreshold;
 local IsInGroup = IsInGroup;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
@@ -295,6 +297,7 @@ end
 local currentInstance;
 local activeWindow;
 local pendingLootMethod;
+local pendingLootThreshold;
 local checkCombatWhilePending;
 
 local function RefreshUI()
@@ -310,6 +313,16 @@ local function RefreshUI()
     local mule = activeWindow:GetUserData("mule");
     if mule then
         mule:SetValue(windowRaid.mule);
+    end
+
+    local lootMethod = activeWindow:GetUserData("lootMethod");
+    if lootMethod then
+        lootMethod:SetValue(GetLootMethod());
+    end
+
+    local lootTh = activeWindow:GetUserData("lootThreshold");
+    if lootTh then
+        lootTh:SetValue(GetLootThreshold());
     end
 
     local autoDistrib = activeWindow:GetUserData("autoDistrib");
@@ -771,15 +784,35 @@ function ABGP:UpdateRaid(windowRaid)
             };
             local lootSelector = AceGUI:Create("Dropdown");
             lootSelector:SetFullWidth(true);
-            lootSelector:SetValue(lootMethod);
-            lootSelector:SetText(lootValues[lootMethod]);
             lootSelector:SetList(lootValues);
+            lootSelector:SetValue(lootMethod);
             lootSelector:SetCallback("OnValueChanged", function(widget, event, value)
                 pendingLootMethod = value;
                 checkCombatWhilePending = not UnitAffectingCombat("player");
                 self:ChangeLootMethod();
             end);
             raidTools:AddChild(lootSelector);
+            window:SetUserData("lootMethod", lootSelector);
+            self:AddWidgetTooltip(lootSelector, "Select the loot method.");
+
+            local lootThreshold = GetLootThreshold();
+            local lootThresholds = {
+                ("%sCommon|r"):format(_G.ITEM_QUALITY_COLORS[1].hex),
+                ("%sUncommon|r"):format(_G.ITEM_QUALITY_COLORS[2].hex),
+                ("%sRare|r"):format(_G.ITEM_QUALITY_COLORS[3].hex),
+                ("%sEpic|r"):format(_G.ITEM_QUALITY_COLORS[4].hex)
+            };
+            local lootSelector = AceGUI:Create("Dropdown");
+            lootSelector:SetFullWidth(true);
+            lootSelector:SetList(lootThresholds);
+            lootSelector:SetValue(lootThreshold);
+            lootSelector:SetCallback("OnValueChanged", function(widget, event, value)
+                pendingLootThreshold = value;
+                checkCombatWhilePending = not UnitAffectingCombat("player");
+                self:ChangeLootMethod();
+            end);
+            raidTools:AddChild(lootSelector);
+            window:SetUserData("lootThreshold", lootSelector);
             self:AddWidgetTooltip(lootSelector, "Select the loot method.");
         end
 
@@ -1019,17 +1052,25 @@ function ABGP:ChangeLootMethod()
     local passedCombatCheck = not checkCombatWhilePending or not inCombat;
     checkCombatWhilePending = not inCombat;
 
-    if GetLootMethod() ~= pendingLootMethod and IsInGroup() and passedCombatCheck then
+    local pendingMethod = pendingLootMethod or GetLootMethod();
+    local pendingThreshold = pendingLootThreshold or GetLootThreshold();
+
+    if (GetLootMethod() ~= pendingMethod or GetLootThreshold() ~= pendingThreshold) and IsInGroup() and passedCombatCheck then
         if not IsRaidInCombat() then
-            SetLootMethod(pendingLootMethod, UnitName("player"));
+            SetLootMethod(pendingMethod, UnitName("player"), pendingThreshold);
         end
         self:ScheduleTimer("ChangeLootMethod", 1);
     else
-        if GetLootMethod() ~= pendingLootMethod then
+        if GetLootMethod() ~= pendingMethod then
             self:Notify("Giving up trying to change the loot type (entered combat or not grouped).");
         end
         pendingLootMethod = nil;
+        pendingLootThreshold = nil;
     end
+end
+
+function ABGP:EventOnLootChanged()
+    RefreshUI();
 end
 
 local function ValidateEP(ep)

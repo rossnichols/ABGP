@@ -118,6 +118,7 @@ ABGP.initialData = {
 				"Ahn'Qiraj",
 				"The Prophet Skeram",
 				{
+					"KAT4FITE",
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
@@ -267,7 +268,7 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"SILVER",
-				"Lower prio if you have Touch of Chaos",
+				"Non-Touch of Chaos Prio",
 			},
 			{
 				"Angelista's Charm",
@@ -469,6 +470,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 				},
 				"SILVER",
+				"0 cost if bwl pants already",
 			},
 			{
 				"Recomposed Boots",
@@ -609,6 +611,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 				},
 				"GOLD",
+				"Non-CTS Prio",
 			},
 			{
 				"Barb of the Sand Reaver",
@@ -713,6 +716,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
+				"Non-Shadow Flame Prio",
 			},
 			{
 				"Ring of the Qiraji Fury",
@@ -1083,10 +1087,12 @@ ABGP.initialData = {
 				"Emperor Vek'lor",
 				{
 					"KAT4FITE",
+					"Metal Rogue",
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
 				"GOLD",
+				"KAT4FITE super prio",
 			},
 			{
 				"Vek'lor's Gloves of Devastation",
@@ -1145,6 +1151,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
+				"Femur Prio; Non-Shadow Flame Prio",
 			},
 			{
 				"Vek'nilash's Circlet",
@@ -1225,8 +1232,10 @@ ABGP.initialData = {
 				"Emperor Vek'nilash",
 				{
 					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
 				"GOLD",
+				"Paladin Super Prio",
 			},
 			{
 				"Gloves of the Hidden Temple",
@@ -1327,6 +1336,7 @@ ABGP.initialData = {
 				"Ahn'Qiraj",
 				"Ouro",
 				{
+					"Hunter",
 					"Slicey Rogue",
 					"Stabby Rogue",
 				},
@@ -1614,6 +1624,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
+				"Requires dagger commitment",
 			},
 			{
 				"Dark Edge of Insanity",
@@ -1842,6 +1853,7 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"GOLD",
+				"Emp Demo Prio",
 			},
 			{
 				"Ritssyn's Ring of Chaos",
@@ -1878,6 +1890,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
+				"Non-Shadow Flame Prio",
 			},
 			{
 				"Blessed Qiraji War Hammer",
@@ -3019,14 +3032,14 @@ ABGP.initialData = {
 			},
 			{
 				"Chromatic Boots",
-				250,
+				225,
 				"|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
 				"Blackwing Lair",
 				"Chromaggus",
 				{
 					"Metal Rogue",
 				},
-				"SILVER",
+				"GOLD",
 			},
 			{
 				"Ashjre'thul, Crossbow of Smiting",
