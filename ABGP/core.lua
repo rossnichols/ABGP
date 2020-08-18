@@ -581,7 +581,7 @@ local function ValueFromItem(item)
         gp = item[ABGP.ItemDataIndex.GP],
         boss = item[ABGP.ItemDataIndex.BOSS],
         raid = item[ABGP.ItemDataIndex.RAID],
-        priority = item[ABGP.ItemDataIndex.PRIORITY],
+        priority = ABGP.tCopy(item[ABGP.ItemDataIndex.PRIORITY]),
         notes = item[ABGP.ItemDataIndex.NOTES],
         token = (item[ABGP.ItemDataIndex.GP] == "T") and {},
         related = item[ABGP.ItemDataIndex.RELATED],
@@ -617,7 +617,7 @@ function ABGP:BuildDefaultItemValues()
     return itemValues;
 end
 
-local function IsValueUpdated(value, oldValue)
+function ABGP:ItemValueIsUpdated(value, oldValue)
     local isUpdated = true;
     local oldValue = oldValue or ABGP:GetItemValue(value.item);
     if oldValue then
@@ -704,7 +704,7 @@ function ABGP:BroadcastItemData(target)
         local defaultValue = defaultValues[name];
         local currentValue = self:GetItemValue(name);
 
-        if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
+        if not defaultValue or self:ItemValueIsUpdated(currentValue, defaultValue) then
             table.insert(payload.itemValues, item);
             -- self:LogDebug("Broadcasting %s", name);
         end
@@ -724,14 +724,14 @@ function ABGP:DumpItemDiffs()
         local defaultValue = defaultValues[name];
         local currentValue = self:GetItemValue(name);
 
-        if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
+        if not defaultValue or self:ItemValueIsUpdated(currentValue, defaultValue) then
             self:LogDebug(name);
         end
     end
 end
 
 function ABGP:CheckUpdatedItem(itemLink, value, bulk)
-    if IsValueUpdated(value) then
+    if self:ItemValueIsUpdated(value) then
         local found = false;
         local items = _G.ABGP_Data2.itemValues.data;
         for _, item in ipairs(items) do

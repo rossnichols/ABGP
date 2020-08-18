@@ -56,11 +56,7 @@ local infoText = [[
     <br/>• Only active raiders gain EP and GP. Trials and non-raiders are still tracked for attendance, but they do not gain GP for any items they receive.
     <br/>• Every week, EP and GP values decay by a certain percentage, to value more recent gains higher than older gains.
     <br/>
-    <br/>Each raid group may earn up to 100 EP per week from attending raids, though the relative values of each raid differ. Raids are worth the following EP amounts:
-    <br/>• AQ: 4 on-time, 36 for bosses (Weekday raid group), 72 for bosses (Weekend raid group)
-    <br/>• BWL: 4 on-time, 24 for bosses (Weekday), 8 for bosses (Weekend)
-    <br/>• MC binding runs: 4 on-time, 28 for bosses (Weekday), 8 for bosses (Weekend)
-    <br/>If a raid is skipped in a given week, its EP will be made up from the other raids of the week, to meet the 100EP/week criteria.
+    <br/>With perfect attendance, a player will earn 100 EP per week. For the weekday raid group, each raid night is worth the same amount of EP. For the weekend raid group, AQ is worth 75 EP with the other 25 EP coming from BWL splits and MC binding runs.
     <br/>
     <br/>Each item tracked by ABGP has the following info associated with it:
     <br/>• Category: Gold or Silver. GP and priority are tracked separately for each category.
@@ -768,6 +764,8 @@ local function DrawItems(container, options)
                                 costContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
                                 container:AddChild(costContainer);
 
+                                local processItemValue;
+
                                 local cost;
                                 if value.token then
                                     local desc = AceGUI:Create("ABGP_Header");
@@ -785,6 +783,7 @@ local function DrawItems(container, options)
                                             return true;
                                         end
                                         cost:SetValue(gp);
+                                        processItemValue();
                                     end);
                                     costContainer:AddChild(cost);
                                     ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
@@ -794,6 +793,7 @@ local function DrawItems(container, options)
                                 catSelector:SetFullWidth(true);
                                 catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
                                 catSelector:SetValue(value.category);
+                                catSelector:SetCallback("OnValueChanged", function() processItemValue(); end);
                                 costContainer:AddChild(catSelector);
                                 ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
 
@@ -802,6 +802,7 @@ local function DrawItems(container, options)
                                 priorityEditor:SetLabel("Priorities");
                                 priorityEditor:SetFullWidth(true);
                                 priorityEditor:SetValues(priorities, false, ABGP:GetItemPriorities());
+                                priorityEditor:SetCallback("OnFilterUpdated", function() processItemValue(); end);
                                 container:AddChild(priorityEditor);
                                 ABGP:AddWidgetTooltip(priorityEditor, "Edit the class/spec priorities of this item.");
 
@@ -811,6 +812,7 @@ local function DrawItems(container, options)
                                 notes:SetValue(value.notes);
                                 notes:SetCallback("OnValueChanged", function(widget, event, value)
                                     if value == "" then widget:SetValue(nil); end
+                                    processItemValue();
                                 end);
                                 container:AddChild(notes);
                                 ABGP:AddWidgetTooltip(notes, "Edit the notes for this item.");
@@ -840,6 +842,7 @@ local function DrawItems(container, options)
                                                 return true;
                                             end
                                             cost:SetValue(gp);
+                                            processItemValue();
                                         end);
                                         itemsContainer:AddChild(cost);
                                         ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
@@ -848,6 +851,7 @@ local function DrawItems(container, options)
                                         catSelector:SetFullWidth(true);
                                         catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
                                         catSelector:SetValue(itemValue.category);
+                                        catSelector:SetCallback("OnValueChanged", function() processItemValue(); end);
                                         itemsContainer:AddChild(catSelector);
                                         ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
 
@@ -857,7 +861,7 @@ local function DrawItems(container, options)
 
                                 local done = AceGUI:Create("Button");
                                 done:SetWidth(100);
-                                done:SetText("Done");
+                                done:SetText("Update");
                                 done:SetUserData("cell", { align = "CENTERRIGHT" });
                                 done:SetCallback("OnClick", function(widget)
                                     if cost then
@@ -891,6 +895,33 @@ local function DrawItems(container, options)
                                     defaultWidth = 300,
                                     defaultHeight = height,
                                 });
+
+                                processItemValue = function()
+                                    local newValue = {
+                                        gp = cost and cost:GetValue() or "T",
+                                        category = catSelector:GetValue(),
+                                        notes = notes:GetValue(),
+                                        priority = {},
+                                    };
+                                    for pri, checked in pairs(priorities) do
+                                        if checked then table.insert(newValue.priority, pri); end
+                                    end
+                                    table.sort(newValue.priority);
+                                    local hasChange = ABGP:ItemValueIsUpdated(newValue, value);
+                                    if not hasChange then
+                                        for itemLink, info in pairs(tokenPrices) do
+                                            newValue = {
+                                                gp = info.cost:GetValue(),
+                                                category = info.category:GetValue(),
+                                                priority = {},
+                                            };
+                                            hasChange = hasChange or ABGP:ItemValueIsUpdated(newValue, info.value);
+                                            if hasChange then break; end
+                                        end
+                                    end
+                                    done:SetDisabled(not hasChange);
+                                end
+                                processItemValue();
                             end,
                             arg1 = data,
                             notCheckable = true
