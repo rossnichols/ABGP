@@ -313,7 +313,7 @@ do
             self.rank.text:SetText(data.rank or "");
             self.rank.text:SetFontObject((data.preferredGroup and data.group == data.preferredGroup) and "ABGPHighlight" or "GameFontNormal");
             if data.priority then
-                self.priority.text:SetText(("%.3f"):format(data.priority));
+                self.priority.text:SetText(ABGP:FormatCost(data.priority, data.category, "%.3f%s"));
                 self.priority.text:SetFontObject(lowPrio and "GameFontDisable" or "GameFontNormal");
             else
                 self.priority.text:SetText("--");
@@ -529,16 +529,20 @@ do
             self.player.text:SetText(ABGP:ColorizeName(data.player or "", data.class));
             self.rank.text:SetText(data.rank or "");
             self.ep.text:SetText(data.ep and ("%.3f"):format(data.ep) or "--");
-            self.gp.text:SetText(data.gp and ("%.3f"):format(data.gp) or "--");
-            self.priority.text:SetText(data.priority and ("%.3f"):format(data.priority) or "--");
+            self.silvergp.text:SetText(data.gp[ABGP.ItemCategory.SILVER] and ("%.3f"):format(data.gp[ABGP.ItemCategory.SILVER]) or "--");
+            self.silverprio.text:SetText(data.priority[ABGP.ItemCategory.SILVER] and ("%.3f"):format(data.priority[ABGP.ItemCategory.SILVER]) or "--");
+            self.goldgp.text:SetText(data.gp[ABGP.ItemCategory.GOLD] and ("%.3f"):format(data.gp[ABGP.ItemCategory.GOLD]) or "--");
+            self.goldprio.text:SetText(data.priority[ABGP.ItemCategory.GOLD] and ("%.3f"):format(data.priority[ABGP.ItemCategory.GOLD]) or "--");
 
             local specialFont = important and "ABGPHighlight" or lowPrio and "GameFontDisable" or "GameFontNormal";
             self.order.text:SetFontObject(specialFont);
             self.player.text:SetFontObject(specialFont);
             self.rank.text:SetFontObject(specialFont);
             self.ep.text:SetFontObject(specialFont);
-            self.gp.text:SetFontObject(specialFont);
-            self.priority.text:SetFontObject(specialFont);
+            self.silvergp.text:SetFontObject(specialFont);
+            self.silverprio.text:SetFontObject(specialFont);
+            self.goldgp.text:SetFontObject(specialFont);
+            self.goldprio.text:SetFontObject(specialFont);
         end,
 
         ["SetWidths"] = function(self, widths)
@@ -546,8 +550,9 @@ do
             self.player:SetWidth(widths[2] or 0);
             self.rank:SetWidth(widths[3] or 0);
             self.ep:SetWidth(widths[4] or 0);
-            self.gp:SetWidth(widths[5] or 0);
-            self.priority:SetWidth(widths[6] or 0);
+            self.silvergp:SetWidth(widths[5] or 0);
+            self.silverprio:SetWidth(widths[6] or 0);
+            self.goldgp:SetWidth(widths[7] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -594,11 +599,18 @@ do
         local ep = CreateElement(frame, rank);
         ep.text = CreateFontString(ep);
 
-        local gp = CreateElement(frame, ep);
-        gp.text = CreateFontString(gp);
+        local silvergp = CreateElement(frame, ep);
+        silvergp.text = CreateFontString(silvergp);
 
-        local priority = CreateElement(frame, gp);
-        priority.text = CreateFontString(priority);
+        local silverprio = CreateElement(frame, silvergp);
+        silverprio.text = CreateFontString(silverprio);
+
+        local goldgp = CreateElement(frame, silverprio);
+        goldgp.text = CreateFontString(goldgp);
+
+        local goldprio = CreateElement(frame, goldgp);
+        goldprio.text = CreateFontString(goldprio);
+        goldprio:SetPoint("TOPRIGHT", frame);
 
         -- create widget
         local widget = {
@@ -606,8 +618,10 @@ do
             player = player,
             rank = rank,
             ep = ep,
-            gp = gp,
-            priority = priority,
+            silvergp = silvergp,
+            goldgp = goldgp,
+            silverprio = silverprio,
+            goldprio = goldprio,
 
             background = background,
 
@@ -653,6 +667,11 @@ do
 
             local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
             self.itemLink.text:SetText(value and value.itemLink or data[ABGP.ItemHistoryIndex.ITEMID]);
+
+            local font = "GameFontNormal";
+            if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.GOLD then font = "ABGPGold"; end
+            if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.SILVER then font = "ABGPSilver"; end
+            self.gp.text:SetFontObject(font);
         end,
 
         ["SetWidths"] = function(self, widths)
@@ -754,7 +773,7 @@ do
 
             self.item.text:SetText(data[ABGP.ItemDataIndex.ITEMLINK] or data[ABGP.ItemDataIndex.NAME]);
             local gp = data[ABGP.ItemDataIndex.GP];
-            self.gp.text:SetText(gp == -1 and "" or gp);
+            self.gp.text:SetText(gp);
             self.notes.text:SetText(data[ABGP.ItemDataIndex.NOTES] and "[Note]" or "");
             self.priority.text:SetText(table.concat(data[ABGP.ItemDataIndex.PRIORITY], ", "));
 
@@ -778,48 +797,6 @@ do
             self.background[show and "Show" or "Hide"](self.background);
         end,
 
-        ["EditPriorities"] = function(self)
-            local oldHeight = self.frame:GetHeight();
-            if oldHeight < 30 then
-                self.frame:SetHeight(30);
-            end
-            if not self.priorityEditor then
-                local priorityEditor = AceGUI:Create("ABGP_Filter");
-                priorityEditor.frame:ClearAllPoints();
-                priorityEditor.frame:SetPoint("TOPLEFT", self.notes, "TOPRIGHT");
-                priorityEditor.frame:SetPoint("TOPRIGHT", self.frame);
-                priorityEditor.frame:SetParent(self.frame);
-
-                self.currentPriorities = {};
-                priorityEditor:SetCallback("OnClosed", function()
-                    if oldHeight < 30 then
-                        self.frame:SetHeight(oldHeight);
-                    end
-                    self.priority:Show();
-                    self.priorityEditor.frame:Hide();
-
-                    self.data[ABGP.ItemDataIndex.PRIORITY] = {};
-                    for pri, value in pairs(self.currentPriorities) do
-                        if value then table.insert(self.data[ABGP.ItemDataIndex.PRIORITY], pri); end
-                    end
-                    table.sort(self.data[ABGP.ItemDataIndex.PRIORITY]);
-
-                    self:SetData(self.data);
-                    self:Fire("OnPrioritiesUpdated");
-                end);
-                self.priorityEditor = priorityEditor;
-            end
-
-            table.wipe(self.currentPriorities);
-            for _, pri in ipairs(self.data[ABGP.ItemDataIndex.PRIORITY]) do self.currentPriorities[pri] = true; end
-            self.priorityEditor:SetValues(self.currentPriorities, false, ABGP:GetItemPriorities());
-            self.priorityEditor:SetText(table.concat(self.data[ABGP.ItemDataIndex.PRIORITY], ", "));
-
-            self.priority:Hide();
-            self.priorityEditor.frame:Show();
-            self.priorityEditor.button:Click();
-        end,
-
         ["SetRelatedItems"] = function(self, items)
             for k, button in pairs(self.icons.buttons) do
                 AceGUI:Release(button);
@@ -831,8 +808,7 @@ do
                 self.item.text:SetPoint("LEFT", self.item, 2, 12);
                 self.item.text:SetPoint("RIGHT", self.item, -2, 12);
 
-                for i, itemId in ipairs(items) do
-                    local itemLink = ("item:%d"):format(itemId);
+                for i, itemLink in ipairs(items) do
                     local button = AceGUI:Create("ABGP_ItemButton");
                     self.icons.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
@@ -1092,6 +1068,7 @@ do
             self:DropdownOnAcquire();
             self:SetMultiselect(true);
             self:SetCallback("OnOpened", self.UpdateCheckboxes);
+            self:SetCallback("OnClosed", self.CheckDefaultText);
         end,
 
         ["SetValues"] = function(self, allowed, showAllButton, values, sorted)
@@ -1161,6 +1138,19 @@ do
 
             return true;
         end,
+
+        ["SetDefaultText"] = function(self, text)
+            self:SetUserData("_defaultText", text);
+            self:SetText(text);
+        end,
+
+        ["CheckDefaultText"] = function(self)
+            self:Fire("OnFilterClosed");
+            local text = self:GetUserData("_defaultText");
+            if text and self:ShowingAll() then
+                self:SetText(text);
+            end
+        end,
     }
 
     --[[-----------------------------------------------------------------------------
@@ -1198,10 +1188,16 @@ do
             self.text:SetPoint("RIGHT", self.frame, -2, 1);
             self.text:SetWordWrap(false);
             self.highlight:Hide();
+
+            self:SetFont(_G.GameFontHighlight);
         end,
 
         ["EnableHighlight"] = function(self, enable)
             self.highlight[enable and "Show" or "Hide"](self.highlight);
+        end,
+
+        ["SetFont"] = function(self, font)
+            self.text:SetFontObject(font);
         end,
 
         ["SetText"] = function(self, text)
@@ -1272,10 +1268,9 @@ do
         end);
 
         local text = CreateFontString(frame);
-        text:SetFontObject(_G.GameFontHighlight);
 
         local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
-        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetTexture("Interface\\Buttons\\UI-Listbox-Highlight");
         highlight:SetAllPoints();
         highlight:SetBlendMode("ADD");
         highlight:SetTexCoord(0, 1, 0, 0.578125);
@@ -1608,6 +1603,7 @@ do
             self.frame:Show();
             self.frame.glow:Hide();
 
+            self:SetAlert(nil);
             self:SetItem(nil);
             self:SetCount(1);
             self:SetRequestCount(0);
@@ -1621,6 +1617,7 @@ do
 
         ["OnRelease"] = function(self)
             self.frame:UnregisterAllEvents();
+            self:SetAlert(nil);
         end,
 
         ["GetItem"] = function(self)
@@ -1815,8 +1812,7 @@ do
                 relatedFrame.buttons[k] = nil;
             end
             if items then
-                for i, itemId in ipairs(items) do
-                    local itemLink = ("item:%d"):format(itemId);
+                for i, itemLink in ipairs(items) do
                     local button = AceGUI:Create("ABGP_ItemButton");
                     button:SetUserData("lootFrame", self);
                     relatedFrame.buttons[i] = button;
@@ -2108,11 +2104,12 @@ do
             OnEscapePressed = _G.AutoCompleteEditBox_OnEscapePressed,
             OnArrowPressed = _G.AutoCompleteEditBox_OnArrowPressed,
         };
+        local alwaysExisting = { OnEnterPressed = true };
         for name, script in pairs(scripts) do
             local existing = elt.editbox:GetScript(name);
             if existing then
                 elt.editbox:SetScript(name, function(...)
-                    return script(...) or existing(...);
+                    return (script(...) and not alwaysExisting[name]) or existing(...);
                 end);
             else
                 elt.editbox:SetScript(name, script);
@@ -2165,6 +2162,52 @@ do
         end
 
         return elt;
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_SimpleHTML", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self:SetText("");
+        end,
+
+        ["OnWidthSet"] = function(self, width)
+            self.frame:SetText(self:GetUserData("text"));
+        end,
+
+        ["SetText"] = function(self, text)
+            self:SetUserData("text", text);
+            self.frame:SetText(text);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("SimpleHTML");
+        frame:SetFontObject(_G.GameFontHighlight);
+        frame:SetFontObject("h1", _G.GameFontNormalHuge);
+        frame:SetFontObject("h2", _G.GameFontNormalLarge);
+
+        -- create widget
+        local widget = {
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
     end
 
     AceGUI:RegisterWidgetType(Type, Constructor, Version)
@@ -2440,5 +2483,5 @@ AceGUI:RegisterLayout("ABGP_Table", function (content, children)
     for _,v in pairs(layoutCache) do wipe(v) end
 
     safecall(obj.LayoutFinished, obj, nil, totalV)
-obj:ResumeLayout()
+    obj:ResumeLayout()
 end)

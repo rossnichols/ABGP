@@ -64,6 +64,7 @@ local function ShowStaticPopup(itemLink, value, selected)
     CloseStaticPopups(itemLink);
     if which then
         local gp = value and value.gp or 0;
+        local category = value and value.category;
         local selectedItemLink;
         local requestedItemLink = itemLink;
         if selected then
@@ -72,8 +73,9 @@ local function ShowStaticPopup(itemLink, value, selected)
             requestedItemLink = fullLink;
             selectedItemLink = fullLink;
             gp = selectedValue.gp;
+            category = selectedValue.category;
         end
-        local dialog = _G.StaticPopup_Show(which, requestedItemLink, gp, { itemLink = itemLink, selectedItem = selectedItemLink });
+        local dialog = _G.StaticPopup_Show(which, requestedItemLink, ABGP:FormatCost(gp, category), { itemLink = itemLink, selectedItem = selectedItemLink });
         if not dialog then
             ABGP:Error("Unable to open request dialog for %s! Try closing other open ones.", itemLink);
         end
@@ -176,7 +178,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         if value.token then
             gpCost = "Token (variable GP cost)";
         elseif value.gp ~= 0 then
-            gpCost = ("GP cost: %d"):format(value.gp);
+            gpCost = ("Cost: %s"):format(self:FormatCost(value.gp, value.category));
         end
         if value.priority and next(value.priority) then
             priority = (", Priority: %s"):format(table.concat(value.priority, ", "));
@@ -220,9 +222,9 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local cost = "";
     local value = self:GetItemValue(self:GetItemName(itemLink));
     if value then
-        local effective = self:GetEffectiveCost(data.historyId, data.cost, value.phase);
-        effective = (effective and effective ~= data.cost) and (" (%.3f effective)"):format(effective) or "";
-        cost = (" for %d GP%s"):format(data.cost, effective);
+        local effective = self:GetEffectiveCost(data.historyId, data.cost);
+        effective = (effective and effective.cost ~= data.cost.cost) and (" (%.3f effective)"):format(effective.cost) or "";
+        cost = (" for %s%s"):format(self:FormatCost(data.cost), effective);
     end
 
     local requestTypes = {
@@ -266,10 +268,10 @@ end
 
 function ABGP:RequestOnItemUnawarded(data)
     local player = (data.player == UnitName("player")) and "you" or self:ColorizeName(data.player);
-    local effective = self:GetEffectiveCost(data.historyId, data.cost, data.phase);
-    effective = (effective and effective ~= data.cost) and (" (%.3f effective)"):format(effective) or "";
-    self:Notify("Award of %s to %s for %d GP%s was removed.",
-        data.itemLink, player, data.cost, effective);
+    local effective = self:GetEffectiveCost(data.historyId, data.cost);
+    effective = (effective and effective.cost ~= data.cost.cost) and (" (%.3f effective)"):format(effective.cost) or "";
+    self:Notify("Award of %s to %s for %s%s was removed.",
+        data.itemLink, player, self:FormatCost(data.cost), effective);
 end
 
 function ABGP:RequestOnItemTrashed(data, distribution, sender)
@@ -410,7 +412,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 end
 
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Request %s for %s GP? You may provide an optional note.",
+    text = "Request %s for %s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",
@@ -431,7 +433,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(AB
     end,
 });
 StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Request %s for %s GP? You may provide an optional note.",
+    text = "Request %s for %s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",

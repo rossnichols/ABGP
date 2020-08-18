@@ -15,11 +15,7 @@ function ABGP:HookTooltips()
             local value = ABGP:GetItemValue(itemName);
             if value then
                 if not value.token then
-                    local category = "";
-                    if value.category == ABGP.ItemCategory.GOLD then category = "|cFFEBB400 [G]|r"; end
-                    if value.category == ABGP.ItemCategory.SILVER then category = "|cFF9BA4A8 [S]|r"; end
-                    local gp = ("%s%s"):format(value.gp, category);
-                    self:AddDoubleLine(("%s Value:"):format(ABGP:ColorizeText("ABGP")), gp, 1, 1, 1, 1, 1, 1);
+                    self:AddDoubleLine(("%s Cost:"):format(ABGP:ColorizeText("ABGP")), ABGP:FormatCost(value.gp, value.category, "%s%s"), 1, 1, 1, 1, 1, 1);
                 end
 
                 if not value.related then
@@ -32,14 +28,14 @@ function ABGP:HookTooltips()
                     if limit > 0 then
                         if IsAltKeyDown() then
                             local player = UnitName("player");
-                            local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data[value.phase].gpHistory);
+                            local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data);
 
                             local raidGroup = ABGP:GetPreferredRaidGroup();
                             local function shouldShowEntry(entry)
                                 if entry[ABGP.ItemHistoryIndex.ITEMID] ~= value.itemId then return false; end
                                 local epgp = ABGP:GetActivePlayer(entry[ABGP.ItemHistoryIndex.PLAYER]);
-                                if not (epgp and epgp[value.phase]) then return false; end
-                                return epgp[value.phase].gpRaidGroup == raidGroup, entry[ABGP.ItemHistoryIndex.PLAYER] == player;
+                                if not epgp then return false; end
+                                return epgp.raidGroup == raidGroup, entry[ABGP.ItemHistoryIndex.PLAYER] == player;
                             end
 
                             -- First pass: count

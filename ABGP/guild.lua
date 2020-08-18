@@ -13,42 +13,7 @@ local UnitIsUnit = UnitIsUnit;
 local table = table;
 local pairs = pairs;
 
-ABGP.Phases = {
-    p1 = "p1",
-    p3 = "p3",
-};
-ABGP.PhaseNames = {
-    [ABGP.Phases.p1] = "Phase 1/2",
-    [ABGP.Phases.p3] = "Phase 3/4",
-};
-ABGP.PhaseNamesShort = {
-    [ABGP.Phases.p1] = "P1/2",
-    [ABGP.Phases.p3] = "P3/4",
-};
-ABGP.PhasesSorted = {
-    ABGP.Phases.p1,
-    ABGP.Phases.p3
-};
-ABGP.PhasesAll = {
-    [ABGP.Phases.p1] = ABGP.Phases.p1,
-    [ABGP.Phases.p3] = ABGP.Phases.p3,
-    p5 = "p5",
-};
-ABGP.PhaseNamesAll = {
-    [ABGP.PhasesAll.p1] = "Phase 1/2",
-    [ABGP.PhasesAll.p3] = "Phase 3/4",
-    [ABGP.PhasesAll.p5] = "Phase 5",
-};
-ABGP.PhasesSortedAll = {
-    ABGP.PhasesAll.p1,
-    ABGP.PhasesAll.p3,
-    ABGP.PhasesAll.p5,
-};
-ABGP.CurrentPhase = ABGP.Phases.p3;
 ABGP.Priorities = {};
-for phase in pairs(ABGP.PhasesAll) do
-    ABGP.Priorities[phase] = {};
-end
 
 ABGP.RaidGroups = {
     RED = "RED",
@@ -63,38 +28,34 @@ ABGP.RaidGroupsSorted = {
     ABGP.RaidGroups.BLUE
 };
 local rankData = {
-    ["Guild Master"] =   { ep = ABGP.RaidGroups.RED, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED } },
-    ["Officer"] =        { ep = ABGP.RaidGroups.RED, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED } },
-    ["Closer"] =         { ep = ABGP.RaidGroups.RED, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED } },
-    ["Red Lobster"] =    { ep = ABGP.RaidGroups.RED, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.RED } },
-    ["Purple Lobster"] = { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.RED,  [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
-    ["Blue Lobster"] =   { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
-    ["Officer Alt"] =    { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
-    ["Lobster Alt"] =    { ep = ABGP.RaidGroups.BLUE, gp = { [ABGP.Phases.p1] = ABGP.RaidGroups.BLUE, [ABGP.Phases.p3] = ABGP.RaidGroups.BLUE } },
+    ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED },
+    ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED },
+    ["Closer"] =         { raidGroup = ABGP.RaidGroups.RED },
+    ["Red Lobster"] =    { raidGroup = ABGP.RaidGroups.RED },
+    ["Purple Lobster"] = { raidGroup = ABGP.RaidGroups.BLUE },
+    ["Blue Lobster"] =   { raidGroup = ABGP.RaidGroups.BLUE },
+    ["Officer Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE },
+    ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE },
 };
 local epMins = {
-    [ABGP.RaidGroups.RED] = { [ABGP.PhasesAll.p1] = 125, [ABGP.PhasesAll.p3] = 315 },
-    [ABGP.RaidGroups.BLUE] = { [ABGP.PhasesAll.p1] = 125, [ABGP.PhasesAll.p3] = 190 },
+    [ABGP.RaidGroups.RED] = 0,
+    [ABGP.RaidGroups.BLUE] = 0,
 };
 
-function ABGP:GetMinEP(raidGroup, phase)
-    return self:IsPrivileged() and epMins[raidGroup][phase] or 0;
+function ABGP:GetMinEP(raidGroup)
+    return self:IsPrivileged() and epMins[raidGroup] or 0;
 end
 
 function ABGP:GetGPDecayInfo()
-    return 0.25, 0;
+    return 15, 0;
 end
 
 function ABGP:GetEPGPMultipliers()
     return 0.85, 1.0;
 end
 
-function ABGP:GetGPRaidGroup(rank, phase)
-    return rank and rankData[rank] and rankData[rank].gp[phase];
-end
-
-function ABGP:GetEPRaidGroup(rank)
-    return rank and rankData[rank] and rankData[rank].ep;
+function ABGP:GetRaidGroup(rank)
+    return rank and rankData[rank] and rankData[rank].raidGroup;
 end
 
 function ABGP:GetPreferredRaidGroup()
@@ -105,7 +66,7 @@ function ABGP:GetPreferredRaidGroup()
     local rank = epgp and epgp.rank;
     if not rank then return self.RaidGroupsSorted[1]; end
 
-    local group = self:GetEPRaidGroup(rank);
+    local group = self:GetRaidGroup(rank);
     if group then
         self:Set("raidGroup", group);
         return group;
@@ -216,9 +177,7 @@ local function CheckSync(force)
     ABGP:LogDebug("Sync target: %s", target or "<none>");
     if not target then
         lastSyncTarget = nil;
-        for phase, data in pairs(ABGP.Priorities) do
-            table.wipe(data);
-        end
+        table.wipe(ABGP.Priorities);
         ABGP:RefreshActivePlayers();
         return;
     end

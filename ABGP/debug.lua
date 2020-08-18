@@ -24,7 +24,7 @@ local debugOpts = {
     -- SkipOfficerNote = true,
 
     -- If set, changing item EPGP data will not "commit" them for propagation.
-    IgnoreItemCommit = true,
+    -- IgnoreItemCommit = true,
 
     -- If set, the addon will never send its history to other players
     -- AvoidHistorySend = true,
@@ -41,5 +41,5 @@ function ABGP:SetDebug(enable)
     self:Set("debug", enable);
 end
 
-ABGP.VersionOverride = "6.1.2";
-ABGP.VersionCmpOverride = "6.1.2";
+ABGP.VersionOverride = "7.0.0";
+ABGP.VersionCmpOverride = "7.0.0";

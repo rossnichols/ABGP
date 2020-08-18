@@ -277,14 +277,14 @@ function ABGP:ShowLootFrame(itemLink)
                 table.insert(context, {
                     text = "Show item",
                     func = function(self)
-                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = itemName, phase = value.phase });
+                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = itemName });
                     end,
                     notCheckable = true
                 });
                 table.insert(context, {
                     text = "Show item history",
                     func = function(self)
-                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemHistory, args = itemName, phase = value.phase });
+                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemHistory, args = itemName });
                     end,
                     notCheckable = true
                 });

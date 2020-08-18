@@ -39,13 +39,14 @@ local version = "${ADDON_VERSION}";
 
 _G.BINDING_HEADER_ABGP = "ABGP";
 _G.BINDING_NAME_ABGP_SHOWITEMREQUESTS = "Show items currently opened for distribution";
+_G.BINDING_NAME_ABGP_OPENMAINWINDOW = "Open the main window";
 
 local itemDataRequestToken = 0;
 
 local function OnGroupJoined()
     ABGP:SendComm(ABGP.CommTypes.STATE_SYNC, {
         token = GetServerTime(),
-        itemDataTime = _G.ABGP_DataTimestamp.itemValues,
+        itemDataTime = _G.ABGP_Data2.itemValues.timestamp,
         itemDataBaseline = ABGP.initialData.itemValues.timestamp,
     }, "BROADCAST");
     ABGP:VersionOnGroupJoined();
@@ -207,7 +208,7 @@ function ABGP:OnEnable()
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
     end, self);
 
-    self:SetCallback(self.InternalEvents.ITEM_DISTRIBUTION_UNAWARDED, function(self, event, data)
+    self:SetCallback(self.InternalEvents.ITEM_UNAWARDED, function(self, event, data)
         self:PriorityOnItemUnawarded(data);
         self:RequestOnItemUnawarded(data);
     end, self);
@@ -333,6 +334,9 @@ function ABGP:OnEnable()
     end, self);
     self:RegisterEvent("ENCOUNTER_END", function(self, event, ...)
         self:CommOnEncounterEnd(...);
+    end, self);
+    self:RegisterEvent("PARTY_LOOT_METHOD_CHANGED", function(self, event, ...)
+        self:EventOnLootChanged(...);
     end, self);
 
     -- Precreate frames to avoid issues generating them during combat.
@@ -490,11 +494,12 @@ ABGP.ItemDataIndex = {
     NAME = 1,
     GP = 2,
     ITEMLINK = 3,
-    BOSS = 4,
-    PRIORITY = 5,
-    CATEGORY = 6,
-    NOTES = 7,
-    RELATED = 8,
+    RAID = 4,
+    BOSS = 5,
+    PRIORITY = 6,
+    CATEGORY = 7,
+    NOTES = 8,
+    RELATED = 9,
 };
 ABGP.ItemHistoryType = {
     ITEM = 1,
@@ -511,12 +516,14 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.ITEM
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp cost (number)
-    ITEMID = 6,       -- item id (number)
+    CATEGORY = 6,   -- from ABGP.ItemCategory
+    ITEMID = 7,     -- item id (number)
 
     -- ABGP.ItemHistoryType.BONUS
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp award (number)
-    NOTES = 6,      -- notes (string)
+    CATEGORY = 6,   -- from ABGP.ItemCategory
+    NOTES = 7,      -- notes (string)
 
     -- ABGP.ItemHistoryType.DECAY
     VALUE = 4,      -- decay percentage (number)
@@ -528,12 +535,33 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.RESET
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- new gp (number)
-    NOTES = 6,      -- notes (string)
+    CATEGORY = 6,   -- from ABGP.ItemCategory
+    NOTES = 7,      -- notes (string)
 };
 ABGP.ItemCategory = {
     SILVER = "SILVER",
     GOLD = "GOLD",
 };
+ABGP.ItemCategoryNames = {
+    [ABGP.ItemCategory.SILVER] = "Silver",
+    [ABGP.ItemCategory.GOLD] = "Gold",
+};
+ABGP.ItemCategoriesSorted = {
+    ABGP.ItemCategory.SILVER,
+    ABGP.ItemCategory.GOLD
+};
+
+function ABGP:FormatCost(cost, category, fmt)
+    if type(cost) == "table" then
+        category = cost.category;
+        cost = cost.cost;
+    end
+
+    local suffix = "";
+    if category == self.ItemCategory.GOLD then suffix = " |cFFEBB400[G]|r"; end
+    if category == self.ItemCategory.SILVER then suffix = " |cFF9BA4A8[S]|r"; end
+    return (fmt or "%s%s GP"):format(cost, suffix);
+end
 
 function ABGP:GetHistoryId()
     local nextId = max(lastHistoryId, GetServerTime());
@@ -548,62 +576,58 @@ function ABGP:ParseHistoryId(id)
     return player, date;
 end
 
-local function ValueFromItem(item, phase)
+local function ValueFromItem(item)
     return {
         item = item[ABGP.ItemDataIndex.NAME],
         itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
         itemId = ABGP:GetItemId(item[ABGP.ItemDataIndex.ITEMLINK]),
         gp = item[ABGP.ItemDataIndex.GP],
         boss = item[ABGP.ItemDataIndex.BOSS],
-        priority = item[ABGP.ItemDataIndex.PRIORITY],
+        raid = item[ABGP.ItemDataIndex.RAID],
+        priority = ABGP.tCopy(item[ABGP.ItemDataIndex.PRIORITY]),
         notes = item[ABGP.ItemDataIndex.NOTES],
-        token = (item[ABGP.ItemDataIndex.GP] == -1) and {},
+        token = (item[ABGP.ItemDataIndex.GP] == "T") and {},
         related = item[ABGP.ItemDataIndex.RELATED],
         category = item[ABGP.ItemDataIndex.CATEGORY],
-        phase = phase
+        dataStore = item,
     };
 end
 
 function ABGP:RefreshItemValues()
     itemValues = {};
-    for phase in pairs(self.PhasesAll) do
-        for _, item in ipairs(_G.ABGP_Data[phase].itemValues) do
-            local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
-            local value = ValueFromItem(item, phase);
-            itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
-            itemValues[self:GetItemId(itemLink)] = value;
+    for _, item in ipairs(_G.ABGP_Data2.itemValues.data) do
+        local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
+        local value = ValueFromItem(item);
+        itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
+        itemValues[self:GetItemId(itemLink)] = value;
 
-            if value.related then
-                local token = self:GetItemValue(value.related);
-                table.insert(token.token, self:GetItemId(itemLink));
-            end
-
-            -- Try to ensure info about the item is cached locally.
-            if itemLink then GetItemInfo(itemLink); end
+        if value.related then
+            local token = self:GetItemValue(value.related);
+            table.insert(token.token, itemLink);
         end
+
+        -- Try to ensure info about the item is cached locally.
+        if itemLink then GetItemInfo(itemLink); end
     end
 end
 
 function ABGP:BuildDefaultItemValues()
     local itemValues = {};
-    for phase in pairs(self.PhasesAll) do
-        for _, item in ipairs(self.initialData.itemValues[phase]) do
-            itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item, phase);
-        end
+    for _, item in ipairs(self.initialData.itemValues.data) do
+        itemValues[item[ABGP.ItemDataIndex.NAME]] = ValueFromItem(item);
     end
 
     return itemValues;
 end
 
-local function IsValueUpdated(value, oldValue)
+function ABGP:ItemValueIsUpdated(value, oldValue)
     local isUpdated = true;
     local oldValue = oldValue or ABGP:GetItemValue(value.item);
     if oldValue then
         isUpdated =
             oldValue.gp ~= value.gp or
-            oldValue.boss ~= value.boss or
+            oldValue.category ~= value.category or
             oldValue.notes ~= value.notes or
-            oldValue.phase ~= value.phase or
             #oldValue.priority ~= #value.priority;
 
         if not isUpdated then
@@ -623,12 +647,12 @@ function ABGP:ItemOnStateSync(data, distribution, sender)
     -- Ignore state syncs with a mismatched baseline.
     if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
-    if data.itemDataTime > _G.ABGP_DataTimestamp.itemValues then
+    if data.itemDataTime > _G.ABGP_Data2.itemValues.timestamp then
         -- This person has newer item data. Request a sync.
         self:SendComm(self.CommTypes.REQUEST_ITEM_DATA_SYNC, {
             token = data.token,
         }, "WHISPER", sender);
-    elseif data.itemDataTime < _G.ABGP_DataTimestamp.itemValues and UnitIsGroupLeader("player") then
+    elseif data.itemDataTime < _G.ABGP_Data2.itemValues.timestamp and UnitIsGroupLeader("player") then
         -- This person has older item data. Send them the latest.
         self:BroadcastItemData(sender);
     end
@@ -643,24 +667,20 @@ end
 
 function ABGP:ItemOnDataSync(data, distribution, sender)
     -- Ignore data syncs that don't have a newer timestamp or have a mismatched baseline.
-    if data.itemDataTime <= _G.ABGP_DataTimestamp.itemValues then return; end
+    if data.itemDataTime <= _G.ABGP_Data2.itemValues.timestamp then return; end
     if data.itemDataBaseline ~= self.initialData.itemValues.timestamp then return; end
 
-    _G.ABGP_DataTimestamp.itemValues = data.itemDataTime;
+    _G.ABGP_Data2.itemValues.timestamp = data.itemDataTime;
     self:LogDebug("Received the latest EPGP item data from %s!", self:ColorizeName(sender));
-    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_DataTimestamp.itemValues)); -- https://strftime.org/
+    self:LogDebug("Data timestamp: %s", date("%m/%d/%y %I:%M%p", _G.ABGP_Data2.itemValues.timestamp)); -- https://strftime.org/
 
     -- Reset to defaults, since we're given a diff from them.
-    for phase in pairs(ABGP.Phases) do
-        _G.ABGP_Data[phase].itemValues = self.tCopy(self.initialData.itemValues[phase]);
-    end
+    _G.ABGP_Data2.itemValues.data = self.tCopy(self.initialData.itemValues.data);
     self:RefreshItemValues();
 
-    for phase, items in pairs(data.itemValues) do
-        for i, item in ipairs(items) do
-            -- self:LogDebug("Checking %s [%s]", item[self.ItemDataIndex.NAME], phase);
-            self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item, phase), true);
-        end
+    for _, item in ipairs(data.itemValues) do
+        -- self:LogDebug("Checking %s", item[self.ItemDataIndex.NAME]);
+        self:CheckUpdatedItem(item[self.ItemDataIndex.ITEMLINK], ValueFromItem(item), true);
     end
 
     self:RefreshItemValues();
@@ -669,30 +689,27 @@ end
 function ABGP:CommitItemData()
     self:RefreshItemValues();
     if not self:GetDebugOpt("IgnoreItemCommit") then
-        _G.ABGP_DataTimestamp.itemValues = GetServerTime();
+        _G.ABGP_Data2.itemValues.timestamp = GetServerTime();
         self:BroadcastItemData();
     end
 end
 
 function ABGP:BroadcastItemData(target)
     local payload = {
-        itemDataTime = _G.ABGP_DataTimestamp.itemValues,
+        itemDataTime = _G.ABGP_Data2.itemValues.timestamp,
         itemDataBaseline = self.initialData.itemValues.timestamp,
         itemValues = {},
     };
 
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.Phases) do
-        payload.itemValues[phase] = {};
-        for i, item in ipairs(_G.ABGP_Data[phase].itemValues) do
-            local name = item[self.ItemDataIndex.NAME];
-            local defaultValue = defaultValues[name];
-            local currentValue = self:GetItemValue(name);
+    for _, item in ipairs(_G.ABGP_Data2.itemValues.data) do
+        local name = item[self.ItemDataIndex.NAME];
+        local defaultValue = defaultValues[name];
+        local currentValue = self:GetItemValue(name);
 
-            if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
-                table.insert(payload.itemValues[phase], item);
-                -- self:LogDebug("Broadcasting %s [%s]", name, phase);
-            end
+        if not defaultValue or self:ItemValueIsUpdated(currentValue, defaultValue) then
+            table.insert(payload.itemValues, item);
+            -- self:LogDebug("Broadcasting %s", name);
         end
     end
 
@@ -705,62 +722,32 @@ end
 
 function ABGP:DumpItemDiffs()
     local defaultValues = self:BuildDefaultItemValues();
-    for phase in pairs(ABGP.Phases) do
-        for i, item in ipairs( _G.ABGP_Data[phase].itemValues) do
-            local name = item[self.ItemDataIndex.NAME];
-            local defaultValue = defaultValues[name];
-            local currentValue = self:GetItemValue(name);
+    for _, item in ipairs( _G.ABGP_Data2.itemValues.data) do
+        local name = item[self.ItemDataIndex.NAME];
+        local defaultValue = defaultValues[name];
+        local currentValue = self:GetItemValue(name);
 
-            if not defaultValue or IsValueUpdated(currentValue, defaultValue) then
-                self:LogDebug("%s:%s", phase, name);
-            end
+        if not defaultValue or self:ItemValueIsUpdated(currentValue, defaultValue) then
+            self:LogDebug(name);
         end
     end
 end
 
 function ABGP:CheckUpdatedItem(itemLink, value, bulk)
-    if IsValueUpdated(value) then
+    if self:ItemValueIsUpdated(value) then
         local found = false;
-        local items = _G.ABGP_Data[value.phase].itemValues;
-        for i, item in ipairs(items) do
+        local items = _G.ABGP_Data2.itemValues.data;
+        for _, item in ipairs(items) do
             if item[ABGP.ItemDataIndex.NAME] == value.item then
                 item[ABGP.ItemDataIndex.GP] = value.gp;
-                item[ABGP.ItemDataIndex.BOSS] = value.boss;
+                item[ABGP.ItemDataIndex.CATEGORY] = value.category;
                 item[ABGP.ItemDataIndex.NOTES] = value.notes;
-                item[ABGP.ItemDataIndex.PRIORITY] = value.priority;
+                item[ABGP.ItemDataIndex.PRIORITY] = self.tCopy(value.priority);
                 found = true;
                 if not bulk then
                     self:Notify("%s's EPGP data was updated!", itemLink);
                 end
                 break;
-            end
-        end
-
-        if not found then
-            local oldValue = self:GetItemValue(value.item);
-            if oldValue then
-                local items = _G.ABGP_Data[oldValue.phase].itemValues;
-                for i, item in ipairs(items) do
-                    if item[ABGP.ItemDataIndex.NAME] == value.item then
-                        table.remove(items, i);
-                        if not bulk then
-                            self:Notify("%s's EPGP data was removed from %s!", itemLink, self.PhaseNamesAll[oldValue.phase]);
-                        end
-                        break;
-                    end
-                end
-            end
-
-            table.insert(items, {
-                [ABGP.ItemDataIndex.NAME] = value.item,
-                [ABGP.ItemDataIndex.GP] = value.gp,
-                [ABGP.ItemDataIndex.ITEMLINK] = self:ShortenLink(itemLink),
-                [ABGP.ItemDataIndex.BOSS] = value.boss,
-                [ABGP.ItemDataIndex.PRIORITY] = value.priority,
-                [ABGP.ItemDataIndex.NOTES] = value.notes,
-            });
-            if not bulk then
-                self:Notify("%s's EPGP data has been added to %s!", itemLink, self.PhaseNamesAll[value.phase]);
             end
         end
 
@@ -773,8 +760,10 @@ function ABGP:HasReceivedItem(itemName)
     local value = self:GetItemValue(itemName);
     if not value then return false; end
 
-    for _, item in ipairs(_G.ABGP_Data[value.phase].gpHistory) do
-        if item[self.ItemHistoryIndex.ITEMID] == value.itemId and item[self.ItemHistoryIndex.PLAYER] == player then
+    for _, item in ipairs(_G.ABGP_Data2.history.data) do
+        if item[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and
+           item[self.ItemHistoryIndex.ITEMID] == value.itemId and
+           item[self.ItemHistoryIndex.PLAYER] == player then
             return true;
         end
     end
@@ -804,6 +793,14 @@ end
 local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
 scanner:SetOwner(UIParent, "ANCHOR_NONE");
 function ABGP:IsItemUsable(itemLink)
+    local value = self:GetItemValue(self:GetItemId(itemLink));
+    if value and value.token then
+        for _, item in ipairs(value.token) do
+            if self:IsItemUsable(item) then return true; end
+        end
+        return false;
+    end
+
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
     -- self:LogVerbose("%s:%d", itemLink, select("#", scanner:GetRegions()));
@@ -857,17 +854,8 @@ local activePlayers = {};
 
 function ABGP:RefreshActivePlayers()
     table.wipe(activePlayers);
-    for phase in pairs(self.Phases) do
-        for _, pri in ipairs(self.Priorities[phase]) do
-            activePlayers[pri.player] = activePlayers[pri.player] or {};
-            activePlayers[pri.player][phase] = pri;
-            activePlayers[pri.player].player = pri.player;
-            activePlayers[pri.player].proxy = pri.proxy;
-            activePlayers[pri.player].rank = pri.rank;
-            activePlayers[pri.player].class = pri.class;
-            activePlayers[pri.player].trial = pri.trial;
-            activePlayers[pri.player].epRaidGroup = pri.epRaidGroup;
-        end
+    for _, pri in ipairs(self.Priorities) do
+        activePlayers[pri.player] = pri;
     end
 
     self:Fire(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED);
@@ -976,6 +964,11 @@ function ABGP:BeginWindowManagement(window, name, defaults)
         table.wipe(saved);
         saved.version = defaults.version;
     end
+
+    defaults.minWidth = defaults.minWidth or defaults.defaultWidth;
+    defaults.maxWidth = defaults.maxWidth or defaults.defaultWidth;
+    defaults.minHeight = defaults.minHeight or defaults.defaultHeight;
+    defaults.maxHeight = defaults.maxHeight or defaults.defaultHeight;
 
     local management = { name = name, defaults = defaults };
     window:SetUserData("windowManagement", management);
@@ -1122,6 +1115,15 @@ ABGP.tCopy = function(t)
         end
     end
     return copy;
+end
+
+ABGP.reverse = function(arr)
+    local i, j = 1, #arr;
+    while i < j do
+        arr[i], arr[j] = arr[j], arr[i];
+        i = i + 1;
+        j = j - 1;
+    end
 end
 
 local itemSlots = {

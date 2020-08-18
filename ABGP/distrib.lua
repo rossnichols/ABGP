@@ -25,35 +25,39 @@ local type = type;
 local max = max;
 
 local activeDistributionWindow;
-local currentRaidGroup;
-local widths = { 110, 100, 70, 40, 40, 1.0 };
+local widths = { 110, 100, 90, 40, 40, 1.0 };
 
 local function CalculateCost(request)
+    local returnedCost = { cost = 0 };
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
 
     if not currentItem.data.value then
-        return 0, false, "no value";
+        return returnedCost, false, "no value";
     end
+    returnedCost.category = currentItem.data.value.category;
 
     if request and request.override then
-        return 0, false, request.override;
+        return returnedCost, false, request.override;
     end
-    local costBase = currentItem.costBase == -1 and 0 or currentItem.costBase;
+
+    returnedCost.cost = currentItem.costBase.cost;
+    returnedCost.category = currentItem.costBase.category;
     if request then
         if request.requestType == ABGP.RequestTypes.MS then
             if request.selectedItem then
                 local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(request.selectedItem));
                 if selectedValue then
-                    costBase = selectedValue.gp;
+                    returnedCost.cost = selectedValue.cost;
+                    returnedCost.category = selectedValue.category;
                 end
             end
         else
-            costBase = 0;
+            returnedCost.cost = 0;
         end
     end
 
-    return currentItem.costEdited or costBase, currentItem.data.value ~= nil;
+    return currentItem.costEdited or returnedCost, true;
 end
 
 local function ProcessSelectedRequest()
@@ -66,8 +70,12 @@ local function ProcessSelectedRequest()
 
     local cost, editable, reason = CalculateCost(selected);
     local edit = window:GetUserData("costEdit");
-    edit:SetValue(reason or cost);
+    edit:SetValue(reason or cost.cost);
     edit:SetDisabled(not editable);
+    local selector = window:GetUserData("categorySelector");
+    if cost.category then selector:SetText(ABGP.ItemCategoryNames[cost.category]); end
+    selector:SetDisabled(not editable);
+    ABGP:LogDebug("Calculated cost: %s", ABGP:FormatCost(cost));
 end
 
 local function AwardItem(request)
@@ -84,7 +92,7 @@ local function AwardItem(request)
         local count = #currentItem.distributions;
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
-    local award = ("%s for %d GP"):format(ABGP:ColorizeName(player), cost);
+    local award = ("%s for %s"):format(ABGP:ColorizeName(player), ABGP:FormatCost(cost));
 
     _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
         itemLink = currentItem.itemLink,
@@ -120,8 +128,8 @@ local function RebuildUI()
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
-        elseif a.group ~= b.group then
-            return a.group and (not b.group or a.group == currentRaidGroup);
+        elseif a.category ~= b.category and a.requestType ~= ABGP.RequestTypes.ROLL then
+            return a.category == ABGP.ItemCategory.GOLD;
         elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
@@ -145,13 +153,7 @@ local function RebuildUI()
     local currentHeading;
     local maxRolls = {};
     for i, request in ipairs(requests) do
-        local heading;
-        if currentItem.data.value then
-            local group = request.group and ABGP.RaidGroupNames[request.group] or "Other";
-            heading = ("%s (%s)"):format(typeHeadings[request.requestType], group);
-        else
-            heading = typeHeadings[request.requestType];
-        end
+        local heading = typeHeadings[request.requestType];
         if currentHeading ~= heading then
             currentHeading = heading;
             local elt = AceGUI:Create("Heading");
@@ -167,7 +169,7 @@ local function RebuildUI()
         local lowPrio;
         local active = ABGP:GetActivePlayer(request.player);
         if active and request.ep and currentItem.data.value then
-            lowPrio = request.ep < ABGP:GetMinEP(active.epRaidGroup, currentItem.data.value.phase);
+            lowPrio = request.ep < ABGP:GetMinEP(active.raidGroup);
         end
         local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.data.value and currentItem.data.value.token);
         elt:SetData(request, equippable, lowPrio);
@@ -178,7 +180,7 @@ local function RebuildUI()
                 local cost = CalculateCost(elt.data);
                 ABGP:ShowContextMenu({
                     {
-                        text = ("Award for %d GP"):format(cost),
+                        text = ("Award for %s"):format(ABGP:FormatCost(cost)),
                         func = function(self, request)
                             AwardItem(request);
                         end,
@@ -292,8 +294,7 @@ local function RebuildUI()
     end
     if related then
         for i = #related, 1, -1 do
-            local itemId = related[i];
-            local itemLink = ("item:%d"):format(itemId);
+            local itemLink = related[i];
             local button = AceGUI:Create("ABGP_ItemButton");
             relatedElts[i] = button;
             button:SetItemLink(itemLink, false);
@@ -454,7 +455,7 @@ local function AddActiveItem(data)
         itemLink = itemLink,
         requests = {},
         rolls = {},
-        costBase = data.value and data.value.gp or 0,
+        costBase = data.value and { cost = (data.value.token and 0 or data.value.gp), category = data.value.category } or { cost = 0 },
         selectedRequest = nil,
         selectedElt = nil,
         costEdited = nil,
@@ -523,7 +524,7 @@ local function ChooseRecipient()
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
 
-    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", itemLink, cost, {
+    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", itemLink, ABGP:FormatCost(cost), {
         itemLink = currentItem.itemLink,
         cost = cost,
         value = currentItem.data.value,
@@ -532,24 +533,26 @@ local function ChooseRecipient()
 end
 
 function ABGP:DistribValidateRecipient(player, cost, value)
-    local epgp = self:GetActivePlayer(player);
-    if cost and cost ~= 0 and not (epgp and epgp[value.phase]) then
-        return false, "The player must have EPGP for this phase";
+    if cost and cost.cost ~= 0 and not self:GetActivePlayer(player) then
+        return false, "The player must have EPGP";
+    end
+
+    if not player or player == "" then
+        return false, "Must enter a player";
     end
 
     return player;
 end
 
-function ABGP:DistribValidateCost(cost, player, value)
+function ABGP:DistribValidateCost(cost, player)
     cost = tonumber(cost);
     if type(cost) ~= "number" then return false, "Not a number"; end
     if cost < 0 then return false, "Can't be negative"; end
     if math.floor(cost) ~= cost then return false, "Must be a whole number"; end
 
     if player then
-        local epgp = self:GetActivePlayer(player);
-        if cost ~= 0 and not (epgp and epgp[value.phase]) then
-            return false, "The player doesn't have EPGP for this phase";
+        if cost ~= 0 and not self:GetActivePlayer(player) then
+            return false, "The player must have EPGP";
         end
     end
 
@@ -589,25 +592,8 @@ local function DistributeItem(data)
     local activeItems = window:GetUserData("activeItems");
 
     local currentItem = activeItems[data.itemLink];
-    local ep, gp, priority = 0, 0, 0;
-    local value = currentItem.data.value;
-    if value then
-        local epgp = ABGP:GetActivePlayer(data.player);
-        if epgp and epgp[value.phase] then
-            ep = epgp[value.phase].ep;
-            gp = epgp[value.phase].gp;
-            priority = epgp[value.phase].priority;
-        end
-    end
     table.insert(currentItem.distributions, {
         player = data.player,
-        ep = ep,
-        gp = gp,
-        priority = priority,
-        cost = data.cost,
-        roll = data.roll,
-        requestType = data.requestType,
-        override = data.override,
     });
 
     local historyId = ABGP:GetHistoryId();
@@ -649,9 +635,7 @@ local function PopulateRequest(request, value)
     local override;
     local rank, class;
     local priority, ep, gp;
-    local raidGroup;
-    local requestGroup;
-    local preferredGroup = currentRaidGroup;
+    local category;
 
     if request.testContent then
         priority = request.priority;
@@ -660,7 +644,6 @@ local function PopulateRequest(request, value)
         rank = request.rank;
         class = request.class;
         override = request.override;
-        raidGroup = value and ABGP:GetGPRaidGroup(rank, value.phase);
     else
         local epgp = ABGP:GetActivePlayer(request.player);
         if epgp then
@@ -679,19 +662,24 @@ local function PopulateRequest(request, value)
 
         if value then
             priority, ep, gp = 0, 0, 0;
-            if epgp and epgp[value.phase] then
-                priority = epgp[value.phase].priority;
-                ep = epgp[value.phase].ep;
-                gp = epgp[value.phase].gp;
-                raidGroup = epgp[value.phase].gpRaidGroup;
+            if epgp then
+                ep = epgp.ep;
+                gp = epgp.gp[value.category];
+                category = value.category;
+                priority = epgp.priority[value.category];
+
+                if request.selectedItem then
+                    local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(request.selectedItem));
+                    if selectedValue then
+                        priority = epgp.priority[selectedValue.category];
+                        gp = epgp.gp[selectedValue.category];
+                        category = selectedValue.category;
+                    end
+                end
             elseif not override then
                 override = "non-raider";
             end
         end
-    end
-
-    if rank and value and not override then
-        requestGroup = raidGroup;
     end
 
     local needsUpdate = false;
@@ -704,13 +692,12 @@ local function PopulateRequest(request, value)
     end
 
     checkValue(request, "priority", priority);
+    checkValue(request, "category", category);
     checkValue(request, "ep", ep);
     checkValue(request, "gp", gp);
     checkValue(request, "rank", rank);
     checkValue(request, "class", class);
     checkValue(request, "override", override);
-    checkValue(request, "group", requestGroup);
-    checkValue(request, "preferredGroup", preferredGroup);
     return needsUpdate;
 end
 
@@ -957,26 +944,8 @@ function ABGP:CreateDistribWindow()
     local topLine = AceGUI:Create("SimpleGroup");
     topLine:SetFullWidth(true);
     topLine:SetLayout("table");
-    topLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
+    topLine:SetUserData("table", { columns = { 1.0, 0 } });
     window:AddChild(topLine);
-
-    local raidGroups, raidGroupNames = {}, {};
-    for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
-    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
-    local groupSelector = AceGUI:Create("Dropdown");
-    groupSelector:SetWidth(110);
-    groupSelector:SetList(raidGroupNames, raidGroups);
-    groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        currentRaidGroup = value;
-        RepopulateRequests();
-        RebuildUI();
-    end);
-    if not currentRaidGroup then
-        currentRaidGroup = ABGP:GetPreferredRaidGroup();
-    end
-    groupSelector:SetValue(currentRaidGroup);
-    topLine:AddChild(groupSelector);
-    self:AddWidgetTooltip(groupSelector, "The selected raid group receives priority for loot.");
 
     local spacer = AceGUI:Create("ABGP_Header");
     topLine:AddChild(spacer);
@@ -1109,7 +1078,10 @@ function ABGP:CreateDistribWindow()
         local currentItem = window:GetUserData("currentItem");
         local cost = self:DistribValidateCost(value);
         if cost then
-            currentItem.costEdited = cost;
+            if not currentItem.costEdited then
+                currentItem.costEdited = { category = currentItem.costBase.category };
+            end
+            currentItem.costEdited.cost = cost;
         else
             currentItem.costEdited = nil;
         end
@@ -1118,6 +1090,20 @@ function ABGP:CreateDistribWindow()
     secondLine:AddChild(cost);
     window:SetUserData("costEdit", cost);
     self:AddWidgetTooltip(cost, "Edit the GP cost of this item.");
+
+    local catSelector = AceGUI:Create("Dropdown");
+    catSelector:SetWidth(80);
+    catSelector:SetList(self.ItemCategoryNames, self.ItemCategoriesSorted);
+    catSelector:SetCallback("OnValueChanged", function(widget, event, value)
+        local currentItem = window:GetUserData("currentItem");
+        if not currentItem.costEdited then
+            currentItem.costEdited = { cost = currentItem.costBase.cost };
+        end
+        currentItem.costEdited.category = value;
+    end);
+    secondLine:AddChild(catSelector);
+    window:SetUserData("categorySelector", catSelector);
+    self:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
 
     local desc = AceGUI:Create("Label");
     desc:SetWidth(45);
@@ -1160,6 +1146,8 @@ function ABGP:CreateDistribWindow()
 
     for i = 1, #columns do
         local desc = AceGUI:Create("ABGP_Header");
+        desc:SetFullWidth(true);
+        desc:SetFont(_G.GameFontHighlightSmall);
         desc:SetText(columns[i]);
         if columns[i] == "Roll" then
             desc:SetJustifyH("RIGHT");
@@ -1287,7 +1275,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticD
     end,
 });
 StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Choose the recipient of %s for %d GP:",
+    text = "Choose the recipient of %s for %s:",
     button1 = "Done",
     button2 = "Cancel",
     maxLetters = 31,

@@ -1,5 +1,8 @@
 <Bindings>
-    <Binding name="ABGP_SHOWITEMREQUESTS" header="ABGP" category="ADDONS">
+    <Binding name="ABGP_OPENMAINWINDOW" category="ADDONS" header="ABGP">
+        ABGP:ShowMainWindow();
+    </Binding>
+    <Binding name="ABGP_SHOWITEMREQUESTS" category="ADDONS">
         ABGP:ShowItemRequests();
     </Binding>
 </Bindings>
