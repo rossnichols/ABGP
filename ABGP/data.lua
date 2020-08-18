@@ -98,7 +98,7 @@ function ABGP:RefreshFromOfficerNotes()
                     });
                 end
             elseif note ~= "" and self:GetRaidGroup(rank) then
-                local _, gpG, ep, gpS = note:match("^(%d+)%:(%d+)%:(%d+)%:(%d+)$");
+                local ep, gpS, gpG = note:match("^(%d+)%:(%d+)%:(%d+)$");
                 if ep then
                     ep = tonumber(ep) / 1000;
                     gpS = tonumber(gpS) / 1000;
@@ -188,7 +188,7 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
         local ep = floor(epgp.ep * 1000 + 0.5);
         local gpS = floor(epgp.gp[self.ItemCategory.SILVER] * 1000 + 0.5);
         local gpG = floor(epgp.gp[self.ItemCategory.GOLD] * 1000 + 0.5);
-        note = ("%d:%d:%d:%d"):format(0, gpG, ep, gpS);
+        note = ("%d:%d:%d"):format(ep, gpS, gpG);
 
         -- Sanity check: all ranks here must be in a raid group.
         if not self:GetRaidGroup(rank) then
