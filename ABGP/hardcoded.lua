@@ -9,7 +9,7 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1597728804, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1597728805, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		data = {
 			{
 				"Barrage Shoulders",
@@ -3884,7 +3884,7 @@ ABGP.initialData = {
 		},
 	},
 	history = {
-		timestamp = 1597728804,
+		timestamp = 1597728805,
 		data = {
 			{
 				2,
