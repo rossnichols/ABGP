@@ -459,12 +459,9 @@ function ABGP:ExportItemHistory(history)
         local value = self:GetItemValue(itemId);
         local itemDate = date("%m/%d/%y", data[self.ItemHistoryIndex.DATE]);
 
-        text = text .. ("%s\t%s\t%s\t%s%s"):format(
-            data[self.ItemHistoryIndex.GP], value.item, data[self.ItemHistoryIndex.PLAYER], itemDate, (i == 1 and "" or "\n"));
-
-        text = text .. ("%d\t%s\t%s\t%s\t%s\t\t%s\n"):format(
+        text = text .. ("%s\t%s\t%s\t%s\t%s\t\t%s\n"):format(
             data[self.ItemHistoryIndex.GP],
-            catMappingHistoryExport[data[self.ItemHistoryIndex.GP]],
+            catMappingHistoryExport[data[self.ItemHistoryIndex.CATEGORY]],
             value.item,
             data[self.ItemHistoryIndex.PLAYER],
             itemDate,

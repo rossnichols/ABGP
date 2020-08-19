@@ -983,7 +983,7 @@ local function DrawItemHistory(container, options)
             export:SetWidth(75);
             export:SetText("Export");
             export:SetCallback("OnClick", function(widget, event)
-                local filtered = container:GetUserData("filteredItemHistory");
+                local filtered = container:GetUserData("shownItemHistory");
                 ABGP:ExportItemHistory(filtered);
             end);
             mainLine:AddChild(export);
@@ -1104,7 +1104,6 @@ local function DrawItemHistory(container, options)
             end
         end
     end
-    container:SetUserData("filteredItemHistory", filtered);
 
     local sorts = {
         -- Player
@@ -1149,6 +1148,7 @@ local function DrawItemHistory(container, options)
         end
     end);
 
+    local shownItemHistory = {};
     pagination:SetValues(#filtered, 50);
     if #filtered > 0 then
         local first, last = pagination:GetRange();
@@ -1156,6 +1156,7 @@ local function DrawItemHistory(container, options)
         for i = first, last do
             count = count + 1;
             local data = filtered[i];
+            table.insert(shownItemHistory, data);
             local elt = AceGUI:Create("ABGP_ItemHistory");
             elt:SetFullWidth(true);
             elt:SetData(data);
@@ -1330,6 +1331,7 @@ local function DrawItemHistory(container, options)
             history:AddChild(elt);
         end
     end
+    container:SetUserData("shownItemHistory", shownItemHistory);
 
     history:SetScroll(scrollValue);
 end
