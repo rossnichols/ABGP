@@ -1188,6 +1188,13 @@ local function DrawItemHistory(container, options)
                             arg1 = data,
                             notCheckable = true
                         },
+                        {
+                            text = "Show item",
+                            func = function(self)
+                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = value.item });
+                            end,
+                            notCheckable = true
+                        }
                     };
                     if ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsItemFavorited(value.itemLink);
