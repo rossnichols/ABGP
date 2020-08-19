@@ -1873,7 +1873,7 @@ do
 
             -- Change default width
             frame:SetWidth(260);
-            frame.fsbind:SetWidth(30);
+            frame.fsbind:SetWidth(40);
             frame.fsloot:SetPoint("RIGHT", frame, "RIGHT", -20, 0);
 
             -- "Hide" greed/pass buttons

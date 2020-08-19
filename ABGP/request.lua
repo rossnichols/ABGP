@@ -177,7 +177,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         self:CheckUpdatedItem(itemLink, value);
         if value.token then
             gpCost = "Token (variable GP cost)";
-        elseif value.gp ~= 0 then
+        else
             gpCost = ("Cost: %s"):format(self:FormatCost(value.gp, value.category));
         end
         if value.priority and next(value.priority) then
