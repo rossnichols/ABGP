@@ -48,7 +48,7 @@ local function CalculateCost(request)
             if request.selectedItem then
                 local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(request.selectedItem));
                 if selectedValue then
-                    returnedCost.cost = selectedValue.cost;
+                    returnedCost.cost = selectedValue.gp;
                     returnedCost.category = selectedValue.category;
                 end
             end
