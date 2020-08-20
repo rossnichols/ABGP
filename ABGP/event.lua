@@ -27,10 +27,10 @@ _G.ABGP_RaidInfo3 = {};
 -- https://wow.gamepedia.com/InstanceID
 local instanceIds = {
     MoltenCore      = 409,
-    -- Onyxia          = 249,
+    Onyxia          = 249,
     BlackwingLair   = 469,
-    -- ZulGurub        = 309,
-    -- AQ20            = 509,
+    ZulGurub        = 309,
+    AQ20            = 509,
     AQ40            = 531,
 };
 
@@ -47,7 +47,7 @@ local bossIds = {
     Majordomo   = 671,
     Ragnaros    = 672,
 
-    -- Onyxia      = 1084,
+    Onyxia      = 1084,
 
     Razorgore   = 610,
     Vaelastrasz = 611,
@@ -58,16 +58,16 @@ local bossIds = {
     Chromaggus  = 616,
     Nefarian    = 617,
 
-    -- Venoxis     = 784,
-    -- Jeklik      = 785,
-    -- Marli       = 786,
-    -- Mandokir    = 787,
-    -- Madness     = 788,
-    -- Thekal      = 789,
-    -- Gahzranka   = 790,
-    -- Arlokk      = 791,
-    -- Jindo       = 792,
-    -- Hakkar      = 793,
+    Venoxis     = 784,
+    Jeklik      = 785,
+    Marli       = 786,
+    Mandokir    = 787,
+    Madness     = 788,
+    Thekal      = 789,
+    Gahzranka   = 790,
+    Arlokk      = 791,
+    Jindo       = 792,
+    Hakkar      = 793,
 
     Skeram      = 709,
     BugTrio     = 710,
@@ -79,12 +79,12 @@ local bossIds = {
     Ouro        = 716,
     Cthun       = 717,
 
-    -- Kurinnaxx   = 718,
-    -- Rajaxx      = 719,
-    -- Moam        = 720,
-    -- Buru        = 721,
-    -- Ayamiss     = 722,
-    -- Ossirian    = 723,
+    Kurinnaxx   = 718,
+    Rajaxx      = 719,
+    Moam        = 720,
+    Buru        = 721,
+    Ayamiss     = 722,
+    Ossirian    = 723,
 };
 
 local instanceInfo = {
@@ -107,6 +107,25 @@ local instanceInfo = {
         bosses = {
             bossIds.Skeram, bossIds.BugTrio, bossIds.Sartura, bossIds.Fankriss, bossIds.Viscidus,
             bossIds.Huhuran, bossIds.TwinEmps, bossIds.Ouro, bossIds.Cthun
+        },
+    },
+    [instanceIds.Onyxia] = {
+        name = "Onyxia",
+        bosses = {
+            bossIds.Onyxia
+        },
+    },
+    [instanceIds.ZulGurub] = {
+        name = "Zul'Gurub",
+        bosses = {
+            bossIds.Venoxis, bossIds.Jeklik, bossIds.Marli, bossIds.Mandokir, bossIds.Madness,
+            bossIds.Thekal, bossIds.Gahzranka, bossIds.Arlokk, bossIds.Jindo, bossIds.Hakkar
+        },
+    },
+    [instanceIds.AQ20] = {
+        name = "Ruins of Ahn'Qiraj",
+        bosses = {
+            bossIds.Kurinnaxx, bossIds.Rajaxx, bossIds.Buru, bossIds.Ayamiss, bossIds.Ossirian, bossIds.Moam
         },
     },
 };
@@ -132,15 +151,35 @@ local bossInfo = {
     [bossIds.Chromaggus]  = { instance = instanceIds.BlackwingLair, name = "Chromaggus" },
     [bossIds.Nefarian]    = { instance = instanceIds.BlackwingLair, name = "Nefarian" },
 
-    [bossIds.Skeram]      = { instance = instanceIds.AQ40, name = "The Prophet Skeram" },
-    [bossIds.BugTrio]     = { instance = instanceIds.AQ40, name = "Silithid Royalty" },
-    [bossIds.Sartura]     = { instance = instanceIds.AQ40, name = "Battleguard Sartura" },
-    [bossIds.Fankriss]    = { instance = instanceIds.AQ40, name = "Fankriss the Unyielding" },
-    [bossIds.Viscidus]    = { instance = instanceIds.AQ40, name = "Viscidus" },
-    [bossIds.Huhuran]     = { instance = instanceIds.AQ40, name = "Princess Huhuran" },
-    [bossIds.TwinEmps]    = { instance = instanceIds.AQ40, name = "Twin Emperors" },
-    [bossIds.Ouro]        = { instance = instanceIds.AQ40, name = "Ouro" },
-    [bossIds.Cthun]       = { instance = instanceIds.AQ40, name = "C'thun" },
+    [bossIds.Skeram]   = { instance = instanceIds.AQ40, name = "The Prophet Skeram" },
+    [bossIds.BugTrio]  = { instance = instanceIds.AQ40, name = "Silithid Royalty" },
+    [bossIds.Sartura]  = { instance = instanceIds.AQ40, name = "Battleguard Sartura" },
+    [bossIds.Fankriss] = { instance = instanceIds.AQ40, name = "Fankriss the Unyielding" },
+    [bossIds.Viscidus] = { instance = instanceIds.AQ40, name = "Viscidus" },
+    [bossIds.Huhuran]  = { instance = instanceIds.AQ40, name = "Princess Huhuran" },
+    [bossIds.TwinEmps] = { instance = instanceIds.AQ40, name = "Twin Emperors" },
+    [bossIds.Ouro]     = { instance = instanceIds.AQ40, name = "Ouro" },
+    [bossIds.Cthun]    = { instance = instanceIds.AQ40, name = "C'thun" },
+
+    [bossIds.Onyxia] = { instance = instanceIds.Onyxia, name =  "Onyxia" },
+
+    [bossIds.Venoxis]   = { instance = instanceIds.ZulGurub, name = "High Priest Venoxis" },
+    [bossIds.Jeklik]    = { instance = instanceIds.ZulGurub, name = "High Priestess Jeklik" },
+    [bossIds.Marli]     = { instance = instanceIds.ZulGurub, name = "High Priestess Mar'li" },
+    [bossIds.Mandokir]  = { instance = instanceIds.ZulGurub, name = "Bloodlord Mandokir" },
+    [bossIds.Madness]   = { instance = instanceIds.ZulGurub, name = "Edge of Madness" },
+    [bossIds.Thekal]    = { instance = instanceIds.ZulGurub, name = "High Priest Thekal" },
+    [bossIds.Gahzranka] = { instance = instanceIds.ZulGurub, name = "Gahz'ranka" },
+    [bossIds.Arlokk]    = { instance = instanceIds.ZulGurub, name = "High Priestess Arlokk" },
+    [bossIds.Jindo]     = { instance = instanceIds.ZulGurub, name = "Jin'do the Hexxer" },
+    [bossIds.Hakkar]    = { instance = instanceIds.ZulGurub, name = "Hakkar" },
+
+    [bossIds.Kurinnaxx] = { instance = instanceIds.AQ20, name = "Kurinnaxx" },
+    [bossIds.Rajaxx]    = { instance = instanceIds.AQ20, name = "General Rajaxx" },
+    [bossIds.Buru]      = { instance = instanceIds.AQ20, name = "Buru the Gorger" },
+    [bossIds.Ayamiss]   = { instance = instanceIds.AQ20, name = "Ayamiss the Hunter" },
+    [bossIds.Ossirian]  = { instance = instanceIds.AQ20, name = "Ossirian the Unscarred" },
+    [bossIds.Moam]      = { instance = instanceIds.AQ20, name = "Moam" },
 };
 
 local tickCategories = {
@@ -439,12 +478,22 @@ function ABGP:StartRaid()
         [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
         [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
         [instanceIds.AQ40] = instanceInfo[instanceIds.AQ40].name,
+        [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
+        [instanceIds.ZulGurub] = instanceInfo[instanceIds.ZulGurub].name,
+        [instanceIds.AQ20] = instanceInfo[instanceIds.AQ20].name,
         [custom] = "Custom",
     };
     local instanceSelector = AceGUI:Create("Dropdown");
     instanceSelector:SetFullWidth(true);
     instanceSelector:SetLabel("Instance");
-    instanceSelector:SetList(instances, { instanceIds.MoltenCore, instanceIds.BlackwingLair, instanceIds.AQ40, custom });
+    instanceSelector:SetList(instances, {
+        instanceIds.MoltenCore,
+        instanceIds.BlackwingLair,
+        instanceIds.AQ40,
+        instanceIds.Onyxia,
+        instanceIds.ZulGurub,
+        instanceIds.AQ20,
+        custom });
     instanceSelector:SetCallback("OnValueChanged", function(widget, event, value)
         raidInstance = value;
         window:GetUserData("nameEdit"):SetValue(instances[raidInstance]);
