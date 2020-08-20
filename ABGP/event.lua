@@ -4,11 +4,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetServerTime = GetServerTime;
 local GetNumGroupMembers = GetNumGroupMembers;
-local UnitIsGroupLeader = UnitIsGroupLeader;
-local GetLootMethod = GetLootMethod;
-local SetLootMethod = SetLootMethod;
-local GetLootThreshold = GetLootThreshold;
-local SetLootThreshold = SetLootThreshold;
 local IsInGroup = IsInGroup;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
@@ -156,10 +151,6 @@ local function MakeRaid()
         bossKills = {},
         startTime = GetServerTime(),
         stopTime = GetServerTime(),
-        disenchanter = nil,
-        autoDistribute = false,
-        mule = nil,
-        trackAttendance = false,
         totalTicks = 0,
     };
 end
@@ -229,39 +220,11 @@ end
 
 local currentInstance;
 local activeWindow;
-local pendingLootMethod;
-local pendingLootThreshold;
-local checkCombatWhilePending;
 
 local function RefreshUI()
     if not activeWindow then return; end
     local windowRaid = activeWindow:GetUserData("raid");
     if not windowRaid then return; end
-
-    local disenchanter = activeWindow:GetUserData("disenchanter");
-    if disenchanter then
-        disenchanter:SetValue(windowRaid.disenchanter);
-    end
-
-    local mule = activeWindow:GetUserData("mule");
-    if mule then
-        mule:SetValue(windowRaid.mule);
-    end
-
-    local lootMethod = activeWindow:GetUserData("lootMethod");
-    if lootMethod then
-        lootMethod:SetValue(GetLootMethod());
-    end
-
-    local lootTh = activeWindow:GetUserData("lootThreshold");
-    if lootTh then
-        lootTh:SetValue(GetLootThreshold());
-    end
-
-    local autoDistrib = activeWindow:GetUserData("autoDistrib");
-    if autoDistrib then
-        autoDistrib:SetValue(windowRaid.autoDistribute);
-    end
 
     local scroll = activeWindow:GetUserData("standbyList");
     if scroll then
@@ -338,55 +301,6 @@ end
 
 function ABGP:IsRaidInProgress()
     return _G.ABGP_RaidInfo3.currentRaid ~= nil;
-end
-
-function ABGP:SetDisenchanter(player)
-    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
-    if not currentRaid then return; end
-
-    if player == "" then
-        player = nil;
-        self:Notify("Will not send disenchanted items to anyone.");
-    else
-        self:Notify("Sending disenchanted items to %s.", self:ColorizeName(player));
-    end
-    currentRaid.disenchanter = player;
-    RefreshUI();
-end
-
-function ABGP:GetRaidDisenchanter()
-    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
-    if not currentRaid then return; end
-
-    return currentRaid.disenchanter;
-end
-
-function ABGP:SetMule(player)
-    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
-    if not currentRaid then return; end
-
-    if player == "" then
-        player = nil;
-        self:Notify("Clearing the designated raid mule.");
-    else
-        self:Notify("Sending muled items to %s.", self:ColorizeName(player));
-    end
-    currentRaid.mule = player;
-    RefreshUI();
-end
-
-function ABGP:GetRaidMule()
-    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
-    if not currentRaid then return; end
-
-    return currentRaid.mule;
-end
-
-function ABGP:ShouldAutoDistribute()
-    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
-    if not currentRaid then return; end
-
-    return currentRaid.autoDistribute;
 end
 
 local function CheckBossEP(bossId, wasWipe)
@@ -501,8 +415,6 @@ function ABGP:StartRaid()
         raidInstance = value;
         window:GetUserData("nameEdit"):SetValue(instances[raidInstance]);
         window:GetUserData("nameEdit"):SetDisabled(value ~= custom);
-        window:GetUserData("attendanceTrack"):SetValue(value ~= custom);
-        window:GetUserData("addStandby"):SetDisabled(value == custom);
     end);
     container:AddChild(instanceSelector);
     self:AddWidgetTooltip(instanceSelector, "If a preset instance is chosen, EP will automatically be recorded for boss kills.");
@@ -514,23 +426,12 @@ function ABGP:StartRaid()
     container:AddChild(name);
     window:SetUserData("nameEdit", name);
 
-    local attendanceTrack = AceGUI:Create("CheckBox");
-    attendanceTrack:SetFullWidth(true);
-    attendanceTrack:SetLabel("Track Attendance");
-    attendanceTrack:SetCallback("OnValueChanged", function(widget, event, value)
-        window:GetUserData("addStandby"):SetDisabled(not value);
-    end);
-    container:AddChild(attendanceTrack);
-    window:SetUserData("attendanceTrack", attendanceTrack);
-    self:AddWidgetTooltip(attendanceTrack, "If selected, attendance will be tracked for future export.");
-
     local addStandby = AceGUI:Create("Button");
     addStandby:SetFullWidth(true);
     addStandby:SetText("Add Standby");
     addStandby:SetCallback("OnClick", function(widget)
         _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
     end);
-    window:SetUserData("addStandby", addStandby);
     container:AddChild(addStandby);
     self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
 
@@ -556,13 +457,10 @@ function ABGP:StartRaid()
     start:SetCallback("OnClick", function(widget)
         windowRaid.instanceId = raidInstance;
         windowRaid.name = name:GetValue();
-        windowRaid.trackAttendance = attendanceTrack:GetValue();
         _G.ABGP_RaidInfo3.currentRaid = windowRaid;
         EnsureAwardsEntries(windowRaid);
         self:Notify("Starting a new raid!");
-        if windowRaid.trackAttendance then
-            AwardEP(windowRaid, "on-time bonus");
-        end
+        AwardEP(windowRaid, "on-time bonus");
         window:Hide();
         self:UpdateRaid();
     end);
@@ -679,146 +577,48 @@ function ABGP:UpdateRaid(windowRaid)
     container:SetLayout("Flow");
     window:AddChild(container);
 
-    if windowRaid.trackAttendance then
-        local manageEP = AceGUI:Create("Button");
-        manageEP:SetFullWidth(true);
-        manageEP:SetText("Manage EP");
-        manageEP:SetCallback("OnClick", function(widget)
-            self:ManageRaid(window);
-        end);
-        container:AddChild(manageEP);
-        self:AddWidgetTooltip(manageEP, "Open the window to individually manage everyone's awarded EP.");
+    local manageEP = AceGUI:Create("Button");
+    manageEP:SetFullWidth(true);
+    manageEP:SetText("Manage EP");
+    manageEP:SetCallback("OnClick", function(widget)
+        self:ManageRaid(window);
+    end);
+    container:AddChild(manageEP);
+    self:AddWidgetTooltip(manageEP, "Open the window to individually manage everyone's awarded EP.");
 
-        local manualTIck = AceGUI:Create("Button");
-        manualTIck:SetFullWidth(true);
-        manualTIck:SetText("Manual Tick");
-        manualTIck:SetCallback("OnClick", function(widget)
-            AwardEP(windowRaid, "manual");
-        end);
-        container:AddChild(manualTIck);
-        self:AddWidgetTooltip(manualTIck, "Manually trigger an attendance tick.");
+    local manualTIck = AceGUI:Create("Button");
+    manualTIck:SetFullWidth(true);
+    manualTIck:SetText("Manual Tick");
+    manualTIck:SetCallback("OnClick", function(widget)
+        AwardEP(windowRaid, "manual");
+    end);
+    container:AddChild(manualTIck);
+    self:AddWidgetTooltip(manualTIck, "Manually trigger an attendance tick.");
 
-        if not IsInProgress(windowRaid) or self:GetDebugOpt("DebugRaidUI") then
-            local export = AceGUI:Create("Button");
-            export:SetFullWidth(true);
-            export:SetText("Export");
-            export:SetCallback("OnClick", function(widget)
-                self:ExportRaid(windowRaid);
-            end);
-            container:AddChild(export);
-            self:AddWidgetTooltip(export, "Open the window to export this raid's EP in the spreadsheet.");
-        end
-    end
+    local addStandby = AceGUI:Create("Button");
+    addStandby:SetFullWidth(true);
+    addStandby:SetText("Add Standby");
+    addStandby:SetCallback("OnClick", function(widget)
+        _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
+    end);
+    container:AddChild(addStandby);
+    self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
 
-    if IsInProgress(windowRaid) then
-        local raidTools = AceGUI:Create("InlineGroup");
-        raidTools:SetTitle("Raid Tools");
-        container:AddChild(raidTools);
+    local elt = AceGUI:Create("ABGP_Header");
+    elt:SetFullWidth(true);
+    elt:SetText("Current standby list:");
+    container:AddChild(elt);
 
-        local autoDistrib = AceGUI:Create("CheckBox");
-        autoDistrib:SetFullWidth(true);
-        autoDistrib:SetLabel("Auto Distribution");
-        autoDistrib:SetCallback("OnValueChanged", function(widget, event, value)
-            windowRaid.autoDistribute = value;
-        end);
-        raidTools:AddChild(autoDistrib);
-        window:SetUserData("autoDistrib", autoDistrib);
-        self:AddWidgetTooltip(autoDistrib, "If enabled, items will be automatically opened for distribution when loot popups are created.");
+    local scrollContainer = AceGUI:Create("SimpleGroup");
+    scrollContainer:SetFullWidth(true);
+    scrollContainer:SetHeight(100);
+    scrollContainer:SetLayout("Fill");
+    container:AddChild(scrollContainer);
 
-        if UnitIsGroupLeader("player") then
-            local lootMethod = GetLootMethod();
-            local lootValues = {
-                group = "Group Loot",
-                master = "Master Loot",
-                freeforall = "Free For All",
-                needbeforegreed = "Need Before Greed",
-                roundrobin = "Round Robin"
-            };
-            local lootSelector = AceGUI:Create("Dropdown");
-            lootSelector:SetFullWidth(true);
-            lootSelector:SetList(lootValues);
-            lootSelector:SetValue(lootMethod);
-            lootSelector:SetCallback("OnValueChanged", function(widget, event, value)
-                pendingLootMethod = value;
-                checkCombatWhilePending = not UnitAffectingCombat("player");
-                self:ChangeLootMethod();
-            end);
-            raidTools:AddChild(lootSelector);
-            window:SetUserData("lootMethod", lootSelector);
-            self:AddWidgetTooltip(lootSelector, "Select the loot method.");
-
-            local lootThreshold = GetLootThreshold();
-            local lootThresholds = {
-                ("%sCommon|r"):format(_G.ITEM_QUALITY_COLORS[1].hex),
-                ("%sUncommon|r"):format(_G.ITEM_QUALITY_COLORS[2].hex),
-                ("%sRare|r"):format(_G.ITEM_QUALITY_COLORS[3].hex),
-                ("%sEpic|r"):format(_G.ITEM_QUALITY_COLORS[4].hex)
-            };
-            local lootSelector = AceGUI:Create("Dropdown");
-            lootSelector:SetFullWidth(true);
-            lootSelector:SetList(lootThresholds);
-            lootSelector:SetValue(lootThreshold);
-            lootSelector:SetCallback("OnValueChanged", function(widget, event, value)
-                pendingLootThreshold = value;
-                checkCombatWhilePending = not UnitAffectingCombat("player");
-                self:ChangeLootMethod();
-            end);
-            raidTools:AddChild(lootSelector);
-            window:SetUserData("lootThreshold", lootSelector);
-            self:AddWidgetTooltip(lootSelector, "Select the loot method.");
-        end
-
-        if self:Get("masterLoot") and GetLootMethod() == "master" then
-            local disenchanter = AceGUI:Create("ABGP_EditBox");
-            disenchanter:SetFullWidth(true);
-            disenchanter:SetLabel("Disenchanter");
-            disenchanter:SetCallback("OnValueChanged", function(widget, event, value)
-                self:SetDisenchanter(value);
-            end);
-            disenchanter:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE);
-            raidTools:AddChild(disenchanter);
-            window:SetUserData("disenchanter", disenchanter);
-            self:AddWidgetTooltip(disenchanter, "Choose the player to whom disenchanted items, or ones you alt+ctrl+click, will get ML'd.");
-
-            local mule = AceGUI:Create("ABGP_EditBox");
-            mule:SetFullWidth(true);
-            mule:SetLabel("Raid Mule");
-            mule:SetCallback("OnValueChanged", function(widget, event, value)
-                self:SetMule(value);
-            end);
-            mule:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE);
-            raidTools:AddChild(mule);
-            window:SetUserData("mule", mule);
-            self:AddWidgetTooltip(mule, "Choose the player to whom items you alt+shift+click will get ML'd.");
-        end
-    end
-
-    if windowRaid.trackAttendance then
-        local addStandby = AceGUI:Create("Button");
-        addStandby:SetFullWidth(true);
-        addStandby:SetText("Add Standby");
-        addStandby:SetCallback("OnClick", function(widget)
-            _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
-        end);
-        container:AddChild(addStandby);
-        self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
-
-        local elt = AceGUI:Create("ABGP_Header");
-        elt:SetFullWidth(true);
-        elt:SetText("Current standby list:");
-        container:AddChild(elt);
-
-        local scrollContainer = AceGUI:Create("SimpleGroup");
-        scrollContainer:SetFullWidth(true);
-        scrollContainer:SetHeight(100);
-        scrollContainer:SetLayout("Fill");
-        container:AddChild(scrollContainer);
-
-        local scroll = AceGUI:Create("ScrollFrame");
-        scroll:SetLayout("List");
-        scrollContainer:AddChild(scroll);
-        window:SetUserData("standbyList", scroll);
-    end
+    local scroll = AceGUI:Create("ScrollFrame");
+    scroll:SetLayout("List");
+    scrollContainer:AddChild(scroll);
+    window:SetUserData("standbyList", scroll);
 
     if IsInProgress(windowRaid) then
         local stop = AceGUI:Create("Button");
@@ -826,19 +626,34 @@ function ABGP:UpdateRaid(windowRaid)
         stop:SetText("Stop");
         stop:SetCallback("OnClick", function(widget)
             _G.ABGP_RaidInfo3.pastRaids = _G.ABGP_RaidInfo3.pastRaids or {};
-
             local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
             _G.ABGP_RaidInfo3.currentRaid = nil;
-            self:Notify("Stopping the raid!");
-            window:Hide();
-            if currentRaid.trackAttendance then
+
+            for player, ticks in pairs(currentRaid.ticks) do
+                if ticks == 0 then currentRaid.ticks[player] = nil; end
+            end
+            if next(currentRaid.ticks) then
+                self:Notify("Stopping the raid!");
                 table.insert(_G.ABGP_RaidInfo3.pastRaids, 1, currentRaid);
+                window:Hide();
                 self:UpdateRaid(windowRaid);
+            else
+                self:Notify("No ticks tracked in this raid. It has been deleted.");
+                window:Hide();
             end
         end);
         container:AddChild(stop);
         self:AddWidgetTooltip(stop, "Stop the raid.");
     else
+        local export = AceGUI:Create("Button");
+        export:SetFullWidth(true);
+        export:SetText("Export");
+        export:SetCallback("OnClick", function(widget)
+            self:ExportRaid(windowRaid);
+        end);
+        container:AddChild(export);
+        self:AddWidgetTooltip(export, "Open the window to export this raid's EP in the spreadsheet.");
+
         local delete = AceGUI:Create("Button");
         delete:SetFullWidth(true);
         delete:SetText("Delete");
@@ -933,48 +748,6 @@ function ABGP:EventOnGroupUpdate()
     if not currentRaid then return; end
 
     EnsureAwardsEntries(currentRaid);
-    RefreshUI();
-end
-
-local function IsRaidInCombat()
-    local groupSize = GetNumGroupMembers();
-    for i = 1, groupSize do
-        local unit = "player";
-        if IsInRaid() then
-            unit = "raid" .. i;
-        elseif i ~= groupSize then
-            unit = "party" .. i;
-        end
-
-        if UnitAffectingCombat(unit) then return true; end
-    end
-
-    return false;
-end
-
-function ABGP:ChangeLootMethod()
-    local inCombat = UnitAffectingCombat("player");
-    local passedCombatCheck = not checkCombatWhilePending or not inCombat;
-    checkCombatWhilePending = not inCombat;
-
-    local pendingMethod = pendingLootMethod or GetLootMethod();
-    local pendingThreshold = pendingLootThreshold or GetLootThreshold();
-
-    if (GetLootMethod() ~= pendingMethod or GetLootThreshold() ~= pendingThreshold) and IsInGroup() and passedCombatCheck then
-        if not IsRaidInCombat() then
-            SetLootMethod(pendingMethod, UnitName("player"), pendingThreshold);
-        end
-        self:ScheduleTimer("ChangeLootMethod", 1);
-    else
-        if GetLootMethod() ~= pendingMethod then
-            self:Notify("Giving up trying to change the loot type (entered combat or not grouped).");
-        end
-        pendingLootMethod = nil;
-        pendingLootThreshold = nil;
-    end
-end
-
-function ABGP:EventOnLootChanged()
     RefreshUI();
 end
 

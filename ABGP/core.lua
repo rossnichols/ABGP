@@ -336,9 +336,6 @@ function ABGP:OnEnable()
         self:CommOnEncounterEnd(...);
         self:EventOnEncounterEnd(...);
     end, self);
-    self:RegisterEvent("PARTY_LOOT_METHOD_CHANGED", function(self, event, ...)
-        self:EventOnLootChanged(...);
-    end, self);
 
     -- Precreate frames to avoid issues generating them during combat.
     if not UnitAffectingCombat("player") then

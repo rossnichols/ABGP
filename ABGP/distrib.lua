@@ -579,11 +579,14 @@ local function GiveItemViaML(itemLink, player)
                 local candidate = GetMasterLootCandidate(slot, i);
                 if candidate and candidate:lower() == player then
                     GiveMasterLoot(slot, i);
-                    break;
+                    return;
                 end
             end
         end
     end
+
+    player = UnitName(player);
+    ABGP:Error("Couldn't ML %s to %s!", itemLink, ABGP:ColorizeName(player));
 end
 
 local function DistributeItem(data)
@@ -1184,20 +1187,39 @@ function ABGP:DistribOnDistOpened(data, distribution, sender)
     end
 end
 
+local function ChooseCandidate(candidates)
+    for player in candidates:gmatch("[^, ]+") do
+        player = UnitName(player);
+        if player then return player; end
+    end
+end
+
+function ABGP:GetRaidDisenchanter()
+    local candidates = self:Get("raidDisenchanters");
+    return ChooseCandidate(candidates), candidates ~= "";
+end
+
+function ABGP:GetRaidMule()
+    local candidates = self:Get("raidMules");
+    return ChooseCandidate(candidates), candidates ~= "";
+end
+
 local function DistributeLoot(itemLink)
     if IsShiftKeyDown() then
-        local mule = ABGP:GetRaidMule();
+        local mule, hasCandidates = ABGP:GetRaidMule();
         if mule then
             GiveItemViaML(itemLink, mule);
         else
-            ABGP:Notify("You don't have a raid mule set up! Choose a player via the raid window.");
+            ABGP:Notify("%s! Update the setting in the options window.",
+                hasCandidates and "None of your configured mules are in the raid" or "You don't have a raid mule configured");
         end
     elseif IsControlKeyDown() then
-        local disenchanter = ABGP:GetRaidDisenchanter();
+        local disenchanter, hasCandidates = ABGP:GetRaidDisenchanter();
         if disenchanter then
             GiveItemViaML(itemLink, disenchanter);
         else
-            ABGP:Notify("You don't have a raid disenchanter set up! Choose a player via the raid window.");
+            ABGP:Notify("%s! Update the setting in the options window.",
+                hasCandidates and "None of your configured disenchanters are in the raid" or "You don't have a raid disenchanter configured");
         end
     else
         if ABGP:GetDebugOpt("TestLootFrame") then

@@ -17,9 +17,6 @@ local debugOpts = {
     -- If set, some extra logging will be printed for comms.
     -- DebugComms = true,
 
-    -- If set, the raid window will have "Export" in an in-progress raid and "Restart" for a completed one.
-    -- DebugRaidUI = true,
-
     -- If set, item awards/updates will avoid editing the officer note.
     -- SkipOfficerNote = true,
 

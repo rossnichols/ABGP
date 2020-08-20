@@ -97,6 +97,10 @@ function ABGP:AnnounceOnLootOpened()
     self:AnnounceOnBossLoot(data);
 end
 
+function ABGP:ShouldAutoDistribute()
+    return IsMasterLooter() and self:Get("autoDistribute");
+end
+
 function ABGP:AnnounceOnBossLoot(data)
     local source = data.source;
     local name = data.name;
