@@ -1395,7 +1395,7 @@ local function DrawRaidHistory(container, options)
     local scrollValue = preserveScroll and raidList:GetUserData("statusTable").scrollvalue or 0;
     raidList:ReleaseChildren();
 
-    local raids = _G.ABGP_RaidInfo2.pastRaids;
+    local raids = _G.ABGP_RaidInfo3.pastRaids;
     local filtered = {};
     for _, raid in ipairs(raids) do
         table.insert(filtered, raid);
@@ -1752,7 +1752,7 @@ function ABGP:CreateMainWindow(command)
         { value = "items", text = "Items", draw = DrawItems },
         { value = "gp", text = "Item History", draw = DrawItemHistory },
     };
-    if _G.ABGP_RaidInfo2.pastRaids and #_G.ABGP_RaidInfo2.pastRaids > 0 then
+    if _G.ABGP_RaidInfo3.pastRaids and #_G.ABGP_RaidInfo3.pastRaids > 0 then
         table.insert(tabs, { value = "ep", text = "Raid History", draw = DrawRaidHistory });
     end
     if self:IsPrivileged() then

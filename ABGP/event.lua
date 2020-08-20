@@ -26,7 +26,7 @@ local type = type;
 local tonumber = tonumber;
 local next = next;
 
-_G.ABGP_RaidInfo2 = {};
+_G.ABGP_RaidInfo3 = {};
 
 -- https://wow.gamepedia.com/InstanceID
 local instanceIds = {
@@ -98,11 +98,6 @@ local instanceInfo = {
             bossIds.Lucifron, bossIds.Magmadar, bossIds.Gehennas, bossIds.Garr, bossIds.Shazzrah,
             bossIds.Geddon, bossIds.Sulfuron, bossIds.Golemagg, bossIds.Majordomo, bossIds.Ragnaros
         },
-        bossEP = {
-            [ABGP.RaidGroups.RED] = 28,
-            [ABGP.RaidGroups.BLUE] = 8,
-        },
-        onTimeBonus = 4,
     },
     [instanceIds.BlackwingLair] = {
         name = "Blackwing Lair",
@@ -110,11 +105,6 @@ local instanceInfo = {
             bossIds.Razorgore, bossIds.Vaelastrasz, bossIds.Broodlord, bossIds.Firemaw,
             bossIds.Ebonroc, bossIds.Flamegor, bossIds.Chromaggus, bossIds.Nefarian
         },
-        bossEP = {
-            [ABGP.RaidGroups.RED] = 24,
-            [ABGP.RaidGroups.BLUE] = 8,
-        },
-        onTimeBonus = 4,
     },
     [instanceIds.AQ40] = {
         name = "Temple of Ahn'Qiraj",
@@ -122,11 +112,6 @@ local instanceInfo = {
             bossIds.Skeram, bossIds.BugTrio, bossIds.Sartura, bossIds.Fankriss, bossIds.Viscidus,
             bossIds.Huhuran, bossIds.TwinEmps, bossIds.Ouro, bossIds.Cthun
         },
-        bossEP = {
-            [ABGP.RaidGroups.RED] = 36,
-            [ABGP.RaidGroups.BLUE] = 72,
-        },
-        onTimeBonus = 4,
     },
 };
 
@@ -162,43 +147,25 @@ local bossInfo = {
     [bossIds.Cthun]       = { instance = instanceIds.AQ40, name = "C'thun" },
 };
 
-local awardCategories = {
-    ONTIME = "ONTIME",
-    BOSS = "BOSS",
-    BONUS = "BONUS",
-};
-local awardCategoryNames = {
-    [awardCategories.ONTIME] = "on-time",
-    [awardCategories.BOSS] = "%d boss(es)",
-    [awardCategories.BONUS] = "%d bonus",
-};
-local awardCategoriesSorted = {
-    awardCategories.ONTIME,
-    awardCategories.BOSS,
-    awardCategories.BONUS,
-};
-
 local function MakeRaid()
     return {
         instanceId = -1,
         name = "Custom",
-        awards = {},
+        ticks = {},
         standby = {},
         bossKills = {},
-        bossKillCount = 0,
         startTime = GetServerTime(),
         stopTime = GetServerTime(),
         disenchanter = nil,
         autoDistribute = false,
         mule = nil,
+        trackAttendance = false,
+        totalTicks = 0,
     };
 end
 
 local function TrackPlayer(raid, player, inRaid)
-    raid.awards[player] = raid.awards[player] or {};
-    for category in pairs(awardCategories) do
-        raid.awards[player][category] = raid.awards[player][category] or 0;
-    end
+    raid.ticks[player] = raid.ticks[player] or 0;
 
     if inRaid then
         for i, standby in ipairs(raid.standby) do
@@ -211,7 +178,7 @@ local function TrackPlayer(raid, player, inRaid)
 end
 
 local function IsInProgress(raid)
-    return (raid and raid == _G.ABGP_RaidInfo2.currentRaid);
+    return (raid and raid == _G.ABGP_RaidInfo3.currentRaid);
 end
 
 local function EnsureAwardsEntries(raid)
@@ -234,42 +201,8 @@ local function EnsureAwardsEntries(raid)
     end
 end
 
-local function AwardPlayerEP(raid, player, ep, category)
-    local award = raid.awards[player];
-    award[category] = award[category] + ep;
-end
-
-local function AwardEP(raid, ep, category, text)
-    ABGP:Alert("Awarding %s EP to the current raid and standby!", text or ep);
-
-    EnsureAwardsEntries(raid);
-    if IsInProgress(raid) then
-        raid.stopTime = GetServerTime();
-        local groupSize = GetNumGroupMembers();
-        if groupSize == 0 then
-            AwardPlayerEP(raid, UnitName("player"), ep, category);
-        else
-            for i = 1, groupSize do
-                local unit = "player";
-                if IsInRaid() then
-                    unit = "raid" .. i;
-                elseif i ~= groupSize then
-                    unit = "party" .. i;
-                end
-
-                local player = UnitName(unit);
-                AwardPlayerEP(raid, player, ep, category);
-            end
-        end
-
-        for _, player in ipairs(raid.standby) do
-            AwardPlayerEP(raid, player, ep, category);
-        end
-    else
-        for player in pairs(raid.awards) do
-            AwardPlayerEP(raid, player, ep, category);
-        end
-    end
+local function AwardPlayerEP(raid, player)
+    raid.ticks[player] = raid.ticks[player] + 1;
 end
 
 local function AddStandby(raid, player)
@@ -290,7 +223,7 @@ local function RemoveStandby(raid, player)
 end
 
 local function RemovePlayer(raid, player)
-    raid.awards[player] = nil;
+    raid.ticks[player] = nil;
     RemoveStandby(raid, player);
 end
 
@@ -331,32 +264,34 @@ local function RefreshUI()
     end
 
     local scroll = activeWindow:GetUserData("standbyList");
-    scroll:ReleaseChildren();
+    if scroll then
+        scroll:ReleaseChildren();
 
-    for _, standby in ipairs(windowRaid.standby) do
-        local elt = AceGUI:Create("ABGP_Header");
-        elt:SetFullWidth(true);
-        elt:SetText(ABGP:ColorizeName(standby));
-        elt:EnableHighlight(true);
-        scroll:AddChild(elt);
+        for _, standby in ipairs(windowRaid.standby) do
+            local elt = AceGUI:Create("ABGP_Header");
+            elt:SetFullWidth(true);
+            elt:SetText(ABGP:ColorizeName(standby));
+            elt:EnableHighlight(true);
+            scroll:AddChild(elt);
 
-        elt:SetUserData("player", standby);
-        elt:SetCallback("OnClick", function(widget, event, button)
-            if button == "RightButton" then
-                ABGP:ShowContextMenu({
-                    {
-                        text = "Remove from standby",
-                        func = function(self, player)
-                            RemoveStandby(windowRaid, player);
-                            RefreshUI();
-                        end,
-                        arg1 = widget:GetUserData("player"),
-                        notCheckable = true
-                    },
-                    { text = "Cancel", notCheckable = true },
-                });
-            end
-        end);
+            elt:SetUserData("player", standby);
+            elt:SetCallback("OnClick", function(widget, event, button)
+                if button == "RightButton" then
+                    ABGP:ShowContextMenu({
+                        {
+                            text = "Remove from standby",
+                            func = function(self, player)
+                                RemoveStandby(windowRaid, player);
+                                RefreshUI();
+                            end,
+                            arg1 = widget:GetUserData("player"),
+                            notCheckable = true
+                        },
+                        { text = "Cancel", notCheckable = true },
+                    });
+                end
+            end);
+        end
     end
 
     if activeWindow:GetUserData("popup") then
@@ -365,12 +300,48 @@ local function RefreshUI()
     end
 end
 
+local function AwardEP(raid, text)
+    raid.totalTicks = raid.totalTicks + 1;
+    ABGP:Notify("Applying EP tick to the current raid and standby (%s)!", text);
+
+    EnsureAwardsEntries(raid);
+    if IsInProgress(raid) then
+        raid.stopTime = GetServerTime();
+        local groupSize = GetNumGroupMembers();
+        if groupSize == 0 then
+            AwardPlayerEP(raid, UnitName("player"));
+        else
+            for i = 1, groupSize do
+                local unit = "player";
+                if IsInRaid() then
+                    unit = "raid" .. i;
+                elseif i ~= groupSize then
+                    unit = "party" .. i;
+                end
+
+                local player = UnitName(unit);
+                AwardPlayerEP(raid, player);
+            end
+        end
+
+        for _, player in ipairs(raid.standby) do
+            AwardPlayerEP(raid, player);
+        end
+    else
+        for player in pairs(raid.ticks) do
+            AwardPlayerEP(raid, player);
+        end
+    end
+
+    RefreshUI();
+end
+
 function ABGP:IsRaidInProgress()
-    return _G.ABGP_RaidInfo2.currentRaid ~= nil;
+    return _G.ABGP_RaidInfo3.currentRaid ~= nil;
 end
 
 function ABGP:SetDisenchanter(player)
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     if player == "" then
@@ -384,14 +355,14 @@ function ABGP:SetDisenchanter(player)
 end
 
 function ABGP:GetRaidDisenchanter()
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     return currentRaid.disenchanter;
 end
 
 function ABGP:SetMule(player)
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     if player == "" then
@@ -405,40 +376,42 @@ function ABGP:SetMule(player)
 end
 
 function ABGP:GetRaidMule()
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     return currentRaid.mule;
 end
 
 function ABGP:ShouldAutoDistribute()
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     return currentRaid.autoDistribute;
 end
 
-local function CheckBossEP(bossId)
+local function CheckBossEP(bossId, wasWipe)
     -- Check for info about the boss and an in-progress raid.
     local info = bossInfo[bossId];
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not (currentRaid and info) then return; end
 
     -- Check that the boss is for this raid.
     local raidInstance = currentRaid.instanceId;
     if info.instance ~= raidInstance then return; end
 
-    if not currentRaid.bossKills[info.name] then
+    if wasWipe then
+        ABGP:LogDebug("This wipe is worth EP.");
+        AwardEP(currentRaid, "boss attempt");
+    elseif not currentRaid.bossKills[info.name] then
         ABGP:LogDebug("This boss is worth EP.");
-        AwardEP(currentRaid, 1, awardCategories.BOSS, "boss");
+        AwardEP(currentRaid, "boss kill");
         currentRaid.bossKills[info.name] = GetServerTime();
-        currentRaid.bossKillCount = currentRaid.bossKillCount + 1;
-    end
 
-    -- See if we killed the final boss of the current raid.
-    local bosses = instanceInfo[raidInstance].bosses;
-    if bosses[#bosses] == bossId then
-        ABGP:UpdateRaid();
+        -- See if we killed the final boss of the current raid.
+        local bosses = instanceInfo[raidInstance].bosses;
+        if bosses[#bosses] == bossId then
+            ABGP:UpdateRaid();
+        end
     end
 end
 
@@ -448,7 +421,7 @@ function ABGP:EventOnBossKilled(bossId, name)
 end
 
 function ABGP:EventOnBossLoot(data, distribution, sender)
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     local instance = instanceInfo[currentRaid.instanceId];
@@ -461,6 +434,12 @@ function ABGP:EventOnBossLoot(data, distribution, sender)
             break;
         end
     end
+end
+
+function ABGP:EventOnEncounterEnd(bossId, name, difficulty, groupSize, success)
+    if success ~= 0 then return; end
+    self:LogDebug("Wipe on %d[%d]!", bossId, name);
+    CheckBossEP(bossId, true);
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)
@@ -521,6 +500,9 @@ function ABGP:StartRaid()
     instanceSelector:SetCallback("OnValueChanged", function(widget, event, value)
         raidInstance = value;
         window:GetUserData("nameEdit"):SetValue(instances[raidInstance]);
+        window:GetUserData("nameEdit"):SetDisabled(value ~= custom);
+        window:GetUserData("attendanceTrack"):SetValue(value ~= custom);
+        window:GetUserData("addStandby"):SetDisabled(value == custom);
     end);
     container:AddChild(instanceSelector);
     self:AddWidgetTooltip(instanceSelector, "If a preset instance is chosen, EP will automatically be recorded for boss kills.");
@@ -532,12 +514,23 @@ function ABGP:StartRaid()
     container:AddChild(name);
     window:SetUserData("nameEdit", name);
 
+    local attendanceTrack = AceGUI:Create("CheckBox");
+    attendanceTrack:SetFullWidth(true);
+    attendanceTrack:SetLabel("Track Attendance");
+    attendanceTrack:SetCallback("OnValueChanged", function(widget, event, value)
+        window:GetUserData("addStandby"):SetDisabled(not value);
+    end);
+    container:AddChild(attendanceTrack);
+    window:SetUserData("attendanceTrack", attendanceTrack);
+    self:AddWidgetTooltip(attendanceTrack, "If selected, attendance will be tracked for future export.");
+
     local addStandby = AceGUI:Create("Button");
     addStandby:SetFullWidth(true);
     addStandby:SetText("Add Standby");
     addStandby:SetCallback("OnClick", function(widget)
         _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
     end);
+    window:SetUserData("addStandby", addStandby);
     container:AddChild(addStandby);
     self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
 
@@ -563,11 +556,12 @@ function ABGP:StartRaid()
     start:SetCallback("OnClick", function(widget)
         windowRaid.instanceId = raidInstance;
         windowRaid.name = name:GetValue();
-        _G.ABGP_RaidInfo2.currentRaid = windowRaid;
+        windowRaid.trackAttendance = attendanceTrack:GetValue();
+        _G.ABGP_RaidInfo3.currentRaid = windowRaid;
         EnsureAwardsEntries(windowRaid);
         self:Notify("Starting a new raid!");
-        if instanceInfo[windowRaid.instanceId] and instanceInfo[windowRaid.instanceId].onTimeBonus then
-            AwardEP(windowRaid, 1, awardCategories.ONTIME, "on-time");
+        if windowRaid.trackAttendance then
+            AwardEP(windowRaid, "on-time bonus");
         end
         window:Hide();
         self:UpdateRaid();
@@ -608,7 +602,7 @@ function ABGP:ManageRaid(window)
         ABGP:ClosePopup(widget);
         window:SetUserData("popup", nil);
     end);
-    local popupWidth = 410;
+    local popupWidth = 300;
     popup:SetWidth(popupWidth);
     popup:SetHeight(300);
     ABGP:OpenPopup(popup);
@@ -623,67 +617,33 @@ function ABGP:ManageRaid(window)
 
     local scroll = AceGUI:Create("ScrollFrame");
     scroll:SetLayout("Table");
-    scroll:SetUserData("table", { columns = { 120, 30, 90, 80, 40 } });
+    scroll:SetUserData("table", { columns = { 120, 90, 40 } });
     popup:AddChild(scroll);
 
     local sorted = {};
-    for player in pairs(windowRaid.awards) do table.insert(sorted, player); end
+    for player in pairs(windowRaid.ticks) do table.insert(sorted, player); end
     table.sort(sorted);
 
     for _, player in ipairs(sorted) do
-        local awards = windowRaid.awards[player];
-
         local elt = AceGUI:Create("ABGP_Header");
         elt:SetFullWidth(true);
         elt:SetText(self:ColorizeName(player));
         scroll:AddChild(elt);
 
-        local ontime = AceGUI:Create("CheckBox");
-        ontime:SetLabel("");
-        ontime:SetValue(awards[awardCategories.ONTIME] ~= 0);
-        ontime:SetCallback("OnValueChanged", function(widget, event, value)
-            awards[awardCategories.ONTIME] = value and 1 or 0;
+        local ticks = AceGUI:Create("Dropdown");
+        ticks:SetText("Ticks");
+        ticks:SetFullWidth(true);
+        ticks:SetCallback("OnValueChanged", function(widget, event, value)
+            windowRaid.ticks[player] = value;
+            widget:SetText(("Ticks: %d"):format(windowRaid.ticks[player]));
         end);
-        scroll:AddChild(ontime);
-        self:AddWidgetTooltip(ontime, "If checked, the player was on-time for the raid.");
-        if not (instanceInfo[windowRaid.instanceId] and instanceInfo[windowRaid.instanceId].onTimeBonus) then
-            ontime:SetDisabled(true);
-        end
-
-        local bosses = AceGUI:Create("Dropdown");
-        bosses:SetText("Bosses");
-        bosses:SetFullWidth(true);
-        bosses:SetCallback("OnValueChanged", function(widget, event, value)
-            awards[awardCategories.BOSS] = value;
-            bosses:SetText(("Bosses: %s"):format(awards[awardCategories.BOSS]));
-        end);
-        scroll:AddChild(bosses);
-        self:AddWidgetTooltip(bosses, "Select the number of bosses for which the player was present.");
-        if instanceInfo[windowRaid.instanceId] then
-            local values = {};
-            for i = 0, windowRaid.bossKillCount do values[i] = i; end
-            bosses:SetList(values);
-            bosses:SetValue(awards[awardCategories.BOSS]);
-            bosses:SetText(("Bosses: %s"):format(awards[awardCategories.BOSS]));
-        else
-            bosses:SetDisabled(true);
-        end
-
-        elt = AceGUI:Create("ABGP_EditBox");
-        elt:SetFullWidth(true);
-        elt:SetValue(awards[awardCategories.BONUS]);
-        elt:SetCallback("OnValueChanged", function(widget, event, value)
-            value = tonumber(value);
-            if type(value) == "number" and value >= 0 and math.floor(value) == value then
-                AwardPlayerEP(windowRaid, player, value - awards[awardCategories.BONUS], awardCategories.BONUS);
-                self:Notify("Bonus EP for %s set to %d.", self:ColorizeName(player), value);
-            else
-                self:Error("Invalid value!");
-                return true;
-            end
-        end);
-        scroll:AddChild(elt);
-        self:AddWidgetTooltip(elt, "Enter the amount of bonus EP for the player.");
+        scroll:AddChild(ticks);
+        self:AddWidgetTooltip(ticks, "Select the number of ticks for which the player was present.");
+        local values = {};
+        for i = 0, windowRaid.totalTicks do values[i] = i; end
+        ticks:SetList(values);
+        ticks:SetValue(windowRaid.ticks[player]);
+        ticks:SetText(("Ticks: %d"):format(windowRaid.ticks[player]));
 
         elt = AceGUI:Create("Button");
         elt:SetText("X");
@@ -698,7 +658,7 @@ function ABGP:ManageRaid(window)
 end
 
 function ABGP:UpdateRaid(windowRaid)
-    windowRaid = windowRaid or _G.ABGP_RaidInfo2.currentRaid;
+    windowRaid = windowRaid or _G.ABGP_RaidInfo3.currentRaid;
     if not windowRaid then return; end
     if activeWindow then activeWindow:Hide(); end
 
@@ -719,43 +679,35 @@ function ABGP:UpdateRaid(windowRaid)
     container:SetLayout("Flow");
     window:AddChild(container);
 
-    local manageEP = AceGUI:Create("Button");
-    manageEP:SetFullWidth(true);
-    manageEP:SetText("Manage EP");
-    manageEP:SetCallback("OnClick", function(widget)
-        self:ManageRaid(window);
-    end);
-    container:AddChild(manageEP);
-    self:AddWidgetTooltip(manageEP, "Open the window to individually manage everyone's awarded EP.");
-
-    local epCustom = -1;
-    local epValues = { [5] = 5, [10] = 10, [epCustom] = "Custom" };
-    local epValuesSorted = { 5, 10, epCustom };
-    local epSelector = AceGUI:Create("Dropdown");
-    epSelector:SetFullWidth(true);
-    epSelector:SetText("Award Bonus EP");
-    epSelector:SetList(epValues, epValuesSorted);
-    epSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        widget:SetValue(nil);
-        widget:SetText("Award Bonus EP");
-        if value == epCustom then
-            _G.StaticPopup_Show("ABGP_AWARD_EP", nil, nil, windowRaid);
-        else
-            _G.StaticPopup_Show("ABGP_CONFIRM_BONUS_EP", value, "manual", { raid = windowRaid, ep = value });
-        end
-    end);
-    container:AddChild(epSelector);
-    self:AddWidgetTooltip(epSelector, "Select an amount of EP to award to the raid and standby list.");
-
-    if not IsInProgress(windowRaid) or self:GetDebugOpt("DebugRaidUI") then
-        local export = AceGUI:Create("Button");
-        export:SetFullWidth(true);
-        export:SetText("Export");
-        export:SetCallback("OnClick", function(widget)
-            self:ExportRaid(windowRaid);
+    if windowRaid.trackAttendance then
+        local manageEP = AceGUI:Create("Button");
+        manageEP:SetFullWidth(true);
+        manageEP:SetText("Manage EP");
+        manageEP:SetCallback("OnClick", function(widget)
+            self:ManageRaid(window);
         end);
-        container:AddChild(export);
-        self:AddWidgetTooltip(export, "Open the window to export this raid's EP in the spreadsheet.");
+        container:AddChild(manageEP);
+        self:AddWidgetTooltip(manageEP, "Open the window to individually manage everyone's awarded EP.");
+
+        local manualTIck = AceGUI:Create("Button");
+        manualTIck:SetFullWidth(true);
+        manualTIck:SetText("Manual Tick");
+        manualTIck:SetCallback("OnClick", function(widget)
+            AwardEP(windowRaid, "manual");
+        end);
+        container:AddChild(manualTIck);
+        self:AddWidgetTooltip(manualTIck, "Manually trigger an attendance tick.");
+
+        if not IsInProgress(windowRaid) or self:GetDebugOpt("DebugRaidUI") then
+            local export = AceGUI:Create("Button");
+            export:SetFullWidth(true);
+            export:SetText("Export");
+            export:SetCallback("OnClick", function(widget)
+                self:ExportRaid(windowRaid);
+            end);
+            container:AddChild(export);
+            self:AddWidgetTooltip(export, "Open the window to export this raid's EP in the spreadsheet.");
+        end
     end
 
     if IsInProgress(windowRaid) then
@@ -841,58 +793,47 @@ function ABGP:UpdateRaid(windowRaid)
         end
     end
 
-    local addStandby = AceGUI:Create("Button");
-    addStandby:SetFullWidth(true);
-    addStandby:SetText("Add Standby");
-    addStandby:SetCallback("OnClick", function(widget)
-        _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
-    end);
-    container:AddChild(addStandby);
-    self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
+    if windowRaid.trackAttendance then
+        local addStandby = AceGUI:Create("Button");
+        addStandby:SetFullWidth(true);
+        addStandby:SetText("Add Standby");
+        addStandby:SetCallback("OnClick", function(widget)
+            _G.StaticPopup_Show("ABGP_ADD_STANDBY", nil, nil, windowRaid);
+        end);
+        container:AddChild(addStandby);
+        self:AddWidgetTooltip(addStandby, "Add a player to the standby list.");
 
-    local elt = AceGUI:Create("ABGP_Header");
-    elt:SetFullWidth(true);
-    elt:SetText("Current standby list:");
-    container:AddChild(elt);
+        local elt = AceGUI:Create("ABGP_Header");
+        elt:SetFullWidth(true);
+        elt:SetText("Current standby list:");
+        container:AddChild(elt);
 
-    local scrollContainer = AceGUI:Create("SimpleGroup");
-    scrollContainer:SetFullWidth(true);
-    scrollContainer:SetHeight(100);
-    scrollContainer:SetLayout("Fill");
-    container:AddChild(scrollContainer);
+        local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetFullWidth(true);
+        scrollContainer:SetHeight(100);
+        scrollContainer:SetLayout("Fill");
+        container:AddChild(scrollContainer);
 
-    local scroll = AceGUI:Create("ScrollFrame");
-    scroll:SetLayout("List");
-    scrollContainer:AddChild(scroll);
-    window:SetUserData("standbyList", scroll);
+        local scroll = AceGUI:Create("ScrollFrame");
+        scroll:SetLayout("List");
+        scrollContainer:AddChild(scroll);
+        window:SetUserData("standbyList", scroll);
+    end
 
     if IsInProgress(windowRaid) then
         local stop = AceGUI:Create("Button");
         stop:SetFullWidth(true);
         stop:SetText("Stop");
         stop:SetCallback("OnClick", function(widget)
-            _G.ABGP_RaidInfo2.pastRaids = _G.ABGP_RaidInfo2.pastRaids or {};
+            _G.ABGP_RaidInfo3.pastRaids = _G.ABGP_RaidInfo3.pastRaids or {};
 
-            local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
-            _G.ABGP_RaidInfo2.currentRaid = nil;
-            for player, award in pairs(currentRaid.awards) do
-                local awardedEP = false;
-                for cat, ep in pairs(award) do
-                    if ep ~= 0 then
-                        awardedEP = true;
-                        break;
-                    end
-                end
-                if not awardedEP then currentRaid.awards[player] = nil; end
-            end
-            if next(currentRaid.awards) then
-                self:Notify("Stopping the raid!");
-                table.insert(_G.ABGP_RaidInfo2.pastRaids, 1, currentRaid);
-                window:Hide();
+            local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
+            _G.ABGP_RaidInfo3.currentRaid = nil;
+            self:Notify("Stopping the raid!");
+            window:Hide();
+            if currentRaid.trackAttendance then
+                table.insert(_G.ABGP_RaidInfo3.pastRaids, 1, currentRaid);
                 self:UpdateRaid(windowRaid);
-            else
-                self:Notify("No EP awarded in this raid. It has been deleted.");
-                window:Hide();
             end
         end);
         container:AddChild(stop);
@@ -928,51 +869,22 @@ end
 function ABGP:ExportRaid(windowRaid)
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
 
+    local minTotalTicks = 0;
     local sortedPlayers = {};
-    for player in pairs(windowRaid.awards) do
+    for player, ticks in pairs(windowRaid.ticks) do
         table.insert(sortedPlayers, player);
+        minTotalTicks = math.max(minTotalTicks, ticks);
     end
     table.sort(sortedPlayers);
-
-    local bossEP;
-    local bossCount = 0;
-    if instanceInfo[windowRaid.instanceId] then
-        bossEP = self.tCopy(instanceInfo[windowRaid.instanceId].bossEP);
-        bossCount = windowRaid.bossKillCount;
-    end
 
     local function buildExportText()
         local text = "";
         for _, player in ipairs(sortedPlayers) do
-            local award = windowRaid.awards[player];
+            local ticks = windowRaid.ticks[player];
             local epgp = self:GetActivePlayer(player);
             local breakdown = {};
-
-            local ep = 0;
-            for _, cat in ipairs(awardCategoriesSorted) do
-                if award[cat] then
-                    if award[cat] ~= 0 then
-                        table.insert(breakdown, awardCategoryNames[cat]:format(award[cat]));
-                        if epgp and not epgp.trial then
-                            if cat == awardCategories.BOSS then
-                                if instanceInfo[windowRaid.instanceId] then
-                                    local fromBosses = ((award[cat] / bossCount) * bossEP[epgp.raidGroup]);
-                                    if math.floor(fromBosses) ~= fromBosses then
-                                        fromBosses = tonumber(("%.2f"):format(fromBosses));
-                                    end
-                                    ep = ep + fromBosses;
-                                end
-                            elseif cat == awardCategories.ONTIME then
-                                if instanceInfo[windowRaid.instanceId] and instanceInfo[windowRaid.instanceId].onTimeBonus then
-                                    ep = ep + instanceInfo[windowRaid.instanceId].onTimeBonus;
-                                end
-                            else
-                                ep = ep + award[cat];
-                            end
-                        end
-                    end
-                end
-            end
+            table.insert(breakdown, ("%d/%d ticks"):format(ticks, windowRaid.totalTicks));
+            local ep = math.floor(ticks / windowRaid.totalTicks * 100 + 0.5);
 
             if epgp then
                 if epgp.trial then
@@ -989,46 +901,39 @@ function ABGP:ExportRaid(windowRaid)
         return text;
     end
 
-    local extra, exportEdit;
-    if bossEP then
-        extra = AceGUI:Create("InlineGroup");
-        extra:SetFullWidth(true);
-        extra:SetTitle(("Boss EP (%d kills)"):format(bossCount));
-        extra:SetLayout("Flow");
-        for _, raidGroup in ipairs(self.RaidGroupsSorted) do
-            local edit = AceGUI:Create("ABGP_EditBox");
-            edit:SetLabel(self.RaidGroupNames[raidGroup]);
-            edit:SetWidth(125);
-            edit:SetValue(bossEP[raidGroup]);
-            edit:SetCallback("OnValueChanged", function(widget, event, value)
-                value = tonumber(value);
-                if not value then return true; end
-                if value <= 0 then return true; end
-                if math.floor(value) ~= value then return true; end
+    local exportEdit;
+    local ticks = AceGUI:Create("Dropdown");
+    ticks:SetWidth(100);
+    ticks:SetLabel("Total Ticks");
+    ticks:SetCallback("OnValueChanged", function(widget, event, value)
+        windowRaid.totalTicks = value;
+        exportEdit:SetText(buildExportText());
+        local values = {};
+        for i = minTotalTicks, windowRaid.totalTicks + 5 do values[i] = i; end
+        widget:SetList(values);
+    end);
+    self:AddWidgetTooltip(ticks, "Select the total number of ticks for the raid.");
+    local values = {};
+    for i = minTotalTicks, windowRaid.totalTicks + 5 do values[i] = i; end
+    ticks:SetList(values);
+    ticks:SetValue(windowRaid.totalTicks);
 
-                widget:SetValue(value);
-                bossEP[raidGroup] = value;
-                exportEdit:SetText(buildExportText());
-            end);
-            extra:AddChild(edit);
-        end
-    end
-
-    exportEdit = self:OpenExportWindow(buildExportText(), extra);
+    exportEdit = self:OpenExportWindow(buildExportText(), ticks);
 end
 
 function ABGP:EventOnGroupJoined()
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     EnsureAwardsEntries(currentRaid);
 end
 
 function ABGP:EventOnGroupUpdate()
-    local currentRaid = _G.ABGP_RaidInfo2.currentRaid;
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
     if not currentRaid then return; end
 
     EnsureAwardsEntries(currentRaid);
+    RefreshUI();
 end
 
 local function IsRaidInCombat()
@@ -1073,14 +978,6 @@ function ABGP:EventOnLootChanged()
     RefreshUI();
 end
 
-local function ValidateEP(ep)
-    ep = tonumber(ep);
-    if type(ep) ~= "number" then return false, "Not a number"; end
-    if math.floor(ep) ~= ep then return false, "Must be a whole number"; end
-
-    return ep;
-end
-
 StaticPopupDialogs["ABGP_ADD_STANDBY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Add a player to the standby list:",
     button1 = "Done",
@@ -1099,7 +996,7 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
     button2 = "No",
     showAlert = true,
     OnAccept = function(self, data)
-        local raids = _G.ABGP_RaidInfo2.pastRaids;
+        local raids = _G.ABGP_RaidInfo3.pastRaids;
         for i, raid in ipairs(raids) do
             if raid == data then
                 table.remove(raids, i);
@@ -1109,27 +1006,6 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
                 break;
             end
         end
-    end,
-});
-StaticPopupDialogs["ABGP_AWARD_EP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Enter the amount of EP to award:",
-    button1 = "Done",
-    button2 = "Cancel",
-    maxLetters = 31,
-    Validate = function(text, data)
-        return ValidateEP(text);
-    end,
-    Commit = function(ep, data)
-        AwardEP(data, ep, awardCategories.BONUS);
-    end,
-});
-StaticPopupDialogs["ABGP_CONFIRM_BONUS_EP"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
-    text = "Award %d EP to the raid (%s)?",
-    button1 = "Yes",
-    button2 = "No",
-    showAlert = true,
-    OnAccept = function(self, data)
-        AwardEP(data.raid, data.ep, awardCategories.BONUS);
     end,
 });
 StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {

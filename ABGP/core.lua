@@ -334,6 +334,7 @@ function ABGP:OnEnable()
     end, self);
     self:RegisterEvent("ENCOUNTER_END", function(self, event, ...)
         self:CommOnEncounterEnd(...);
+        self:EventOnEncounterEnd(...);
     end, self);
     self:RegisterEvent("PARTY_LOOT_METHOD_CHANGED", function(self, event, ...)
         self:EventOnLootChanged(...);
