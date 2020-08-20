@@ -347,7 +347,7 @@ local function DrawPriority(container, options)
                         arg1 = elt.data,
                         notCheckable = true
                     },
-                    { text = "Cancel", notCheckable = true },
+                    { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" },
                 });
             end
         end);
@@ -927,7 +927,7 @@ local function DrawItems(container, options)
                             notCheckable = true
                         });
                     end
-                    table.insert(context, { text = "Cancel", notCheckable = true });
+                    table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                     ABGP:ShowContextMenu(context);
                 end
             end);
@@ -1331,7 +1331,7 @@ local function DrawItemHistory(container, options)
                             notCheckable = true
                         });
                     end
-                    table.insert(context, { text = "Cancel", notCheckable = true });
+                    table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                     ABGP:ShowContextMenu(context);
                 end
             end);
@@ -1443,7 +1443,7 @@ local function DrawRaidHistory(container, options)
                             arg1 = raid,
                             notCheckable = true
                         },
-                        { text = "Cancel", notCheckable = true },
+                        { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" },
                     });
                 end
             end);
@@ -1667,7 +1667,7 @@ local function DrawAuditLog(container, options)
                         });
                     end
 
-                    table.insert(context, { text = "Cancel", notCheckable = true });
+                    table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                     ABGP:ShowContextMenu(context);
                 end
             end);

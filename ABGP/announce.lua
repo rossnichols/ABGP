@@ -16,6 +16,7 @@ local GetBindingKey = GetBindingKey;
 local FlashClientIcon = FlashClientIcon;
 local GetTime = GetTime;
 local IsShiftKeyDown = IsShiftKeyDown;
+local GetItemIcon = GetItemIcon;
 local select = select;
 local table = table;
 local ipairs = ipairs;
@@ -203,6 +204,10 @@ local function SetRequestInfo(elt, itemLink, activeItem)
             valueText = nil;
             valueTextCompact = "T";
             elt:SetRelatedItems(ABGP:GetTokenItems(itemLink));
+            local tokenItem = elt:GetUserData("tokenItem");
+            if tokenItem then
+                elt:SelectRelatedItem(tokenItem, true);
+            end
         end
         elt:SetSecondaryText(valueText, valueTextCompact);
     end
@@ -290,7 +295,7 @@ function ABGP:ShowLootFrame(itemLink)
                 });
             end
             if #context > 0 then
-                table.insert(context, { text = "Cancel", notCheckable = true });
+                table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                 ABGP:ShowContextMenu(context);
             end
         end
@@ -302,8 +307,28 @@ function ABGP:ShowLootFrame(itemLink)
             if tokenItem then
                 ABGP:ShowRequestPopup(itemLink, tokenItem);
             else
-                self:Notify("Please select one of the token's items before requesting!");
-                widget:SetAlert("Choose an item first!");
+                local context = {
+                    {
+                        text = "Select an item",
+                        isTitle = true,
+                        notCheckable = true
+                    }
+                };
+                local itemLinks = widget:GetRelatedItems();
+                for _, tokenItem in ipairs(itemLinks) do
+                    local menu = {};
+                    local value = ABGP:GetItemValue(ABGP:GetItemId(tokenItem));
+                    menu.icon = GetItemIcon(tokenItem);
+                    menu.text = value.item;
+                    menu.notCheckable = true;
+                    menu.func = function()
+                        widget:SelectRelatedItem(tokenItem, true);
+                        ABGP:ShowRequestPopup(itemLink, tokenItem);
+                    end;
+                    table.insert(context, menu);
+                end
+                table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
+                ABGP:ShowContextMenu(context);
             end
         else
             ABGP:ShowRequestPopup(itemLink);
@@ -340,10 +365,10 @@ function ABGP:ShowLootFrame(itemLink)
 
         AceGUI:Release(widget);
         self:Fire(self.InternalEvents.LOOT_FRAME_CLOSED);
+        self:HideContextMenu();
     end);
     elt:SetCallback("OnRelatedItemSelected", function(widget, event, itemLink)
-        widget:SetAlert(nil);
-        widget:SetUserData("tokenItem", itemLink and self:GetItemId(itemLink) or nil);
+        widget:SetUserData("tokenItem", itemLink);
     end);
 
     self:Fire(self.InternalEvents.LOOT_FRAME_OPENED);

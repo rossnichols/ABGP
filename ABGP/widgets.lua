@@ -196,6 +196,10 @@ do
             self.frame:UnregisterAllEvents();
         end,
 
+        ["GetItemLink"] = function(self)
+            return self.frame.itemLink;
+        end,
+
         ["SetItemLink"] = function(self, itemLink, checkUsable)
             local button = self.frame;
             button.itemLink = itemLink;
@@ -1603,7 +1607,6 @@ do
             self.frame:Show();
             self.frame.glow:Hide();
 
-            self:SetAlert(nil);
             self:SetItem(nil);
             self:SetCount(1);
             self:SetRequestCount(0);
@@ -1617,7 +1620,6 @@ do
 
         ["OnRelease"] = function(self)
             self.frame:UnregisterAllEvents();
-            self:SetAlert(nil);
         end,
 
         ["GetItem"] = function(self)
@@ -1802,6 +1804,22 @@ do
             return self.count;
         end,
 
+        ["GetRelatedItems"] = function(self)
+            return self.frame.relatedItemIds;
+        end,
+
+        ["SelectRelatedItem"] = function(self, itemLink, checked)
+            local frame = self.frame;
+            local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
+            for _, button in pairs(relatedFrame.buttons) do
+                if button:GetItemLink() == itemLink then
+                    button.frame:SetChecked(checked);
+                    RelatedItem_OnClick(button, "OnClick", itemLink);
+                    break;
+                end
+            end
+        end,
+
         ["SetRelatedItems"] = function(self, items)
             local frame = self.frame;
             frame.relatedItemIds = items;
@@ -1842,18 +1860,6 @@ do
                     frame:SetScript("OnEnter", Frame_OnEnter);
                     frame:SetScript("OnLeave", Frame_OnLeave);
                 end
-            end
-        end,
-
-        ["SetAlert"] = function(self, alert)
-            local frame = self.frame;
-            local tooltip = frame.tooltip;
-            local need = frame.elvui and frame.needbutt or frame.NeedButton;
-            if alert then
-                tooltip:SetOwner(need, "ANCHOR_BOTTOMRIGHT");
-                tooltip:SetText(alert, 1, 1, 1);
-            else
-                tooltip:Hide();
             end
         end,
     }
@@ -2003,10 +2009,6 @@ do
         fadeOut:SetOrder(2);
         frame.glow = glow;
         glow.animIn = animIn;
-
-        local tooltipName = "ABGPLootFrameTooltip" .. widgetNum;
-        frame.tooltip = CreateFrame("GameTooltip", tooltipName, _G.UIParent, "GameTooltipTemplate");
-        _G[tooltipName .. "TextLeft1"]:SetFontObject("GameFontNormalSmall");
 
         -- create widget
         local widget = {

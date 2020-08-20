@@ -203,7 +203,7 @@ local function RebuildUI()
                         arg1 = elt.data,
                         notCheckable = true
                     },
-                    { text = "Cancel", notCheckable = true },
+                    { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" },
                 });
             else
                 local currentItem = window:GetUserData("currentItem");

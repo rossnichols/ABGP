@@ -1009,7 +1009,7 @@ end
 
 
 --
--- Context Menu support
+-- Context Menu support (https://wow.gamepedia.com/UI_Object_UIDropDownMenu)
 --
 
 local contextFrame = CreateFrame("Frame", "ABGPContextMenu", _G.UIParent, "UIDropDownMenuTemplate");

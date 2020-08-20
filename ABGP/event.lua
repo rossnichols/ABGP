@@ -287,7 +287,7 @@ local function RefreshUI()
                             arg1 = widget:GetUserData("player"),
                             notCheckable = true
                         },
-                        { text = "Cancel", notCheckable = true },
+                        { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" },
                     });
                 end
             end);

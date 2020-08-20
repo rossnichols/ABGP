@@ -147,7 +147,7 @@ function ABGP:OnIconClick(frame, button)
                 notCheckable = true
             });
         end
-        table.insert(context, { text = "Cancel", notCheckable = true });
+        table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
         self:ShowContextMenu(context, frame);
     end
 end
