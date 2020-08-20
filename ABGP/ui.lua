@@ -1352,15 +1352,11 @@ local function DrawRaidHistory(container, options)
 
     local widths = { 1.0 };
     if rebuild then
-        local pagination = AceGUI:Create("ABGP_Paginator");
-        pagination:SetFullWidth(true);
-        pagination:SetCallback("OnRangeSet", function()
-            PopulateUI({ rebuild = false });
-        end);
-        container:AddChild(pagination);
-        container:SetUserData("pagination", pagination);
+        container:SetLayout("ABGP_Table");
+        container:SetUserData("table", { columns = { 1.0 }, rows = { 1.0, 0 } });
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
+        scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
         scrollContainer:SetFullWidth(true);
         scrollContainer:SetFullHeight(true);
         scrollContainer:SetLayout("Flow");
@@ -1389,6 +1385,14 @@ local function DrawRaidHistory(container, options)
         scroll:SetStatusTable(scroll:GetUserData("statusTable"));
         scrollContainer:AddChild(scroll);
         container:SetUserData("raidList", scroll);
+
+        local pagination = AceGUI:Create("ABGP_Paginator");
+        pagination:SetFullWidth(true);
+        pagination:SetCallback("OnRangeSet", function()
+            PopulateUI({ rebuild = false });
+        end);
+        container:AddChild(pagination);
+        container:SetUserData("pagination", pagination);
     end
 
     local raidList = container:GetUserData("raidList");
