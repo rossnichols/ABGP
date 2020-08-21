@@ -196,6 +196,20 @@ local tickCategoryNames = {
     [tickCategories.MANUAL] = "manual",
 };
 
+local tickCategoryBreakdowns = {
+    [tickCategories.BOSSKILL] = "%d/%d boss kills",
+    [tickCategories.BOSSWIPE] = "%d/%d boss attempts",
+    [tickCategories.ONTIME] = "on-time",
+    [tickCategories.MANUAL] = "%d/%d manual",
+};
+
+local tickCategoriesSorted = {
+    tickCategories.ONTIME,
+    tickCategories.BOSSKILL,
+    tickCategories.BOSSWIPE,
+    tickCategories.MANUAL,
+};
+
 local function MakeRaid()
     return {
         instanceId = -1,
@@ -273,21 +287,25 @@ local function RemovePlayer(raid, player)
     RemoveStandby(raid, player);
 end
 
-local function CountPlayerTicks(raid, player)
+local function CountPlayerTicks(raid, player, category)
     local tickCount = 0;
     for tickTime, wasPresent in pairs(raid.players[player]) do
-        if wasPresent and raid.allowedTicks[tickTime] then tickCount = tickCount + 1; end
+        if wasPresent and raid.allowedTicks[tickTime] and (not category or raid.ticks[tickTime].category == category) then
+            tickCount = tickCount + 1;
+        end
     end
     return tickCount;
 end
 
-local function CountValidTicks(raid)
+local function CountValidTicks(raid, category)
     local totalTicks = 0;
     local totalValidTicks = 0;
     for _, tick in pairs(raid.ticks) do
-        totalTicks = totalTicks + 1;
-        if raid.allowedTicks[tick.time] then
-            totalValidTicks = totalValidTicks + 1;
+        if not category or tick.category == category then
+            totalTicks = totalTicks + 1;
+            if raid.allowedTicks[tick.time] then
+                totalValidTicks = totalValidTicks + 1;
+            end
         end
     end
 
@@ -347,10 +365,10 @@ local function GetTickServerTime()
     return nextTime;
 end
 
-local function AwardEP(raid, category)
+local function AwardEP(raid, category, extra)
     ABGP:Notify("Applying EP tick to the current raid and standby (%s)!", tickCategoryNames[category]);
-    local tick = { time = GetTickServerTime(), category = category };
-    table.insert(raid.ticks, tick);
+    local tick = { time = GetTickServerTime(), category = category, extra = extra };
+    raid.ticks[tick.time] = tick;
     raid.allowedTicks[tick.time] = true;
 
     EnsureAwardsEntries(raid);
@@ -385,11 +403,36 @@ local function AwardEP(raid, category)
     RefreshUI();
 end
 
+function ABGP:InitEvents()
+    if not _G.ABGP_RaidInfo3.pastRaids then return; end
+
+    -- Convert ticks from array to map with time as key.
+    for _, raid in ipairs(_G.ABGP_RaidInfo3.pastRaids) do
+        if not raid.convertedTicks then
+            local convert = false;
+            for idx in pairs(raid.ticks) do
+                if idx < 10000 then
+                    convert = true;
+                    break;
+                end
+            end
+            if convert then
+                raid.convertedTicks = true;
+                local newTicks = {};
+                for _, tick in pairs(raid.ticks) do
+                    newTicks[tick.time] = tick;
+                end
+                raid.ticks = newTicks;
+            end
+        end
+    end
+end
+
 function ABGP:IsRaidInProgress()
     return _G.ABGP_RaidInfo3.currentRaid ~= nil;
 end
 
-local function CheckBossEP(bossId, wasWipe)
+local function CheckBossEP(bossId, bossName, wasWipe)
     -- Check for info about the boss and an in-progress raid.
     local info = bossInfo[bossId];
     local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
@@ -401,10 +444,10 @@ local function CheckBossEP(bossId, wasWipe)
 
     if wasWipe then
         ABGP:LogDebug("This wipe is worth EP.");
-        AwardEP(currentRaid, tickCategories.BOSSWIPE);
+        AwardEP(currentRaid, tickCategories.BOSSWIPE, bossName);
     elseif not currentRaid.bossKills[info.name] then
         ABGP:LogDebug("This boss is worth EP.");
-        AwardEP(currentRaid, tickCategories.BOSSKILL);
+        AwardEP(currentRaid, tickCategories.BOSSKILL, bossName);
         currentRaid.bossKills[info.name] = GetServerTime();
 
         -- See if we killed the final boss of the current raid.
@@ -417,7 +460,7 @@ end
 
 function ABGP:EventOnBossKilled(bossId, name)
     self:LogDebug("%s[%d] defeated!", bossId, name);
-    CheckBossEP(bossId);
+    CheckBossEP(bossId, name);
 end
 
 function ABGP:EventOnBossLoot(data, distribution, sender)
@@ -430,7 +473,7 @@ function ABGP:EventOnBossLoot(data, distribution, sender)
     -- See if the name corresponds to any bosses in the current instance.
     for _, id in ipairs(instance.bosses) do
         if bossInfo[id].name == data.name then
-            CheckBossEP(id);
+            CheckBossEP(id, data.name);
             break;
         end
     end
@@ -439,7 +482,7 @@ end
 function ABGP:EventOnEncounterEnd(bossId, name, difficulty, groupSize, success)
     if success ~= 0 then return; end
     self:LogDebug("Wipe on %d[%d]!", bossId, name);
-    CheckBossEP(bossId, true);
+    CheckBossEP(bossId, name, true);
 end
 
 function ABGP:EventOnZoneChanged(name, instanceId)
@@ -592,13 +635,15 @@ function ABGP:ManageRaid(window)
     popup:SetTitle("Manage EP");
     popup:SetLayout("Flow");
     popup:SetCallback("OnClose", function(widget)
-        AceGUI:Release(widget);
         ABGP:ClosePopup(widget);
+        ABGP:EndWindowManagement(widget);
+        AceGUI:Release(widget);
         window:SetUserData("popup", nil);
     end);
     local popupWidth = 425;
+    local popupHeight = 300;
     popup:SetWidth(popupWidth);
-    popup:SetHeight(300);
+    popup:SetHeight(popupHeight);
     ABGP:OpenPopup(popup);
     local _, _, screenWidth = _G.UIParent:GetRect();
     local windowLeft, _, windowWidth = window.frame:GetRect();
@@ -614,11 +659,13 @@ function ABGP:ManageRaid(window)
     table.sort(sorted);
 
     local tickValues, ticksSorted = {}, {};
-    for _, tick in ipairs(windowRaid.ticks) do
-        local text = ("%s: %s"):format(date("%I:%M%p", tick.time), tickCategoryNames[tick.category]);
+    for _, tick in pairs(windowRaid.ticks) do
+        local extra = tick.extra and (" (%s)"):format(tick.extra) or "";
+        local text = ("%s: %s%s"):format(date("%I:%M%p", tick.time), tickCategoryNames[tick.category], extra);
         tickValues[tick.time] = text;
         table.insert(ticksSorted, tick.time);
     end
+    table.sort(ticksSorted);
 
     local valid, total = CountValidTicks(windowRaid);
     local allowedTicks = AceGUI:Create("ABGP_Filter");
@@ -646,9 +693,10 @@ function ABGP:ManageRaid(window)
     container:AddChild(scroll);
 
     local allowedTickValues, allowedTicksSorted = {}, {};
-    for _, tick in ipairs(windowRaid.ticks) do
+    for _, tick in pairs(windowRaid.ticks) do
         if windowRaid.allowedTicks[tick.time] then
-            local text = ("%s: %s"):format(date("%I:%M%p", tick.time), tickCategoryNames[tick.category]);
+            local extra = tick.extra and (" (%s)"):format(tick.extra) or "";
+            local text = ("%s: %s%s"):format(date("%I:%M%p", tick.time), tickCategoryNames[tick.category], extra);
             allowedTickValues[tick.time] = text;
             table.insert(allowedTicksSorted, tick.time);
         end
@@ -660,15 +708,15 @@ function ABGP:ManageRaid(window)
         elt:SetText(self:ColorizeName(player));
         scroll:AddChild(elt);
 
-        local ticks = AceGUI:Create("ABGP_Filter");
-        ticks:SetValues(windowRaid.players[player], false, allowedTickValues, allowedTicksSorted);
-        ticks:SetFullWidth(true);
-        ticks:SetText(("Ticks (%d)"):format(CountPlayerTicks(windowRaid, player)));
-        ticks:SetCallback("OnFilterClosed", function(widget)
+        local tickFilter = AceGUI:Create("ABGP_Filter");
+        tickFilter:SetValues(windowRaid.players[player], false, allowedTickValues, allowedTicksSorted);
+        tickFilter:SetFullWidth(true);
+        tickFilter:SetText(("Ticks (%d)"):format(CountPlayerTicks(windowRaid, player)));
+        tickFilter:SetCallback("OnFilterClosed", function(widget)
             widget:SetText(("Ticks (%d)"):format(CountPlayerTicks(windowRaid, player)));
         end);
-        scroll:AddChild(ticks);
-        self:AddWidgetTooltip(ticks, "Select the ticks for which the player was present.");
+        scroll:AddChild(tickFilter);
+        self:AddWidgetTooltip(tickFilter, "Select the ticks for which the player was present.");
 
         elt = AceGUI:Create("Button");
         elt:SetText("X");
@@ -680,6 +728,10 @@ function ABGP:ManageRaid(window)
     end
 
     window:SetUserData("popup", popup);
+    self:BeginWindowManagement(popup, "popup", {
+        defaultWidth = popupWidth,
+        defaultHeight = popupHeight,
+    });
 end
 
 function ABGP:UpdateRaid(windowRaid)
@@ -813,7 +865,7 @@ function ABGP:ExportRaid(windowRaid)
     local totalTicks = CountValidTicks(windowRaid);
 
     local sortedPlayers = {};
-    for player, ticks in pairs(windowRaid.players) do
+    for player in pairs(windowRaid.players) do
         table.insert(sortedPlayers, player);
     end
     table.sort(sortedPlayers);
@@ -821,24 +873,32 @@ function ABGP:ExportRaid(windowRaid)
     local text = "";
     for _, player in ipairs(sortedPlayers) do
         local tickCount = CountPlayerTicks(windowRaid, player);
+        if tickCount > 0 then
+            local ep = math.floor(tickCount / totalTicks * 100 + 0.5);
+            local epgp = self:GetActivePlayer(player);
+            local breakdown = {};
 
-        local epgp = self:GetActivePlayer(player);
-        local breakdown = {};
-        table.insert(breakdown, ("%d/%d ticks"):format(tickCount, totalTicks));
-        local ep = math.floor(tickCount / totalTicks * 100 + 0.5);
+            for _, category in ipairs(tickCategoriesSorted) do
+                local categoryCount = CountPlayerTicks(windowRaid, player, category);
+                if categoryCount > 0 then
+                    local totalCategoryTicks = CountValidTicks(windowRaid, category);
+                    table.insert(breakdown, tickCategoryBreakdowns[category]:format(categoryCount, totalCategoryTicks));
+                end
+            end
 
-        if epgp then
-            if epgp.trial then
-                table.insert(breakdown, 1, "Trial");
+            if epgp then
+                if epgp.trial then
+                    table.insert(breakdown, 1, "Trial");
+                    ep = 0;
+                end
+            else
+                table.insert(breakdown, 1, "Non-raider");
                 ep = 0;
             end
-        else
-            table.insert(breakdown, 1, "Non-raider");
-            ep = 0;
-        end
 
-        text = text .. ("%s\t%s\t%s\t%s\t%s\t\t%s\n"):format(
-            ep, "EP", windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
+            text = text .. ("%s\t%s\t%s\t%s\t%s\t\t%s\n"):format(
+                ep, "EP", windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
+        end
     end
 
     self:OpenExportWindow(text);

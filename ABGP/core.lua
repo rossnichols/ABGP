@@ -80,6 +80,7 @@ function ABGP:OnEnable()
     self:RefreshItemValues();
     self:SetupCommMonitor();
     self:InitMinimapIcon();
+    self:InitEvents();
 
     -- Trigger a guild roster update to refresh priorities.
     GuildRoster();
