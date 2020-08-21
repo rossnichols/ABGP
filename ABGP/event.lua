@@ -618,6 +618,7 @@ function ABGP:ManageRaid(window)
     self:AddWidgetTooltip(allowedTicks, "Select the ticks that should be used for attendance.");
 
     local container = AceGUI:Create("InlineGroup");
+    container:SetLayout("Fill");
     container:SetFullWidth(true);
     container:SetFullHeight(true);
     container:SetTitle("Attendance");
