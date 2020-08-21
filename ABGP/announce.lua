@@ -312,6 +312,7 @@ function ABGP:ShowLootFrame(itemLink)
             if tokenItem then
                 ABGP:ShowRequestPopup(itemLink, tokenItem);
             else
+                local itemLinks = widget:GetRelatedItems();
                 local context = {
                     {
                         text = "Select an item",
@@ -319,23 +320,48 @@ function ABGP:ShowLootFrame(itemLink)
                         notCheckable = true
                     }
                 };
-                local itemLinks = widget:GetRelatedItems();
+
+                local tokenCount = 0;
+                local selectedTokenItem;
+                local function processTokenItem(tokenItem)
+                    tokenCount = tokenCount + 1;
+                    selectedTokenItem = tokenItem;
+
+                    local menu = {};
+                    local value = ABGP:GetItemValue(ABGP:GetItemId(tokenItem));
+                    menu.icon = GetItemIcon(tokenItem);
+                    menu.text = ("%s: %s"):format(ABGP:ColorizeText(value.item), ABGP:FormatCost(value.gp, value.category, "%s%s"));
+                    menu.notCheckable = true;
+                    menu.func = function()
+                        widget:SelectRelatedItem(tokenItem, true);
+                        ABGP:ShowRequestPopup(itemLink, tokenItem);
+                    end;
+                    table.insert(context, menu);
+                end
+
+                -- First try to just add usable items.
                 for _, tokenItem in ipairs(itemLinks) do
                     if ABGP:IsItemUsable(tokenItem) then
-                        local menu = {};
-                        local value = ABGP:GetItemValue(ABGP:GetItemId(tokenItem));
-                        menu.icon = GetItemIcon(tokenItem);
-                        menu.text = ("%s: %s"):format(ABGP:ColorizeText(value.item), ABGP:FormatCost(value.gp, value.category, "%s%s"));
-                        menu.notCheckable = true;
-                        menu.func = function()
-                            widget:SelectRelatedItem(tokenItem, true);
-                            ABGP:ShowRequestPopup(itemLink, tokenItem);
-                        end;
-                        table.insert(context, menu);
+                        processTokenItem(tokenItem);
                     end
                 end
-                table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
-                ABGP:ShowContextMenu(context);
+
+                -- If nothing was added, just add everything.
+                if tokenCount == 0 then
+                    for _, tokenItem in ipairs(itemLinks) do
+                        processTokenItem(tokenItem);
+                    end
+                end
+
+                -- If a single item was added, immediately select it.
+                -- Otherwise, show the menu.
+                if tokenCount == 1 then
+                    widget:SelectRelatedItem(selectedTokenItem, true);
+                    ABGP:ShowRequestPopup(itemLink, selectedTokenItem);
+                else
+                    table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
+                    ABGP:ShowContextMenu(context);
+                end
             end
         else
             ABGP:ShowRequestPopup(itemLink);
