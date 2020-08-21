@@ -640,7 +640,7 @@ function ABGP:ManageRaid(window)
         AceGUI:Release(widget);
         window:SetUserData("popup", nil);
     end);
-    local popupWidth = 425;
+    local popupWidth = 435;
     local popupHeight = 300;
     popup:SetWidth(popupWidth);
     popup:SetHeight(popupHeight);
@@ -689,7 +689,7 @@ function ABGP:ManageRaid(window)
     scroll:SetFullWidth(true);
     scroll:SetFullHeight(true);
     scroll:SetLayout("Table");
-    scroll:SetUserData("table", { columns = { 120, 200, 40 } });
+    scroll:SetUserData("table", { columns = { 120, 200, 50 } });
     container:AddChild(scroll);
 
     local allowedTickValues, allowedTicksSorted = {}, {};
@@ -701,6 +701,7 @@ function ABGP:ManageRaid(window)
             table.insert(allowedTicksSorted, tick.time);
         end
     end
+    table.sort(allowedTicksSorted);
 
     for _, player in ipairs(sorted) do
         local elt = AceGUI:Create("ABGP_Header");
