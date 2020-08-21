@@ -281,6 +281,19 @@ local function CountPlayerTicks(raid, player)
     return tickCount;
 end
 
+local function CountValidTicks(raid)
+    local totalTicks = 0;
+    local totalValidTicks = 0;
+    for _, tick in pairs(raid.ticks) do
+        totalTicks = totalTicks + 1;
+        if raid.allowedTicks[tick.time] then
+            totalValidTicks = totalValidTicks + 1;
+        end
+    end
+
+    return totalValidTicks, totalTicks;
+end
+
 local currentInstance;
 local activeWindow;
 local lastTickTime = 0;
@@ -607,10 +620,11 @@ function ABGP:ManageRaid(window)
         table.insert(ticksSorted, tick.time);
     end
 
+    local valid, total = CountValidTicks(windowRaid);
     local allowedTicks = AceGUI:Create("ABGP_Filter");
     allowedTicks:SetValues(windowRaid.allowedTicks, false, tickValues, ticksSorted);
-    allowedTicks:SetWidth(200);
-    allowedTicks:SetDefaultText("Valid ticks");
+    allowedTicks:SetFullWidth(true);
+    allowedTicks:SetDefaultText(("Attendance ticks (%d total, %d active)"):format(total, valid));
     allowedTicks:SetCallback("OnFilterClosed", function()
         RefreshUI();
     end);
@@ -796,13 +810,7 @@ end
 
 function ABGP:ExportRaid(windowRaid)
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
-
-    local totalTicks = 0;
-    for _, tick in pairs(windowRaid.ticks) do
-        if windowRaid.allowedTicks[tick.time] then
-            totalTicks = totalTicks + 1;
-        end
-    end
+    local totalTicks = CountValidTicks(windowRaid);
 
     local sortedPlayers = {};
     for player, ticks in pairs(windowRaid.players) do
