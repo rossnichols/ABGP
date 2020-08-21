@@ -17,6 +17,7 @@ local FlashClientIcon = FlashClientIcon;
 local GetTime = GetTime;
 local IsShiftKeyDown = IsShiftKeyDown;
 local GetItemIcon = GetItemIcon;
+local IsMasterLooter = IsMasterLooter;
 local select = select;
 local table = table;
 local ipairs = ipairs;
@@ -320,16 +321,18 @@ function ABGP:ShowLootFrame(itemLink)
                 };
                 local itemLinks = widget:GetRelatedItems();
                 for _, tokenItem in ipairs(itemLinks) do
-                    local menu = {};
-                    local value = ABGP:GetItemValue(ABGP:GetItemId(tokenItem));
-                    menu.icon = GetItemIcon(tokenItem);
-                    menu.text = value.item;
-                    menu.notCheckable = true;
-                    menu.func = function()
-                        widget:SelectRelatedItem(tokenItem, true);
-                        ABGP:ShowRequestPopup(itemLink, tokenItem);
-                    end;
-                    table.insert(context, menu);
+                    if ABGP:IsItemUsable(tokenItem) then
+                        local menu = {};
+                        local value = ABGP:GetItemValue(ABGP:GetItemId(tokenItem));
+                        menu.icon = GetItemIcon(tokenItem);
+                        menu.text = ("%s: %s"):format(ABGP:ColorizeText(value.item), ABGP:FormatCost(value.gp, value.category, "%s%s"));
+                        menu.notCheckable = true;
+                        menu.func = function()
+                            widget:SelectRelatedItem(tokenItem, true);
+                            ABGP:ShowRequestPopup(itemLink, tokenItem);
+                        end;
+                        table.insert(context, menu);
+                    end
                 end
                 table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                 ABGP:ShowContextMenu(context);
