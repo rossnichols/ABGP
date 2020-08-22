@@ -90,6 +90,7 @@ local bossIds = {
 local instanceInfo = {
     [instanceIds.MoltenCore]  = {
         name = "Molten Core",
+        promptRaidStart = true,
         bosses = {
             bossIds.Lucifron, bossIds.Magmadar, bossIds.Gehennas, bossIds.Garr, bossIds.Shazzrah,
             bossIds.Geddon, bossIds.Sulfuron, bossIds.Golemagg, bossIds.Majordomo, bossIds.Ragnaros
@@ -97,6 +98,7 @@ local instanceInfo = {
     },
     [instanceIds.BlackwingLair] = {
         name = "Blackwing Lair",
+        promptRaidStart = true,
         bosses = {
             bossIds.Razorgore, bossIds.Vaelastrasz, bossIds.Broodlord, bossIds.Firemaw,
             bossIds.Ebonroc, bossIds.Flamegor, bossIds.Chromaggus, bossIds.Nefarian
@@ -104,6 +106,7 @@ local instanceInfo = {
     },
     [instanceIds.AQ40] = {
         name = "Temple of Ahn'Qiraj",
+        promptRaidStart = true,
         bosses = {
             bossIds.Skeram, bossIds.BugTrio, bossIds.Sartura, bossIds.Fankriss, bossIds.Viscidus,
             bossIds.Huhuran, bossIds.TwinEmps, bossIds.Ouro, bossIds.Cthun
@@ -489,7 +492,7 @@ function ABGP:EventOnZoneChanged(name, instanceId)
     self:LogDebug("Zone changed to %s[%d]!", name, instanceId);
     currentInstance = instanceId;
     local info = instanceInfo[instanceId];
-    if info then
+    if info and info.promptRaidStart then
         -- Gently suggest that a raid gets started.
         if self:IsPrivileged() and not self:IsRaidInProgress() and self:Get("promptRaidStart") then
             self:StartRaid();
