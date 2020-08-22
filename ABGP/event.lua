@@ -865,44 +865,89 @@ function ABGP:ExportRaid(windowRaid)
     local raidDate = date("%m/%d/%y", windowRaid.startTime); -- https://strftime.org/
     local totalTicks = CountValidTicks(windowRaid);
 
-    local sortedPlayers = {};
-    for player in pairs(windowRaid.players) do
-        table.insert(sortedPlayers, player);
-    end
-    table.sort(sortedPlayers);
+    local substitutions = {};
+    local function buildExportText()
+        local sortedPlayers = {};
+        for player in pairs(windowRaid.players) do
+            table.insert(sortedPlayers, player);
+        end
+        table.sort(sortedPlayers, function(a, b)
+            a = substitutions[a] or a;
+            b = substitutions[b] or b;
 
-    local text = "";
-    for _, player in ipairs(sortedPlayers) do
-        local tickCount = CountPlayerTicks(windowRaid, player);
-        if tickCount > 0 then
-            local ep = math.floor(tickCount / totalTicks * 100 + 0.5);
-            local epgp = self:GetActivePlayer(player);
-            local breakdown = {};
-
-            for _, category in ipairs(tickCategoriesSorted) do
-                local categoryCount = CountPlayerTicks(windowRaid, player, category);
-                if categoryCount > 0 then
-                    local totalCategoryTicks = CountValidTicks(windowRaid, category);
-                    table.insert(breakdown, tickCategoryBreakdowns[category]:format(categoryCount, totalCategoryTicks));
-                end
+            local aActive = self:GetActivePlayer(a);
+            local bActive = self:GetActivePlayer(b);
+            if not aActive and not bActive then return a < b; end
+            if aActive and bActive then
+                if aActive.raidGroup == bActive.raidGroup then return a < b; end
+                return self.RaidGroupsSortedReverse[aActive.raidGroup] < self.RaidGroupsSortedReverse[bActive.raidGroup];
             end
+            return aActive ~= nil;
+        end);
 
-            if epgp then
-                if epgp.trial then
-                    table.insert(breakdown, 1, "Trial");
+        local text = "";
+        for _, player in ipairs(sortedPlayers) do
+            local tickCount = CountPlayerTicks(windowRaid, player);
+            if tickCount > 0 then
+                local exportedPlayer = substitutions[player] or player;
+                local ep = math.floor(tickCount / totalTicks * 100 + 0.5);
+                local epgp = self:GetActivePlayer(exportedPlayer);
+                local breakdown = {};
+                local raidGroup = "";
+
+                for _, category in ipairs(tickCategoriesSorted) do
+                    local categoryCount = CountPlayerTicks(windowRaid, player, category);
+                    if categoryCount > 0 then
+                        local totalCategoryTicks = CountValidTicks(windowRaid, category);
+                        table.insert(breakdown, tickCategoryBreakdowns[category]:format(categoryCount, totalCategoryTicks));
+                    end
+                end
+
+                if epgp then
+                    raidGroup = self.RaidGroupNames[epgp.raidGroup];
+                    if epgp.trial then
+                        table.insert(breakdown, 1, "Trial");
+                        ep = 0;
+                    end
+                else
+                    table.insert(breakdown, 1, "Non-raider");
                     ep = 0;
                 end
-            else
-                table.insert(breakdown, 1, "Non-raider");
-                ep = 0;
-            end
 
-            text = text .. ("%s\t%s\t%s\t%s\t%s\t\t%s\n"):format(
-                ep, "EP", windowRaid.name, player, raidDate, table.concat(breakdown, ", "));
+                if exportedPlayer ~= player then
+                    table.insert(breakdown, ("attended on %s"):format(player));
+                end
+
+                text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
+                    ep, "EP", windowRaid.name, exportedPlayer, raidDate, raidGroup, table.concat(breakdown, ", "));
+            end
         end
+
+        return text;
     end
 
-    self:OpenExportWindow(text);
+    local exportEdit;
+    local extra = AceGUI:Create("InlineGroup");
+    extra:SetFullWidth(true);
+    extra:SetTitle("Substitutions");
+    extra:SetLayout("Flow");
+    local edit = AceGUI:Create("MultiLineEditBox");
+    edit:SetFullWidth(true);
+    edit:SetLabel("Enter two names per row. If the first name attended the raid, they will be treated as the second name for EPGP.");
+    edit:SetCallback("OnEnterPressed", function(widget, event, value)
+        substitutions = {};
+        local lines = { ("\n"):split(value) };
+        for _, line in ipairs(lines) do
+            local first, second = line:match("^(%S+)%s*(%S+)$");
+            if first and second then
+                substitutions[first] = second;
+            end
+        end
+        exportEdit:SetText(buildExportText());
+    end);
+    extra:AddChild(edit);
+
+    exportEdit = self:OpenExportWindow(buildExportText(), extra);
 end
 
 function ABGP:EventOnGroupJoined()

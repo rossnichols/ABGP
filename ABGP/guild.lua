@@ -27,6 +27,10 @@ ABGP.RaidGroupsSorted = {
     ABGP.RaidGroups.RED,
     ABGP.RaidGroups.BLUE
 };
+ABGP.RaidGroupsSortedReverse = {
+    [ABGP.RaidGroups.RED] = 1,
+    [ABGP.RaidGroups.BLUE] = 2,
+};
 local rankData = {
     ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED },
     ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED },
