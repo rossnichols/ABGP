@@ -169,6 +169,24 @@ local function GetLootFrame(itemLink)
     end
 end
 
+local function SetDefaultInfo(elt, itemLink)
+    local itemName = ABGP:GetItemName(itemLink);
+    local value = ABGP:GetItemValue(itemName);
+    local valueText = value and ABGP:FormatCost(value.gp, value.category) or "No GP Cost";
+    local valueTextCompact = value and ABGP:FormatCost(value.gp, value.category, "%s%s") or "--";
+    if value and value.token then
+        elt:SetUserData("isToken", true);
+        valueText = nil;
+        valueTextCompact = "T";
+        elt:SetRelatedItems(ABGP:GetTokenItems(itemLink));
+        local tokenItem = elt:GetUserData("tokenItem");
+        if tokenItem then
+            elt:SelectRelatedItem(tokenItem, true);
+        end
+    end
+    elt:SetSecondaryText(valueText, valueTextCompact);
+end
+
 local function SetRequestInfo(elt, itemLink, activeItem)
     local requestType = activeItem.sentRequestType;
     local roll = activeItem.roll;
@@ -200,21 +218,7 @@ local function SetRequestInfo(elt, itemLink, activeItem)
         end
     else
         elt:SetUserData("requested", false);
-        local itemName = ABGP:GetItemName(itemLink);
-        local value = ABGP:GetItemValue(itemName);
-        local valueText = value and ABGP:FormatCost(value.gp, value.category) or "No GP Cost";
-        local valueTextCompact = value and ABGP:FormatCost(value.gp, value.category, "%s%s") or "--";
-        if value and value.token then
-            elt:SetUserData("isToken", true);
-            valueText = nil;
-            valueTextCompact = "T";
-            elt:SetRelatedItems(ABGP:GetTokenItems(itemLink));
-            local tokenItem = elt:GetUserData("tokenItem");
-            if tokenItem then
-                elt:SelectRelatedItem(tokenItem, true);
-            end
-        end
-        elt:SetSecondaryText(valueText, valueTextCompact);
+        SetDefaultInfo(elt, itemLink);
     end
 
     elt:SetCount(activeItem.count);
@@ -244,19 +248,8 @@ function ABGP:ShowLootFrame(itemLink)
     elt:SetItem(itemLink);
     elt:SetDuration(self:Get("lootDuration"));
     elt:EnableRequests(false, "Item not open for distribution.");
+    SetDefaultInfo(elt, itemLink);
     forceClosures[itemLink] = nil;
-
-    local itemName = ABGP:GetItemName(itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    local valueText = value and ABGP:FormatCost(value.gp, value.category) or "No GP Cost";
-    local valueTextCompact = value and ABGP:FormatCost(value.gp, value.category, "%s%s") or "--";
-    if value and value.token then
-        elt:SetUserData("isToken", true);
-        valueText = nil;
-        valueTextCompact = "T";
-        elt:SetRelatedItems(ABGP:GetTokenItems(itemLink));
-    end
-    elt:SetSecondaryText(valueText, valueTextCompact);
 
     -- Determine the first free slot for the frame.
     local i = 1;
