@@ -431,6 +431,13 @@ function ABGP:InitEvents()
     end
 end
 
+function ABGP:GetRaidStatistics(raid)
+    local ticks = CountValidTicks(raid);
+    local kills = CountValidTicks(raid, tickCategories.BOSSKILL);
+    local wipes = CountValidTicks(raid, tickCategories.BOSSWIPE);
+    return ticks, kills, wipes;
+end
+
 function ABGP:IsRaidInProgress()
     return _G.ABGP_RaidInfo3.currentRaid ~= nil;
 end

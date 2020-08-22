@@ -7,6 +7,7 @@ local UnitExists = UnitExists;
 local IsInGroup = IsInGroup;
 local GetItemInfo = GetItemInfo;
 local GetAutoCompleteResults = GetAutoCompleteResults;
+local SecondsToTime = SecondsToTime;
 local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
 local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local date = date;
@@ -142,7 +143,7 @@ local function DrawPriority(container, options)
     -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
-    local widths = { 35, 120, 110, 75, 75, 85, 75, 1.0 };
+    local widths = { 35, 120, 110, 75, 75, 85, 75, 85 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0 } });
@@ -1350,7 +1351,7 @@ local function DrawRaidHistory(container, options)
     -- local command = options.command;
     if not rebuild and reason then return; end
 
-    local widths = { 1.0 };
+    local widths = { 180, 70, 100, 50, 50, 50 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 1.0, 0 } });
@@ -1362,7 +1363,14 @@ local function DrawRaidHistory(container, options)
         scrollContainer:SetLayout("Flow");
         container:AddChild(scrollContainer);
 
-        local columns = { "Name", weights = { unpack(widths) } };
+        local columns = {
+            { canSort = true, defaultAsc = true, name = "Raid" },
+            { canSort = true, defaultAsc = false, name = "Date" },
+            { canSort = true, defaultAsc = false, name = "Duration" },
+            { canSort = true, defaultAsc = false, name = "Ticks", rightJustify = true },
+            { canSort = true, defaultAsc = false, name = "Kills", rightJustify = true },
+            { canSort = true, defaultAsc = false, name = "Wipes", rightJustify = true },
+            weights = { unpack(widths) } };
         local header = AceGUI:Create("SimpleGroup");
         header:SetFullWidth(true);
         header:SetLayout("Table");
@@ -1373,7 +1381,24 @@ local function DrawRaidHistory(container, options)
             local desc = AceGUI:Create("ABGP_Header");
             desc:SetFullWidth(true);
             desc:SetFont(_G.GameFontHighlightSmall);
-            desc:SetText(columns[i]);
+            desc:SetText(columns[i].name);
+            if columns[i].canSort then
+                desc:EnableHighlight(true);
+                desc:SetCallback("OnClick", function()
+                    local current = container:GetUserData("sortCol");
+                    if current == i then
+                        container:SetUserData("sortAsc", not container:GetUserData("sortAsc"));
+                    else
+                        container:SetUserData("sortAsc", columns[i].defaultAsc);
+                    end
+                    container:SetUserData("sortCol", i);
+                    PopulateUI({ rebuild = false });
+                end);
+            end
+            if columns[i].rightJustify then
+                desc:SetJustifyH("RIGHT");
+                desc:SetPadding(2, -10);
+            end
             header:AddChild(desc);
         end
 
@@ -1393,29 +1418,104 @@ local function DrawRaidHistory(container, options)
         end);
         container:AddChild(pagination);
         container:SetUserData("pagination", pagination);
+
+        container:SetUserData("sortCol", 2);
+        container:SetUserData("sortAsc", false);
     end
 
     local raidList = container:GetUserData("raidList");
     local scrollValue = preserveScroll and raidList:GetUserData("statusTable").scrollvalue or 0;
     raidList:ReleaseChildren();
 
+    local function guessRaidGroup(raid)
+        local raidGroups = {};
+        for player in pairs(raid.players) do
+            local epgp = ABGP:GetActivePlayer(player);
+            if epgp then
+                raidGroups[epgp.raidGroup] = (raidGroups[epgp.raidGroup] or 0) + 1;
+            end
+        end
+
+        local raidGroup, maxCount = nil, 0;
+        for raidGroupCmp, count in pairs(raidGroups) do
+            if count > maxCount then
+                maxCount = count;
+                raidGroup = raidGroupCmp;
+            end
+        end
+
+        return raidGroup;
+    end
+
     local raids = _G.ABGP_RaidInfo3.pastRaids;
     local filtered = {};
     for _, raid in ipairs(raids) do
-        table.insert(filtered, raid);
+        if not currentRaidGroup or guessRaidGroup(raid) == currentRaidGroup then
+            local ticks, kills, wipes = ABGP:GetRaidStatistics(raid);
+            table.insert(filtered, {
+                raid = raid,
+                name = raid.name,
+                startTime = raid.startTime,
+                stopTime = raid.stopTime,
+                date = date("%m/%d/%y", raid.startTime),
+                duration = SecondsToTime(raid.stopTime - raid.startTime, true),
+                ticks = ticks,
+                bossKills = kills,
+                bossWipes = wipes,
+            });
+        end
     end
+
+    local sorts = {
+        -- Raid
+        function(a, b) return a.name < b.name, a.name == b.name; end,
+
+        -- Date
+        function(a, b) return a.startTime < b.startTime, a.startTime == b.startTime; end,
+
+        -- Duration
+        function(a, b)
+            local aDuration = a.stopTime - a.startTime;
+            local bDuration = b.stopTime - b.startTime;
+            return aDuration < bDuration, aDuration == bDuration;
+        end,
+
+        -- Ticks
+        function(a, b) return a.ticks < b.ticks, a.ticks == b.ticks; end,
+
+        -- Kills
+        function(a, b) return a.bossKills < b.bossKills, a.bossKills == b.bossKills; end,
+
+        -- Wipes
+        function(a, b) return a.bossWipes < b.bossWipes, a.bossWipes == b.bossWipes; end,
+    };
+
+    local sortCol = container:GetUserData("sortCol");
+    local sortAsc = container:GetUserData("sortAsc");
+    table.sort(filtered, function(a, b)
+        local lt, eq = sorts[sortCol](a, b);
+        if eq then
+            return sorts[1](a, b);
+        elseif sortAsc then
+            return lt;
+        else
+            return not lt;
+        end
+    end);
 
     local pagination = container:GetUserData("pagination");
     pagination:SetValues(#filtered, 100);
     if #filtered > 0 then
         local first, last = pagination:GetRange();
+        local count = 0;
         for i = first, last do
+            count = count + 1;
             local raid = filtered[i];
-            local elt = AceGUI:Create("ABGP_Header");
+            local elt = AceGUI:Create("ABGP_RaidHistory");
             elt:SetFullWidth(true);
-            local raidDate = date("%m/%d/%y", raid.startTime); -- https://strftime.org/
-            elt:SetText(("%s (%s)"):format(raid.name, raidDate));
-            elt:EnableHighlight(true);
+            elt:SetData(raid);
+            elt:SetWidths(widths);
+            elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
                     ABGP:ShowContextMenu({
@@ -1424,7 +1524,7 @@ local function DrawRaidHistory(container, options)
                             func = function(self, raid)
                                 ABGP:ExportRaid(raid);
                             end,
-                            arg1 = raid,
+                            arg1 = raid.raid,
                             notCheckable = true
                         },
                         {
@@ -1432,7 +1532,7 @@ local function DrawRaidHistory(container, options)
                             func = function(self, raid)
                                 ABGP:UpdateRaid(raid);
                             end,
-                            arg1 = raid,
+                            arg1 = raid.raid,
                             notCheckable = true
                         },
                         {
@@ -1440,7 +1540,7 @@ local function DrawRaidHistory(container, options)
                             func = function(self, raid)
                                 ABGP:DeleteRaid(raid);
                             end,
-                            arg1 = raid,
+                            arg1 = raid.raid,
                             notCheckable = true
                         },
                         { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" },

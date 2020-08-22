@@ -129,6 +129,10 @@ local function CreateFontString(frame, y)
     return fontstr;
 end
 
+local highlightFont = CreateFont("ABGPHighlight");
+highlightFont:CopyFontObject(GameFontHighlight);
+highlightFont:SetTextColor(unpack(ABGP.ColorTable));
+
 do
     local Type, Version = "ABGP_ItemButton", 1;
 
@@ -279,10 +283,6 @@ end
 
 do
     local Type, Version = "ABGP_Player", 1;
-
-    local mainSpecFont = CreateFont("ABGPHighlight");
-    mainSpecFont:CopyFontObject(GameFontHighlight);
-    mainSpecFont:SetTextColor(unpack(ABGP.ColorTable));
 
     local gold = CreateFont("ABGPGold");
     gold:CopyFontObject(GameFontHighlight);
@@ -509,20 +509,13 @@ end
 do
     local Type, Version = "ABGP_Priority", 1;
 
-    local mainSpecFont = CreateFont("ABGPHighlight");
-    mainSpecFont:CopyFontObject(GameFontHighlight);
-    mainSpecFont:SetTextColor(unpack(ABGP.ColorTable));
-
     --[[-----------------------------------------------------------------------------
     Methods
     -------------------------------------------------------------------------------]]
     local methods = {
         ["OnAcquire"] = function(self)
-            self:SetHeight(20);
-
             self.frame.highlightRequests = 0;
             self.frame:UnlockHighlight();
-
             self.background:Hide();
         end,
 
@@ -557,6 +550,7 @@ do
             self.silvergp:SetWidth(widths[5] or 0);
             self.silverprio:SetWidth(widths[6] or 0);
             self.goldgp:SetWidth(widths[7] or 0);
+            self.goldprio:SetWidth(widths[8] or 0);
         end,
 
         ["ShowBackground"] = function(self, show)
@@ -569,7 +563,7 @@ do
     -------------------------------------------------------------------------------]]
     local function Constructor()
         local frame = CreateFrame("Button", nil, _G.UIParent);
-        frame:SetHeight(32);
+        frame:SetHeight(20);
         frame:Hide();
 
         frame.highlightRequests = 0;
@@ -614,7 +608,6 @@ do
 
         local goldprio = CreateElement(frame, goldgp);
         goldprio.text = CreateFontString(goldprio);
-        goldprio:SetPoint("TOPRIGHT", frame);
 
         -- create widget
         local widget = {
@@ -2202,6 +2195,119 @@ do
 
         -- create widget
         local widget = {
+            frame = frame,
+            type  = Type
+        }
+        for method, func in pairs(methods) do
+            widget[method] = func
+        end
+
+        return AceGUI:RegisterAsWidget(widget)
+    end
+
+    AceGUI:RegisterWidgetType(Type, Constructor, Version)
+end
+
+do
+    local Type, Version = "ABGP_RaidHistory", 1;
+
+    --[[-----------------------------------------------------------------------------
+    Methods
+    -------------------------------------------------------------------------------]]
+    local methods = {
+        ["OnAcquire"] = function(self)
+            self.frame.highlightRequests = 0;
+            self.frame:UnlockHighlight();
+            self.background:Hide();
+        end,
+
+        ["SetData"] = function(self, data)
+            self.data = data;
+
+            self.name.text:SetText(data.name);
+            self.date.text:SetText(data.date);
+            self.duration.text:SetText(data.duration);
+            self.ticks.text:SetText(data.ticks);
+            self.bossKills.text:SetText(data.bossKills);
+            self.bossWipes.text:SetText(data.bossWipes);
+        end,
+
+        ["SetWidths"] = function(self, widths)
+            self.name:SetWidth(widths[1] or 0);
+            self.date:SetWidth(widths[2] or 0);
+            self.duration:SetWidth(widths[3] or 0);
+            self.ticks:SetWidth(widths[4] or 0);
+            self.bossKills:SetWidth(widths[5] or 0);
+            self.bossWipes:SetWidth(widths[6] or 0);
+        end,
+
+        ["ShowBackground"] = function(self, show)
+            self.background[show and "Show" or "Hide"](self.background);
+        end,
+    }
+
+    --[[-----------------------------------------------------------------------------
+    Constructor
+    -------------------------------------------------------------------------------]]
+    local function Constructor()
+        local frame = CreateFrame("Button", nil, _G.UIParent);
+        frame:SetHeight(20);
+        frame:Hide();
+
+        frame.highlightRequests = 0;
+        frame.RequestHighlight = function(self, enable)
+            self.highlightRequests = self.highlightRequests + (enable and 1 or -1);
+            self[self.highlightRequests > 0 and "LockHighlight" or "UnlockHighlight"](self);
+        end;
+
+        local highlight = frame:CreateTexture(nil, "HIGHLIGHT");
+        highlight:SetTexture("Interface\\HelpFrame\\HelpFrameButton-Highlight");
+        highlight:SetAllPoints();
+        highlight:SetBlendMode("ADD");
+        highlight:SetTexCoord(0, 1, 0, 0.578125);
+
+        local background = frame:CreateTexture(nil, "BACKGROUND");
+        background:SetAllPoints();
+        background:SetColorTexture(0, 0, 0, 0.5);
+
+        local name = CreateElement(frame);
+        name.text = CreateFontString(name);
+
+        local date = CreateElement(frame, name);
+        date.text = CreateFontString(date);
+
+        local duration = CreateElement(frame, date);
+        duration.text = CreateFontString(duration);
+
+        local ticks = CreateElement(frame, duration);
+        ticks.text = CreateFontString(ticks);
+        ticks.text:SetJustifyH("RIGHT");
+        ticks.text:SetPoint("LEFT", ticks, 2, 1);
+        ticks.text:SetPoint("RIGHT", ticks, -10, 1);
+
+        local bossKills = CreateElement(frame, ticks);
+        bossKills.text = CreateFontString(bossKills);
+        bossKills.text:SetJustifyH("RIGHT");
+        bossKills.text:SetPoint("LEFT", bossKills, 2, 1);
+        bossKills.text:SetPoint("RIGHT", bossKills, -10, 1);
+
+        local bossWipes = CreateElement(frame, bossKills);
+        bossWipes.text = CreateFontString(bossWipes);
+        bossWipes.text:SetJustifyH("RIGHT");
+        bossWipes.text:SetPoint("LEFT", bossWipes, 2, 1);
+        bossWipes.text:SetPoint("RIGHT", bossWipes, -10, 1);
+
+        -- create widget
+        local widget = {
+            name = name,
+            date = date,
+            duration = duration,
+            ticks = ticks,
+            bossKills = bossKills,
+            bossWipes = bossWipes,
+
+            background = background,
+
             frame = frame,
             type  = Type
         }
