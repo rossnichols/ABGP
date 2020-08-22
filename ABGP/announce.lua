@@ -248,8 +248,8 @@ function ABGP:ShowLootFrame(itemLink)
 
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
-    local valueText = (value and value.gp ~= 0) and ("GP cost: %s"):format(self:ColorizeText(value.gp)) or "No GP Cost";
-    local valueTextCompact = (value and value.gp ~= 0) and value.gp or "--";
+    local valueText = value and ABGP:FormatCost(value.gp, value.category) or "No GP Cost";
+    local valueTextCompact = value and ABGP:FormatCost(value.gp, value.category, "%s%s") or "--";
     if value and value.token then
         elt:SetUserData("isToken", true);
         valueText = nil;
