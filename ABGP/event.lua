@@ -730,6 +730,7 @@ function ABGP:ManageRaid(window)
         self:AddWidgetTooltip(tickFilter, "Select the ticks for which the player was present.");
 
         elt = AceGUI:Create("Button");
+        elt:SetFullWidth(true);
         elt:SetText("X");
         elt:SetCallback("OnClick", function()
             _G.StaticPopup_Show("ABGP_REMOVE_FROM_RAID", self:ColorizeName(player), nil, { player = player, raid = windowRaid });

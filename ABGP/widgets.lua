@@ -992,10 +992,14 @@ do
         container:SetFullWidth(true);
         container:SetLayout("table");
         container:SetUserData("table", { columns = { 0, 0, 1.0, 0, 0 } });
+        local fontIncrease = 10;
+        local buttonWidth = 45;
 
         local left1 = AceGUI:Create("Button");
-        left1:SetWidth(45);
-        left1:SetText("<<");
+        left1:SetWidth(buttonWidth);
+        left1:SetText("«");
+        local fontName, fontHeight, fontFlags = left1.text:GetFont();
+        left1.text:SetFont(fontName, fontHeight + fontIncrease, fontFlags);
         left1:SetCallback("OnClick", function()
             widget.page = 1;
             widget:CalculateRange();
@@ -1003,8 +1007,9 @@ do
         container:AddChild(left1);
 
         local left2 = AceGUI:Create("Button");
-        left2:SetWidth(40);
-        left2:SetText("<");
+        left2:SetWidth(buttonWidth);
+        left2:SetText("‹");
+        left2.text:SetFont(fontName, fontHeight + fontIncrease, fontFlags);
         left2:SetCallback("OnClick", function()
             widget.page = widget.page - 1;
             widget:CalculateRange();
@@ -1017,8 +1022,9 @@ do
         container:AddChild(mid);
 
         local right1 = AceGUI:Create("Button");
-        right1:SetWidth(40);
-        right1:SetText(">");
+        right1:SetWidth(buttonWidth);
+        right1:SetText("›");
+        right1.text:SetFont(fontName, fontHeight + fontIncrease, fontFlags);
         right1:SetCallback("OnClick", function()
             widget.page = widget.page + 1;
             widget:CalculateRange();
@@ -1026,8 +1032,9 @@ do
         container:AddChild(right1);
 
         local right2 = AceGUI:Create("Button");
-        right2:SetWidth(45);
-        right2:SetText(">>");
+        right2:SetWidth(buttonWidth);
+        right2:SetText("»");
+        right2.text:SetFont(fontName, fontHeight + fontIncrease, fontFlags);
         right2:SetCallback("OnClick", function()
             widget.page = widget.pageCount;
             widget:CalculateRange();
