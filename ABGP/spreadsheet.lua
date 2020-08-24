@@ -386,49 +386,51 @@ function ABGP:ImportItemHistory()
                 elseif entry.action == "GP Awards" then
                     local entryTime = entry.time;
                     for player, item, cat, gp in entry.info:gmatch("(.-):(.-):(.-):([0-9.]+)%s*") do
-                        if item == "Reset GP" then
-                            table.insert(newGPHistory, {
-                                [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
-                                [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
-                                [self.ItemHistoryIndex.DATE] = entryTime,
-                                [self.ItemHistoryIndex.PLAYER] = player,
-                                [self.ItemHistoryIndex.GP] = tonumber(gp),
-                                [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
-                            });
-                            entryTime = entryTime + 1;
-                        elseif item == "Bonus GP" then
-                            table.insert(newGPHistory, {
-                                [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
-                                [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
-                                [self.ItemHistoryIndex.DATE] = entryTime,
-                                [self.ItemHistoryIndex.PLAYER] = player,
-                                [self.ItemHistoryIndex.GP] = tonumber(gp),
-                                [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
-                            });
-                            entryTime = entryTime + 1;
-                        else
-                            table.insert(newGPHistory, {
-                                [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.ITEM,
-                                [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
-                                [self.ItemHistoryIndex.DATE] = entryTime,
-                                [self.ItemHistoryIndex.PLAYER] = player,
-                                [self.ItemHistoryIndex.GP] = tonumber(gp),
-                                [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
-                                [self.ItemHistoryIndex.ITEMID] = item,
-                            });
-                            entryTime = entryTime + 1;
-                            if cat == "SG" then
-                                -- Any "SG" awards are first processed as gold, then the same amount
-                                -- of gp is awarded as bonus silver.
+                        if self:GetActivePlayer(player) then
+                            if item == "Reset GP" then
+                                table.insert(newGPHistory, {
+                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+                                    [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                    [self.ItemHistoryIndex.DATE] = entryTime,
+                                    [self.ItemHistoryIndex.PLAYER] = player,
+                                    [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                    [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
+                                });
+                                entryTime = entryTime + 1;
+                            elseif item == "Bonus GP" then
                                 table.insert(newGPHistory, {
                                     [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
                                     [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
                                     [self.ItemHistoryIndex.DATE] = entryTime,
                                     [self.ItemHistoryIndex.PLAYER] = player,
                                     [self.ItemHistoryIndex.GP] = tonumber(gp),
-                                    [self.ItemHistoryIndex.CATEGORY] = ABGP.ItemCategory.SILVER,
+                                    [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
                                 });
                                 entryTime = entryTime + 1;
+                            else
+                                table.insert(newGPHistory, {
+                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.ITEM,
+                                    [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                    [self.ItemHistoryIndex.DATE] = entryTime,
+                                    [self.ItemHistoryIndex.PLAYER] = player,
+                                    [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                    [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
+                                    [self.ItemHistoryIndex.ITEMID] = item,
+                                });
+                                entryTime = entryTime + 1;
+                                if cat == "SG" then
+                                    -- Any "SG" awards are first processed as gold, then the same amount
+                                    -- of gp is awarded as bonus silver.
+                                    table.insert(newGPHistory, {
+                                        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+                                        [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
+                                        [self.ItemHistoryIndex.DATE] = entryTime,
+                                        [self.ItemHistoryIndex.PLAYER] = player,
+                                        [self.ItemHistoryIndex.GP] = tonumber(gp),
+                                        [self.ItemHistoryIndex.CATEGORY] = ABGP.ItemCategory.SILVER,
+                                    });
+                                    entryTime = entryTime + 1;
+                                end
                             end
                         end
                     end

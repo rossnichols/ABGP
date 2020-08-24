@@ -4,7 +4,7 @@
 ## Author: Xanido
 ## Version: ${ADDON_VERSION}
 ## OptionalDeps: ElvUI
-## SavedVariables: ABGP_DB, ABGP_WindowManagement, ABGP_DataTimestamp, ABGP_Data2, ABGP_RaidInfo3, ABGP_MessageLog
+## SavedVariables: ABGP_DB, ABGP_WindowManagement, ABGP_Data2, ABGP_RaidInfo3, ABGP_MessageLog
 
 embeds.xml
 core.lua
