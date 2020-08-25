@@ -23,7 +23,7 @@ local ipairs = ipairs;
 local mod = mod;
 
 local startTime = GetTime();
-local suppressionThreshold = 30;
+local suppressionThreshold = 60;
 local alertedSlowComms = false;
 local synchronousCheck = false;
 local delayThreshold = 5;
