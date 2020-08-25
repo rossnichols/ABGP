@@ -98,7 +98,7 @@ function ABGP:RefreshFromOfficerNotes()
                     });
                 end
             elseif note ~= "" and self:GetRaidGroup(rank) then
-                local ep, gpS, gpG = note:match("^(%d+)%:(%d+)%:(%d+)$");
+                local ep, gpS, gpG, raidGroup = note:match("^(%d+)%:(%d+)%:(%d+)%:?(%S*)$");
                 if ep then
                     ep = tonumber(ep) / 1000;
                     gpS = tonumber(gpS) / 1000;
@@ -110,7 +110,7 @@ function ABGP:RefreshFromOfficerNotes()
                             proxy = proxy,
                             rank = rank,
                             class = class,
-                            raidGroup = self:GetRaidGroup(rank),
+                            raidGroup = raidGroup and self.RaidGroupNamesReversed[raidGroup] or self:GetRaidGroup(rank),
                             ep = ep,
                             gp = { [self.ItemCategory.GOLD] = gpG, [self.ItemCategory.SILVER] = gpS },
                             priority = { [self.ItemCategory.GOLD] = ep * 10 / gpG, [self.ItemCategory.SILVER] = ep * 10 / gpS },

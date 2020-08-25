@@ -23,6 +23,10 @@ ABGP.RaidGroupNames = {
     [ABGP.RaidGroups.RED] = "Weekday",
     [ABGP.RaidGroups.BLUE] = "Weekend",
 };
+ABGP.RaidGroupNamesReversed = {
+    ["Weekday"] = ABGP.RaidGroups.RED,
+    ["Weekend"] = ABGP.RaidGroups.BLUE,
+};
 ABGP.RaidGroupsSorted = {
     ABGP.RaidGroups.RED,
     ABGP.RaidGroups.BLUE
