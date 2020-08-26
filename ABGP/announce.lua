@@ -299,11 +299,17 @@ function ABGP:ShowLootFrame(itemLink)
         end
     end);
     elt:SetCallback("OnRequest", function(widget)
+        local function requestItem(widget, itemLink, tokenItem)
+            widget:SetUserData("requestAttempted", false);
+            ABGP:ShowRequestPopup(itemLink, tokenItem);
+            ABGP:HideContextMenu();
+        end
+
         local itemLink = widget:GetItem();
         if widget:GetUserData("isToken") then
             local tokenItem = widget:GetUserData("tokenItem");
             if tokenItem then
-                ABGP:ShowRequestPopup(itemLink, tokenItem);
+                requestItem(widget, itemLink, tokenItem);
             else
                 local itemLinks = widget:GetRelatedItems();
                 local context = {
@@ -327,7 +333,7 @@ function ABGP:ShowLootFrame(itemLink)
                     menu.notCheckable = true;
                     menu.func = function()
                         widget:SelectRelatedItem(tokenItem, true);
-                        ABGP:ShowRequestPopup(itemLink, tokenItem);
+                        requestItem(widget, itemLink, tokenItem);
                     end;
                     table.insert(context, menu);
                 end
@@ -350,14 +356,15 @@ function ABGP:ShowLootFrame(itemLink)
                 -- Otherwise, show the menu.
                 if tokenCount == 1 then
                     widget:SelectRelatedItem(selectedTokenItem, true);
-                    ABGP:ShowRequestPopup(itemLink, selectedTokenItem);
+                    requestItem(widget, itemLink, selectedTokenItem);
                 else
                     table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                     ABGP:ShowContextMenu(context);
+                    widget:SetUserData("requestAttempted", true);
                 end
             end
         else
-            ABGP:ShowRequestPopup(itemLink);
+            requestItem(widget, itemLink);
         end
     end);
     elt:SetCallback("OnMouseDown", function(widget)
@@ -395,6 +402,9 @@ function ABGP:ShowLootFrame(itemLink)
     end);
     elt:SetCallback("OnRelatedItemSelected", function(widget, event, itemLink)
         widget:SetUserData("tokenItem", itemLink);
+        if widget:GetUserData("requestAttempted") then
+            widget:Fire("OnRequest");
+        end
     end);
 
     self:Fire(self.InternalEvents.LOOT_FRAME_OPENED);
