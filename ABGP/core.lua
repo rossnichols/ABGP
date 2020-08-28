@@ -487,6 +487,7 @@ end
 --
 
 local itemValues = {};
+local itemValuesPrerelease = {};
 local lastHistoryId = 0;
 
 ABGP.ItemDataIndex = {
@@ -592,22 +593,27 @@ local function ValueFromItem(item)
     };
 end
 
-function ABGP:RefreshItemValues()
-    itemValues = {};
-    for _, item in ipairs(_G.ABGP_Data2.itemValues.data) do
+local function RefreshItemValues(items, dataStore, prerelease)
+    table.wipe(dataStore);
+    for _, item in ipairs(items) do
         local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
         local value = ValueFromItem(item);
-        itemValues[item[ABGP.ItemDataIndex.NAME]] = value;
-        itemValues[self:GetItemId(itemLink)] = value;
+        dataStore[item[ABGP.ItemDataIndex.NAME]] = value;
+        dataStore[ABGP:GetItemId(itemLink)] = value;
 
         if value.related then
-            local token = self:GetItemValue(value.related);
+            local token = ABGP:GetItemValue(value.related, prerelease);
             table.insert(token.token, itemLink);
         end
 
         -- Try to ensure info about the item is cached locally.
         if itemLink then GetItemInfo(itemLink); end
     end
+end
+
+function ABGP:RefreshItemValues()
+    RefreshItemValues(_G.ABGP_Data2.itemValues.data, itemValues, false);
+    RefreshItemValues(_G.ABGP_Data2.itemValuesPrerelease.data, itemValuesPrerelease, true);
 end
 
 function ABGP:BuildDefaultItemValues()
@@ -685,9 +691,9 @@ function ABGP:ItemOnDataSync(data, distribution, sender)
     self:RefreshItemValues();
 end
 
-function ABGP:CommitItemData()
+function ABGP:CommitItemData(prerelease)
     self:RefreshItemValues();
-    if not self:GetDebugOpt("IgnoreItemCommit") then
+    if not self:GetDebugOpt("IgnoreItemCommit") and not prerelease then
         _G.ABGP_Data2.itemValues.timestamp = GetServerTime();
         self:BroadcastItemData();
     end
@@ -770,9 +776,9 @@ function ABGP:HasReceivedItem(itemName)
     return false;
 end
 
-function ABGP:GetItemValue(itemName)
+function ABGP:GetItemValue(itemName, prerelease)
     if not itemName then return; end
-    return itemValues[itemName];
+    return (prerelease and itemValuesPrerelease or itemValues)[itemName];
 end
 
 function ABGP:GetItemName(itemLink)
@@ -792,7 +798,8 @@ end
 local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
 scanner:SetOwner(UIParent, "ANCHOR_NONE");
 function ABGP:IsItemUsable(itemLink)
-    local value = self:GetItemValue(self:GetItemId(itemLink));
+    local itemId = self:GetItemId(itemLink);
+    local value = self:GetItemValue(itemId) or self:GetItemValue(itemId, true);
     if value and value.token then
         for _, item in ipairs(value.token) do
             if self:IsItemUsable(item) then return true; end
@@ -1157,9 +1164,9 @@ local itemOverrides = {
     [22637] = { slots = { "INVTYPE_HEAD", "INVTYPE_LEGS" } },
 };
 
-function ABGP:GetTokenItems(itemLink)
+function ABGP:GetTokenItems(itemLink, prerelease)
     local itemId = self:GetItemId(itemLink);
-    local value = self:GetItemValue(itemId);
+    local value = self:GetItemValue(itemId, prerelease);
     return value and value.token;
 end
 

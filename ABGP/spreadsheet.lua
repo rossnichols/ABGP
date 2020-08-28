@@ -227,7 +227,9 @@ function ABGP:ImportPriority()
     OpenImportWindow(importFunc, true);
 end
 
-function ABGP:ImportItems()
+function ABGP:ImportItems(prerelease)
+    local items = prerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
+
     if not (_G.AtlasLoot and
             _G.AtlasLoot.ItemDB and
             _G.AtlasLoot.ItemDB.Storage and
@@ -239,7 +241,7 @@ function ABGP:ImportItems()
     self:BuildItemLookup();
 
     local importFunc = function(widget, event)
-        local success = ImportSpreadsheetText(widget:GetText(), _G.ABGP_Data2.itemValues.data, itemMapping, function(row)
+        local success = ImportSpreadsheetText(widget:GetText(), items, itemMapping, function(row)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
             for k, v in pairs(row) do
                 if itemPriorities[k] then
@@ -279,7 +281,7 @@ function ABGP:ImportItems()
         end);
 
         if success then
-            ABGP:CommitItemData();
+            ABGP:CommitItemData(prerelease);
         end
 
         widget:GetUserData("window"):Hide();
@@ -288,7 +290,9 @@ function ABGP:ImportItems()
     OpenImportWindow(importFunc);
 end
 
-function ABGP:ExportItems()
+function ABGP:ExportItems(prerelease)
+    local items = prerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
+
     local _, sortedPriorities = self:GetItemPriorities();
     local function buildPrioString(prio)
         local itemPriorities = {};
@@ -300,7 +304,6 @@ function ABGP:ExportItems()
         return table.concat(priorities, "\t");
     end
 
-    local items = _G.ABGP_Data2.itemValues.data;
     local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
     for i, item in ipairs(items) do
         if item[self.ItemDataIndex.RELATED] then
@@ -478,15 +481,16 @@ local lookup = {};
 function ABGP:BuildItemLookup(shouldPrint)
     local succeeded = true;
 
-    local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore.items;
-    -- local ony = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia.items;
-    local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses.items;
-    local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair.items;
-    -- local aq20 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheRuinsofAhnQiraj.items;
-    local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj.items;
+    local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore;
+    -- local ony = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia;
+    local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses;
+    local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair;
+    -- local aq20 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheRuinsofAhnQiraj;
+    local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj;
+    local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
     local token = _G.AtlasLoot.Data.Token;
-    for _, collection in ipairs({ mc, wb, bwl, aq40 }) do
-        for _, sub in ipairs(collection) do
+    for _, collection in ipairs({ mc, wb, bwl, aq40, naxx }) do
+        for _, sub in ipairs(collection.items) do
             if sub[1] then
                 for _, item in ipairs(sub[1]) do
                     if type(item[2]) == "number" then
@@ -562,4 +566,70 @@ function ABGP:FixupHistory(history)
 
     self:Notify("Done fixing up history!");
     return true;
+end
+
+function ABGP:GenerateItemList()
+    if not self:BuildItemLookup(true) then return false; end
+
+    local items = _G.ABGP_Data2.itemValuesPrerelease.data;
+    table.wipe(items);
+
+    local insertedItems = {};
+
+    local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
+    local token = _G.AtlasLoot.Data.Token;
+    for _, collection in ipairs({ naxx }) do
+        for _, sub in ipairs(collection.items) do
+            if sub[1] then
+                for _, item in ipairs(sub[1]) do
+                    if type(item[2]) == "number" then
+                        local name, link = GetItemInfo(item[2]);
+                        if name then
+                            if not insertedItems[name] then
+                                local itemData = {
+                                    [ABGP.ItemDataIndex.NAME] = name,
+                                    [ABGP.ItemDataIndex.GP] = 0,
+                                    [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
+                                    [ABGP.ItemDataIndex.RAID] = collection.AtlasMapID,
+                                    [ABGP.ItemDataIndex.BOSS] = sub.name,
+                                    [ABGP.ItemDataIndex.PRIORITY] = {},
+                                    [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
+                                    [ABGP.ItemDataIndex.NOTES] = nil,
+                                    [ABGP.ItemDataIndex.RELATED] = nil,
+                                };
+                                table.insert(items, itemData);
+                                insertedItems[name] = itemData;
+                            end
+
+                            local tokenData = token.GetTokenData(item[2]);
+                            if tokenData and type(tokenData) == "table" then
+                                for _, v in ipairs(tokenData) do
+                                    if type(v) == "number" and v ~= 0 then
+                                        local tokenName, link = GetItemInfo(v);
+                                        if tokenName and not insertedItems[tokenName] then
+                                            insertedItems[name][ABGP.ItemDataIndex.GP] = "T";
+                                            insertedItems[tokenName] = {
+                                                [ABGP.ItemDataIndex.NAME] = tokenName,
+                                                [ABGP.ItemDataIndex.GP] = 0,
+                                                [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
+                                                [ABGP.ItemDataIndex.RAID] = collection.AtlasMapID,
+                                                [ABGP.ItemDataIndex.BOSS] = sub.name,
+                                                [ABGP.ItemDataIndex.PRIORITY] = {},
+                                                [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
+                                                [ABGP.ItemDataIndex.NOTES] = nil,
+                                                [ABGP.ItemDataIndex.RELATED] = name,
+                                            };
+                                            table.insert(items, insertedItems[tokenName]);
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    self:RefreshItemValues();
 end

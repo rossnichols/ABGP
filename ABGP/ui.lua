@@ -32,6 +32,7 @@ local allowedClasses = {
 };
 local allowedPriorities = ABGP:GetItemPriorities();
 local allowedSources;
+local showPrerelease = false;
 local onlyUsable = false;
 local onlyFaved = false;
 local onlyGrouped = false;
@@ -387,23 +388,30 @@ local function DrawItems(container, options)
         mainLine:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
 
-        local items = _G.ABGP_Data2.itemValues.data;
+        local items = showPrerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
         local sources, sourcesSorted = {}, {};
-        local lastRaid;
+        local lastRaid, lastBoss;
         for _, item in ipairs(items) do
             local raid = item[ABGP.ItemDataIndex.RAID];
             local boss = item[ABGP.ItemDataIndex.BOSS];
             if raid ~= lastRaid then
                 local entry = raid;
-                sources[entry] = entry;
+                sources[entry] = ABGP:ColorizeText(entry);
                 table.insert(sourcesSorted, entry);
                 lastRaid = raid;
+                lastBoss = nil;
+            end
+            if boss ~= lastBoss then
+                local entry = boss;
+                sources[entry] = entry;
+                table.insert(sourcesSorted, entry);
+                lastBoss = boss;
             end
         end
         allowedSources = ABGP.tCopy(sources);
 
         local sourceSelector = AceGUI:Create("ABGP_Filter");
-        sourceSelector:SetWidth(125);
+        sourceSelector:SetWidth(175);
         sourceSelector:SetValues(allowedSources, true, sources, sourcesSorted);
         sourceSelector:SetCallback("OnFilterUpdated", function()
             PopulateUI({ rebuild = false });
@@ -465,7 +473,7 @@ local function DrawItems(container, options)
             export:SetWidth(75);
             export:SetText("Export");
             export:SetCallback("OnClick", function(widget, event)
-                ABGP:ExportItems();
+                ABGP:ExportItems(showPrerelease);
             end);
             mainLine:AddChild(export);
 
@@ -473,7 +481,7 @@ local function DrawItems(container, options)
             import:SetWidth(75);
             import:SetText("Import");
             import:SetCallback("OnClick", function(widget, event)
-                ABGP:ImportItems();
+                ABGP:ImportItems(showPrerelease);
             end);
             mainLine:AddChild(import);
         end
@@ -553,7 +561,7 @@ local function DrawItems(container, options)
     local scrollValue = preserveScroll and itemList:GetUserData("statusTable").scrollvalue or 0;
     itemList:ReleaseChildren();
 
-    local items = _G.ABGP_Data2.itemValues.data;
+    local items = showPrerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
     local filtered = {};
     local priSelector = container:GetUserData("priSelector");
     local sourceSelector = container:GetUserData("sourceSelector");
@@ -571,7 +579,7 @@ local function DrawItems(container, options)
         exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
-                if allowedSources[item[ABGP.ItemDataIndex.RAID]] then
+                if allowedSources[item[ABGP.ItemDataIndex.RAID]] or allowedSources[item[ABGP.ItemDataIndex.BOSS]] then
                     if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
                         if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
                             local matchesSearch = false;
@@ -592,7 +600,7 @@ local function DrawItems(container, options)
                             end
 
                             if not matchesSearch and item[ABGP.ItemDataIndex.GP] == "T" then
-                                local value = ABGP:GetItemValue(item[ABGP.ItemDataIndex.NAME]);
+                                local value = ABGP:GetItemValue(item[ABGP.ItemDataIndex.NAME], showPrerelease);
                                 for _, itemLink in ipairs(value.token) do
                                     local name = ABGP:GetItemName(itemLink);
                                     if exact then
@@ -704,7 +712,7 @@ local function DrawItems(container, options)
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:SetFullWidth(true);
-            elt:SetRelatedItems(ABGP:GetTokenItems(data[ABGP.ItemDataIndex.ITEMLINK]));
+            elt:SetRelatedItems(ABGP:GetTokenItems(data[ABGP.ItemDataIndex.ITEMLINK], showPrerelease));
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
@@ -739,12 +747,12 @@ local function DrawItems(container, options)
                         table.insert(context, {
                             text = "Edit item",
                             func = function(self, data)
-                                local value = ABGP:GetItemValue(data[ABGP.ItemDataIndex.NAME]);
+                                local value = ABGP:GetItemValue(data[ABGP.ItemDataIndex.NAME], showPrerelease);
                                 local priorities = {};
 
                                 local window = AceGUI:Create("ABGP_OpaqueWindow");
                                 window:SetLayout("Flow");
-                                window:SetTitle(("Edit %s"):format(value.itemLink));
+                                window:SetTitle(("Edit %s"):format(data[ABGP.ItemDataIndex.ITEMLINK]));
                                 ABGP:OpenPopup(window);
                                 window:SetCallback("OnClose", function(widget)
                                     ABGP:ClosePopup(widget);
@@ -768,7 +776,7 @@ local function DrawItems(container, options)
                                 local processItemValue;
 
                                 local cost;
-                                if value.token then
+                                if data[ABGP.ItemDataIndex.GP] == "T" then
                                     local desc = AceGUI:Create("ABGP_Header");
                                     desc:SetFullWidth(true);
                                     desc:SetText("Token");
@@ -776,7 +784,7 @@ local function DrawItems(container, options)
                                 else
                                     cost = AceGUI:Create("ABGP_EditBox");
                                     cost:SetFullWidth(true);
-                                    cost:SetValue(value.gp);
+                                    cost:SetValue(data[ABGP.ItemDataIndex.GP]);
                                     cost:SetCallback("OnValueChanged", function(widget, event, value)
                                         local gp, errorText = ABGP:DistribValidateCost(value);
                                         if not gp then
@@ -793,12 +801,12 @@ local function DrawItems(container, options)
                                 local catSelector = AceGUI:Create("Dropdown");
                                 catSelector:SetFullWidth(true);
                                 catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
-                                catSelector:SetValue(value.category);
+                                catSelector:SetValue(data[ABGP.ItemDataIndex.CATEGORY]);
                                 catSelector:SetCallback("OnValueChanged", function() processItemValue(); end);
                                 costContainer:AddChild(catSelector);
                                 ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this item.");
 
-                                for _, pri in ipairs(value.priority) do priorities[pri] = true; end
+                                for _, pri in ipairs(data[ABGP.ItemDataIndex.PRIORITY]) do priorities[pri] = true; end
                                 local priorityEditor = AceGUI:Create("ABGP_Filter");
                                 priorityEditor:SetLabel("Priorities");
                                 priorityEditor:SetFullWidth(true);
@@ -810,7 +818,7 @@ local function DrawItems(container, options)
                                 local notes = AceGUI:Create("ABGP_EditBox");
                                 notes:SetLabel("Notes");
                                 notes:SetFullWidth(true);
-                                notes:SetValue(value.notes);
+                                notes:SetValue(data[ABGP.ItemDataIndex.NOTES]);
                                 notes:SetCallback("OnValueChanged", function(widget, event, value)
                                     if value == "" then widget:SetValue(nil); end
                                     processItemValue();
@@ -828,7 +836,7 @@ local function DrawItems(container, options)
                                     container:AddChild(itemsContainer);
 
                                     for _, itemLink in ipairs(value.token) do
-                                        local itemValue = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
+                                        local itemValue = ABGP:GetItemValue(ABGP:GetItemName(itemLink), showPrerelease);
                                         local button = AceGUI:Create("ABGP_ItemButton");
                                         button:SetItemLink(itemLink);
                                         itemsContainer:AddChild(button);
@@ -882,9 +890,9 @@ local function DrawItems(container, options)
                                         info.value.dataStore[ABGP.ItemDataIndex.CATEGORY] = info.category:GetValue();
                                     end
 
-                                    ABGP:Notify("%s has been updated!", value.itemLink);
+                                    ABGP:Notify("%s has been updated!", data[ABGP.ItemDataIndex.ITEMLINK]);
                                     elt:SetData(elt.data);
-                                    ABGP:CommitItemData();
+                                    ABGP:CommitItemData(showPrerelease);
 
                                     window:Hide();
                                 end);
@@ -927,6 +935,37 @@ local function DrawItems(container, options)
                             arg1 = data,
                             notCheckable = true
                         });
+                        if showPrerelease and ABGP:GetDebugOpt() then
+                            table.insert(context, {
+                                text = "Delete item",
+                                func = function(self, data)
+                                    for i, v in ipairs(items) do
+                                        if v[ABGP.ItemDataIndex.NAME] == data[ABGP.ItemDataIndex.NAME] then
+                                            ABGP:Notify("Removing item: %s", v[ABGP.ItemDataIndex.NAME]);
+                                            table.remove(items, i);
+                                            if v[ABGP.ItemDataIndex.GP] == "T" then
+                                                while true do
+                                                    local found = false;
+                                                    for i, v in ipairs(items) do
+                                                        if v[ABGP.ItemDataIndex.RELATED] == data[ABGP.ItemDataIndex.NAME] then
+                                                            ABGP:Notify("Removing item: %s", v[ABGP.ItemDataIndex.NAME]);
+                                                            found = true;
+                                                            table.remove(items, i);
+                                                            break;
+                                                        end
+                                                    end
+                                                    if not found then break; end
+                                                end
+                                            end
+                                            break;
+                                        end
+                                    end
+                                    PopulateUI({ rebuild = false, preserveScroll = true });
+                                end,
+                                arg1 = data,
+                                notCheckable = true
+                            });
+                        end
                     end
                     table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                     ABGP:ShowContextMenu(context);
@@ -1793,8 +1832,8 @@ function ABGP:CreateMainWindow(command)
     window:SetLayout("Flow");
     self:BeginWindowManagement(window, "main", {
         version = 3,
-        defaultWidth = 750,
-        minWidth = 750,
+        defaultWidth = 800,
+        minWidth = 800,
         maxWidth = 850,
         defaultHeight = 600,
         minHeight = 300,
@@ -1811,7 +1850,7 @@ function ABGP:CreateMainWindow(command)
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
     window:AddChild(mainLine);
 
     local raidGroups, raidGroupNames = {}, {};
@@ -1837,6 +1876,21 @@ function ABGP:CreateMainWindow(command)
     currentRaidGroup = ABGP:GetPreferredRaidGroup();
     groupSelector:SetValue(currentRaidGroup);
     mainLine:AddChild(groupSelector);
+
+    if ABGP:IsPrivileged() then
+        local prerelease = AceGUI:Create("CheckBox");
+        prerelease:SetWidth(100);
+        prerelease:SetLabel("Prerelease");
+        prerelease:SetValue(showPrerelease);
+        prerelease:SetCallback("OnValueChanged", function(widget, event, value)
+            showPrerelease = value;
+            PopulateUI({ rebuild = true });
+        end);
+        mainLine:AddChild(prerelease);
+    else
+        local spacer = AceGUI:Create("Label");
+        mainLine:AddChild(spacer);
+    end
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);
