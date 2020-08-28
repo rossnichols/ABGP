@@ -26,20 +26,7 @@ local staticPopups = {
 local function GetStaticPopupType(itemLink)
     if not activeItems[itemLink] then return; end
 
-    local favorited = ABGP:IsItemFavorited(itemLink);
-    if activeItems[itemLink].requestType == ABGP.RequestTypes.ROLL then
-        if activeItems[itemLink].roll then
-            return (favorited)
-                and staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE
-                or staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL;
-        else
-            return (favorited)
-                and staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE
-                or staticPopups.ABGP_LOOTDISTRIB_ROLL;
-        end
-    end
-
-    return (favorited)
+    return ABGP:IsItemFavorited(itemLink)
         and staticPopups.ABGP_LOOTDISTRIB_FAVORITE
         or staticPopups.ABGP_LOOTDISTRIB;
 end
@@ -159,7 +146,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     activeItems[itemLink] = {
         itemLink = itemLink,
         sender = sender,
-        requestType = data.requestType,
+        requiresRoll = data.requiresRoll,
         value = data.value,
         slots = data.slots,
         roll = nil,
@@ -171,14 +158,15 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         osRequestCount = 0,
     };
 
-    local gpCost, priority, notes = "No GP cost (rolled)", "", "";
+    local gpCost, priority, notes = "", "", "";
     local value = data.value;
     if value then
         self:CheckUpdatedItem(itemLink, value);
         if value.token then
             gpCost = "Token (variable GP cost)";
         else
-            gpCost = ("Cost: %s"):format(self:FormatCost(value.gp, value.category));
+            local rolled = data.requiresRoll and (" (rolled)") or "";
+            gpCost = ("Cost: %s%s"):format(self:FormatCost(value.gp, value.category), rolled);
         end
         if value.priority and next(value.priority) then
             priority = (", Priority: %s"):format(table.concat(value.priority, ", "));
@@ -188,7 +176,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         end
     end
 
-    self:Notify("Item distribution opened for %s! %s%s%s.", itemLink, gpCost, priority, notes);
+    self:Notify("Item distribution opened for %s! %s%s%s", itemLink, gpCost, priority, notes);
 end
 
 function ABGP:RequestOnDistClosed(data)
@@ -351,7 +339,6 @@ function ABGP:RequestItem(itemLink, selected, requestType, notes)
     local requestTypes = {
         [ABGP.RequestTypes.MS] = "for main spec",
         [ABGP.RequestTypes.OS] = "for off spec",
-        [ABGP.RequestTypes.ROLL] = "by rolling",
     };
 
     local requestedItemLink = selected or itemLink;
@@ -449,66 +436,6 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTe
         if not self then return; end
         if reason == "override" then return; end
         ABGP:RequestItem(data.itemLink, data.selectedItem, ABGP.RequestTypes.OS, self.editBox:GetText());
-    end,
-    OnAlt = function(self, data)
-        ABGP:PassOnItem(data.itemLink, false);
-    end,
-    OnExtraButton = function(self, data)
-        ABGP:PassOnItem(data.itemLink, true);
-    end,
-});
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Roll for %s? You may provide an optional note.",
-    button1 = "Roll",
-    button3 = "Pass",
-    maxLetters = 255,
-    notFocused = true,
-    Commit = function(text, data)
-        ABGP:RequestItem(data.itemLink, data.selectedItem, ABGP.RequestTypes.ROLL, text);
-    end,
-    OnAlt = function(self, data)
-        ABGP:PassOnItem(data.itemLink, false);
-    end,
-});
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Roll for %s? You may provide an optional note.",
-    button1 = "Update",
-    button3 = "Pass",
-    maxLetters = 255,
-    notFocused = true,
-    Commit = function(text, data)
-        ABGP:RequestItem(data.itemLink, data.selectedItem, ABGP.RequestTypes.ROLL, text);
-    end,
-    OnAlt = function(self, data)
-        ABGP:PassOnItem(data.itemLink, false);
-    end,
-});
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_ROLL_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Roll for %s? You may provide an optional note.",
-    button1 = "Roll",
-    button3 = "Pass",
-    extraButton = "Pass and unfavorite",
-    maxLetters = 255,
-    notFocused = true,
-    Commit = function(text, data)
-        ABGP:RequestItem(data.itemLink, data.selectedItem, ABGP.RequestTypes.ROLL, text);
-    end,
-    OnAlt = function(self, data)
-        ABGP:PassOnItem(data.itemLink, false);
-    end,
-    OnExtraButton = function(self, data)
-        ABGP:PassOnItem(data.itemLink, true);
-    end,
-});
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_UPDATEROLL_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Roll for %s? You may provide an optional note.",
-    button1 = "Update",
-    button3 = "Pass",
-    extraButton = "Pass and unfavorite",
-    maxLetters = 255,
-    notFocused = true,
-    Commit = function(text, data)
-        ABGP:RequestItem(data.itemLink, data.selectedItem, ABGP.RequestTypes.ROLL, text);
     end,
     OnAlt = function(self, data)
         ABGP:PassOnItem(data.itemLink, false);

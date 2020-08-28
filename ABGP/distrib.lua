@@ -122,15 +122,14 @@ local function RebuildUI()
     local requestTypes = {
         [ABGP.RequestTypes.MS] = 1,
         [ABGP.RequestTypes.OS] = 2,
-        [ABGP.RequestTypes.ROLL] = 3,
     };
 
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
-        elseif a.category ~= b.category and a.requestType ~= ABGP.RequestTypes.ROLL then
+        elseif a.category ~= b.category and not currentItem.requiresRoll then
             return a.category == ABGP.ItemCategory.GOLD;
-        elseif a.priority ~= b.priority and a.requestType ~= ABGP.RequestTypes.ROLL then
+        elseif a.priority ~= b.priority and not currentItem.requiresRoll then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
             return (a.roll or 0) > (b.roll or 0);
@@ -147,7 +146,6 @@ local function RebuildUI()
     local typeHeadings = {
         [ABGP.RequestTypes.MS] = "Main Spec",
         [ABGP.RequestTypes.OS] = "Off Spec",
-        [ABGP.RequestTypes.ROLL] = "Rolls",
     };
 
     local currentHeading;
@@ -380,7 +378,7 @@ local function ProcessNewRequest(request)
     end
 
     -- Generate a new roll if necessary
-    if request.requestType == ABGP.RequestTypes.ROLL and not request.roll then
+    if currentItem.requiresRoll and not request.roll then
         request.roll = math.random(1, 100);
         if UnitExists(request.player) then
             ABGP:SendComm(ABGP.CommTypes.ITEM_ROLLED, {
@@ -398,17 +396,14 @@ local function ProcessNewRequest(request)
     -- Persist the roll
     item.rolls[request.player] = request.roll;
 
+    table.insert(requests, request);
     if not oldRequest or oldRequest.requestType ~= request.requestType then
         local requestTypes = {
             [ABGP.RequestTypes.MS] = "for main spec",
             [ABGP.RequestTypes.OS] = "for off spec",
-            [ABGP.RequestTypes.ROLL] = "by rolling",
         };
         ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(request.player), request.itemLink, requestTypes[request.requestType]);
-    end
 
-    table.insert(requests, request);
-    if not oldRequest then
         local total, main, off = GetRequestCounts(requests);
         ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
             itemLink = request.itemLink,
@@ -461,7 +456,8 @@ local function AddActiveItem(data)
         costEdited = nil,
         closeConfirmed = false,
         distributions = {},
-        rollsAllowed = (data.requestType == ABGP.RequestTypes.ROLL),
+        rollsAllowed = data.requiresRoll,
+        requiresRoll = data.requiresRoll,
         data = data,
         receivedComm = false,
         testItem = not IsInRaid(),
@@ -560,7 +556,7 @@ function ABGP:DistribValidateCost(cost, player)
 end
 
 local function GiveItemViaML(itemLink, player)
-    if ABGP:Get("masterLoot") and player then
+    if ABGP:Get("masterLoot") and IsMasterLooter() and player then
         player = player:lower();
         local itemName = ABGP:GetItemName(itemLink);
         local slot;
@@ -583,10 +579,10 @@ local function GiveItemViaML(itemLink, player)
                 end
             end
         end
-    end
 
-    player = UnitName(player);
-    ABGP:Error("Couldn't ML %s to %s!", itemLink, ABGP:ColorizeName(player));
+        player = UnitName(player) or player;
+        ABGP:Error("Couldn't ML %s to %s!", itemLink, ABGP:ColorizeName(player));
+    end
 end
 
 local function DistributeItem(data)
@@ -822,10 +818,6 @@ function ABGP:ShowDistrib(itemLink)
     end
 
     local value = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
-    local requestType = (value and value.gp ~= 0)
-        and self.RequestTypes.MS_OS
-        or self.RequestTypes.ROLL;
-
     if not activeDistributionWindow then
         activeDistributionWindow = self:CreateDistribWindow();
     end
@@ -833,7 +825,7 @@ function ABGP:ShowDistrib(itemLink)
     local data = {
         itemLink = itemLink,
         value = value,
-        requestType = requestType,
+        requiresRoll = not value or value.gp == 0,
         slots = self:GetItemEquipSlots(itemLink),
         count = self:GetLootCount(itemLink) or 1,
     };
@@ -874,17 +866,13 @@ function ABGP:ShowDistrib(itemLink)
             },
             version = self:GetVersion(),
         };
-        for i = 1, 9 do
+        for i = 1, 10 do
             local entry = {};
             for k, v in pairs(testBase) do entry[k] = v; end
             entry.player = "TestTestPlayer" .. i;
             entry.rank = ranks[math.random(1, #ranks)];
             entry.class = classes[math.random(1, #classes)];
-            local rand = math.random();
-            if rand < 0.33 then entry.requestType = ABGP.RequestTypes.MS;
-            elseif rand < 0.67 then entry.requestType = ABGP.RequestTypes.OS;
-            else entry.requestType = ABGP.RequestTypes.ROLL;
-            end
+            entry.requestType = math.random() < 0.5 and ABGP.RequestTypes.MS or ABGP.RequestTypes.OS;
             if value then
                 entry.ep = math.random() * 2000;
                 entry.gp = math.random() * 2000;

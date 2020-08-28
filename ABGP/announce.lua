@@ -172,7 +172,7 @@ end
 local function SetDefaultInfo(elt, itemLink)
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
-    local valueText = value and ABGP:FormatCost(value.gp, value.category) or "No GP Cost";
+    local valueText = value and ABGP:FormatCost(value.gp, value.category) or "";
     local valueTextCompact = value and ABGP:FormatCost(value.gp, value.category, "%s%s") or "--";
     if value and value.token then
         elt:SetUserData("isToken", true);
@@ -189,33 +189,32 @@ end
 
 local function SetRequestInfo(elt, itemLink, activeItem)
     local requestType = activeItem.sentRequestType;
-    local roll = activeItem.roll;
 
     if requestType then
         elt:SetUserData("requested", true);
-        if roll then
-            local rollText = ("Requested by %srolling|r (%s%d|r)"):format(ABGP.Color, ABGP.Color, roll);
-            local rollTextCompact = ("|cffffffffR:|r%d"):format(roll);
-            elt:SetSecondaryText(rollText, rollTextCompact);
+        local requestTypes = {
+            [ABGP.RequestTypes.MS] = "main spec",
+            [ABGP.RequestTypes.OS] = "off spec",
+        };
+        local requestTypesCompact = {
+            [ABGP.RequestTypes.MS] = "MS",
+            [ABGP.RequestTypes.OS] = "OS",
+        };
+        local text, compact;
+        if activeItem.requiresRoll then
+            local roll = activeItem.roll;
+            if roll then
+                text = ("Rolled for %s (%s)"):format(ABGP:ColorizeText(requestTypes[requestType]), ABGP:ColorizeText(activeItem.roll));
+                compact = ("%s:|cffffffff%s|r"):format(requestTypesCompact[requestType], roll);
+            else
+                text = ("Rolled for %s"):format(ABGP:ColorizeText(requestTypes[requestType]));
+                compact = requestTypesCompact[requestType];
+            end
         else
-            local requestTypesPre = {
-                [ABGP.RequestTypes.MS] = "for",
-                [ABGP.RequestTypes.OS] = "for",
-                [ABGP.RequestTypes.ROLL] = "by",
-            };
-            local requestTypes = {
-                [ABGP.RequestTypes.MS] = "main spec",
-                [ABGP.RequestTypes.OS] = "off spec",
-                [ABGP.RequestTypes.ROLL] = "rolling",
-            };
-            local requestTypesCompact = {
-                [ABGP.RequestTypes.MS] = "MS",
-                [ABGP.RequestTypes.OS] = "OS",
-                [ABGP.RequestTypes.ROLL] = "Roll",
-            };
-            local text = ("Requested %s %s"):format(requestTypesPre[requestType], ABGP:ColorizeText(requestTypes[requestType]));
-            elt:SetSecondaryText(text, requestTypesCompact[requestType]);
+            text = ("Requested for %s"):format(ABGP:ColorizeText(requestTypes[requestType]));
+            compact = requestTypesCompact[requestType];
         end
+        elt:SetSecondaryText(text, compact);
     else
         elt:SetUserData("requested", false);
         SetDefaultInfo(elt, itemLink);
@@ -484,7 +483,7 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
         };
         local extra;
         if requestTypes[data.requestType] then
-            extra = requestTypes[data.requestType];
+            extra = data.roll and ("%s:%s"):format(requestTypes[data.requestType], data.roll) or requestTypes[data.requestType];
         elseif data.roll then
             extra = data.roll;
         end

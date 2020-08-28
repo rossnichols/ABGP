@@ -88,7 +88,7 @@ ABGP.CommTypes = {
     ITEM_DIST_OPENED = { name = "ITEM_DIST_OPENED", id = 5, priority = "ALERT" },
     -- itemLink: item link string
     -- value: table from ABGP:GetItemValue()
-    -- requestType: string from ABGP.RequestTypes
+    -- requiresRoll: bool
     -- slots: array of strings
     -- count: number
 

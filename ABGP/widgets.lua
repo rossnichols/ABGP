@@ -347,7 +347,6 @@ do
             local requestTypes = {
                 [ABGP.RequestTypes.MS] = "MS",
                 [ABGP.RequestTypes.OS] = "OS",
-                [ABGP.RequestTypes.ROLL] = "",
             };
             self.requestType.text:SetText(data.requestType and requestTypes[data.requestType] or "");
             local specialFont = (data.requestType and data.requestType == ABGP.RequestTypes.MS) and "ABGPHighlight" or "GameFontHighlight";

@@ -837,8 +837,6 @@ end
 --
 
 ABGP.RequestTypes = {
-    MS_OS = "MS_OS",
-    ROLL = "ROLL",
     MS = "MS",
     OS = "OS",
     MANUAL = "MANUAL",
