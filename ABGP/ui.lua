@@ -203,8 +203,8 @@ local function DrawPriority(container, options)
             mainLine:AddChild(spacer);
 
             local import = AceGUI:Create("Button");
-            import:SetWidth(75);
-            import:SetText("Import");
+            import:SetWidth(45);
+            import:SetText("I");
             import:SetCallback("OnClick", function(widget, event)
                 ABGP:ImportPriority();
             end);
@@ -375,7 +375,7 @@ local function DrawItems(container, options)
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
         mainLine:SetLayout("table");
-        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 1.0, 0, 0 } });
+        mainLine:SetUserData("table", { columns = { 0, 0, 0, 0, 0, 0, 1.0, 0, 0 } });
         container:AddChild(mainLine);
 
         local priSelector = AceGUI:Create("ABGP_Filter");
@@ -440,7 +440,7 @@ local function DrawItems(container, options)
         container:SetUserData("search", search);
 
         local usable = AceGUI:Create("CheckBox");
-        usable:SetWidth(80);
+        usable:SetWidth(72);
         usable:SetLabel("Usable");
         usable:SetValue(onlyUsable);
         usable:SetCallback("OnValueChanged", function(widget, event, value)
@@ -451,7 +451,7 @@ local function DrawItems(container, options)
 
         if ABGP:CanFavoriteItems() then
             local faved = AceGUI:Create("CheckBox");
-            faved:SetWidth(80);
+            faved:SetWidth(65);
             faved:SetLabel("Faved");
             faved:SetValue(onlyFaved);
             faved:SetCallback("OnValueChanged", function(widget, event, value)
@@ -466,20 +466,35 @@ local function DrawItems(container, options)
         end
 
         if ABGP:IsPrivileged() then
+            local prerelease = AceGUI:Create("CheckBox");
+            prerelease:SetWidth(93);
+            prerelease:SetLabel("Future");
+            prerelease:SetValue(showPrerelease);
+            prerelease:SetCallback("OnValueChanged", function(widget, event, value)
+                showPrerelease = value;
+                PopulateUI({ rebuild = true });
+            end);
+            mainLine:AddChild(prerelease);
+        else
+            local spacer = AceGUI:Create("Label");
+            mainLine:AddChild(spacer);
+        end
+
+        if ABGP:IsPrivileged() then
             local spacer = AceGUI:Create("Label");
             mainLine:AddChild(spacer);
 
             local export = AceGUI:Create("Button");
-            export:SetWidth(75);
-            export:SetText("Export");
+            export:SetWidth(45);
+            export:SetText("E");
             export:SetCallback("OnClick", function(widget, event)
                 ABGP:ExportItems(showPrerelease);
             end);
             mainLine:AddChild(export);
 
             local import = AceGUI:Create("Button");
-            import:SetWidth(75);
-            import:SetText("Import");
+            import:SetWidth(45);
+            import:SetText("I");
             import:SetCallback("OnClick", function(widget, event)
                 ABGP:ImportItems(showPrerelease);
             end);
@@ -576,7 +591,6 @@ local function DrawItems(container, options)
         end
     else
         local exact = searchText:match("^\"(.+)\"$");
-        exact = exact and exact:lower() or exact;
         for i, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
                 if allowedSources[item[ABGP.ItemDataIndex.RAID]] or allowedSources[item[ABGP.ItemDataIndex.BOSS]] then
@@ -712,7 +726,26 @@ local function DrawItems(container, options)
             elt:SetData(data);
             elt:SetWidths(widths);
             elt:SetFullWidth(true);
-            elt:SetRelatedItems(ABGP:GetTokenItems(data[ABGP.ItemDataIndex.ITEMLINK], showPrerelease));
+            local related = ABGP:GetTokenItems(data[ABGP.ItemDataIndex.ITEMLINK], showPrerelease);
+            if related and searchText ~= "" then
+                local exact = searchText:match("^\"(.+)\"$");
+                local filteredRelated = {};
+                for _, itemLink in ipairs(related) do
+                    local matchesSearch = false;
+                    local name = ABGP:GetItemName(itemLink);
+                    if exact then
+                        if name:lower() == exact then matchesSearch = true; end
+                    else
+                        if name:lower():find(searchText, 1, true) then matchesSearch = true; end
+                    end
+
+                    if matchesSearch then
+                        table.insert(filteredRelated, itemLink);
+                    end
+                end
+                related = filteredRelated;
+            end
+            elt:SetRelatedItems(related);
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
@@ -1020,8 +1053,8 @@ local function DrawItemHistory(container, options)
             mainLine:AddChild(spacer);
 
             local export = AceGUI:Create("Button");
-            export:SetWidth(75);
-            export:SetText("Export");
+            export:SetWidth(45);
+            export:SetText("E");
             export:SetCallback("OnClick", function(widget, event)
                 local filtered = container:GetUserData("shownItemHistory");
                 ABGP:ExportItemHistory(filtered);
@@ -1029,8 +1062,8 @@ local function DrawItemHistory(container, options)
             mainLine:AddChild(export);
 
             local import = AceGUI:Create("Button");
-            import:SetWidth(75);
-            import:SetText("Import");
+            import:SetWidth(45);
+            import:SetText("I");
             import:SetCallback("OnClick", function(widget, event)
                 ABGP:ImportItemHistory();
             end);
@@ -1850,7 +1883,7 @@ function ABGP:CreateMainWindow(command)
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 0, 1.0, 0 } });
+    mainLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
     window:AddChild(mainLine);
 
     local raidGroups, raidGroupNames = {}, {};
@@ -1876,21 +1909,6 @@ function ABGP:CreateMainWindow(command)
     currentRaidGroup = ABGP:GetPreferredRaidGroup();
     groupSelector:SetValue(currentRaidGroup);
     mainLine:AddChild(groupSelector);
-
-    if ABGP:IsPrivileged() then
-        local prerelease = AceGUI:Create("CheckBox");
-        prerelease:SetWidth(100);
-        prerelease:SetLabel("Prerelease");
-        prerelease:SetValue(showPrerelease);
-        prerelease:SetCallback("OnValueChanged", function(widget, event, value)
-            showPrerelease = value;
-            PopulateUI({ rebuild = true });
-        end);
-        mainLine:AddChild(prerelease);
-    else
-        local spacer = AceGUI:Create("Label");
-        mainLine:AddChild(spacer);
-    end
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);
