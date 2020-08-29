@@ -235,6 +235,9 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
     if not data.player then return; end
 
+    -- See if we can ML the item to the player.
+    self:GiveItemViaML(data.itemLink, data.player);
+
     local itemName = ABGP:GetItemName(data.itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end

@@ -555,10 +555,10 @@ function ABGP:DistribValidateCost(cost, player)
     return cost;
 end
 
-local function GiveItemViaML(itemLink, player)
-    if ABGP:Get("masterLoot") and IsMasterLooter() and player then
+function ABGP:GiveItemViaML(itemLink, player)
+    if self:Get("masterLoot") and IsMasterLooter() and player then
         player = player:lower();
-        local itemName = ABGP:GetItemName(itemLink);
+        local itemName = self:GetItemName(itemLink);
         local slot;
 
         local loot = GetLootInfo();
@@ -581,7 +581,7 @@ local function GiveItemViaML(itemLink, player)
         end
 
         player = UnitName(player) or player;
-        ABGP:Error("Couldn't ML %s to %s!", itemLink, ABGP:ColorizeName(player));
+        self:Error("Couldn't ML %s to %s!", itemLink, self:ColorizeName(player));
     end
 end
 
@@ -617,8 +617,6 @@ local function DistributeItem(data)
     else
         RemoveActiveItem(data.itemLink);
     end
-
-    GiveItemViaML(data.itemLink, data.player);
 end
 
 function ABGP:DistribOnStateSync(data, distribution, sender)
@@ -1194,20 +1192,28 @@ end
 
 local function DistributeLoot(itemLink)
     if IsShiftKeyDown() then
-        local mule, hasCandidates = ABGP:GetRaidMule();
-        if mule then
-            GiveItemViaML(itemLink, mule);
+        if IsMasterLooter() then
+            local mule, hasCandidates = ABGP:GetRaidMule();
+            if mule then
+                ABGP:GiveItemViaML(itemLink, mule);
+            else
+                ABGP:Notify("%s! Update the setting in the options window.",
+                    hasCandidates and "None of your configured mules are in the raid" or "You don't have a raid mule configured");
+            end
         else
-            ABGP:Notify("%s! Update the setting in the options window.",
-                hasCandidates and "None of your configured mules are in the raid" or "You don't have a raid mule configured");
+            ABGP:Notify("Can't send to raid mule - you're not the master looter!");
         end
     elseif IsControlKeyDown() then
-        local disenchanter, hasCandidates = ABGP:GetRaidDisenchanter();
-        if disenchanter then
-            GiveItemViaML(itemLink, disenchanter);
+        if IsMasterLooter() then
+            local disenchanter, hasCandidates = ABGP:GetRaidDisenchanter();
+            if disenchanter then
+                ABGP:GiveItemViaML(itemLink, disenchanter);
+            else
+                ABGP:Notify("%s! Update the setting in the options window.",
+                    hasCandidates and "None of your configured disenchanters are in the raid" or "You don't have a raid disenchanter configured");
+            end
         else
-            ABGP:Notify("%s! Update the setting in the options window.",
-                hasCandidates and "None of your configured disenchanters are in the raid" or "You don't have a raid disenchanter configured");
+            ABGP:Notify("Can't send to raid disenchanter - you're not the master looter!");
         end
     else
         if ABGP:GetDebugOpt("TestLootFrame") then
@@ -1256,8 +1262,6 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.Static
         else
             RemoveActiveItem(data.itemLink);
         end
-
-        GiveItemViaML(data.itemLink, ABGP:GetRaidDisenchanter());
     end,
 });
 StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {

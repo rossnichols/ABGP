@@ -274,6 +274,9 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
         multiple = (" #%d"):format(data.count);
     end
 
+    -- See if we can ML the item to the raid disenchanter.
+    self:GiveItemViaML(data.itemLink, ABGP:GetRaidDisenchanter());
+
     self:Notify("%s%s will be disenchanted%s.", itemLink, multiple, info);
 end
 

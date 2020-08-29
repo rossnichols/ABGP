@@ -17,7 +17,7 @@ local FlashClientIcon = FlashClientIcon;
 local GetTime = GetTime;
 local IsShiftKeyDown = IsShiftKeyDown;
 local GetItemIcon = GetItemIcon;
-local IsMasterLooter = IsMasterLooter;
+local UnitIsGroupLeader = UnitIsGroupLeader;
 local select = select;
 local table = table;
 local ipairs = ipairs;
@@ -99,7 +99,7 @@ function ABGP:AnnounceOnLootOpened()
 end
 
 function ABGP:ShouldAutoDistribute()
-    return IsMasterLooter() and self:Get("autoDistribute");
+    return UnitIsGroupLeader("player") and self:Get("autoDistribute");
 end
 
 function ABGP:AnnounceOnBossLoot(data)
