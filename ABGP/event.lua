@@ -890,7 +890,10 @@ function ABGP:ExportRaid(windowRaid)
             local bActive = self:GetActivePlayer(b);
             if not aActive and not bActive then return a < b; end
             if aActive and bActive then
-                if aActive.raidGroup == bActive.raidGroup then return a < b; end
+                if aActive.raidGroup == bActive.raidGroup then
+                    if aActive.rank == bActive.rank then return a < b; end
+                    return aActive.rank < bActive.rank;
+                end
                 return self.RaidGroupsSortedReverse[aActive.raidGroup] < self.RaidGroupsSortedReverse[bActive.raidGroup];
             end
             return aActive ~= nil;
@@ -904,7 +907,7 @@ function ABGP:ExportRaid(windowRaid)
                 local ep = math.floor(tickCount / totalTicks * 100 + 0.5);
                 local epgp = self:GetActivePlayer(exportedPlayer);
                 local breakdown = {};
-                local raidGroup = "";
+                local rank = "";
 
                 for _, category in ipairs(tickCategoriesSorted) do
                     local categoryCount = CountPlayerTicks(windowRaid, player, category);
@@ -915,7 +918,7 @@ function ABGP:ExportRaid(windowRaid)
                 end
 
                 if epgp then
-                    raidGroup = self.RaidGroupNames[epgp.raidGroup];
+                    rank = epgp.rank;
                     if epgp.trial then
                         table.insert(breakdown, 1, "Trial");
                         ep = 0;
@@ -930,7 +933,7 @@ function ABGP:ExportRaid(windowRaid)
                 end
 
                 text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
-                    ep, "EP", windowRaid.name, exportedPlayer, raidDate, raidGroup, table.concat(breakdown, ", "));
+                    ep, "EP", windowRaid.name, exportedPlayer, raidDate, rank, table.concat(breakdown, ", "));
             end
         end
 
