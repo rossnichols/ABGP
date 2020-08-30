@@ -58,7 +58,7 @@ local infoText = [[
     <br/>• Only active raiders gain EP and GP. Trials and non-raiders are still tracked for attendance, but they do not gain GP for any items they receive.
     <br/>• Every week, EP and GP values decay by a certain percentage, to value more recent gains higher than older gains.
     <br/>
-    <br/>With perfect attendance, a player will earn 100 EP per week. For the weekday raid group, each raid night is worth the same amount of EP. For the weekend raid group, AQ is worth 75 EP with the other 25 EP coming from BWL splits and MC binding runs.
+    <br/>With perfect attendance, a player will earn 100 EP per week. For the weekday raid group, each raid night is worth the same amount of EP. For the weekend raid group, all 100 EP comes from the Saturday raid, except for Purple Lobsters, whose EP comes from both AQ and splits.
     <br/>
     <br/>Each item tracked by ABGP has the following info associated with it:
     <br/>• Category: Gold or Silver. GP and priority are tracked separately for each category.
@@ -81,6 +81,10 @@ local infoText = [[
     <br/>• Main-spec requests, when the player meets the item's class/spec priority
     <br/>• Main-spec requests, when the player does not meet that priority
     <br/>• Off-spec requests
+    </p>
+
+    <h2><br/>How is loot prioritized in splits?</h2>
+    <p>In our split runs of BWL and MC (bindings), loot is prioritized first to Red and Purple Lobsters, for whom split attendance is required to obtain the max of 100 EP per week. Blue Lobsters and Lobster Alts are next in priority, followed by trial raiders and finally non-raiders.
     </p>
 
     <h2><br/>Is there a limit on loot I can receive?</h2>
