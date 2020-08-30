@@ -25,6 +25,7 @@ local type = type;
 local max = max;
 
 local activeDistributionWindow;
+local prioritizeByRank = false;
 local widths = { 110, 100, 90, 40, 40, 1.0 };
 
 local function CalculateCost(request)
@@ -127,6 +128,8 @@ local function RebuildUI()
     table.sort(requests, function(a, b)
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
+        elseif a.rankPriority ~= b.rankPriority then
+            return a.rankPriority < b.rankPriority;
         elseif a.category ~= b.category and not currentItem.requiresRoll then
             return a.category == ABGP.ItemCategory.GOLD;
         elseif a.priority ~= b.priority and not currentItem.requiresRoll then
@@ -148,12 +151,13 @@ local function RebuildUI()
         [ABGP.RequestTypes.OS] = "Off Spec",
     };
 
-    local currentHeading;
+    local currentHeading, currentRankPriority;
     local maxRolls = {};
     for i, request in ipairs(requests) do
         local heading = typeHeadings[request.requestType];
-        if currentHeading ~= heading then
+        if currentHeading ~= heading or currentRankPriority ~= request.rankPriority then
             currentHeading = heading;
+            currentRankPriority = request.rankPriority;
             local elt = AceGUI:Create("Heading");
             elt:SetFullWidth(true);
             elt:SetText(("|cffffffff%s|r"):format(heading));
@@ -633,6 +637,7 @@ local function PopulateRequest(request, value)
     local rank, class;
     local priority, ep, gp;
     local category;
+    local rankPriority = math.huge;
 
     if request.testContent then
         priority = request.priority;
@@ -641,6 +646,10 @@ local function PopulateRequest(request, value)
         rank = request.rank;
         class = request.class;
         override = request.override;
+        rankPriority = ABGP:GetRankPriority(rank);
+        if not prioritizeByRank and rankPriority ~= math.huge then
+            rankPriority = 0;
+        end
     else
         local epgp = ABGP:GetActivePlayer(request.player);
         if epgp then
@@ -677,6 +686,10 @@ local function PopulateRequest(request, value)
                 override = "non-raider";
             end
         end
+
+        if epgp and rank and value then
+            rankPriority = prioritizeByRank and ABGP:GetRankPriority(rank) or 0;
+        end
     end
 
     local needsUpdate = false;
@@ -694,6 +707,7 @@ local function PopulateRequest(request, value)
     checkValue(request, "gp", gp);
     checkValue(request, "rank", rank);
     checkValue(request, "class", class);
+    checkValue(request, "rankPriority", rankPriority);
     checkValue(request, "override", override);
     return needsUpdate;
 end
@@ -933,8 +947,20 @@ function ABGP:CreateDistribWindow()
     local topLine = AceGUI:Create("SimpleGroup");
     topLine:SetFullWidth(true);
     topLine:SetLayout("table");
-    topLine:SetUserData("table", { columns = { 1.0, 0 } });
+    topLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
     window:AddChild(topLine);
+
+    local rankPriority = AceGUI:Create("CheckBox");
+    rankPriority:SetWidth(150);
+    rankPriority:SetLabel("Rank-based Priority");
+    rankPriority:SetCallback("OnValueChanged", function(widget, event, value)
+        prioritizeByRank = value;
+        RepopulateRequests();
+        RebuildUI();
+    end);
+    rankPriority:SetValue(prioritizeByRank);
+    topLine:AddChild(rankPriority);
+    self:AddWidgetTooltip(rankPriority, "If selected, requests will be prioritized based on guild rank, when appropriate.");
 
     local spacer = AceGUI:Create("ABGP_Header");
     topLine:AddChild(spacer);

@@ -12,6 +12,7 @@ local UnitIsGroupLeader = UnitIsGroupLeader;
 local UnitIsUnit = UnitIsUnit;
 local table = table;
 local pairs = pairs;
+local math = math;
 
 ABGP.Priorities = {};
 
@@ -36,14 +37,14 @@ ABGP.RaidGroupsSortedReverse = {
     [ABGP.RaidGroups.BLUE] = 2,
 };
 local rankData = {
-    ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED },
-    ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED },
-    ["Closer"] =         { raidGroup = ABGP.RaidGroups.RED },
-    ["Red Lobster"] =    { raidGroup = ABGP.RaidGroups.RED },
-    ["Purple Lobster"] = { raidGroup = ABGP.RaidGroups.BLUE },
-    ["Blue Lobster"] =   { raidGroup = ABGP.RaidGroups.BLUE },
-    ["Officer Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE },
-    ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE },
+    ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
+    ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
+    ["Closer"] =         { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
+    ["Red Lobster"] =    { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
+    ["Purple Lobster"] = { raidGroup = ABGP.RaidGroups.BLUE, priority = 1 },
+    ["Blue Lobster"] =   { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
+    ["Officer Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
+    ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
 };
 local epMins = {
     [ABGP.RaidGroups.RED] = 0,
@@ -64,6 +65,10 @@ end
 
 function ABGP:GetRaidGroup(rank)
     return rank and rankData[rank] and rankData[rank].raidGroup;
+end
+
+function ABGP:GetRankPriority(rank)
+    return rank and rankData[rank] and rankData[rank].priority or math.huge;
 end
 
 function ABGP:GetPreferredRaidGroup()
