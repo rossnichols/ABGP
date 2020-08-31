@@ -505,8 +505,6 @@ function ABGP:HistoryUpdateItemAward(data, player, cost)
         historyId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
-    self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
-    self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 end
 
 function ABGP:HistoryDeleteItemAward(data)
@@ -516,8 +514,6 @@ function ABGP:HistoryDeleteItemAward(data)
         updateId = ABGP:GetHistoryId(),
     };
     self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
-    self:HistoryOnItemAwarded(commData, nil, UnitName("player"));
-    self:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 end
 
 function ABGP:HistoryDeleteEntry(entry, deleteId)

@@ -117,11 +117,8 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.CommTypes.ITEM_AWARDED.name, function(self, event, data, distribution, sender, version)
-        if sender ~= UnitName("player") then
-            self:HistoryOnItemAwarded(data, distribution, sender, version);
-            self:PriorityOnItemAwarded(data, distribution, sender, version);
-        end
-
+        self:HistoryOnItemAwarded(data, distribution, sender, version);
+        self:PriorityOnItemAwarded(data, distribution, sender, version);
         self:RequestOnItemAwarded(data, distribution, sender, version);
         self:AnnounceOnItemAwarded(data, distribution, sender, version);
     end, self);

@@ -96,7 +96,7 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- count: number
 
-    ITEM_AWARDED = { name = "ITEM_AWARDED", id = 7, priority = "ALERT" },
+    ITEM_AWARDED = { name = "ITEM_AWARDED", id = 7, priority = "ALERT", fireLocally = true },
     -- itemLink: item link string
     -- player: string
     -- cost: number
@@ -111,7 +111,7 @@ ABGP.CommTypes = {
     -- awarded: number
     -- oldHistoryId: string
 
-    ITEM_TRASHED = { name = "ITEM_TRASHED", id = 8, priority = "ALERT" },
+    ITEM_TRASHED = { name = "ITEM_TRASHED", id = 8, priority = "ALERT", fireLocally = true },
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
@@ -343,6 +343,11 @@ function ABGP:SendComm(typ, data, distribution, target)
         self:SendCommMessage(prefix, payload, distribution, target, priority, commCallback, self);
     end
 
+    if typ.fireLocally then
+        -- self:LogDebug("Firing comm [%s] locally.", typ.name);
+        self:Fire(typ.name, data, distribution, UnitName("player"), self:GetVersion());
+    end
+
     return synchronousCheck;
 end
 
@@ -363,6 +368,11 @@ function ABGP:OnCommReceived(prefix, payload, distribution, sender)
         self:LogVerbose("<<< COMM");
     elseif sender ~= UnitName("player") and not typ:find("VERSION") and self:GetDebugOpt("DebugComms") then
         self:LogDebug("COMM-RECV: %s dist=%s sender=%s prefix=%s len=%s", typ, distribution, sender, prefix, payload:len());
+    end
+
+    if self.CommTypes[typ] and self.CommTypes[typ].fireLocally and sender == UnitName("player") then
+        -- self:LogDebug("Received comm [%s], skipping fire (local).", typ);
+        return;
     end
 
     self:Fire(typ, data, distribution, sender, version);

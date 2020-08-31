@@ -613,8 +613,6 @@ local function DistributeItem(data)
         awarded = GetServerTime(),
     };
     ABGP:SendComm(ABGP.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
-    ABGP:HistoryOnItemAwarded(commData, nil, UnitName("player"));
-    ABGP:PriorityOnItemAwarded(commData, nil, UnitName("player"));
 
     if #currentItem.distributions < currentItem.totalCount then
         RebuildUI();
