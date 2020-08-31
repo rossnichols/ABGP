@@ -60,7 +60,7 @@ end
 
 -- The prefix can be revved to create a backwards-incompatible version.
 function ABGP:GetCommPrefix()
-    return "ABGP4";
+    return "ABGP5";
 end
 
 -- Highest ID: 22
