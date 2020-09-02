@@ -364,7 +364,6 @@ local function ProcessNewRequest(request)
     local activeItems = window:GetUserData("activeItems");
     local item = activeItems[request.itemLink];
     local requests = item.requests;
-    local currentItem = window:GetUserData("currentItem");
     local oldRequest;
 
     for i, existing in ipairs(requests) do
@@ -382,7 +381,7 @@ local function ProcessNewRequest(request)
     end
 
     -- Generate a new roll if necessary
-    if currentItem.requiresRoll and not request.roll then
+    if item.requiresRoll and not request.roll then
         request.roll = math.random(1, 100);
         if UnitExists(request.player) then
             ABGP:SendComm(ABGP.CommTypes.ITEM_ROLLED, {
@@ -417,7 +416,7 @@ local function ProcessNewRequest(request)
         }, "BROADCAST");
     end
 
-    if request.itemLink == currentItem.itemLink then
+    if request.itemLink == window:GetUserData("currentItem").itemLink then
         RebuildUI();
     end
 end
