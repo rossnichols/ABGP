@@ -19,10 +19,18 @@ ABGP.Priorities = {};
 ABGP.RaidGroups = {
     RED = "RED",
     BLUE = "BLUE",
+    SPLITHIGH = "SPLITHIGH",
+    SPLITLOW = "SPLITLOW"
 };
 ABGP.RaidGroupNames = {
     [ABGP.RaidGroups.RED] = "Weekday",
     [ABGP.RaidGroups.BLUE] = "Weekend",
+};
+ABGP.RaidGroupNamesAll = {
+    [ABGP.RaidGroups.RED] = "Weekday",
+    [ABGP.RaidGroups.BLUE] = "Weekend",
+    [ABGP.RaidGroups.SPLITHIGH] = "Splits (Loot Prio)",
+    [ABGP.RaidGroups.SPLITLOW] = "Splits (No Loot Prio)",
 };
 ABGP.RaidGroupNamesReversed = {
     ["Weekday"] = ABGP.RaidGroups.RED,
@@ -30,21 +38,27 @@ ABGP.RaidGroupNamesReversed = {
 };
 ABGP.RaidGroupsSorted = {
     ABGP.RaidGroups.RED,
-    ABGP.RaidGroups.BLUE
+    ABGP.RaidGroups.BLUE,
+};
+ABGP.RaidGroupsSortedAll = {
+    ABGP.RaidGroups.RED,
+    ABGP.RaidGroups.BLUE,
+    ABGP.RaidGroups.SPLITHIGH,
+    ABGP.RaidGroups.SPLITLOW,
 };
 ABGP.RaidGroupsSortedReverse = {
     [ABGP.RaidGroups.RED] = 1,
     [ABGP.RaidGroups.BLUE] = 2,
 };
 local rankData = {
-    ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Closer"] =         { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Red Lobster"] =    { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Purple Lobster"] = { raidGroup = ABGP.RaidGroups.BLUE, priority = 1 },
-    ["Blue Lobster"] =   { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
-    ["Officer Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
-    ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
+    ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED, altRaidGroup = ABGP.RaidGroups.SPLITHIGH, priority = 1 },
+    ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED, altRaidGroup = ABGP.RaidGroups.SPLITHIGH, priority = 1 },
+    ["Closer"] =         { raidGroup = ABGP.RaidGroups.RED, altRaidGroup = ABGP.RaidGroups.SPLITHIGH, priority = 1 },
+    ["Red Lobster"] =    { raidGroup = ABGP.RaidGroups.RED, altRaidGroup = ABGP.RaidGroups.SPLITHIGH, priority = 1 },
+    ["Purple Lobster"] = { raidGroup = ABGP.RaidGroups.BLUE, altRaidGroup = ABGP.RaidGroups.SPLITHIGH, priority = 1 },
+    ["Blue Lobster"] =   { raidGroup = ABGP.RaidGroups.BLUE, altRaidGroup = ABGP.RaidGroups.SPLITLOW, priority = 2 },
+    ["Officer Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, altRaidGroup = ABGP.RaidGroups.SPLITLOW, priority = 2 },
+    ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, altRaidGroup = ABGP.RaidGroups.SPLITLOW, priority = 2 },
 };
 local epMins = {
     [ABGP.RaidGroups.RED] = 0,
@@ -65,6 +79,12 @@ end
 
 function ABGP:GetRaidGroup(rank)
     return rank and rankData[rank] and rankData[rank].raidGroup;
+end
+
+
+function ABGP:IsInRaidGroup(rank, raidGroup)
+    if not rank or not rankData[rank] then return false; end
+    return rankData[rank].raidGroup == raidGroup or rankData[rank].altRaidGroup == raidGroup;
 end
 
 function ABGP:GetRankPriority(rank)

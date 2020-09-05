@@ -279,7 +279,7 @@ local function DrawPriority(container, options)
     local priority = ABGP.Priorities;
     local filtered = {};
     for i, data in ipairs(priority) do
-        local inRaidGroup = not currentRaidGroup or data.raidGroup == currentRaidGroup;
+        local inRaidGroup = not currentRaidGroup or ABGP:IsInRaidGroup(data.rank, currentRaidGroup);
         local isGrouped = not onlyGrouped or UnitExists(data.player);
         if allowedClasses[data.class] and inRaidGroup and isGrouped then
             table.insert(filtered, data);
@@ -1160,7 +1160,7 @@ local function DrawItemHistory(container, options)
         local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
         if value and (epgp or not currentRaidGroup) then
-            if not currentRaidGroup or epgp.raidGroup == currentRaidGroup then
+            if not currentRaidGroup or ABGP:IsInRaidGroup(epgp.rank, currentRaidGroup) then
                 local class = epgp and epgp.class:lower() or "";
                 local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                 if exact then
@@ -1891,12 +1891,12 @@ function ABGP:CreateMainWindow(command)
     window:AddChild(mainLine);
 
     local raidGroups, raidGroupNames = {}, {};
-    for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
-    for k, v in pairs(ABGP.RaidGroupNames) do raidGroupNames[k] = v; end
+    for i, v in ipairs(ABGP.RaidGroupsSortedAll) do raidGroups[i] = v; end
+    for k, v in pairs(ABGP.RaidGroupNamesAll) do raidGroupNames[k] = v; end
     table.insert(raidGroups, "ALL");
     raidGroupNames.ALL = "All";
     local groupSelector = AceGUI:Create("Dropdown");
-    groupSelector:SetWidth(110);
+    groupSelector:SetWidth(150);
     groupSelector:SetList(raidGroupNames, raidGroups);
     groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
         currentRaidGroup = (value ~= "ALL") and value or nil;
