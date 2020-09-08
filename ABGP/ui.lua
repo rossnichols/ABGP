@@ -747,7 +747,10 @@ local function DrawItems(container, options)
                         table.insert(filteredRelated, itemLink);
                     end
                 end
-                related = filteredRelated;
+
+                if #filteredRelated > 0 then
+                    related = filteredRelated;
+                end
             end
             elt:SetRelatedItems(related);
             elt:ShowBackground((count % 2) == 0);
