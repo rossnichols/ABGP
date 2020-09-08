@@ -405,11 +405,11 @@ local function DrawItems(container, options)
                 lastRaid = raid;
                 lastBoss = nil;
             end
-            if boss ~= lastBoss then
-                local entry = boss;
+            if #boss == 1 and boss[1] ~= lastBoss then
+                local entry = boss[1];
                 sources[entry] = entry;
                 table.insert(sourcesSorted, entry);
-                lastBoss = boss;
+                lastBoss = boss[1];
             end
         end
         allowedSources = ABGP.tCopy(sources);
@@ -597,23 +597,46 @@ local function DrawItems(container, options)
         local exact = searchText:match("^\"(.+)\"$");
         for i, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
-                if allowedSources[item[ABGP.ItemDataIndex.RAID]] or allowedSources[item[ABGP.ItemDataIndex.BOSS]] then
+                local allowedBySource = allowedSources[item[ABGP.ItemDataIndex.RAID]];
+                if not allowedBySource then
+                    for _, boss in ipairs(item[ABGP.ItemDataIndex.BOSS]) do
+                        if allowedSources[boss] then
+                            allowedBySource = true;
+                            break;
+                        end
+                    end
+                end
+                if allowedBySource then
                     if not onlyUsable or ABGP:IsItemUsable(item[ABGP.ItemDataIndex.ITEMLINK]) then
                         if not onlyFaved or ABGP:IsItemFavorited(item[ABGP.ItemDataIndex.ITEMLINK]) then
                             local matchesSearch = false;
                             if exact then
                                 if item[ABGP.ItemDataIndex.NAME]:lower() == exact or
-                                    item[ABGP.ItemDataIndex.BOSS]:lower() == exact or
                                     item[ABGP.ItemDataIndex.RAID]:lower() == exact or
                                     (item[ABGP.ItemDataIndex.NOTES] or ""):lower() == exact then
                                     matchesSearch = true;
                                 end
                             else
                                 if item[ABGP.ItemDataIndex.NAME]:lower():find(searchText, 1, true) or
-                                    item[ABGP.ItemDataIndex.BOSS]:lower():find(searchText, 1, true) or
                                     item[ABGP.ItemDataIndex.RAID]:lower():find(searchText, 1, true) or
                                     (item[ABGP.ItemDataIndex.NOTES] or ""):lower():find(searchText, 1, true) then
                                     matchesSearch = true;
+                                end
+                            end
+
+                            if not matchesSearch then
+                                for _, boss in ipairs(item[ABGP.ItemDataIndex.BOSS]) do
+                                    if exact then
+                                        if boss:lower() == exact then
+                                            matchesSearch = true;
+                                            break;
+                                        end
+                                    else
+                                        if boss:lower():find(searchText, 1, true) then
+                                            matchesSearch = true;
+                                            break;
+                                        end
+                                    end
                                 end
                             end
 
@@ -622,9 +645,15 @@ local function DrawItems(container, options)
                                 for _, itemLink in ipairs(value.token) do
                                     local name = ABGP:GetItemName(itemLink);
                                     if exact then
-                                        if name:lower() == exact then matchesSearch = true; end
+                                        if name:lower() == exact then
+                                            matchesSearch = true;
+                                            break;
+                                        end
                                     else
-                                        if name:lower():find(searchText, 1, true) then matchesSearch = true; end
+                                        if name:lower():find(searchText, 1, true) then
+                                            matchesSearch = true;
+                                            break;
+                                        end
                                     end
                                 end
                             end

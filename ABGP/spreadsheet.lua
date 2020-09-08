@@ -256,6 +256,7 @@ function ABGP:ImportItems(prerelease)
                 return false, true;
             end
             row[ABGP.ItemDataIndex.CATEGORY] = catMapping[row[ABGP.ItemDataIndex.CATEGORY]];
+            row[ABGP.ItemDataIndex.BOSS] = { (";"):split(row[ABGP.ItemDataIndex.BOSS]) };
 
             if row[ABGP.ItemDataIndex.GP] == "T" then
                 return true;
@@ -309,7 +310,7 @@ function ABGP:ExportItems(prerelease)
         if item[self.ItemDataIndex.RELATED] then
             text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
                 item[self.ItemDataIndex.RAID],
-                item[self.ItemDataIndex.BOSS],
+                table.concat(item[self.ItemDataIndex.BOSS], ";"),
                 ("%s (%s)"):format(item[self.ItemDataIndex.NAME], item[self.ItemDataIndex.RELATED]),
                 self.ItemCategoryNames[item[self.ItemDataIndex.CATEGORY]],
                 item[self.ItemDataIndex.GP],
@@ -318,7 +319,7 @@ function ABGP:ExportItems(prerelease)
         else
             text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
                 item[self.ItemDataIndex.RAID],
-                item[self.ItemDataIndex.BOSS],
+                table.concat(item[self.ItemDataIndex.BOSS], ";"),
                 item[self.ItemDataIndex.NAME],
                 self.ItemCategoryNames[item[self.ItemDataIndex.CATEGORY]],
                 item[self.ItemDataIndex.GP],
@@ -591,7 +592,7 @@ function ABGP:GenerateItemList()
                                     [ABGP.ItemDataIndex.GP] = 0,
                                     [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
                                     [ABGP.ItemDataIndex.RAID] = collection.AtlasMapID,
-                                    [ABGP.ItemDataIndex.BOSS] = sub.name,
+                                    [ABGP.ItemDataIndex.BOSS] = { sub.name },
                                     [ABGP.ItemDataIndex.PRIORITY] = {},
                                     [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
                                     [ABGP.ItemDataIndex.NOTES] = nil,
@@ -613,7 +614,7 @@ function ABGP:GenerateItemList()
                                                 [ABGP.ItemDataIndex.GP] = 0,
                                                 [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
                                                 [ABGP.ItemDataIndex.RAID] = collection.AtlasMapID,
-                                                [ABGP.ItemDataIndex.BOSS] = sub.name,
+                                                [ABGP.ItemDataIndex.BOSS] = { sub.name },
                                                 [ABGP.ItemDataIndex.PRIORITY] = {},
                                                 [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
                                                 [ABGP.ItemDataIndex.NOTES] = nil,

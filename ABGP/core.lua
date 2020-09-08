@@ -579,7 +579,7 @@ local function ValueFromItem(item)
         itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
         itemId = ABGP:GetItemId(item[ABGP.ItemDataIndex.ITEMLINK]),
         gp = item[ABGP.ItemDataIndex.GP],
-        boss = item[ABGP.ItemDataIndex.BOSS],
+        boss = ABGP.tCopy(item[ABGP.ItemDataIndex.BOSS]),
         raid = item[ABGP.ItemDataIndex.RAID],
         priority = ABGP.tCopy(item[ABGP.ItemDataIndex.PRIORITY]),
         notes = item[ABGP.ItemDataIndex.NOTES],

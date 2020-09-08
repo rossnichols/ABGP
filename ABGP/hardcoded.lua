@@ -9,14 +9,16 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1598642875, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1599595765, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		data = {
 			{
 				"Barrage Shoulders",
 				0,
 				"|cffa335ee|Hitem:21699|h[Barrage Shoulders]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -27,7 +29,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21814|h[Breastplate of Annihilation]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Metal Rogue",
 					"Paladin (Ret)",
@@ -39,7 +43,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21708|h[Beetle Scaled Wristguards]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Progression",
 				},
@@ -50,7 +56,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21698|h[Leggings of Immersion]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -61,7 +69,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21705|h[Boots of the Fallen Prophet]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -72,7 +82,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21704|h[Boots of the Redeemed Prophecy]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -83,7 +95,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21706|h[Boots of the Unwavering Will]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -94,7 +108,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21702|h[Amulet of Foul Warding]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Progression",
 				},
@@ -105,7 +121,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21700|h[Pendant of the Qiraji Guardian]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -116,7 +134,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21701|h[Cloak of Concentrated Hatred]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"KAT4FITE",
 					"Slicey Rogue",
@@ -129,7 +149,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21707|h[Ring of Swarming Thought]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -140,7 +162,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21703|h[Hammer of Ji'zhi]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Garbage",
 				},
@@ -151,7 +175,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21128|h[Staff of the Qiraji Prophets]|h|r",
 				"Ahn'Qiraj",
-				"The Prophet Skeram",
+				{
+					"The Prophet Skeram",
+				},
 				{
 					"Progression",
 				},
@@ -162,7 +188,11 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21693|h[Guise of the Devourer]|h|r",
 				"Ahn'Qiraj",
-				"Bug Trio",
+				{
+					"Lord Kri",
+					"Vem",
+					"Princess Yauj",
+				},
 				{
 					"Tank",
 				},
@@ -173,7 +203,11 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21694|h[Ternary Mantle]|h|r",
 				"Ahn'Qiraj",
-				"Bug Trio",
+				{
+					"Lord Kri",
+					"Vem",
+					"Princess Yauj",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -184,7 +218,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21697|h[Cape of the Trinity]|h|r",
 				"Ahn'Qiraj",
-				"Bug Trio",
+				{
+					"Lord Kri",
+					"Vem",
+					"Princess Yauj",
+				},
 				{
 					"Garbage",
 				},
@@ -195,7 +233,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21696|h[Robes of the Triumvirate]|h|r",
 				"Ahn'Qiraj",
-				"Bug Trio",
+				{
+					"Lord Kri",
+					"Vem",
+					"Princess Yauj",
+				},
 				{
 					"Progression",
 				},
@@ -206,7 +248,11 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21692|h[Triad Girdle]|h|r",
 				"Ahn'Qiraj",
-				"Bug Trio",
+				{
+					"Lord Kri",
+					"Vem",
+					"Princess Yauj",
+				},
 				{
 					"Metal Rogue",
 					"Tank",
@@ -218,7 +264,11 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21695|h[Angelista's Touch]|h|r",
 				"Ahn'Qiraj",
-				"Bug Trio",
+				{
+					"Lord Kri",
+					"Vem",
+					"Princess Yauj",
+				},
 				{
 					"Tank",
 				},
@@ -229,7 +279,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21680|h[Vest of Swift Execution]|h|r",
 				"Ahn'Qiraj",
-				"Lord Kri",
+				{
+					"Lord Kri",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -241,7 +293,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21681|h[Ring of the Devoured]|h|r",
 				"Ahn'Qiraj",
-				"Lord Kri",
+				{
+					"Lord Kri",
+				},
 				{
 					"Garbage",
 				},
@@ -252,7 +306,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21685|h[Petrified Scarab]|h|r",
 				"Ahn'Qiraj",
-				"Lord Kri",
+				{
+					"Lord Kri",
+				},
 				{
 					"Progression",
 				},
@@ -263,7 +319,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21603|h[Wand of Qiraji Nobility]|h|r",
 				"Ahn'Qiraj",
-				"Lord Kri",
+				{
+					"Lord Kri",
+				},
 				{
 					"Garbage",
 				},
@@ -275,7 +333,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21690|h[Angelista's Charm]|h|r",
 				"Ahn'Qiraj",
-				"Vem",
+				{
+					"Vem",
+				},
 				{
 					"Garbage",
 				},
@@ -286,7 +346,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21689|h[Gloves of Ebru]|h|r",
 				"Ahn'Qiraj",
-				"Vem",
+				{
+					"Vem",
+				},
 				{
 					"Garbage",
 				},
@@ -297,7 +359,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21691|h[Ooze-ridden Gauntlets]|h|r",
 				"Ahn'Qiraj",
-				"Vem",
+				{
+					"Vem",
+				},
 				{
 					"Progression",
 				},
@@ -308,7 +372,9 @@ ABGP.initialData = {
 				175,
 				"|cffa335ee|Hitem:21688|h[Boots of the Fallen Hero]|h|r",
 				"Ahn'Qiraj",
-				"Vem",
+				{
+					"Vem",
+				},
 				{
 					"Metal Rogue",
 					"Tank",
@@ -320,7 +386,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21686|h[Mantle of Phrenic Power]|h|r",
 				"Ahn'Qiraj",
-				"Princess Yauj",
+				{
+					"Princess Yauj",
+				},
 				{
 					"Mage",
 				},
@@ -331,7 +399,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21684|h[Mantle of the Desert's Fury]|h|r",
 				"Ahn'Qiraj",
-				"Princess Yauj",
+				{
+					"Princess Yauj",
+				},
 				{
 					"Garbage",
 				},
@@ -342,7 +412,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21683|h[Mantle of the Desert Crusade]|h|r",
 				"Ahn'Qiraj",
-				"Princess Yauj",
+				{
+					"Princess Yauj",
+				},
 				{
 					"Garbage",
 				},
@@ -353,7 +425,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21682|h[Bile-Covered Gauntlets]|h|r",
 				"Ahn'Qiraj",
-				"Princess Yauj",
+				{
+					"Princess Yauj",
+				},
 				{
 					"Progression",
 				},
@@ -364,7 +438,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21687|h[Ukko's Ring of Darkness]|h|r",
 				"Ahn'Qiraj",
-				"Princess Yauj",
+				{
+					"Princess Yauj",
+				},
 				{
 					"Progression",
 				},
@@ -375,7 +451,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21669|h[Creeping Vine Helm]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -388,7 +466,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21678|h[Necklace of Purity]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Progression",
 				},
@@ -399,7 +479,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21671|h[Robes of the Battleguard]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Garbage",
 				},
@@ -410,7 +492,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21672|h[Gloves of Enforcement]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"KAT4FITE",
 				},
@@ -421,7 +505,9 @@ ABGP.initialData = {
 				175,
 				"|cffa335ee|Hitem:21674|h[Gauntlets of Steadfast Determination]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Tank",
 				},
@@ -432,7 +518,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21675|h[Thick Qirajihide Belt]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Tank",
 				},
@@ -443,7 +531,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21676|h[Leggings of the Festering Swarm]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Mage",
 				},
@@ -454,7 +544,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21668|h[Scaled Leggings of Qiraji Fury]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Garbage",
 				},
@@ -465,7 +557,9 @@ ABGP.initialData = {
 				175,
 				"|cffa335ee|Hitem:21667|h[Legplates of Blazing Light]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -477,7 +571,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21648|h[Recomposed Boots]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Progression",
 				},
@@ -488,7 +584,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21670|h[Badge of the Swarmguard]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Hunter",
 					"KAT4FITE",
@@ -501,7 +599,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21666|h[Sartura's Might]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -514,7 +614,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21673|h[Silithid Claw]|h|r",
 				"Ahn'Qiraj",
-				"Battleguard Sartura",
+				{
+					"Battleguard Sartura",
+				},
 				{
 					"Garbage",
 				},
@@ -525,7 +627,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21665|h[Mantle of Wicked Revenge]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"KAT4FITE",
 				},
@@ -536,7 +640,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21639|h[Pauldrons of the Unrelenting]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Garbage",
 				},
@@ -547,7 +653,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21627|h[Cloak of Untold Secrets]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Progression",
 				},
@@ -558,7 +666,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21663|h[Robes of the Guardian Saint]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -571,7 +681,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21652|h[Silithid Carapace Chestguard]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Progression",
 				},
@@ -582,7 +694,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21651|h[Scaled Sand Reaver Leggings]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Metal Rogue",
 					"Paladin (Ret)",
@@ -594,7 +708,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21645|h[Hive Tunneler's Boots]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Garbage",
 				},
@@ -605,7 +721,9 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:21650|h[Ancient Qiraji Ripper]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -618,7 +736,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21635|h[Barb of the Sand Reaver]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Hunter",
 				},
@@ -629,7 +749,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21664|h[Barbed Choker]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Hunter",
 					"Metal Rogue",
@@ -645,7 +767,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21647|h[Fetish of the Sand Reaver]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -656,7 +780,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22402|h[Libram of Grace]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Progression",
 				},
@@ -667,7 +793,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22396|h[Totem of Life]|h|r",
 				"Ahn'Qiraj",
-				"Fankriss the Unyielding",
+				{
+					"Fankriss the Unyielding",
+				},
 				{
 					"Garbage",
 				},
@@ -678,7 +806,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21624|h[Gauntlets of Kalimdor]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Garbage",
 				},
@@ -689,7 +819,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21623|h[Gauntlets of the Righteous Champion]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Garbage",
 				},
@@ -700,7 +832,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21626|h[Slime-coated Leggings]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Garbage",
 				},
@@ -711,7 +845,9 @@ ABGP.initialData = {
 				450,
 				"|cffa335ee|Hitem:21622|h[Sharpened Silithid Femur]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -724,7 +860,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21677|h[Ring of the Qiraji Fury]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Metal Rogue",
 					"Tank",
@@ -736,7 +874,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:21625|h[Scarab Brooch]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -749,7 +889,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22399|h[Idol of Health]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus",
+				{
+					"Viscidus",
+				},
 				{
 					"Progression",
 				},
@@ -760,7 +902,10 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20928|h[Qiraji Bindings of Command]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -774,7 +919,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21333|h[Conqueror's Greaves]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -785,7 +933,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21330|h[Conqueror's Spaulders]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -796,7 +947,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21359|h[Deathdealer's Boots]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -807,7 +961,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21361|h[Deathdealer's Spaulders]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -818,7 +975,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21349|h[Footwraps of the Oracle]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -829,7 +989,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21350|h[Mantle of the Oracle]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -840,7 +1003,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21365|h[Striker's Footguards]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -851,7 +1017,10 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21367|h[Striker's Pauldrons]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -862,7 +1031,10 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20932|h[Qiraji Bindings of Dominance]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -874,7 +1046,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21388|h[Avenger's Greaves]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -885,7 +1060,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21391|h[Avenger's Pauldrons]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -896,7 +1074,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21338|h[Doomcaller's Footwraps]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -907,7 +1088,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21335|h[Doomcaller's Mantle]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -918,7 +1102,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21344|h[Enigma Boots]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -929,7 +1116,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21345|h[Enigma Shoulderpads]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -940,7 +1130,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21355|h[Genesis Boots]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -951,7 +1144,10 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21354|h[Genesis Shoulderpads]|h|r",
 				"Ahn'Qiraj",
-				"Viscidus, Huhuran",
+				{
+					"Viscidus",
+					"Princess Huhuran",
+				},
 				{
 				},
 				"GOLD",
@@ -962,7 +1158,9 @@ ABGP.initialData = {
 				125,
 				"|cffa335ee|Hitem:21621|h[Cloak of the Golden Hive]|h|r",
 				"Ahn'Qiraj",
-				"Princess Huhuran",
+				{
+					"Princess Huhuran",
+				},
 				{
 					"Tank",
 				},
@@ -973,7 +1171,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21618|h[Hive Defiler Wristguards]|h|r",
 				"Ahn'Qiraj",
-				"Princess Huhuran",
+				{
+					"Princess Huhuran",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -984,7 +1184,9 @@ ABGP.initialData = {
 				75,
 				"|cffa335ee|Hitem:21619|h[Gloves of the Messiah]|h|r",
 				"Ahn'Qiraj",
-				"Princess Huhuran",
+				{
+					"Princess Huhuran",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -995,7 +1197,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21617|h[Wasphide Gauntlets]|h|r",
 				"Ahn'Qiraj",
-				"Princess Huhuran",
+				{
+					"Princess Huhuran",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -1006,7 +1210,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21620|h[Ring of the Martyr]|h|r",
 				"Ahn'Qiraj",
-				"Princess Huhuran",
+				{
+					"Princess Huhuran",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -1018,7 +1224,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:21616|h[Huhuran's Stinger]|h|r",
 				"Ahn'Qiraj",
-				"Princess Huhuran",
+				{
+					"Princess Huhuran",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -1029,7 +1237,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20930|h[Vek'lor's Diadem]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"Slicey Rogue",
 					"Stabby Rogue",
@@ -1041,7 +1251,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21387|h[Avenger's Crown]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 				},
 				"GOLD",
@@ -1052,7 +1264,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21360|h[Deathdealer's Helm]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 				},
 				"GOLD",
@@ -1063,7 +1277,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21353|h[Genesis Helm]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 				},
 				"GOLD",
@@ -1074,7 +1290,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21366|h[Striker's Diadem]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 				},
 				"GOLD",
@@ -1085,7 +1303,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21602|h[Qiraji Execution Bracers]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -1100,7 +1320,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21599|h[Vek'lor's Gloves of Devastation]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"Garbage",
 				},
@@ -1111,7 +1333,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21598|h[Royal Qiraji Belt]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"Tank",
 				},
@@ -1122,7 +1346,9 @@ ABGP.initialData = {
 				75,
 				"|cffa335ee|Hitem:21600|h[Boots of Epiphany]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -1135,7 +1361,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21601|h[Ring of Emperor Vek'lor]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"Tank",
 				},
@@ -1146,7 +1374,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21597|h[Royal Scepter of Vek'lor]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'lor",
+				{
+					"Emperor Vek'lor",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -1159,7 +1389,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20926|h[Vek'nilash's Circlet]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Mage",
 					"Metal Rogue",
@@ -1174,7 +1406,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21329|h[Conqueror's Crown]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1185,7 +1419,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21337|h[Doomcaller's Circlet]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1196,7 +1432,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21347|h[Enigma Circlet]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1207,7 +1445,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21348|h[Tiara of the Oracle]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1218,7 +1458,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21608|h[Amulet of Vek'nilash]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -1230,7 +1472,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21604|h[Bracelets of Royal Redemption]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Paladin (Holy)",
 					"Priest (Heal)",
@@ -1243,7 +1487,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:21605|h[Gloves of the Hidden Temple]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Tank",
 				},
@@ -1254,7 +1500,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21609|h[Regenerating Belt of Vek'nilash]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Garbage",
 				},
@@ -1265,7 +1513,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21607|h[Grasp of the Fallen Emperor]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Garbage",
 				},
@@ -1276,7 +1526,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21606|h[Belt of the Fallen Emperor]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Garbage",
 				},
@@ -1287,7 +1539,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21679|h[Kalimdor's Revenge]|h|r",
 				"Ahn'Qiraj",
-				"Emperor Vek'nilash",
+				{
+					"Emperor Vek'nilash",
+				},
 				{
 					"Garbage",
 				},
@@ -1298,7 +1552,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21615|h[Don Rigoberto's Lost Hat]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -1311,7 +1567,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21611|h[Burrower Bracers]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -1324,7 +1582,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23558|h[The Burrower's Shell]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Garbage",
 				},
@@ -1335,7 +1595,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:23570|h[Jom Gabbar]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Hunter",
 					"Slicey Rogue",
@@ -1348,7 +1610,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21610|h[Wormscale Blocker]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Progression",
 				},
@@ -1359,7 +1623,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:23557|h[Larvae of the Great Worm]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Hunter",
 					"Metal Rogue",
@@ -1373,7 +1639,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20927|h[Ouro's Intact Hide]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -1387,7 +1655,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21332|h[Conqueror's Legguards]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"GOLD",
@@ -1398,7 +1668,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21362|h[Deathdealer's Leggings]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"GOLD",
@@ -1409,7 +1681,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21346|h[Enigma Leggings]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"GOLD",
@@ -1420,7 +1694,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21352|h[Trousers of the Oracle]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"GOLD",
@@ -1431,7 +1707,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20931|h[Skin of the Great Sandworm]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 					"Garbage",
 				},
@@ -1442,7 +1720,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21390|h[Avenger's Legguards]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"SILVER",
@@ -1453,7 +1733,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21336|h[Doomcaller's Trousers]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"SILVER",
@@ -1464,7 +1746,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21356|h[Genesis Trousers]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"SILVER",
@@ -1475,7 +1759,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21368|h[Striker's Leggings]|h|r",
 				"Ahn'Qiraj",
-				"Ouro",
+				{
+					"Ouro",
+				},
 				{
 				},
 				"SILVER",
@@ -1486,7 +1772,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:22732|h[Mark of C'Thun]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Tank",
 				},
@@ -1497,7 +1785,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21583|h[Cloak of Clarity]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -1510,7 +1800,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:22731|h[Cloak of the Devoured]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -1523,7 +1815,9 @@ ABGP.initialData = {
 				350,
 				"|cffa335ee|Hitem:22730|h[Eyestalk Waist Cord]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -1536,7 +1830,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21582|h[Grasp of the Old God]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Paladin (Holy)",
 					"Priest (Heal)",
@@ -1548,7 +1844,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21586|h[Belt of Never-ending Agony]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"KAT4FITE",
 					"Slicey Rogue",
@@ -1561,7 +1859,9 @@ ABGP.initialData = {
 				350,
 				"|cffa335ee|Hitem:21585|h[Dark Storm Gauntlets]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -1574,7 +1874,9 @@ ABGP.initialData = {
 				450,
 				"|cffa335ee|Hitem:21581|h[Gauntlets of Annihilation]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -1585,7 +1887,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21596|h[Ring of the Godslayer]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Hunter",
 				},
@@ -1596,7 +1900,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21579|h[Vanquished Tentacle of C'Thun]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Garbage",
 				},
@@ -1607,7 +1913,9 @@ ABGP.initialData = {
 				500,
 				"|cffa335ee|Hitem:21839|h[Scepter of the False Prophet]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -1620,7 +1928,9 @@ ABGP.initialData = {
 				600,
 				"|cffa335ee|Hitem:21126|h[Death's Sting]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Stabby Rogue",
 				},
@@ -1632,7 +1942,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21134|h[Dark Edge of Insanity]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Garbage",
 				},
@@ -1643,7 +1955,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20929|h[Carapace of the Old God]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -1658,7 +1972,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21389|h[Avenger's Breastplate]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"GOLD",
@@ -1669,7 +1985,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21331|h[Conqueror's Breastplate]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"GOLD",
@@ -1680,7 +1998,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21364|h[Deathdealer's Vest]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"GOLD",
@@ -1691,7 +2011,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:21370|h[Striker's Hauberk]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"GOLD",
@@ -1702,7 +2024,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:20933|h[Husk of the Old God]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -1715,7 +2039,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21334|h[Doomcaller's Robes]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"SILVER",
@@ -1726,7 +2052,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21343|h[Enigma Robes]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"SILVER",
@@ -1737,7 +2065,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21357|h[Genesis Vest]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"SILVER",
@@ -1748,7 +2078,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:21351|h[Vestments of the Oracle]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"SILVER",
@@ -1759,7 +2091,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:21221|h[Eye of C'Thun]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -1772,7 +2106,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:21712|h[Amulet of the Fallen God]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"SILVER",
@@ -1783,7 +2119,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:21710|h[Cloak of the Fallen God]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"SILVER",
@@ -1794,7 +2132,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21709|h[Ring of the Fallen God]|h|r",
 				"Ahn'Qiraj",
-				"C'Thun",
+				{
+					"C'Thun",
+				},
 				{
 				},
 				"GOLD",
@@ -1805,7 +2145,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21838|h[Garb of Royal Ascension]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Progression",
 				},
@@ -1816,7 +2158,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21888|h[Gloves of the Immortal]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Garbage",
 				},
@@ -1827,7 +2171,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21889|h[Gloves of the Redeemed Prophecy]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Garbage",
 				},
@@ -1838,7 +2184,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21856|h[Neretzek, The Blood Drinker]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Garbage",
 				},
@@ -1849,7 +2197,9 @@ ABGP.initialData = {
 				500,
 				"|cffa335ee|Hitem:21837|h[Anubisath Warhammer]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -1861,7 +2211,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:21836|h[Ritssyn's Ring of Chaos]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Mage",
 				},
@@ -1872,7 +2224,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:21891|h[Shard of the Fallen Star]|h|r",
 				"Ahn'Qiraj",
-				"AQ Trash",
+				{
+					"AQ Trash",
+				},
 				{
 					"Garbage",
 				},
@@ -1883,7 +2237,17 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:21237|h[Imperial Qiraji Regalia]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 					"KAT4FITE",
 					"Mage",
@@ -1898,7 +2262,17 @@ ABGP.initialData = {
 				450,
 				"|cffa335ee|Hitem:21268|h[Blessed Qiraji War Hammer]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1909,7 +2283,17 @@ ABGP.initialData = {
 				450,
 				"|cffa335ee|Hitem:21273|h[Blessed Qiraji Acolyte Staff]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1920,7 +2304,17 @@ ABGP.initialData = {
 				450,
 				"|cffa335ee|Hitem:21275|h[Blessed Qiraji Augur Staff]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1931,7 +2325,17 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:21232|h[Imperial Qiraji Armaments]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 					"Stabby Rogue",
 				},
@@ -1942,7 +2346,17 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:21242|h[Blessed Qiraji War Axe]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1953,7 +2367,17 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:21244|h[Blessed Qiraji Pugio]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1964,7 +2388,17 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:21272|h[Blessed Qiraji Musket]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1975,7 +2409,17 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:21269|h[Blessed Qiraji Bulwark]|h|r",
 				"Ahn'Qiraj",
-				"AQ Shared",
+				{
+					"Princess Yauj",
+					"Viscidus",
+					"Ouro",
+					"Princess Huhuran",
+					"Vem",
+					"Emperor Vek'lor",
+					"Battleguard Sartura",
+					"Fankriss the Unyielding",
+					"Emperor Vek'nilash",
+				},
 				{
 				},
 				"GOLD",
@@ -1986,7 +2430,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16926|h[Bindings of Transcendence]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -1997,7 +2443,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16918|h[Netherwind Bindings]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Mage",
 				},
@@ -2008,7 +2456,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16934|h[Nemesis Bracers]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Warlock",
 				},
@@ -2019,7 +2469,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16911|h[Bloodfang Bracers]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Slicey Rogue",
 					"Stabby Rogue",
@@ -2031,7 +2483,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16904|h[Stormrage Bracers]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -2042,7 +2496,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16935|h[Dragonstalker's Bracers]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Hunter",
 				},
@@ -2053,7 +2509,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16951|h[Judgement Bindings]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2064,7 +2522,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16959|h[Bracelets of Wrath]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Tank",
 				},
@@ -2075,7 +2535,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19336|h[Arcane Infused Gem]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Hunter",
 				},
@@ -2086,7 +2548,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19337|h[The Black Book]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Warlock",
 				},
@@ -2097,7 +2561,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19370|h[Mantle of the Blackwing Cabal]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -2111,7 +2577,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19369|h[Gloves of Rapid Evolution]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Garbage",
 				},
@@ -2122,7 +2590,9 @@ ABGP.initialData = {
 				70,
 				"|cffa335ee|Hitem:19335|h[Spineshatter]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -2137,7 +2607,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19334|h[The Untamed Blade]|h|r",
 				"Blackwing Lair",
-				"Razorgore the Untamed",
+				{
+					"Razorgore the Untamed",
+				},
 				{
 					"Garbage",
 				},
@@ -2148,7 +2620,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16925|h[Belt of Transcendence]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -2159,7 +2633,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16818|h[Netherwind Belt]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Mage",
 				},
@@ -2170,7 +2646,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16933|h[Nemesis Belt]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Warlock",
 				},
@@ -2181,7 +2659,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16910|h[Bloodfang Belt]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Slicey Rogue",
 					"Stabby Rogue",
@@ -2193,7 +2673,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16903|h[Stormrage Belt]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -2204,7 +2686,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16936|h[Dragonstalker's Belt]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Hunter",
 				},
@@ -2215,7 +2699,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16952|h[Judgement Belt]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2226,7 +2712,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:16960|h[Waistband of Wrath]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Tank",
 				},
@@ -2237,7 +2725,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19339|h[Mind Quickening Gem]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Mage",
 				},
@@ -2248,7 +2738,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19340|h[Rune of Metamorphosis]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -2259,7 +2751,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19372|h[Helm of Endless Rage]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Tank",
 				},
@@ -2270,7 +2764,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19371|h[Pendant of the Fallen Dragon]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -2283,7 +2779,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19348|h[Red Dragonscale Protector]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2294,7 +2792,9 @@ ABGP.initialData = {
 				70,
 				"|cffa335ee|Hitem:19346|h[Dragonfang Blade]|h|r",
 				"Blackwing Lair",
-				"Vaelastraz the Corrupt",
+				{
+					"Vaelastraz the Corrupt",
+				},
 				{
 					"Hunter",
 					"Stabby Rogue",
@@ -2308,7 +2808,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:16919|h[Boots of Transcendence]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -2319,7 +2821,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16927|h[Nemesis Boots]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Warlock",
 				},
@@ -2330,7 +2834,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16912|h[Netherwind Boots]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Mage",
 				},
@@ -2341,7 +2847,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:16906|h[Bloodfang Boots]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Slicey Rogue",
 				},
@@ -2352,7 +2860,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:16898|h[Stormrage Boots]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -2363,7 +2873,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:16941|h[Dragonstalker's Greaves]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Hunter",
 				},
@@ -2374,7 +2886,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16957|h[Judgement Sabatons]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2385,7 +2899,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:16965|h[Sabatons of Wrath]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Tank",
 				},
@@ -2396,7 +2912,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19341|h[Lifegiving Gem]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Tank",
 				},
@@ -2407,7 +2925,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19342|h[Venomous Totem]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Slicey Rogue",
 					"Stabby Rogue",
@@ -2419,7 +2939,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19373|h[Black Brood Pauldrons]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Garbage",
 				},
@@ -2430,7 +2952,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19374|h[Bracers of Arcane Accuracy]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -2443,7 +2967,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19350|h[Heartstriker]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -2457,7 +2983,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19351|h[Maladath, Runed Blade of the Black Flight]|h|r",
 				"Blackwing Lair",
-				"Broodlord Lashlayer",
+				{
+					"Broodlord Lashlayer",
+				},
 				{
 					"Metal Rogue",
 					"Tank",
@@ -2470,7 +2998,11 @@ ABGP.initialData = {
 				80,
 				"|cffa335ee|Hitem:16920|h[Handguards of Transcendence]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -2481,7 +3013,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16913|h[Netherwind Gloves]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Mage",
 				},
@@ -2492,7 +3028,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16928|h[Nemesis Gloves]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Warlock",
 				},
@@ -2503,7 +3043,11 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:16907|h[Bloodfang Gloves]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Slicey Rogue",
 				},
@@ -2515,7 +3059,11 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:16899|h[Stormrage Handguards]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -2526,7 +3074,11 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:16940|h[Dragonstalker's Gauntlets]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Hunter",
 				},
@@ -2537,7 +3089,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16956|h[Judgement Gauntlets]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2548,7 +3104,11 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:16964|h[Gauntlets of Wrath]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Tank",
 				},
@@ -2559,7 +3119,11 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:19394|h[Drake Talon Pauldrons]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Metal Rogue",
 					"Tank",
@@ -2571,7 +3135,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19396|h[Taut Dragonhide Belt]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Garbage",
 				},
@@ -2582,7 +3150,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19353|h[Drake Talon Cleaver]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Garbage",
 				},
@@ -2593,7 +3165,11 @@ ABGP.initialData = {
 				70,
 				"|cffa335ee|Hitem:19355|h[Shadow Wing Focus Staff]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Druid (Heal)",
 					"Mage",
@@ -2607,7 +3183,11 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19397|h[Ring of Blackrock]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -2621,7 +3201,11 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:19395|h[Rejuvenating Gem]|h|r",
 				"Blackwing Lair",
-				"Firemaw, Ebonroc, Flamegor",
+				{
+					"Firemaw",
+					"Ebonroc",
+					"Flamegor",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -2634,7 +3218,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19343|h[Scrolls of Blinding Light]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2645,7 +3231,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19398|h[Cloak of Firemaw]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -2658,7 +3246,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19399|h[Black Ash Robe]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Progression",
 				},
@@ -2669,7 +3259,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19400|h[Firemaw's Clutch]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -2682,7 +3274,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19401|h[Primalist's Linked Legguards]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Garbage",
 				},
@@ -2693,7 +3287,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19402|h[Legguards of the Fallen Crusader]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Metal Rogue",
 					"Tank",
@@ -2705,7 +3301,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19365|h[Claw of the Black Drake]|h|r",
 				"Blackwing Lair",
-				"Firemaw",
+				{
+					"Firemaw",
+				},
 				{
 					"Garbage",
 				},
@@ -2716,7 +3314,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19407|h[Ebony Flame Gloves]|h|r",
 				"Blackwing Lair",
-				"Ebonroc",
+				{
+					"Ebonroc",
+				},
 				{
 					"Priest (Shadow)",
 					"Warlock",
@@ -2728,7 +3328,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19405|h[Malfurion's Blessed Bulwark]|h|r",
 				"Blackwing Lair",
-				"Ebonroc",
+				{
+					"Ebonroc",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -2741,7 +3343,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19368|h[Dragonbreath Hand Cannon]|h|r",
 				"Blackwing Lair",
-				"Ebonroc",
+				{
+					"Ebonroc",
+				},
 				{
 					"Slicey Rogue",
 					"Stabby Rogue",
@@ -2754,7 +3358,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:19403|h[Band of Forced Concentration]|h|r",
 				"Blackwing Lair",
-				"Ebonroc",
+				{
+					"Ebonroc",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -2767,7 +3373,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19345|h[Aegis of Preservation]|h|r",
 				"Blackwing Lair",
-				"Ebonroc",
+				{
+					"Ebonroc",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -2778,7 +3386,9 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:19406|h[Drake Fang Talisman]|h|r",
 				"Blackwing Lair",
-				"Ebonroc",
+				{
+					"Ebonroc",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -2794,7 +3404,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19430|h[Shroud of Pure Thought]|h|r",
 				"Blackwing Lair",
-				"Flamegor",
+				{
+					"Flamegor",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -2807,7 +3419,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19433|h[Emberweave Leggings]|h|r",
 				"Blackwing Lair",
-				"Flamegor",
+				{
+					"Flamegor",
+				},
 				{
 					"Progression",
 				},
@@ -2818,7 +3432,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19367|h[Dragon's Touch]|h|r",
 				"Blackwing Lair",
-				"Flamegor",
+				{
+					"Flamegor",
+				},
 				{
 					"Garbage",
 				},
@@ -2829,7 +3445,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19357|h[Herald of Woe]|h|r",
 				"Blackwing Lair",
-				"Flamegor",
+				{
+					"Flamegor",
+				},
 				{
 					"Garbage",
 				},
@@ -2840,7 +3458,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19432|h[Circle of Applied Force]|h|r",
 				"Blackwing Lair",
-				"Flamegor",
+				{
+					"Flamegor",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -2855,7 +3475,9 @@ ABGP.initialData = {
 				325,
 				"|cffa335ee|Hitem:19431|h[Styleen's Impeding Scarab]|h|r",
 				"Blackwing Lair",
-				"Flamegor",
+				{
+					"Flamegor",
+				},
 				{
 					"Tank",
 				},
@@ -2866,7 +3488,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:16924|h[Pauldrons of Transcendence]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -2877,7 +3501,9 @@ ABGP.initialData = {
 				80,
 				"|cffa335ee|Hitem:16917|h[Netherwind Mantle]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Mage",
 				},
@@ -2888,7 +3514,9 @@ ABGP.initialData = {
 				125,
 				"|cffa335ee|Hitem:16932|h[Nemesis Spaulders]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Warlock",
 				},
@@ -2899,7 +3527,9 @@ ABGP.initialData = {
 				50,
 				"|cffa335ee|Hitem:16832|h[Bloodfang Spaulders]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Slicey Rogue",
 				},
@@ -2910,7 +3540,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16902|h[Stormrage Pauldrons]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -2921,7 +3553,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:16937|h[Dragonstalker's Spaulders]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Hunter",
 				},
@@ -2932,7 +3566,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16953|h[Judgement Spaulders]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -2943,7 +3579,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:16961|h[Pauldrons of Wrath]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Tank",
 				},
@@ -2954,7 +3592,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19389|h[Taut Dragonhide Shoulderpads]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"KAT4FITE",
 				},
@@ -2965,7 +3605,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19386|h[Elementium Threaded Cloak]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"KAT4FITE",
 					"Tank",
@@ -2977,7 +3619,9 @@ ABGP.initialData = {
 				80,
 				"|cffa335ee|Hitem:19390|h[Taut Dragonhide Gloves]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -2989,7 +3633,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19388|h[Angelista's Grasp]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Garbage",
 				},
@@ -3000,7 +3646,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19392|h[Girdle of the Fallen Crusader]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Garbage",
 				},
@@ -3011,7 +3659,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19385|h[Empowered Leggings]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3023,7 +3673,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19391|h[Shimmering Geta]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3036,7 +3688,9 @@ ABGP.initialData = {
 				225,
 				"|cffa335ee|Hitem:19387|h[Chromatic Boots]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -3047,7 +3701,9 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:19361|h[Ashjre'thul, Crossbow of Smiting]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Hunter",
 				},
@@ -3058,7 +3714,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:19349|h[Elementium Reinforced Bulwark]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Tank",
 				},
@@ -3069,7 +3727,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:19347|h[Claw of Chromaggus]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -3081,7 +3741,9 @@ ABGP.initialData = {
 				500,
 				"|cffa335ee|Hitem:19352|h[Chromatically Tempered Sword]|h|r",
 				"Blackwing Lair",
-				"Chromaggus",
+				{
+					"Chromaggus",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -3093,7 +3755,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:16923|h[Robes of Transcendence]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -3104,7 +3768,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16916|h[Netherwind Robes]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Mage",
 				},
@@ -3115,7 +3781,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16931|h[Nemesis Robes]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Warlock",
 				},
@@ -3126,7 +3794,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:16905|h[Bloodfang Chestpiece]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Slicey Rogue",
 					"Stabby Rogue",
@@ -3138,7 +3808,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16897|h[Stormrage Chestguard]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Druid (Heal)",
 				},
@@ -3149,7 +3821,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:16942|h[Dragonstalker's Breastplate]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Hunter",
 				},
@@ -3160,7 +3834,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:16958|h[Judgement Breastplate]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Paladin (Holy)",
 				},
@@ -3171,7 +3847,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:16966|h[Breastplate of Wrath]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Tank",
 				},
@@ -3182,7 +3860,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:19003|h[Head of Nefarian]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Hunter",
 					"KAT4FITE",
@@ -3199,7 +3879,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19383|h[Master Dragonslayer's Medallion]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 				},
 				"SILVER",
@@ -3210,7 +3892,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 				},
 				"SILVER",
@@ -3221,7 +3905,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19366|h[Master Dragonslayer's Orb]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 				},
 				"SILVER",
@@ -3232,7 +3918,9 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:19360|h[Lok'amir il Romathis]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3245,7 +3933,9 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:19363|h[Crul'shorukh, Edge of Chaos]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -3256,7 +3946,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19364|h[Ashkandi, Greatsword of the Brotherhood]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Garbage",
 				},
@@ -3267,7 +3959,9 @@ ABGP.initialData = {
 				450,
 				"|cffa335ee|Hitem:19356|h[Staff of the Shadow Flame]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -3279,7 +3973,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:19375|h[Mish'undare, Circlet of the Mind Flayer]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -3291,7 +3987,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19377|h[Prestor's Talisman of Connivery]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Hunter",
 					"KAT4FITE",
@@ -3305,7 +4003,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19378|h[Cloak of the Brood Lord]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -3318,7 +4018,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19380|h[Therazane's Link]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Garbage",
 				},
@@ -3329,7 +4031,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19381|h[Boots of the Shadow Flame]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"KAT4FITE",
 					"Stabby Rogue",
@@ -3341,7 +4045,9 @@ ABGP.initialData = {
 				125,
 				"|cffa335ee|Hitem:19376|h[Archimtiros' Ring of Reckoning]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"KAT4FITE",
 					"Tank",
@@ -3353,7 +4059,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19382|h[Pure Elementium Band]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Druid (Heal)",
 					"Priest (Heal)",
@@ -3365,7 +4073,9 @@ ABGP.initialData = {
 				400,
 				"|cffa335ee|Hitem:19379|h[Neltharion's Tear]|h|r",
 				"Blackwing Lair",
-				"Nefarian",
+				{
+					"Nefarian",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -3378,7 +4088,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19436|h[Cloak of Draconic Might]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -3390,7 +4102,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19439|h[Interlaced Shadow Jerkin]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Progression",
 				},
@@ -3401,7 +4115,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:19437|h[Boots of Pure Thought]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3414,7 +4130,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:19438|h[Ringo's Blizzard Boots]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Mage",
 				},
@@ -3425,7 +4143,9 @@ ABGP.initialData = {
 				200,
 				"|cffa335ee|Hitem:19434|h[Band of Dark Dominion]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Priest (Shadow)",
 					"Warlock",
@@ -3437,7 +4157,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Priest (Heal)",
 				},
@@ -3448,7 +4170,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:19362|h[Doom's Edge]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Hunter",
 					"Metal Rogue",
@@ -3460,7 +4184,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:19354|h[Draconic Avenger]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"Garbage",
 				},
@@ -3471,7 +4197,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:19358|h[Draconic Maul]|h|r",
 				"Blackwing Lair",
-				"BWL Trash",
+				{
+					"BWL Trash",
+				},
 				{
 					"KAT4FITE",
 				},
@@ -3482,7 +4210,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20579|h[Green Dragonskin Cloak]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Progression",
 				},
@@ -3493,7 +4226,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20615|h[Dragonspur Wraps]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Progression",
 				},
@@ -3504,7 +4242,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20616|h[Dragonbone Wristguards]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Garbage",
 				},
@@ -3515,7 +4258,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20618|h[Gloves of Delusional Power]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Garbage",
 				},
@@ -3526,7 +4274,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20617|h[Ancient Corroded Leggings]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Garbage",
 				},
@@ -3537,7 +4290,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20619|h[Acid Inscribed Greaves]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Progression",
 				},
@@ -3548,7 +4306,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20582|h[Trance Stone]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Druid (Heal)",
 					"Mage",
@@ -3562,7 +4325,12 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:20580|h[Hammer of Bestial Fury]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"KAT4FITE",
 				},
@@ -3573,7 +4341,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20581|h[Staff of Rampant Growth]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Progression",
 				},
@@ -3584,7 +4357,12 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20600|h[Malfurion's Signet Ring]|h|r",
 				"Green Dragons",
-				"Green Dragons Shared",
+				{
+					"Lethon",
+					"Emeriss",
+					"Taerar",
+					"Ysondre",
+				},
 				{
 					"Progression",
 				},
@@ -3595,7 +4373,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:20628|h[Deviate Growth Cap]|h|r",
 				"Green Dragons",
-				"Lethon",
+				{
+					"Lethon",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3607,7 +4387,9 @@ ABGP.initialData = {
 				75,
 				"|cffa335ee|Hitem:20626|h[Black Bark Wristbands]|h|r",
 				"Green Dragons",
-				"Lethon",
+				{
+					"Lethon",
+				},
 				{
 					"Mage",
 					"Priest (Shadow)",
@@ -3620,7 +4402,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20630|h[Gauntlets of the Shining Light]|h|r",
 				"Green Dragons",
-				"Lethon",
+				{
+					"Lethon",
+				},
 				{
 					"Garbage",
 				},
@@ -3631,7 +4415,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20625|h[Belt of the Dark Bog]|h|r",
 				"Green Dragons",
-				"Lethon",
+				{
+					"Lethon",
+				},
 				{
 					"Progression",
 				},
@@ -3642,7 +4428,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:20627|h[Dark Heart Pants]|h|r",
 				"Green Dragons",
-				"Lethon",
+				{
+					"Lethon",
+				},
 				{
 					"KAT4FITE",
 					"Metal Rogue",
@@ -3654,7 +4442,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20629|h[Malignant Footguards]|h|r",
 				"Green Dragons",
-				"Lethon",
+				{
+					"Lethon",
+				},
 				{
 					"Garbage",
 				},
@@ -3665,7 +4455,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:20623|h[Circlet of Restless Dreams]|h|r",
 				"Green Dragons",
-				"Emeriss",
+				{
+					"Emeriss",
+				},
 				{
 					"Stabby Rogue",
 				},
@@ -3676,7 +4468,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20622|h[Dragonheart Necklace]|h|r",
 				"Green Dragons",
-				"Emeriss",
+				{
+					"Emeriss",
+				},
 				{
 					"Garbage",
 				},
@@ -3687,7 +4481,9 @@ ABGP.initialData = {
 				80,
 				"|cffa335ee|Hitem:20624|h[Ring of the Unliving]|h|r",
 				"Green Dragons",
-				"Emeriss",
+				{
+					"Emeriss",
+				},
 				{
 					"Hunter",
 					"KAT4FITE",
@@ -3701,7 +4497,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20621|h[Boots of the Endless Moor]|h|r",
 				"Green Dragons",
-				"Emeriss",
+				{
+					"Emeriss",
+				},
 				{
 					"Progression",
 				},
@@ -3712,7 +4510,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20599|h[Polished Ironwood Crossbow]|h|r",
 				"Green Dragons",
-				"Emeriss",
+				{
+					"Emeriss",
+				},
 				{
 					"Progression",
 				},
@@ -3723,7 +4523,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20633|h[Unnatural Leather Spaulders]|h|r",
 				"Green Dragons",
-				"Taerar",
+				{
+					"Taerar",
+				},
 				{
 					"Progression",
 				},
@@ -3734,7 +4536,9 @@ ABGP.initialData = {
 				80,
 				"|cffa335ee|Hitem:20631|h[Mendicant's Slippers]|h|r",
 				"Green Dragons",
-				"Taerar",
+				{
+					"Taerar",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3747,7 +4551,9 @@ ABGP.initialData = {
 				80,
 				"|cffa335ee|Hitem:20634|h[Boots of Fright]|h|r",
 				"Green Dragons",
-				"Taerar",
+				{
+					"Taerar",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3759,7 +4565,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:20632|h[Mindtear Band]|h|r",
 				"Green Dragons",
-				"Taerar",
+				{
+					"Taerar",
+				},
 				{
 					"Mage",
 					"Warlock",
@@ -3771,7 +4579,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:20577|h[Nightmare Blade]|h|r",
 				"Green Dragons",
-				"Taerar",
+				{
+					"Taerar",
+				},
 				{
 					"Metal Rogue",
 					"Slicey Rogue",
@@ -3784,7 +4594,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20637|h[Acid Inscribed Pauldrons]|h|r",
 				"Green Dragons",
-				"Ysondre",
+				{
+					"Ysondre",
+				},
 				{
 					"Progression",
 				},
@@ -3795,7 +4607,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20635|h[Jade Inlaid Vestments]|h|r",
 				"Green Dragons",
-				"Ysondre",
+				{
+					"Ysondre",
+				},
 				{
 					"Garbage",
 				},
@@ -3806,7 +4620,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20638|h[Leggings of the Demented Mind]|h|r",
 				"Green Dragons",
-				"Ysondre",
+				{
+					"Ysondre",
+				},
 				{
 					"Garbage",
 				},
@@ -3817,7 +4633,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:20639|h[Strangely Glyphed Legplates]|h|r",
 				"Green Dragons",
-				"Ysondre",
+				{
+					"Ysondre",
+				},
 				{
 					"Garbage",
 				},
@@ -3828,7 +4646,9 @@ ABGP.initialData = {
 				150,
 				"|cffa335ee|Hitem:20636|h[Hibernation Crystal]|h|r",
 				"Green Dragons",
-				"Ysondre",
+				{
+					"Ysondre",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3841,7 +4661,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:20578|h[Emerald Dragonfang]|h|r",
 				"Green Dragons",
-				"Ysondre",
+				{
+					"Ysondre",
+				},
 				{
 					"Stabby Rogue",
 				},
@@ -3852,7 +4674,9 @@ ABGP.initialData = {
 				100,
 				"|cffa335ee|Hitem:18821|h[Quick Strike Ring]|h|r",
 				"Legacy Content",
-				"Garr",
+				{
+					"Garr",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -3863,7 +4687,9 @@ ABGP.initialData = {
 				250,
 				"|cffa335ee|Hitem:19132|h[Crystal Adorned Crown]|h|r",
 				"Legacy Content",
-				"Azuregos",
+				{
+					"Azuregos",
+				},
 				{
 					"Druid (Heal)",
 					"Paladin (Holy)",
@@ -3876,7 +4702,9 @@ ABGP.initialData = {
 				300,
 				"|cffa335ee|Hitem:17112|h[Empyrean Demolisher]|h|r",
 				"Legacy Content",
-				"Kazzak",
+				{
+					"Kazzak",
+				},
 				{
 					"Metal Rogue",
 				},
@@ -14628,14 +15456,18 @@ ABGP.initialData = {
 		},
 	},
 	itemValuesPrerelease = {
-		timestamp = 1598642875,
+		timestamp = 1599595765,
 		data = {
 			{
 				"Desecrated Bindings",
 				"T",
 				"|cffa335ee|Hitem:22369|h[Desecrated Bindings]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14645,7 +15477,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22519|h[Bindings of Faith]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14656,7 +15492,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22503|h[Frostfire Bindings]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14667,7 +15507,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22511|h[Plagueheart Bindings]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14678,7 +15522,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22362|h[Desecrated Wristguards]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14688,7 +15536,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22443|h[Cryptstalker Wristguards]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14699,7 +15551,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22495|h[Dreamwalker Wristguards]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14710,7 +15566,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22424|h[Redemption Wristguards]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14721,7 +15581,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22355|h[Desecrated Bracers]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14731,7 +15595,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22483|h[Bonescythe Bracers]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14742,7 +15610,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22423|h[Dreadnaught Bracers]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan, Faerlina, Gluth",
+				{
+					"Anub'Rekhan",
+					"Grand Widow Faerlina",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -14753,7 +15625,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22935|h[Touch of Frost]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan",
+				{
+					"Anub'Rekhan",
+				},
 				{
 				},
 				"GOLD",
@@ -14763,7 +15637,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22938|h[Cryptfiend Silk Cloak]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan",
+				{
+					"Anub'Rekhan",
+				},
 				{
 				},
 				"GOLD",
@@ -14773,7 +15649,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22936|h[Wristguards of Vengeance]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan",
+				{
+					"Anub'Rekhan",
+				},
 				{
 				},
 				"GOLD",
@@ -14783,7 +15661,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22939|h[Band of Unanswered Prayers]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan",
+				{
+					"Anub'Rekhan",
+				},
 				{
 				},
 				"GOLD",
@@ -14793,7 +15673,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22937|h[Gem of Nerubis]|h|r",
 				"Naxxramas",
-				"Anub'Rekhan",
+				{
+					"Anub'Rekhan",
+				},
 				{
 				},
 				"GOLD",
@@ -14803,7 +15685,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22943|h[Malice Stone Pendant]|h|r",
 				"Naxxramas",
-				"Grand Widow Faerlina",
+				{
+					"Grand Widow Faerlina",
+				},
 				{
 				},
 				"GOLD",
@@ -14813,7 +15697,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22941|h[Polar Shoulder Pads]|h|r",
 				"Naxxramas",
-				"Grand Widow Faerlina",
+				{
+					"Grand Widow Faerlina",
+				},
 				{
 				},
 				"GOLD",
@@ -14823,7 +15709,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22940|h[Icebane Pauldrons]|h|r",
 				"Naxxramas",
-				"Grand Widow Faerlina",
+				{
+					"Grand Widow Faerlina",
+				},
 				{
 				},
 				"GOLD",
@@ -14833,7 +15721,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22942|h[The Widow's Embrace]|h|r",
 				"Naxxramas",
-				"Grand Widow Faerlina",
+				{
+					"Grand Widow Faerlina",
+				},
 				{
 				},
 				"GOLD",
@@ -14843,7 +15733,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22806|h[Widow's Remorse]|h|r",
 				"Naxxramas",
-				"Grand Widow Faerlina",
+				{
+					"Grand Widow Faerlina",
+				},
 				{
 				},
 				"GOLD",
@@ -14853,7 +15745,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22371|h[Desecrated Gloves]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14863,7 +15757,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22501|h[Frostfire Gloves]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14874,7 +15770,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22517|h[Gloves of Faith]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14885,7 +15783,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22509|h[Plagueheart Gloves]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14896,7 +15796,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22364|h[Desecrated Handguards]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14906,7 +15808,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22441|h[Cryptstalker Handguards]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14917,7 +15821,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22493|h[Dreamwalker Handguards]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14928,7 +15834,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22426|h[Redemption Handguards]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14939,7 +15847,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22357|h[Desecrated Gauntlets]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14949,7 +15859,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22481|h[Bonescythe Gauntlets]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14960,7 +15872,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22421|h[Dreadnaught Gauntlets]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14971,7 +15885,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22947|h[Pendant of Forgotten Names]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14981,7 +15897,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23220|h[Crystal Webbed Robe]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -14991,7 +15909,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22954|h[Kiss of the Spider]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -15001,7 +15921,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22807|h[Wraith Blade]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -15011,7 +15933,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22804|h[Maexxna's Fang]|h|r",
 				"Naxxramas",
-				"Maexxna",
+				{
+					"Maexxna",
+				},
 				{
 				},
 				"GOLD",
@@ -15021,7 +15945,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22370|h[Desecrated Belt]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15031,7 +15959,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22518|h[Belt of Faith]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15042,7 +15974,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22502|h[Frostfire Belt]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15053,7 +15989,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22510|h[Plagueheart Belt]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15064,7 +16004,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22363|h[Desecrated Girdle]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15074,7 +16018,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22442|h[Cryptstalker Girdle]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15085,7 +16033,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22494|h[Dreamwalker Girdle]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15096,7 +16048,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22431|h[Redemption Girdle]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15107,7 +16063,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22356|h[Desecrated Waistguard]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15117,7 +16077,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22482|h[Bonescythe Waistguard]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15128,7 +16092,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22422|h[Dreadnaught Waistguard]|h|r",
 				"Naxxramas",
-				"Noth, Heigan, Gluth",
+				{
+					"Noth the Plaguebringer",
+					"Heigan the Unclean",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15139,7 +16107,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23030|h[Cloak of the Scourge]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15149,7 +16119,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23031|h[Band of the Inevitable]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15159,7 +16131,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23028|h[Hailstone Band]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15169,7 +16143,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23029|h[Noth's Frigid Heart]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15179,7 +16155,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23006|h[Libram of Light]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15189,7 +16167,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23005|h[Totem of Flowing Water]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15199,7 +16179,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22816|h[Hatchet of Sundered Bone]|h|r",
 				"Naxxramas",
-				"Noth the Plaguebringer",
+				{
+					"Noth the Plaguebringer",
+				},
 				{
 				},
 				"GOLD",
@@ -15209,7 +16191,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23035|h[Preceptor's Hat]|h|r",
 				"Naxxramas",
-				"Heigan the Unclean",
+				{
+					"Heigan the Unclean",
+				},
 				{
 				},
 				"GOLD",
@@ -15219,7 +16203,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23033|h[Icy Scale Coif]|h|r",
 				"Naxxramas",
-				"Heigan the Unclean",
+				{
+					"Heigan the Unclean",
+				},
 				{
 				},
 				"GOLD",
@@ -15229,7 +16215,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23019|h[Icebane Helmet]|h|r",
 				"Naxxramas",
-				"Heigan the Unclean",
+				{
+					"Heigan the Unclean",
+				},
 				{
 				},
 				"GOLD",
@@ -15239,7 +16227,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23036|h[Necklace of Necropsy]|h|r",
 				"Naxxramas",
-				"Heigan the Unclean",
+				{
+					"Heigan the Unclean",
+				},
 				{
 				},
 				"GOLD",
@@ -15249,7 +16239,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23068|h[Legplates of Carnage]|h|r",
 				"Naxxramas",
-				"Heigan the Unclean",
+				{
+					"Heigan the Unclean",
+				},
 				{
 				},
 				"GOLD",
@@ -15259,7 +16251,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22366|h[Desecrated Leggings]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15269,7 +16263,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22497|h[Frostfire Leggings]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15280,7 +16276,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22513|h[Leggings of Faith]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15291,7 +16289,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22505|h[Plagueheart Leggings]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15302,7 +16302,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22359|h[Desecrated Legguards]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15312,7 +16314,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22437|h[Cryptstalker Legguards]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15323,7 +16327,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22489|h[Dreamwalker Legguards]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15334,7 +16340,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22427|h[Redemption Legguards]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15345,7 +16353,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22352|h[Desecrated Legplates]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15355,7 +16365,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22477|h[Bonescythe Legplates]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15366,7 +16378,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22417|h[Dreadnaught Legplates]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15377,7 +16391,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23038|h[Band of Unnatural Forces]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15387,7 +16403,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23037|h[Ring of Spiritual Fervor]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15397,7 +16415,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23042|h[Loatheb's Reflection]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15407,7 +16427,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23039|h[The Eye of Nerub]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15417,7 +16439,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22800|h[Brimstone Staff]|h|r",
 				"Naxxramas",
-				"Loatheb",
+				{
+					"Loatheb",
+				},
 				{
 				},
 				"GOLD",
@@ -15427,7 +16451,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22372|h[Desecrated Sandals]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15437,7 +16465,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22500|h[Frostfire Sandals]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15448,7 +16480,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22508|h[Plagueheart Sandals]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15459,7 +16495,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22516|h[Sandals of Faith]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15470,7 +16510,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22365|h[Desecrated Boots]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15480,7 +16524,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22440|h[Cryptstalker Boots]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15491,7 +16539,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22492|h[Dreamwalker Boots]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15502,7 +16554,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22430|h[Redemption Boots]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15513,7 +16569,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22358|h[Desecrated Sabatons]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15523,7 +16583,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22480|h[Bonescythe Sabatons]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15534,7 +16598,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22420|h[Dreadnaught Sabatons]|h|r",
 				"Naxxramas",
-				"Razuvious, Gothik, Gluth",
+				{
+					"Instructor Razuvious",
+					"Gothik the Harvester",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15545,7 +16613,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23017|h[Veil of Eclipse]|h|r",
 				"Naxxramas",
-				"Instructor Razuvious",
+				{
+					"Instructor Razuvious",
+				},
 				{
 				},
 				"GOLD",
@@ -15555,7 +16625,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23219|h[Girdle of the Mentor]|h|r",
 				"Naxxramas",
-				"Instructor Razuvious",
+				{
+					"Instructor Razuvious",
+				},
 				{
 				},
 				"GOLD",
@@ -15565,7 +16637,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23018|h[Signet of the Fallen Defender]|h|r",
 				"Naxxramas",
-				"Instructor Razuvious",
+				{
+					"Instructor Razuvious",
+				},
 				{
 				},
 				"GOLD",
@@ -15575,7 +16649,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23004|h[Idol of Longevity]|h|r",
 				"Naxxramas",
-				"Instructor Razuvious",
+				{
+					"Instructor Razuvious",
+				},
 				{
 				},
 				"GOLD",
@@ -15585,7 +16661,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23009|h[Wand of the Whispering Dead]|h|r",
 				"Naxxramas",
-				"Instructor Razuvious",
+				{
+					"Instructor Razuvious",
+				},
 				{
 				},
 				"GOLD",
@@ -15595,7 +16673,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23014|h[Iblis, Blade of the Fallen Seraph]|h|r",
 				"Naxxramas",
-				"Instructor Razuvious",
+				{
+					"Instructor Razuvious",
+				},
 				{
 				},
 				"GOLD",
@@ -15605,7 +16685,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23032|h[Glacial Headdress]|h|r",
 				"Naxxramas",
-				"Gothik the Harvester",
+				{
+					"Gothik the Harvester",
+				},
 				{
 				},
 				"GOLD",
@@ -15615,7 +16697,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23020|h[Polar Helmet]|h|r",
 				"Naxxramas",
-				"Gothik the Harvester",
+				{
+					"Gothik the Harvester",
+				},
 				{
 				},
 				"GOLD",
@@ -15625,7 +16709,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23023|h[Sadist's Collar]|h|r",
 				"Naxxramas",
-				"Gothik the Harvester",
+				{
+					"Gothik the Harvester",
+				},
 				{
 				},
 				"GOLD",
@@ -15635,7 +16721,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23021|h[The Soul Harvester's Bindings]|h|r",
 				"Naxxramas",
-				"Gothik the Harvester",
+				{
+					"Gothik the Harvester",
+				},
 				{
 				},
 				"GOLD",
@@ -15645,7 +16733,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23073|h[Boots of Displacement]|h|r",
 				"Naxxramas",
-				"Gothik the Harvester",
+				{
+					"Gothik the Harvester",
+				},
 				{
 				},
 				"GOLD",
@@ -15655,7 +16745,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22351|h[Desecrated Robe]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15665,7 +16757,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22496|h[Frostfire Robe]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15676,7 +16770,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22504|h[Plagueheart Robe]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15687,7 +16783,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22512|h[Robe of Faith]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15698,7 +16796,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22350|h[Desecrated Tunic]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15708,7 +16808,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22436|h[Cryptstalker Tunic]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15719,7 +16821,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22488|h[Dreamwalker Tunic]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15730,7 +16834,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22425|h[Redemption Tunic]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15741,7 +16847,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22349|h[Desecrated Breastplate]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15751,7 +16859,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22476|h[Bonescythe Breastplate]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15762,7 +16872,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22416|h[Dreadnaught Breastplate]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15773,7 +16885,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23071|h[Leggings of Apocalypse]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15783,7 +16897,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23025|h[Seal of the Damned]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15793,7 +16909,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23027|h[Warmth of Forgiveness]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15803,7 +16921,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22811|h[Soulstring]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15813,7 +16933,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22809|h[Maul of the Redeemed Crusader]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15823,7 +16945,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22691|h[Corrupted Ashbringer]|h|r",
 				"Naxxramas",
-				"The Four Horsemen",
+				{
+					"The Four Horsemen",
+				},
 				{
 				},
 				"GOLD",
@@ -15833,7 +16957,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22368|h[Desecrated Shoulderpads]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15843,7 +16971,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22499|h[Frostfire Shoulderpads]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15854,7 +16986,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22507|h[Plagueheart Shoulderpads]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15865,7 +17001,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22515|h[Shoulderpads of Faith]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15876,7 +17016,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22361|h[Desecrated Spaulders]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15886,7 +17030,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22439|h[Cryptstalker Spaulders]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15897,7 +17045,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22491|h[Dreamwalker Spaulders]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15908,7 +17060,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22429|h[Redemption Spaulders]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15919,7 +17075,11 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22354|h[Desecrated Pauldrons]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15929,7 +17089,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22479|h[Bonescythe Pauldrons]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15940,7 +17104,11 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22419|h[Dreadnaught Pauldrons]|h|r",
 				"Naxxramas",
-				"Patchwerk, Grobbulus, Gluth",
+				{
+					"Patchwerk",
+					"Grobbulus",
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -15951,7 +17119,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22960|h[Cloak of Suturing]|h|r",
 				"Naxxramas",
-				"Patchwerk",
+				{
+					"Patchwerk",
+				},
 				{
 				},
 				"GOLD",
@@ -15961,7 +17131,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22961|h[Band of Reanimation]|h|r",
 				"Naxxramas",
-				"Patchwerk",
+				{
+					"Patchwerk",
+				},
 				{
 				},
 				"GOLD",
@@ -15971,7 +17143,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22820|h[Wand of Fates]|h|r",
 				"Naxxramas",
-				"Patchwerk",
+				{
+					"Patchwerk",
+				},
 				{
 				},
 				"GOLD",
@@ -15981,7 +17155,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22818|h[The Plague Bearer]|h|r",
 				"Naxxramas",
-				"Patchwerk",
+				{
+					"Patchwerk",
+				},
 				{
 				},
 				"GOLD",
@@ -15991,7 +17167,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22815|h[Severance]|h|r",
 				"Naxxramas",
-				"Patchwerk",
+				{
+					"Patchwerk",
+				},
 				{
 				},
 				"GOLD",
@@ -16001,7 +17179,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22968|h[Glacial Mantle]|h|r",
 				"Naxxramas",
-				"Grobbulus",
+				{
+					"Grobbulus",
+				},
 				{
 				},
 				"GOLD",
@@ -16011,7 +17191,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22967|h[Icy Scale Spaulders]|h|r",
 				"Naxxramas",
-				"Grobbulus",
+				{
+					"Grobbulus",
+				},
 				{
 				},
 				"GOLD",
@@ -16021,7 +17203,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22810|h[Toxin Injector]|h|r",
 				"Naxxramas",
-				"Grobbulus",
+				{
+					"Grobbulus",
+				},
 				{
 				},
 				"GOLD",
@@ -16031,7 +17215,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22803|h[Midnight Haze]|h|r",
 				"Naxxramas",
-				"Grobbulus",
+				{
+					"Grobbulus",
+				},
 				{
 				},
 				"GOLD",
@@ -16041,7 +17227,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22988|h[The End of Dreams]|h|r",
 				"Naxxramas",
-				"Grobbulus",
+				{
+					"Grobbulus",
+				},
 				{
 				},
 				"GOLD",
@@ -16051,7 +17239,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22983|h[Rime Covered Mantle]|h|r",
 				"Naxxramas",
-				"Gluth",
+				{
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -16061,7 +17251,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22981|h[Gluth's Missing Collar]|h|r",
 				"Naxxramas",
-				"Gluth",
+				{
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -16071,7 +17263,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22994|h[Digested Hand of Power]|h|r",
 				"Naxxramas",
-				"Gluth",
+				{
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -16081,7 +17275,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23075|h[Death's Bargain]|h|r",
 				"Naxxramas",
-				"Gluth",
+				{
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -16091,7 +17287,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22813|h[Claymore of Unholy Might]|h|r",
 				"Naxxramas",
-				"Gluth",
+				{
+					"Gluth",
+				},
 				{
 				},
 				"GOLD",
@@ -16101,7 +17299,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22367|h[Desecrated Circlet]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16111,7 +17311,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22514|h[Circlet of Faith]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16122,7 +17324,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22498|h[Frostfire Circlet]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16133,7 +17337,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22506|h[Plagueheart Circlet]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16144,7 +17350,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22360|h[Desecrated Headpiece]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16154,7 +17362,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22438|h[Cryptstalker Headpiece]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16165,7 +17375,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22490|h[Dreamwalker Headpiece]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16176,7 +17388,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22428|h[Redemption Headpiece]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16187,7 +17401,9 @@ ABGP.initialData = {
 				"T",
 				"|cffa335ee|Hitem:22353|h[Desecrated Helmet]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16197,7 +17413,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22478|h[Bonescythe Helmet]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16208,7 +17426,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22418|h[Dreadnaught Helmet]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16219,7 +17439,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23000|h[Plated Abomination Ribcage]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16229,7 +17451,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23070|h[Leggings of Polarity]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16239,7 +17463,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23001|h[Eye of Diminution]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16249,7 +17475,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22808|h[The Castigator]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16259,7 +17487,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22801|h[Spire of Twilight]|h|r",
 				"Naxxramas",
-				"Thaddius",
+				{
+					"Thaddius",
+				},
 				{
 				},
 				"GOLD",
@@ -16269,7 +17499,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23050|h[Cloak of the Necropolis]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16279,7 +17511,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23045|h[Shroud of Dominion]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16289,7 +17523,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23040|h[Glyph of Deflection]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16299,7 +17535,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23047|h[Eye of the Dead]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16309,7 +17547,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23041|h[Slayer's Crest]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16319,7 +17559,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23046|h[The Restrained Essence of Sapphiron]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16329,7 +17571,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23049|h[Sapphiron's Left Eye]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16339,7 +17583,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23048|h[Sapphiron's Right Eye]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16349,7 +17595,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23043|h[The Face of Death]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16359,7 +17607,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23242|h[Claw of the Frost Wyrm]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16369,7 +17619,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23549|h[Fortitude of the Scourge]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16379,7 +17631,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23548|h[Might of the Scourge]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16389,7 +17643,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23545|h[Power of the Scourge]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16399,7 +17655,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23547|h[Resilience of the Scourge]|h|r",
 				"Naxxramas",
-				"Sapphiron",
+				{
+					"Sapphiron",
+				},
 				{
 				},
 				"GOLD",
@@ -16409,7 +17667,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23057|h[Gem of Trapped Innocents]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16419,7 +17679,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23053|h[Stormrage's Talisman of Seething]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16429,7 +17691,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22812|h[Nerubian Slavemaker]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16439,7 +17703,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22821|h[Doomfinger]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16449,7 +17715,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22819|h[Shield of Condemnation]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16459,7 +17727,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22802|h[Kingsfall]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16469,7 +17739,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23056|h[Hammer of the Twisting Nether]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16479,7 +17751,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23054|h[Gressil, Dawn of Ruin]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16489,7 +17763,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23577|h[The Hungering Cold]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16499,7 +17775,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22798|h[Might of Menethil]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16509,7 +17787,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22799|h[Soulseeker]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16519,7 +17799,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:22520|h[The Phylactery of Kel'Thuzad]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16529,7 +17811,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23061|h[Ring of Faith]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16539,7 +17823,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23062|h[Frostfire Ring]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16549,7 +17835,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23063|h[Plagueheart Ring]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16559,7 +17847,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23060|h[Bonescythe Ring]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16569,7 +17859,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23064|h[Ring of the Dreamwalker]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16579,7 +17871,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23067|h[Ring of the Cryptstalker]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16589,7 +17883,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23066|h[Ring of Redemption]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16599,7 +17895,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23059|h[Ring of the Dreadnaught]|h|r",
 				"Naxxramas",
-				"Kel'Thuzad",
+				{
+					"Kel'Thuzad",
+				},
 				{
 				},
 				"GOLD",
@@ -16609,7 +17907,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23664|h[Pauldrons of Elemental Fury]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16619,7 +17919,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23667|h[Spaulders of the Grand Crusader]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16629,7 +17931,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23069|h[Necro-Knight's Garb]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16639,7 +17943,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23226|h[Ghoul Skin Tunic]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16649,7 +17955,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23663|h[Girdle of Elemental Fury]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16659,7 +17967,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23666|h[Belt of the Grand Crusader]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16669,7 +17979,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23665|h[Leggings of Elemental Fury]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16679,7 +17991,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23668|h[Leggings of the Grand Crusader]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16689,7 +18003,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23237|h[Ring of the Eternal Flame]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16699,7 +18015,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23238|h[Stygian Buckler]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16709,7 +18027,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23044|h[Harbinger of Doom]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
@@ -16719,7 +18039,9 @@ ABGP.initialData = {
 				0,
 				"|cffa335ee|Hitem:23221|h[Misplaced Servo Arm]|h|r",
 				"Naxxramas",
-				"Naxx Trash",
+				{
+					"Naxx Trash",
+				},
 				{
 				},
 				"GOLD",
