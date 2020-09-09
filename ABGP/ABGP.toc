@@ -9,6 +9,7 @@
 embeds.xml
 core.lua
 guild.lua
+event.lua
 hardcoded.lua
 announce.lua
 tooltips.lua
@@ -22,7 +23,6 @@ data.lua
 sync.lua
 ui.lua
 options.lua
-event.lua
 minimap.lua
 frames.xml
 bindings.xml

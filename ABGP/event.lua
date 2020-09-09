@@ -35,7 +35,7 @@ local instanceIds = {
 };
 
 -- https://wow.tools/dbc/?dbc=dungeonencounter
-local bossIds = {
+ABGP.BossIds = {
     Lucifron    = 663,
     Magmadar    = 664,
     Gehennas    = 665,
@@ -86,6 +86,7 @@ local bossIds = {
     Ayamiss     = 722,
     Ossirian    = 723,
 };
+local bossIds = ABGP.BossIds;
 
 local instanceInfo = {
     [instanceIds.MoltenCore]  = {

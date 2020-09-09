@@ -55,7 +55,7 @@ function ABGP:AnnounceOnLootOpened()
     if #announceItems == 0 then return; end
 
     -- Determine the source of the loot. Use current target if it seems appropriate,
-    -- otherwise use the last boss killed (if it was recent).
+    -- otherwise use the last boss killed (if it was recent and recorded).
     if lastBossTime and GetTime() - lastBossTime >= 60 then lastBoss = nil; end
     local source, name = lastBoss, lastBoss;
     if UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target') then
@@ -95,7 +95,6 @@ function ABGP:AnnounceOnLootOpened()
 
     local data = { source = source, name = name, bossSource = bossSource, items = announceItems };
     self:SendComm(self.CommTypes.BOSS_LOOT, data, "BROADCAST");
-    self:AnnounceOnBossLoot(data);
 end
 
 function ABGP:ShouldAutoDistribute()
@@ -134,10 +133,17 @@ function ABGP:AnnounceOnBossLoot(data)
     end
 end
 
+-- Only allow bosses that aren't looted normally.
+local allowedBosses = {
+    [ABGP.BossIds.Majordomo] = true,
+}
+
 function ABGP:AnnounceOnBossKilled(id, name)
     bossKills[name] = true;
-    lastBoss = name;
-    lastBossTime = GetTime();
+    if allowedBosses[id] then
+        lastBoss = name;
+        lastBossTime = GetTime();
+    end
 end
 
 function ABGP:AnnounceOnZoneChanged()
@@ -238,8 +244,10 @@ end
 function ABGP:ShowLootFrame(itemLink)
     local elt = GetLootFrame(itemLink);
     if elt then
-        elt:SetCount(elt:GetCount() + 1);
-        elt:SetDuration(self:Get("lootDuration"));
+        if not self:GetActiveItem(itemLink) then
+            elt:SetCount(elt:GetCount() + 1);
+            elt:SetDuration(self:Get("lootDuration"));
+        end
         return elt;
     end
 

@@ -138,7 +138,7 @@ ABGP.CommTypes = {
     PRIORITY_SYNC = { name = "PRIORITY_SYNC", id = 13, priority = "BULK" },
     -- priorities: table
 
-    BOSS_LOOT = { name = "BOSS_LOOT", id = 14, priority = "ALERT" },
+    BOSS_LOOT = { name = "BOSS_LOOT", id = 14, priority = "ALERT", fireLocally = true },
     -- source: string
     -- items: table
 
