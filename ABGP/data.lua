@@ -91,6 +91,7 @@ function ABGP:RefreshFromOfficerNotes()
                         rank = rank,
                         class = class,
                         raidGroup = trialGroup,
+                        altRaidGroup = trialGroup,
                         ep = 0,
                         gp = { [self.ItemCategory.GOLD] = 0, [self.ItemCategory.SILVER] = 0 },
                         priority = { [self.ItemCategory.GOLD] = 0, [self.ItemCategory.SILVER] = 0 },
@@ -111,6 +112,7 @@ function ABGP:RefreshFromOfficerNotes()
                             rank = rank,
                             class = class,
                             raidGroup = raidGroup and self.RaidGroupNamesReversed[raidGroup] or self:GetRaidGroup(rank),
+                            altRaidGroup = self:GetAltRaidGroup(rank),
                             ep = ep,
                             gp = { [self.ItemCategory.GOLD] = gpG, [self.ItemCategory.SILVER] = gpS },
                             priority = { [self.ItemCategory.GOLD] = ep * 10 / gpG, [self.ItemCategory.SILVER] = ep * 10 / gpS },
@@ -189,6 +191,9 @@ function ABGP:UpdateOfficerNote(player, guildIndex)
         local gpS = floor(epgp.gp[self.ItemCategory.SILVER] * 1000 + 0.5);
         local gpG = floor(epgp.gp[self.ItemCategory.GOLD] * 1000 + 0.5);
         note = ("%d:%d:%d"):format(ep, gpS, gpG);
+        if epgp.raidGroup ~= self:GetRaidGroup(epgp.rank) then
+            note = ("%s:%s"):format(note, self.RaidGroupNames[epgp.raidGroup]);
+        end
 
         -- Sanity check: all ranks here must be in a raid group.
         if not self:GetRaidGroup(rank) then

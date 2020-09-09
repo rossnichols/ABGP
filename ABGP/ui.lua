@@ -279,7 +279,7 @@ local function DrawPriority(container, options)
     local priority = ABGP.Priorities;
     local filtered = {};
     for i, data in ipairs(priority) do
-        local inRaidGroup = not currentRaidGroup or ABGP:IsInRaidGroup(data.rank, currentRaidGroup);
+        local inRaidGroup = not currentRaidGroup or ABGP:IsInRaidGroup(data, currentRaidGroup);
         local isGrouped = not onlyGrouped or UnitExists(data.player);
         if allowedClasses[data.class] and inRaidGroup and isGrouped then
             table.insert(filtered, data);
@@ -1192,7 +1192,7 @@ local function DrawItemHistory(container, options)
         local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
         if value and (epgp or not currentRaidGroup) then
-            if not currentRaidGroup or ABGP:IsInRaidGroup(epgp.rank, currentRaidGroup) then
+            if not currentRaidGroup or ABGP:IsInRaidGroup(epgp, currentRaidGroup) then
                 local class = epgp and epgp.class:lower() or "";
                 local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
                 if exact then

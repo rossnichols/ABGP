@@ -81,10 +81,13 @@ function ABGP:GetRaidGroup(rank)
     return rank and rankData[rank] and rankData[rank].raidGroup;
 end
 
+function ABGP:GetAltRaidGroup(rank)
+    return rank and rankData[rank] and rankData[rank].altRaidGroup;
+end
 
-function ABGP:IsInRaidGroup(rank, raidGroup)
-    if not rank or not rankData[rank] then return false; end
-    return rankData[rank].raidGroup == raidGroup or rankData[rank].altRaidGroup == raidGroup;
+
+function ABGP:IsInRaidGroup(active, raidGroup)
+    return active.raidGroup == raidGroup or active.altRaidGroup == raidGroup;
 end
 
 function ABGP:GetRankPriority(rank)
