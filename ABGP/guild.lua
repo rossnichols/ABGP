@@ -85,7 +85,6 @@ function ABGP:GetAltRaidGroup(rank)
     return rank and rankData[rank] and rankData[rank].altRaidGroup;
 end
 
-
 function ABGP:IsInRaidGroup(active, raidGroup)
     return active.raidGroup == raidGroup or active.altRaidGroup == raidGroup;
 end
