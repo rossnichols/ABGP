@@ -923,11 +923,11 @@ function ABGP:ExportRaid(windowRaid)
                     rank = epgp.rank;
                     raidGroup = self.RaidGroupNames[epgp.raidGroup];
                     if epgp.trial then
-                        table.insert(breakdown, 1, "Trial");
+                        table.insert(breakdown, 1, "trial");
                         ep = 0;
                     end
                 else
-                    table.insert(breakdown, 1, "Non-raider");
+                    table.insert(breakdown, 1, "non-raider");
                     ep = 0;
                 end
 
