@@ -4,12 +4,10 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local UnitExists = UnitExists;
 local UnitName = UnitName;
-local GetItemInfo = GetItemInfo;
 local IsShiftKeyDown = IsShiftKeyDown;
 local IsControlKeyDown = IsControlKeyDown;
 local GetServerTime = GetServerTime;
 local IsMasterLooter = IsMasterLooter;
-local GetNumGroupMembers = GetNumGroupMembers;
 local GiveMasterLoot = GiveMasterLoot;
 local GetMasterLootCandidate = GetMasterLootCandidate;
 local GetLootInfo = GetLootInfo;
@@ -531,7 +529,7 @@ local function ChooseRecipient()
     });
 end
 
-function ABGP:DistribValidateRecipient(player, cost, value)
+function ABGP:DistribValidateRecipient(player, cost)
     if cost and cost.cost ~= 0 and not self:GetActivePlayer(player) then
         return false, "The player must have EPGP";
     end
@@ -714,7 +712,7 @@ local function RepopulateRequests()
     local activeItems = activeDistributionWindow:GetUserData("activeItems");
 
     local needsUpdate = false;
-    for itemLink, item in pairs(activeItems) do
+    for _, item in pairs(activeItems) do
         local value = item.data.value;
         if value then
             for _, request in ipairs(item.requests) do
@@ -975,7 +973,7 @@ function ABGP:CreateDistribWindow()
     tabGroup:SetFullWidth(true);
     tabGroup:SetFullHeight(true);
     tabGroup:SetLayout("Flow");
-    tabGroup:SetCallback("OnGroupSelected", function(container, event, itemLink)
+    tabGroup:SetCallback("OnGroupSelected", function(widget, event, itemLink)
         local activeItems = window:GetUserData("activeItems");
         window:SetUserData("currentItem", activeItems[itemLink]);
         RebuildUI();
@@ -1319,7 +1317,7 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
     autoCompleteSource = GetAutoCompleteResults,
     autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
     Validate = function(text, data)
-        return ABGP:DistribValidateRecipient(text, data.cost, data.value);
+        return ABGP:DistribValidateRecipient(text, data.cost);
     end,
     Commit = function(player, data)
         data.player = player;

@@ -12,7 +12,6 @@ local UnitIsFriend = UnitIsFriend;
 local UnitIsDead = UnitIsDead;
 local GetLootMethod = GetLootMethod;
 local UnitGUID = UnitGUID;
-local GetBindingKey = GetBindingKey;
 local FlashClientIcon = FlashClientIcon;
 local GetTime = GetTime;
 local IsShiftKeyDown = IsShiftKeyDown;

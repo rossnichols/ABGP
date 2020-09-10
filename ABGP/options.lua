@@ -12,7 +12,6 @@ local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local pairs = pairs;
 local time = time;
 local ipairs = ipairs;
-local table = table;
 local tonumber = tonumber;
 local type = type;
 local date = date;

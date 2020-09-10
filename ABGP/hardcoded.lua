@@ -2,8 +2,6 @@ local _G = _G;
 local ABGP = _G.ABGP;
 
 local pairs = pairs;
-local ipairs = ipairs;
-local type = type;
 
 _G.ABGP_Data2 = {};
 

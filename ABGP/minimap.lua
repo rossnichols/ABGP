@@ -8,7 +8,6 @@ local GetScreenWidth = GetScreenWidth;
 local GetScreenHeight = GetScreenHeight;
 local IsControlKeyDown = IsControlKeyDown;
 local IsShiftKeyDown = IsShiftKeyDown;
-local IsAltKeyDown = IsAltKeyDown;
 local table = table;
 local unpack = unpack;
 
@@ -34,7 +33,7 @@ function ABGP:OnIconCreated(event, frame, name)
     frame.icon:SetSize(18, 18);
     frame.tooltip = CreateFrame("GameTooltip", "ABGPMinimapTooltip", _G.UIParent, "GameTooltipTemplate");
     _G.ABGPMinimapTooltipTextLeft1:SetFontObject("GameFontNormalSmall");
-    frame.tooltip:SetScript("OnUpdate", function(self, elapsed)
+    frame.tooltip:SetScript("OnUpdate", function(self)
         self:SetAlpha(ABGP:IsContextMenuOpen() and 0 or 1);
     end);
 end

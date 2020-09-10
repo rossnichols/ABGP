@@ -4,21 +4,16 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetServerTime = GetServerTime;
 local GetNumGroupMembers = GetNumGroupMembers;
-local IsInGroup = IsInGroup;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
-local UnitAffectingCombat = UnitAffectingCombat;
 local GetAutoCompleteResults = GetAutoCompleteResults;
 local tContains = tContains;
 local AUTOCOMPLETE_FLAG_IN_GROUP = AUTOCOMPLETE_FLAG_IN_GROUP;
-local AUTOCOMPLETE_FLAG_NONE = AUTOCOMPLETE_FLAG_NONE;
 local pairs = pairs;
 local math = math;
 local ipairs = ipairs;
 local table = table;
 local date = date;
-local type = type;
-local tonumber = tonumber;
 local next = next;
 local max = max;
 
@@ -256,7 +251,6 @@ local function EnsureAwardsEntries(raid)
             unit = "party" .. i;
         end
 
-        local player = UnitName(unit);
         TrackPlayer(raid, UnitName(unit), true);
     end
 
@@ -490,7 +484,7 @@ function ABGP:EventOnBossLoot(data, distribution, sender)
     end
 end
 
-function ABGP:EventOnEncounterEnd(bossId, name, difficulty, groupSize, success)
+function ABGP:EventOnEncounterEnd(bossId, name, _, _, success)
     if success ~= 0 then return; end
     self:LogDebug("Wipe on %d[%d]!", bossId, name);
     CheckBossEP(bossId, name, true);

@@ -7,9 +7,7 @@ local GuildRoster = GuildRoster;
 local tContains = tContains;
 local pairs = pairs;
 local ipairs = ipairs;
-local strupper = strupper;
 local type = type;
-local floor = floor;
 local table = table;
 local tonumber = tonumber;
 local time = time;
@@ -379,7 +377,7 @@ function ABGP:ImportItemHistory()
             local newGPHistory = {};
             for _, entry in ipairs(imported) do
                 if entry.action == "DECAY" then
-                    local epDecay, gpDecay = entry.info:match("(%d+):(%d+)");
+                    local _, gpDecay = entry.info:match("(%d+):(%d+)");
                     table.insert(newGPHistory, {
                         [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
                         [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entry.time),

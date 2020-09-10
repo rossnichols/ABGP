@@ -10,7 +10,6 @@ local SendSystemMessage = SendSystemMessage;
 local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
-local select = select;
 local next = next;
 
 local activeItems = {};

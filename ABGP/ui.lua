@@ -5,7 +5,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 local UnitName = UnitName;
 local UnitExists = UnitExists;
 local IsInGroup = IsInGroup;
-local GetItemInfo = GetItemInfo;
 local GetAutoCompleteResults = GetAutoCompleteResults;
 local SecondsToTime = SecondsToTime;
 local AUTOCOMPLETE_FLAG_IN_GUILD = AUTOCOMPLETE_FLAG_IN_GUILD;
@@ -15,7 +14,6 @@ local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
 local unpack = unpack;
-local floor = floor;
 local select = select;
 local type = type;
 
@@ -954,7 +952,7 @@ local function DrawItems(container, options)
                                     end
                                     table.sort(value.dataStore[ABGP.ItemDataIndex.PRIORITY]);
 
-                                    for itemLink, info in pairs(tokenPrices) do
+                                    for _, info in pairs(tokenPrices) do
                                         info.value.dataStore[ABGP.ItemDataIndex.GP] = info.cost:GetValue();
                                         info.value.dataStore[ABGP.ItemDataIndex.CATEGORY] = info.category:GetValue();
                                     end
@@ -987,7 +985,7 @@ local function DrawItems(container, options)
                                     table.sort(newValue.priority);
                                     local hasChange = ABGP:ItemValueIsUpdated(newValue, value);
                                     if not hasChange then
-                                        for itemLink, info in pairs(tokenPrices) do
+                                        for _, info in pairs(tokenPrices) do
                                             newValue = {
                                                 gp = info.cost:GetValue(),
                                                 category = info.category:GetValue(),

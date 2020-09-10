@@ -5,8 +5,6 @@ local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
-local GetServerTime = GetServerTime;
-local date = date;
 local ipairs = ipairs;
 local table = table;
 local floor = floor;
@@ -216,7 +214,7 @@ function ABGP:PriorityOnGuildRosterUpdate()
     self:RefreshFromOfficerNotes();
 end
 
-local function UpdateEPGP(itemLink, player, cost, sender, skipOfficerNote)
+local function UpdateEPGP(player, cost, sender, skipOfficerNote)
     local epgp = ABGP:GetActivePlayer(player);
     if epgp and not epgp.trial then
         epgp.gp[cost.category] = epgp.gp[cost.category] + cost.cost;
@@ -248,7 +246,7 @@ function ABGP:PriorityOnItemAwarded(data, distribution, sender)
     if not value then return; end
 
     local cost = self:GetEffectiveCost(data.historyId, data.cost) or data.cost;
-    UpdateEPGP(data.itemLink, data.player, cost, sender);
+    UpdateEPGP(data.player, cost, sender);
 end
 
 function ABGP:PriorityOnItemUnawarded(data)
@@ -261,7 +259,7 @@ function ABGP:PriorityOnItemUnawarded(data)
 
     local cost = self:GetEffectiveCost(data.historyId, data.cost) or data.cost;
     local adjustedCost = { cost = -cost.cost, category = cost.category }; -- negative because we're undoing the GP adjustment
-    UpdateEPGP(data.itemLink, data.player, adjustedCost, data.sender, data.skipOfficerNote);
+    UpdateEPGP(data.player, adjustedCost, data.sender, data.skipOfficerNote);
 end
 
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)

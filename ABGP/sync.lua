@@ -6,11 +6,9 @@ local GetServerTime = GetServerTime;
 local ipairs = ipairs;
 local pairs = pairs;
 local table = table;
-local max = max;
 local next = next;
 local bit = bit;
 local unpack = unpack;
-local type = type;
 
 local requestedHistoryToken;
 local requestedHistoryEntries = {};
@@ -167,9 +165,6 @@ if syncTesting then
         self:SyncHistory();
     end
 
-    function ABGP:TestHistorySync(privIndex, localIndex, remoteIndex)
-    end
-
     GetHistory = function()
         return testUseLocalData and localHistory or remoteHistory;
     end
@@ -242,7 +237,7 @@ function ABGP:BuildSyncHashData(gpHistory, now)
 
     for _, entry in ipairs(gpHistory) do
         local id = entry[ABGP.ItemHistoryIndex.ID];
-        local player, date = ABGP:ParseHistoryId(id);
+        local _, date = ABGP:ParseHistoryId(id);
         if now - date > syncThreshold then break; end
 
         hash = bit.bxor(hash, Hash(id));
@@ -254,7 +249,8 @@ end
 
 function ABGP:TriggerInitialSync()
     if not syncTesting then
-        local upToDate = self:HasCompleteHistory(self:GetDebugOpt());
+        -- Print out discrepancies if debug is enabled.
+        self:HasCompleteHistory(self:GetDebugOpt());
         self:HistoryTriggerSync();
     end
 end
@@ -297,7 +293,7 @@ function ABGP:SyncHistory(target, token, now, remote)
         commData.ids = {};
         for _, entry in ipairs(gpHistory) do
             local id = entry[self.ItemHistoryIndex.ID];
-            local player, date = self:ParseHistoryId(id);
+            local _, date = self:ParseHistoryId(id);
             if now - date > syncThreshold then break; end
 
             commData.ids[id] = true;
@@ -353,7 +349,7 @@ function ABGP:HistoryOnSync(data, distribution, sender, version)
     else
         for _, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID];
-            local player, date = self:ParseHistoryId(id);
+            local _, date = self:ParseHistoryId(id);
             if now - date > syncThreshold then break; end
 
             syncCount = syncCount + 1;
@@ -426,7 +422,7 @@ function ABGP:HistoryOnSync(data, distribution, sender, version)
         local sendCount, requestCount = 0, 0;
         for i, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID];
-            local player, date = self:ParseHistoryId(id);
+            local _, date = self:ParseHistoryId(id);
             if now - date > syncThreshold then break; end
 
             if data.ids[id] then

@@ -147,7 +147,7 @@ function ABGP:OnEnable()
 
     self:SetCallback(self.CommTypes.GUILD_NOTES_UPDATED.name, function(self, event, data, distribution, sender, version)
         if self:Get("outsider") then
-            self:OutsiderOnOfficerNotesUpdated();
+            self:OutsiderOnOfficerNotesUpdated(data, distribution, sender, version);
         elseif IsInGuild() then
             GuildRoster();
             OnGuildRosterUpdate();
@@ -517,9 +517,9 @@ ABGP.ItemHistoryIndex = {
     ITEMID = 7,     -- item id (number)
 
     -- ABGP.ItemHistoryType.BONUS
-    PLAYER = 4,     -- player name (string)
-    GP = 5,         -- gp award (number)
-    CATEGORY = 6,   -- from ABGP.ItemCategory
+    -- PLAYER = 4,     -- player name (string)
+    -- GP = 5,         -- gp award (number)
+    -- CATEGORY = 6,   -- from ABGP.ItemCategory
     NOTES = 7,      -- notes (string)
 
     -- ABGP.ItemHistoryType.DECAY
@@ -530,10 +530,10 @@ ABGP.ItemHistoryIndex = {
     DELETEDID = 4,  -- from ABGP:GetHistoryId()
 
     -- ABGP.ItemHistoryType.RESET
-    PLAYER = 4,     -- player name (string)
-    GP = 5,         -- new gp (number)
-    CATEGORY = 6,   -- from ABGP.ItemCategory
-    NOTES = 7,      -- notes (string)
+    -- PLAYER = 4,     -- player name (string)
+    -- GP = 5,         -- new gp (number)
+    -- CATEGORY = 6,   -- from ABGP.ItemCategory
+    -- NOTES = 7,      -- notes (string)
 };
 ABGP.ItemCategory = {
     SILVER = "SILVER",
@@ -737,7 +737,6 @@ end
 
 function ABGP:CheckUpdatedItem(itemLink, value, bulk)
     if self:ItemValueIsUpdated(value) then
-        local found = false;
         local items = _G.ABGP_Data2.itemValues.data;
         for _, item in ipairs(items) do
             if item[ABGP.ItemDataIndex.NAME] == value.item then
@@ -745,7 +744,7 @@ function ABGP:CheckUpdatedItem(itemLink, value, bulk)
                 item[ABGP.ItemDataIndex.CATEGORY] = value.category;
                 item[ABGP.ItemDataIndex.NOTES] = value.notes;
                 item[ABGP.ItemDataIndex.PRIORITY] = self.tCopy(value.priority);
-                found = true;
+
                 if not bulk then
                     self:Notify("%s's EPGP data was updated!", itemLink);
                 end
@@ -1097,7 +1096,7 @@ ABGP.tCompare = function(lhsTable, rhsTable, depth)
         end
     end
     -- Check for any keys that are in rhsTable and not lhsTable.
-    for key, value in pairs(rhsTable) do
+    for key in pairs(rhsTable) do
         if lhsTable[key] == nil then
             -- print("mismatched key: " .. key);
             return false;
@@ -1207,7 +1206,7 @@ function ABGP:StaticDialogTemplate(template, t)
         _G.GameTooltip:SetHyperlink(itemLink);
         _G.GameTooltip:Show();
     end;
-    t.OnHyperlinkLeave = function(self, itemLink)
+    t.OnHyperlinkLeave = function(self)
         _G.GameTooltip:Hide();
     end;
 

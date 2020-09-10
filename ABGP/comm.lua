@@ -394,14 +394,14 @@ function ABGP:SetupCommMonitor()
     if not self:Get("commMonitoringEnabled") then return; end
     if not monitoringComms then
         monitoringComms = true;
-        self:SecureHook(_G.C_ChatInfo, "SendAddonMessage", function(prefix, msg, chatType, target)
+        self:SecureHook(_G.C_ChatInfo, "SendAddonMessage", function(prefix, msg)
             local slot = GetSlot();
             commMonitor[slot][prefix] = commMonitor[slot][prefix] or {};
             commMonitor[slot][prefix].count = (commMonitor[slot][prefix].count or 0) + 1;
             commMonitor[slot][prefix].len = (commMonitor[slot][prefix].len or 0) + strlen(prefix) + strlen(msg);
         end);
         if _G.ChatThrottleLib then
-            self:SecureHook(_G.ChatThrottleLib, "Enqueue", function(ctl, prioname, pipename, msg)
+            self:SecureHook(_G.ChatThrottleLib, "Enqueue", function()
                 local now = GetTime();
                 if _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold and UnitAffectingCombat("player") then
                     if not ctlQueue.queueing then
@@ -415,7 +415,7 @@ function ABGP:SetupCommMonitor()
                     ctlQueue.count = ctlQueue.count + 1;
                 end
             end);
-            self:SecureHookScript(_G.ChatThrottleLib.Frame, "OnUpdate", function(frame, delay)
+            self:SecureHookScript(_G.ChatThrottleLib.Frame, "OnUpdate", function()
                 local now = GetTime();
                 if not _G.ChatThrottleLib.bQueueing and now - startTime > suppressionThreshold and ctlQueue.queueing then
                     self:WriteLogged("COMM", "ChatThrottleLib has stopped queueing (duration=%.2fs, msgs=%d).", now - ctlQueue.start, ctlQueue.count);
@@ -482,11 +482,11 @@ function ABGP:DumpCommMonitor(toChat)
     end
 end
 
-function ABGP:CommOnEncounterStart(encounterId, encounterName)
+function ABGP:CommOnEncounterStart(_, encounterName)
     currentEncounter = encounterName;
 end
 
-function ABGP:CommOnEncounterEnd(encounterId, encounterName)
+function ABGP:CommOnEncounterEnd(_, encounterName)
     currentEncounter = nil;
     if not monitoringComms then return; end
 

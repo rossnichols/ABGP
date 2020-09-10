@@ -80,7 +80,7 @@ local function CreateElement(frame, anchor, template)
         self.hasItem = nil;
         ResetCursor();
     end);
-    elt:SetScript("OnHyperlinkClick", function(self, itemLink, text, ...)
+    elt:SetScript("OnHyperlinkClick", function(self, itemLink, _, ...)
         if IsModifiedClick() then
             _G.HandleModifiedItemClick(select(2, GetItemInfo(itemLink)));
         else
@@ -1253,7 +1253,7 @@ do
             self.hasItem = nil;
             ResetCursor();
         end);
-        frame:SetScript("OnHyperlinkClick", function(self, itemLink, text, ...)
+        frame:SetScript("OnHyperlinkClick", function(self, itemLink, _, ...)
             if IsModifiedClick() then
                 _G.HandleModifiedItemClick(select(2, GetItemInfo(itemLink)));
             else
@@ -1545,7 +1545,7 @@ do
         end
     end
 
-    local function Need_OnClick(frame, button, down)
+    local function Need_OnClick(frame)
         local self = frame:GetParent().obj;
         self:Fire("OnRequest");
     end
@@ -1594,8 +1594,6 @@ do
 
         self:Fire("OnRelatedItemSelected", widget.frame:GetChecked() and itemLink or nil);
     end
-
-    local frameCount = 0;
 
     --[[-----------------------------------------------------------------------------
     Methods
@@ -1867,8 +1865,6 @@ do
     Constructor
     -------------------------------------------------------------------------------]]
     local function Constructor()
-        local widgetNum = AceGUI:GetNextWidgetNum(Type);
-
         local frame, button, need, close;
         if ABGP:Get("lootElvUI") and _G.ElvUI then
             frame = _G.ElvUI[1]:GetModule("Misc"):CreateRollFrame();
@@ -1935,8 +1931,8 @@ do
             need = frame.needbutt;
             close = frame.closeButton;
         else
-            frameCount = frameCount + 1;
-            frame = CreateFrame("Frame", "ABGP_LootFrame" .. frameCount, _G.UIParent, "ABGPLootTemplate");
+            local widgetNum = AceGUI:GetNextWidgetNum(Type);
+            frame = CreateFrame("Frame", "ABGP_LootFrame" .. widgetNum, _G.UIParent, "ABGPLootTemplate");
             button = frame.IconFrame;
             need = frame.NeedButton;
             close = frame.CloseButton;
@@ -2180,7 +2176,7 @@ do
             self:SetText("");
         end,
 
-        ["OnWidthSet"] = function(self, width)
+        ["OnWidthSet"] = function(self)
             self.frame:SetText(self:GetUserData("text"));
         end,
 
@@ -2351,7 +2347,7 @@ local GetCellAlign = function (dir, tableObj, colObj, cellObj, cell, child)
 end
 
 -- Get width or height for multiple cells combined
-local GetCellDimension = function (dir, laneDim, from, to, space)
+local GetCellDimension = function(_, laneDim, from, to, space)
     local dim = 0
     for cell=from,to do
         dim = dim + (laneDim[cell] or 0)
