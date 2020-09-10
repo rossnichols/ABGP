@@ -199,9 +199,12 @@ function ABGP:ImportPriority()
         else
             ImportSpreadsheetText(widget:GetText(), self.Priorities, priMapping, function(row)
                 if row.ep ~= 0 and row.gpS and row.gpS ~= 0 and row.gpG and row.gpG ~= 0 then
-                    row.gp = { [self.ItemCategory.GOLD] = row.gpG, [self.ItemCategory.SILVER] = row.gpS };
-                    row.gpG = nil;
-                    row.gpS = nil;
+                    local active = self.tCopy(self:GetActivePlayer(row.player) or {});
+                    active.player = row.player;
+                    active.ep = row.ep;
+                    active.gp = { [self.ItemCategory.GOLD] = row.gpG, [self.ItemCategory.SILVER] = row.gpS };
+                    table.wipe(row);
+                    for k, v in pairs(active) do row[k] = v; end
                     return true;
                 else
                     return false;
@@ -209,10 +212,9 @@ function ABGP:ImportPriority()
             end);
         end
 
-        -- This is a bit hacky - basically we've trashed the "real" active players list
-        -- with a rebuilt one that only contains EPGP, and then we trigger a mass-rebuild
-        -- of officer notes from the data, which only needs those fields. The proper list
-        -- will be reconstructed when we process the next GUILD_ROSTER_UPDATE event.
+        -- Refresh the active players now that we've rebuilt the priorities table,
+        -- then rebuild the officer notes from that table. For new players that didn't
+        -- have the other table values, we'll rebuild again on the next GUILD_ROSTER_UPDATE.
         self:RefreshActivePlayers();
         if not self:GetDebugOpt("SkipOfficerNote") then
             self:RebuildOfficerNotes();
