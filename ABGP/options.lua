@@ -667,7 +667,7 @@ function ABGP:ShowAddPlayerWindow()
         if not m then return true; end
 
         local now = GetServerTime();
-        local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
+        local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 23, min = 59, sec = 58 });
         if addTime > now then return true; end
     end);
     dateEdit:SetValue(date("%m/%d/%y", GetServerTime()));
@@ -738,7 +738,7 @@ function ABGP:ShowAddPlayerWindow()
 
         local addDate = dateEdit:GetValue();
         local m, d, y = addDate:match("^(%d+)/(%d+)/(%d+)$");
-        local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
+        local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 23, min = 59, sec = 58 });
 
         self:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG);
         window:Hide();
@@ -843,8 +843,7 @@ StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.Static
         if not m then return false, "Couldn't parse date"; end
 
         local now = GetServerTime();
-        local decayTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 0, min = 0, sec = 0 });
-        decayTime = decayTime + (24 * 60 * 60) - 1;
+        local decayTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 23, min = 59, sec = 59 });
         if decayTime > now then return false, "Date must be before today"; end
 
         local history = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
