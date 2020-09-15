@@ -7,9 +7,8 @@ local GetItemInfo = GetItemInfo;
 local GetLootInfo = GetLootInfo;
 local GetNumLootItems = GetNumLootItems;
 local GetLootSlotLink = GetLootSlotLink;
+local GetLootSourceInfo = GetLootSourceInfo;
 local UnitExists = UnitExists;
-local UnitIsFriend = UnitIsFriend;
-local UnitIsDead = UnitIsDead;
 local GetLootMethod = GetLootMethod;
 local UnitGUID = UnitGUID;
 local FlashClientIcon = FlashClientIcon;
@@ -33,18 +32,22 @@ local forceCloseThreshold = 60;
 local forceClosing = false;
 
 local function ItemShouldBeAutoAnnounced(item)
-    -- Announce rare+ BoP items
+    -- Announce rare+ BoP items.
     return item.quality >= 3 and select(14, GetItemInfo(item.link)) == 1;
 end
 
 function ABGP:AnnounceOnLootOpened()
     local loot = GetLootInfo();
 
-    -- Determine the items that meet announcement criteria.
+    -- Determine the items that meet announcement criteria, and what object is being looted.
     local announceItems = {};
+    local lootSource;
     for i = 1, GetNumLootItems() do
         local item = loot[i];
         if item then
+            -- In Classic, we can only loot one object at a time.
+            lootSource = GetLootSourceInfo(i);
+
             item.link = GetLootSlotLink(i);
             if ItemShouldBeAutoAnnounced(item) then
                 table.insert(announceItems, item.link);
@@ -53,22 +56,18 @@ function ABGP:AnnounceOnLootOpened()
     end
     if #announceItems == 0 then return; end
 
-    -- Determine the source of the loot. Use current target if it seems appropriate,
-    -- otherwise use the last boss killed (if it was recent and recorded).
-    if lastBossTime and GetTime() - lastBossTime >= 60 then lastBoss = nil; end
-    local source, name = lastBoss, lastBoss;
-    if UnitExists("target") and not UnitIsFriend('player', 'target') and UnitIsDead('target') then
-        source, name = UnitGUID("target"), UnitName("target");
+    -- Validate the source of the loot. If we're looting a chest and have an appropriate
+    -- boss kill in the recent past, use that. Otherwise use our target if it matches.
+    local source, name;
+    if lootSource:find("GameObject-") and lastBossTime and GetTime() - lastBossTime < 60 then
+        source, name = lastBoss, lastBoss;
+    elseif UnitExists("target") then
+        local guid = UnitGUID("target");
+        if guid == lootSource then
+            source, name = guid, UnitName("target");
+        end
     end
     if not source then return; end
-
-    -- Only use the target GUID as the source if it's not a boss kill.
-    -- For boss kills, bossSource will be the GUID if it's set.
-    local bossSource;
-    if bossKills[name] then
-        source, bossSource = name, source;
-        if source == bossSource then bossSource = nil; end
-    end
 
     -- Loot from boss kills should always be announced.
     -- If not from a boss, check if any of the items have an item value.
@@ -87,12 +86,7 @@ function ABGP:AnnounceOnLootOpened()
     lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
     if lootAnnouncements[source].announced then return; end
 
-    if bossSource then
-        lootAnnouncements[bossSource] = lootAnnouncements[bossSource] or { name = name, announced = false };
-        if lootAnnouncements[bossSource].announced then return; end
-    end
-
-    local data = { source = source, name = name, bossSource = bossSource, items = announceItems };
+    local data = { source = source, name = name, items = announceItems };
     self:SendComm(self.CommTypes.BOSS_LOOT, data, "BROADCAST");
 end
 
@@ -105,17 +99,9 @@ function ABGP:AnnounceOnBossLoot(data)
     local name = data.name;
     lootAnnouncements[source] = lootAnnouncements[source] or { name = name, announced = false };
 
-    local bossSourceAnnounced = false;
-    local bossSource = data.bossSource;
-    if bossSource then
-        lootAnnouncements[bossSource] = lootAnnouncements[bossSource] or { name = name, announced = false };
-        bossSourceAnnounced = lootAnnouncements[bossSource].announced;
-    end
-
-    if not lootAnnouncements[source].announced and not bossSourceAnnounced then
-        self:LogDebug("Announcing loot: name=%s source=%s boss=%s", name, source, bossSource or "<none>");
+    if not lootAnnouncements[source].announced then
+        self:LogDebug("Announcing loot: name=%s source=%s", name, source);
         lootAnnouncements[source].announced = true;
-        if bossSource then lootAnnouncements[bossSource].announced = true; end
 
         if GetLootMethod() == "master" then
             self:Notify("Loot from %s:", self:ColorizeText(name));
