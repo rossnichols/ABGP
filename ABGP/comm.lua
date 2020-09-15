@@ -158,7 +158,7 @@ ABGP.CommTypes = {
     -- notPrivileged: bool
     -- ids: table OR hash: number
 
-    HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", id = 18, priority = "NORMAL" },
+    HISTORY_REPLACE_INITIATION = { name = "HISTORY_REPLACE_INITIATION", id = 18, priority = "BULK" },
     -- token: from HISTORY_SYNC
 
     HISTORY_MERGE = { name = "HISTORY_MERGE", id = 19, priority = "BULK" },
@@ -174,14 +174,14 @@ ABGP.CommTypes = {
     -- history: table
     -- requested: bool
 
-    HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", id = 21, priority = "NORMAL" },
+    HISTORY_REPLACE_REQUEST = { name = "HISTORY_REPLACE_REQUEST", id = 21, priority = "BULK" },
     -- token: from HISTORY_SYNC
 
     -- NOTE: these aren't versioned and use legacy encoding so they can continue to function across major changes.
-    VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "NORMAL", legacy = true },
+    VERSION_REQUEST = { name = "ABGP_VERSION_REQUEST", priority = "BULK", legacy = true },
     -- reset: bool or nil
     -- version: from ABGP:GetVersion()
-    VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "NORMAL", legacy = true },
+    VERSION_RESPONSE = { name = "ABGP_VERSION_RESPONSE", priority = "BULK", legacy = true },
     -- version: from ABGP:GetVersion()
 };
 local commIdMap = {};
