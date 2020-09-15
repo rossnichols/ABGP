@@ -379,7 +379,7 @@ function ABGP:ImportItemHistory()
             local newGPHistory = {};
             for _, entry in ipairs(imported) do
                 if entry.action == "DECAY" then
-                    local _, gpDecay = entry.info:match("(%d+):(%d+)");
+                    local _, gpDecay = entry.info:match("(%d+),(%d+)");
                     table.insert(newGPHistory, {
                         [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
                         [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entry.time),
