@@ -110,6 +110,21 @@ function ABGP:OnEnable()
         self:MinimapOnDistOpened(data, distribution, sender, version);
     end, self);
 
+    self:SetCallback(self.CommTypes.ITEM_DIST_SUMMARY.name, function(self, event, data, distribution, sender, version)
+        for _, item in ipairs(data) do
+            self:Fire(self.CommTypes.ITEM_DIST_OPENED.name, item.openedData, distribution, sender, version);
+            self:Fire(self.CommTypes.ITEM_COUNT.name, item.countData, distribution, sender, version);
+            self:Fire(self.CommTypes.ITEM_REQUESTCOUNT.name, item.requestCountData, distribution, sender, version);
+
+            if item.requestReceivedData then
+                self:Fire(self.CommTypes.ITEM_REQUEST_RECEIVED.name, item.requestReceivedData, distribution, sender, version);
+            end
+            if item.rollData then
+                self:Fire(self.CommTypes.ITEM_ROLLED.name, item.rollData, distribution, sender, version);
+            end
+        end
+    end, self);
+
     self:SetCallback(self.CommTypes.ITEM_DIST_CLOSED.name, function(self, event, data, distribution, sender, version)
         self:RequestOnDistClosed(data, distribution, sender, version);
         self:AnnounceOnDistClosed(data, distribution, sender, version);
@@ -126,6 +141,10 @@ function ABGP:OnEnable()
     self:SetCallback(self.CommTypes.ITEM_TRASHED.name, function(self, event, data, distribution, sender, version)
         self:RequestOnItemTrashed(data, distribution, sender, version);
         self:AnnounceOnItemTrashed(data, distribution, sender, version);
+    end, self);
+
+    self:SetCallback(self.CommTypes.ITEM_REQUEST_RECEIVED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemRequestReceived(data, distribution, sender, version);
     end, self);
 
     self:SetCallback(self.CommTypes.ITEM_REQUEST_REJECTED.name, function(self, event, data, distribution, sender, version)

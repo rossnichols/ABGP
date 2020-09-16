@@ -279,6 +279,24 @@ function ABGP:RequestOnItemTrashed(data, distribution, sender)
     self:Notify("%s%s will be disenchanted%s.", itemLink, multiple, info);
 end
 
+function ABGP:RequestOnItemRequestReceived(data, distribution, sender)
+    local itemLink = data.itemLink;
+    if not activeItems[itemLink] then return; end
+
+    self:Notify("Your %s %s has been received.", data.requestType and "request for" or "pass on", itemLink);
+
+    if  not activeItems[itemLink].sentComms then
+        -- We didn't realize we sent this request (reloaded UI, perhaps).
+        activeItems[itemLink].sentComms = true;
+        activeItems[itemLink].sentRequestType = data.requestType;
+        if data.sentRequestType then
+            self:Fire(self.InternalEvents.ITEM_REQUESTED, data);
+        else
+            self:Fire(self.InternalEvents.ITEM_PASSED, data);
+        end
+    end
+end
+
 function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
     local itemLink = data.itemLink;
     if not activeItems[itemLink] then return; end

@@ -381,21 +381,23 @@ local function ProcessNewRequest(request)
     -- Generate a new roll if necessary
     if item.requiresRoll and not request.roll then
         request.roll = math.random(1, 100);
-        if UnitExists(request.player) then
-            ABGP:SendComm(ABGP.CommTypes.ITEM_ROLLED, {
-                itemLink = request.itemLink,
-                roll = request.roll,
-            }, "WHISPER", request.player);
-        end
     end
+
+    -- Tell the requester what they rolled.
+    if request.roll and UnitExists(request.player) then
+        ABGP:SendComm(ABGP.CommTypes.ITEM_ROLLED, {
+            itemLink = request.itemLink,
+            roll = request.roll,
+        }, "WHISPER", request.player);
+    end
+
+    -- Persist the roll
+    item.rolls[request.player] = request.roll;
 
     -- Persist the equipped items (for requests that come in without them)
     if oldRequest and oldRequest.equipped and not request.equipped then
         request.equipped = oldRequest.equipped;
     end
-
-    -- Persist the roll
-    item.rolls[request.player] = request.roll;
 
     table.insert(requests, request);
     if not oldRequest or oldRequest.requestType ~= request.requestType then
@@ -622,8 +624,42 @@ function ABGP:DistribOnStateSync(data, distribution, sender)
     local window = activeDistributionWindow;
     local activeItems = window and window:GetUserData("activeItems") or {};
 
+    local summary = {};
     for _, item in pairs(activeItems) do
-        self:SendComm(self.CommTypes.ITEM_DIST_OPENED, item.data, "WHISPER", sender);
+        local total, main, off = GetRequestCounts(item.requests);
+        local senderRequest;
+        for i, request in ipairs(item.requests) do
+            if request.player == sender then
+                senderRequest = request;
+                break;
+            end
+        end
+
+        table.insert(summary, {
+            openedData = item.data, -- ITEM_DIST_OPENED
+            countData = { -- ITEM_COUNT
+                itemLink = item.itemLink,
+                count = item.totalCount,
+            },
+            requestCountData = { -- ITEM_REQUESTCOUNT
+                itemLink = item.itemLink,
+                count = total,
+                main = main,
+                off = off
+            },
+            requestReceivedData = senderRequest and { -- ITEM_REQUEST_RECEIVED
+                itemLink = item.itemLink,
+                requestType = senderRequest.requestType,
+            },
+            rollData = senderRequest and item.requiresRoll and item.rolls[sender] and { -- ITEM_ROLLED
+                itemLink = item.itemLink,
+                roll = item.rolls[sender],
+            },
+        });
+    end
+
+    if #summary > 0 then
+        self:SendComm(self.CommTypes.ITEM_DIST_SUMMARY, summary, "WHISPER", sender);
     end
 end
 
@@ -751,6 +787,10 @@ function ABGP:DistribOnItemRequest(data, distribution, sender, version)
     };
     PopulateRequest(request, activeItems[itemLink].data.value);
 
+    self:SendComm(self.CommTypes.ITEM_REQUEST_RECEIVED, {
+        itemLink = itemLink,
+        requestType = data.requestType,
+    }, "WHISPER", sender);
     ProcessNewRequest(request);
 end
 
@@ -767,6 +807,9 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
         return;
     end
 
+    self:SendComm(self.CommTypes.ITEM_REQUEST_RECEIVED, {
+        itemLink = itemLink,
+    }, "WHISPER", sender);
     RemoveRequest(sender, itemLink);
 end
 

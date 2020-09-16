@@ -63,7 +63,7 @@ function ABGP:GetCommPrefix()
     return "ABGP5";
 end
 
--- Highest ID: 22
+-- Highest ID: 24
 ABGP.CommTypes = {
     ITEM_REQUEST = { name = "ITEM_REQUEST", id = 1, priority = "INSTANT" },
     -- itemLink: item link string
@@ -92,6 +92,14 @@ ABGP.CommTypes = {
     -- slots: array of strings
     -- count: number
 
+    ITEM_DIST_SUMMARY = { name = "ITEM_DIST_SUMMARY", id = 23, priority = "ALERT" },
+    -- summary: array with values of tables with following keys
+    --  openedData: table matching ITEM_DIST_OPENED
+    --  countData: table matching ITEM_COUNT
+    --  requestCountData: table matching ITEM_REQUESTCOUNT
+    --  requestReceivedData: table matching ITEM_REQUEST_RECEIVED
+    --  rollData: table matching ITEM_ROLLED
+
     ITEM_DIST_CLOSED = { name = "ITEM_DIST_CLOSED", id = 6, priority = "ALERT" },
     -- itemLink: item link string
     -- count: number
@@ -115,6 +123,10 @@ ABGP.CommTypes = {
     -- itemLink: item link string
     -- count: number
     -- testItem: bool
+
+    ITEM_REQUEST_RECEIVED = { name = "ITEM_REQUEST_RECEIVED", id = 24, priority = "INSTANT" },
+    -- itemLink: string
+    -- requestType: string from ABGP.RequestTypes or nil
 
     ITEM_REQUEST_REJECTED = { name = "ITEM_REQUEST_REJECTED", id = 22, priority = "ALERT" },
     -- itemLink: string
