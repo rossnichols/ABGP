@@ -1603,6 +1603,7 @@ do
             self.frame:SetAlpha(0);
             self.frame:Show();
             self.frame.glow:Hide();
+            self.frame.checkLeave = false;
 
             self:SetItem(nil);
             self:SetCount(1);
