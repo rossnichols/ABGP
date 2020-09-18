@@ -371,7 +371,6 @@ local function AwardEP(raid, category, extra)
 
     EnsureAwardsEntries(raid);
     if IsInProgress(raid) then
-        raid.stopTime = tick.time;
         local groupSize = GetNumGroupMembers();
         if groupSize == 0 then
             AwardPlayerEP(raid, UnitName("player"), tick);
@@ -820,6 +819,7 @@ function ABGP:UpdateRaid(windowRaid)
             end
             if next(currentRaid.players) then
                 self:Notify("Stopping the raid!");
+                currentRaid.stopTime = GetServerTime();
                 table.insert(_G.ABGP_RaidInfo3.pastRaids, 1, currentRaid);
                 window:Hide();
                 self:UpdateRaid(windowRaid);
@@ -933,6 +933,21 @@ function ABGP:ExportRaid(windowRaid)
                     ep, "EP", windowRaid.name, exportedPlayer, raidDate, raidGroup, rank, table.concat(breakdown, ", "));
             end
         end
+
+        -- Include any items that were awarded while the raid was active.
+        text = text .. "\n";
+        local gpHistory = self:ProcessItemHistory(_G.ABGP_Data2.history.data);
+        local filtered = {};
+        for _, item in ipairs(gpHistory) do
+            local awardDate = item[ABGP.ItemHistoryIndex.DATE];
+            if awardDate < windowRaid.startTime then
+                break;
+            end
+            if awardDate <= windowRaid.stopTime then
+                table.insert(filtered, item);
+            end
+        end
+        text = text .. self:BuildItemHistoryExport(filtered);
 
         return text;
     end

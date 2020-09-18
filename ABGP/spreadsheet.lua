@@ -457,7 +457,7 @@ function ABGP:ImportItemHistory()
     OpenImportWindow(importFunc);
 end
 
-function ABGP:ExportItemHistory(history)
+function ABGP:BuildItemHistoryExport(history)
     local text = "";
     for i = #history, 1, -1 do
         local data = history[i];
@@ -473,6 +473,11 @@ function ABGP:ExportItemHistory(history)
             itemDate);
     end
 
+    return text;
+end
+
+function ABGP:ExportItemHistory(history)
+    local text = self:BuildItemHistoryExport(history);
     self:OpenExportWindow(text);
 end
 
