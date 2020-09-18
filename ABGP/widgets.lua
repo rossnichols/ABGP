@@ -139,6 +139,7 @@ do
     local function ItemButton_OnEnter(self)
         local itemLink = self.itemLink;
         if not itemLink then return; end
+        if ABGP:IsContextMenuOpen() then return; end
 
         _G.ShowUIPanel(_G.GameTooltip);
         _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
@@ -156,18 +157,27 @@ do
         ResetCursor();
     end
 
-    local function ItemButton_OnClick(frame)
+    local function ItemButton_OnClick(frame, button, down)
         local self = frame.obj;
         if not frame.itemLink then return; end
+
+        if not self.clickable or button ~= "LeftButton" then
+            frame:SetChecked(not frame:GetChecked());
+        end
 
         if IsModifiedClick() then
             _G.HandleModifiedItemClick(select(2, GetItemInfo(frame.itemLink)));
         elseif self.clickable then
-            self:Fire("OnClick", frame.itemLink);
+            self:Fire("OnClick", frame.itemLink, button, down);
         end
     end
 
     local function ItemButton_OnUpdate(self)
+        if ABGP:IsContextMenuOpen() then
+            _G.GameTooltip:Hide();
+            self.hasItem = nil;
+        end
+
         if _G.GameTooltip:IsOwned(self) and self.hasItem then
             _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
             _G.GameTooltip:ClearAllPoints();
@@ -254,7 +264,7 @@ do
         local widgetNum = AceGUI:GetNextWidgetNum(Type)
 
         local frame = CreateFrame("CheckButton", "ABGPActionButton" .. widgetNum, _G.UIParent, "ActionButtonTemplate");
-        frame:RegisterForClicks("LeftButtonUp");
+        frame:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 
         frame:SetScript("OnEnter", ItemButton_OnEnter);
         frame:SetScript("OnLeave", ItemButton_OnLeave);
@@ -746,6 +756,11 @@ end
 do
     local Type, Version = "ABGP_ItemValue", 1;
 
+    local function RelatedItem_OnClick(widget, event, itemLink, button, down)
+        local self = widget:GetUserData("itemValueFrame");
+        self:Fire("OnRelatedItemClicked", itemLink, button, down);
+    end
+
     --[[-----------------------------------------------------------------------------
     Methods
     -------------------------------------------------------------------------------]]
@@ -806,10 +821,13 @@ do
 
                 for i, itemLink in ipairs(items) do
                     local button = AceGUI:Create("ABGP_ItemButton");
+                    button:SetUserData("itemValueFrame", self);
                     self.icons.buttons[i] = button;
                     button:SetItemLink(itemLink, true);
                     button.frame:SetParent(self.icons);
                     button.frame:SetScale(0.5);
+                    button:SetClickable(true);
+                    button:SetCallback("OnClick", RelatedItem_OnClick);
 
                     if i == 1 then
                         button.frame:SetPoint("BOTTOMLEFT", self.icons, 5, 11);
@@ -1242,7 +1260,7 @@ do
             _G.ShowUIPanel(_G.GameTooltip);
             _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
             _G.GameTooltip:ClearAllPoints();
-            _G.GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT");
+            _G.GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
             _G.GameTooltip:SetHyperlink(itemLink);
             _G.GameTooltip:Show();
             self.hasItem = itemLink;
@@ -1264,7 +1282,7 @@ do
             if _G.GameTooltip:IsOwned(self) and self.hasItem then
                 _G.GameTooltip:SetOwner(self, "ANCHOR_NONE");
                 _G.GameTooltip:ClearAllPoints();
-                _G.GameTooltip:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT");
+                _G.GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
                 _G.GameTooltip:SetHyperlink(self.hasItem);
                 CursorUpdate(self);
             end
@@ -1581,18 +1599,22 @@ do
         parent:Hide();
     end
 
-    local function RelatedItem_OnClick(widget, event, itemLink)
+    local function RelatedItem_OnClick(widget, event, itemLink, button, down)
         local self = widget:GetUserData("lootFrame");
         local frame = self.frame;
         local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
 
-        for _, button in pairs(relatedFrame.buttons) do
-            if button ~= widget then
-                button.frame:SetChecked(false);
+        if button == "LeftButton" then
+            for _, button in pairs(relatedFrame.buttons) do
+                if button ~= widget then
+                    button.frame:SetChecked(false);
+                end
             end
-        end
 
-        self:Fire("OnRelatedItemSelected", widget.frame:GetChecked() and itemLink or nil);
+            self:Fire("OnRelatedItemSelected", widget.frame:GetChecked() and itemLink or nil);
+        else
+            self:Fire("OnRelatedItemClicked", itemLink, button, down);
+        end
     end
 
     --[[-----------------------------------------------------------------------------
@@ -1811,7 +1833,6 @@ do
             local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
             for _, button in pairs(relatedFrame.buttons) do
                 if button:GetItemLink() == itemLink then
-                    button.frame:SetChecked(checked);
                     RelatedItem_OnClick(button, "OnClick", itemLink);
                     break;
                 end

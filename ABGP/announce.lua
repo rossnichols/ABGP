@@ -283,6 +283,15 @@ function ABGP:ShowLootFrame(itemLink)
                     end,
                     notCheckable = true
                 });
+                if not value.token and ABGP:GetActivePlayer(UnitName("player")) and ABGP:GetDebugOpt() then
+                    table.insert(context, {
+                        text = "Show impact on priority",
+                        func = function(self)
+                            ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemImpact, args = itemName });
+                        end,
+                        notCheckable = true
+                    });
+                end
             end
             if #context > 0 then
                 table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
@@ -396,6 +405,26 @@ function ABGP:ShowLootFrame(itemLink)
         widget:SetUserData("tokenItem", itemLink);
         if widget:GetUserData("requestAttempted") then
             widget:Fire("OnRequest");
+        end
+    end);
+    elt:SetCallback("OnRelatedItemClicked", function(widget, event, itemLink, button)
+        if button == "RightButton" then
+            local context = {};
+            local itemName = ABGP:GetItemName(itemLink);
+            if ABGP:GetActivePlayer(UnitName("player")) and ABGP:GetDebugOpt() then
+                table.insert(context, {
+                    text = "Show impact on priority",
+                    func = function(self)
+                        ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemImpact, args = itemName });
+                    end,
+                    notCheckable = true
+                });
+            end
+
+            if #context > 0 then
+                table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
+                ABGP:ShowContextMenu(context);
+            end
         end
     end);
 

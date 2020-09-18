@@ -285,6 +285,8 @@ local function RebuildUI()
 
     local itemRef = window:GetUserData("itemRef");
     itemRef:SetText(currentItem.itemLink);
+    itemRef:SetWidth(itemRef.text:GetStringWidth() + 5);
+    window:GetUserData("topLine"):DoLayout();
 
     local related = ABGP:GetTokenItems(currentItem.itemLink);
     local relatedElts = window:GetUserData("relatedItems");
@@ -1006,9 +1008,9 @@ function ABGP:CreateDistribWindow()
     local itemRef = AceGUI:Create("ABGP_Header");
     itemRef:SetJustifyH("RIGHT");
     itemRef:SetJustifyV("TOP");
-    itemRef:SetWidth(itemRef.text:GetStringWidth());
     itemRef:SetUserData("cell", { align = "TOPRIGHT" });
     topLine:AddChild(itemRef);
+    window:SetUserData("topLine", topLine);
     window:SetUserData("itemRef", itemRef);
     window:SetUserData("relatedItems", {});
 

@@ -39,6 +39,7 @@ local currentRaidGroup;
 ABGP.UICommands = {
     ShowItemHistory = "ShowItemHistory",
     ShowItem = "ShowItem",
+    ShowItemImpact = "ShowItemImpact",
 };
 
 local infoText = [[
@@ -143,13 +144,44 @@ local function DrawPriority(container, options)
     local rebuild = options.rebuild;
     local reason = options.reason;
     local preserveScroll = options.preserveScroll;
-    -- local command = options.command;
+    local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.ACTIVE_PLAYERS_REFRESHED then return; end
 
     local widths = { 35, 120, 110, 75, 75, 85, 75, 85 };
     if rebuild then
+        local addedItemImpact;
+        if command and command.command == ABGP.UICommands.ShowItemImpact then
+            addedItemImpact = command.args;
+            container:SetUserData("addedItemImpact", addedItemImpact);
+        end
+
         container:SetLayout("ABGP_Table");
-        container:SetUserData("table", { columns = { 1.0 }, rows = { 0, 1.0 } });
+        container:SetUserData("table", { columns = { 1.0 }, rows = addedItemImpact and { 0, 0, 1.0 } or { 0, 1.0 } });
+
+        if addedItemImpact then
+            local impactLine = AceGUI:Create("SimpleGroup");
+            impactLine:SetFullWidth(true);
+            impactLine:SetLayout("table");
+            impactLine:SetUserData("table", { columns = { 1.0, 0 } });
+            container:AddChild(impactLine);
+
+            local itemImpact = AceGUI:Create("ABGP_Header");
+            itemImpact:SetFullWidth(true);
+
+            local value = ABGP:GetItemValue(addedItemImpact);
+            itemImpact:SetText(("Added %s from %s to your EPGP."):format(
+                ABGP:FormatCost(value.gp, value.category),
+                value.itemLink));
+            impactLine:AddChild(itemImpact);
+
+            local clearImpact = AceGUI:Create("Button");
+            clearImpact:SetWidth(85);
+            clearImpact:SetText("Clear");
+            clearImpact:SetCallback("OnClick", function()
+                PopulateUI({ rebuild = true });
+            end);
+            impactLine:AddChild(clearImpact);
+        end
 
         local mainLine = AceGUI:Create("SimpleGroup");
         mainLine:SetFullWidth(true);
@@ -272,6 +304,7 @@ local function DrawPriority(container, options)
 
     local priorities = container:GetUserData("priorities");
     local scrollValue = preserveScroll and priorities:GetUserData("statusTable").scrollvalue or 0;
+    local addedItemImpact = container:GetUserData("addedItemImpact");
     priorities:ReleaseChildren();
 
     local priority = ABGP.Priorities;
@@ -280,6 +313,12 @@ local function DrawPriority(container, options)
         local inRaidGroup = not currentRaidGroup or ABGP:IsInRaidGroup(data, currentRaidGroup);
         local isGrouped = not onlyGrouped or UnitExists(data.player);
         if allowedClasses[data.class] and inRaidGroup and isGrouped then
+            if addedItemImpact and data.player == UnitName("player") then
+                data = ABGP.tCopy(data);
+                local value = ABGP:GetItemValue(addedItemImpact);
+                data.gp[value.category] = data.gp[value.category] + value.gp;
+                data.priority[value.category] = data.ep * 10 / data.gp[value.category];
+            end
             table.insert(filtered, data);
         end
     end
@@ -781,6 +820,26 @@ local function DrawItems(container, options)
             end
             elt:SetRelatedItems(related);
             elt:ShowBackground((count % 2) == 0);
+            elt:SetCallback("OnRelatedItemClicked", function(widget, event, itemLink, button)
+                if button == "RightButton" then
+                    local context = {};
+                    local itemName = ABGP:GetItemName(itemLink);
+                    if ABGP:GetActivePlayer(UnitName("player")) and ABGP:GetDebugOpt() then
+                        table.insert(context, {
+                            text = "Show impact on priority",
+                            func = function(self)
+                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemImpact, args = itemName });
+                            end,
+                            notCheckable = true
+                        });
+                    end
+
+                    if #context > 0 then
+                        table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
+                        ABGP:ShowContextMenu(context);
+                    end
+                end
+            end);
             elt:SetCallback("OnClick", function(widget, event, button)
                 if button == "RightButton" then
                     local context = {
@@ -798,6 +857,16 @@ local function DrawItems(container, options)
                             notCheckable = true
                         },
                     };
+                    if data[ABGP.ItemDataIndex.GP] ~= "T" and ABGP:GetActivePlayer(UnitName("player")) and ABGP:GetDebugOpt() then
+                        table.insert(context, {
+                            text = "Show impact on priority",
+                            func = function(self)
+                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItemImpact, args = data[ABGP.ItemDataIndex.NAME] });
+                            end,
+                            arg1 = data,
+                            notCheckable = true
+                        });
+                    end
                     if data[ABGP.ItemDataIndex.ITEMLINK] and ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK]);
                         table.insert(context, 1, {
