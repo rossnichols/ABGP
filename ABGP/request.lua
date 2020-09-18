@@ -145,8 +145,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     activeItems[itemLink] = {
         itemLink = itemLink,
         sender = sender,
-        requiresRoll = data.requiresRoll,
-        value = data.value,
+        value = ABGP:GetItemValue(ABGP:GetItemName(itemLink)),
         slots = data.slots,
         roll = nil,
         sentComms = false,
@@ -158,13 +157,12 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
     };
 
     local gpCost, priority, notes = "", "", "";
-    local value = data.value;
+    local value = activeItems[itemLink].value;
     if value then
-        self:CheckUpdatedItem(itemLink, value);
         if value.token then
             gpCost = "Token (variable GP cost)";
         else
-            local rolled = data.requiresRoll and (" (rolled)") or "";
+            local rolled = self:ItemRequiresRoll(itemLink) and (" (rolled)") or "";
             gpCost = ("Cost: %s%s"):format(self:FormatCost(value.gp, value.category), rolled);
         end
         if value.priority and next(value.priority) then

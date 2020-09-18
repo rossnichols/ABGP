@@ -31,10 +31,10 @@ local function CalculateCost(request)
     local window = activeDistributionWindow;
     local currentItem = window:GetUserData("currentItem");
 
-    if not currentItem.data.value then
+    if not currentItem.value then
         return returnedCost, false, "no value";
     end
-    returnedCost.category = currentItem.data.value.category;
+    returnedCost.category = currentItem.value.category;
 
     if request and request.override then
         return returnedCost, false, request.override;
@@ -124,13 +124,18 @@ local function RebuildUI()
     };
 
     table.sort(requests, function(a, b)
+        local aRollRequired = ABGP:ItemRequiresRoll(currentItem.itemLink, a.selectedItem);
+        local bRollRequired = ABGP:ItemRequiresRoll(currentItem.itemLink, b.selectedItem);
+
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
         elseif a.rankPriority ~= b.rankPriority then
             return a.rankPriority < b.rankPriority;
-        elseif a.category ~= b.category and not currentItem.requiresRoll then
+        elseif aRollRequired ~= bRollRequired then
+            return bRollRequired;
+        elseif a.category ~= b.category and not aRollRequired then
             return a.category == ABGP.ItemCategory.GOLD;
-        elseif a.priority ~= b.priority and not currentItem.requiresRoll then
+        elseif a.priority ~= b.priority and not aRollRequired then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
             return (a.roll or 0) > (b.roll or 0);
@@ -168,10 +173,10 @@ local function RebuildUI()
         elt:SetFullWidth(true);
         local lowPrio;
         local active = ABGP:GetActivePlayer(request.player);
-        if active and request.ep and currentItem.data.value then
+        if active and request.ep and currentItem.value then
             lowPrio = request.ep < ABGP:GetMinEP(active.raidGroup);
         end
-        local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.data.value and currentItem.data.value.token);
+        local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.value and currentItem.value.token);
         elt:SetData(request, equippable, lowPrio);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
@@ -359,7 +364,16 @@ local function CombineNotes(a, b)
     return a .. "\n" .. b;
 end
 
-local function ProcessNewRequest(request)
+function ABGP:ItemRequiresRoll(itemLink, selectedItem)
+    local value = ABGP:GetItemValue(ABGP:GetItemId(itemLink));
+    if not value or value.gp == 0 then return true; end
+    if not selectedItem then return false; end
+
+    local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(selectedItem));
+    return not selectedValue or selectedValue.gp == 0;
+end
+
+local function ProcessNewRequest(request, summary)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
     local item = activeItems[request.itemLink];
@@ -381,7 +395,7 @@ local function ProcessNewRequest(request)
     end
 
     -- Generate a new roll if necessary
-    if item.requiresRoll and not request.roll then
+    if ABGP:ItemRequiresRoll(item.itemLink, request.selectedItem) and not request.roll then
         request.roll = math.random(1, 100);
     end
 
@@ -410,12 +424,17 @@ local function ProcessNewRequest(request)
         ABGP:Notify("%s is requesting %s %s.", ABGP:ColorizeName(request.player), request.itemLink, requestTypes[request.requestType]);
 
         local total, main, off = GetRequestCounts(requests);
-        ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, {
+        local commData = {
             itemLink = request.itemLink,
             count = total,
             main = main,
             off = off,
-        }, "BROADCAST");
+        };
+        if summary then
+            table.insert(summary, { ABGP.CommTypes.ITEM_REQUESTCOUNT.name, commData });
+        else
+            ABGP:SendComm(ABGP.CommTypes.ITEM_REQUESTCOUNT, commData, "BROADCAST");
+        end
     end
 
     if request.itemLink == window:GetUserData("currentItem").itemLink then
@@ -450,23 +469,24 @@ local function AddActiveItem(data)
     local window = activeDistributionWindow;
     local activeItems = window:GetUserData("activeItems");
     local itemLink = data.itemLink;
+    local value = ABGP:GetItemValue(ABGP:GetItemName(data.itemLink));
 
     local newItem = {
         itemLink = itemLink,
         requests = {},
         rolls = {},
-        costBase = data.value and { cost = (data.value.token and 0 or data.value.gp), category = data.value.category } or { cost = 0 },
+        value = value,
+        costBase = value and { cost = (value.token and 0 or value.gp), category = value.category } or { cost = 0 },
         selectedRequest = nil,
         selectedElt = nil,
         costEdited = nil,
         closeConfirmed = false,
         distributions = {},
-        rollsAllowed = data.requiresRoll,
-        requiresRoll = data.requiresRoll,
+        rollsAllowed = ABGP:ItemRequiresRoll(itemLink),
         data = data,
         receivedComm = false,
         testItem = not IsInRaid(),
-        totalCount = data.count,
+        totalCount = data.count or 1,
     };
 
     activeItems[itemLink] = newItem;
@@ -528,7 +548,7 @@ local function ChooseRecipient()
     _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", itemLink, ABGP:FormatCost(cost), {
         itemLink = currentItem.itemLink,
         cost = cost,
-        value = currentItem.data.value,
+        value = currentItem.value,
         requestType = ABGP.RequestTypes.MANUAL
     });
 end
@@ -637,27 +657,29 @@ function ABGP:DistribOnStateSync(data, distribution, sender)
             end
         end
 
-        table.insert(summary, {
-            openedData = item.data, -- ITEM_DIST_OPENED
-            countData = { -- ITEM_COUNT
-                itemLink = item.itemLink,
-                count = item.totalCount,
-            },
-            requestCountData = { -- ITEM_REQUESTCOUNT
-                itemLink = item.itemLink,
-                count = total,
-                main = main,
-                off = off
-            },
-            requestReceivedData = senderRequest and { -- ITEM_REQUEST_RECEIVED
+        table.insert(summary, { self.CommTypes.ITEM_DIST_OPENED.name, item.data });
+        table.insert(summary, { self.CommTypes.ITEM_COUNT.name, {
+            itemLink = item.itemLink,
+            count = item.totalCount,
+        }});
+        table.insert(summary, { self.CommTypes.ITEM_REQUESTCOUNT.name, {
+            itemLink = item.itemLink,
+            count = total,
+            main = main,
+            off = off
+        }});
+        if senderRequest then
+            table.insert(summary, { self.CommTypes.ITEM_REQUEST_RECEIVED.name, {
                 itemLink = item.itemLink,
                 requestType = senderRequest.requestType,
-            },
-            rollData = senderRequest and item.requiresRoll and item.rolls[sender] and { -- ITEM_ROLLED
-                itemLink = item.itemLink,
-                roll = item.rolls[sender],
-            },
-        });
+            }});
+            if item.rolls[sender] then
+                table.insert(summary, { self.CommTypes.ITEM_ROLLED.name, {
+                    itemLink = item.itemLink,
+                    roll = item.rolls[sender],
+                }});
+            end
+        end
     end
 
     if #summary > 0 then
@@ -751,7 +773,7 @@ local function RepopulateRequests()
 
     local needsUpdate = false;
     for _, item in pairs(activeItems) do
-        local value = item.data.value;
+        local value = item.value;
         if value then
             for _, request in ipairs(item.requests) do
                 if PopulateRequest(request, value) then
@@ -787,7 +809,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender, version)
         notes = data.notes,
         version = version
     };
-    PopulateRequest(request, activeItems[itemLink].data.value);
+    PopulateRequest(request, activeItems[itemLink].value);
 
     self:SendComm(self.CommTypes.ITEM_REQUEST_RECEIVED, {
         itemLink = itemLink,
@@ -843,16 +865,16 @@ function ABGP:DistribOnLogout()
     EndDistribution();
 end
 
-function ABGP:ShowDistrib(itemLink)
+function ABGP:ShowItemDistrib(itemLink, summary)
     if activeDistributionWindow then
         local window = activeDistributionWindow;
         local activeItems = window:GetUserData("activeItems");
         if activeItems[itemLink] then
             activeItems[itemLink].totalCount = activeItems[itemLink].totalCount + 1;
-            ABGP:SendComm(ABGP.CommTypes.ITEM_COUNT, {
+            table.insert(summary, { ABGP.CommTypes.ITEM_COUNT.name, {
                 itemLink = itemLink,
                 count = activeItems[itemLink].totalCount,
-            }, "BROADCAST");
+            }});
             local currentItem = window:GetUserData("currentItem");
             if currentItem.itemLink ~= itemLink then
                 window:GetUserData("tabGroup"):SelectTab(itemLink);
@@ -869,19 +891,21 @@ function ABGP:ShowDistrib(itemLink)
         return;
     end
 
-    local value = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
     if not activeDistributionWindow then
         activeDistributionWindow = self:CreateDistribWindow();
     end
 
+    local value = ABGP:GetItemValue(ABGP:GetItemName(itemLink));
+    local count = self:GetLootCount(itemLink) or 1;
+    count = (count ~= 1) and count or nil;
     local data = {
         itemLink = itemLink,
-        value = value,
-        requiresRoll = not value or value.gp == 0,
-        slots = self:GetItemEquipSlots(itemLink),
-        count = self:GetLootCount(itemLink) or 1,
+        slots = self:GetItemEquipSlots(itemLink, true),
+        count = count,
     };
     AddActiveItem(data);
+
+    table.insert(summary, { self.CommTypes.ITEM_DIST_OPENED.name, data });
 
     if self:GetDebugOpt("ShowTestDistrib") then
         local ranks = {
@@ -931,11 +955,37 @@ function ABGP:ShowDistrib(itemLink)
                 entry.priority = entry.ep * 10 / entry.gp;
             end
             PopulateRequest(entry, value);
-            ProcessNewRequest(entry);
+            ProcessNewRequest(entry, summary);
         end
     end
 
-    self:SendComm(self.CommTypes.ITEM_DIST_OPENED, data, "BROADCAST");
+    return true;
+end
+
+function ABGP:ShowDistrib(itemLinks)
+    local summary = {};
+
+    if type(itemLinks) == "table" then
+        -- Any newly distributed items should only have ShowItemDistrib()
+        -- called once, since we'll call GetLootCount() to determine the
+        -- initial count. If the item is already being distributed, each
+        -- subsequent call will add one to the count.
+        local filtered = {};
+        for _, itemLink in ipairs(itemLinks) do
+            if not filtered[itemLink] then
+                local newDistrib = self:ShowItemDistrib(itemLink, summary);
+                if newDistrib then
+                    filtered[itemLink] = true;
+                end
+            end
+        end
+    else
+        self:ShowItemDistrib(itemLinks, summary);
+    end
+
+    if #summary > 0 then
+        self:SendComm(self.CommTypes.ITEM_DIST_SUMMARY, summary, "BROADCAST");
+    end
 end
 
 function ABGP:CreateDistribWindow()

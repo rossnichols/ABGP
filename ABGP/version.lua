@@ -230,6 +230,11 @@ function ABGP:VersionOnGroupJoined()
     }, "BROADCAST");
 end
 
+function ABGP:VersionOnEnteringWorld(isInitialLogin)
+    -- Only check version on the initial login.
+    if not isInitialLogin then checkedGuild = true; end
+end
+
 function ABGP:VersionOnGuildRosterUpdate()
     if not checkedGuild then
         checkedGuild = true;

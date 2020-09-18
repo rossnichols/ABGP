@@ -87,18 +87,11 @@ ABGP.CommTypes = {
 
     ITEM_DIST_OPENED = { name = "ITEM_DIST_OPENED", id = 5, priority = "ALERT" },
     -- itemLink: item link string
-    -- value: table from ABGP:GetItemValue()
-    -- requiresRoll: bool
     -- slots: array of strings
     -- count: number
 
     ITEM_DIST_SUMMARY = { name = "ITEM_DIST_SUMMARY", id = 23, priority = "ALERT" },
-    -- summary: array with values of tables with following keys
-    --  openedData: table matching ITEM_DIST_OPENED
-    --  countData: table matching ITEM_COUNT
-    --  requestCountData: table matching ITEM_REQUESTCOUNT
-    --  requestReceivedData: table matching ITEM_REQUEST_RECEIVED
-    --  rollData: table matching ITEM_ROLLED
+    -- array of events, each of which is an array of { name, payload }
 
     ITEM_DIST_CLOSED = { name = "ITEM_DIST_CLOSED", id = 6, priority = "ALERT" },
     -- itemLink: item link string
@@ -152,6 +145,7 @@ ABGP.CommTypes = {
 
     BOSS_LOOT = { name = "BOSS_LOOT", id = 14, priority = "ALERT", fireLocally = true },
     -- source: string
+    -- name: string
     -- items: table
 
     REQUEST_ITEM_DATA_SYNC = { name = "REQUEST_ITEM_DATA_SYNC", id = 15, priority = "NORMAL" },
@@ -232,12 +226,13 @@ function ABGP:Serialize(typ, data, legacy)
     else
         local serialized = LibSerialize:Serialize(typ.id, self:GetVersion(), data);
         local compressed = LibDeflate:CompressDeflate(serialized);
+        local encoded = LibDeflate:EncodeForWoWAddonChannel(compressed);
 
-        if #compressed > #serialized + 10 then
-            self:LogDebug("WARNING: compressing payload for %s increased size from %d to %d!",
-                data.type, #serialized, #compressed);
+        if #encoded > #serialized + 10 then
+            self:LogDebug("WARNING: compressing payload for %s increased size from %d to %d (%d before encoding)!",
+                data.type, #serialized, #encoded, #compressed);
         elseif self:GetDebugOpt("DebugComms") then
-            self:LogDebug("Serialized payload %d compressed to %d.", #serialized, #compressed);
+            self:LogDebug("Serialized payload len %d (compressed %d, encoded %d).", #serialized, #compressed, #encoded);
         end
 
         if self:GetDebugOpt() then

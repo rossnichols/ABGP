@@ -111,17 +111,8 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.CommTypes.ITEM_DIST_SUMMARY.name, function(self, event, data, distribution, sender, version)
-        for _, item in ipairs(data) do
-            self:Fire(self.CommTypes.ITEM_DIST_OPENED.name, item.openedData, distribution, sender, version);
-            self:Fire(self.CommTypes.ITEM_COUNT.name, item.countData, distribution, sender, version);
-            self:Fire(self.CommTypes.ITEM_REQUESTCOUNT.name, item.requestCountData, distribution, sender, version);
-
-            if item.requestReceivedData then
-                self:Fire(self.CommTypes.ITEM_REQUEST_RECEIVED.name, item.requestReceivedData, distribution, sender, version);
-            end
-            if item.rollData then
-                self:Fire(self.CommTypes.ITEM_ROLLED.name, item.rollData, distribution, sender, version);
-            end
+        for _, eventData in ipairs(data) do
+            self:Fire(eventData[1], eventData[2], distribution, sender, version);
         end
     end, self);
 
@@ -315,7 +306,8 @@ function ABGP:OnEnable()
         self:DistribOnLeavingWorld();
     end, self);
     self:RegisterEvent("PLAYER_ENTERING_WORLD", function(self, event, ...)
-        self:CommOnEnteringWorld();
+        self:VersionOnEnteringWorld(...);
+        self:CommOnEnteringWorld(...);
         self:HistoryOnEnteringWorld(...);
     end, self);
     self:RegisterEvent("LOADING_SCREEN_ENABLED", function(self, event, ...)
@@ -1185,7 +1177,7 @@ function ABGP:GetTokenItems(itemLink, prerelease)
     return value and value.token;
 end
 
-function ABGP:GetItemEquipSlots(itemLink)
+function ABGP:GetItemEquipSlots(itemLink, onlyOverride)
     local itemId = self:GetItemId(itemLink);
     if itemOverrides[itemId] and itemOverrides[itemId].slots then
         if #itemOverrides[itemId].slots == 1 then
@@ -1199,7 +1191,7 @@ function ABGP:GetItemEquipSlots(itemLink)
             end
             return slots;
         end
-    elseif IsEquippableItem(itemLink) then
+    elseif not onlyOverride and IsEquippableItem(itemLink) then
         local equipLoc = select(9, GetItemInfo(itemLink));
         if equipLoc and itemSlots[equipLoc] then
             return itemSlots[equipLoc];

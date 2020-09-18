@@ -110,9 +110,9 @@ function ABGP:AnnounceOnBossLoot(data)
                 if self:Get("lootShowImmediately") then
                     self:ShowLootFrame(itemLink);
                 end
-                if self:ShouldAutoDistribute() then
-                    self:ShowDistrib(itemLink);
-                end
+            end
+            if self:ShouldAutoDistribute() then
+                self:ShowDistrib(data.items);
             end
         end
     end
@@ -192,7 +192,7 @@ local function SetRequestInfo(elt, itemLink, activeItem)
             [ABGP.RequestTypes.OS] = "OS",
         };
         local text, compact;
-        if activeItem.requiresRoll then
+        if ABGP:ItemRequiresRoll(itemLink, elt:GetUserData("tokenItem")) then
             local roll = activeItem.roll;
             if roll then
                 text = ("Rolled for %s (%s)"):format(ABGP:ColorizeText(requestTypes[requestType]), ABGP:ColorizeText(activeItem.roll));
@@ -583,8 +583,8 @@ function ABGP:ShowTestLoot()
     };
     for _, itemLink in ipairs(itemLinks) do
         self:ShowLootFrame(itemLink);
-        if self:ShouldAutoDistribute() and self:GetDebugOpt() then
-            self:ShowDistrib(itemLink);
-        end
+    end
+    if self:Get("autoDistribute") and self:GetDebugOpt() then
+        self:ShowDistrib(itemLinks);
     end
 end
