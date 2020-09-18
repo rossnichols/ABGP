@@ -460,6 +460,10 @@ function ABGP:DistribOnRoll(sender, roll)
         if elt and not elt.data.roll then
             elt.data.roll = roll;
             currentItem.rolls[elt.data.player] = roll;
+            self:SendComm(self.CommTypes.ITEM_ROLLED, {
+                itemLink = currentItem.itemLink,
+                roll = roll,
+            }, "WHISPER", sender);
             RebuildUI();
         end
     end

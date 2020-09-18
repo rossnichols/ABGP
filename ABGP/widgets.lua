@@ -1833,7 +1833,8 @@ do
             local relatedFrame = frame.elvui and frame.relatedItems or frame.RelatedItems;
             for _, button in pairs(relatedFrame.buttons) do
                 if button:GetItemLink() == itemLink then
-                    RelatedItem_OnClick(button, "OnClick", itemLink);
+                    button.frame:SetChecked(true);
+                    RelatedItem_OnClick(button, "OnClick", itemLink, "LeftButton");
                     break;
                 end
             end

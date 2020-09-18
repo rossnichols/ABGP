@@ -104,9 +104,9 @@ end
 
 function ABGP:RequestOnItemRolled(data, distribution, sender)
     local itemLink = data.itemLink;
-    self:Notify("You rolled %d on %s.", data.roll, itemLink);
 
     if activeItems[itemLink] then
+        self:Notify("You rolled %d on %s.", data.roll, itemLink);
         activeItems[itemLink].roll = data.roll;
     end
 end
