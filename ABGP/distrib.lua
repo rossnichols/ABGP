@@ -173,7 +173,7 @@ local function RebuildUI()
         elt:SetFullWidth(true);
         local lowPrio;
         local active = ABGP:GetActivePlayer(request.player);
-        if active and request.ep and currentItem.value then
+        if active and not active.trial and request.ep and currentItem.value then
             lowPrio = request.ep < ABGP:GetMinEP(active.raidGroup);
         end
         local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.value and currentItem.value.token);

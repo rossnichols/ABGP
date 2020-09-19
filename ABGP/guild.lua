@@ -61,8 +61,8 @@ local rankData = {
     ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, altRaidGroup = ABGP.RaidGroups.SPLITLOW, priority = 2 },
 };
 local epMins = {
-    [ABGP.RaidGroups.RED] = 0,
-    [ABGP.RaidGroups.BLUE] = 0,
+    [ABGP.RaidGroups.RED] = 168.75,
+    [ABGP.RaidGroups.BLUE] = 168.75,
 };
 
 function ABGP:GetMinEP(raidGroup)

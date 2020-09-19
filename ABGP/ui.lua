@@ -340,13 +340,21 @@ local function DrawPriority(container, options)
         function(a, b) return a.gp[ABGP.ItemCategory.SILVER] < b.gp[ABGP.ItemCategory.SILVER], a.gp[ABGP.ItemCategory.SILVER] == b.gp[ABGP.ItemCategory.SILVER]; end,
 
         -- Prio[G]
-        function(a, b) return a.priority[ABGP.ItemCategory.SILVER] < b.priority[ABGP.ItemCategory.SILVER], a.priority[ABGP.ItemCategory.SILVER] == b.priority[ABGP.ItemCategory.SILVER]; end,
+        function(a, b)
+            -- local lowPrioA, lowPrioB = a.ep < ABGP:GetMinEP(a.raidGroup), b.ep < ABGP:GetMinEP(b.raidGroup);
+            -- if lowPrioA ~= lowPrioB then return lowPrioA; end
+            return a.priority[ABGP.ItemCategory.SILVER] < b.priority[ABGP.ItemCategory.SILVER], a.priority[ABGP.ItemCategory.SILVER] == b.priority[ABGP.ItemCategory.SILVER];
+        end,
 
         -- GP[G]
         function(a, b) return a.gp[ABGP.ItemCategory.GOLD] < b.gp[ABGP.ItemCategory.GOLD], a.gp[ABGP.ItemCategory.GOLD] == b.gp[ABGP.ItemCategory.GOLD]; end,
 
         -- Prio[G]
-        function(a, b) return a.priority[ABGP.ItemCategory.GOLD] < b.priority[ABGP.ItemCategory.GOLD], a.priority[ABGP.ItemCategory.GOLD] == b.priority[ABGP.ItemCategory.GOLD]; end,
+        function(a, b)
+            -- local lowPrioA, lowPrioB = a.ep < ABGP:GetMinEP(a.raidGroup), b.ep < ABGP:GetMinEP(b.raidGroup);
+            -- if lowPrioA ~= lowPrioB then return lowPrioA; end
+            return a.priority[ABGP.ItemCategory.GOLD] < b.priority[ABGP.ItemCategory.GOLD], a.priority[ABGP.ItemCategory.GOLD] == b.priority[ABGP.ItemCategory.GOLD];
+        end,
     };
 
     local sortCol = container:GetUserData("sortCol");
@@ -370,7 +378,7 @@ local function DrawPriority(container, options)
         if i > 1 and not select(2, sorts[sortCol](data, filtered[i - 1])) then
             order = i;
         end
-        local lowPrio = data.ep and data.ep < ABGP:GetMinEP(data.raidGroup);
+        local lowPrio = not data.trial and data.ep < ABGP:GetMinEP(data.raidGroup);
         elt:SetData(data, order, important, lowPrio);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);
