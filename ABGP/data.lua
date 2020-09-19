@@ -272,7 +272,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     local history = _G.ABGP_Data2.history.data;
 
     if data.oldHistoryId then
-        for i, entry in ipairs(history) do
+        for _, entry in ipairs(history) do
             if entry[self.ItemHistoryIndex.ID] == data.oldHistoryId then
                 -- This is the entry being replaced.
                 self:HistoryDeleteEntry(entry, data.updateId);

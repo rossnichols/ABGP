@@ -420,7 +420,7 @@ function ABGP:HistoryOnSync(data, distribution, sender, version)
         self:RebuildIds(data.ids, now);
         local merge = {};
         local sendCount, requestCount = 0, 0;
-        for i, entry in ipairs(history) do
+        for _, entry in ipairs(history) do
             local id = entry[self.ItemHistoryIndex.ID];
             local _, date = self:ParseHistoryId(id);
             if now - date > syncThreshold then break; end

@@ -447,7 +447,7 @@ function ABGP:DumpCommMonitor(toChat)
 
     local totals = {};
     local prefixes = {};
-    for i, slot in pairs(commMonitor) do
+    for _, slot in pairs(commMonitor) do
         for prefix, data in pairs(slot) do
             if not totals[prefix] then
                 totals[prefix] = { count = 0, len = 0 };
@@ -464,7 +464,7 @@ function ABGP:DumpCommMonitor(toChat)
 
     if #prefixes > 0 then
         self[logFn](self, "COMM", " Traffic in the last %d seconds:", bufferLength);
-        for i, prefix in ipairs(prefixes) do
+        for _, prefix in ipairs(prefixes) do
             self[logFn](self, "COMM", "  %s: %d bytes over %d msgs", prefix, totals[prefix].len, totals[prefix].count);
         end
     else

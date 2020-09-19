@@ -309,7 +309,7 @@ local function DrawPriority(container, options)
 
     local priority = ABGP.Priorities;
     local filtered = {};
-    for i, data in ipairs(priority) do
+    for _, data in ipairs(priority) do
         local inRaidGroup = not currentRaidGroup or ABGP:IsInRaidGroup(data, currentRaidGroup);
         local isGrouped = not onlyGrouped or UnitExists(data.player);
         if allowedClasses[data.class] and inRaidGroup and isGrouped then
@@ -625,14 +625,14 @@ local function DrawItems(container, options)
     local searchText = search:GetText():lower();
 
     if priSelector:ShowingAll() and sourceSelector:ShowingAll() and not onlyUsable and not onlyFaved and searchText == "" then
-        for i, item in ipairs(items) do
+        for _, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
                 table.insert(filtered, item);
             end
         end
     else
         local exact = searchText:match("^\"(.+)\"$");
-        for i, item in ipairs(items) do
+        for _, item in ipairs(items) do
             if not item[ABGP.ItemDataIndex.RELATED] then
                 local allowedBySource = allowedSources[item[ABGP.ItemDataIndex.RAID]];
                 if not allowedBySource then
@@ -1789,7 +1789,7 @@ local function DrawAuditLog(container, options)
     local entries = _G.ABGP_Data2.history.data;
     local deletedEntries = {};
     local deleteReferences = {};
-    for i, entry in ipairs(entries) do
+    for _, entry in ipairs(entries) do
         local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
         local id = entry[ABGP.ItemHistoryIndex.ID];
 

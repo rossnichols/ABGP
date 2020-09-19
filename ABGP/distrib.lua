@@ -268,7 +268,7 @@ local function RebuildUI()
     local itemLink = currentItem.itemLink;
     local tabs = window:GetUserData("tabs");
     local tabGroup = window:GetUserData("tabGroup");
-    for i, tab in ipairs(tabs) do
+    for _, tab in ipairs(tabs) do
         if tab.value == itemLink then
             tab.text = (currentItem.totalCount == 1)
                 and ABGP:GetItemName(itemLink)
@@ -654,7 +654,7 @@ function ABGP:DistribOnStateSync(data, distribution, sender)
     for _, item in pairs(activeItems) do
         local total, main, off = GetRequestCounts(item.requests);
         local senderRequest;
-        for i, request in ipairs(item.requests) do
+        for _, request in ipairs(item.requests) do
             if request.player == sender then
                 senderRequest = request;
                 break;

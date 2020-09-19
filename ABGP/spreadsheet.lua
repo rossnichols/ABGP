@@ -243,7 +243,7 @@ function ABGP:ImportItems(prerelease)
     local importFunc = function(widget, event)
         local success = ImportSpreadsheetText(widget:GetText(), items, itemMapping, function(row)
             row[ABGP.ItemDataIndex.PRIORITY] = {};
-            for k, v in pairs(row) do
+            for k in pairs(row) do
                 if itemPriorities[k] then
                     table.insert(row[ABGP.ItemDataIndex.PRIORITY], itemPriorities[k]);
                     row[k] = nil;
@@ -306,7 +306,7 @@ function ABGP:ExportItems(prerelease)
     end
 
     local text = ("Raid\tBoss\tItem\tCategory\tGP\t%s\tNotes\n"):format(table.concat(sortedPriorities, "\t"));
-    for i, item in ipairs(items) do
+    for _, item in ipairs(items) do
         if item[self.ItemDataIndex.RELATED] then
             text = text .. ("%s\t%s\t%s\t%s\t%s\t%s\t%s\n"):format(
                 item[self.ItemDataIndex.RAID],
