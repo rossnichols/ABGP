@@ -39,6 +39,7 @@ function ABGP:InitOptions()
             raidMules = "",
             syncEnabled = true,
             syncVerbose = true,
+            strictOnTime = false,
             minimap = {
                 hide = false,
             },
@@ -468,9 +469,17 @@ function ABGP:InitOptions()
                             get = function(info) return self.db.char.autoDistribute; end,
                             set = function(info, v) self.db.char.autoDistribute = v; end,
                         },
+                        strictOnTime = {
+                            name = "Strict On-Time",
+                            order = 7,
+                            desc = "Only award the on-time bonus to raid members that are online and in your zone. Standby is unaffected.",
+                            type = "toggle",
+                            get = function(info) return self.db.char.strictOnTime; end,
+                            set = function(info, v) self.db.char.strictOnTime = v; end,
+                        },
                         raidDisenchanters = {
                             name = "Disenchanters",
-                            order = 7,
+                            order = 8,
                             desc = "Specify a comma-separated list of players, in priority order, who are the raid's disenchanters. You can ML items to this person in the distribution window or by alt+ctrl+clicking it in the loot window.",
                             type = "input",
                             get = function(info) return self.db.char.raidDisenchanters; end,
@@ -478,7 +487,7 @@ function ABGP:InitOptions()
                         },
                         raidMules = {
                             name = "Mules",
-                            order = 7,
+                            order = 9,
                             desc = "Specify a comma-separated list of players, in priority order, who are the raid's mules. You can ML items to this person in the distribution window or by alt+shift+clicking it in the loot window.",
                             type = "input",
                             get = function(info) return self.db.char.raidMules; end,

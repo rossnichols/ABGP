@@ -7,6 +7,8 @@ local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
 local GetAutoCompleteResults = GetAutoCompleteResults;
+local GetRealZoneText = GetRealZoneText;
+local GetRaidRosterInfo = GetRaidRosterInfo;
 local tContains = tContains;
 local AUTOCOMPLETE_FLAG_IN_GROUP = AUTOCOMPLETE_FLAG_IN_GROUP;
 local pairs = pairs;
@@ -16,6 +18,7 @@ local table = table;
 local date = date;
 local next = next;
 local max = max;
+local select = select;
 
 _G.ABGP_RaidInfo3 = {};
 
@@ -363,7 +366,7 @@ local function GetTickServerTime()
     return nextTime;
 end
 
-local function AwardEP(raid, category, extra)
+local function AwardEP(raid, category, extra, strict)
     ABGP:Notify("Applying EP tick to the current raid and standby (%s)!", tickCategoryNames[category]);
     local tick = { time = GetTickServerTime(), category = category, extra = extra };
     raid.ticks[tick.time] = tick;
@@ -375,6 +378,8 @@ local function AwardEP(raid, category, extra)
         if groupSize == 0 then
             AwardPlayerEP(raid, UnitName("player"), tick);
         else
+            local myZone = GetRealZoneText();
+            local offline, unzoned = {}, {};
             for i = 1, groupSize do
                 local unit = "player";
                 if IsInRaid() then
@@ -384,7 +389,36 @@ local function AwardEP(raid, category, extra)
                 end
 
                 local player = UnitName(unit);
-                AwardPlayerEP(raid, player, tick);
+                local zone, online = select(7, GetRaidRosterInfo(i));
+                zone = zone or "(Unknown zone)";
+
+                local shouldAward = true;
+                if not online or zone ~= myZone then
+                    table.insert(online and unzoned or offline, { player = player, zone = zone });
+                    shouldAward = not strict;
+                end
+
+                if shouldAward then
+                    AwardPlayerEP(raid, player, tick);
+                end
+            end
+
+            local sortFunc = function(a, b) return a.player < b.player; end
+            table.sort(offline, sortFunc);
+            table.sort(unzoned, sortFunc);
+
+            if #offline > 0 then
+                ABGP:Notify("The following players were offline (EP %s awarded):", strict and ABGP:ColorizeText("not") or "still");
+                for _, data in ipairs(offline) do
+                    ABGP:Notify(ABGP:ColorizeName(data.player));
+                end
+            end
+
+            if #unzoned > 0 then
+                ABGP:Notify("The following players were not zoned in (EP %s awarded):", strict and ABGP:ColorizeText("not") or "still");
+                for _, data in ipairs(unzoned) do
+                    ABGP:Notify("%s (%s)", ABGP:ColorizeName(data.player), data.zone);
+                end
             end
         end
 
@@ -603,7 +637,7 @@ function ABGP:StartRaid()
         _G.ABGP_RaidInfo3.currentRaid = windowRaid;
         EnsureAwardsEntries(windowRaid);
         self:Notify("Starting a new raid!");
-        AwardEP(windowRaid, tickCategories.ONTIME);
+        AwardEP(windowRaid, tickCategories.ONTIME, nil, self:Get("strictOnTime"));
         window:Hide();
         self:UpdateRaid();
     end);
