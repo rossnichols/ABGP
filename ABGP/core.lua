@@ -136,6 +136,7 @@ function ABGP:OnEnable()
 
     self:SetCallback(self.CommTypes.ITEM_REQUEST_RECEIVED.name, function(self, event, data, distribution, sender, version)
         self:RequestOnItemRequestReceived(data, distribution, sender, version);
+        self:AnnounceOnItemRequestReceived(data, distribution, sender, version);
     end, self);
 
     self:SetCallback(self.CommTypes.ITEM_REQUEST_REJECTED.name, function(self, event, data, distribution, sender, version)

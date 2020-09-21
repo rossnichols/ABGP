@@ -1904,9 +1904,11 @@ do
             frame.greedbutt:SetAlpha(0);
             frame.greedbutt:Disable();
             frame.greedbutt:SetWidth(1);
+            frame.greedbutt:SetScript("OnEnter", nil);
             frame.pass:GetParent():SetAlpha(0);
             frame.pass:GetParent():Disable();
             frame.pass:GetParent():SetWidth(1);
+            frame.pass:GetParent():SetScript("OnEnter", nil);
 
             -- Add count fontstring
             local count = frame.button:CreateFontString(nil, 'OVERLAY');

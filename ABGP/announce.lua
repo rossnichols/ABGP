@@ -205,6 +205,10 @@ local function SetRequestInfo(elt, itemLink, activeItem)
             text = ("Requested for %s"):format(ABGP:ColorizeText(requestTypes[requestType]));
             compact = requestTypesCompact[requestType];
         end
+        if not activeItem.receivedAck then
+            text = text .. "...";
+            compact = "|cffffffff" .. compact;
+        end
         elt:SetSecondaryText(text, compact);
     else
         elt:SetUserData("requested", false);
@@ -522,48 +526,39 @@ function ABGP:AnnounceOnItemTrashed(data, distribution, sender)
     elt:SetUserData("trashed", true);
 end
 
-function ABGP:AnnounceOnItemRolled(data, distribution, sender)
-    local elt = GetLootFrame(data.itemLink);
+local function UpdateLootFrame(itemLink)
+    local elt = GetLootFrame(itemLink);
     if not elt then return; end
 
-    -- Since this message is delivered from the distributor, the item may no longer
-    -- be active by the time we receive it.
-    local activeItem = self:GetActiveItem(data.itemLink);
+    local activeItem = ABGP:GetActiveItem(itemLink);
+
     if activeItem then
-        SetRequestInfo(elt, data.itemLink, activeItem);
+        SetRequestInfo(elt, itemLink, activeItem);
     end
 end
 
-function ABGP:AnnounceOnItemRequested(data)
-    local elt = GetLootFrame(data.itemLink);
-    if not elt then return; end
+function ABGP:AnnounceOnItemRolled(data, distribution, sender)
+    UpdateLootFrame(data.itemLink);
+end
 
-    local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, data.itemLink, activeItem);
+function ABGP:AnnounceOnItemRequested(data)
+    UpdateLootFrame(data.itemLink);
 end
 
 function ABGP:AnnounceOnItemPassed(data)
-    local elt = GetLootFrame(data.itemLink);
-    if not elt then return; end
-
-    local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, data.itemLink, activeItem);
+    UpdateLootFrame(data.itemLink);
 end
 
 function ABGP:AnnounceOnItemRequestCount(data, distribution, sender)
-    local elt = GetLootFrame(data.itemLink);
-    if not elt then return; end
+    UpdateLootFrame(data.itemLink);
+end
 
-    local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, data.itemLink, activeItem);
+function ABGP:AnnounceOnItemRequestReceived(data, distribution, sender)
+    UpdateLootFrame(data.itemLink);
 end
 
 function ABGP:AnnounceOnItemCount(data, distribution, sender)
-    local elt = GetLootFrame(data.itemLink);
-    if not elt then return; end
-
-    local activeItem = self:GetActiveItem(data.itemLink);
-    SetRequestInfo(elt, data.itemLink, activeItem);
+    UpdateLootFrame(data.itemLink);
 end
 
 function ABGP:AnnounceOnItemFavorited(data)

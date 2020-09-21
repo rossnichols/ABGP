@@ -149,6 +149,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         slots = data.slots,
         roll = nil,
         sentComms = false,
+        receivedAck = false,
         sentRequestType = nil,
         count = data.count or 1,
         requestCount = 0,
@@ -283,7 +284,9 @@ function ABGP:RequestOnItemRequestReceived(data, distribution, sender)
 
     self:Notify("Your %s %s has been received.", data.requestType and "request for" or "pass on", itemLink);
 
-    if  not activeItems[itemLink].sentComms then
+    activeItems[itemLink].receivedAck = true;
+
+    if not activeItems[itemLink].sentComms then
         -- We didn't realize we sent this request (reloaded UI, perhaps).
         activeItems[itemLink].sentComms = true;
         activeItems[itemLink].sentRequestType = data.requestType;
@@ -309,6 +312,7 @@ function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
             self:Notify("Reason: %s", data.reason);
         end
         activeItems[itemLink].sentComms = true;
+        activeItems[itemLink].receivedAck = true;
         activeItems[itemLink].sentRequestType = nil;
 
         self:Fire(self.InternalEvents.ITEM_PASSED, {
@@ -385,6 +389,7 @@ function ABGP:RequestItem(itemLink, selected, requestType, notes)
     end
 
     activeItems[itemLink].sentComms = true;
+    activeItems[itemLink].receivedAck = false;
     activeItems[itemLink].sentRequestType = requestType;
 
     self:Fire(self.InternalEvents.ITEM_REQUESTED, data);
@@ -411,6 +416,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 
     self:Notify("Passing on %s%s.", itemLink, faveRemove);
     activeItems[itemLink].sentComms = true;
+    activeItems[itemLink].receivedAck = false;
     activeItems[itemLink].sentRequestType = nil;
 
     self:Fire(self.InternalEvents.ITEM_PASSED, data);
