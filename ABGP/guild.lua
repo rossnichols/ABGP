@@ -61,12 +61,35 @@ local rankData = {
     ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, altRaidGroup = ABGP.RaidGroups.SPLITLOW, priority = 2 },
 };
 local epMins = {
-    [ABGP.RaidGroups.RED] = 168.75,
-    [ABGP.RaidGroups.BLUE] = 168.75,
+    [ABGP.RaidGroups.RED] = 0,
+    [ABGP.RaidGroups.BLUE] = 0,
 };
 
 function ABGP:GetMinEP(raidGroup)
     return self:IsPrivileged() and epMins[raidGroup] or 0;
+end
+
+function ABGP:GuildOnActivePlayersRefreshed()
+    local epDecay = self:GetEPDecayInfo();
+    epDecay = (100 - epDecay) / 100;
+    epMins = {
+        [ABGP.RaidGroups.RED] = 0,
+        [ABGP.RaidGroups.BLUE] = 0,
+    };
+
+    -- Find the max EP currently assigned in each raid group.
+    for player, epgp in pairs(self:GetActivePlayers()) do
+        epMins[epgp.raidGroup] = math.max(epMins[epgp.raidGroup], epgp.ep);
+    end
+
+    -- Decay the found max EPs twice to determine the min threshold.
+    for raidGroup, epMax in pairs(epMins) do
+        epMins[raidGroup] = epMax * epDecay * epDecay;
+    end
+end
+
+function ABGP:GetEPDecayInfo()
+    return 25, 0;
 end
 
 function ABGP:GetGPDecayInfo()

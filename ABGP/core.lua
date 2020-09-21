@@ -211,6 +211,7 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
+        self:GuildOnActivePlayersRefreshed();
         self:DistribOnActivePlayersRefreshed();
         self:HistoryOnActivePlayersRefreshed();
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
