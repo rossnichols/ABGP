@@ -467,12 +467,14 @@ function ABGP:HasCompleteHistory(shouldPrint)
     local history = self:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
     for category in pairs(self.ItemCategory) do
         for player, epgp in pairs(self:GetActivePlayers()) do
-            local calculated = self:CalculateCurrentGP(player, category, history);
-            if abs(calculated - epgp.gp[category]) > 0.0015 then
-                hasComplete = false;
-                if shouldPrint then
-                    self:Notify("Incomplete %s history for %s: expected %.3f, calculated %.3f.",
-                        self.ItemCategoryNames[category], self:ColorizeName(player), epgp.gp[category], calculated);
+            if not epgp.trial then
+                local calculated = self:CalculateCurrentGP(player, category, history);
+                if abs(calculated - epgp.gp[category]) > 0.0015 then
+                    hasComplete = false;
+                    if shouldPrint then
+                        self:Notify("Incomplete %s history for %s: expected %.3f, calculated %.3f.",
+                            self.ItemCategoryNames[category], self:ColorizeName(player), epgp.gp[category], calculated);
+                    end
                 end
             end
         end
