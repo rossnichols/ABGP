@@ -701,7 +701,7 @@ function ABGP:ShowAddPlayerWindow()
         local addTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 23, min = 59, sec = 58 });
         if addTime > now then return true; end
     end);
-    dateEdit:SetValue(date("%m/%d/%y", GetServerTime()));
+    dateEdit:SetValue(date("%m/%d/%y", GetServerTime() - 24 * 60 * 60));
     playerContainer:AddChild(dateEdit);
     self:AddWidgetTooltip(dateEdit, "Enter the date of their entry.");
 
@@ -815,11 +815,6 @@ function ABGP:ShowAddPlayerWindow()
         local raidGroup = self:GetRaidGroup(rank);
         if not raidGroup then
             label:SetText("The player's guild rank is invalid!");
-            return true;
-        end
-
-        if self:GetActivePlayer(player) then
-            label:SetText("The player is already active!");
             return true;
         end
 

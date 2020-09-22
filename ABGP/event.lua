@@ -848,22 +848,10 @@ function ABGP:UpdateRaid(windowRaid)
         stop:SetFullWidth(true);
         stop:SetText("Stop");
         stop:SetCallback("OnClick", function(widget)
-            _G.ABGP_RaidInfo3.pastRaids = _G.ABGP_RaidInfo3.pastRaids or {};
-            local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
-            _G.ABGP_RaidInfo3.currentRaid = nil;
-
-            for player in pairs(currentRaid.players) do
-                if CountPlayerTicks(currentRaid, player) == 0 then currentRaid.players[player] = nil; end
-            end
-            if next(currentRaid.players) then
-                self:Notify("Stopping the raid!");
-                currentRaid.stopTime = GetServerTime();
-                table.insert(_G.ABGP_RaidInfo3.pastRaids, 1, currentRaid);
-                window:Hide();
-                self:UpdateRaid(windowRaid);
+            if self:HasActiveItems() then
+                _G.StaticPopup_Show("ABGP_STOP_RAID");
             else
-                self:Notify("No players with ticks in this raid. It has been deleted.");
-                window:Hide();
+                self:StopRaid();
             end
         end);
         container:AddChild(stop);
@@ -899,6 +887,27 @@ function ABGP:UpdateRaid(windowRaid)
     activeWindow = window;
     window.frame:Raise();
     RefreshUI();
+end
+
+function ABGP:StopRaid()
+    _G.ABGP_RaidInfo3.pastRaids = _G.ABGP_RaidInfo3.pastRaids or {};
+    local currentRaid = _G.ABGP_RaidInfo3.currentRaid;
+    _G.ABGP_RaidInfo3.currentRaid = nil;
+    if not currentRaid then return; end
+
+    for player in pairs(currentRaid.players) do
+        if CountPlayerTicks(currentRaid, player) == 0 then currentRaid.players[player] = nil; end
+    end
+    if next(currentRaid.players) then
+        self:Notify("Stopping the raid!");
+        currentRaid.stopTime = GetServerTime();
+        table.insert(_G.ABGP_RaidInfo3.pastRaids, 1, currentRaid);
+        if activeWindow then activeWindow:Hide(); end
+        self:UpdateRaid(currentRaid);
+    else
+        self:Notify("No players with ticks in this raid. It has been deleted.");
+        if activeWindow then activeWindow:Hide(); end
+    end
 end
 
 function ABGP:DeleteRaid(raid)
@@ -1067,5 +1076,14 @@ StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.Sta
     OnAccept = function(self, data)
         RemovePlayer(data.raid, data.player);
         RefreshUI();
+    end,
+});
+StaticPopupDialogs["ABGP_STOP_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+    text = "There are still items being distributed! Really stop the raid?",
+    button1 = "Yes",
+    button2 = "No",
+    showAlert = true,
+    OnAccept = function(self, data)
+        ABGP:StopRaid();
     end,
 });
