@@ -79,7 +79,9 @@ function ABGP:GuildOnActivePlayersRefreshed()
 
     -- Find the max EP currently assigned in each raid group.
     for player, epgp in pairs(self:GetActivePlayers()) do
-        epMins[epgp.raidGroup] = math.max(epMins[epgp.raidGroup], epgp.ep);
+        if epgp.raidGroup then
+            epMins[epgp.raidGroup] = math.max(epMins[epgp.raidGroup], epgp.ep);
+        end
     end
 
     -- Decay the found max EPs twice to determine the min threshold.
