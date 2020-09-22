@@ -1422,6 +1422,8 @@ local function DrawItemHistory(container, options)
                                 awarded:SetText(entryDate);
                                 container:AddChild(awarded);
 
+                                local processItemUpdate;
+
                                 local cost, catSelector;
                                 local playerEdit = AceGUI:Create("ABGP_EditBox");
                                 playerEdit:SetWidth(150);
@@ -1436,6 +1438,7 @@ local function DrawItemHistory(container, options)
                                         return true;
                                     end
                                     playerEdit:SetValue(player);
+                                    processItemUpdate();
                                 end);
                                 container:AddChild(playerEdit);
                                 ABGP:AddWidgetTooltip(playerEdit, "Enter the player receiving the award.");
@@ -1457,6 +1460,7 @@ local function DrawItemHistory(container, options)
                                         return true;
                                     end
                                     cost:SetValue(gp);
+                                    processItemUpdate();
                                 end);
                                 costContainer:AddChild(cost);
                                 ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this award.");
@@ -1465,6 +1469,7 @@ local function DrawItemHistory(container, options)
                                 catSelector:SetFullWidth(true);
                                 catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
                                 catSelector:SetValue(arg1[ABGP.ItemHistoryIndex.CATEGORY]);
+                                catSelector:SetCallback("OnValueChanged", function() processItemUpdate(); end);
                                 costContainer:AddChild(catSelector);
                                 ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this award.");
 
@@ -1496,6 +1501,19 @@ local function DrawItemHistory(container, options)
                                     defaultWidth = 300,
                                     defaultHeight = container.frame:GetHeight() + 57,
                                 });
+
+                                processItemUpdate = function()
+                                    local player = playerEdit:GetValue();
+                                    local gp = cost:GetValue();
+                                    local cat = catSelector:GetValue();
+
+                                    local hasChange =
+                                        player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
+                                        gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
+                                        cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY];
+                                    done:SetDisabled(not hasChange);
+                                end
+                                processItemUpdate();
                             end,
                             arg1 = data,
                             notCheckable = true
