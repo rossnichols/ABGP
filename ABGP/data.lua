@@ -370,10 +370,15 @@ function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
-function ABGP:AddTrial(player, raidGroup)
+function ABGP:AddTrial(player, raidGroup, proxy)
     local raidGroupName = self.RaidGroupNames[raidGroup];
-    self:Notify("Adding %s as a trial for the %s raid group.", self:ColorizeName(player), raidGroupName);
-    _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP Raid Group: %s"):format(raidGroupName));
+    if proxy then
+        self:Notify("Adding %s (proxied by %s) as a trial for the %s raid group.", self:ColorizeName(player), self:ColorizeName(proxy), raidGroupName);
+        _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP RG:%s P:%s"):format(raidGroupName, proxy));
+    else
+        self:Notify("Adding %s as a trial for the %s raid group.", self:ColorizeName(player), raidGroupName);
+        _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP Raid Group: %s"):format(raidGroupName));
+    end
 end
 
 function ABGP:ProcessItemHistory(gpHistory, includeNonItems)

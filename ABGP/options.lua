@@ -558,6 +558,12 @@ function ABGP:ShowAddTrialWindow()
     playerContainer:AddChild(playerEdit);
     self:AddWidgetTooltip(playerEdit, "Enter the player being added as a trial.");
 
+    local proxyEdit = AceGUI:Create("ABGP_EditBox");
+    proxyEdit:SetLabel("Proxy");
+    proxyEdit:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
+    playerContainer:AddChild(proxyEdit);
+    self:AddWidgetTooltip(proxyEdit, "If the player is not in the guild, enter the name of the character in the guild that will serve as their proxy.");
+
     local currentRaidGroup = self:GetPreferredRaidGroup();
     local raidGroups, raidGroupNames = {}, {};
     for i, v in ipairs(ABGP.RaidGroupsSorted) do raidGroups[i] = v; end
@@ -583,7 +589,8 @@ function ABGP:ShowAddTrialWindow()
     done:SetUserData("cell", { align = "CENTERRIGHT" });
     done:SetCallback("OnClick", function(widget, event)
         local player = playerEdit:GetValue();
-        self:AddTrial(player, currentRaidGroup);
+        local proxy = proxyEdit:GetValue();
+        self:AddTrial(player, currentRaidGroup, proxy);
         window:Hide();
     end);
     container:AddChild(done);
@@ -593,12 +600,26 @@ function ABGP:ShowAddTrialWindow()
         groupSelector:SetDisabled(true);
 
         local player = playerEdit:GetValue();
+        local proxy = proxyEdit:GetValue();
         player = player ~= "" and player or nil;
+        proxy = proxy ~= "" and proxy or nil;
         if not player then
             label:SetText("Enter the player being added as a trial.");
             return;
-        elseif not self:GetGuildInfo(player) then
-            label:SetText("Couldn't find the player in the guild!");
+        elseif self:GetGuildInfo(player) then
+            -- Standard case: player has guild info
+            if proxy then
+                label:SetText("Players in the guild shouldn't have a proxy!");
+                return true;
+            end
+        elseif proxy and self:GetGuildInfo(proxy) then
+            -- Set the player to the proxy for calculating raid groups.
+            player = proxy;
+        elseif player or proxy then
+            label:SetText("Couldn't find the player/proxy in the guild!");
+            return true;
+        else
+            label:SetText("Enter the player being added as a trial.");
             return true;
         end
 
@@ -621,6 +642,7 @@ function ABGP:ShowAddTrialWindow()
         groupSelector:SetDisabled(false);
     end
     playerEdit:SetCallback("OnValueChanged", processPlayer);
+    proxyEdit:SetCallback("OnValueChanged", processPlayer);
     processPlayer();
 
     local height = container.frame:GetHeight() + 57;
@@ -805,25 +827,11 @@ function ABGP:ShowAddPlayerWindow()
         gpsEdit:SetDisabled(false);
         gpgEdit:SetDisabled(false);
         playerRank:SetText(rank);
-        label:SetText(("Raid Group: %s"):format(self.RaidGroupNames[raidGroup]));
+        label:SetText(("Class: %s, Raid Group: %s"):format(guildInfo[5], self.RaidGroupNames[raidGroup]));
 
-        local players = self:GetActivePlayers();
-        local epSum, gpsSum, gpgSum, count = 0, 0, 0, 0;
-        for _, active in pairs(players) do
-            if not active.trial and active.raidGroup == raidGroup and active.ep >= self:GetMinEP(active.raidGroup) then
-                count = count + 1;
-                epSum = epSum + active.ep;
-                gpsSum = gpsSum + active.gp[self.ItemCategory.SILVER];
-                gpgSum = gpgSum + active.gp[self.ItemCategory.GOLD];
-            end
-        end
-
-        local epMult, gpMult = self:GetEPGPMultipliers();
-        self:Notify("EPGP calculated by averaging %d active players in raid group %s and multiplying by %.2f (EP), %.2f (GP).",
-            count, self.RaidGroupNames[raidGroup], epMult, gpMult);
-        epEdit:SetValue(math.floor((epMult * epSum / count) + 0.5));
-        gpsEdit:SetValue(math.floor((gpMult * gpsSum / count) + 0.5));
-        gpgEdit:SetValue(math.floor((gpMult * gpgSum / count) + 0.5));
+        epEdit:SetValue(0);
+        gpsEdit:SetValue(0);
+        gpgEdit:SetValue(0);
         done:SetDisabled(false);
     end
     playerEdit:SetCallback("OnValueChanged", processPlayer);
