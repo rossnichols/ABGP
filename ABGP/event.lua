@@ -408,17 +408,21 @@ local function AwardEP(raid, category, extra, strict)
             table.sort(unzoned, sortFunc);
 
             if #offline > 0 then
+                local offlineText = {};
                 ABGP:Notify("The following players were offline (EP %s awarded):", strict and ABGP:ColorizeText("not") or "still");
                 for _, data in ipairs(offline) do
-                    ABGP:Notify(ABGP:ColorizeName(data.player));
+                    table.insert(offlineText, ABGP:ColorizeName(data.player));
                 end
+                ABGP:Notify(table.concat(offlineText, ", "));
             end
 
             if #unzoned > 0 then
+                local unzonedText = {};
                 ABGP:Notify("The following players were not zoned in (EP %s awarded):", strict and ABGP:ColorizeText("not") or "still");
                 for _, data in ipairs(unzoned) do
-                    ABGP:Notify("%s (%s)", ABGP:ColorizeName(data.player), data.zone);
+                    table.insert(unzonedText, ("%s (%s)"):format(ABGP:ColorizeName(data.player), data.zone));
                 end
+                ABGP:Notify(table.concat(unzonedText, ", "));
             end
         end
 
