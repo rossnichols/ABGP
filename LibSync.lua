@@ -56,6 +56,17 @@ function LibHistorySync:GetInvalidBaseline()
     return self._invalidBaseline
 end
 
+local function Hash(value)
+    -- An implementation of the djb2 hash algorithm.
+    -- See http://www.cs.yorku.ca/~oz/hash.html.
+
+    local h = 5381
+    for i = 1, #value do
+        h = bit.band((33 * h + value:byte(i)), 4294967295)
+    end
+    return h
+end
+
 function LibHistorySync:_SyncWorker(controller, syncId, token, now, target)
     local history = controller:GetHistory(syncId)
     local baseline = controller:GetBaseline(syncId)
@@ -89,6 +100,26 @@ function LibHistorySync:_SyncWorker(controller, syncId, token, now, target)
     end
     commData.archivedCount = #history - syncCount
     self:_SendComm("HISTORY_SYNC", prepared, target)
+end
+
+function LibHistorySync:_BuildSyncHashData(controller, history, baseline, now)
+    local recentHash = 0
+    local archivedHash = 0
+    local syncThreshold = controller:GetSyncThreshold()
+    local ids = {}
+
+    if baseline == self._invalidBaseline then return recentHash, archivedHash end
+
+    for _, entry in ipairs(history) do
+        local id, entryDate = controller:GetEntryInfo(entry)
+        if now - entryDate > syncThreshold then
+            archivedHash = bit.bxor(archivedHash, Hash(id))
+        else
+            recentHash = bit.bxor(recentHash, Hash(id))
+        end
+    end
+
+    return recentHash, archivedHash
 end
 
 function LibHistorySync:_HISTORY_SYNC(controller, data, sender)
