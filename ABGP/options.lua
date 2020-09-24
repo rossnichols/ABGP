@@ -480,7 +480,7 @@ function ABGP:InitOptions()
                         raidDisenchanters = {
                             name = "Disenchanters",
                             order = 8,
-                            desc = "Specify a comma-separated list of players, in priority order, who are the raid's disenchanters. You can ML items to this person in the distribution window or by alt+ctrl+clicking it in the loot window.",
+                            desc = "Specify a comma-separated list of players, in priority order, who are the raid's disenchanters. You can ML items to this person in the distribution window or by alt+clicking the item.",
                             type = "input",
                             get = function(info) return self.db.char.raidDisenchanters; end,
                             set = function(info, v) self.db.char.raidDisenchanters = v; end,
@@ -488,7 +488,7 @@ function ABGP:InitOptions()
                         raidMules = {
                             name = "Mules",
                             order = 9,
-                            desc = "Specify a comma-separated list of players, in priority order, who are the raid's mules. You can ML items to this person in the distribution window or by alt+shift+clicking it in the loot window.",
+                            desc = "Specify a comma-separated list of players, in priority order, who are the raid's mules. You can ML items to this person by alt+clicking the item.",
                             type = "input",
                             get = function(info) return self.db.char.raidMules; end,
                             set = function(info, v) self.db.char.raidMules = v; end,

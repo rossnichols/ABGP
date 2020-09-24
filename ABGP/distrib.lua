@@ -1311,37 +1311,75 @@ function ABGP:GetRaidMule()
 end
 
 local function DistributeLoot(itemLink)
-    if IsShiftKeyDown() then
-        if IsMasterLooter() then
-            local mule, hasCandidates = ABGP:GetRaidMule();
-            if mule then
-                ABGP:GiveItemViaML(itemLink, mule);
-            else
-                ABGP:Notify("%s! Update the setting in the options window.",
-                    hasCandidates and "None of your configured mules are in the raid" or "You don't have a raid mule configured");
-            end
+    local context = {
+        {
+            text = ("%sABGP|r Item Options"):format(ABGP.Color),
+            isTitle = true,
+            notCheckable = true,
+        },
+        {
+            text = "Distribute item",
+            func = function(self, arg1)
+                if ABGP:GetDebugOpt("TestLootFrame") then
+                    ABGP:ShowLootFrame(arg1);
+                else
+                    ABGP:ShowDistrib(arg1);
+                end
+            end,
+            arg1 = itemLink,
+            notCheckable = true
+        },
+    };
+    if IsMasterLooter() then
+        local mule, hasCandidates = ABGP:GetRaidMule();
+        if mule then
+            table.insert(context, {
+                text = "Give to raid mule",
+                func = function(self, arg1, arg2)
+                    ABGP:GiveItemViaML(arg1, arg2);
+                end,
+                arg1 = itemLink,
+                arg2 = mule,
+                notCheckable = true
+            });
         else
-            ABGP:Notify("Can't send to raid mule - you're not the master looter!");
+            table.insert(context, {
+                text = "No raid mule",
+                fontObject = "GameFontRedSmall",
+                func = function(self, arg1)
+                    ABGP:Notify("%s! Update the setting in the options window.",
+                        arg1 and "None of your configured mules are in the raid" or "You don't have a raid mules configured");
+                end,
+                arg1 = hasCandidates,
+                notCheckable = true
+            });
         end
-    elseif IsControlKeyDown() then
-        if IsMasterLooter() then
-            local disenchanter, hasCandidates = ABGP:GetRaidDisenchanter();
-            if disenchanter then
-                ABGP:GiveItemViaML(itemLink, disenchanter);
-            else
-                ABGP:Notify("%s! Update the setting in the options window.",
-                    hasCandidates and "None of your configured disenchanters are in the raid" or "You don't have a raid disenchanter configured");
-            end
+        local disenchanter, hasCandidates = ABGP:GetRaidDisenchanter();
+        if disenchanter then
+            table.insert(context, {
+                text = "Give to raid disenchanter",
+                func = function(self, arg1, arg2)
+                    ABGP:GiveItemViaML(arg1, arg2);
+                end,
+                arg1 = itemLink,
+                arg2 = disenchanter,
+                notCheckable = true
+            });
         else
-            ABGP:Notify("Can't send to raid disenchanter - you're not the master looter!");
-        end
-    else
-        if ABGP:GetDebugOpt("TestLootFrame") then
-            ABGP:ShowLootFrame(itemLink);
-        else
-            ABGP:ShowDistrib(itemLink);
+            table.insert(context, {
+                text = "No raid disenchanter",
+                fontObject = "GameFontRedSmall",
+                func = function(self, arg1)
+                    ABGP:Notify("%s! Update the setting in the options window.",
+                        arg1 and "None of your configured disenchanters are in the raid" or "You don't have a raid disenchanter configured");
+                end,
+                arg1 = hasCandidates,
+                notCheckable = true
+            });
         end
     end
+    table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
+    ABGP:ShowContextMenu(context);
     return true;
 end
 
