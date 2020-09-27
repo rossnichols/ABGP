@@ -501,7 +501,7 @@ local function CheckBossEP(bossId, bossName, wasWipe)
 end
 
 function ABGP:EventOnBossKilled(bossId, name)
-    self:LogDebug("%s[%d] defeated!", bossId, name);
+    self:LogDebug("%s[%d] defeated!", name, bossId);
     CheckBossEP(bossId, name);
 end
 
