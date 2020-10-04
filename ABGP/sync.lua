@@ -827,8 +827,8 @@ StaticPopupDialogs["ABGP_HISTORY_OUT_OF_DATE"] = ABGP:StaticDialogTemplate(ABGP.
     exclusive = false,
     multiple = true,
     text = "Your history is out of date! Sync from %s?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Sync",
+    button2 = "Cancel",
     OnAccept = function(self, data)
         RequestFullHistory(data);
     end,
@@ -838,8 +838,8 @@ StaticPopupDialogs["ABGP_UPDATED_HISTORY"] = ABGP:StaticDialogTemplate(ABGP.Stat
     exclusive = false,
     multiple = true,
     text = "Updated history has been discovered from %s! Apply it?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Apply",
+    button2 = "Cancel",
     OnAccept = function(self, data)
         ApplyHistoryReplacement(data.sender, data.baseline, data.history);
     end,

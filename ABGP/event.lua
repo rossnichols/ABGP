@@ -1052,8 +1052,8 @@ StaticPopupDialogs["ABGP_ADD_STANDBY"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
 });
 StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Delete this raid? This can't be undone!",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Delete",
+    button2 = "Cancel",
     showAlert = true,
     OnAccept = function(self, data)
         local raids = _G.ABGP_RaidInfo3.pastRaids;
@@ -1070,8 +1070,8 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
 });
 StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Remove %s's data from the raid?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Remove",
+    button2 = "Cancel",
     showAlert = true,
     OnAccept = function(self, data)
         RemovePlayer(data.raid, data.player);
@@ -1080,8 +1080,8 @@ StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.Sta
 });
 StaticPopupDialogs["ABGP_STOP_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "There are still items being distributed! Really stop the raid?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Stop",
+    button2 = "Cancel",
     showAlert = true,
     OnAccept = function(self, data)
         ABGP:StopRaid();

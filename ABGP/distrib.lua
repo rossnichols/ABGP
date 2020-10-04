@@ -1389,16 +1389,16 @@ end
 
 StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Award %s to %s?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Award",
+    button2 = "Cancel",
     OnAccept = function(self, data)
         DistributeItem(data);
     end,
 });
 StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Disenchant %s?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Disenchant",
+    button2 = "Cancel",
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
         local window = activeDistributionWindow;
@@ -1424,8 +1424,8 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.Static
 });
 StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Stop distribution of all items?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Stop",
+    button2 = "Cancel",
     showAlert = true,
     OnAccept = function(self, data)
         if not activeDistributionWindow then return; end
@@ -1439,8 +1439,8 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.Sta
 });
 StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Done with %s? %s",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Done",
+    button2 = "Cancel",
     showAlert = true,
     OnAccept = function(self, data)
         RemoveActiveItem(data.itemLink);

@@ -2110,8 +2110,8 @@ end
 
 StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Remove award of %s to %s?",
-    button1 = "Yes",
-    button2 = "No",
+    button1 = "Remove",
+    button2 = "Cancel",
     OnAccept = function(self, data)
         ABGP:HistoryDeleteItemAward(data);
     end,
