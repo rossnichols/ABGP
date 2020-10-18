@@ -523,7 +523,7 @@ end
 
 function ABGP:EventOnEncounterEnd(bossId, name, _, _, success)
     if success ~= 0 then return; end
-    self:LogDebug("Wipe on %d[%d]!", bossId, name);
+    self:LogDebug("Wipe on %s[%d]!", name, bossId);
     CheckBossEP(bossId, name, true);
 end
 
