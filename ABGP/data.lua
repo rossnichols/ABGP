@@ -374,7 +374,7 @@ function ABGP:AddTrial(player, raidGroup, proxy)
     local raidGroupName = self.RaidGroupNames[raidGroup];
     if proxy then
         self:Notify("Adding %s (proxied by %s) as a trial for the %s raid group.", self:ColorizeName(player), self:ColorizeName(proxy), raidGroupName);
-        _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP RG:%s P:%s"):format(raidGroupName, proxy));
+        _G.GuildRosterSetPublicNote(self:GetGuildIndex(proxy), ("ABGP RG:%s P:%s"):format(raidGroupName, proxy));
     else
         self:Notify("Adding %s as a trial for the %s raid group.", self:ColorizeName(player), raidGroupName);
         _G.GuildRosterSetPublicNote(self:GetGuildIndex(player), ("ABGP Raid Group: %s"):format(raidGroupName));
