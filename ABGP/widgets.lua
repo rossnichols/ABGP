@@ -2173,8 +2173,8 @@ do
         local elt = AceGUI:Create("Window");
 
         local background = elt.frame:CreateTexture(nil, "BACKGROUND");
-		background:SetPoint("TOPLEFT", 8, -24);
-		background:SetPoint("BOTTOMRIGHT", -6, 8);
+        background:SetPoint("TOPLEFT", 8, -24);
+        background:SetPoint("BOTTOMRIGHT", -6, 8);
         background:SetColorTexture(0, 0, 0, 1);
 
         elt.type = Type;
