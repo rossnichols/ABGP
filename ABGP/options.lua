@@ -141,6 +141,13 @@ function ABGP:InitOptions()
                             get = function(info) return not self.db.char.minimap.hide; end,
                             set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
                         },
+                        windowPos = {
+                            name = "Reset Window Pos",
+                            order = 2,
+                            desc = "Reset window positions. Make sure none are currently opened.",
+                            type = "execute",
+                            func = function() _G.ABGP_WindowManagement = {}; end,
+                        },
                         itemHistoryLimit = {
                             name = "Tooltip item history",
                             order = 3,
