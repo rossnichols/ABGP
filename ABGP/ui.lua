@@ -341,7 +341,7 @@ local function DrawPriority(container, options)
 
         -- Prio[G]
         function(a, b)
-            -- local lowPrioA, lowPrioB = a.ep < ABGP:GetMinEP(a.raidGroup), b.ep < ABGP:GetMinEP(b.raidGroup);
+            -- local lowPrioA, lowPrioB = a.ep < ABGP:GetMinEP(), b.ep < ABGP:GetMinEP();
             -- if lowPrioA ~= lowPrioB then return lowPrioA; end
             return a.priority[ABGP.ItemCategory.SILVER] < b.priority[ABGP.ItemCategory.SILVER], a.priority[ABGP.ItemCategory.SILVER] == b.priority[ABGP.ItemCategory.SILVER];
         end,
@@ -351,7 +351,7 @@ local function DrawPriority(container, options)
 
         -- Prio[G]
         function(a, b)
-            -- local lowPrioA, lowPrioB = a.ep < ABGP:GetMinEP(a.raidGroup), b.ep < ABGP:GetMinEP(b.raidGroup);
+            -- local lowPrioA, lowPrioB = a.ep < ABGP:GetMinEP(), b.ep < ABGP:GetMinEP();
             -- if lowPrioA ~= lowPrioB then return lowPrioA; end
             return a.priority[ABGP.ItemCategory.GOLD] < b.priority[ABGP.ItemCategory.GOLD], a.priority[ABGP.ItemCategory.GOLD] == b.priority[ABGP.ItemCategory.GOLD];
         end,
@@ -378,7 +378,7 @@ local function DrawPriority(container, options)
         if i > 1 and not select(2, sorts[sortCol](data, filtered[i - 1])) then
             order = i;
         end
-        local lowPrio = not data.trial and data.ep < ABGP:GetMinEP(data.raidGroup);
+        local lowPrio = not data.trial and data.ep < ABGP:GetMinEP();
         elt:SetData(data, order, important, lowPrio);
         elt:SetWidths(widths);
         elt:ShowBackground((i % 2) == 0);

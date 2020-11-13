@@ -174,7 +174,7 @@ local function RebuildUI()
         local lowPrio;
         local active = ABGP:GetActivePlayer(request.player);
         if active and not active.trial and request.ep and currentItem.value then
-            lowPrio = request.ep < ABGP:GetMinEP(active.raidGroup);
+            lowPrio = request.ep < ABGP:GetMinEP();
         end
         local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.value and currentItem.value.token);
         elt:SetData(request, equippable, lowPrio);
