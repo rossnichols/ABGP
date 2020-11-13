@@ -17918,7 +17918,7 @@ ABGP.initialData = {
 		},
 	},
 	itemValuesPrerelease = {
-		timestamp = 1599595765,
+		timestamp = 1605235799,
 		data = {
 			{
 				"Desecrated Bindings",
@@ -18091,42 +18091,47 @@ ABGP.initialData = {
 					"Anub'Rekhan",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
 			{
 				"Cryptfiend Silk Cloak",
-				0,
+				200,
 				"|cffa335ee|Hitem:22938|h[Cryptfiend Silk Cloak]|h|r",
 				"Naxxramas",
 				{
 					"Anub'Rekhan",
 				},
 				{
+					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Wristguards of Vengeance",
-				0,
+				200,
 				"|cffa335ee|Hitem:22936|h[Wristguards of Vengeance]|h|r",
 				"Naxxramas",
 				{
 					"Anub'Rekhan",
 				},
 				{
+					"Metal Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Band of Unanswered Prayers",
-				0,
+				250,
 				"|cffa335ee|Hitem:22939|h[Band of Unanswered Prayers]|h|r",
 				"Naxxramas",
 				{
 					"Anub'Rekhan",
 				},
 				{
+					"Druid (Heal)",
+					"Priest (Heal)",
 				},
 				"GOLD",
 			},
@@ -18139,6 +18144,7 @@ ABGP.initialData = {
 					"Anub'Rekhan",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -18151,6 +18157,7 @@ ABGP.initialData = {
 					"Grand Widow Faerlina",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -18163,6 +18170,7 @@ ABGP.initialData = {
 					"Grand Widow Faerlina",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -18175,30 +18183,38 @@ ABGP.initialData = {
 					"Grand Widow Faerlina",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
 			{
 				"The Widow's Embrace",
-				0,
+				300,
 				"|cffa335ee|Hitem:22942|h[The Widow's Embrace]|h|r",
 				"Naxxramas",
 				{
 					"Grand Widow Faerlina",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
+				"Non-cthun mace prio",
 			},
 			{
 				"Widow's Remorse",
-				0,
+				250,
 				"|cffa335ee|Hitem:22806|h[Widow's Remorse]|h|r",
 				"Naxxramas",
 				{
 					"Grand Widow Faerlina",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Tank",
 				},
 				"GOLD",
 			},
@@ -18351,18 +18367,20 @@ ABGP.initialData = {
 					"Maexxna",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"Crystal Webbed Robe",
-				0,
+				300,
 				"|cffa335ee|Hitem:23220|h[Crystal Webbed Robe]|h|r",
 				"Naxxramas",
 				{
 					"Maexxna",
 				},
 				{
+					"Priest (Shadow)",
 				},
 				"GOLD",
 			},
@@ -18375,20 +18393,26 @@ ABGP.initialData = {
 					"Maexxna",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Wraith Blade",
-				0,
+				600,
 				"|cffa335ee|Hitem:22807|h[Wraith Blade]|h|r",
 				"Naxxramas",
 				{
 					"Maexxna",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
+				"twins/sapph oh prio",
 			},
 			{
 				"Maexxna's Fang",
@@ -18399,6 +18423,7 @@ ABGP.initialData = {
 					"Maexxna",
 				},
 				{
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
@@ -18566,25 +18591,28 @@ ABGP.initialData = {
 			},
 			{
 				"Cloak of the Scourge",
-				0,
+				200,
 				"|cffa335ee|Hitem:23030|h[Cloak of the Scourge]|h|r",
 				"Naxxramas",
 				{
 					"Noth the Plaguebringer",
 				},
 				{
+					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Band of the Inevitable",
-				0,
+				250,
 				"|cffa335ee|Hitem:23031|h[Band of the Inevitable]|h|r",
 				"Naxxramas",
 				{
 					"Noth the Plaguebringer",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
 			},
@@ -18597,32 +18625,37 @@ ABGP.initialData = {
 					"Noth the Plaguebringer",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
 			{
 				"Noth's Frigid Heart",
-				0,
+				150,
 				"|cffa335ee|Hitem:23029|h[Noth's Frigid Heart]|h|r",
 				"Naxxramas",
 				{
 					"Noth the Plaguebringer",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Libram of Light",
-				0,
+				150,
 				"|cffa335ee|Hitem:23006|h[Libram of Light]|h|r",
 				"Naxxramas",
 				{
 					"Noth the Plaguebringer",
 				},
 				{
+					"Paladin (Holy)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Totem of Flowing Water",
@@ -18633,6 +18666,7 @@ ABGP.initialData = {
 					"Noth the Plaguebringer",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -18645,20 +18679,25 @@ ABGP.initialData = {
 					"Noth the Plaguebringer",
 				},
 				{
+					"Hunter",
+					"Metal Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Preceptor's Hat",
-				0,
+				100,
 				"|cffa335ee|Hitem:23035|h[Preceptor's Hat]|h|r",
 				"Naxxramas",
 				{
 					"Heigan the Unclean",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Icy Scale Coif",
@@ -18669,6 +18708,7 @@ ABGP.initialData = {
 					"Heigan the Unclean",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -18681,20 +18721,23 @@ ABGP.initialData = {
 					"Heigan the Unclean",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
 			{
 				"Necklace of Necropsy",
-				0,
+				150,
 				"|cffa335ee|Hitem:23036|h[Necklace of Necropsy]|h|r",
 				"Naxxramas",
 				{
 					"Heigan the Unclean",
 				},
 				{
+					"Druid (Heal)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Legplates of Carnage",
@@ -18705,6 +18748,7 @@ ABGP.initialData = {
 					"Heigan the Unclean",
 				},
 				{
+					"Metal Rogue",
 				},
 				"GOLD",
 			},
@@ -18850,13 +18894,17 @@ ABGP.initialData = {
 			},
 			{
 				"Band of Unnatural Forces",
-				0,
+				250,
 				"|cffa335ee|Hitem:23038|h[Band of Unnatural Forces]|h|r",
 				"Naxxramas",
 				{
 					"Loatheb",
 				},
 				{
+					"KAT4FITE",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
@@ -18869,6 +18917,7 @@ ABGP.initialData = {
 					"Loatheb",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -18881,18 +18930,20 @@ ABGP.initialData = {
 					"Loatheb",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
 			{
 				"The Eye of Nerub",
-				0,
+				250,
 				"|cffa335ee|Hitem:23039|h[The Eye of Nerub]|h|r",
 				"Naxxramas",
 				{
 					"Loatheb",
 				},
 				{
+					"Hunter",
 				},
 				"GOLD",
 			},
@@ -18905,6 +18956,8 @@ ABGP.initialData = {
 					"Loatheb",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
 			},
@@ -19079,30 +19132,35 @@ ABGP.initialData = {
 					"Instructor Razuvious",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"Girdle of the Mentor",
-				0,
+				300,
 				"|cffa335ee|Hitem:23219|h[Girdle of the Mentor]|h|r",
 				"Naxxramas",
 				{
 					"Instructor Razuvious",
 				},
 				{
+					"Metal Rogue",
+					"Tank",
 				},
 				"GOLD",
+				"Non-Onslaught Prio",
 			},
 			{
 				"Signet of the Fallen Defender",
-				0,
+				250,
 				"|cffa335ee|Hitem:23018|h[Signet of the Fallen Defender]|h|r",
 				"Naxxramas",
 				{
 					"Instructor Razuvious",
 				},
 				{
+					"Tank",
 				},
 				"GOLD",
 			},
@@ -19115,20 +19173,22 @@ ABGP.initialData = {
 					"Instructor Razuvious",
 				},
 				{
+					"Druid (Heal)",
 				},
 				"GOLD",
 			},
 			{
 				"Wand of the Whispering Dead",
-				0,
+				250,
 				"|cffa335ee|Hitem:23009|h[Wand of the Whispering Dead]|h|r",
 				"Naxxramas",
 				{
 					"Instructor Razuvious",
 				},
 				{
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Iblis, Blade of the Fallen Seraph",
@@ -19139,6 +19199,8 @@ ABGP.initialData = {
 					"Instructor Razuvious",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
 				},
 				"GOLD",
 			},
@@ -19151,6 +19213,7 @@ ABGP.initialData = {
 					"Gothik the Harvester",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -19163,6 +19226,7 @@ ABGP.initialData = {
 					"Gothik the Harvester",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -19175,20 +19239,24 @@ ABGP.initialData = {
 					"Gothik the Harvester",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"The Soul Harvester's Bindings",
-				0,
+				250,
 				"|cffa335ee|Hitem:23021|h[The Soul Harvester's Bindings]|h|r",
 				"Naxxramas",
 				{
 					"Gothik the Harvester",
 				},
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Boots of Displacement",
@@ -19351,44 +19419,52 @@ ABGP.initialData = {
 					"The Four Horsemen",
 				},
 				{
+					"KAT4FITE",
 				},
 				"GOLD",
 			},
 			{
 				"Seal of the Damned",
-				0,
+				250,
 				"|cffa335ee|Hitem:23025|h[Seal of the Damned]|h|r",
 				"Naxxramas",
 				{
 					"The Four Horsemen",
 				},
 				{
+					"Warlock",
 				},
 				"GOLD",
 			},
 			{
 				"Warmth of Forgiveness",
-				0,
+				150,
 				"|cffa335ee|Hitem:23027|h[Warmth of Forgiveness]|h|r",
 				"Naxxramas",
 				{
 					"The Four Horsemen",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
 				"GOLD",
 			},
 			{
 				"Soulstring",
-				0,
+				250,
 				"|cffa335ee|Hitem:22811|h[Soulstring]|h|r",
 				"Naxxramas",
 				{
 					"The Four Horsemen",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Maul of the Redeemed Crusader",
@@ -19399,6 +19475,7 @@ ABGP.initialData = {
 					"The Four Horsemen",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -19411,8 +19488,10 @@ ABGP.initialData = {
 					"The Four Horsemen",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
+				"not-rum prio",
 			},
 			{
 				"Desecrated Shoulderpads",
@@ -19578,39 +19657,45 @@ ABGP.initialData = {
 			},
 			{
 				"Cloak of Suturing",
-				0,
+				200,
 				"|cffa335ee|Hitem:22960|h[Cloak of Suturing]|h|r",
 				"Naxxramas",
 				{
 					"Patchwerk",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
+				"non-cthun cloak prio",
 			},
 			{
 				"Band of Reanimation",
-				0,
+				250,
 				"|cffa335ee|Hitem:22961|h[Band of Reanimation]|h|r",
 				"Naxxramas",
 				{
 					"Patchwerk",
 				},
 				{
+					"Hunter",
 				},
 				"GOLD",
 			},
 			{
 				"Wand of Fates",
-				0,
+				250,
 				"|cffa335ee|Hitem:22820|h[Wand of Fates]|h|r",
 				"Naxxramas",
 				{
 					"Patchwerk",
 				},
 				{
+					"Warlock",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"The Plague Bearer",
@@ -19621,6 +19706,7 @@ ABGP.initialData = {
 					"Patchwerk",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -19633,6 +19719,7 @@ ABGP.initialData = {
 					"Patchwerk",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -19645,6 +19732,7 @@ ABGP.initialData = {
 					"Grobbulus",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -19657,6 +19745,7 @@ ABGP.initialData = {
 					"Grobbulus",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -19669,6 +19758,7 @@ ABGP.initialData = {
 					"Grobbulus",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -19681,30 +19771,38 @@ ABGP.initialData = {
 					"Grobbulus",
 				},
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
 				"GOLD",
+				"catchup",
 			},
 			{
 				"The End of Dreams",
-				0,
+				450,
 				"|cffa335ee|Hitem:22988|h[The End of Dreams]|h|r",
 				"Naxxramas",
 				{
 					"Grobbulus",
 				},
 				{
+					"KAT4FITE",
+					"Priest (Shadow)",
 				},
 				"GOLD",
 			},
 			{
 				"Rime Covered Mantle",
-				0,
+				250,
 				"|cffa335ee|Hitem:22983|h[Rime Covered Mantle]|h|r",
 				"Naxxramas",
 				{
 					"Gluth",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
 			},
@@ -19717,6 +19815,7 @@ ABGP.initialData = {
 					"Gluth",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -19729,20 +19828,22 @@ ABGP.initialData = {
 					"Gluth",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"Death's Bargain",
-				0,
+				200,
 				"|cffa335ee|Hitem:23075|h[Death's Bargain]|h|r",
 				"Naxxramas",
 				{
 					"Gluth",
 				},
 				{
+					"Paladin (Holy)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Claymore of Unholy Might",
@@ -19753,6 +19854,7 @@ ABGP.initialData = {
 					"Gluth",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -19898,87 +20000,104 @@ ABGP.initialData = {
 			},
 			{
 				"Plated Abomination Ribcage",
-				0,
+				300,
 				"|cffa335ee|Hitem:23000|h[Plated Abomination Ribcage]|h|r",
 				"Naxxramas",
 				{
 					"Thaddius",
 				},
 				{
+					"Metal Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Leggings of Polarity",
-				0,
+				350,
 				"|cffa335ee|Hitem:23070|h[Leggings of Polarity]|h|r",
 				"Naxxramas",
 				{
 					"Thaddius",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
 			},
 			{
 				"Eye of Diminution",
-				0,
+				200,
 				"|cffa335ee|Hitem:23001|h[Eye of Diminution]|h|r",
 				"Naxxramas",
 				{
 					"Thaddius",
 				},
 				{
+					"Mage",
+					"Paladin (Holy)",
+					"Warlock",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"The Castigator",
-				0,
+				300,
 				"|cffa335ee|Hitem:22808|h[The Castigator]|h|r",
 				"Naxxramas",
 				{
 					"Thaddius",
 				},
 				{
+					"Metal Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Spire of Twilight",
-				0,
+				300,
 				"|cffa335ee|Hitem:22801|h[Spire of Twilight]|h|r",
 				"Naxxramas",
 				{
 					"Thaddius",
 				},
 				{
+					"Druid (Heal)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
+				"benediction prio",
 			},
 			{
 				"Cloak of the Necropolis",
-				0,
+				200,
 				"|cffa335ee|Hitem:23050|h[Cloak of the Necropolis]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
-				"GOLD",
+				"SILVER",
+				"non-cthun cloak prio",
 			},
 			{
 				"Shroud of Dominion",
-				0,
+				300,
 				"|cffa335ee|Hitem:23045|h[Shroud of Dominion]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Hunter",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Glyph of Deflection",
@@ -19989,78 +20108,98 @@ ABGP.initialData = {
 					"Sapphiron",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"Eye of the Dead",
-				0,
+				450,
 				"|cffa335ee|Hitem:23047|h[Eye of the Dead]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
 				"GOLD",
+				"Non-Rejuv Gem Prio",
 			},
 			{
 				"Slayer's Crest",
-				0,
+				400,
 				"|cffa335ee|Hitem:23041|h[Slayer's Crest]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Hunter",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"The Restrained Essence of Sapphiron",
-				0,
+				450,
 				"|cffa335ee|Hitem:23046|h[The Restrained Essence of Sapphiron]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Mage",
+					"Priest (Shadow)",
+					"Warlock",
 				},
 				"GOLD",
+				"Non-Nelths tear prio",
 			},
 			{
 				"Sapphiron's Left Eye",
-				0,
+				250,
 				"|cffa335ee|Hitem:23049|h[Sapphiron's Left Eye]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
+				"wraith blade prio; non twins oh prio",
 			},
 			{
 				"Sapphiron's Right Eye",
-				0,
+				300,
 				"|cffa335ee|Hitem:23048|h[Sapphiron's Right Eye]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Druid (Heal)",
+					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
+				"1h prio",
 			},
 			{
 				"The Face of Death",
-				0,
+				250,
 				"|cffa335ee|Hitem:23043|h[The Face of Death]|h|r",
 				"Naxxramas",
 				{
 					"Sapphiron",
 				},
 				{
+					"Tank",
 				},
 				"GOLD",
 			},
@@ -20126,37 +20265,44 @@ ABGP.initialData = {
 			},
 			{
 				"Gem of Trapped Innocents",
-				0,
+				250,
 				"|cffa335ee|Hitem:23057|h[Gem of Trapped Innocents]|h|r",
 				"Naxxramas",
 				{
 					"Kel'Thuzad",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
+				"Non-Twins or Rag Neck Prio",
 			},
 			{
 				"Stormrage's Talisman of Seething",
-				0,
+				150,
 				"|cffa335ee|Hitem:23053|h[Stormrage's Talisman of Seething]|h|r",
 				"Naxxramas",
 				{
 					"Kel'Thuzad",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Nerubian Slavemaker",
-				0,
+				600,
 				"|cffa335ee|Hitem:22812|h[Nerubian Slavemaker]|h|r",
 				"Naxxramas",
 				{
 					"Kel'Thuzad",
 				},
 				{
+					"Hunter",
 				},
 				"GOLD",
 			},
@@ -20174,15 +20320,16 @@ ABGP.initialData = {
 			},
 			{
 				"Shield of Condemnation",
-				0,
+				300,
 				"|cffa335ee|Hitem:22819|h[Shield of Condemnation]|h|r",
 				"Naxxramas",
 				{
 					"Kel'Thuzad",
 				},
 				{
+					"Paladin (Holy)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Kingsfall",
@@ -20193,6 +20340,7 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
@@ -20205,6 +20353,9 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Druid (Heal)",
+					"Paladin (Holy)",
+					"Priest (Heal)",
 				},
 				"GOLD",
 			},
@@ -20217,6 +20368,8 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
 				},
 				"GOLD",
 			},
@@ -20229,8 +20382,12 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Tank",
 				},
 				"GOLD",
+				"wrong-race prio",
 			},
 			{
 				"Might of Menethil",
@@ -20241,6 +20398,7 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20253,6 +20411,8 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Mage",
+					"Warlock",
 				},
 				"GOLD",
 			},
@@ -20265,6 +20425,7 @@ ABGP.initialData = {
 					"Kel'Thuzad",
 				},
 				{
+					"Progression",
 				},
 				"GOLD",
 			},
@@ -20373,6 +20534,7 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20385,6 +20547,7 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20397,6 +20560,7 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20409,6 +20573,8 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"KAT4FITE",
+					"Tank",
 				},
 				"GOLD",
 			},
@@ -20421,6 +20587,7 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20433,6 +20600,7 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20445,6 +20613,7 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
@@ -20457,18 +20626,20 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"Ring of the Eternal Flame",
-				0,
+				250,
 				"|cffa335ee|Hitem:23237|h[Ring of the Eternal Flame]|h|r",
 				"Naxxramas",
 				{
 					"Naxx Trash",
 				},
 				{
+					"Mage",
 				},
 				"GOLD",
 			},
@@ -20481,30 +20652,33 @@ ABGP.initialData = {
 					"Naxx Trash",
 				},
 				{
+					"Garbage",
 				},
 				"GOLD",
 			},
 			{
 				"Harbinger of Doom",
-				0,
+				450,
 				"|cffa335ee|Hitem:23044|h[Harbinger of Doom]|h|r",
 				"Naxxramas",
 				{
 					"Naxx Trash",
 				},
 				{
+					"Stabby Rogue",
 				},
 				"GOLD",
 			},
 			{
 				"Misplaced Servo Arm",
-				0,
+				450,
 				"|cffa335ee|Hitem:23221|h[Misplaced Servo Arm]|h|r",
 				"Naxxramas",
 				{
 					"Naxx Trash",
 				},
 				{
+					"Metal Rogue",
 				},
 				"GOLD",
 			},
