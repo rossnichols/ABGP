@@ -7,7 +7,7 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1602174821, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1605235799, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		data = {
 			{
 				"Barrage Shoulders",
@@ -498,6 +498,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 				},
 				"GOLD",
+				"Stabby rogue prio if have Death's Sting",
 			},
 			{
 				"Gauntlets of Steadfast Determination",
@@ -580,7 +581,7 @@ ABGP.initialData = {
 			},
 			{
 				"Badge of the Swarmguard",
-				300,
+				200,
 				"|cffa335ee|Hitem:21670|h[Badge of the Swarmguard]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -591,7 +592,7 @@ ABGP.initialData = {
 					"KAT4FITE",
 					"Metal Rogue",
 				},
-				"SILVER",
+				"GOLD",
 			},
 			{
 				"Sartura's Might",
@@ -1070,7 +1071,7 @@ ABGP.initialData = {
 			},
 			{
 				"Doomcaller's Footwraps",
-				250,
+				0,
 				"|cffa335ee|Hitem:21338|h[Doomcaller's Footwraps]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1112,7 +1113,7 @@ ABGP.initialData = {
 			},
 			{
 				"Enigma Shoulderpads",
-				250,
+				0,
 				"|cffa335ee|Hitem:21345|h[Enigma Shoulderpads]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -2203,7 +2204,6 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"GOLD",
-				"Emp Demo Prio",
 			},
 			{
 				"Ritssyn's Ring of Chaos",
@@ -4153,7 +4153,7 @@ ABGP.initialData = {
 			},
 			{
 				"Essence Gatherer",
-				100,
+				0,
 				"|cffa335ee|Hitem:19435|h[Essence Gatherer]|h|r",
 				"Blackwing Lair",
 				{
@@ -4161,6 +4161,7 @@ ABGP.initialData = {
 				},
 				{
 					"Priest (Heal)",
+					"Priest (Shadow)",
 				},
 				"SILVER",
 			},
