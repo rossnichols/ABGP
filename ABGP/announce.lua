@@ -193,7 +193,7 @@ local function SetRequestInfo(elt, itemLink, activeItem)
         };
         local text, compact;
         local roll = activeItem.roll;
-        if roll or ABGP:ItemRequiresRoll(itemLink, elt:GetUserData("tokenItem")) then
+        if roll or ABGP:ItemRequiresRoll(itemLink, elt:GetUserData("tokenItem"), requestType) then
             if roll then
                 text = ("Rolled for %s (%s)"):format(ABGP:ColorizeText(requestTypes[requestType]), ABGP:ColorizeText(activeItem.roll));
                 compact = ("%s:|cffffffff%s|r"):format(requestTypesCompact[requestType], roll);

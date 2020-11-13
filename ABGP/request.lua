@@ -163,7 +163,7 @@ function ABGP:RequestOnDistOpened(data, distribution, sender)
         if value.token then
             gpCost = "Token (variable GP cost)";
         else
-            local rolled = self:ItemRequiresRoll(itemLink) and (" (rolled)") or "";
+            local rolled = data.rollsAllowed and (" (rolled)") or "";
             gpCost = ("Cost: %s%s"):format(self:FormatCost(value.gp, value.category), rolled);
         end
         if value.priority and next(value.priority) then

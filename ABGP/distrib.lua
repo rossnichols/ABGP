@@ -124,8 +124,8 @@ local function RebuildUI()
     };
 
     table.sort(requests, function(a, b)
-        local aRollRequired = ABGP:ItemRequiresRoll(currentItem.itemLink, a.selectedItem);
-        local bRollRequired = ABGP:ItemRequiresRoll(currentItem.itemLink, b.selectedItem);
+        local aRollRequired = ABGP:ItemRequiresRoll(currentItem.itemLink, a.selectedItem, a.requestType);
+        local bRollRequired = ABGP:ItemRequiresRoll(currentItem.itemLink, b.selectedItem, b.requestType);
 
         if a.requestType ~= b.requestType then
             return requestTypes[a.requestType] < requestTypes[b.requestType];
@@ -135,7 +135,7 @@ local function RebuildUI()
             return bRollRequired;
         elseif a.category ~= b.category and not aRollRequired then
             return a.category == ABGP.ItemCategory.GOLD;
-        elseif a.priority ~= b.priority and not aRollRequired and a.requestType ~= ABGP.RequestTypes.OS then
+        elseif a.priority ~= b.priority and not aRollRequired then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
             return (a.roll or 0) > (b.roll or 0);
@@ -364,7 +364,8 @@ local function CombineNotes(a, b)
     return a .. "\n" .. b;
 end
 
-function ABGP:ItemRequiresRoll(itemLink, selectedItem)
+function ABGP:ItemRequiresRoll(itemLink, selectedItem, requestType)
+    if requestType and requestType == self.RequestTypes.OS then return true; end
     local value = ABGP:GetItemValue(ABGP:GetItemId(itemLink));
     if not value or value.gp == 0 then return true; end
     if not selectedItem then return false; end
@@ -395,7 +396,7 @@ local function ProcessNewRequest(request, summary)
     end
 
     -- Generate a new roll if necessary
-    if ABGP:ItemRequiresRoll(item.itemLink, request.selectedItem) or request.requestType == ABGP.RequestTypes.OS then
+    if ABGP:ItemRequiresRoll(item.itemLink, request.selectedItem, request.requestType) then
         request.roll = request.roll or math.random(1, 100);
     end
 
