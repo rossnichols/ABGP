@@ -229,13 +229,18 @@ local function DrawPriority(container, options)
         else
             onlyGrouped = false;
             local spacer = AceGUI:Create("Label");
+            spacer:SetWidth(1);
             mainLine:AddChild(spacer);
         end
 
-        if ABGP:IsPrivileged() then
-            local spacer = AceGUI:Create("Label");
-            mainLine:AddChild(spacer);
+        local epText = AceGUI:Create("ABGP_Header");
+        epText:SetFullWidth(true);
+        epText:SetFont(_G.GameFontHighlightSmall);
+        epText:SetJustifyH("LEFT");
+        epText:SetText(("   The minimum EP threshold is %s."):format(ABGP:ColorizeText(ABGP:GetMinEP())));
+        mainLine:AddChild(epText);
 
+        if ABGP:IsPrivileged() then
             local import = AceGUI:Create("Button");
             import:SetWidth(45);
             import:SetText("I");
