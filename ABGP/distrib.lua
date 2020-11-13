@@ -135,7 +135,7 @@ local function RebuildUI()
             return bRollRequired;
         elseif a.category ~= b.category and not aRollRequired then
             return a.category == ABGP.ItemCategory.GOLD;
-        elseif a.priority ~= b.priority and not aRollRequired then
+        elseif a.priority ~= b.priority and not aRollRequired and a.requestType ~= ABGP.RequestTypes.OS then
             return a.priority > b.priority;
         elseif a.roll ~= b.roll then
             return (a.roll or 0) > (b.roll or 0);
