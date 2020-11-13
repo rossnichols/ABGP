@@ -395,8 +395,8 @@ local function ProcessNewRequest(request, summary)
     end
 
     -- Generate a new roll if necessary
-    if ABGP:ItemRequiresRoll(item.itemLink, request.selectedItem) and not request.roll then
-        request.roll = math.random(1, 100);
+    if ABGP:ItemRequiresRoll(item.itemLink, request.selectedItem) or request.requestType == ABGP.RequestTypes.OS then
+        request.roll = request.roll or math.random(1, 100);
     end
 
     -- Tell the requester what they rolled.
