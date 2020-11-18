@@ -7,7 +7,7 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1605235799, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1605235800, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		data = {
 			{
 				"Barrage Shoulders",
@@ -701,7 +701,7 @@ ABGP.initialData = {
 					"Metal Rogue",
 					"Paladin (Ret)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Hive Tunneler's Boots",
