@@ -515,7 +515,7 @@ local function DrawItems(container, options)
             mainLine:AddChild(spacer);
         end
 
-        if ABGP:IsPrivileged() then
+        -- if ABGP:IsPrivileged() then
             local prerelease = AceGUI:Create("CheckBox");
             prerelease:SetWidth(93);
             prerelease:SetLabel("Future");
@@ -525,10 +525,10 @@ local function DrawItems(container, options)
                 PopulateUI({ rebuild = true });
             end);
             mainLine:AddChild(prerelease);
-        else
-            local spacer = AceGUI:Create("Label");
-            mainLine:AddChild(spacer);
-        end
+        -- else
+        --     local spacer = AceGUI:Create("Label");
+        --     mainLine:AddChild(spacer);
+        -- end
 
         if ABGP:IsPrivileged() then
             local spacer = AceGUI:Create("Label");
