@@ -17917,2770 +17917,2819 @@ ABGP.initialData = {
 		},
 	},
 	itemValuesPrerelease = {
-		timestamp = 1605235799,
+		timestamp = 1605235801,
 		data = {
-			{
-				"Desecrated Bindings",
-				"T",
-				"|cffa335ee|Hitem:22369|h[Desecrated Bindings]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bindings of Faith",
-				0,
-				"|cffa335ee|Hitem:22519|h[Bindings of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Bindings",
-			},
-			{
-				"Frostfire Bindings",
-				0,
-				"|cffa335ee|Hitem:22503|h[Frostfire Bindings]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Bindings",
-			},
-			{
-				"Plagueheart Bindings",
-				0,
-				"|cffa335ee|Hitem:22511|h[Plagueheart Bindings]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Bindings",
-			},
-			{
-				"Desecrated Wristguards",
-				"T",
-				"|cffa335ee|Hitem:22362|h[Desecrated Wristguards]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Wristguards",
-				0,
-				"|cffa335ee|Hitem:22443|h[Cryptstalker Wristguards]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Wristguards",
-			},
-			{
-				"Dreamwalker Wristguards",
-				0,
-				"|cffa335ee|Hitem:22495|h[Dreamwalker Wristguards]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Wristguards",
-			},
-			{
-				"Redemption Wristguards",
-				0,
-				"|cffa335ee|Hitem:22424|h[Redemption Wristguards]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Wristguards",
-			},
-			{
-				"Desecrated Bracers",
-				"T",
-				"|cffa335ee|Hitem:22355|h[Desecrated Bracers]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Bracers",
-				0,
-				"|cffa335ee|Hitem:22483|h[Bonescythe Bracers]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Bracers",
-			},
-			{
-				"Dreadnaught Bracers",
-				0,
-				"|cffa335ee|Hitem:22423|h[Dreadnaught Bracers]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-					"Grand Widow Faerlina",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Bracers",
-			},
-			{
-				"Touch of Frost",
-				0,
-				"|cffa335ee|Hitem:22935|h[Touch of Frost]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Cryptfiend Silk Cloak",
-				200,
-				"|cffa335ee|Hitem:22938|h[Cryptfiend Silk Cloak]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-				},
-				{
-					"Tank",
-				},
-				"SILVER",
-			},
-			{
-				"Wristguards of Vengeance",
-				200,
-				"|cffa335ee|Hitem:22936|h[Wristguards of Vengeance]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-				},
-				{
-					"Metal Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Band of Unanswered Prayers",
-				250,
-				"|cffa335ee|Hitem:22939|h[Band of Unanswered Prayers]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-				},
-				{
-					"Druid (Heal)",
-					"Priest (Heal)",
-				},
-				"GOLD",
-			},
-			{
-				"Gem of Nerubis",
-				0,
-				"|cffa335ee|Hitem:22937|h[Gem of Nerubis]|h|r",
-				"Naxxramas",
-				{
-					"Anub'Rekhan",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Malice Stone Pendant",
-				0,
-				"|cffa335ee|Hitem:22943|h[Malice Stone Pendant]|h|r",
-				"Naxxramas",
-				{
-					"Grand Widow Faerlina",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Polar Shoulder Pads",
-				0,
-				"|cffa335ee|Hitem:22941|h[Polar Shoulder Pads]|h|r",
-				"Naxxramas",
-				{
-					"Grand Widow Faerlina",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Icebane Pauldrons",
-				0,
-				"|cffa335ee|Hitem:22940|h[Icebane Pauldrons]|h|r",
-				"Naxxramas",
-				{
-					"Grand Widow Faerlina",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"The Widow's Embrace",
-				300,
-				"|cffa335ee|Hitem:22942|h[The Widow's Embrace]|h|r",
-				"Naxxramas",
-				{
-					"Grand Widow Faerlina",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-				"Non-cthun mace prio",
-			},
-			{
-				"Widow's Remorse",
-				250,
-				"|cffa335ee|Hitem:22806|h[Widow's Remorse]|h|r",
-				"Naxxramas",
-				{
-					"Grand Widow Faerlina",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Tank",
-				},
-				"GOLD",
-			},
-			{
-				"Desecrated Gloves",
-				"T",
-				"|cffa335ee|Hitem:22371|h[Desecrated Gloves]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Frostfire Gloves",
-				0,
-				"|cffa335ee|Hitem:22501|h[Frostfire Gloves]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Gloves",
-			},
-			{
-				"Gloves of Faith",
-				0,
-				"|cffa335ee|Hitem:22517|h[Gloves of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Gloves",
-			},
-			{
-				"Plagueheart Gloves",
-				0,
-				"|cffa335ee|Hitem:22509|h[Plagueheart Gloves]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Gloves",
-			},
-			{
-				"Desecrated Handguards",
-				"T",
-				"|cffa335ee|Hitem:22364|h[Desecrated Handguards]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Handguards",
-				0,
-				"|cffa335ee|Hitem:22441|h[Cryptstalker Handguards]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Handguards",
-			},
-			{
-				"Dreamwalker Handguards",
-				0,
-				"|cffa335ee|Hitem:22493|h[Dreamwalker Handguards]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Handguards",
-			},
-			{
-				"Redemption Handguards",
-				0,
-				"|cffa335ee|Hitem:22426|h[Redemption Handguards]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Handguards",
-			},
-			{
-				"Desecrated Gauntlets",
-				"T",
-				"|cffa335ee|Hitem:22357|h[Desecrated Gauntlets]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Gauntlets",
-				0,
-				"|cffa335ee|Hitem:22481|h[Bonescythe Gauntlets]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Gauntlets",
-			},
-			{
-				"Dreadnaught Gauntlets",
-				0,
-				"|cffa335ee|Hitem:22421|h[Dreadnaught Gauntlets]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Gauntlets",
-			},
-			{
-				"Pendant of Forgotten Names",
-				0,
-				"|cffa335ee|Hitem:22947|h[Pendant of Forgotten Names]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Crystal Webbed Robe",
-				300,
-				"|cffa335ee|Hitem:23220|h[Crystal Webbed Robe]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-					"Priest (Shadow)",
-				},
-				"GOLD",
-			},
-			{
-				"Kiss of the Spider",
-				0,
-				"|cffa335ee|Hitem:22954|h[Kiss of the Spider]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Wraith Blade",
-				600,
-				"|cffa335ee|Hitem:22807|h[Wraith Blade]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-				"twins/sapph oh prio",
-			},
-			{
-				"Maexxna's Fang",
-				0,
-				"|cffa335ee|Hitem:22804|h[Maexxna's Fang]|h|r",
-				"Naxxramas",
-				{
-					"Maexxna",
-				},
-				{
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Desecrated Belt",
-				"T",
-				"|cffa335ee|Hitem:22370|h[Desecrated Belt]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Belt of Faith",
-				0,
-				"|cffa335ee|Hitem:22518|h[Belt of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Belt",
-			},
-			{
-				"Frostfire Belt",
-				0,
-				"|cffa335ee|Hitem:22502|h[Frostfire Belt]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Belt",
-			},
-			{
-				"Plagueheart Belt",
-				0,
-				"|cffa335ee|Hitem:22510|h[Plagueheart Belt]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Belt",
-			},
-			{
-				"Desecrated Girdle",
-				"T",
-				"|cffa335ee|Hitem:22363|h[Desecrated Girdle]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Girdle",
-				0,
-				"|cffa335ee|Hitem:22442|h[Cryptstalker Girdle]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Girdle",
-			},
-			{
-				"Dreamwalker Girdle",
-				0,
-				"|cffa335ee|Hitem:22494|h[Dreamwalker Girdle]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Girdle",
-			},
-			{
-				"Redemption Girdle",
-				0,
-				"|cffa335ee|Hitem:22431|h[Redemption Girdle]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Girdle",
-			},
-			{
-				"Desecrated Waistguard",
-				"T",
-				"|cffa335ee|Hitem:22356|h[Desecrated Waistguard]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Waistguard",
-				0,
-				"|cffa335ee|Hitem:22482|h[Bonescythe Waistguard]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Waistguard",
-			},
-			{
-				"Dreadnaught Waistguard",
-				0,
-				"|cffa335ee|Hitem:22422|h[Dreadnaught Waistguard]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-					"Heigan the Unclean",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Waistguard",
-			},
-			{
-				"Cloak of the Scourge",
-				200,
-				"|cffa335ee|Hitem:23030|h[Cloak of the Scourge]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Tank",
-				},
-				"SILVER",
-			},
-			{
-				"Band of the Inevitable",
-				250,
-				"|cffa335ee|Hitem:23031|h[Band of the Inevitable]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-			},
-			{
-				"Hailstone Band",
-				0,
-				"|cffa335ee|Hitem:23028|h[Hailstone Band]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Noth's Frigid Heart",
-				150,
-				"|cffa335ee|Hitem:23029|h[Noth's Frigid Heart]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-			},
-			{
-				"Libram of Light",
-				150,
-				"|cffa335ee|Hitem:23006|h[Libram of Light]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Paladin (Holy)",
-				},
-				"SILVER",
-			},
-			{
-				"Totem of Flowing Water",
-				0,
-				"|cffa335ee|Hitem:23005|h[Totem of Flowing Water]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Hatchet of Sundered Bone",
-				0,
-				"|cffa335ee|Hitem:22816|h[Hatchet of Sundered Bone]|h|r",
-				"Naxxramas",
-				{
-					"Noth the Plaguebringer",
-				},
-				{
-					"Hunter",
-					"Metal Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Preceptor's Hat",
-				100,
-				"|cffa335ee|Hitem:23035|h[Preceptor's Hat]|h|r",
-				"Naxxramas",
-				{
-					"Heigan the Unclean",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-			},
-			{
-				"Icy Scale Coif",
-				0,
-				"|cffa335ee|Hitem:23033|h[Icy Scale Coif]|h|r",
-				"Naxxramas",
-				{
-					"Heigan the Unclean",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Icebane Helmet",
-				0,
-				"|cffa335ee|Hitem:23019|h[Icebane Helmet]|h|r",
-				"Naxxramas",
-				{
-					"Heigan the Unclean",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Necklace of Necropsy",
-				150,
-				"|cffa335ee|Hitem:23036|h[Necklace of Necropsy]|h|r",
-				"Naxxramas",
-				{
-					"Heigan the Unclean",
-				},
-				{
-					"Druid (Heal)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-			},
-			{
-				"Legplates of Carnage",
-				0,
-				"|cffa335ee|Hitem:23068|h[Legplates of Carnage]|h|r",
-				"Naxxramas",
-				{
-					"Heigan the Unclean",
-				},
-				{
-					"Metal Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Desecrated Leggings",
-				"T",
-				"|cffa335ee|Hitem:22366|h[Desecrated Leggings]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Frostfire Leggings",
-				0,
-				"|cffa335ee|Hitem:22497|h[Frostfire Leggings]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Leggings",
-			},
-			{
-				"Leggings of Faith",
-				0,
-				"|cffa335ee|Hitem:22513|h[Leggings of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Leggings",
-			},
-			{
-				"Plagueheart Leggings",
-				0,
-				"|cffa335ee|Hitem:22505|h[Plagueheart Leggings]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Leggings",
-			},
-			{
-				"Desecrated Legguards",
-				"T",
-				"|cffa335ee|Hitem:22359|h[Desecrated Legguards]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Legguards",
-				0,
-				"|cffa335ee|Hitem:22437|h[Cryptstalker Legguards]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Legguards",
-			},
-			{
-				"Dreamwalker Legguards",
-				0,
-				"|cffa335ee|Hitem:22489|h[Dreamwalker Legguards]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Legguards",
-			},
-			{
-				"Redemption Legguards",
-				0,
-				"|cffa335ee|Hitem:22427|h[Redemption Legguards]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Legguards",
-			},
-			{
-				"Desecrated Legplates",
-				"T",
-				"|cffa335ee|Hitem:22352|h[Desecrated Legplates]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Legplates",
-				0,
-				"|cffa335ee|Hitem:22477|h[Bonescythe Legplates]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Legplates",
-			},
-			{
-				"Dreadnaught Legplates",
-				0,
-				"|cffa335ee|Hitem:22417|h[Dreadnaught Legplates]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Legplates",
-			},
-			{
-				"Band of Unnatural Forces",
-				250,
-				"|cffa335ee|Hitem:23038|h[Band of Unnatural Forces]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-					"KAT4FITE",
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Ring of Spiritual Fervor",
-				0,
-				"|cffa335ee|Hitem:23037|h[Ring of Spiritual Fervor]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Loatheb's Reflection",
-				0,
-				"|cffa335ee|Hitem:23042|h[Loatheb's Reflection]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"The Eye of Nerub",
-				250,
-				"|cffa335ee|Hitem:23039|h[The Eye of Nerub]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-					"Hunter",
-				},
-				"GOLD",
-			},
-			{
-				"Brimstone Staff",
-				0,
-				"|cffa335ee|Hitem:22800|h[Brimstone Staff]|h|r",
-				"Naxxramas",
-				{
-					"Loatheb",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-			},
-			{
-				"Desecrated Sandals",
-				"T",
-				"|cffa335ee|Hitem:22372|h[Desecrated Sandals]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Frostfire Sandals",
-				0,
-				"|cffa335ee|Hitem:22500|h[Frostfire Sandals]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Sandals",
-			},
-			{
-				"Plagueheart Sandals",
-				0,
-				"|cffa335ee|Hitem:22508|h[Plagueheart Sandals]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Sandals",
-			},
-			{
-				"Sandals of Faith",
-				0,
-				"|cffa335ee|Hitem:22516|h[Sandals of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Sandals",
-			},
-			{
-				"Desecrated Boots",
-				"T",
-				"|cffa335ee|Hitem:22365|h[Desecrated Boots]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Boots",
-				0,
-				"|cffa335ee|Hitem:22440|h[Cryptstalker Boots]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Boots",
-			},
-			{
-				"Dreamwalker Boots",
-				0,
-				"|cffa335ee|Hitem:22492|h[Dreamwalker Boots]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Boots",
-			},
-			{
-				"Redemption Boots",
-				0,
-				"|cffa335ee|Hitem:22430|h[Redemption Boots]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Boots",
-			},
-			{
-				"Desecrated Sabatons",
-				"T",
-				"|cffa335ee|Hitem:22358|h[Desecrated Sabatons]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Sabatons",
-				0,
-				"|cffa335ee|Hitem:22480|h[Bonescythe Sabatons]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Sabatons",
-			},
-			{
-				"Dreadnaught Sabatons",
-				0,
-				"|cffa335ee|Hitem:22420|h[Dreadnaught Sabatons]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-					"Gothik the Harvester",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Sabatons",
-			},
-			{
-				"Veil of Eclipse",
-				0,
-				"|cffa335ee|Hitem:23017|h[Veil of Eclipse]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Girdle of the Mentor",
-				300,
-				"|cffa335ee|Hitem:23219|h[Girdle of the Mentor]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-				},
-				{
-					"Metal Rogue",
-					"Tank",
-				},
-				"GOLD",
-				"Non-Onslaught Prio",
-			},
-			{
-				"Signet of the Fallen Defender",
-				250,
-				"|cffa335ee|Hitem:23018|h[Signet of the Fallen Defender]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-				},
-				{
-					"Tank",
-				},
-				"GOLD",
-			},
-			{
-				"Idol of Longevity",
-				0,
-				"|cffa335ee|Hitem:23004|h[Idol of Longevity]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-				},
-				{
-					"Druid (Heal)",
-				},
-				"GOLD",
-			},
-			{
-				"Wand of the Whispering Dead",
-				250,
-				"|cffa335ee|Hitem:23009|h[Wand of the Whispering Dead]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-				},
-				{
-					"Priest (Heal)",
-				},
-				"SILVER",
-			},
-			{
-				"Iblis, Blade of the Fallen Seraph",
-				0,
-				"|cffa335ee|Hitem:23014|h[Iblis, Blade of the Fallen Seraph]|h|r",
-				"Naxxramas",
-				{
-					"Instructor Razuvious",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Glacial Headdress",
-				0,
-				"|cffa335ee|Hitem:23032|h[Glacial Headdress]|h|r",
-				"Naxxramas",
-				{
-					"Gothik the Harvester",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Polar Helmet",
-				0,
-				"|cffa335ee|Hitem:23020|h[Polar Helmet]|h|r",
-				"Naxxramas",
-				{
-					"Gothik the Harvester",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Sadist's Collar",
-				0,
-				"|cffa335ee|Hitem:23023|h[Sadist's Collar]|h|r",
-				"Naxxramas",
-				{
-					"Gothik the Harvester",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"The Soul Harvester's Bindings",
-				250,
-				"|cffa335ee|Hitem:23021|h[The Soul Harvester's Bindings]|h|r",
-				"Naxxramas",
-				{
-					"Gothik the Harvester",
-				},
-				{
-					"Mage",
-					"Priest (Shadow)",
-					"Warlock",
-				},
-				"SILVER",
-			},
-			{
-				"Boots of Displacement",
-				0,
-				"|cffa335ee|Hitem:23073|h[Boots of Displacement]|h|r",
-				"Naxxramas",
-				{
-					"Gothik the Harvester",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Desecrated Robe",
-				"T",
-				"|cffa335ee|Hitem:22351|h[Desecrated Robe]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Frostfire Robe",
-				0,
-				"|cffa335ee|Hitem:22496|h[Frostfire Robe]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Robe",
-			},
-			{
-				"Plagueheart Robe",
-				0,
-				"|cffa335ee|Hitem:22504|h[Plagueheart Robe]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Robe",
-			},
-			{
-				"Robe of Faith",
-				0,
-				"|cffa335ee|Hitem:22512|h[Robe of Faith]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Robe",
-			},
-			{
-				"Desecrated Tunic",
-				"T",
-				"|cffa335ee|Hitem:22350|h[Desecrated Tunic]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Tunic",
-				0,
-				"|cffa335ee|Hitem:22436|h[Cryptstalker Tunic]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Tunic",
-			},
-			{
-				"Dreamwalker Tunic",
-				0,
-				"|cffa335ee|Hitem:22488|h[Dreamwalker Tunic]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Tunic",
-			},
-			{
-				"Redemption Tunic",
-				0,
-				"|cffa335ee|Hitem:22425|h[Redemption Tunic]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Tunic",
-			},
-			{
-				"Desecrated Breastplate",
-				"T",
-				"|cffa335ee|Hitem:22349|h[Desecrated Breastplate]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Breastplate",
-				0,
-				"|cffa335ee|Hitem:22476|h[Bonescythe Breastplate]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Breastplate",
-			},
-			{
-				"Dreadnaught Breastplate",
-				0,
-				"|cffa335ee|Hitem:22416|h[Dreadnaught Breastplate]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Breastplate",
-			},
-			{
-				"Leggings of Apocalypse",
-				0,
-				"|cffa335ee|Hitem:23071|h[Leggings of Apocalypse]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-					"KAT4FITE",
-				},
-				"GOLD",
-			},
-			{
-				"Seal of the Damned",
-				250,
-				"|cffa335ee|Hitem:23025|h[Seal of the Damned]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-					"Warlock",
-				},
-				"GOLD",
-			},
-			{
-				"Warmth of Forgiveness",
-				150,
-				"|cffa335ee|Hitem:23027|h[Warmth of Forgiveness]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"GOLD",
-			},
-			{
-				"Soulstring",
-				250,
-				"|cffa335ee|Hitem:22811|h[Soulstring]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-				},
-				"SILVER",
-			},
-			{
-				"Maul of the Redeemed Crusader",
-				0,
-				"|cffa335ee|Hitem:22809|h[Maul of the Redeemed Crusader]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Corrupted Ashbringer",
-				0,
-				"|cffa335ee|Hitem:22691|h[Corrupted Ashbringer]|h|r",
-				"Naxxramas",
-				{
-					"The Four Horsemen",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-				"not-rum prio",
-			},
-			{
-				"Desecrated Shoulderpads",
-				"T",
-				"|cffa335ee|Hitem:22368|h[Desecrated Shoulderpads]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Frostfire Shoulderpads",
-				0,
-				"|cffa335ee|Hitem:22499|h[Frostfire Shoulderpads]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Shoulderpads",
-			},
-			{
-				"Plagueheart Shoulderpads",
-				0,
-				"|cffa335ee|Hitem:22507|h[Plagueheart Shoulderpads]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Shoulderpads",
-			},
-			{
-				"Shoulderpads of Faith",
-				0,
-				"|cffa335ee|Hitem:22515|h[Shoulderpads of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Shoulderpads",
-			},
-			{
-				"Desecrated Spaulders",
-				"T",
-				"|cffa335ee|Hitem:22361|h[Desecrated Spaulders]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Spaulders",
-				0,
-				"|cffa335ee|Hitem:22439|h[Cryptstalker Spaulders]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Spaulders",
-			},
-			{
-				"Dreamwalker Spaulders",
-				0,
-				"|cffa335ee|Hitem:22491|h[Dreamwalker Spaulders]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Spaulders",
-			},
-			{
-				"Redemption Spaulders",
-				0,
-				"|cffa335ee|Hitem:22429|h[Redemption Spaulders]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Spaulders",
-			},
-			{
-				"Desecrated Pauldrons",
-				"T",
-				"|cffa335ee|Hitem:22354|h[Desecrated Pauldrons]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Pauldrons",
-				0,
-				"|cffa335ee|Hitem:22479|h[Bonescythe Pauldrons]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Pauldrons",
-			},
-			{
-				"Dreadnaught Pauldrons",
-				0,
-				"|cffa335ee|Hitem:22419|h[Dreadnaught Pauldrons]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-					"Grobbulus",
-					"Gluth",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Pauldrons",
-			},
-			{
-				"Cloak of Suturing",
-				200,
-				"|cffa335ee|Hitem:22960|h[Cloak of Suturing]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-				"non-cthun cloak prio",
-			},
-			{
-				"Band of Reanimation",
-				250,
-				"|cffa335ee|Hitem:22961|h[Band of Reanimation]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-				},
-				{
-					"Hunter",
-				},
-				"GOLD",
-			},
-			{
-				"Wand of Fates",
-				250,
-				"|cffa335ee|Hitem:22820|h[Wand of Fates]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-				},
-				{
-					"Warlock",
-				},
-				"SILVER",
-			},
-			{
-				"The Plague Bearer",
-				0,
-				"|cffa335ee|Hitem:22818|h[The Plague Bearer]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Severance",
-				0,
-				"|cffa335ee|Hitem:22815|h[Severance]|h|r",
-				"Naxxramas",
-				{
-					"Patchwerk",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Glacial Mantle",
-				0,
-				"|cffa335ee|Hitem:22968|h[Glacial Mantle]|h|r",
-				"Naxxramas",
-				{
-					"Grobbulus",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Icy Scale Spaulders",
-				0,
-				"|cffa335ee|Hitem:22967|h[Icy Scale Spaulders]|h|r",
-				"Naxxramas",
-				{
-					"Grobbulus",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Toxin Injector",
-				0,
-				"|cffa335ee|Hitem:22810|h[Toxin Injector]|h|r",
-				"Naxxramas",
-				{
-					"Grobbulus",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Midnight Haze",
-				0,
-				"|cffa335ee|Hitem:22803|h[Midnight Haze]|h|r",
-				"Naxxramas",
-				{
-					"Grobbulus",
-				},
-				{
-					"Mage",
-					"Priest (Shadow)",
-					"Warlock",
-				},
-				"GOLD",
-				"catchup",
-			},
-			{
-				"The End of Dreams",
-				450,
-				"|cffa335ee|Hitem:22988|h[The End of Dreams]|h|r",
-				"Naxxramas",
-				{
-					"Grobbulus",
-				},
-				{
-					"KAT4FITE",
-					"Priest (Shadow)",
-				},
-				"GOLD",
-			},
-			{
-				"Rime Covered Mantle",
-				250,
-				"|cffa335ee|Hitem:22983|h[Rime Covered Mantle]|h|r",
-				"Naxxramas",
-				{
-					"Gluth",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-			},
-			{
-				"Gluth's Missing Collar",
-				0,
-				"|cffa335ee|Hitem:22981|h[Gluth's Missing Collar]|h|r",
-				"Naxxramas",
-				{
-					"Gluth",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Digested Hand of Power",
-				0,
-				"|cffa335ee|Hitem:22994|h[Digested Hand of Power]|h|r",
-				"Naxxramas",
-				{
-					"Gluth",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Death's Bargain",
-				200,
-				"|cffa335ee|Hitem:23075|h[Death's Bargain]|h|r",
-				"Naxxramas",
-				{
-					"Gluth",
-				},
-				{
-					"Paladin (Holy)",
-				},
-				"SILVER",
-			},
-			{
-				"Claymore of Unholy Might",
-				0,
-				"|cffa335ee|Hitem:22813|h[Claymore of Unholy Might]|h|r",
-				"Naxxramas",
-				{
-					"Gluth",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Desecrated Circlet",
-				"T",
-				"|cffa335ee|Hitem:22367|h[Desecrated Circlet]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Circlet of Faith",
-				0,
-				"|cffa335ee|Hitem:22514|h[Circlet of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Circlet",
-			},
-			{
-				"Frostfire Circlet",
-				0,
-				"|cffa335ee|Hitem:22498|h[Frostfire Circlet]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Circlet",
-			},
-			{
-				"Plagueheart Circlet",
-				0,
-				"|cffa335ee|Hitem:22506|h[Plagueheart Circlet]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Circlet",
-			},
-			{
-				"Desecrated Headpiece",
-				"T",
-				"|cffa335ee|Hitem:22360|h[Desecrated Headpiece]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Cryptstalker Headpiece",
-				0,
-				"|cffa335ee|Hitem:22438|h[Cryptstalker Headpiece]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Headpiece",
-			},
-			{
-				"Dreamwalker Headpiece",
-				0,
-				"|cffa335ee|Hitem:22490|h[Dreamwalker Headpiece]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Headpiece",
-			},
-			{
-				"Redemption Headpiece",
-				0,
-				"|cffa335ee|Hitem:22428|h[Redemption Headpiece]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Headpiece",
-			},
-			{
-				"Desecrated Helmet",
-				"T",
-				"|cffa335ee|Hitem:22353|h[Desecrated Helmet]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Helmet",
-				0,
-				"|cffa335ee|Hitem:22478|h[Bonescythe Helmet]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Helmet",
-			},
-			{
-				"Dreadnaught Helmet",
-				0,
-				"|cffa335ee|Hitem:22418|h[Dreadnaught Helmet]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-				},
-				"GOLD",
-				[9] = "Desecrated Helmet",
-			},
-			{
-				"Plated Abomination Ribcage",
-				300,
-				"|cffa335ee|Hitem:23000|h[Plated Abomination Ribcage]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-					"Metal Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Leggings of Polarity",
-				350,
-				"|cffa335ee|Hitem:23070|h[Leggings of Polarity]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-			},
-			{
-				"Eye of Diminution",
-				200,
-				"|cffa335ee|Hitem:23001|h[Eye of Diminution]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-					"Mage",
-					"Paladin (Holy)",
-					"Warlock",
-				},
-				"SILVER",
-			},
-			{
-				"The Castigator",
-				300,
-				"|cffa335ee|Hitem:22808|h[The Castigator]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-					"Metal Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Spire of Twilight",
-				300,
-				"|cffa335ee|Hitem:22801|h[Spire of Twilight]|h|r",
-				"Naxxramas",
-				{
-					"Thaddius",
-				},
-				{
-					"Druid (Heal)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-				"benediction prio",
-			},
-			{
-				"Cloak of the Necropolis",
-				200,
-				"|cffa335ee|Hitem:23050|h[Cloak of the Necropolis]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"SILVER",
-				"non-cthun cloak prio",
-			},
-			{
-				"Shroud of Dominion",
-				300,
-				"|cffa335ee|Hitem:23045|h[Shroud of Dominion]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Hunter",
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-				},
-				"SILVER",
-			},
-			{
-				"Glyph of Deflection",
-				0,
-				"|cffa335ee|Hitem:23040|h[Glyph of Deflection]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Eye of the Dead",
-				450,
-				"|cffa335ee|Hitem:23047|h[Eye of the Dead]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"GOLD",
-				"Non-Rejuv Gem Prio",
-			},
-			{
-				"Slayer's Crest",
-				400,
-				"|cffa335ee|Hitem:23041|h[Slayer's Crest]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Hunter",
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"The Restrained Essence of Sapphiron",
-				450,
-				"|cffa335ee|Hitem:23046|h[The Restrained Essence of Sapphiron]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Mage",
-					"Priest (Shadow)",
-					"Warlock",
-				},
-				"GOLD",
-				"Non-Nelths tear prio",
-			},
-			{
-				"Sapphiron's Left Eye",
-				250,
-				"|cffa335ee|Hitem:23049|h[Sapphiron's Left Eye]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-				"wraith blade prio; non twins oh prio",
-			},
-			{
-				"Sapphiron's Right Eye",
-				300,
-				"|cffa335ee|Hitem:23048|h[Sapphiron's Right Eye]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Druid (Heal)",
-					"Priest (Heal)",
-				},
-				"SILVER",
-				"1h prio",
-			},
-			{
-				"The Face of Death",
-				250,
-				"|cffa335ee|Hitem:23043|h[The Face of Death]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-					"Tank",
-				},
-				"GOLD",
-			},
-			{
-				"Claw of the Frost Wyrm",
-				0,
-				"|cffa335ee|Hitem:23242|h[Claw of the Frost Wyrm]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Fortitude of the Scourge",
-				0,
-				"|cffa335ee|Hitem:23549|h[Fortitude of the Scourge]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Might of the Scourge",
-				0,
-				"|cffa335ee|Hitem:23548|h[Might of the Scourge]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Power of the Scourge",
-				0,
-				"|cffa335ee|Hitem:23545|h[Power of the Scourge]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Resilience of the Scourge",
-				0,
-				"|cffa335ee|Hitem:23547|h[Resilience of the Scourge]|h|r",
-				"Naxxramas",
-				{
-					"Sapphiron",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Gem of Trapped Innocents",
-				250,
-				"|cffa335ee|Hitem:23057|h[Gem of Trapped Innocents]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-				"Non-Twins or Rag Neck Prio",
-			},
-			{
-				"Stormrage's Talisman of Seething",
-				150,
-				"|cffa335ee|Hitem:23053|h[Stormrage's Talisman of Seething]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Nerubian Slavemaker",
-				600,
-				"|cffa335ee|Hitem:22812|h[Nerubian Slavemaker]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Hunter",
-				},
-				"GOLD",
-			},
-			{
-				"Doomfinger",
-				0,
-				"|cffa335ee|Hitem:22821|h[Doomfinger]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Shield of Condemnation",
-				300,
-				"|cffa335ee|Hitem:22819|h[Shield of Condemnation]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Paladin (Holy)",
-				},
-				"SILVER",
-			},
-			{
-				"Kingsfall",
-				0,
-				"|cffa335ee|Hitem:22802|h[Kingsfall]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Hammer of the Twisting Nether",
-				0,
-				"|cffa335ee|Hitem:23056|h[Hammer of the Twisting Nether]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
-				},
-				"GOLD",
-			},
-			{
-				"Gressil, Dawn of Ruin",
-				0,
-				"|cffa335ee|Hitem:23054|h[Gressil, Dawn of Ruin]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"The Hungering Cold",
-				0,
-				"|cffa335ee|Hitem:23577|h[The Hungering Cold]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Metal Rogue",
-					"Slicey Rogue",
-					"Tank",
-				},
-				"GOLD",
-				"wrong-race prio",
-			},
-			{
-				"Might of Menethil",
-				0,
-				"|cffa335ee|Hitem:22798|h[Might of Menethil]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Soulseeker",
-				0,
-				"|cffa335ee|Hitem:22799|h[Soulseeker]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Mage",
-					"Warlock",
-				},
-				"GOLD",
-			},
-			{
-				"The Phylactery of Kel'Thuzad",
-				0,
-				"|cffa335ee|Hitem:22520|h[The Phylactery of Kel'Thuzad]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-					"Progression",
-				},
-				"GOLD",
-			},
-			{
-				"Ring of Faith",
-				0,
-				"|cffa335ee|Hitem:23061|h[Ring of Faith]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Frostfire Ring",
-				0,
-				"|cffa335ee|Hitem:23062|h[Frostfire Ring]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Plagueheart Ring",
-				0,
-				"|cffa335ee|Hitem:23063|h[Plagueheart Ring]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Bonescythe Ring",
-				0,
-				"|cffa335ee|Hitem:23060|h[Bonescythe Ring]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Ring of the Dreamwalker",
-				0,
-				"|cffa335ee|Hitem:23064|h[Ring of the Dreamwalker]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Ring of the Cryptstalker",
-				0,
-				"|cffa335ee|Hitem:23067|h[Ring of the Cryptstalker]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Ring of Redemption",
-				0,
-				"|cffa335ee|Hitem:23066|h[Ring of Redemption]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Ring of the Dreadnaught",
-				0,
-				"|cffa335ee|Hitem:23059|h[Ring of the Dreadnaught]|h|r",
-				"Naxxramas",
-				{
-					"Kel'Thuzad",
-				},
-				{
-				},
-				"GOLD",
-			},
-			{
-				"Pauldrons of Elemental Fury",
-				0,
-				"|cffa335ee|Hitem:23664|h[Pauldrons of Elemental Fury]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Spaulders of the Grand Crusader",
-				0,
-				"|cffa335ee|Hitem:23667|h[Spaulders of the Grand Crusader]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Necro-Knight's Garb",
-				0,
-				"|cffa335ee|Hitem:23069|h[Necro-Knight's Garb]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Ghoul Skin Tunic",
-				0,
-				"|cffa335ee|Hitem:23226|h[Ghoul Skin Tunic]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"KAT4FITE",
-					"Tank",
-				},
-				"GOLD",
-			},
-			{
-				"Girdle of Elemental Fury",
-				0,
-				"|cffa335ee|Hitem:23663|h[Girdle of Elemental Fury]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Belt of the Grand Crusader",
-				0,
-				"|cffa335ee|Hitem:23666|h[Belt of the Grand Crusader]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Leggings of Elemental Fury",
-				0,
-				"|cffa335ee|Hitem:23665|h[Leggings of Elemental Fury]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Leggings of the Grand Crusader",
-				0,
-				"|cffa335ee|Hitem:23668|h[Leggings of the Grand Crusader]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Ring of the Eternal Flame",
-				250,
-				"|cffa335ee|Hitem:23237|h[Ring of the Eternal Flame]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Mage",
-				},
-				"GOLD",
-			},
-			{
-				"Stygian Buckler",
-				0,
-				"|cffa335ee|Hitem:23238|h[Stygian Buckler]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Garbage",
-				},
-				"GOLD",
-			},
-			{
-				"Harbinger of Doom",
-				450,
-				"|cffa335ee|Hitem:23044|h[Harbinger of Doom]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Stabby Rogue",
-				},
-				"GOLD",
-			},
-			{
-				"Misplaced Servo Arm",
-				450,
-				"|cffa335ee|Hitem:23221|h[Misplaced Servo Arm]|h|r",
-				"Naxxramas",
-				{
-					"Naxx Trash",
-				},
-				{
-					"Metal Rogue",
-				},
-				"GOLD",
-			},
+			["data"] = {
+				{
+					"Desecrated Bindings",
+					"T",
+					"|cffa335ee|Hitem:22369|h[Desecrated Bindings]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bindings of Faith",
+					0,
+					"|cffa335ee|Hitem:22519|h[Bindings of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Bindings",
+				},
+				{
+					"Frostfire Bindings",
+					0,
+					"|cffa335ee|Hitem:22503|h[Frostfire Bindings]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Bindings",
+				},
+				{
+					"Plagueheart Bindings",
+					0,
+					"|cffa335ee|Hitem:22511|h[Plagueheart Bindings]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Bindings",
+				},
+				{
+					"Desecrated Wristguards",
+					"T",
+					"|cffa335ee|Hitem:22362|h[Desecrated Wristguards]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Wristguards",
+					0,
+					"|cffa335ee|Hitem:22443|h[Cryptstalker Wristguards]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Wristguards",
+				},
+				{
+					"Dreamwalker Wristguards",
+					0,
+					"|cffa335ee|Hitem:22495|h[Dreamwalker Wristguards]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Wristguards",
+				},
+				{
+					"Redemption Wristguards",
+					0,
+					"|cffa335ee|Hitem:22424|h[Redemption Wristguards]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Wristguards",
+				},
+				{
+					"Desecrated Bracers",
+					"T",
+					"|cffa335ee|Hitem:22355|h[Desecrated Bracers]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Bracers",
+					0,
+					"|cffa335ee|Hitem:22483|h[Bonescythe Bracers]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Bracers",
+				},
+				{
+					"Dreadnaught Bracers",
+					0,
+					"|cffa335ee|Hitem:22423|h[Dreadnaught Bracers]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+						"Grand Widow Faerlina",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Bracers",
+				},
+				{
+					"Touch of Frost",
+					0,
+					"|cffa335ee|Hitem:22935|h[Touch of Frost]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Cryptfiend Silk Cloak",
+					200,
+					"|cffa335ee|Hitem:22938|h[Cryptfiend Silk Cloak]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+					},
+					{
+						"Tank",
+					},
+					"SILVER",
+					"Physical Council, ",
+				},
+				{
+					"Wristguards of Vengeance",
+					200,
+					"|cffa335ee|Hitem:22936|h[Wristguards of Vengeance]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+					},
+					{
+						"Metal Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Band of Unanswered Prayers",
+					250,
+					"|cffa335ee|Hitem:22939|h[Band of Unanswered Prayers]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+					},
+					{
+						"Druid (Heal)",
+						"Priest (Heal)",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Gem of Nerubis",
+					0,
+					"|cffa335ee|Hitem:22937|h[Gem of Nerubis]|h|r",
+					"Naxxramas",
+					{
+						"Anub'Rekhan",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Malice Stone Pendant",
+					0,
+					"|cffa335ee|Hitem:22943|h[Malice Stone Pendant]|h|r",
+					"Naxxramas",
+					{
+						"Grand Widow Faerlina",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Polar Shoulder Pads",
+					0,
+					"|cffa335ee|Hitem:22941|h[Polar Shoulder Pads]|h|r",
+					"Naxxramas",
+					{
+						"Grand Widow Faerlina",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Icebane Pauldrons",
+					0,
+					"|cffa335ee|Hitem:22940|h[Icebane Pauldrons]|h|r",
+					"Naxxramas",
+					{
+						"Grand Widow Faerlina",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"The Widow's Embrace",
+					300,
+					"|cffa335ee|Hitem:22942|h[The Widow's Embrace]|h|r",
+					"Naxxramas",
+					{
+						"Grand Widow Faerlina",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, Non-cthun mace prio",
+				},
+				{
+					"Widow's Remorse",
+					250,
+					"|cffa335ee|Hitem:22806|h[Widow's Remorse]|h|r",
+					"Naxxramas",
+					{
+						"Grand Widow Faerlina",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Tank",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Desecrated Gloves",
+					"T",
+					"|cffa335ee|Hitem:22371|h[Desecrated Gloves]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Frostfire Gloves",
+					0,
+					"|cffa335ee|Hitem:22501|h[Frostfire Gloves]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Gloves",
+				},
+				{
+					"Gloves of Faith",
+					0,
+					"|cffa335ee|Hitem:22517|h[Gloves of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Gloves",
+				},
+				{
+					"Plagueheart Gloves",
+					0,
+					"|cffa335ee|Hitem:22509|h[Plagueheart Gloves]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Gloves",
+				},
+				{
+					"Desecrated Handguards",
+					"T",
+					"|cffa335ee|Hitem:22364|h[Desecrated Handguards]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Handguards",
+					0,
+					"|cffa335ee|Hitem:22441|h[Cryptstalker Handguards]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Handguards",
+				},
+				{
+					"Dreamwalker Handguards",
+					0,
+					"|cffa335ee|Hitem:22493|h[Dreamwalker Handguards]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Handguards",
+				},
+				{
+					"Redemption Handguards",
+					0,
+					"|cffa335ee|Hitem:22426|h[Redemption Handguards]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Handguards",
+				},
+				{
+					"Desecrated Gauntlets",
+					"T",
+					"|cffa335ee|Hitem:22357|h[Desecrated Gauntlets]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Gauntlets",
+					0,
+					"|cffa335ee|Hitem:22481|h[Bonescythe Gauntlets]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Gauntlets",
+				},
+				{
+					"Dreadnaught Gauntlets",
+					0,
+					"|cffa335ee|Hitem:22421|h[Dreadnaught Gauntlets]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Gauntlets",
+				},
+				{
+					"Pendant of Forgotten Names",
+					0,
+					"|cffa335ee|Hitem:22947|h[Pendant of Forgotten Names]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Crystal Webbed Robe",
+					300,
+					"|cffa335ee|Hitem:23220|h[Crystal Webbed Robe]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+						"Priest (Shadow)",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Kiss of the Spider",
+					0,
+					"|cffa335ee|Hitem:22954|h[Kiss of the Spider]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Wraith Blade",
+					600,
+					"|cffa335ee|Hitem:22807|h[Wraith Blade]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, twins/sapph oh prio",
+				},
+				{
+					"Maexxna's Fang",
+					0,
+					"|cffa335ee|Hitem:22804|h[Maexxna's Fang]|h|r",
+					"Naxxramas",
+					{
+						"Maexxna",
+					},
+					{
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Desecrated Belt",
+					"T",
+					"|cffa335ee|Hitem:22370|h[Desecrated Belt]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Belt of Faith",
+					0,
+					"|cffa335ee|Hitem:22518|h[Belt of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Belt",
+				},
+				{
+					"Frostfire Belt",
+					0,
+					"|cffa335ee|Hitem:22502|h[Frostfire Belt]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Belt",
+				},
+				{
+					"Plagueheart Belt",
+					0,
+					"|cffa335ee|Hitem:22510|h[Plagueheart Belt]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Belt",
+				},
+				{
+					"Desecrated Girdle",
+					"T",
+					"|cffa335ee|Hitem:22363|h[Desecrated Girdle]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Girdle",
+					0,
+					"|cffa335ee|Hitem:22442|h[Cryptstalker Girdle]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Girdle",
+				},
+				{
+					"Dreamwalker Girdle",
+					0,
+					"|cffa335ee|Hitem:22494|h[Dreamwalker Girdle]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Girdle",
+				},
+				{
+					"Redemption Girdle",
+					0,
+					"|cffa335ee|Hitem:22431|h[Redemption Girdle]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Girdle",
+				},
+				{
+					"Desecrated Waistguard",
+					"T",
+					"|cffa335ee|Hitem:22356|h[Desecrated Waistguard]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Waistguard",
+					0,
+					"|cffa335ee|Hitem:22482|h[Bonescythe Waistguard]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Waistguard",
+				},
+				{
+					"Dreadnaught Waistguard",
+					0,
+					"|cffa335ee|Hitem:22422|h[Dreadnaught Waistguard]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+						"Heigan the Unclean",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Waistguard",
+				},
+				{
+					"Cloak of the Scourge",
+					200,
+					"|cffa335ee|Hitem:23030|h[Cloak of the Scourge]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+					},
+					{
+						"Tank",
+					},
+					"SILVER",
+					"Physical Council, ",
+				},
+				{
+					"Band of the Inevitable",
+					250,
+					"|cffa335ee|Hitem:23031|h[Band of the Inevitable]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Hailstone Band",
+					0,
+					"|cffa335ee|Hitem:23028|h[Hailstone Band]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Noth's Frigid Heart",
+					150,
+					"|cffa335ee|Hitem:23029|h[Noth's Frigid Heart]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Libram of Light",
+					150,
+					"|cffa335ee|Hitem:23006|h[Libram of Light]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+					},
+					{
+						"Paladin (Holy)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Hatchet of Sundered Bone",
+					0,
+					"|cffa335ee|Hitem:22816|h[Hatchet of Sundered Bone]|h|r",
+					"Naxxramas",
+					{
+						"Noth the Plaguebringer",
+					},
+					{
+						"Hunter",
+						"Metal Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Preceptor's Hat",
+					100,
+					"|cffa335ee|Hitem:23035|h[Preceptor's Hat]|h|r",
+					"Naxxramas",
+					{
+						"Heigan the Unclean",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Icy Scale Coif",
+					0,
+					"|cffa335ee|Hitem:23033|h[Icy Scale Coif]|h|r",
+					"Naxxramas",
+					{
+						"Heigan the Unclean",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Icebane Helmet",
+					0,
+					"|cffa335ee|Hitem:23019|h[Icebane Helmet]|h|r",
+					"Naxxramas",
+					{
+						"Heigan the Unclean",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Necklace of Necropsy",
+					150,
+					"|cffa335ee|Hitem:23036|h[Necklace of Necropsy]|h|r",
+					"Naxxramas",
+					{
+						"Heigan the Unclean",
+					},
+					{
+						"Druid (Heal)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Legplates of Carnage",
+					0,
+					"|cffa335ee|Hitem:23068|h[Legplates of Carnage]|h|r",
+					"Naxxramas",
+					{
+						"Heigan the Unclean",
+					},
+					{
+						"Metal Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Desecrated Leggings",
+					"T",
+					"|cffa335ee|Hitem:22366|h[Desecrated Leggings]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Frostfire Leggings",
+					0,
+					"|cffa335ee|Hitem:22497|h[Frostfire Leggings]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Leggings",
+				},
+				{
+					"Leggings of Faith",
+					0,
+					"|cffa335ee|Hitem:22513|h[Leggings of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Leggings",
+				},
+				{
+					"Plagueheart Leggings",
+					0,
+					"|cffa335ee|Hitem:22505|h[Plagueheart Leggings]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Leggings",
+				},
+				{
+					"Desecrated Legguards",
+					"T",
+					"|cffa335ee|Hitem:22359|h[Desecrated Legguards]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Legguards",
+					0,
+					"|cffa335ee|Hitem:22437|h[Cryptstalker Legguards]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Legguards",
+				},
+				{
+					"Dreamwalker Legguards",
+					0,
+					"|cffa335ee|Hitem:22489|h[Dreamwalker Legguards]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Legguards",
+				},
+				{
+					"Redemption Legguards",
+					0,
+					"|cffa335ee|Hitem:22427|h[Redemption Legguards]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Legguards",
+				},
+				{
+					"Desecrated Legplates",
+					"T",
+					"|cffa335ee|Hitem:22352|h[Desecrated Legplates]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Legplates",
+					0,
+					"|cffa335ee|Hitem:22477|h[Bonescythe Legplates]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Legplates",
+				},
+				{
+					"Dreadnaught Legplates",
+					0,
+					"|cffa335ee|Hitem:22417|h[Dreadnaught Legplates]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Legplates",
+				},
+				{
+					"Band of Unnatural Forces",
+					250,
+					"|cffa335ee|Hitem:23038|h[Band of Unnatural Forces]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+						"KAT4FITE",
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Ring of Spiritual Fervor",
+					0,
+					"|cffa335ee|Hitem:23037|h[Ring of Spiritual Fervor]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Loatheb's Reflection",
+					0,
+					"|cffa335ee|Hitem:23042|h[Loatheb's Reflection]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"The Eye of Nerub",
+					250,
+					"|cffa335ee|Hitem:23039|h[The Eye of Nerub]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+						"Hunter",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Brimstone Staff",
+					0,
+					"|cffa335ee|Hitem:22800|h[Brimstone Staff]|h|r",
+					"Naxxramas",
+					{
+						"Loatheb",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Desecrated Sandals",
+					"T",
+					"|cffa335ee|Hitem:22372|h[Desecrated Sandals]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Frostfire Sandals",
+					0,
+					"|cffa335ee|Hitem:22500|h[Frostfire Sandals]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Sandals",
+				},
+				{
+					"Plagueheart Sandals",
+					0,
+					"|cffa335ee|Hitem:22508|h[Plagueheart Sandals]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Sandals",
+				},
+				{
+					"Sandals of Faith",
+					0,
+					"|cffa335ee|Hitem:22516|h[Sandals of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Sandals",
+				},
+				{
+					"Desecrated Boots",
+					"T",
+					"|cffa335ee|Hitem:22365|h[Desecrated Boots]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Boots",
+					0,
+					"|cffa335ee|Hitem:22440|h[Cryptstalker Boots]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Boots",
+				},
+				{
+					"Dreamwalker Boots",
+					0,
+					"|cffa335ee|Hitem:22492|h[Dreamwalker Boots]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Boots",
+				},
+				{
+					"Redemption Boots",
+					0,
+					"|cffa335ee|Hitem:22430|h[Redemption Boots]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Boots",
+				},
+				{
+					"Desecrated Sabatons",
+					"T",
+					"|cffa335ee|Hitem:22358|h[Desecrated Sabatons]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Sabatons",
+					0,
+					"|cffa335ee|Hitem:22480|h[Bonescythe Sabatons]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Sabatons",
+				},
+				{
+					"Dreadnaught Sabatons",
+					0,
+					"|cffa335ee|Hitem:22420|h[Dreadnaught Sabatons]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+						"Gothik the Harvester",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Sabatons",
+				},
+				{
+					"Veil of Eclipse",
+					0,
+					"|cffa335ee|Hitem:23017|h[Veil of Eclipse]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Girdle of the Mentor",
+					300,
+					"|cffa335ee|Hitem:23219|h[Girdle of the Mentor]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+					},
+					{
+						"Metal Rogue",
+						"Tank",
+					},
+					"GOLD",
+					"Physical Council, Non-Onslaught Prio",
+				},
+				{
+					"Signet of the Fallen Defender",
+					250,
+					"|cffa335ee|Hitem:23018|h[Signet of the Fallen Defender]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+					},
+					{
+						"Tank",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Idol of Longevity",
+					0,
+					"|cffa335ee|Hitem:23004|h[Idol of Longevity]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+					},
+					{
+						"Druid (Heal)",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Wand of the Whispering Dead",
+					250,
+					"|cffa335ee|Hitem:23009|h[Wand of the Whispering Dead]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+					},
+					{
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Iblis, Blade of the Fallen Seraph",
+					0,
+					"|cffa335ee|Hitem:23014|h[Iblis, Blade of the Fallen Seraph]|h|r",
+					"Naxxramas",
+					{
+						"Instructor Razuvious",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Glacial Headdress",
+					0,
+					"|cffa335ee|Hitem:23032|h[Glacial Headdress]|h|r",
+					"Naxxramas",
+					{
+						"Gothik the Harvester",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Polar Helmet",
+					0,
+					"|cffa335ee|Hitem:23020|h[Polar Helmet]|h|r",
+					"Naxxramas",
+					{
+						"Gothik the Harvester",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Sadist's Collar",
+					0,
+					"|cffa335ee|Hitem:23023|h[Sadist's Collar]|h|r",
+					"Naxxramas",
+					{
+						"Gothik the Harvester",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"The Soul Harvester's Bindings",
+					250,
+					"|cffa335ee|Hitem:23021|h[The Soul Harvester's Bindings]|h|r",
+					"Naxxramas",
+					{
+						"Gothik the Harvester",
+					},
+					{
+						"Mage",
+						"Priest (Shadow)",
+						"Warlock",
+					},
+					"SILVER",
+					"Caster Council, ",
+				},
+				{
+					"Boots of Displacement",
+					0,
+					"|cffa335ee|Hitem:23073|h[Boots of Displacement]|h|r",
+					"Naxxramas",
+					{
+						"Gothik the Harvester",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Desecrated Robe",
+					"T",
+					"|cffa335ee|Hitem:22351|h[Desecrated Robe]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Frostfire Robe",
+					0,
+					"|cffa335ee|Hitem:22496|h[Frostfire Robe]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Robe",
+				},
+				{
+					"Plagueheart Robe",
+					0,
+					"|cffa335ee|Hitem:22504|h[Plagueheart Robe]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Robe",
+				},
+				{
+					"Robe of Faith",
+					0,
+					"|cffa335ee|Hitem:22512|h[Robe of Faith]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Robe",
+				},
+				{
+					"Desecrated Tunic",
+					"T",
+					"|cffa335ee|Hitem:22350|h[Desecrated Tunic]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Tunic",
+					0,
+					"|cffa335ee|Hitem:22436|h[Cryptstalker Tunic]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Tunic",
+				},
+				{
+					"Dreamwalker Tunic",
+					0,
+					"|cffa335ee|Hitem:22488|h[Dreamwalker Tunic]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Tunic",
+				},
+				{
+					"Redemption Tunic",
+					0,
+					"|cffa335ee|Hitem:22425|h[Redemption Tunic]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Tunic",
+				},
+				{
+					"Desecrated Breastplate",
+					"T",
+					"|cffa335ee|Hitem:22349|h[Desecrated Breastplate]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Breastplate",
+					0,
+					"|cffa335ee|Hitem:22476|h[Bonescythe Breastplate]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Breastplate",
+				},
+				{
+					"Dreadnaught Breastplate",
+					0,
+					"|cffa335ee|Hitem:22416|h[Dreadnaught Breastplate]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Breastplate",
+				},
+				{
+					"Leggings of Apocalypse",
+					0,
+					"|cffa335ee|Hitem:23071|h[Leggings of Apocalypse]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+						"KAT4FITE",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Seal of the Damned",
+					250,
+					"|cffa335ee|Hitem:23025|h[Seal of the Damned]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Warmth of Forgiveness",
+					150,
+					"|cffa335ee|Hitem:23027|h[Warmth of Forgiveness]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Soulstring",
+					250,
+					"|cffa335ee|Hitem:22811|h[Soulstring]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Stabby Rogue",
+					},
+					"SILVER",
+					"Physical Council, ",
+				},
+				{
+					"Maul of the Redeemed Crusader",
+					0,
+					"|cffa335ee|Hitem:22809|h[Maul of the Redeemed Crusader]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Corrupted Ashbringer",
+					0,
+					"|cffa335ee|Hitem:22691|h[Corrupted Ashbringer]|h|r",
+					"Naxxramas",
+					{
+						"The Four Horsemen",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, not-rum prio",
+				},
+				{
+					"Desecrated Shoulderpads",
+					"T",
+					"|cffa335ee|Hitem:22368|h[Desecrated Shoulderpads]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Frostfire Shoulderpads",
+					0,
+					"|cffa335ee|Hitem:22499|h[Frostfire Shoulderpads]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Shoulderpads",
+				},
+				{
+					"Plagueheart Shoulderpads",
+					0,
+					"|cffa335ee|Hitem:22507|h[Plagueheart Shoulderpads]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Shoulderpads",
+				},
+				{
+					"Shoulderpads of Faith",
+					0,
+					"|cffa335ee|Hitem:22515|h[Shoulderpads of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Shoulderpads",
+				},
+				{
+					"Desecrated Spaulders",
+					"T",
+					"|cffa335ee|Hitem:22361|h[Desecrated Spaulders]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Spaulders",
+					0,
+					"|cffa335ee|Hitem:22439|h[Cryptstalker Spaulders]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Spaulders",
+				},
+				{
+					"Dreamwalker Spaulders",
+					0,
+					"|cffa335ee|Hitem:22491|h[Dreamwalker Spaulders]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Spaulders",
+				},
+				{
+					"Redemption Spaulders",
+					0,
+					"|cffa335ee|Hitem:22429|h[Redemption Spaulders]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Spaulders",
+				},
+				{
+					"Desecrated Pauldrons",
+					"T",
+					"|cffa335ee|Hitem:22354|h[Desecrated Pauldrons]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Pauldrons",
+					0,
+					"|cffa335ee|Hitem:22479|h[Bonescythe Pauldrons]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Pauldrons",
+				},
+				{
+					"Dreadnaught Pauldrons",
+					0,
+					"|cffa335ee|Hitem:22419|h[Dreadnaught Pauldrons]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+						"Grobbulus",
+						"Gluth",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Pauldrons",
+				},
+				{
+					"Cloak of Suturing",
+					200,
+					"|cffa335ee|Hitem:22960|h[Cloak of Suturing]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, non-cthun cloak prio",
+				},
+				{
+					"Band of Reanimation",
+					250,
+					"|cffa335ee|Hitem:22961|h[Band of Reanimation]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+					},
+					{
+						"Hunter",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Wand of Fates",
+					250,
+					"|cffa335ee|Hitem:22820|h[Wand of Fates]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+					},
+					{
+						"Warlock",
+					},
+					"SILVER",
+					"Caster Council, ",
+				},
+				{
+					"The Plague Bearer",
+					0,
+					"|cffa335ee|Hitem:22818|h[The Plague Bearer]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Severance",
+					0,
+					"|cffa335ee|Hitem:22815|h[Severance]|h|r",
+					"Naxxramas",
+					{
+						"Patchwerk",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Glacial Mantle",
+					0,
+					"|cffa335ee|Hitem:22968|h[Glacial Mantle]|h|r",
+					"Naxxramas",
+					{
+						"Grobbulus",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Icy Scale Spaulders",
+					0,
+					"|cffa335ee|Hitem:22967|h[Icy Scale Spaulders]|h|r",
+					"Naxxramas",
+					{
+						"Grobbulus",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Toxin Injector",
+					0,
+					"|cffa335ee|Hitem:22810|h[Toxin Injector]|h|r",
+					"Naxxramas",
+					{
+						"Grobbulus",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Midnight Haze",
+					0,
+					"|cffa335ee|Hitem:22803|h[Midnight Haze]|h|r",
+					"Naxxramas",
+					{
+						"Grobbulus",
+					},
+					{
+						"Mage",
+						"Priest (Shadow)",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, catchup",
+				},
+				{
+					"The End of Dreams",
+					450,
+					"|cffa335ee|Hitem:22988|h[The End of Dreams]|h|r",
+					"Naxxramas",
+					{
+						"Grobbulus",
+					},
+					{
+						"KAT4FITE",
+						"Priest (Shadow)",
+					},
+					"GOLD",
+					"Caster Council, Physical Council, ",
+				},
+				{
+					"Rime Covered Mantle",
+					250,
+					"|cffa335ee|Hitem:22983|h[Rime Covered Mantle]|h|r",
+					"Naxxramas",
+					{
+						"Gluth",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Gluth's Missing Collar",
+					0,
+					"|cffa335ee|Hitem:22981|h[Gluth's Missing Collar]|h|r",
+					"Naxxramas",
+					{
+						"Gluth",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Digested Hand of Power",
+					0,
+					"|cffa335ee|Hitem:22994|h[Digested Hand of Power]|h|r",
+					"Naxxramas",
+					{
+						"Gluth",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Death's Bargain",
+					200,
+					"|cffa335ee|Hitem:23075|h[Death's Bargain]|h|r",
+					"Naxxramas",
+					{
+						"Gluth",
+					},
+					{
+						"Paladin (Holy)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Claymore of Unholy Might",
+					0,
+					"|cffa335ee|Hitem:22813|h[Claymore of Unholy Might]|h|r",
+					"Naxxramas",
+					{
+						"Gluth",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Desecrated Circlet",
+					"T",
+					"|cffa335ee|Hitem:22367|h[Desecrated Circlet]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Circlet of Faith",
+					0,
+					"|cffa335ee|Hitem:22514|h[Circlet of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Circlet",
+				},
+				{
+					"Frostfire Circlet",
+					0,
+					"|cffa335ee|Hitem:22498|h[Frostfire Circlet]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Circlet",
+				},
+				{
+					"Plagueheart Circlet",
+					0,
+					"|cffa335ee|Hitem:22506|h[Plagueheart Circlet]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Circlet",
+				},
+				{
+					"Desecrated Headpiece",
+					"T",
+					"|cffa335ee|Hitem:22360|h[Desecrated Headpiece]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Cryptstalker Headpiece",
+					0,
+					"|cffa335ee|Hitem:22438|h[Cryptstalker Headpiece]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Headpiece",
+				},
+				{
+					"Dreamwalker Headpiece",
+					0,
+					"|cffa335ee|Hitem:22490|h[Dreamwalker Headpiece]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Headpiece",
+				},
+				{
+					"Redemption Headpiece",
+					0,
+					"|cffa335ee|Hitem:22428|h[Redemption Headpiece]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Headpiece",
+				},
+				{
+					"Desecrated Helmet",
+					"T",
+					"|cffa335ee|Hitem:22353|h[Desecrated Helmet]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+				},
+				{
+					"Bonescythe Helmet",
+					0,
+					"|cffa335ee|Hitem:22478|h[Bonescythe Helmet]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Helmet",
+				},
+				{
+					"Dreadnaught Helmet",
+					0,
+					"|cffa335ee|Hitem:22418|h[Dreadnaught Helmet]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+					},
+					"GOLD",
+					[9] = "Desecrated Helmet",
+				},
+				{
+					"Plated Abomination Ribcage",
+					300,
+					"|cffa335ee|Hitem:23000|h[Plated Abomination Ribcage]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+						"Metal Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Leggings of Polarity",
+					350,
+					"|cffa335ee|Hitem:23070|h[Leggings of Polarity]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Eye of Diminution",
+					200,
+					"|cffa335ee|Hitem:23001|h[Eye of Diminution]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+						"Mage",
+						"Paladin (Holy)",
+						"Warlock",
+					},
+					"SILVER",
+					"Caster Council, Healer Council, ",
+				},
+				{
+					"The Castigator",
+					300,
+					"|cffa335ee|Hitem:22808|h[The Castigator]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+						"Metal Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Spire of Twilight",
+					300,
+					"|cffa335ee|Hitem:22801|h[Spire of Twilight]|h|r",
+					"Naxxramas",
+					{
+						"Thaddius",
+					},
+					{
+						"Druid (Heal)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, benediction prio",
+				},
+				{
+					"Cloak of the Necropolis",
+					200,
+					"|cffa335ee|Hitem:23050|h[Cloak of the Necropolis]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"SILVER",
+					"Caster Council, non-cthun cloak prio",
+				},
+				{
+					"Shroud of Dominion",
+					300,
+					"|cffa335ee|Hitem:23045|h[Shroud of Dominion]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Hunter",
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Stabby Rogue",
+					},
+					"SILVER",
+					"Physical Council, ",
+				},
+				{
+					"Glyph of Deflection",
+					0,
+					"|cffa335ee|Hitem:23040|h[Glyph of Deflection]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Eye of the Dead",
+					450,
+					"|cffa335ee|Hitem:23047|h[Eye of the Dead]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"GOLD",
+					"Healer Council, Non-Rejuv Gem Prio",
+				},
+				{
+					"Slayer's Crest",
+					400,
+					"|cffa335ee|Hitem:23041|h[Slayer's Crest]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Hunter",
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"The Restrained Essence of Sapphiron",
+					450,
+					"|cffa335ee|Hitem:23046|h[The Restrained Essence of Sapphiron]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Mage",
+						"Priest (Shadow)",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, Non-Nelths tear prio",
+				},
+				{
+					"Sapphiron's Left Eye",
+					250,
+					"|cffa335ee|Hitem:23049|h[Sapphiron's Left Eye]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, wraith blade prio; non twins oh prio",
+				},
+				{
+					"Sapphiron's Right Eye",
+					300,
+					"|cffa335ee|Hitem:23048|h[Sapphiron's Right Eye]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Druid (Heal)",
+						"Priest (Heal)",
+					},
+					"SILVER",
+					"Healer Council, 1h prio",
+				},
+				{
+					"The Face of Death",
+					250,
+					"|cffa335ee|Hitem:23043|h[The Face of Death]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+						"Tank",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Claw of the Frost Wyrm",
+					0,
+					"|cffa335ee|Hitem:23242|h[Claw of the Frost Wyrm]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Fortitude of the Scourge",
+					0,
+					"|cffa335ee|Hitem:23549|h[Fortitude of the Scourge]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Might of the Scourge",
+					0,
+					"|cffa335ee|Hitem:23548|h[Might of the Scourge]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Power of the Scourge",
+					0,
+					"|cffa335ee|Hitem:23545|h[Power of the Scourge]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Resilience of the Scourge",
+					0,
+					"|cffa335ee|Hitem:23547|h[Resilience of the Scourge]|h|r",
+					"Naxxramas",
+					{
+						"Sapphiron",
+					},
+					{
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Gem of Trapped Innocents",
+					250,
+					"|cffa335ee|Hitem:23057|h[Gem of Trapped Innocents]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, Non-Twins or Rag Neck Prio",
+				},
+				{
+					"Stormrage's Talisman of Seething",
+					150,
+					"|cffa335ee|Hitem:23053|h[Stormrage's Talisman of Seething]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Nerubian Slavemaker",
+					600,
+					"|cffa335ee|Hitem:22812|h[Nerubian Slavemaker]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Hunter",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Doomfinger",
+					0,
+					"|cffa335ee|Hitem:22821|h[Doomfinger]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Shield of Condemnation",
+					300,
+					"|cffa335ee|Hitem:22819|h[Shield of Condemnation]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Paladin (Holy)",
+					},
+					"SILVER",
+					"Healer Council, ",
+				},
+				{
+					"Kingsfall",
+					0,
+					"|cffa335ee|Hitem:22802|h[Kingsfall]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Hammer of the Twisting Nether",
+					0,
+					"|cffa335ee|Hitem:23056|h[Hammer of the Twisting Nether]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Druid (Heal)",
+						"Paladin (Holy)",
+						"Priest (Heal)",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Gressil, Dawn of Ruin",
+					0,
+					"|cffa335ee|Hitem:23054|h[Gressil, Dawn of Ruin]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"The Hungering Cold",
+					0,
+					"|cffa335ee|Hitem:23577|h[The Hungering Cold]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Metal Rogue",
+						"Slicey Rogue",
+						"Tank",
+					},
+					"GOLD",
+					"Physical Council, wrong-race prio",
+				},
+				{
+					"Might of Menethil",
+					0,
+					"|cffa335ee|Hitem:22798|h[Might of Menethil]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Soulseeker",
+					0,
+					"|cffa335ee|Hitem:22799|h[Soulseeker]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Mage",
+						"Warlock",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"The Phylactery of Kel'Thuzad",
+					0,
+					"|cffa335ee|Hitem:22520|h[The Phylactery of Kel'Thuzad]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+						"Progression",
+					},
+					"GOLD",
+				},
+				{
+					"Ring of Faith",
+					0,
+					"|cffa335ee|Hitem:23061|h[Ring of Faith]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Frostfire Ring",
+					0,
+					"|cffa335ee|Hitem:23062|h[Frostfire Ring]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Plagueheart Ring",
+					0,
+					"|cffa335ee|Hitem:23063|h[Plagueheart Ring]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Bonescythe Ring",
+					0,
+					"|cffa335ee|Hitem:23060|h[Bonescythe Ring]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Ring of the Dreamwalker",
+					0,
+					"|cffa335ee|Hitem:23064|h[Ring of the Dreamwalker]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Ring of the Cryptstalker",
+					0,
+					"|cffa335ee|Hitem:23067|h[Ring of the Cryptstalker]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Ring of Redemption",
+					0,
+					"|cffa335ee|Hitem:23066|h[Ring of Redemption]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Ring of the Dreadnaught",
+					0,
+					"|cffa335ee|Hitem:23059|h[Ring of the Dreadnaught]|h|r",
+					"Naxxramas",
+					{
+						"Kel'Thuzad",
+					},
+					{
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Spaulders of the Grand Crusader",
+					0,
+					"|cffa335ee|Hitem:23667|h[Spaulders of the Grand Crusader]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Necro-Knight's Garb",
+					0,
+					"|cffa335ee|Hitem:23069|h[Necro-Knight's Garb]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Ghoul Skin Tunic",
+					0,
+					"|cffa335ee|Hitem:23226|h[Ghoul Skin Tunic]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"KAT4FITE",
+						"Tank",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Girdle of Elemental Fury",
+					0,
+					"|cffa335ee|Hitem:23663|h[Girdle of Elemental Fury]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Belt of the Grand Crusader",
+					0,
+					"|cffa335ee|Hitem:23666|h[Belt of the Grand Crusader]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Healer Council, ",
+				},
+				{
+					"Leggings of the Grand Crusader",
+					0,
+					"|cffa335ee|Hitem:23668|h[Leggings of the Grand Crusader]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Ring of the Eternal Flame",
+					250,
+					"|cffa335ee|Hitem:23237|h[Ring of the Eternal Flame]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Mage",
+					},
+					"GOLD",
+					"Caster Council, ",
+				},
+				{
+					"Stygian Buckler",
+					0,
+					"|cffa335ee|Hitem:23238|h[Stygian Buckler]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Garbage",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Harbinger of Doom",
+					450,
+					"|cffa335ee|Hitem:23044|h[Harbinger of Doom]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Stabby Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+				{
+					"Misplaced Servo Arm",
+					450,
+					"|cffa335ee|Hitem:23221|h[Misplaced Servo Arm]|h|r",
+					"Naxxramas",
+					{
+						"Naxx Trash",
+					},
+					{
+						"Metal Rogue",
+					},
+					"GOLD",
+					"Physical Council, ",
+				},
+			},
+			["timestamp"] = 1605235799,
 		},
 	},
 };
