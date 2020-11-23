@@ -16,6 +16,7 @@ local pairs = pairs;
 local unpack = unpack;
 local select = select;
 local type = type;
+local next = next;
 
 local activeWindow;
 local allowedClasses = {
@@ -759,6 +760,10 @@ local function DrawItems(container, options)
         -- Priority
         function(a, b)
             local apri, bpri = a[ABGP.ItemDataIndex.PRIORITY], b[ABGP.ItemDataIndex.PRIORITY];
+            local aHas, bHas = next(apri), next(bpri);
+            if aHas ~= bHas then return aHas, false; end
+            if not aHas then return false, true; end
+
             local firstDiff, lastA;
             for i, pri in ipairs(apri) do
                 lastA = i;
@@ -960,6 +965,16 @@ local function DrawItems(container, options)
                                 container:AddChild(priorityEditor);
                                 ABGP:AddWidgetTooltip(priorityEditor, "Edit the class/spec priorities of this item.");
 
+                                -- local currentCouncil = (data[ABGP.ItemDataIndex.NOTES] or ""):match("^(.+) Council");
+                                -- local councilSelector = AceGUI:Create("Dropdown");
+                                -- councilSelector:SetFullWidth(true);
+                                -- councilSelector:SetLabel("Council");
+                                -- councilSelector:SetList({ Caster = "Caster", Healer = "Healer", Physical = "Physical" });
+                                -- councilSelector:SetValue(currentCouncil);
+                                -- councilSelector:SetCallback("OnValueChanged", function() processItemValue(); end);
+                                -- costContainer:AddChild(councilSelector);
+                                -- ABGP:AddWidgetTooltip(councilSelector, "Choose the council for this item.");
+
                                 local notes = AceGUI:Create("ABGP_EditBox");
                                 notes:SetLabel("Notes");
                                 notes:SetFullWidth(true);
@@ -1057,6 +1072,14 @@ local function DrawItems(container, options)
                                         notes = notes:GetValue(),
                                         priority = {},
                                     };
+                                    -- local council = councilSelector:GetValue();
+                                    -- if council then
+                                    --     if newValue.notes then
+                                    --         newValue.notes = newValue.notes:gsub("^.+ Council, ", "");
+                                    --     end
+                                    --     newValue.notes = council .. " Council, " .. (newValue.notes or "");
+                                    --     notes:SetValue(newValue.notes);
+                                    -- end
                                     for pri, checked in pairs(priorities) do
                                         if checked then table.insert(newValue.priority, pri); end
                                     end
@@ -1080,37 +1103,37 @@ local function DrawItems(container, options)
                             arg1 = data,
                             notCheckable = true
                         });
-                        if showPrerelease and ABGP:GetDebugOpt() then
-                            table.insert(context, {
-                                text = "Delete item",
-                                func = function(self, data)
-                                    for i, v in ipairs(items) do
-                                        if v[ABGP.ItemDataIndex.NAME] == data[ABGP.ItemDataIndex.NAME] then
-                                            ABGP:Notify("Removing item: %s", v[ABGP.ItemDataIndex.NAME]);
-                                            table.remove(items, i);
-                                            if v[ABGP.ItemDataIndex.GP] == "T" then
-                                                while true do
-                                                    local found = false;
-                                                    for i, v in ipairs(items) do
-                                                        if v[ABGP.ItemDataIndex.RELATED] == data[ABGP.ItemDataIndex.NAME] then
-                                                            ABGP:Notify("Removing item: %s", v[ABGP.ItemDataIndex.NAME]);
-                                                            found = true;
-                                                            table.remove(items, i);
-                                                            break;
-                                                        end
-                                                    end
-                                                    if not found then break; end
-                                                end
-                                            end
-                                            break;
-                                        end
-                                    end
-                                    PopulateUI({ rebuild = false, preserveScroll = true });
-                                end,
-                                arg1 = data,
-                                notCheckable = true
-                            });
-                        end
+                        -- if showPrerelease and ABGP:GetDebugOpt() then
+                        --     table.insert(context, {
+                        --         text = "Delete item",
+                        --         func = function(self, data)
+                        --             for i, v in ipairs(items) do
+                        --                 if v[ABGP.ItemDataIndex.NAME] == data[ABGP.ItemDataIndex.NAME] then
+                        --                     ABGP:Notify("Removing item: %s", v[ABGP.ItemDataIndex.NAME]);
+                        --                     table.remove(items, i);
+                        --                     if v[ABGP.ItemDataIndex.GP] == "T" then
+                        --                         while true do
+                        --                             local found = false;
+                        --                             for i, v in ipairs(items) do
+                        --                                 if v[ABGP.ItemDataIndex.RELATED] == data[ABGP.ItemDataIndex.NAME] then
+                        --                                     ABGP:Notify("Removing item: %s", v[ABGP.ItemDataIndex.NAME]);
+                        --                                     found = true;
+                        --                                     table.remove(items, i);
+                        --                                     break;
+                        --                                 end
+                        --                             end
+                        --                             if not found then break; end
+                        --                         end
+                        --                     end
+                        --                     break;
+                        --                 end
+                        --             end
+                        --             PopulateUI({ rebuild = false, preserveScroll = true });
+                        --         end,
+                        --         arg1 = data,
+                        --         notCheckable = true
+                        --     });
+                        -- end
                     end
                     table.insert(context, { text = "Cancel", notCheckable = true, fontObject = "GameFontDisableSmall" });
                     ABGP:ShowContextMenu(context);
