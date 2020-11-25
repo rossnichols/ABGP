@@ -5,6 +5,8 @@
 ## Version: ${ADDON_VERSION}
 ## OptionalDeps: ElvUI
 ## SavedVariables: ABGP_DB, ABGP_WindowManagement, ABGP_Data2, ABGP_RaidInfo3, ABGP_MessageLog
+## X-Curse-Project-ID: 361413
+## X-WoWI-ID: 25801
 
 embeds.xml
 core.lua
