@@ -447,16 +447,16 @@ function ABGP:CalculateCurrentGP(player, category, history)
            entry[self.ItemHistoryIndex.PLAYER] == player and
            entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = gp + entry[self.ItemHistoryIndex.GP];
-            -- print("adding", entry[self.ItemHistoryIndex.GP]);
+            -- print("adding", entry[self.ItemHistoryIndex.GP], "=>", gp);
         elseif entryType == self.ItemHistoryType.DECAY then
             gp = gp * (1 - (entry[self.ItemHistoryIndex.VALUE] * 0.01));
             gp = max(gp, entry[self.ItemHistoryIndex.FLOOR]);
-            -- print("decaying");
+            -- print("decaying", "=>", gp);
         elseif entryType == self.ItemHistoryType.RESET and
                entry[self.ItemHistoryIndex.PLAYER] == player and
                entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = entry[self.ItemHistoryIndex.GP];
-            -- print("resetting", entry[self.ItemHistoryIndex.GP]);
+            -- print("resetting", entry[self.ItemHistoryIndex.GP], "=>", gp);
         end
     end
 

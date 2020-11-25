@@ -1,5 +1,5 @@
 local _G = _G;
-_G.ABGP = _G.LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0");
+_G.ABGP = _G.LibStub("AceAddon-3.0"):NewAddon("ABGP", "AceBucket-3.0", "AceConsole-3.0", "AceComm-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0");
 local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
@@ -54,11 +54,11 @@ local function OnGroupJoined()
     ABGP:EventOnGroupJoined();
 end
 
-local function OnGuildRosterUpdate()
-    ABGP:RebuildGuildInfo();
-    ABGP:VersionOnGuildRosterUpdate();
-    ABGP:PriorityOnGuildRosterUpdate();
-    ABGP:HistoryOnGuildRosterUpdate();
+function ABGP:OnGuildRosterUpdate()
+    self:RebuildGuildInfo();
+    self:VersionOnGuildRosterUpdate();
+    self:PriorityOnGuildRosterUpdate();
+    self:HistoryOnGuildRosterUpdate();
 end
 
 function ABGP:OnEnable()
@@ -161,7 +161,7 @@ function ABGP:OnEnable()
             self:OutsiderOnOfficerNotesUpdated(data, distribution, sender, version);
         elseif IsInGuild() then
             GuildRoster();
-            OnGuildRosterUpdate();
+            self:OnGuildRosterUpdate();
         end
     end, self);
 
@@ -262,11 +262,7 @@ function ABGP:OnEnable()
     local lootSelfRegex = self:ConvertChatString(_G.LOOT_ITEM_SELF);
     local lastZone;
 
-    self:RegisterEvent("GUILD_ROSTER_UPDATE", function(self, event, ...)
-        if not self:Get("outsider") then
-            OnGuildRosterUpdate();
-        end
-    end, self);
+    self:RegisterBucketEvent("GUILD_ROSTER_UPDATE", 1, "OnGuildRosterUpdate");
     self:RegisterEvent("CHAT_MSG_SYSTEM", function(self, event, ...)
         local text = ...;
         local sender, roll, minRoll, maxRoll = text:match(rollRegex);
