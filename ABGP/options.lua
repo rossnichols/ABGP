@@ -141,16 +141,9 @@ function ABGP:InitOptions()
                             get = function(info) return not self.db.char.minimap.hide; end,
                             set = function(info, v) self.db.char.minimap.hide = not v; self:RefreshMinimapIcon(); end,
                         },
-                        windowPos = {
-                            name = "Reset Window Pos",
-                            order = 2,
-                            desc = "Reset window positions. Make sure none are currently opened.",
-                            type = "execute",
-                            func = function() _G.ABGP_WindowManagement = {}; end,
-                        },
                         itemHistoryLimit = {
                             name = "Tooltip item history",
-                            order = 3,
+                            order = 2,
                             desc = "Controls the max number of item history entries to show in a tooltip when holding alt. Set to 0 to disable.",
                             type = "range",
                             min = 0,
@@ -162,7 +155,7 @@ function ABGP:InitOptions()
                         },
                         commMonitor = {
                             name = "Monitor addon comms",
-                            order = 4,
+                            order = 3,
                             desc = "Monitor addon communication to help diagnose delayed messages.",
                             type = "toggle",
                             get = function(info) return self.db.char.commMonitoringEnabled; end,
