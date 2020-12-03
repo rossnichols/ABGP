@@ -106,7 +106,7 @@ function ABGP:RequestOnItemRolled(data, distribution, sender)
     local itemLink = data.itemLink;
 
     if activeItems[itemLink] then
-        self:Notify("You rolled %d on %s.", data.roll, itemLink);
+        self:Notify("You rolled %d on %s.", data.roll, data.selectedItem or itemLink);
         activeItems[itemLink].roll = data.roll;
     end
 end
@@ -193,6 +193,7 @@ end
 
 function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
+    local selectedItemLink = data.selectedItem or itemLink;
 
     local player = data.player;
     local override = data.override;
@@ -240,15 +241,15 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
             rollValue = data.roll;
         end
         local lessAwesome = (data.cost == 0);
-        _G.LootAlertSystem:AddAlert(itemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
-        self:Notify("%s%s was awarded to you%s%s!%s", itemLink, multiple, cost, requestType, unfaved);
+        _G.LootAlertSystem:AddAlert(selectedItemLink, nil, rollType, rollValue, nil, nil, nil, nil, lessAwesome, nil, true, nil);
+        self:Notify("%s%s was awarded to you%s%s!%s", selectedItemLink, multiple, cost, requestType, unfaved);
     else
         local roll = "";
         if data.roll then
             roll = (" with a roll of %d"):format(data.roll);
         end
         self:Notify("%s%s was awarded to %s%s%s%s.",
-            itemLink, multiple, self:ColorizeName(player), cost, requestType, roll);
+            selectedItemLink, multiple, self:ColorizeName(player), cost, requestType, roll);
     end
 end
 
@@ -282,7 +283,7 @@ function ABGP:RequestOnItemRequestReceived(data, distribution, sender)
     local itemLink = data.itemLink;
     if not activeItems[itemLink] then return; end
 
-    self:Notify("Your %s %s has been received.", data.requestType and "request for" or "pass on", itemLink);
+    self:Notify("Your %s %s has been received.", data.requestType and "request for" or "pass on", data.selectedItem or itemLink);
 
     activeItems[itemLink].receivedAck = true;
 
@@ -319,7 +320,7 @@ function ABGP:RequestOnItemRequestRejected(data, distribution, sender)
             itemLink = itemLink,
         });
     else
-        self:Notify("%s's request for %s has been |cffff0000rejected|r!", self:ColorizeName(data.player), itemLink);
+        self:Notify("%s's request for %s has been |cffff0000rejected|r!", self:ColorizeName(data.player), data.selectedItem or itemLink);
         if data.reason then
             self:Notify("Reason: %s", data.reason);
         end

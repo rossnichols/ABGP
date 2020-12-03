@@ -56,6 +56,14 @@ local function CalculateCost(request)
         end
     end
 
+    if currentItem.selectedItem then
+        local selectedValue = ABGP:GetItemValue(ABGP:GetItemId(currentItem.selectedItem));
+        if selectedValue then
+            returnedCost.cost = selectedValue.gp;
+            returnedCost.category = selectedValue.category;
+        end
+    end
+
     return currentItem.costEdited or returnedCost, true;
 end
 
@@ -93,8 +101,9 @@ local function AwardItem(request)
     end
     local award = ("%s for %s"):format(ABGP:ColorizeName(player), ABGP:FormatCost(cost));
 
-    _G.StaticPopup_Show("ABGP_CONFIRM_DIST", itemLink, award, {
+    _G.StaticPopup_Show("ABGP_CONFIRM_DIST", request.selectedItem or itemLink, award, {
         itemLink = currentItem.itemLink,
+        selectedItem = request.selectedItem,
         player = player,
         cost = cost,
         roll = request.roll,
@@ -253,7 +262,13 @@ local function RebuildUI()
     for _, rolls in pairs(maxRolls) do
         for _, elt in ipairs(rolls.elts) do
             elt.data.currentMaxRoll = true;
-            elt:SetData(elt.data, ABGP:GetItemEquipSlots(currentItem.itemLink));
+            local lowPrio;
+            local active = ABGP:GetActivePlayer(elt.data.player);
+            if active and not active.trial and elt.data.ep and currentItem.value then
+                lowPrio = elt.data.ep < ABGP:GetMinEP();
+            end
+            local equippable = ABGP:GetItemEquipSlots(currentItem.itemLink) or (currentItem.value and currentItem.value.token);
+            elt:SetData(elt.data, equippable, lowPrio);
         end
     end
 
@@ -305,8 +320,20 @@ local function RebuildUI()
             local button = AceGUI:Create("ABGP_ItemButton");
             relatedElts[i] = button;
             button:SetItemLink(itemLink, false);
+            button:SetClickable(true);
+            button:SetCallback("OnClick", function(widget, event, button)
+                for _, button in pairs(relatedElts) do
+                    if button ~= widget then
+                        button.frame:SetChecked(false);
+                    end
+                end
+
+                currentItem.selectedItem = widget.frame:GetChecked() and itemLink or nil;
+                RebuildUI();
+            end);
             button.frame:SetParent(itemRef.frame);
             button.frame:SetScale(0.5);
+            button.frame:SetChecked(itemLink == currentItem.selectedItem);
 
             if i == #related then
                 button.frame:SetPoint("TOPRIGHT", itemRef.frame, "BOTTOMRIGHT", -3, 0);
@@ -315,6 +342,8 @@ local function RebuildUI()
             end
         end
     end
+
+    window:GetUserData("chooseButton"):SetDisabled(related and not currentItem.selectedItem);
 
     ABGP:HideContextMenu();
 end
@@ -404,6 +433,7 @@ local function ProcessNewRequest(request, summary)
     if request.roll and UnitExists(request.player) then
         ABGP:SendComm(ABGP.CommTypes.ITEM_ROLLED, {
             itemLink = request.itemLink,
+            selectedItem = request.selectedItem,
             roll = request.roll,
         }, "WHISPER", request.player);
     end
@@ -463,6 +493,7 @@ function ABGP:DistribOnRoll(sender, roll)
             currentItem.rolls[elt.data.player] = roll;
             self:SendComm(self.CommTypes.ITEM_ROLLED, {
                 itemLink = currentItem.itemLink,
+                selectedItem = elt.data.selectedItem,
                 roll = roll,
             }, "WHISPER", sender);
             RebuildUI();
@@ -484,6 +515,7 @@ local function AddActiveItem(data)
         costBase = value and { cost = (value.token and 0 or value.gp), category = value.category } or { cost = 0 },
         selectedRequest = nil,
         selectedElt = nil,
+        selectedItem = nil,
         costEdited = nil,
         closeConfirmed = false,
         distributions = {},
@@ -550,8 +582,9 @@ local function ChooseRecipient()
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
 
-    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", itemLink, ABGP:FormatCost(cost), {
+    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", currentItem.selectedItem or itemLink, ABGP:FormatCost(cost), {
         itemLink = currentItem.itemLink,
+        selectedItem = currentItem.selectedItem,
         cost = cost,
         value = currentItem.value,
         requestType = ABGP.RequestTypes.MANUAL
@@ -628,6 +661,7 @@ local function DistributeItem(data)
     local historyId = ABGP:GetHistoryId();
     local commData = {
         itemLink = data.itemLink,
+        selectedItem = data.selectedItem,
         player = data.player,
         cost = data.cost,
         roll = data.roll,
@@ -676,11 +710,13 @@ function ABGP:DistribOnStateSync(data, distribution, sender)
         if senderRequest then
             table.insert(summary, { self.CommTypes.ITEM_REQUEST_RECEIVED.name, {
                 itemLink = item.itemLink,
+                selectedItem = senderRequest.selectedItem,
                 requestType = senderRequest.requestType,
             }});
             if item.rolls[sender] then
                 table.insert(summary, { self.CommTypes.ITEM_ROLLED.name, {
                     itemLink = item.itemLink,
+                    selectedItem = senderRequest.selectedItem,
                     roll = item.rolls[sender],
                 }});
             end
@@ -818,6 +854,7 @@ function ABGP:DistribOnItemRequest(data, distribution, sender, version)
 
     self:SendComm(self.CommTypes.ITEM_REQUEST_RECEIVED, {
         itemLink = itemLink,
+        selectedItem = data.selectedItem,
         requestType = data.requestType,
     }, "WHISPER", sender);
     ProcessNewRequest(request);
@@ -838,6 +875,7 @@ function ABGP:DistribOnItemPass(data, distribution, sender)
 
     self:SendComm(self.CommTypes.ITEM_REQUEST_RECEIVED, {
         itemLink = itemLink,
+        selectedItem = data.selectedItem,
     }, "WHISPER", sender);
     RemoveRequest(sender, itemLink);
 end
@@ -1119,6 +1157,7 @@ function ABGP:CreateDistribWindow()
     choose:SetText("Choose Player");
     choose:SetCallback("OnClick", function() ChooseRecipient(); end);
     mainLine:AddChild(choose);
+    window:SetUserData("chooseButton", choose);
     self:AddWidgetTooltip(choose, "Manually choose the player to whom the item will be awarded. If configured, the item will be ML'd to them.");
 
     local spacer = AceGUI:Create("Label");

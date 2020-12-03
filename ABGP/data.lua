@@ -263,7 +263,7 @@ end
 function ABGP:HistoryOnItemAwarded(data, distribution, sender)
     if data.testItem then return; end
 
-    local itemLink = data.itemLink;
+    local itemLink = data.selectedItem or data.itemLink;
     local itemName = ABGP:GetItemName(itemLink);
     local value = ABGP:GetItemValue(itemName);
     if not value then return; end

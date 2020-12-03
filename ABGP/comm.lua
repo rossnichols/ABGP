@@ -60,7 +60,7 @@ end
 
 -- The prefix can be revved to create a backwards-incompatible version.
 function ABGP:GetCommPrefix()
-    return "ABGP6";
+    return "ABGP7";
 end
 
 -- Highest ID: 24
@@ -99,6 +99,7 @@ ABGP.CommTypes = {
 
     ITEM_AWARDED = { name = "ITEM_AWARDED", id = 7, priority = "ALERT", fireLocally = true },
     -- itemLink: item link string
+    -- selectedItem: item link string or nil
     -- player: string
     -- cost: number
     -- roll: number
