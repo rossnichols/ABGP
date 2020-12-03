@@ -7,7 +7,7 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1606779828, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1607021324, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		data = {
 			{
 				"Barrage Shoulders",
@@ -915,7 +915,7 @@ ABGP.initialData = {
 			},
 			{
 				"Conqueror's Greaves",
-				300,
+				200,
 				"|cffa335ee|Hitem:21333|h[Conqueror's Greaves]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -924,12 +924,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
 				"Conqueror's Spaulders",
-				300,
+				200,
 				"|cffa335ee|Hitem:21330|h[Conqueror's Spaulders]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -943,7 +943,7 @@ ABGP.initialData = {
 			},
 			{
 				"Deathdealer's Boots",
-				300,
+				200,
 				"|cffa335ee|Hitem:21359|h[Deathdealer's Boots]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -952,12 +952,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
 				"Deathdealer's Spaulders",
-				300,
+				200,
 				"|cffa335ee|Hitem:21361|h[Deathdealer's Spaulders]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -966,12 +966,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
 				"Footwraps of the Oracle",
-				300,
+				200,
 				"|cffa335ee|Hitem:21349|h[Footwraps of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -980,12 +980,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
 				"Mantle of the Oracle",
-				300,
+				200,
 				"|cffa335ee|Hitem:21350|h[Mantle of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -994,12 +994,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
 				"Striker's Footguards",
-				300,
+				200,
 				"|cffa335ee|Hitem:21365|h[Striker's Footguards]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1008,12 +1008,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
 				"Striker's Pauldrons",
-				300,
+				200,
 				"|cffa335ee|Hitem:21367|h[Striker's Pauldrons]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1022,7 +1022,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Qiraji Bindings of Command",
 			},
 			{
@@ -1402,7 +1402,7 @@ ABGP.initialData = {
 			},
 			{
 				"Conqueror's Crown",
-				150,
+				250,
 				"|cffa335ee|Hitem:21329|h[Conqueror's Crown]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1410,12 +1410,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
 				"Doomcaller's Circlet",
-				150,
+				250,
 				"|cffa335ee|Hitem:21337|h[Doomcaller's Circlet]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1423,12 +1423,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
 				"Enigma Circlet",
-				150,
+				250,
 				"|cffa335ee|Hitem:21347|h[Enigma Circlet]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1436,12 +1436,12 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
 				"Tiara of the Oracle",
-				150,
+				250,
 				"|cffa335ee|Hitem:21348|h[Tiara of the Oracle]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1449,7 +1449,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Vek'nilash's Circlet",
 			},
 			{
@@ -1483,7 +1483,7 @@ ABGP.initialData = {
 			},
 			{
 				"Gloves of the Hidden Temple",
-				100,
+				200,
 				"|cffa335ee|Hitem:21605|h[Gloves of the Hidden Temple]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -1492,7 +1492,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Regenerating Belt of Vek'nilash",
@@ -1972,7 +1972,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -1985,7 +1985,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -1998,7 +1998,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -2011,7 +2011,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Carapace of the Old God",
 			},
 			{
@@ -2134,7 +2134,7 @@ ABGP.initialData = {
 			},
 			{
 				"Ring of the Fallen God",
-				200,
+				150,
 				"|cffa335ee|Hitem:21709|h[Ring of the Fallen God]|h|r",
 				"Ahn'Qiraj",
 				{
@@ -2341,6 +2341,7 @@ ABGP.initialData = {
 				},
 				{
 					"Stabby Rogue",
+					"Tank",
 				},
 				"SILVER",
 			},
@@ -3876,7 +3877,7 @@ ABGP.initialData = {
 			},
 			{
 				"Master Dragonslayer's Medallion",
-				1,
+				0,
 				"|cffa335ee|Hitem:19383|h[Master Dragonslayer's Medallion]|h|r",
 				"Blackwing Lair",
 				{
@@ -3889,7 +3890,7 @@ ABGP.initialData = {
 			},
 			{
 				"Master Dragonslayer's Ring",
-				1,
+				0,
 				"|cffa335ee|Hitem:19384|h[Master Dragonslayer's Ring]|h|r",
 				"Blackwing Lair",
 				{
