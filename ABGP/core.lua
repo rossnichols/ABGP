@@ -803,15 +803,6 @@ end
 local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
 scanner:SetOwner(UIParent, "ANCHOR_NONE");
 function ABGP:IsItemUsable(itemLink)
-    local itemId = self:GetItemId(itemLink);
-    local value = self:GetItemValue(itemId) or self:GetItemValue(itemId, true);
-    if value and value.token then
-        for _, item in ipairs(value.token) do
-            if self:IsItemUsable(item) then return true; end
-        end
-        return false;
-    end
-
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
     -- self:LogVerbose("%s:%d", itemLink, select("#", scanner:GetRegions()));
@@ -831,6 +822,15 @@ function ABGP:IsItemUsable(itemLink)
                 -- self:LogVerbose("%s %.2f %.2f %.2f", region:GetText() or "<none>", r, g, b);
             end
         end
+    end
+
+    local itemId = self:GetItemId(itemLink);
+    local value = self:GetItemValue(itemId) or self:GetItemValue(itemId, true);
+    if value and value.token then
+        for _, item in ipairs(value.token) do
+            if self:IsItemUsable(item) then return true; end
+        end
+        return false;
     end
 
     return true;
