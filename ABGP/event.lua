@@ -30,6 +30,7 @@ local instanceIds = {
     ZulGurub        = 309,
     AQ20            = 509,
     AQ40            = 531,
+    Naxxramas       = 533,
 };
 
 -- https://wow.tools/dbc/?dbc=dungeonencounter
@@ -83,6 +84,22 @@ ABGP.BossIds = {
     Buru        = 721,
     Ayamiss     = 722,
     Ossirian    = 723,
+
+    AnubRekhan  = 1107,
+    Gluth       = 1108,
+    Gothik      = 1109,
+    Faerlina    = 1110,
+    Grobbulus   = 1111,
+    Heigan      = 1112,
+    Razuvious   = 1113,
+    KulThuzad   = 1114,
+    Loatheb     = 1115,
+    Maexxna     = 1116,
+    Noth        = 1117,
+    Patchwerk   = 1118,
+    Sapphiron   = 1119,
+    Thaddius    = 1120,
+    FourHorse   = 1121,
 };
 local bossIds = ABGP.BossIds;
 
@@ -128,6 +145,14 @@ local instanceInfo = {
         name = "Ruins of Ahn'Qiraj",
         bosses = {
             bossIds.Kurinnaxx, bossIds.Rajaxx, bossIds.Buru, bossIds.Ayamiss, bossIds.Ossirian, bossIds.Moam
+        },
+    },
+    [instanceIds.Naxxramas] = {
+        name = "Naxxramas",
+        bosses = {
+            bossIds.AnubRekhan, bossIds.Gluth, bossIds.Gothik, bossIds.Faerlina, bossIds.Grobbulus,
+            bossIds.Heigan, bossIds.Razuvious, bossIds.Loatheb, bossIds.Maexxna, bossIds.Noth,
+            bossIds.Patchwerk, bossIds.Thaddius, bossIds.FourHorse, bossIds.Sapphiron, bossIds.KulThuzad,
         },
     },
 };
@@ -182,6 +207,22 @@ local bossInfo = {
     [bossIds.Ayamiss]   = { instance = instanceIds.AQ20, name = "Ayamiss the Hunter" },
     [bossIds.Ossirian]  = { instance = instanceIds.AQ20, name = "Ossirian the Unscarred" },
     [bossIds.Moam]      = { instance = instanceIds.AQ20, name = "Moam" },
+
+    [bossIds.AnubRekhan] = { instance = instanceIds.Naxxramas, name = "Anub'Rekhan" },
+    [bossIds.Gluth]      = { instance = instanceIds.Naxxramas, name = "Gluth" },
+    [bossIds.Gothik]     = { instance = instanceIds.Naxxramas, name = "Gothik the Harvester" },
+    [bossIds.Faerlina]   = { instance = instanceIds.Naxxramas, name = "Grand Widow Faerlina" },
+    [bossIds.Grobbulus]  = { instance = instanceIds.Naxxramas, name = "Grobbulus" },
+    [bossIds.Heigan]     = { instance = instanceIds.Naxxramas, name = "Heigan the Unclean" },
+    [bossIds.Razuvious]  = { instance = instanceIds.Naxxramas, name = "Instructor Razuvious" },
+    [bossIds.KulThuzad]  = { instance = instanceIds.Naxxramas, name = "Kel'Thuzad" },
+    [bossIds.Loatheb]    = { instance = instanceIds.Naxxramas, name = "Loatheb" },
+    [bossIds.Maexxna]    = { instance = instanceIds.Naxxramas, name = "Maexxna" },
+    [bossIds.Noth]       = { instance = instanceIds.Naxxramas, name = "Noth the Plaguebringer" },
+    [bossIds.Patchwerk]  = { instance = instanceIds.Naxxramas, name = "Patchwerk" },
+    [bossIds.Sapphiron]  = { instance = instanceIds.Naxxramas, name = "Sapphiron" },
+    [bossIds.Thaddius]   = { instance = instanceIds.Naxxramas, name = "Thaddius" },
+    [bossIds.FourHorse]  = { instance = instanceIds.Naxxramas, name = "The Four Horsemen" },
 };
 
 local tickCategories = {
@@ -573,9 +614,10 @@ function ABGP:StartRaid()
 
     local custom = -1;
     local instances = {
-        [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
-        [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
+        [instanceIds.Naxxramas] = instanceInfo[instanceIds.Naxxramas].name,
         [instanceIds.AQ40] = instanceInfo[instanceIds.AQ40].name,
+        [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
+        [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
         [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
         [instanceIds.ZulGurub] = instanceInfo[instanceIds.ZulGurub].name,
         [instanceIds.AQ20] = instanceInfo[instanceIds.AQ20].name,
@@ -585,9 +627,10 @@ function ABGP:StartRaid()
     instanceSelector:SetFullWidth(true);
     instanceSelector:SetLabel("Instance");
     instanceSelector:SetList(instances, {
-        instanceIds.MoltenCore,
-        instanceIds.BlackwingLair,
+        instanceIds.Naxxramas,
         instanceIds.AQ40,
+        instanceIds.BlackwingLair,
+        instanceIds.MoltenCore,
         instanceIds.Onyxia,
         instanceIds.ZulGurub,
         instanceIds.AQ20,
