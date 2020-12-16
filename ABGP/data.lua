@@ -3,6 +3,7 @@ local ABGP = _G.ABGP;
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
+local GetServerTime = GetServerTime;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local ipairs = ipairs;
@@ -13,6 +14,7 @@ local pairs = pairs;
 local max = max;
 local unpack = unpack;
 local abs = abs;
+local date = date;
 
 local updatingNotes = false;
 local hasCompleteCached = false;
@@ -400,6 +402,32 @@ function ABGP:ProcessItemHistory(gpHistory, includeNonItems)
     end);
 
     return processed;
+end
+
+function ABGP:GetMispricedAwards(timeLen)
+    timeLen = timeLen or 30 * 24 * 60 * 60;
+    local history = self:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
+    local endTime = GetServerTime() - timeLen;
+
+    for i, entry in ipairs(history) do
+        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM then
+            if entry[self.ItemHistoryIndex.DATE] < endTime then break; end
+
+            local gp = entry[self.ItemHistoryIndex.GP];
+            local cat = entry[self.ItemHistoryIndex.CATEGORY];
+            local itemid = entry[self.ItemHistoryIndex.ITEMID];
+            local value = self:GetItemValue(itemid);
+            if gp ~= 0 and (gp ~= value.gp or cat ~= value.category) then
+                local entryMsg = ("%s to %s for %s on %s now costs %s"):format(
+                    value.itemLink,
+                    self:ColorizeName(entry[self.ItemHistoryIndex.PLAYER]),
+                    self:FormatCost(entry[self.ItemHistoryIndex.GP], entry[self.ItemHistoryIndex.CATEGORY]),
+                    date("%m/%d/%y", entry[self.ItemHistoryIndex.DATE]),
+                    self:FormatCost(value.gp, value.category));
+                self:Notify(entryMsg);
+            end
+        end
+    end
 end
 
 function ABGP:GetEffectiveCost(id, cost)
