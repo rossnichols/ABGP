@@ -7,7 +7,7 @@ _G.ABGP_Data2 = {};
 
 ABGP.initialData = {
 	itemValues = {
-		timestamp = 1607032164, -- https://www.epochconverter.com/ or GetServerTime() ingame
+		timestamp = 1608146366, -- https://www.epochconverter.com/ or GetServerTime() ingame
 		data = {
 			{
 				"Desecrated Bindings",
@@ -22,7 +22,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Bindings of Faith",
@@ -84,7 +84,7 @@ ABGP.initialData = {
 					"Hunter",
 					"Paladin (Holy)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Cryptstalker Wristguards",
@@ -146,7 +146,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Bonescythe Bracers",
@@ -203,7 +203,6 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Wristguards of Vengeance",
@@ -217,7 +216,6 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Band of Unanswered Prayers",
@@ -232,7 +230,6 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Gem of Nerubis",
@@ -246,7 +243,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Malice Stone Pendant",
@@ -260,7 +256,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Polar Shoulder Pads",
@@ -302,7 +297,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
-				"Healer Council, Non-cthun mace prio",
+				"Non-cthun mace prio",
 			},
 			{
 				"Widow's Remorse",
@@ -318,7 +313,6 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Desecrated Gloves",
@@ -331,7 +325,7 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Frostfire Gloves",
@@ -384,7 +378,7 @@ ABGP.initialData = {
 					"Druid (Heal)",
 					"Hunter",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Cryptstalker Handguards",
@@ -396,7 +390,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Desecrated Handguards",
 			},
 			{
@@ -409,7 +403,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Desecrated Handguards",
 			},
 			{
@@ -422,7 +416,7 @@ ABGP.initialData = {
 				},
 				{
 				},
-				"GOLD",
+				"SILVER",
 				[9] = "Desecrated Handguards",
 			},
 			{
@@ -438,7 +432,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Bonescythe Gauntlets",
@@ -478,7 +472,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Crystal Webbed Robe",
@@ -492,7 +485,6 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Kiss of the Spider",
@@ -508,7 +500,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
+				"non-dft prio",
 			},
 			{
 				"Wraith Blade",
@@ -523,7 +515,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council, twins/sapph oh prio",
+				"twins/sapph oh prio",
 			},
 			{
 				"Maexxna's Fang",
@@ -537,7 +529,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Desecrated Belt",
@@ -554,7 +545,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 					"Warlock",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Belt of Faith",
@@ -616,7 +607,7 @@ ABGP.initialData = {
 					"Hunter",
 					"Paladin (Holy)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Cryptstalker Girdle",
@@ -678,7 +669,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Bonescythe Waistguard",
@@ -722,7 +713,6 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Band of the Inevitable",
@@ -737,7 +727,6 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Hailstone Band",
@@ -766,7 +755,6 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"SILVER",
-				"Healer Council,",
 			},
 			{
 				"Libram of Light",
@@ -780,7 +768,6 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 				},
 				"SILVER",
-				"Healer Council,",
 			},
 			{
 				"Hatchet of Sundered Bone",
@@ -795,23 +782,19 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Preceptor's Hat",
-				100,
+				200,
 				"|cffa335ee|Hitem:23035|h[Preceptor's Hat]|h|r",
 				"Naxxramas",
 				{
 					"Heigan the Unclean",
 				},
 				{
-					"Druid (Heal)",
-					"Paladin (Holy)",
-					"Priest (Heal)",
+					"Priest (Shadow)",
 				},
-				"SILVER",
-				"Healer Council,",
+				"GOLD",
 			},
 			{
 				"Icy Scale Coif",
@@ -852,7 +835,6 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"SILVER",
-				"Healer Council,",
 			},
 			{
 				"Legplates of Carnage",
@@ -866,7 +848,6 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Desecrated Leggings",
@@ -1032,7 +1013,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Ring of Spiritual Fervor",
@@ -1046,7 +1026,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Loatheb's Reflection",
@@ -1073,7 +1052,6 @@ ABGP.initialData = {
 					"Hunter",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Brimstone Staff",
@@ -1088,7 +1066,6 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Desecrated Sandals",
@@ -1105,7 +1082,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 					"Warlock",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Frostfire Sandals",
@@ -1167,7 +1144,7 @@ ABGP.initialData = {
 					"Hunter",
 					"Paladin (Holy)",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Cryptstalker Boots",
@@ -1229,7 +1206,7 @@ ABGP.initialData = {
 					"Stabby Rogue",
 					"Tank",
 				},
-				"GOLD",
+				"SILVER",
 			},
 			{
 				"Bonescythe Sabatons",
@@ -1273,11 +1250,10 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Girdle of the Mentor",
-				200,
+				350,
 				"|cffa335ee|Hitem:23219|h[Girdle of the Mentor]|h|r",
 				"Naxxramas",
 				{
@@ -1288,7 +1264,7 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"SILVER",
-				"Physical Council, Non-Onslaught Prio",
+				"Non-Onslaught Prio",
 			},
 			{
 				"Signet of the Fallen Defender",
@@ -1302,7 +1278,6 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Idol of Longevity",
@@ -1316,7 +1291,6 @@ ABGP.initialData = {
 					"Druid (Heal)",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Wand of the Whispering Dead",
@@ -1330,7 +1304,6 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"SILVER",
-				"Healer Council,",
 			},
 			{
 				"Iblis, Blade of the Fallen Seraph",
@@ -1345,7 +1318,7 @@ ABGP.initialData = {
 					"Slicey Rogue",
 				},
 				"GOLD",
-				"Physical Council, slicey rogue super prio",
+				"slicey rogue super prio",
 			},
 			{
 				"Glacial Headdress",
@@ -1375,17 +1348,20 @@ ABGP.initialData = {
 			},
 			{
 				"Sadist's Collar",
-				0,
+				100,
 				"|cffa335ee|Hitem:23023|h[Sadist's Collar]|h|r",
 				"Naxxramas",
 				{
 					"Gothik the Harvester",
 				},
 				{
-					"Garbage",
+					"KAT4FITE",
+					"Metal Rogue",
+					"Slicey Rogue",
+					"Stabby Rogue",
+					"Tank",
 				},
-				"GOLD",
-				"Physical Council,",
+				"SILVER",
 			},
 			{
 				"The Soul Harvester's Bindings",
@@ -1401,7 +1377,6 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
-				"Caster Council,",
 			},
 			{
 				"Boots of Displacement",
@@ -1415,7 +1390,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Desecrated Robe",
@@ -1578,7 +1552,6 @@ ABGP.initialData = {
 					"KAT4FITE",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Seal of the Damned",
@@ -1593,11 +1566,10 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Warmth of Forgiveness",
-				150,
+				200,
 				"|cffa335ee|Hitem:23027|h[Warmth of Forgiveness]|h|r",
 				"Naxxramas",
 				{
@@ -1608,8 +1580,7 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 					"Priest (Heal)",
 				},
-				"GOLD",
-				"Healer Council,",
+				"SILVER",
 			},
 			{
 				"Soulstring",
@@ -1625,7 +1596,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Maul of the Redeemed Crusader",
@@ -1639,7 +1609,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Corrupted Ashbringer",
@@ -1654,7 +1623,7 @@ ABGP.initialData = {
 					"Paladin (Ret)",
 				},
 				"GOLD",
-				"Physical Council, not-rum prio",
+				"not-rum prio",
 			},
 			{
 				"Desecrated Shoulderpads",
@@ -1840,7 +1809,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"SILVER",
-				"Healer Council, non-cthun cloak prio",
+				"non-cthun cloak prio",
 			},
 			{
 				"Band of Reanimation",
@@ -1854,7 +1823,6 @@ ABGP.initialData = {
 					"Hunter",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Wand of Fates",
@@ -1869,7 +1837,6 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
-				"Caster Council,",
 			},
 			{
 				"The Plague Bearer",
@@ -1896,7 +1863,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Glacial Mantle",
@@ -1936,7 +1902,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Midnight Haze",
@@ -1952,7 +1917,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council, catchup",
+				"catchup",
 			},
 			{
 				"The End of Dreams",
@@ -1967,7 +1932,6 @@ ABGP.initialData = {
 					"Priest (Shadow)",
 				},
 				"GOLD",
-				"Caster Council, Physical Council,",
 			},
 			{
 				"Rime Covered Mantle",
@@ -1981,7 +1945,6 @@ ABGP.initialData = {
 					"Mage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Gluth's Missing Collar",
@@ -1995,7 +1958,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Digested Hand of Power",
@@ -2009,7 +1971,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Death's Bargain",
@@ -2023,7 +1984,6 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 				},
 				"SILVER",
-				"Healer Council,",
 			},
 			{
 				"Claymore of Unholy Might",
@@ -2037,7 +1997,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Desecrated Circlet",
@@ -2200,7 +2159,6 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Leggings of Polarity",
@@ -2215,11 +2173,10 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Eye of Diminution",
-				200,
+				0,
 				"|cffa335ee|Hitem:23001|h[Eye of Diminution]|h|r",
 				"Naxxramas",
 				{
@@ -2231,11 +2188,10 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
-				"Caster Council, Healer Council,",
 			},
 			{
 				"The Castigator",
-				300,
+				500,
 				"|cffa335ee|Hitem:22808|h[The Castigator]|h|r",
 				"Naxxramas",
 				{
@@ -2245,7 +2201,6 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Spire of Twilight",
@@ -2260,7 +2215,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
-				"Healer Council, benediction prio",
+				"benediction prio",
 			},
 			{
 				"Cloak of the Necropolis",
@@ -2275,7 +2230,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
-				"Caster Council, non-cthun cloak prio",
+				"non-cthun cloak prio",
 			},
 			{
 				"Shroud of Dominion",
@@ -2292,7 +2247,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Glyph of Deflection",
@@ -2306,7 +2260,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Eye of the Dead",
@@ -2322,7 +2275,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
-				"Healer Council, Non-Rejuv Gem Prio",
+				"Non-Rejuv Gem Prio",
 			},
 			{
 				"Slayer's Crest",
@@ -2339,7 +2292,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"The Restrained Essence of Sapphiron",
@@ -2355,7 +2307,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council, Non-Nelths tear prio",
+				"Non-Nelths tear prio",
 			},
 			{
 				"Sapphiron's Left Eye",
@@ -2370,7 +2322,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council, wraith blade prio; non twins oh prio",
+				"wraith blade prio; non twins oh prio",
 			},
 			{
 				"Sapphiron's Right Eye",
@@ -2385,7 +2337,7 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"SILVER",
-				"Healer Council, 1h prio",
+				"1h prio",
 			},
 			{
 				"The Face of Death",
@@ -2399,7 +2351,6 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Claw of the Frost Wyrm",
@@ -2415,7 +2366,6 @@ ABGP.initialData = {
 					"Slicey Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Fortitude of the Scourge",
@@ -2428,7 +2378,6 @@ ABGP.initialData = {
 				{
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Might of the Scourge",
@@ -2441,7 +2390,6 @@ ABGP.initialData = {
 				{
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Power of the Scourge",
@@ -2454,7 +2402,6 @@ ABGP.initialData = {
 				{
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Resilience of the Scourge",
@@ -2467,7 +2414,6 @@ ABGP.initialData = {
 				{
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Gem of Trapped Innocents",
@@ -2482,7 +2428,7 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council, Non-Twins or Rag Neck Prio",
+				"Non-Twins or Rag Neck Prio",
 			},
 			{
 				"Stormrage's Talisman of Seething",
@@ -2498,7 +2444,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"SILVER",
-				"Physical Council,",
 			},
 			{
 				"Nerubian Slavemaker",
@@ -2512,7 +2457,6 @@ ABGP.initialData = {
 					"Hunter",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Doomfinger",
@@ -2528,7 +2472,6 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Shield of Condemnation",
@@ -2542,7 +2485,6 @@ ABGP.initialData = {
 					"Paladin (Holy)",
 				},
 				"SILVER",
-				"Healer Council,",
 			},
 			{
 				"Kingsfall",
@@ -2556,7 +2498,6 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Hammer of the Twisting Nether",
@@ -2572,7 +2513,6 @@ ABGP.initialData = {
 					"Priest (Heal)",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Gressil, Dawn of Ruin",
@@ -2587,7 +2527,6 @@ ABGP.initialData = {
 					"Slicey Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"The Hungering Cold",
@@ -2603,7 +2542,7 @@ ABGP.initialData = {
 					"Tank",
 				},
 				"GOLD",
-				"Physical Council, MT prio",
+				"MT prio",
 			},
 			{
 				"Might of Menethil",
@@ -2618,7 +2557,6 @@ ABGP.initialData = {
 					"Paladin (Ret)",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Soulseeker",
@@ -2633,7 +2571,6 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"The Phylactery of Kel'Thuzad",
@@ -2650,7 +2587,7 @@ ABGP.initialData = {
 			},
 			{
 				"Ring of Faith",
-				200,
+				300,
 				"|cffa335ee|Hitem:23061|h[Ring of Faith]|h|r",
 				"Naxxramas",
 				{
@@ -2659,12 +2596,11 @@ ABGP.initialData = {
 				{
 					"Priest (Heal)",
 				},
-				"GOLD",
-				"Healer Council,",
+				"SILVER",
 			},
 			{
 				"Frostfire Ring",
-				250,
+				300,
 				"|cffa335ee|Hitem:23062|h[Frostfire Ring]|h|r",
 				"Naxxramas",
 				{
@@ -2673,12 +2609,11 @@ ABGP.initialData = {
 				{
 					"Mage",
 				},
-				"GOLD",
-				"Caster Council,",
+				"SILVER",
 			},
 			{
 				"Plagueheart Ring",
-				0,
+				50,
 				"|cffa335ee|Hitem:23063|h[Plagueheart Ring]|h|r",
 				"Naxxramas",
 				{
@@ -2688,24 +2623,24 @@ ABGP.initialData = {
 					"Warlock",
 				},
 				"SILVER",
-				"Caster Council,",
 			},
 			{
 				"Bonescythe Ring",
-				0,
+				300,
 				"|cffa335ee|Hitem:23060|h[Bonescythe Ring]|h|r",
 				"Naxxramas",
 				{
 					"Kel'Thuzad",
 				},
 				{
+					"Slicey Rogue",
+					"Stabby Rogue",
 				},
-				"GOLD",
-				"Physical Council,",
+				"SILVER",
 			},
 			{
 				"Ring of the Dreamwalker",
-				200,
+				300,
 				"|cffa335ee|Hitem:23064|h[Ring of the Dreamwalker]|h|r",
 				"Naxxramas",
 				{
@@ -2714,12 +2649,11 @@ ABGP.initialData = {
 				{
 					"Druid (Heal)",
 				},
-				"GOLD",
-				"Healer Council,",
+				"SILVER",
 			},
 			{
 				"Ring of the Cryptstalker",
-				200,
+				300,
 				"|cffa335ee|Hitem:23067|h[Ring of the Cryptstalker]|h|r",
 				"Naxxramas",
 				{
@@ -2728,12 +2662,11 @@ ABGP.initialData = {
 				{
 					"Hunter",
 				},
-				"GOLD",
-				"Physical Council,",
+				"SILVER",
 			},
 			{
 				"Ring of Redemption",
-				200,
+				300,
 				"|cffa335ee|Hitem:23066|h[Ring of Redemption]|h|r",
 				"Naxxramas",
 				{
@@ -2742,12 +2675,11 @@ ABGP.initialData = {
 				{
 					"Paladin (Holy)",
 				},
-				"GOLD",
-				"Healer Council,",
+				"SILVER",
 			},
 			{
 				"Ring of the Dreadnaught",
-				200,
+				300,
 				"|cffa335ee|Hitem:23059|h[Ring of the Dreadnaught]|h|r",
 				"Naxxramas",
 				{
@@ -2756,8 +2688,7 @@ ABGP.initialData = {
 				{
 					"Tank",
 				},
-				"GOLD",
-				"Physical Council,",
+				"SILVER",
 			},
 			{
 				"Spaulders of the Grand Crusader",
@@ -2771,7 +2702,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Necro-Knight's Garb",
@@ -2785,7 +2715,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Ghoul Skin Tunic",
@@ -2797,10 +2726,10 @@ ABGP.initialData = {
 				},
 				{
 					"KAT4FITE",
+					"Metal Rogue",
 					"Tank",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Girdle of Elemental Fury",
@@ -2814,7 +2743,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Belt of the Grand Crusader",
@@ -2828,7 +2756,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Healer Council,",
 			},
 			{
 				"Leggings of the Grand Crusader",
@@ -2842,7 +2769,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Ring of the Eternal Flame",
@@ -2856,7 +2782,6 @@ ABGP.initialData = {
 					"Mage",
 				},
 				"GOLD",
-				"Caster Council,",
 			},
 			{
 				"Stygian Buckler",
@@ -2870,7 +2795,6 @@ ABGP.initialData = {
 					"Garbage",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Harbinger of Doom",
@@ -2884,11 +2808,10 @@ ABGP.initialData = {
 					"Stabby Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Misplaced Servo Arm",
-				450,
+				300,
 				"|cffa335ee|Hitem:23221|h[Misplaced Servo Arm]|h|r",
 				"Naxxramas",
 				{
@@ -2898,7 +2821,6 @@ ABGP.initialData = {
 					"Metal Rogue",
 				},
 				"GOLD",
-				"Physical Council,",
 			},
 			{
 				"Barrage Shoulders",
@@ -4510,7 +4432,7 @@ ABGP.initialData = {
 			},
 			{
 				"Larvae of the Great Worm",
-				1,
+				250,
 				"|cffa335ee|Hitem:23557|h[Larvae of the Great Worm]|h|r",
 				"Ahn'Qiraj",
 				{
