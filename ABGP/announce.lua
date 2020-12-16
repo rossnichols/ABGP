@@ -59,7 +59,7 @@ function ABGP:AnnounceOnLootOpened()
     -- Validate the source of the loot. If we're looting a chest and have an appropriate
     -- boss kill in the recent past, use that. Otherwise use our target if it matches.
     local source, name;
-    if lootSource:find("GameObject-") and lastBossTime and GetTime() - lastBossTime < 60 then
+    if lootSource:find("GameObject-") and lastBossTime and GetTime() - lastBossTime < 120 then
         source, name = lastBoss, lastBoss;
     elseif UnitExists("target") then
         local guid = UnitGUID("target");
@@ -121,6 +121,7 @@ end
 -- Only allow bosses that aren't looted normally.
 local allowedBosses = {
     [ABGP.BossIds.Majordomo] = true,
+    [ABGP.BossIds.FourHorse] = true,
 }
 
 function ABGP:AnnounceOnBossKilled(id, name)
