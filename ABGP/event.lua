@@ -9,6 +9,7 @@ local UnitName = UnitName;
 local GetAutoCompleteResults = GetAutoCompleteResults;
 local GetRealZoneText = GetRealZoneText;
 local GetRaidRosterInfo = GetRaidRosterInfo;
+local IsShiftKeyDown = IsShiftKeyDown;
 local tContains = tContains;
 local AUTOCOMPLETE_FLAG_IN_GROUP = AUTOCOMPLETE_FLAG_IN_GROUP;
 local pairs = pairs;
@@ -595,16 +596,25 @@ end
 function ABGP:StartRaid()
     local raidInstance;
     local windowRaid = MakeRaid();
-    if activeWindow then activeWindow:Hide(); end
+    if activeWindow then
+        activeWindow:SetUserData("closeConfirmed", true);
+        activeWindow:Hide();
+    end
 
     local window = AceGUI:Create("Window");
     window.frame:SetFrameStrata("MEDIUM");
     window:SetLayout("Flow");
     window:SetTitle(("%s Raid"):format(self:ColorizeText("ABGP")));
     window:SetCallback("OnClose", function(widget)
-        ABGP:EndWindowManagement(widget);
-        AceGUI:Release(widget);
-        activeWindow = nil;
+        if widget:GetUserData("closeConfirmed") or IsShiftKeyDown() then
+            ABGP:EndWindowManagement(widget);
+            AceGUI:Release(widget);
+            activeWindow = nil;
+            _G.StaticPopup_Hide("ABGP_CONFIRM_CLOSE");
+        else
+            _G.StaticPopup_Show("ABGP_CONFIRM_CLOSE");
+            widget:Show();
+        end
     end);
 
     local container = AceGUI:Create("SimpleGroup");
@@ -685,6 +695,7 @@ function ABGP:StartRaid()
         EnsureAwardsEntries(windowRaid);
         self:Notify("Starting a new raid!");
         AwardEP(windowRaid, tickCategories.ONTIME, nil, self:Get("strictOnTime"));
+        window:SetUserData("closeConfirmed", true);
         window:Hide();
         self:UpdateRaid();
     end);
@@ -824,7 +835,10 @@ end
 function ABGP:UpdateRaid(windowRaid)
     windowRaid = windowRaid or _G.ABGP_RaidInfo3.currentRaid;
     if not windowRaid then return; end
-    if activeWindow then activeWindow:Hide(); end
+    if activeWindow then
+        activeWindow:SetUserData("closeConfirmed", true);
+        activeWindow:Hide();
+    end
 
     local window = AceGUI:Create("Window");
     window.frame:SetFrameStrata("MEDIUM");
@@ -945,11 +959,17 @@ function ABGP:StopRaid()
         self:Notify("Stopping the raid!");
         currentRaid.stopTime = GetServerTime();
         table.insert(_G.ABGP_RaidInfo3.pastRaids, 1, currentRaid);
-        if activeWindow then activeWindow:Hide(); end
+        if activeWindow then
+            activeWindow:SetUserData("closeConfirmed", true);
+            activeWindow:Hide();
+        end
         self:UpdateRaid(currentRaid);
     else
         self:Notify("No players with ticks in this raid. It has been deleted.");
-        if activeWindow then activeWindow:Hide(); end
+        if activeWindow then
+            activeWindow:SetUserData("closeConfirmed", true);
+            activeWindow:Hide();
+        end
     end
 end
 
@@ -1104,7 +1124,10 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
             if raid == data then
                 table.remove(raids, i);
                 ABGP:Notify("Deleted the raid!");
-                if activeWindow then activeWindow:Hide(); end
+                if activeWindow then
+                    activeWindow:SetUserData("closeConfirmed", true);
+                    activeWindow:Hide();
+                end
                 ABGP:RefreshUI();
                 break;
             end
@@ -1128,5 +1151,18 @@ StaticPopupDialogs["ABGP_STOP_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDial
     showAlert = true,
     OnAccept = function(self, data)
         ABGP:StopRaid();
+    end,
+});
+
+StaticPopupDialogs["ABGP_CONFIRM_CLOSE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+    text = "Close this window? |cffaaaaaaBypass this confirmation by holding <shift>.|r",
+    button1 = "Close",
+    button2 = "Cancel",
+    showAlert = true,
+    OnAccept = function(self, data)
+        if activeWindow then
+            activeWindow:SetUserData("closeConfirmed", true);
+            activeWindow:Hide();
+        end
     end,
 });
