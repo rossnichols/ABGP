@@ -43,9 +43,30 @@ function ABGP:InitOptions()
             minimap = {
                 hide = false,
             },
-        }
+        },
+        global = {
+            raidDisenchanters = "",
+            raidMules = "",
+            autoMLItems = "word of thawing\n" ..
+                          "wartorn plate scrap\n" ..
+                          "wartorn chain scrap\n" ..
+                          "wartorn leather scrap\n" ..
+                          "wartorn cloth scrap",
+        },
     };
     self.db = AceDB:New("ABGP_DB", defaults);
+
+    local old = self:Get("raidDisenchanters");
+    local new = self:GetGlobal("raidDisenchanters");
+    if old ~= "" and new == "" then
+        self:SetGlobal("raidDisenchanters", old);
+    end
+
+    local old = self:Get("raidMules");
+    local new = self:GetGlobal("raidMules");
+    if old ~= "" and new == "" then
+        self:SetGlobal("raidMules", old);
+    end
 
     local addonText = "ABGP";
     local version = self:GetVersion();
@@ -482,16 +503,25 @@ function ABGP:InitOptions()
                             order = 8,
                             desc = "Specify a comma-separated list of players, in priority order, who are the raid's disenchanters. You can ML items to this person in the distribution window or by alt+clicking the item.",
                             type = "input",
-                            get = function(info) return self.db.char.raidDisenchanters; end,
-                            set = function(info, v) self.db.char.raidDisenchanters = v; end,
+                            get = function(info) return self.db.global.raidDisenchanters; end,
+                            set = function(info, v) self.db.global.raidDisenchanters = v; end,
                         },
                         raidMules = {
                             name = "Mules",
                             order = 9,
                             desc = "Specify a comma-separated list of players, in priority order, who are the raid's mules. You can ML items to this person by alt+clicking the item.",
                             type = "input",
-                            get = function(info) return self.db.char.raidMules; end,
-                            set = function(info, v) self.db.char.raidMules = v; end,
+                            get = function(info) return self.db.global.raidMules; end,
+                            set = function(info, v) self.db.global.raidMules = v; end,
+                        },
+                        autoMLItems = {
+                            name = "Auto-Mule Items",
+                            order = 10,
+                            desc = "Specify a list of items, one per line, that should automatically be ML'd to the raid's mule.",
+                            type = "input",
+                            multiline = true,
+                            get = function(info) return self.db.global.autoMLItems; end,
+                            set = function(info, v) self.db.global.autoMLItems = v; end,
                         },
                     },
                 },
@@ -517,6 +547,14 @@ end
 
 function ABGP:Set(k, v)
     self.db.char[k] = v;
+end
+
+function ABGP:GetGlobal(k)
+    return self.db.global[k];
+end
+
+function ABGP:SetGlobal(k, v)
+    self.db.global[k] = v;
 end
 
 function ABGP:RefreshOptionsWindow()

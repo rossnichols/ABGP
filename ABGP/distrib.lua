@@ -13,6 +13,7 @@ local GetMasterLootCandidate = GetMasterLootCandidate;
 local GetLootInfo = GetLootInfo;
 local GetNumLootItems = GetNumLootItems;
 local IsInRaid = IsInRaid;
+local GetLootSlotLink = GetLootSlotLink;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -1341,12 +1342,12 @@ local function ChooseCandidate(candidates)
 end
 
 function ABGP:GetRaidDisenchanter()
-    local candidates = self:Get("raidDisenchanters");
+    local candidates = self:GetGlobal("raidDisenchanters");
     return ChooseCandidate(candidates), candidates ~= "";
 end
 
 function ABGP:GetRaidMule()
-    local candidates = self:Get("raidMules");
+    local candidates = self:GetGlobal("raidMules");
     return ChooseCandidate(candidates), candidates ~= "";
 end
 
@@ -1425,6 +1426,24 @@ end
 
 function ABGP:AddItemHooks()
     self:RegisterModifiedItemClickFn(DistributeLoot);
+end
+
+function ABGP:DistribOnLootOpened()
+    if not IsMasterLooter() then return; end
+    local mule = self:GetRaidMule();
+    if not mule then return; end
+
+    local autoMLItems = {}
+    local autoMLText = self:GetGlobal("autoMLItems");
+    for item in autoMLText:gmatch("[^\n]+") do autoMLItems[item:lower()] = true; end
+
+    local loot = GetLootInfo();
+    for i = 1, GetNumLootItems() do
+        local item = loot[i];
+        if item and autoMLItems[item.item:lower()] then
+            self:GiveItemViaML(GetLootSlotLink(i), mule);
+        end
+    end
 end
 
 StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {

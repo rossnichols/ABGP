@@ -332,6 +332,7 @@ function ABGP:OnEnable()
     end, self);
     self:RegisterEvent("LOOT_OPENED", function(self, event, ...)
         self:AnnounceOnLootOpened();
+        self:DistribOnLootOpened();
     end, self);
     self:RegisterEvent("PARTY_LEADER_CHANGED", function(self, event, ...)
         self:OutsiderOnPartyLeaderChanged();
