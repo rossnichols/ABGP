@@ -261,7 +261,7 @@ end
 
 function ABGP:HistoryTriggerRebuild()
     self:ClearSyncWarnings();
-    SetHistory(invalidBaseline);
+    SetBaseline(invalidBaseline);
     self:HistoryTriggerSync();
 end
 

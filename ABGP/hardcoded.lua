@@ -2,6 +2,7 @@ local _G = _G;
 local ABGP = _G.ABGP;
 
 local pairs = pairs;
+local type = type;
 
 _G.ABGP_Data2 = {};
 
@@ -21354,7 +21355,7 @@ function ABGP:CheckHardcodedData()
 	for key, initialData in pairs(self.initialData) do
 		_G.ABGP_Data2[key] = _G.ABGP_Data2[key] or { timestamp = 0, data = {} };
 
-		if _G.ABGP_Data2[key].timestamp < initialData.timestamp then
+		if _G.ABGP_Data2[key].timestamp < initialData.timestamp or type(_G.ABGP_Data2[key].data) ~= "table" then
 			_G.ABGP_Data2[key].timestamp = initialData.timestamp;
 			_G.ABGP_Data2[key].data = self.tCopy(initialData.data);
 		end
