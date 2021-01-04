@@ -22,6 +22,7 @@ local unpack = unpack;
 local math = math;
 local type = type;
 local max = max;
+local next = next;
 
 local activeDistributionWindow;
 local prioritizeByRank = false;
@@ -1433,9 +1434,10 @@ function ABGP:DistribOnLootOpened()
     local mule = self:GetRaidMule();
     if not mule then return; end
 
-    local autoMLItems = {}
+    local autoMLItems = {};
     local autoMLText = self:GetGlobal("autoMLItems");
     for item in autoMLText:gmatch("[^\n]+") do autoMLItems[item:lower()] = true; end
+    if not next(autoMLItems) then return; end
 
     local loot = GetLootInfo();
     for i = 1, GetNumLootItems() do
