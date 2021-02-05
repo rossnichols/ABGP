@@ -150,6 +150,7 @@ local instanceInfo = {
     },
     [instanceIds.Naxxramas] = {
         name = "Naxxramas",
+        promptRaidStart = true,
         bosses = {
             bossIds.AnubRekhan, bossIds.Gluth, bossIds.Gothik, bossIds.Faerlina, bossIds.Grobbulus,
             bossIds.Heigan, bossIds.Razuvious, bossIds.Loatheb, bossIds.Maexxna, bossIds.Noth,
