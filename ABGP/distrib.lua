@@ -14,6 +14,7 @@ local GetLootInfo = GetLootInfo;
 local GetNumLootItems = GetNumLootItems;
 local IsInRaid = IsInRaid;
 local GetLootSlotLink = GetLootSlotLink;
+local UnitIsConnected = UnitIsConnected;
 local table = table;
 local ipairs = ipairs;
 local pairs = pairs;
@@ -1338,7 +1339,7 @@ end
 local function ChooseCandidate(candidates)
     for player in candidates:gmatch("[^, ]+") do
         player = UnitName(player);
-        if player then return player; end
+        if player and UnitIsConnected(player) then return player; end
     end
 end
 
