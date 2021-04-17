@@ -295,7 +295,7 @@ function ABGP:HistoryOnItemAwarded(data, distribution, sender)
 
     if data.player then
         table.insert(history, 1, {
-            [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEM,
+            [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.GPITEM,
             [ABGP.ItemHistoryIndex.ID] = data.historyId,
             [ABGP.ItemHistoryIndex.DATE] = data.awarded,
             [ABGP.ItemHistoryIndex.PLAYER] = data.player,
@@ -311,7 +311,7 @@ end
 function ABGP:HistoryTriggerDecay(decayTime)
     local decayValue, decayFloor = self:GetGPDecayInfo();
     table.insert(_G.ABGP_Data2.history.data, 1, {
-        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
+        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPDECAY,
         [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
         [self.ItemHistoryIndex.DATE] = decayTime,
         [self.ItemHistoryIndex.VALUE] = decayValue,
@@ -341,7 +341,7 @@ function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
     end
 
     table.insert(_G.ABGP_Data2.history.data, 1, {
-        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPRESET,
         [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
         [self.ItemHistoryIndex.DATE] = addTime,
         [self.ItemHistoryIndex.PLAYER] = player,
@@ -350,7 +350,7 @@ function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
         [self.ItemHistoryIndex.NOTES] = "New active raider",
     });
     table.insert(_G.ABGP_Data2.history.data, 1, {
-        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPRESET,
         [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
         [self.ItemHistoryIndex.DATE] = addTime,
         [self.ItemHistoryIndex.PLAYER] = player,
@@ -387,7 +387,7 @@ function ABGP:ProcessItemHistory(gpHistory, includeNonItems)
     for _, data in ipairs(gpHistory) do
         if not deleted[data[ABGP.ItemHistoryIndex.ID]] then
             local entryType = data[ABGP.ItemHistoryIndex.TYPE];
-            if entryType == ABGP.ItemHistoryType.ITEM then
+            if entryType == ABGP.ItemHistoryType.GPITEM then
                 table.insert(processed, data);
             elseif entryType == ABGP.ItemHistoryType.DELETE then
                 deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
@@ -406,26 +406,24 @@ end
 
 function ABGP:GetMispricedAwards(timeLen)
     timeLen = timeLen or 30 * 24 * 60 * 60;
-    local history = self:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
+    local history = self:ProcessItemHistory(_G.ABGP_Data2.history.data, false);
     local endTime = GetServerTime() - timeLen;
 
     for i, entry in ipairs(history) do
-        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM then
-            if entry[self.ItemHistoryIndex.DATE] < endTime then break; end
+        if entry[self.ItemHistoryIndex.DATE] < endTime then break; end
 
-            local gp = entry[self.ItemHistoryIndex.GP];
-            local cat = entry[self.ItemHistoryIndex.CATEGORY];
-            local itemid = entry[self.ItemHistoryIndex.ITEMID];
-            local value = self:GetItemValue(itemid);
-            if gp ~= 0 and (gp ~= value.gp or cat ~= value.category) then
-                local entryMsg = ("%s to %s for %s on %s now costs %s"):format(
-                    value.itemLink,
-                    self:ColorizeName(entry[self.ItemHistoryIndex.PLAYER]),
-                    self:FormatCost(entry[self.ItemHistoryIndex.GP], entry[self.ItemHistoryIndex.CATEGORY]),
-                    date("%m/%d/%y", entry[self.ItemHistoryIndex.DATE]),
-                    self:FormatCost(value.gp, value.category));
-                self:Notify(entryMsg);
-            end
+        local gp = entry[self.ItemHistoryIndex.GP];
+        local cat = entry[self.ItemHistoryIndex.CATEGORY];
+        local itemid = entry[self.ItemHistoryIndex.ITEMID];
+        local value = self:GetItemValue(itemid);
+        if gp ~= 0 and (gp ~= value.gp or cat ~= value.category) then
+            local entryMsg = ("%s to %s for %s on %s now costs %s"):format(
+                value.itemLink,
+                self:ColorizeName(entry[self.ItemHistoryIndex.PLAYER]),
+                self:FormatCost(entry[self.ItemHistoryIndex.GP], entry[self.ItemHistoryIndex.CATEGORY]),
+                date("%m/%d/%y", entry[self.ItemHistoryIndex.DATE]),
+                self:FormatCost(value.gp, value.category));
+            self:Notify(entryMsg);
         end
     end
 end
@@ -440,7 +438,7 @@ function ABGP:GetEffectiveCost(id, cost)
         local entry = history[i];
         if entry[self.ItemHistoryIndex.ID] == id then
             effectiveCost = cost.cost;
-        elseif cost ~= 0 and entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.DECAY then
+        elseif cost ~= 0 and entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.GPDECAY then
             effectiveCost = effectiveCost * (1 - (entry[self.ItemHistoryIndex.VALUE] * 0.01));
             effectiveCost = max(effectiveCost, entry[self.ItemHistoryIndex.FLOOR]);
             decayCount = decayCount + 1;
@@ -471,16 +469,16 @@ function ABGP:CalculateCurrentGP(player, category, history)
     for i = #history, 1, -1 do
         local entry = history[i];
         local entryType = entry[self.ItemHistoryIndex.TYPE];
-        if (entryType == self.ItemHistoryType.ITEM or entryType == self.ItemHistoryType.BONUS) and
+        if (entryType == self.ItemHistoryType.GPITEM or entryType == self.ItemHistoryType.GPBONUS) and
            entry[self.ItemHistoryIndex.PLAYER] == player and
            entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = gp + entry[self.ItemHistoryIndex.GP];
             -- print("adding", entry[self.ItemHistoryIndex.GP], "=>", gp);
-        elseif entryType == self.ItemHistoryType.DECAY then
+        elseif entryType == self.ItemHistoryType.GPDECAY then
             gp = gp * (1 - (entry[self.ItemHistoryIndex.VALUE] * 0.01));
             gp = max(gp, entry[self.ItemHistoryIndex.FLOOR]);
             -- print("decaying", "=>", gp);
-        elseif entryType == self.ItemHistoryType.RESET and
+        elseif entryType == self.ItemHistoryType.GPRESET and
                entry[self.ItemHistoryIndex.PLAYER] == player and
                entry[self.ItemHistoryIndex.CATEGORY] == category then
             gp = entry[self.ItemHistoryIndex.GP];

@@ -228,7 +228,8 @@ function ABGP:ImportPriority()
 end
 
 function ABGP:ImportItems(prerelease)
-    local items = prerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
+    -- ITEMTODO: what does it mean to import when you can also import history?
+    local items = {};
 
     if not (_G.AtlasLoot and
             _G.AtlasLoot.ItemDB and
@@ -282,7 +283,7 @@ function ABGP:ImportItems(prerelease)
         end);
 
         if success then
-            ABGP:CommitItemData(prerelease);
+            -- ITEMTODO: now what?
         end
 
         widget:GetUserData("window"):Hide();
@@ -292,7 +293,8 @@ function ABGP:ImportItems(prerelease)
 end
 
 function ABGP:ExportItems(prerelease)
-    local items = prerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
+    -- ITEMTODO: how to export?
+    local items = {};
 
     local _, sortedPriorities = self:GetItemPriorities();
     local function buildPrioString(prio)
@@ -381,7 +383,7 @@ function ABGP:ImportItemHistory()
                 if entry.action == "DECAY" then
                     local _, gpDecay = entry.info:match("(%d+),(%d+)");
                     table.insert(newGPHistory, {
-                        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.DECAY,
+                        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPDECAY,
                         [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entry.time),
                         [self.ItemHistoryIndex.DATE] = entry.time,
                         [self.ItemHistoryIndex.VALUE] = tonumber(gpDecay),
@@ -393,7 +395,7 @@ function ABGP:ImportItemHistory()
                         if self:GetActivePlayer(player) then
                             if item == "Reset GP" then
                                 table.insert(newGPHistory, {
-                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.RESET,
+                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPRESET,
                                     [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
                                     [self.ItemHistoryIndex.DATE] = entryTime,
                                     [self.ItemHistoryIndex.PLAYER] = player,
@@ -403,7 +405,7 @@ function ABGP:ImportItemHistory()
                                 entryTime = entryTime + 1;
                             elseif item == "Bonus GP" then
                                 table.insert(newGPHistory, {
-                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPBONUS,
                                     [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
                                     [self.ItemHistoryIndex.DATE] = entryTime,
                                     [self.ItemHistoryIndex.PLAYER] = player,
@@ -413,7 +415,7 @@ function ABGP:ImportItemHistory()
                                 entryTime = entryTime + 1;
                             else
                                 table.insert(newGPHistory, {
-                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.ITEM,
+                                    [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPITEM,
                                     [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
                                     [self.ItemHistoryIndex.DATE] = entryTime,
                                     [self.ItemHistoryIndex.PLAYER] = player,
@@ -426,7 +428,7 @@ function ABGP:ImportItemHistory()
                                     -- Any "SG" awards are first processed as gold, then the same amount
                                     -- of gp is awarded as bonus silver.
                                     table.insert(newGPHistory, {
-                                        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.BONUS,
+                                        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPBONUS,
                                         [self.ItemHistoryIndex.ID] = ("%s:%s"):format("IMPORT", entryTime),
                                         [self.ItemHistoryIndex.DATE] = entryTime,
                                         [self.ItemHistoryIndex.PLAYER] = player,
@@ -559,7 +561,7 @@ function ABGP:FixupHistory(history)
     if not self:BuildItemLookup(true) then return false; end
 
     for _, entry in ipairs(history) do
-        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
+        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.GPITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
             -- NOTE: The ITEMID field is still the item name at this point.
             if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
                 self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
@@ -577,8 +579,7 @@ end
 function ABGP:GenerateItemList()
     if not self:BuildItemLookup(true) then return false; end
 
-    local items = _G.ABGP_Data2.itemValuesPrerelease.data;
-    table.wipe(items);
+    local items = {};
 
     local insertedItems = {};
 
@@ -637,5 +638,5 @@ function ABGP:GenerateItemList()
         end
     end
 
-    self:RefreshItemValues();
+    -- ITEMTODO: what do we do with `items` now?
 end

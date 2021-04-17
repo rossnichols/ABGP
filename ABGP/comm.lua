@@ -60,7 +60,7 @@ end
 
 -- The prefix can be revved to create a backwards-incompatible version.
 function ABGP:GetCommPrefix()
-    return "ABGP7";
+    return "ABGP8";
 end
 
 -- Highest ID: 24
@@ -128,8 +128,7 @@ ABGP.CommTypes = {
     -- player: string
 
     STATE_SYNC = { name = "STATE_SYNC", id = 9, priority = "ALERT" },
-    -- token: unique token for the message
-    -- itemDataTime: number
+    -- no payload
 
     ITEM_ROLLED = { name = "ITEM_ROLLED", id = 10, priority = "ALERT" },
     -- itemLink: item link string
@@ -148,13 +147,6 @@ ABGP.CommTypes = {
     -- source: string
     -- name: string
     -- items: table
-
-    REQUEST_ITEM_DATA_SYNC = { name = "REQUEST_ITEM_DATA_SYNC", id = 15, priority = "NORMAL" },
-    -- token: value from STATE_SYNC
-
-    ITEM_DATA_SYNC = { name = "ITEM_DATA_SYNC", id = 16, priority = "BULK" },
-    -- itemDataTime: number
-    -- itemValues: table
 
     HISTORY_SYNC = { name = "HISTORY_SYNC", id = 17, priority = "BULK" },
     -- version: from ABGP:GetVersion()
@@ -512,7 +504,6 @@ end
 
 function ABGP:TestSerialization(input)
     input = input or self:PrepareHistory(_G.ABGP_Data2.history.data);
-    -- input = input or _G.ABGP_Data2.p1.itemValues;
     local LibDeflate = _G.LibStub("LibDeflate");
 
     local serialized = LibSerialize:Serialize(input);

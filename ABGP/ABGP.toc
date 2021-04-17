@@ -12,7 +12,6 @@ embeds.xml
 core.lua
 guild.lua
 event.lua
-hardcoded.lua
 announce.lua
 tooltips.lua
 spreadsheet.lua

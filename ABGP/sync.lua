@@ -692,19 +692,19 @@ function ABGP:BreakdownHistory(history)
     end
 
     local typesSorted = {
-        self.ItemHistoryType.ITEM,
-        self.ItemHistoryType.BONUS,
-        self.ItemHistoryType.DECAY,
+        self.ItemHistoryType.GPITEM,
+        self.ItemHistoryType.GPBONUS,
+        self.ItemHistoryType.GPDECAY,
         self.ItemHistoryType.DELETE,
-        self.ItemHistoryType.RESET,
+        self.ItemHistoryType.GPRESET,
     };
 
     local typeNames = {
-        [self.ItemHistoryType.ITEM] = "item award(s)",
-        [self.ItemHistoryType.BONUS] = "gp award(s)",
-        [self.ItemHistoryType.DECAY] = "decay trigger(s)",
+        [self.ItemHistoryType.GPITEM] = "item award(s)",
+        [self.ItemHistoryType.GPBONUS] = "gp award(s)",
+        [self.ItemHistoryType.GPDECAY] = "decay trigger(s)",
         [self.ItemHistoryType.DELETE] = "deletion(s)",
-        [self.ItemHistoryType.RESET] = "reset(s)",
+        [self.ItemHistoryType.GPRESET] = "reset(s)",
     };
 
     local out = {};

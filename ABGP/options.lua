@@ -901,7 +901,7 @@ StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.Static
             local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
             if entryDate < decayTime then break; end
 
-            if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.DECAY then
+            if entry[ABGP.ItemHistoryIndex.TYPE] == ABGP.ItemHistoryType.GPDECAY then
                 return false, "A more recent decay already exists";
             end
         end

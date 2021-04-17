@@ -418,6 +418,8 @@ local function DrawItems(container, options)
     local command = options.command;
     if not rebuild and reason then return; end
 
+    local items = ABGP:GetItemData(showPrerelease);
+
     local widths = { 275, 50, 50, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
@@ -439,7 +441,6 @@ local function DrawItems(container, options)
         mainLine:AddChild(priSelector);
         container:SetUserData("priSelector", priSelector);
 
-        local items = showPrerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
         local sources, sourcesSorted = {}, {};
         local lastRaid, lastBoss;
         for _, item in ipairs(items) do
@@ -627,7 +628,6 @@ local function DrawItems(container, options)
     local scrollValue = preserveScroll and itemList:GetUserData("statusTable").scrollvalue or 0;
     itemList:ReleaseChildren();
 
-    local items = showPrerelease and _G.ABGP_Data2.itemValuesPrerelease.data or _G.ABGP_Data2.itemValues.data;
     local filtered = {};
     local priSelector = container:GetUserData("priSelector");
     local sourceSelector = container:GetUserData("sourceSelector");
@@ -1052,7 +1052,7 @@ local function DrawItems(container, options)
 
                                     ABGP:Notify("%s has been updated!", data[ABGP.ItemDataIndex.ITEMLINK]);
                                     elt:SetData(elt.data);
-                                    ABGP:CommitItemData(showPrerelease);
+                                    -- ITEMTODO: how does this get committed?
 
                                     window:Hide();
                                 end);
@@ -1855,11 +1855,11 @@ local function DrawAuditLog(container, options)
         end
     end
     local typeNames = {
-        [ABGP.ItemHistoryType.ITEM] = "Item",
-        [ABGP.ItemHistoryType.BONUS] = "Award",
-        [ABGP.ItemHistoryType.DECAY] = "Decay",
+        [ABGP.ItemHistoryType.GPITEM] = "Item",
+        [ABGP.ItemHistoryType.GPBONUS] = "Award",
+        [ABGP.ItemHistoryType.GPDECAY] = "Decay",
         [ABGP.ItemHistoryType.DELETE] = "Delete",
-        [ABGP.ItemHistoryType.RESET] = "Reset",
+        [ABGP.ItemHistoryType.GPRESET] = "Reset",
     };
 
     local function getAuditMessage(entry)
@@ -1876,19 +1876,19 @@ local function DrawAuditLog(container, options)
                 entryMsg = "Deleted a nonexistent entry";
             end
         else
-            if entryType == ABGP.ItemHistoryType.ITEM then
+            if entryType == ABGP.ItemHistoryType.GPITEM then
                 local item = entry[ABGP.ItemHistoryIndex.ITEMID];
                 local value = ABGP:GetItemValue(item);
                 if value then item = value.itemLink; end
                 entryMsg = ("%s to %s for %s"):format(
                     item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
-            elseif entryType == ABGP.ItemHistoryType.BONUS then
+            elseif entryType == ABGP.ItemHistoryType.GPBONUS then
                 entryMsg = ("%s awarded %s"):format(
                     ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
-            elseif entryType == ABGP.ItemHistoryType.DECAY then
+            elseif entryType == ABGP.ItemHistoryType.GPDECAY then
                 entryMsg = ("GP decayed by %d%%"):format(
                     entry[ABGP.ItemHistoryIndex.VALUE]);
-            elseif entryType == ABGP.ItemHistoryType.RESET then
+            elseif entryType == ABGP.ItemHistoryType.GPRESET then
                 entryMsg = ("%s reset to %s"):format(
                     ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
             end
@@ -1952,7 +1952,7 @@ local function DrawAuditLog(container, options)
                             notCheckable = true
                         });
                     else
-                        if entryType == ABGP.ItemHistoryType.ITEM then
+                        if entryType == ABGP.ItemHistoryType.GPITEM then
                             local value = ABGP:GetItemValue(entry[ABGP.ItemHistoryIndex.ITEMID]);
                             if value then
                                 if ABGP:GetDebugOpt() then
@@ -1971,7 +1971,7 @@ local function DrawAuditLog(container, options)
                                     });
                                 end
                             end
-                        elseif  entryType == ABGP.ItemHistoryType.BONUS then
+                        elseif  entryType == ABGP.ItemHistoryType.GPBONUS then
                             table.insert(context, {
                                 text = "Edit amount [NYI]",
                                 func = function(self, arg1)
