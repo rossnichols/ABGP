@@ -237,15 +237,15 @@ local function DrawPriority(container, options)
         epText:SetText(("   The minimum EP threshold is %s."):format(ABGP:ColorizeText(ABGP:GetMinEP())));
         mainLine:AddChild(epText);
 
-        if ABGP:IsPrivileged() then
-            local import = AceGUI:Create("Button");
-            import:SetWidth(45);
-            import:SetText("I");
-            import:SetCallback("OnClick", function(widget, event)
-                ABGP:ImportPriority();
-            end);
-            mainLine:AddChild(import);
-        end
+        -- if ABGP:IsPrivileged() then
+        --     local import = AceGUI:Create("Button");
+        --     import:SetWidth(45);
+        --     import:SetText("I");
+        --     import:SetCallback("OnClick", function(widget, event)
+        --         ABGP:ImportPriority();
+        --     end);
+        --     mainLine:AddChild(import);
+        -- end
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
@@ -537,25 +537,33 @@ local function DrawItems(container, options)
         --     mainLine:AddChild(spacer);
         -- end
 
-        if ABGP:IsPrivileged() then
+        if ABGP:IsPrivileged() and showPrerelease then
             local spacer = AceGUI:Create("Label");
             mainLine:AddChild(spacer);
 
-            local export = AceGUI:Create("Button");
-            export:SetWidth(45);
-            export:SetText("E");
-            export:SetCallback("OnClick", function(widget, event)
-                ABGP:ExportItems(showPrerelease);
+            local commit = AceGUI:Create("Button");
+            commit:SetWidth(90);
+            commit:SetText("Commit");
+            commit:SetCallback("OnClick", function(widget)
+                _G.StaticPopup_Show("ABGP_CONFIRM_COMMITPRERELEASE", nil, nil, {});
             end);
-            mainLine:AddChild(export);
+            mainLine:AddChild(commit);
 
-            local import = AceGUI:Create("Button");
-            import:SetWidth(45);
-            import:SetText("I");
-            import:SetCallback("OnClick", function(widget, event)
-                ABGP:ImportItems(showPrerelease);
-            end);
-            mainLine:AddChild(import);
+        --     local export = AceGUI:Create("Button");
+        --     export:SetWidth(45);
+        --     export:SetText("E");
+        --     export:SetCallback("OnClick", function(widget, event)
+        --         ABGP:ExportItems(showPrerelease);
+        --     end);
+        --     mainLine:AddChild(export);
+
+        --     local import = AceGUI:Create("Button");
+        --     import:SetWidth(45);
+        --     import:SetText("I");
+        --     import:SetCallback("OnClick", function(widget, event)
+        --         ABGP:ImportItems(showPrerelease);
+        --     end);
+        --     mainLine:AddChild(import);
         end
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
@@ -1172,27 +1180,27 @@ local function DrawItemHistory(container, options)
         mainLine:AddChild(search);
         container:SetUserData("search", search);
 
-        if ABGP:IsPrivileged() then
-            local spacer = AceGUI:Create("Label");
-            mainLine:AddChild(spacer);
+        -- if ABGP:IsPrivileged() then
+        --     local spacer = AceGUI:Create("Label");
+        --     mainLine:AddChild(spacer);
 
-            local export = AceGUI:Create("Button");
-            export:SetWidth(45);
-            export:SetText("E");
-            export:SetCallback("OnClick", function(widget, event)
-                local filtered = container:GetUserData("shownItemHistory");
-                ABGP:ExportItemHistory(filtered);
-            end);
-            mainLine:AddChild(export);
+        --     local export = AceGUI:Create("Button");
+        --     export:SetWidth(45);
+        --     export:SetText("E");
+        --     export:SetCallback("OnClick", function(widget, event)
+        --         local filtered = container:GetUserData("shownItemHistory");
+        --         ABGP:ExportItemHistory(filtered);
+        --     end);
+        --     mainLine:AddChild(export);
 
-            local import = AceGUI:Create("Button");
-            import:SetWidth(45);
-            import:SetText("I");
-            import:SetCallback("OnClick", function(widget, event)
-                ABGP:ImportItemHistory();
-            end);
-            mainLine:AddChild(import);
-        end
+        --     local import = AceGUI:Create("Button");
+        --     import:SetWidth(45);
+        --     import:SetText("I");
+        --     import:SetCallback("OnClick", function(widget, event)
+        --         ABGP:ImportItemHistory();
+        --     end);
+        --     mainLine:AddChild(import);
+        -- end
 
         local scrollContainer = AceGUI:Create("SimpleGroup");
         scrollContainer:SetUserData("cell", { align = "fill", paddingBottom = 5 });
@@ -1775,7 +1783,7 @@ local function DrawAuditLog(container, options)
     -- local command = options.command;
     if not rebuild and reason and reason ~= ABGP.RefreshReasons.HISTORY_UPDATED then return; end
 
-    local widths = { 120, 80, 50, 70, 1.0 };
+    local widths = { 120, 80, 90, 70, 1.0 };
     if rebuild then
         container:SetLayout("ABGP_Table");
         container:SetUserData("table", { columns = { 1.0 }, rows = { 1.0, 0 } });
@@ -1844,11 +1852,15 @@ local function DrawAuditLog(container, options)
         end
     end
     local typeNames = {
-        [ABGP.ItemHistoryType.GPITEM] = "Item",
-        [ABGP.ItemHistoryType.GPBONUS] = "Award",
-        [ABGP.ItemHistoryType.GPDECAY] = "Decay",
         [ABGP.ItemHistoryType.DELETE] = "Delete",
-        [ABGP.ItemHistoryType.GPRESET] = "Reset",
+        [ABGP.ItemHistoryType.ITEMADD] = "Item Add",
+        [ABGP.ItemHistoryType.ITEMREMOVE] = "Item Remove",
+        [ABGP.ItemHistoryType.ITEMUPDATE] = "Item Update",
+        [ABGP.ItemHistoryType.ITEMWIPE] = "Items wipe",
+        [ABGP.ItemHistoryType.GPITEM] = "Item Award",
+        [ABGP.ItemHistoryType.GPBONUS] = "GP Award",
+        [ABGP.ItemHistoryType.GPDECAY] = "GP Decay",
+        [ABGP.ItemHistoryType.GPRESET] = "GP Reset",
     };
 
     local function getAuditMessage(entry)
@@ -1915,7 +1927,11 @@ local function DrawAuditLog(container, options)
             if entryType == ABGP.ItemHistoryType.DELETE then
                 local reference = deleteReferences[entry[ABGP.ItemHistoryIndex.DELETEDID]];
                 if reference then
-                    deleteRef = getAuditMessage(reference);
+                    local refPlayer, refDate = ABGP:ParseHistoryId(id);
+                    deleteRef = ("%s on %s: %s"):format(
+                        ABGP:ColorizeName(refPlayer),
+                        date("%m/%d/%y", refDate),
+                        getAuditMessage(reference));
                 end
             end
 
@@ -1945,9 +1961,9 @@ local function DrawAuditLog(container, options)
 
                     if deleted then
                         table.insert(context, {
-                            text = "Undelete entry [NYI]",
+                            text = "Undelete entry",
                             func = function(self, arg1)
-
+                                ABGP:HistoryDeleteEntry(deletedEntries[arg1[ABGP.ItemHistoryIndex.ID]]);
                             end,
                             arg1 = entry,
                             notCheckable = true
@@ -2179,5 +2195,45 @@ StaticPopupDialogs["ABGP_CONFIRM_DELETEITEM"] = ABGP:StaticDialogTemplate(ABGP.S
         end
 
         ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
+    end,
+});
+
+StaticPopupDialogs["ABGP_CONFIRM_COMMITPRERELEASE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+    text = "Replace current item values with prerelease?",
+    button1 = "Commit",
+    button2 = "Cancel",
+    OnAccept = function(self, data)
+            -- Step 1: wipe current
+            local historyId = ABGP:GetHistoryId();
+            local entry = {
+                [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMWIPE,
+                [ABGP.ItemHistoryIndex.ID] = historyId,
+                [ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId)),
+                [ABGP.ItemDataIndex.PRERELEASE] = false
+            };
+            table.insert(_G.ABGP_Data2.history.data, 1, entry);
+
+            -- Step 2: copy prerelease to current
+            local items = ABGP.tCopy(ABGP:GetItemData(true));
+            for _, item in pairs(items) do
+                local historyId = ABGP:GetHistoryId();
+                item[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMADD;
+                item[ABGP.ItemHistoryIndex.ID] = historyId;
+                item[ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId));
+                item[ABGP.ItemDataIndex.PRERELEASE] = false;
+                table.insert(_G.ABGP_Data2.history.data, 1, item);
+            end
+
+            -- Step 3: wipe prerelease
+            local historyId = ABGP:GetHistoryId();
+            local entry = {
+                [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMWIPE,
+                [ABGP.ItemHistoryIndex.ID] = historyId,
+                [ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId)),
+                [ABGP.ItemDataIndex.PRERELEASE] = true
+            };
+            table.insert(_G.ABGP_Data2.history.data, 1, entry);
+
+            ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
     end,
 });

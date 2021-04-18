@@ -1412,7 +1412,9 @@ do
                     _G.GameTooltip:AddLine(obj.data.deleteRef, 1, 1, 1, 1, true);
                 elseif obj.data.deleted then
                     _G.GameTooltip:SetText(obj.data.deleted, 1, 1, 1, 1, true);
-                    _G.GameTooltip:AddLine(self.text:GetText(), 1, 1, 1, 1, true);
+                    if self.text:IsTruncated() then
+                        _G.GameTooltip:AddLine(self.text:GetText(), 1, 1, 1, 1, true);
+                    end
                 else
                     _G.GameTooltip:SetText(self.text:GetText(), 1, 1, 1, 1, true);
                 end

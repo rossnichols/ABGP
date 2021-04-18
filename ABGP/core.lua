@@ -34,6 +34,7 @@ local min = min;
 local max = max;
 local date = date;
 local type = type;
+local floor = floor;
 
 local version = "${ADDON_VERSION}";
 
@@ -595,7 +596,7 @@ function ABGP:FormatCost(cost, category, fmt)
 end
 
 function ABGP:GetHistoryId()
-    local nextId = max(lastHistoryId, GetServerTime());
+    local nextId = max(lastHistoryId, (GetServerTime() - 1600000000) * 100);
     if nextId == lastHistoryId then nextId = nextId + 1; end
     lastHistoryId = nextId;
     return ("%s:%d"):format(UnitName("player"), nextId);
@@ -603,7 +604,7 @@ end
 
 function ABGP:ParseHistoryId(id)
     local player, date = id:match("^(.-):(.-)$");
-    if player then date = tonumber(date); end
+    if player then date = floor(tonumber(date) / 100) + 1600000000; end
     return player, date;
 end
 
