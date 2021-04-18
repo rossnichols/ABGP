@@ -45,9 +45,9 @@ ABGP.UICommands = {
 
 local infoText = [[
 <html><body>
-    <h1 align="center">|cFF94E4FFABGP|r: Always Be Pulling Loot System</h1>
+    <h1 align="center">|cFF94E4FFABGP|r: Always Be Pugging Loot System</h1>
 
-    <p><br/>Always Be Pulling uses a modified EPGP loot system. Unlike most EPGP systems, the GP values in ABGP are priced individually and are based on their real value and learned knowledge from 15 years of min-maxing by the community.
+    <p><br/>Always Be Pugging uses a modified EPGP loot system. Unlike most EPGP systems, the GP values in ABGP are priced individually and are based on their real value and learned knowledge from 15 years of min-maxing by the community.
     </p>
 
     <h2><br/>How does the EPGP system work?</h2>

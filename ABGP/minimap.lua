@@ -16,7 +16,7 @@ local suppressTooltip = false;
 
 function ABGP:InitMinimapIcon()
     local obj = LibDataBroker:NewDataObject("ABGP", {
-        icon = "Interface\\AddOns\\ABGP\\Assets\\lobster.tga",
+        icon = "Interface\\AddOns\\ABGP\\Assets\\minimap.tga",
         OnClick = function(frame, button) self:OnIconClick(frame, button); end,
         OnTooltipShow = function(tooltip) self:OnIconTooltip(tooltip); end,
         OnLeave = function(frame) self:OnIconLeave(frame); end,

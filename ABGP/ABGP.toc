@@ -1,6 +1,6 @@
 ## Interface: 11306
 ## Title: ABGP
-## Notes: EPGP AddOn for <Always Be Pulling>
+## Notes: EPGP AddOn for <Always Be Pugging>
 ## Author: Xanido
 ## Version: ${ADDON_VERSION}
 ## OptionalDeps: ElvUI
