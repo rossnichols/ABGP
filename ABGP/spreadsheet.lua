@@ -12,6 +12,7 @@ local table = table;
 local tonumber = tonumber;
 local time = time;
 local date = date;
+local select = select;
 
 local priMapping = {
     ["Player"] = "player",
@@ -580,9 +581,6 @@ function ABGP:GenerateItemList()
     if not self:BuildItemLookup(true) then return false; end
 
     local items = {};
-
-    local insertedItems = {};
-
     local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
     local token = _G.AtlasLoot.Data.Token;
     for _, collection in ipairs({ naxx }) do
@@ -592,7 +590,7 @@ function ABGP:GenerateItemList()
                     if type(item[2]) == "number" then
                         local name, link = GetItemInfo(item[2]);
                         if name then
-                            if not insertedItems[name] then
+                            if not items[name] then
                                 local itemData = {
                                     [ABGP.ItemDataIndex.NAME] = name,
                                     [ABGP.ItemDataIndex.GP] = 0,
@@ -604,8 +602,7 @@ function ABGP:GenerateItemList()
                                     [ABGP.ItemDataIndex.NOTES] = nil,
                                     [ABGP.ItemDataIndex.RELATED] = nil,
                                 };
-                                table.insert(items, itemData);
-                                insertedItems[name] = itemData;
+                                items[name] = itemData;
                             end
 
                             local tokenData = token.GetTokenData(item[2]);
@@ -613,9 +610,9 @@ function ABGP:GenerateItemList()
                                 for _, v in ipairs(tokenData) do
                                     if type(v) == "number" and v ~= 0 then
                                         local tokenName, link = GetItemInfo(v);
-                                        if tokenName and not insertedItems[tokenName] then
-                                            insertedItems[name][ABGP.ItemDataIndex.GP] = "T";
-                                            insertedItems[tokenName] = {
+                                        if tokenName and not items[tokenName] then
+                                            items[name][ABGP.ItemDataIndex.GP] = "T";
+                                            items[tokenName] = {
                                                 [ABGP.ItemDataIndex.NAME] = tokenName,
                                                 [ABGP.ItemDataIndex.GP] = 0,
                                                 [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
@@ -626,7 +623,6 @@ function ABGP:GenerateItemList()
                                                 [ABGP.ItemDataIndex.NOTES] = nil,
                                                 [ABGP.ItemDataIndex.RELATED] = name,
                                             };
-                                            table.insert(items, insertedItems[tokenName]);
                                         end
                                     end
                                 end
@@ -638,5 +634,15 @@ function ABGP:GenerateItemList()
         end
     end
 
-    -- ITEMTODO: what do we do with `items` now?
+    for _, item in pairs(items) do
+        if not self:GetItemValue(item[ABGP.ItemDataIndex.NAME], true) then
+            item[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMADD;
+            item[ABGP.ItemHistoryIndex.ID] = self:GetHistoryId();
+            item[ABGP.ItemHistoryIndex.DATE] = select(2, self:ParseHistoryId(item[ABGP.ItemHistoryIndex.ID]));
+            item[ABGP.ItemDataIndex.PRERELEASE] = true;
+            table.insert(_G.ABGP_Data2.history.data, 1, item);
+        end
+    end
+
+    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end

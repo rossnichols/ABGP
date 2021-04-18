@@ -514,15 +514,19 @@ ABGP.ItemDataIndex = {
     NOTES = 11,
     RELATED = 12,
     PRERELEASE = 13,
-    REMOVED = 14,
 };
 ABGP.ItemHistoryType = {
     DELETE = 1,
-    ITEM = 2,
-    GPITEM = 3,
-    GPBONUS = 4,
-    GPDECAY = 5,
-    GPRESET = 6,
+
+    ITEMADD = 10,
+    ITEMREMOVE = 11,
+    ITEMUPDATE = 12,
+    ITEMWIPE = 13,
+
+    GPITEM = 20,
+    GPBONUS = 21,
+    GPDECAY = 22,
+    GPRESET = 23,
 };
 ABGP.ItemHistoryIndex = {
     TYPE = 1,       -- from ABGP.ItemHistoryType
@@ -595,7 +599,7 @@ function ABGP:ParseHistoryId(id)
     return player, date;
 end
 
-local function ValueFromItem(item)
+function ABGP:ValueFromItem(item)
     return {
         item = item[ABGP.ItemDataIndex.NAME],
         itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
@@ -617,13 +621,22 @@ function ABGP:GetItemData(prerelease)
     local processed = {};
     local deleted = {};
 
+    -- Find the most recent entry for each item name,
+    -- breaking early if an item wipe entry is encountered.
     for _, data in ipairs(history) do
         if not deleted[data[self.ItemHistoryIndex.ID]] then
             local entryType = data[self.ItemHistoryIndex.TYPE];
-            if entryType == self.ItemHistoryType.ITEM then
-                local item = data[self.ItemDataIndex.ITEM];
+            if entryType == self.ItemHistoryType.ITEMADD or
+               entryType == self.ItemHistoryType.ITEMREMOVE or
+               entryType == self.ItemHistoryType.ITEMUPDATE then
+
+                local item = data[self.ItemDataIndex.NAME];
                 if not processed[item] and data[self.ItemDataIndex.PRERELEASE] == prerelease then
                     processed[item] = data;
+                end
+            elseif entryType == self.ItemHistoryType.ITEMWIPE then
+                if data[self.ItemDataIndex.PRERELEASE] == prerelease then
+                    break;
                 end
             elseif entryType == ABGP.ItemHistoryType.DELETE then
                 deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
@@ -631,15 +644,23 @@ function ABGP:GetItemData(prerelease)
         end
     end
 
+    -- If the most recent entry for any item is a remove, remove the item.
     for item, data in pairs(processed) do
-        if data[self.ItemDataIndex.REMOVED] then
+        if data[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEMREMOVE then
             processed[item] = nil
         end
     end
 
-    table.sort(processed, function(a, b)
-        local aItem = a[self.ItemDataIndex.ITEM];
-        local bItem = b[self.ItemDataIndex.ITEM];
+    -- Convert the entries to an array.
+    local array = {};
+    for item, item in pairs(processed) do
+        table.insert(array, item);
+    end
+
+    -- Sort the array alphabetically, but ensuring a token's items directly follow it.
+    table.sort(array, function(a, b)
+        local aItem = a[self.ItemDataIndex.NAME];
+        local bItem = b[self.ItemDataIndex.NAME];
         local aRelated = a[self.ItemDataIndex.RELATED];
         local bRelated = b[self.ItemDataIndex.RELATED];
 
@@ -648,13 +669,21 @@ function ABGP:GetItemData(prerelease)
         elseif aRelated and bRelated then
             return aRelated < bRelated;
         elseif aRelated then
-            return aRelated < bItem;
+            if aRelated == bItem then
+                return false;
+            else
+                return aRelated < bItem;
+            end
         else
-            return aItem < bRelated;
+            if aItem == bRelated then
+                return true;
+            else
+                return aItem < bRelated;
+            end
         end
     end);
 
-    return processed;
+    return array;
 end
 
 function ABGP:RefreshItemValues()
@@ -667,9 +696,9 @@ function ABGP:RefreshItemValues()
         table.wipe(data.store);
         local items = self:GetItemData(data.prerelease);
 
-        for _, item in ipairs(data.items) do
+        for _, item in ipairs(items) do
             local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
-            local value = ValueFromItem(item);
+            local value = self:ValueFromItem(item);
             data.store[item[ABGP.ItemDataIndex.NAME]] = value;
             data.store[ABGP:GetItemId(itemLink)] = value;
 
