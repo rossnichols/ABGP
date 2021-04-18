@@ -12,7 +12,8 @@ function ABGP:HookTooltips()
     for _, tt in pairs({ _G.GameTooltip, _G.ItemRefTooltip, _G.ShoppingTooltip1, _G.ShoppingTooltip2 }) do
         tt:HookScript("OnTooltipSetItem", function(self)
             local itemName = self:GetItem();
-            local value = ABGP:GetItemValue(itemName);
+            local altShowsPrerelease = ABGP:Get("altShowsPrerelease");
+            local value = ABGP:GetItemValue(itemName, altShowsPrerelease and IsAltKeyDown());
             if value then
                 if not value.token then
                     self:AddDoubleLine(("%s Cost:"):format(ABGP:ColorizeText("ABGP")), ABGP:FormatCost(value.gp, value.category, "%s%s"), 1, 1, 1, 1, 1, 1);
@@ -25,7 +26,7 @@ function ABGP:HookTooltips()
                     end
 
                     local limit = ABGP:Get("itemHistoryLimit");
-                    if limit > 0 then
+                    if limit > 0  and not altShowsPrerelease then
                         if IsAltKeyDown() then
                             local player = UnitName("player");
                             local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data);

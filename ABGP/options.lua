@@ -40,6 +40,7 @@ function ABGP:InitOptions()
             syncEnabled = true,
             syncVerbose = true,
             strictOnTime = false,
+            altShowsPrerelease = false,
             minimap = {
                 hide = false,
             },
@@ -490,17 +491,25 @@ function ABGP:InitOptions()
                             get = function(info) return self.db.char.autoDistribute; end,
                             set = function(info, v) self.db.char.autoDistribute = v; end,
                         },
-                        strictOnTime = {
-                            name = "Strict On-Time",
-                            order = 7,
-                            desc = "Only award the on-time bonus to raid members that are online and in your zone. Standby is unaffected.",
+                        -- strictOnTime = {
+                        --     name = "Strict On-Time",
+                        --     order = 7,
+                        --     desc = "Only award the on-time bonus to raid members that are online and in your zone. Standby is unaffected.",
+                        --     type = "toggle",
+                        --     get = function(info) return self.db.char.strictOnTime; end,
+                        --     set = function(info, v) self.db.char.strictOnTime = v; end,
+                        -- },
+                        altShowsPrerelease = {
+                            name = "Alt shows prerelease",
+                            order = 8,
+                            desc = "When displaying an item tooltip, pressing alt will now show the item's prerelease value instead of its award history.",
                             type = "toggle",
-                            get = function(info) return self.db.char.strictOnTime; end,
-                            set = function(info, v) self.db.char.strictOnTime = v; end,
+                            get = function(info) return self.db.char.altShowsPrerelease; end,
+                            set = function(info, v) self.db.char.altShowsPrerelease = v; end,
                         },
                         raidDisenchanters = {
                             name = "Disenchanters",
-                            order = 8,
+                            order = 9,
                             desc = "Specify a comma-separated list of players, in priority order, who are the raid's disenchanters. You can ML items to this person in the distribution window or by alt+clicking the item.",
                             type = "input",
                             get = function(info) return self.db.global.raidDisenchanters; end,
@@ -508,7 +517,7 @@ function ABGP:InitOptions()
                         },
                         raidMules = {
                             name = "Mules",
-                            order = 9,
+                            order = 10,
                             desc = "Specify a comma-separated list of players, in priority order, who are the raid's mules. You can ML items to this person by alt+clicking the item.",
                             type = "input",
                             get = function(info) return self.db.global.raidMules; end,
@@ -516,7 +525,7 @@ function ABGP:InitOptions()
                         },
                         autoMLItems = {
                             name = "Auto-Mule Items",
-                            order = 10,
+                            order = 11,
                             desc = "Specify a list of items, one per line, that should automatically be ML'd to the raid's mule.",
                             type = "input",
                             multiline = true,
