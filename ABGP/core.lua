@@ -505,12 +505,12 @@ local lastHistoryId = 0;
 
 ABGP.ItemDataIndex = {
     NAME = 4,
-    GP = 5,
-    ITEMLINK = 6,
-    RAID = 7,
-    BOSS = 8,
-    PRIORITY = 9,
-    CATEGORY = 10,
+    ITEMLINK = 5,
+    GP = 6,
+    CATEGORY = 7,
+    RAID = 8,
+    BOSS = 9,
+    PRIORITY = 10,
     NOTES = 11,
     RELATED = 12,
     PRERELEASE = 13,
@@ -536,8 +536,16 @@ ABGP.ItemHistoryIndex = {
     -- ABGP.ItemHistoryType.DELETE
     DELETEDID = 4,  -- from ABGP:GetHistoryId()
 
-    -- ABGP.ItemHistoryType.ITEM
-    -- see ABGP.ItemDataIndex
+    -- ABGP.ItemHistoryType.ITEMADD, ITEMUPDATE
+    -- ABGP.ItemDataIndex.*
+
+    -- ABGP.ItemHistoryType.ITEMREMOVE
+    -- ABGP.ItemDataIndex.NAME
+    -- ABGP.ItemDataIndex.ITEMLINK
+    -- ABGP.ItemDataIndex.PRERELEASE
+
+    -- ABGP.ItemHistoryType.ITEMWIPE
+    -- ABGP.ItemDataIndex.PRERELEASE
 
     -- ABGP.ItemHistoryType.GPITEM
     PLAYER = 4,     -- player name (string)
