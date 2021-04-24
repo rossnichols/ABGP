@@ -535,7 +535,7 @@ local function ApplyHistoryReplacement(sender, baseline, history)
     ABGP:RebuildHistory(history);
     SetBaseline(baseline);
     SetHistory(history);
-    ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
+    ABGP:UpdateHistory();
 
     ABGP:Notify("Received complete history from %s! Breakdown: %s.",
         ABGP:ColorizeName(sender), ABGP:BreakdownHistory(history));
@@ -580,6 +580,16 @@ local function RequestFullHistory(data)
     }, "WHISPER", data.sender);
     ABGP:Notify("Requesting full item history from %s! This could take a little while.",
         ABGP:ColorizeName(data.sender));
+end
+
+function ABGP:HistoryBroadcastEntries(entries, now, token, remote)
+    self:SendComm(self.CommTypes.HISTORY_MERGE, {
+        baseline = GetBaseline(),
+        merge = self:PrepareHistory(entries),
+        now = now or GetServerTime(),
+        token = token,
+        remote = remote,
+    }, "GUILD");
 end
 
 function ABGP:HistoryOnMerge(data, distribution, sender, version)
@@ -631,13 +641,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender, version)
                             remote = not data.remote, -- for testing
                         }, "WHISPER", UnitName("player"));
                     else
-                        self:SendComm(self.CommTypes.HISTORY_MERGE, {
-                            baseline = baseline,
-                            merge = self:PrepareHistory(merge),
-                            now = now,
-                            token = data.token,
-                            remote = not data.remote, -- for testing
-                        }, "GUILD");
+                        self:HistoryBroadcastEntries(merge, now, data.token, not data.remote);
                     end
                 end
             else
@@ -666,7 +670,7 @@ function ABGP:HistoryOnMerge(data, distribution, sender, version)
             self:RebuildHistory(data.merge);
             local mergeCount = MergeHistory(history, data.merge);
             if mergeCount > 0 then
-                self:Fire(self.InternalEvents.HISTORY_UPDATED);
+                self:UpdateHistory();
 
                 if self:Get("syncVerbose") then
                     self:Notify("Received %d item history entries from %s! Breakdown: %s.",
@@ -717,7 +721,7 @@ function ABGP:BreakdownHistory(history)
 end
 
 function ABGP:CommitHistory()
-    self:Fire(self.InternalEvents.HISTORY_UPDATED);
+    self:UpdateHistory();
     if not self:GetDebugOpt("AvoidHistorySend") then
         _G.ABGP_Data2.history.timestamp = GetServerTime();
 

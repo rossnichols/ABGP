@@ -490,19 +490,6 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
     elt:SetUserData("awards", elt:GetUserData("awards") or {});
     local awards = elt:GetUserData("awards");
 
-    if data.oldHistoryId then
-        -- This award is an edit. See if we have an entry in the awards.
-        local found = false;
-        for i, award in ipairs(awards) do
-            if award.historyId == data.oldHistoryId then
-                found = true;
-                table.remove(awards, i);
-                break;
-            end
-        end
-        if not found then return; end
-    end
-
     if data.player then
         local requestTypes = {
             [self.RequestTypes.MS] = "MS",
@@ -516,7 +503,7 @@ function ABGP:AnnounceOnItemAwarded(data, distribution, sender)
         end
         extra = extra and (" (%s)"):format(self:ColorizeText(extra)) or "";
         local award = ("%s%s"):format(self:ColorizeName(data.player), extra);
-        table.insert(awards, { historyId = data.historyId, text = award });
+        table.insert(awards, { text = award });
     end
 end
 

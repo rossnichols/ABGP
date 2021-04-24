@@ -1042,6 +1042,7 @@ local function DrawItems(container, options)
                                     end
                                     newItem[ABGP.ItemDataIndex.CATEGORY] = catSelector:GetValue();
                                     newItem[ABGP.ItemDataIndex.NOTES] = notes:GetValue();
+                                    newItem[ABGP.ItemDataIndex.PRERELEASE] = showPrerelease;
 
                                     newItem[ABGP.ItemDataIndex.PRIORITY] = {};
                                     for pri, checked in pairs(priorities) do
@@ -1050,11 +1051,7 @@ local function DrawItems(container, options)
                                     table.sort(newItem[ABGP.ItemDataIndex.PRIORITY]);
 
                                     if ABGP:ItemValueIsUpdated(ABGP:ValueFromItem(newItem), value) then
-                                        newItem[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMUPDATE;
-                                        newItem[ABGP.ItemHistoryIndex.ID] = ABGP:GetHistoryId();
-                                        newItem[ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(newItem[ABGP.ItemHistoryIndex.ID]));
-                                        newItem[ABGP.ItemDataIndex.PRERELEASE] = showPrerelease;
-                                        table.insert(_G.ABGP_Data2.history.data, 1, newItem);
+                                        ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMUPDATE, newItem, true);
                                         ABGP:Notify("%s has been updated!", newItem[ABGP.ItemDataIndex.ITEMLINK]);
                                     end
 
@@ -1062,18 +1059,15 @@ local function DrawItems(container, options)
                                         local newItem = ABGP.tCopy(info.value.dataStore);
                                         newItem[ABGP.ItemDataIndex.GP] = info.cost:GetValue();
                                         newItem[ABGP.ItemDataIndex.CATEGORY] = info.category:GetValue();
+                                        newItem[ABGP.ItemDataIndex.PRERELEASE] = showPrerelease;
 
                                         if ABGP:ItemValueIsUpdated(ABGP:ValueFromItem(newItem), info.value) then
-                                            newItem[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMUPDATE;
-                                            newItem[ABGP.ItemHistoryIndex.ID] = ABGP:GetHistoryId();
-                                            newItem[ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(newItem[ABGP.ItemHistoryIndex.ID]));
-                                            newItem[ABGP.ItemDataIndex.PRERELEASE] = showPrerelease;
-                                            table.insert(_G.ABGP_Data2.history.data, 1, newItem);
+                                            ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMUPDATE, newItem, true);
                                             ABGP:Notify("%s has been updated!", newItem[ABGP.ItemDataIndex.ITEMLINK]);
                                         end
                                     end
 
-                                    ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
+                                    ABGP:UpdateHistory();
                                     window:Hide();
                                 end);
                                 container:AddChild(done);
@@ -1285,26 +1279,24 @@ local function DrawItemHistory(container, options)
     local exact = searchText:match("^\"(.+)\"$");
     exact = exact and exact:lower() or exact;
     for _, data in ipairs(gpHistory) do
-        local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-        if value and (epgp or not currentRaidGroup) then
-            if not currentRaidGroup or ABGP:IsInRaidGroup(epgp, currentRaidGroup) then
-                local class = epgp and epgp.class:lower() or "";
-                local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
-                if exact then
-                    if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
-                        value.item:lower() == exact or
-                        class == exact or
-                        entryDate == exact then
-                        table.insert(filtered, data);
-                    end
-                else
-                    if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
-                        value.item:lower():find(searchText, 1, true) or
-                        class:find(searchText, 1, true) or
-                        entryDate:find(searchText, 1, true) then
-                        table.insert(filtered, data);
-                    end
+        if not currentRaidGroup or ABGP:IsInRaidGroup(epgp, currentRaidGroup) then
+            local itemName = ABGP:GetItemName(data[ABGP.ItemHistoryIndex.ITEMLINK]):lower();
+            local class = epgp and epgp.class:lower() or "";
+            local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
+            if exact then
+                if data[ABGP.ItemHistoryIndex.PLAYER]:lower() == exact or
+                    itemName == exact or
+                    class == exact or
+                    entryDate == exact then
+                    table.insert(filtered, data);
+                end
+            else
+                if data[ABGP.ItemHistoryIndex.PLAYER]:lower():find(searchText, 1, true) or
+                    itemName:find(searchText, 1, true) or
+                    class:find(searchText, 1, true) or
+                    entryDate:find(searchText, 1, true) then
+                    table.insert(filtered, data);
                 end
             end
         end
@@ -1334,9 +1326,9 @@ local function DrawItemHistory(container, options)
 
         -- Item
         function(a, b)
-            local avalue = ABGP:GetItemValue(a[ABGP.ItemHistoryIndex.ITEMID]);
-            local bvalue = ABGP:GetItemValue(b[ABGP.ItemHistoryIndex.ITEMID]);
-            return avalue.item < bvalue.item, avalue.item == bvalue.item;
+            local aname = ABGP:GetItemName(a[ABGP.ItemHistoryIndex.ITEMLINK]);
+            local bname = ABGP:GetItemName(b[ABGP.ItemHistoryIndex.ITEMLINK]);
+            return aname < bname, aname == bname;
         end,
     };
 
@@ -1368,7 +1360,6 @@ local function DrawItemHistory(container, options)
             elt:SetWidths(widths);
             elt:ShowBackground((count % 2) == 0);
             elt:SetCallback("OnClick", function(widget, event, button)
-                local value = ABGP:GetItemValue(data[ABGP.ItemHistoryIndex.ITEMID]);
                 if button == "RightButton" then
                     local context = {
                         {
@@ -1386,7 +1377,7 @@ local function DrawItemHistory(container, options)
                             text = "Show item history",
                             func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetValue(("\"%s\""):format(value.item));
+                                    search:SetValue(("\"%s\""):format(ABGP:GetItemName(arg1[ABGP.ItemHistoryIndex.ITEMLINK])));
                                     PopulateUI({ rebuild = false });
                                 end
                             end,
@@ -1395,18 +1386,19 @@ local function DrawItemHistory(container, options)
                         },
                         {
                             text = "Show item",
-                            func = function(self)
-                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = value.item });
+                            func = function(self, arg1)
+                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = ABGP:GetItemName(arg1[ABGP.ItemHistoryIndex.ITEMLINK]) });
                             end,
+                            arg1 = data,
                             notCheckable = true
                         }
                     };
                     if ABGP:CanFavoriteItems() then
-                        local faved = ABGP:IsItemFavorited(value.itemLink);
+                        local faved = ABGP:IsItemFavorited(data[ABGP.ItemHistoryIndex.ITEMLINK]);
                         table.insert(context, 1, {
                             text = faved and "Remove item favorite" or "Add item favorite",
                             func = function(self, arg1)
-                                ABGP:SetItemFavorited(value.itemLink, not faved);
+                                ABGP:SetItemFavorited(arg1[ABGP.ItemHistoryIndex.ITEMLINK], not faved);
                             end,
                             arg1 = data,
                             notCheckable = true
@@ -1434,7 +1426,7 @@ local function DrawItemHistory(container, options)
 
                                 local item = AceGUI:Create("ABGP_Header");
                                 item:SetFullWidth(true);
-                                item:SetText(value.itemLink);
+                                item:SetText(arg1[ABGP.ItemHistoryIndex.ITEMLINK]);
                                 container:AddChild(item);
 
                                 local awarded = AceGUI:Create("ABGP_Header");
@@ -1503,14 +1495,11 @@ local function DrawItemHistory(container, options)
                                     local gp = cost:GetValue();
                                     local cat = catSelector:GetValue();
 
+                                    -- ITEMTODO: allow changing selected item
                                     if player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
                                        gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
                                        cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY] then
-                                        ABGP:HistoryUpdateItemAward({
-                                            itemLink = value.itemLink,
-                                            historyId = arg1[ABGP.ItemHistoryIndex.ID],
-                                            awarded = arg1[ABGP.ItemHistoryIndex.DATE],
-                                        }, player, { cost = gp, category = cat });
+                                        ABGP:HistoryUpdateItemAward(arg1, player, { cost = gp, category = cat });
                                     end
 
                                     window:Hide();
@@ -1542,13 +1531,10 @@ local function DrawItemHistory(container, options)
                         table.insert(context, {
                             text = "Delete entry",
                             func = function(self, arg1)
-                                local award = ("%s for %s"):format(
+                                local award = ("%s%s"):format(
                                     ABGP:ColorizeName(arg1[ABGP.ItemHistoryIndex.PLAYER]),
-                                    ABGP:FormatCost(arg1[ABGP.ItemHistoryIndex.GP], arg1[ABGP.ItemHistoryIndex.CATEGORY]));
-                                _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", value.itemLink, award, {
-                                    historyId = arg1[ABGP.ItemHistoryIndex.ID],
-                                    itemLink = value.itemLink,
-                                });
+                                    ABGP:FormatCost(arg1[ABGP.ItemHistoryIndex.GP], arg1[ABGP.ItemHistoryIndex.CATEGORY], " for %s%s GP"));
+                                _G.StaticPopup_Show("ABGP_CONFIRM_UNAWARD", arg1[ABGP.ItemHistoryIndex.ITEMLINK], award, arg1);
                             end,
                             arg1 = data,
                             notCheckable = true
@@ -1878,11 +1864,9 @@ local function DrawAuditLog(container, options)
             end
         else
             if entryType == ABGP.ItemHistoryType.GPITEM then
-                local item = entry[ABGP.ItemHistoryIndex.ITEMID];
-                local value = ABGP:GetItemValue(item);
-                if value then item = value.itemLink; end
-                entryMsg = ("%s to %s for %s"):format(
-                    item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
+                local item = entry[ABGP.ItemHistoryIndex.ITEMLINK];
+                entryMsg = ("%s to %s%s"):format(
+                    item, ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY], " for %s%s GP"));
             elseif entryType == ABGP.ItemHistoryType.GPBONUS then
                 entryMsg = ("%s awarded %s"):format(
                     ABGP:ColorizeName(entry[ABGP.ItemHistoryIndex.PLAYER]), ABGP:FormatCost(entry[ABGP.ItemHistoryIndex.GP], entry[ABGP.ItemHistoryIndex.CATEGORY]));
@@ -1969,26 +1953,21 @@ local function DrawAuditLog(container, options)
                             notCheckable = true
                         });
                     else
-                        if entryType == ABGP.ItemHistoryType.GPITEM then
-                            local value = ABGP:GetItemValue(entry[ABGP.ItemHistoryIndex.ITEMID]);
-                            if value then
-                                if ABGP:GetDebugOpt() then
-                                    table.insert(context, {
-                                        text = "Effective cost",
-                                        func = function(self, arg1)
-                                            local cost, decayCount = ABGP:GetEffectiveCost(entry[ABGP.ItemHistoryIndex.ID], entry[ABGP.ItemHistoryIndex.GP]);
-                                            if cost then
-                                                ABGP:LogDebug("Effective cost is %.3f after %d decays.", cost, decayCount);
-                                            else
-                                                ABGP:LogDebug("Failed to calculate!");
-                                            end
-                                        end,
-                                        arg1 = entry,
-                                        notCheckable = true
-                                    });
-                                end
-                            end
-                        elseif  entryType == ABGP.ItemHistoryType.GPBONUS then
+                        if ABGP:GetDebugOpt() and entryType == ABGP.ItemHistoryType.GPITEM and entry[ABGP.ItemHistoryIndex.GP] ~= 0 then
+                            table.insert(context, {
+                                text = "Effective cost",
+                                func = function(self, arg1)
+                                    local cost, decayCount = ABGP:GetEffectiveCost(entry[ABGP.ItemHistoryIndex.ID], entry[ABGP.ItemHistoryIndex.GP]);
+                                    if cost then
+                                        ABGP:LogDebug("Effective cost is %.3f after %d decays.", cost, decayCount);
+                                    else
+                                        ABGP:LogDebug("Failed to calculate!");
+                                    end
+                                end,
+                                arg1 = entry,
+                                notCheckable = true
+                            });
+                        elseif entryType == ABGP.ItemHistoryType.GPBONUS then
                             table.insert(context, {
                                 text = "Edit amount [NYI]",
                                 func = function(self, arg1)
@@ -2164,37 +2143,27 @@ StaticPopupDialogs["ABGP_CONFIRM_DELETEITEM"] = ABGP:StaticDialogTemplate(ABGP.S
     button2 = "Cancel",
     OnAccept = function(self, data)
         local item = data.item;
-        local historyId = ABGP:GetHistoryId();
-        local entry = {
+        ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMREMOVE, {
             [ABGP.ItemDataIndex.NAME] = item[ABGP.ItemDataIndex.NAME],
             [ABGP.ItemDataIndex.ITEMLINK] = item[ABGP.ItemDataIndex.ITEMLINK],
-            [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMREMOVE,
-            [ABGP.ItemHistoryIndex.ID] = historyId,
-            [ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId)),
             [ABGP.ItemDataIndex.PRERELEASE] = data.prerelease
-        };
-        table.insert(_G.ABGP_Data2.history.data, 1, entry);
+        }, true);
         ABGP:Notify("%s has been deleted!", item[ABGP.ItemDataIndex.ITEMLINK]);
 
         if item[ABGP.ItemDataIndex.GP] == "T" then
             for _, v in ipairs(data.items) do
                 if v[ABGP.ItemDataIndex.RELATED] == item[ABGP.ItemDataIndex.NAME] then
-                    local historyId = ABGP:GetHistoryId();
-                    local entry = {
+                    ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMREMOVE, {
                         [ABGP.ItemDataIndex.NAME] = v[ABGP.ItemDataIndex.NAME],
                         [ABGP.ItemDataIndex.ITEMLINK] = v[ABGP.ItemDataIndex.ITEMLINK],
-                        [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMREMOVE,
-                        [ABGP.ItemHistoryIndex.ID] = historyId,
-                        [ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId)),
                         [ABGP.ItemDataIndex.PRERELEASE] = data.prerelease
-                    };
-                    table.insert(_G.ABGP_Data2.history.data, 1, entry);
+                    }, true);
                     ABGP:Notify("%s has been deleted!", v[ABGP.ItemDataIndex.ITEMLINK]);
                 end
             end
         end
 
-        ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
+        ABGP:UpdateHistory();
     end,
 });
 
@@ -2204,36 +2173,22 @@ StaticPopupDialogs["ABGP_CONFIRM_COMMITPRERELEASE"] = ABGP:StaticDialogTemplate(
     button2 = "Cancel",
     OnAccept = function(self, data)
             -- Step 1: wipe current
-            local historyId = ABGP:GetHistoryId();
-            local entry = {
-                [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMWIPE,
-                [ABGP.ItemHistoryIndex.ID] = historyId,
-                [ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId)),
+            ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMWIPE, {
                 [ABGP.ItemDataIndex.PRERELEASE] = false
-            };
-            table.insert(_G.ABGP_Data2.history.data, 1, entry);
+            }, true);
 
             -- Step 2: copy prerelease to current
             local items = ABGP.tCopy(ABGP:GetItemData(true));
             for _, item in pairs(items) do
-                local historyId = ABGP:GetHistoryId();
-                item[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMADD;
-                item[ABGP.ItemHistoryIndex.ID] = historyId;
-                item[ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId));
                 item[ABGP.ItemDataIndex.PRERELEASE] = false;
-                table.insert(_G.ABGP_Data2.history.data, 1, item);
+                ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMADD, item, true);
             end
 
             -- Step 3: wipe prerelease
-            local historyId = ABGP:GetHistoryId();
-            local entry = {
-                [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMWIPE,
-                [ABGP.ItemHistoryIndex.ID] = historyId,
-                [ABGP.ItemHistoryIndex.DATE] = select(2, ABGP:ParseHistoryId(historyId)),
+            ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMWIPE, {
                 [ABGP.ItemDataIndex.PRERELEASE] = true
-            };
-            table.insert(_G.ABGP_Data2.history.data, 1, entry);
+            }, true);
 
-            ABGP:Fire(ABGP.InternalEvents.HISTORY_UPDATED);
+            ABGP:UpdateHistory();
     end,
 });

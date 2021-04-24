@@ -108,10 +108,11 @@ ABGP.CommTypes = {
     -- override: string
     -- count: number
     -- testItem: bool
-    -- historyId: string
-    -- updateId: string
-    -- awarded: number
-    -- oldHistoryId: string
+    -- updated: bool
+
+    ITEM_UNAWARDED = { name = "ITEM_UNAWARDED", id = 15, priority = "ALERT", fireLocally = true },
+    -- itemLink: item link string
+    -- player: string
 
     ITEM_TRASHED = { name = "ITEM_TRASHED", id = 8, priority = "ALERT", fireLocally = true },
     -- itemLink: item link string
@@ -190,7 +191,6 @@ end
 
 ABGP.InternalEvents = {
     ACTIVE_PLAYERS_REFRESHED = "ACTIVE_PLAYERS_REFRESHED",
-    ITEM_UNAWARDED = "ITEM_UNAWARDED",
     ITEM_CLOSED = "ITEM_CLOSED",
     ITEM_REQUESTED = "ITEM_REQUESTED",
     ITEM_PASSED = "ITEM_PASSED",

@@ -195,10 +195,13 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
     local itemLink = data.itemLink;
     local selectedItemLink = data.selectedItem or itemLink;
 
+    if not data.testItem and not data.updated then
+        -- See if we can ML the item to the player.
+        self:GiveItemViaML(data.itemLink, data.player);
+    end
+
     local player = data.player;
     local override = data.override;
-    if data.testItem then override = "test"; end
-    if not player then return; end
 
     local multiple = "";
     local itemCount = activeItems[data.itemLink] and activeItems[data.itemLink].count or 1;
@@ -212,7 +215,10 @@ function ABGP:RequestOnItemAwarded(data, distribution, sender)
         local effective = self:GetEffectiveCost(data.historyId, data.cost);
         effective = (effective and effective.cost ~= data.cost.cost) and (" (%.3f effective)"):format(effective.cost) or "";
         cost = (" for %s%s"):format(self:FormatCost(data.cost), effective);
+    else
+        override = nil;
     end
+    if data.testItem then override = "test"; end
 
     local requestTypes = {
         [self.RequestTypes.MS] = " (%smain spec)",
@@ -255,10 +261,7 @@ end
 
 function ABGP:RequestOnItemUnawarded(data)
     local player = (data.player == UnitName("player")) and "you" or self:ColorizeName(data.player);
-    local effective = self:GetEffectiveCost(data.historyId, data.cost);
-    effective = (effective and effective.cost ~= data.cost.cost) and (" (%.3f effective)"):format(effective.cost) or "";
-    self:Notify("Award of %s to %s for %s%s was removed.",
-        data.itemLink, player, self:FormatCost(data.cost), effective);
+    self:Notify("Award of %s to %s was removed.", data.itemLink, player);
 end
 
 function ABGP:RequestOnItemTrashed(data, distribution, sender)

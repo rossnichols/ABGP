@@ -214,7 +214,7 @@ function ABGP:PriorityOnGuildRosterUpdate()
     self:RefreshFromOfficerNotes();
 end
 
-local function UpdateEPGP(player, cost, sender, skipOfficerNote)
+local function UpdateEPGP(player, cost)
     local epgp = ABGP:GetActivePlayer(player);
     if epgp and not epgp.trial then
         epgp.gp[cost.category] = epgp.gp[cost.category] + cost.cost;
@@ -225,94 +225,15 @@ local function UpdateEPGP(player, cost, sender, skipOfficerNote)
         table.sort(ABGP.Priorities, PrioritySort);
 
         ABGP:RefreshActivePlayers();
-
-        if sender == UnitName("player") and not ABGP:GetDebugOpt("SkipOfficerNote") and not skipOfficerNote then
-            -- UpdateOfficerNote expects the name of the guild member
-            -- that is being updated, which is the proxy if it's set.
-            ABGP:UpdateOfficerNote(epgp.proxy or player);
-        end
-    end
-end
-
-function ABGP:PriorityOnItemAwarded(data, distribution, sender)
-    if data.testItem then return; end
-    if not data.player then return; end
-
-    -- See if we can ML the item to the player.
-    self:GiveItemViaML(data.itemLink, data.player);
-
-    local itemName = ABGP:GetItemName(data.itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    if not value then return; end
-
-    local cost = self:GetEffectiveCost(data.historyId, data.cost) or data.cost;
-    UpdateEPGP(data.player, cost, sender);
-end
-
-function ABGP:PriorityOnItemUnawarded(data)
-    if data.testItem then return; end
-    if not data.player then return; end
-
-    local itemName = ABGP:GetItemName(data.itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    if not value then return; end
-
-    local cost = self:GetEffectiveCost(data.historyId, data.cost) or data.cost;
-    local adjustedCost = { cost = -cost.cost, category = cost.category }; -- negative because we're undoing the GP adjustment
-    UpdateEPGP(data.player, adjustedCost, data.sender, data.skipOfficerNote);
-end
-
-function ABGP:HistoryOnItemAwarded(data, distribution, sender)
-    if data.testItem then return; end
-
-    local itemLink = data.selectedItem or data.itemLink;
-    local itemName = ABGP:GetItemName(itemLink);
-    local value = ABGP:GetItemValue(itemName);
-    if not value then return; end
-    local history = _G.ABGP_Data2.history.data;
-
-    if data.oldHistoryId then
-        for _, entry in ipairs(history) do
-            if entry[self.ItemHistoryIndex.ID] == data.oldHistoryId then
-                -- This is the entry being replaced.
-                self:HistoryDeleteEntry(entry, data.updateId);
-
-                -- If the previous award is for the same player, then the officer note will already
-                -- get updated to the proper value for the new award, and writing the officer note
-                -- twice for the same player with no delay will fail.
-                self:Fire(self.InternalEvents.ITEM_UNAWARDED, {
-                    itemLink = value.itemLink,
-                    historyId = data.oldHistoryId,
-                    player = entry[ABGP.ItemHistoryIndex.PLAYER],
-                    cost = { cost = entry[ABGP.ItemHistoryIndex.GP], category = entry[ABGP.ItemHistoryIndex.CATEGORY] },
-                    skipOfficerNote = (entry[self.ItemHistoryIndex.PLAYER] == data.player),
-                    sender = sender,
-                });
-                break;
-            end
-        end
+        return true;
     end
 
-    if data.player then
-        table.insert(history, 1, {
-            [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.GPITEM,
-            [ABGP.ItemHistoryIndex.ID] = data.historyId,
-            [ABGP.ItemHistoryIndex.DATE] = data.awarded,
-            [ABGP.ItemHistoryIndex.PLAYER] = data.player,
-            [ABGP.ItemHistoryIndex.ITEMID] = value.itemId,
-            [ABGP.ItemHistoryIndex.GP] = data.cost.cost,
-            [ABGP.ItemHistoryIndex.CATEGORY] = data.cost.category,
-        });
-    end
-
-    self:Fire(self.InternalEvents.HISTORY_UPDATED);
+    return false;
 end
 
 function ABGP:HistoryTriggerDecay(decayTime)
     local decayValue, decayFloor = self:GetGPDecayInfo();
-    table.insert(_G.ABGP_Data2.history.data, 1, {
-        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPDECAY,
-        [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+    self:AddHistoryEntry(self.ItemHistoryType.GPDECAY, {
         [self.ItemHistoryIndex.DATE] = decayTime,
         [self.ItemHistoryIndex.VALUE] = decayValue,
         [self.ItemHistoryIndex.FLOOR] = decayFloor,
@@ -324,8 +245,6 @@ function ABGP:HistoryTriggerDecay(decayTime)
     end
     self:Notify("Applied a decay of %d%%%s to EPGP.", decayValue, floorText);
     self:Notify("NOTE: this just adds the appropriate history entries for now. Officer notes are unchanged.");
-
-    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
 function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
@@ -340,18 +259,14 @@ function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
         end
     end
 
-    table.insert(_G.ABGP_Data2.history.data, 1, {
-        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPRESET,
-        [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+    self:AddHistoryEntry(self.ItemHistoryType.GPRESET, {
         [self.ItemHistoryIndex.DATE] = addTime,
         [self.ItemHistoryIndex.PLAYER] = player,
         [self.ItemHistoryIndex.GP] = gpS,
         [self.ItemHistoryIndex.CATEGORY] = self.ItemCategory.SILVER,
         [self.ItemHistoryIndex.NOTES] = "New active raider",
-    });
-    table.insert(_G.ABGP_Data2.history.data, 1, {
-        [self.ItemHistoryIndex.TYPE] = self.ItemHistoryType.GPRESET,
-        [self.ItemHistoryIndex.ID] = self:GetHistoryId(),
+    }, true);
+    self:AddHistoryEntry(self.ItemHistoryType.GPRESET, {
         [self.ItemHistoryIndex.DATE] = addTime,
         [self.ItemHistoryIndex.PLAYER] = player,
         [self.ItemHistoryIndex.GP] = gpG,
@@ -367,6 +282,29 @@ function ABGP:AddActivePlayer(player, proxy, addTime, ep, gpS, gpG)
 
     self:RefreshActivePlayers();
     self:RebuildOfficerNotes();
+end
+
+function ABGP:AddHistoryEntry(entryType, entry, skipEvent)
+    entry[self.ItemHistoryIndex.TYPE] = entryType;
+    entry[self.ItemHistoryIndex.ID] = self:GetHistoryId();
+
+    if not entry[self.ItemHistoryIndex.DATE] then
+        local _, entryDate = self:ParseHistoryId(entry[self.ItemHistoryIndex.ID]);
+        entry[self.ItemHistoryIndex.DATE] = entryDate;
+    end
+
+    table.insert(_G.ABGP_Data2.history.data, 1, entry);
+
+    self:HistoryBroadcastEntries({ [entry[self.ItemHistoryIndex.ID]] = entry });
+
+    if not skipEvent then
+        self:UpdateHistory();
+    end
+
+    return entry;
+end
+
+function ABGP:UpdateHistory()
     self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end
 
@@ -414,9 +352,9 @@ function ABGP:GetMispricedAwards(timeLen)
 
         local gp = entry[self.ItemHistoryIndex.GP];
         local cat = entry[self.ItemHistoryIndex.CATEGORY];
-        local itemid = entry[self.ItemHistoryIndex.ITEMID];
-        local value = self:GetItemValue(itemid);
-        if gp ~= 0 and (gp ~= value.gp or cat ~= value.category) then
+        local itemLink = entry[self.ItemHistoryIndex.ITEMLINK];
+        local value = self:GetItemValue(self:GetItemId(itemLink));
+        if value and gp ~= 0 and (gp ~= value.gp or cat ~= value.category) then
             local entryMsg = ("%s to %s for %s on %s now costs %s"):format(
                 value.itemLink,
                 self:ColorizeName(entry[self.ItemHistoryIndex.PLAYER]),
@@ -460,6 +398,8 @@ function ABGP:HistoryOnActivePlayersRefreshed()
 end
 
 function ABGP:HistoryOnUpdate()
+    -- ITEMTODO: kind of expensive to refresh item values if you get non-item history entries
+    self:RefreshItemValues();
     hasCompleteCached = false;
 end
 
@@ -527,40 +467,105 @@ function ABGP:HistoryOnGuildRosterUpdate()
     self:TriggerInitialSync();
 end
 
-function ABGP:HistoryUpdateItemAward(data, player, cost)
+function ABGP:HistoryAwardItem(data, testItem, skipOfficerNote)
     local commData = {
         itemLink = data.itemLink,
-        oldHistoryId = data.historyId,
-        awarded = data.awarded,
+        selectedItem = data.selectedItem,
+        player = data.player,
+        cost = data.cost,
+        roll = data.roll,
+        requestType = data.requestType,
+        override = data.override,
+        count = data.count,
+        testItem = testItem,
+    };
+    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
+
+    if not testItem then
+        local itemLink = data.selectedItem or data.itemLink;
+        local tokenLink = data.selectedItem and data.itemLink or nil;
+        local entry = self:AddHistoryEntry(self.ItemHistoryType.GPITEM, {
+            [self.ItemHistoryIndex.DATE] = data.awarded,
+            [self.ItemHistoryIndex.PLAYER] = data.player,
+            [self.ItemHistoryIndex.ITEMLINK] = itemLink,
+            [self.ItemHistoryIndex.TOKENLINK] = tokenLink,
+            [self.ItemHistoryIndex.GP] = data.cost.cost,
+            [self.ItemHistoryIndex.CATEGORY] = data.cost.category,
+        });
+
+        if data.cost.category and data.cost.cost ~= 0 then
+            local cost = {
+                cost = entry[self.ItemHistoryIndex.GP],
+                category = entry[self.ItemHistoryIndex.CATEGORY]
+            };
+            cost = self:GetEffectiveCost(entry[self.ItemHistoryIndex.ID], cost) or cost;
+            if UpdateEPGP(data.player, cost) and not skipOfficerNote and not self:GetDebugOpt("SkipOfficerNote") then
+                local epgp = ABGP:GetActivePlayer(data.player);
+                -- UpdateOfficerNote expects the name of the guild member
+                -- that is being updated, which is the proxy if it's set.
+                ABGP:UpdateOfficerNote(epgp.proxy or data.player);
+            end
+        end
+    end
+end
+
+function ABGP:HistoryUpdateItemAward(entry, player, cost, selectedItem)
+    local samePlayer = (entry[ABGP.ItemHistoryIndex.PLAYER] == player);
+    local itemLink = entry[self.ItemHistoryIndex.TOKENLINK] or entry[self.ItemHistoryIndex.ITEMLINK];
+
+    -- Remove old entry.
+    self:HistoryDeleteItemAward(entry, samePlayer);
+
+    -- Add new entry.
+    self:HistoryAwardItem({
+        itemLink = itemLink,
+        selectedItem = selectedItem,
+        awarded = entry[self.ItemHistoryIndex.DATE],
+        requestType = self.RequestTypes.MANUAL,
         player = player,
         cost = cost,
-        requestType = self.RequestTypes.MANUAL,
-        updateId = ABGP:GetHistoryId(),
-        historyId = ABGP:GetHistoryId(),
-    };
-    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
+        updated = true,
+    }, false, samePlayer);
+
+    if samePlayer then
+        -- We suppressed updating officer note above. Do it now.
+        local epgp = ABGP:GetActivePlayer(player);
+        if epgp and not epgp.trial then
+            -- UpdateOfficerNote expects the name of the guild member
+            -- that is being updated, which is the proxy if it's set.
+            ABGP:UpdateOfficerNote(epgp.proxy or player);
+        end
+    end
 end
 
-function ABGP:HistoryDeleteItemAward(data)
+function ABGP:HistoryDeleteItemAward(entry, skipOfficerNote)
+    local player = entry[ABGP.ItemHistoryIndex.PLAYER];
     local commData = {
-        itemLink = data.itemLink,
-        oldHistoryId = data.historyId,
-        updateId = ABGP:GetHistoryId(),
+        itemLink = entry[self.ItemHistoryIndex.ITEMLINK],
+        player = player
     };
-    self:SendComm(self.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
+    self:SendComm(self.CommTypes.ITEM_UNAWARDED, commData, "BROADCAST");
+
+    self:HistoryDeleteEntry(entry);
+
+    if entry[self.ItemHistoryIndex.CATEGORY] and entry[self.ItemHistoryIndex.GP] ~= 0 then
+        local cost = {
+            cost = entry[self.ItemHistoryIndex.GP],
+            category = entry[self.ItemHistoryIndex.CATEGORY]
+        };
+        cost = self:GetEffectiveCost(entry[self.ItemHistoryIndex.ID], cost) or cost;
+        cost.cost = -cost.cost;
+        if UpdateEPGP(player, cost) and not skipOfficerNote and not self:GetDebugOpt("SkipOfficerNote") then
+            local epgp = ABGP:GetActivePlayer(player);
+            -- UpdateOfficerNote expects the name of the guild member
+            -- that is being updated, which is the proxy if it's set.
+            ABGP:UpdateOfficerNote(epgp.proxy or player);
+        end
+    end
 end
 
-function ABGP:HistoryDeleteEntry(entry, deleteId)
-    if not deleteId then deleteId = self:GetHistoryId(); end
-    local history = _G.ABGP_Data2.history.data;
-
-    local _, deleteDate = self:ParseHistoryId(deleteId);
-    table.insert(history, 1, {
-        [ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.DELETE,
-        [ABGP.ItemHistoryIndex.ID] = deleteId,
-        [ABGP.ItemHistoryIndex.DATE] = deleteDate,
+function ABGP:HistoryDeleteEntry(entry)
+    self:AddHistoryEntry(self.ItemHistoryType.DELETE, {
         [ABGP.ItemHistoryIndex.DELETEDID] = entry[ABGP.ItemHistoryIndex.ID],
     });
-
-    self:Fire(self.InternalEvents.HISTORY_UPDATED);
 end

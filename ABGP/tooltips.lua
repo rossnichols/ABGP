@@ -33,7 +33,7 @@ function ABGP:HookTooltips()
 
                             local raidGroup = ABGP:GetPreferredRaidGroup();
                             local function shouldShowEntry(entry)
-                                if entry[ABGP.ItemHistoryIndex.ITEMID] ~= value.itemId then return false; end
+                                if entry[ABGP.ItemHistoryIndex.ITEMLINK] ~= value.itemLink then return false; end
                                 local epgp = ABGP:GetActivePlayer(entry[ABGP.ItemHistoryIndex.PLAYER]);
                                 if not epgp then return false; end
                                 return epgp.raidGroup == raidGroup, entry[ABGP.ItemHistoryIndex.PLAYER] == player;

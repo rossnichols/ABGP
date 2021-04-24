@@ -102,7 +102,7 @@ local function AwardItem(request)
         local count = #currentItem.distributions;
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
-    local award = ("%s for %s"):format(ABGP:ColorizeName(player), ABGP:FormatCost(cost));
+    local award = ("%s%s"):format(ABGP:ColorizeName(player), ABGP:FormatCost(cost, nil, " for %s%s GP"));
 
     _G.StaticPopup_Show("ABGP_CONFIRM_DIST", request.selectedItem or itemLink, award, {
         itemLink = currentItem.itemLink,
@@ -197,7 +197,7 @@ local function RebuildUI()
                 local cost = CalculateCost(elt.data);
                 ABGP:ShowContextMenu({
                     {
-                        text = ("Award for %s"):format(ABGP:FormatCost(cost)),
+                        text = ("Award%s"):format(ABGP:FormatCost(cost, nil, " for %s%s GP")),
                         func = function(self, request)
                             AwardItem(request);
                         end,
@@ -585,7 +585,7 @@ local function ChooseRecipient()
         itemLink = ("%s #%d"):format(itemLink, count + 1);
     end
 
-    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", currentItem.selectedItem or itemLink, ABGP:FormatCost(cost), {
+    _G.StaticPopup_Show("ABGP_CHOOSE_RECIPIENT", currentItem.selectedItem or itemLink, ABGP:FormatCost(cost, nil, " for %s%s GP"), {
         itemLink = currentItem.itemLink,
         selectedItem = currentItem.selectedItem,
         cost = cost,
@@ -660,22 +660,9 @@ local function DistributeItem(data)
     table.insert(currentItem.distributions, {
         player = data.player,
     });
+    data.count = #currentItem.distributions;
 
-    local historyId = ABGP:GetHistoryId();
-    local commData = {
-        itemLink = data.itemLink,
-        selectedItem = data.selectedItem,
-        player = data.player,
-        cost = data.cost,
-        roll = data.roll,
-        requestType = data.requestType,
-        override = data.override,
-        count = #currentItem.distributions,
-        testItem = currentItem.testItem,
-        historyId = historyId,
-        awarded = GetServerTime(),
-    };
-    ABGP:SendComm(ABGP.CommTypes.ITEM_AWARDED, commData, "BROADCAST");
+    ABGP:HistoryAwardItem(data, currentItem.testItem);
 
     if #currentItem.distributions < currentItem.totalCount then
         RebuildUI();
@@ -1509,7 +1496,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticD
     end,
 });
 StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Choose the recipient of %s for %s:",
+    text = "Choose the recipient of %s%s:",
     button1 = "Done",
     button2 = "Cancel",
     maxLetters = 31,

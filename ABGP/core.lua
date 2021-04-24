@@ -120,10 +120,12 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.CommTypes.ITEM_AWARDED.name, function(self, event, data, distribution, sender, version)
-        self:HistoryOnItemAwarded(data, distribution, sender, version);
-        self:PriorityOnItemAwarded(data, distribution, sender, version);
         self:RequestOnItemAwarded(data, distribution, sender, version);
         self:AnnounceOnItemAwarded(data, distribution, sender, version);
+    end, self);
+
+    self:SetCallback(self.CommTypes.ITEM_UNAWARDED.name, function(self, event, data, distribution, sender, version)
+        self:RequestOnItemUnawarded(data, distribution, sender, version);
     end, self);
 
     self:SetCallback(self.CommTypes.ITEM_TRASHED.name, function(self, event, data, distribution, sender, version)
@@ -206,11 +208,6 @@ function ABGP:OnEnable()
         self:RefreshUI(self.RefreshReasons.ACTIVE_PLAYERS_REFRESHED);
     end, self);
 
-    self:SetCallback(self.InternalEvents.ITEM_UNAWARDED, function(self, event, data)
-        self:PriorityOnItemUnawarded(data);
-        self:RequestOnItemUnawarded(data);
-    end, self);
-
     self:SetCallback(self.InternalEvents.ITEM_CLOSED, function(self, event, data)
         self:RequestOnDistClosed(data);
         self:AnnounceOnDistClosed(data);
@@ -238,8 +235,6 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.InternalEvents.HISTORY_UPDATED, function(self, event, data)
-        -- ITEMTODO: kind of expensive to refresh item values if you get non-item history entries
-        self:RefreshItemValues();
         self:HistoryOnUpdate();
         self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
         self:OptionsOnHistoryUpdate();
@@ -552,7 +547,8 @@ ABGP.ItemHistoryIndex = {
     PLAYER = 4,     -- player name (string)
     GP = 5,         -- gp cost (number)
     CATEGORY = 6,   -- from ABGP.ItemCategory
-    ITEMID = 7,     -- item id (number)
+    ITEMLINK = 7,   -- item link (string)
+    TOKENLINK = 8,  -- token item link (string)
 
     -- ABGP.ItemHistoryType.GPBONUS
     -- PLAYER = 4,     -- player name (string)
@@ -592,6 +588,8 @@ function ABGP:FormatCost(cost, category, fmt)
     local suffix = "";
     if category == self.ItemCategory.GOLD then suffix = " |cFFEBB400[G]|r"; end
     if category == self.ItemCategory.SILVER then suffix = " |cFF9BA4A8[S]|r"; end
+
+    if category == nil then return ""; end
     return (fmt or "%s%s GP"):format(cost, suffix);
 end
 

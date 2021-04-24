@@ -422,7 +422,8 @@ function ABGP:ImportItemHistory()
                                     [self.ItemHistoryIndex.PLAYER] = player,
                                     [self.ItemHistoryIndex.GP] = tonumber(gp),
                                     [self.ItemHistoryIndex.CATEGORY] = catMappingHistory[cat],
-                                    [self.ItemHistoryIndex.ITEMID] = item,
+                                    [self.ItemHistoryIndex.ITEMLINK] = item, -- Name will be converted to link later
+                                    -- ITEMTODO: doesn't populate TOKENLINK
                                 });
                                 entryTime = entryTime + 1;
                                 if cat == "SG" then
@@ -464,14 +465,13 @@ function ABGP:BuildItemHistoryExport(history)
     local text = "";
     for i = #history, 1, -1 do
         local data = history[i];
-        local itemId = data[self.ItemHistoryIndex.ITEMID];
-        local value = self:GetItemValue(itemId);
         local itemDate = date("%m/%d/%y", data[self.ItemHistoryIndex.DATE]);
 
+        -- ITEMTODO: doesn't export TOKENLINK
         text = text .. ("%s\t%s\t%s\t%s\t%s\n"):format(
             data[self.ItemHistoryIndex.GP],
             catMappingHistoryExport[data[self.ItemHistoryIndex.CATEGORY]],
-            value.item,
+            self:GetItemName(data[self.ItemHistoryIndex.ITEMLINK]),
             data[self.ItemHistoryIndex.PLAYER],
             itemDate);
     end
@@ -562,14 +562,14 @@ function ABGP:FixupHistory(history)
     if not self:BuildItemLookup(true) then return false; end
 
     for _, entry in ipairs(history) do
-        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.GPITEM and type(entry[self.ItemHistoryIndex.ITEMID]) == "string" then
-            -- NOTE: The ITEMID field is still the item name at this point.
-            if not lookup[entry[self.ItemHistoryIndex.ITEMID]] then
-                self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMID]));
+        if entry[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.GPITEM and not entry[self.ItemHistoryIndex.ITEMLINK]:find("[") then
+            -- NOTE: The ITEMLINK field is still the item name at this point.
+            if not lookup[entry[self.ItemHistoryIndex.ITEMLINK]] then
+                self:Notify(("FAILED TO FIND [%s]"):format(entry[self.ItemHistoryIndex.ITEMLINK]));
                 return false;
             end
 
-            entry[self.ItemHistoryIndex.ITEMID] = self:GetItemId(lookup[entry[self.ItemHistoryIndex.ITEMID]]);
+            entry[self.ItemHistoryIndex.ITEMLINK] = lookup[entry[self.ItemHistoryIndex.ITEMLINK]];
         end
     end
 
@@ -636,13 +636,10 @@ function ABGP:GenerateItemList()
 
     for _, item in pairs(items) do
         if not self:GetItemValue(item[ABGP.ItemDataIndex.NAME], true) then
-            item[ABGP.ItemHistoryIndex.TYPE] = ABGP.ItemHistoryType.ITEMADD;
-            item[ABGP.ItemHistoryIndex.ID] = self:GetHistoryId();
-            item[ABGP.ItemHistoryIndex.DATE] = select(2, self:ParseHistoryId(item[ABGP.ItemHistoryIndex.ID]));
             item[ABGP.ItemDataIndex.PRERELEASE] = true;
-            table.insert(_G.ABGP_Data2.history.data, 1, item);
+            self:AddHistoryEntry(self.ItemHistoryType.ITEMADD, item, true);
         end
     end
 
-    self:Fire(self.InternalEvents.HISTORY_UPDATED);
+    self:UpdateHistory();
 end
