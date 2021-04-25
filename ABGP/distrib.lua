@@ -603,7 +603,7 @@ function ABGP:DistribValidateRecipient(player, cost)
         return false, "Must enter a player";
     end
 
-    return player;
+    return UnitExists(player) and UnitName(player) or player;
 end
 
 function ABGP:DistribValidateCost(cost, player)

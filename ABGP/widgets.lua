@@ -667,15 +667,18 @@ do
             self.data = data;
 
             self.player.text:SetText(ABGP:ColorizeName(data[ABGP.ItemHistoryIndex.PLAYER] or ""));
-            self.gp.text:SetText(data[ABGP.ItemHistoryIndex.GP]);
+            self.itemLink.text:SetText(data[ABGP.ItemHistoryIndex.ITEMLINK]);
             local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
             self.date.text:SetText(entryDate);
-            self.itemLink.text:SetText(data[ABGP.ItemHistoryIndex.ITEMLINK]);
 
-            local font = "GameFontNormal";
-            if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.GOLD then font = "ABGPGold"; end
-            if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.SILVER then font = "ABGPSilver"; end
-            self.gp.text:SetFontObject(font);
+            local category = data[ABGP.ItemHistoryIndex.CATEGORY];
+            if category then
+                self.gp.text:SetText(data[ABGP.ItemHistoryIndex.GP]);
+                local font = "GameFontNormal";
+                if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.GOLD then font = "ABGPGold"; end
+                if data[ABGP.ItemHistoryIndex.CATEGORY] == ABGP.ItemCategory.SILVER then font = "ABGPSilver"; end
+                self.gp.text:SetFontObject(font);
+            end
         end,
 
         ["SetWidths"] = function(self, widths)

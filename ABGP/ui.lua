@@ -1280,7 +1280,7 @@ local function DrawItemHistory(container, options)
     exact = exact and exact:lower() or exact;
     for _, data in ipairs(gpHistory) do
         local epgp = ABGP:GetActivePlayer(data[ABGP.ItemHistoryIndex.PLAYER]);
-        if not currentRaidGroup or ABGP:IsInRaidGroup(epgp, currentRaidGroup) then
+        if not currentRaidGroup or (epgp and ABGP:IsInRaidGroup(epgp, currentRaidGroup)) then
             local itemName = ABGP:GetItemName(data[ABGP.ItemHistoryIndex.ITEMLINK]):lower();
             local class = epgp and epgp.class:lower() or "";
             local entryDate = date("%m/%d/%y", data[ABGP.ItemHistoryIndex.DATE]):lower(); -- https://strftime.org/
@@ -1372,27 +1372,30 @@ local function DrawItemHistory(container, options)
                             end,
                             arg1 = data,
                             notCheckable = true
-                        },
-                        {
+                        }
+                    };
+                    local itemName = ABGP:GetItemName(data[ABGP.ItemHistoryIndex.ITEMLINK]);
+                    if ABGP:GetItemValue(itemName) then
+                        table.insert(context, {
                             text = "Show item history",
                             func = function(self, arg1)
                                 if activeWindow then
-                                    search:SetValue(("\"%s\""):format(ABGP:GetItemName(arg1[ABGP.ItemHistoryIndex.ITEMLINK])));
+                                    search:SetValue(("\"%s\""):format(itemName));
                                     PopulateUI({ rebuild = false });
                                 end
                             end,
                             arg1 = data,
                             notCheckable = true
-                        },
-                        {
+                        });
+                        table.insert(context, {
                             text = "Show item",
                             func = function(self, arg1)
-                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = ABGP:GetItemName(arg1[ABGP.ItemHistoryIndex.ITEMLINK]) });
+                                ABGP:ShowMainWindow({ command = ABGP.UICommands.ShowItem, args = itemName });
                             end,
                             arg1 = data,
                             notCheckable = true
-                        }
-                    };
+                        });
+                    end
                     if ABGP:CanFavoriteItems() then
                         local faved = ABGP:IsItemFavorited(data[ABGP.ItemHistoryIndex.ITEMLINK]);
                         table.insert(context, 1, {
@@ -1424,18 +1427,55 @@ local function DrawItemHistory(container, options)
                                 container:SetUserData("table", { columns = { 1.0 }});
                                 window:AddChild(container);
 
+                                local itemLink = arg1[ABGP.ItemHistoryIndex.ITEMLINK];
+                                local tokenLink = arg1[ABGP.ItemHistoryIndex.TOKENLINK];
+                                local tokenValue = ABGP:GetItemValue(ABGP:GetItemName(tokenLink));
+                                if not tokenValue.token then tokenValue = nil; end
+                                if tokenValue then
+                                    itemLink = tokenLink;
+                                end
+
                                 local item = AceGUI:Create("ABGP_Header");
                                 item:SetFullWidth(true);
-                                item:SetText(arg1[ABGP.ItemHistoryIndex.ITEMLINK]);
+                                item:SetText(itemLink);
                                 container:AddChild(item);
+
+                                local processItemUpdate;
+
+                                local selectedItemLink = arg1[ABGP.ItemHistoryIndex.ITEMLINK];
+                                if tokenValue then
+                                    local itemsContainer = AceGUI:Create("SimpleGroup");
+                                    itemsContainer:SetFullWidth(true);
+                                    itemsContainer:SetLayout("Flow");
+                                    container:AddChild(itemsContainer);
+
+                                    local elts = {};
+                                    for _, tokenItem in ipairs(tokenValue.token) do
+                                        local button = AceGUI:Create("ABGP_ItemButton");
+                                        button.frame:SetScale(0.75);
+                                        button:SetItemLink(tokenItem);
+                                        button:SetClickable(true);
+                                        button:SetCallback("OnClick", function(widget, event, button)
+                                            for _, button in pairs(elts) do
+                                                if button ~= widget then
+                                                    button.frame:SetChecked(false);
+                                                end
+                                            end
+
+                                            selectedItemLink = widget.frame:GetChecked() and tokenItem or nil;
+                                            processItemUpdate();
+                                        end);
+                                        button.frame:SetChecked(tokenItem == selectedItemLink);
+                                        itemsContainer:AddChild(button);
+                                        table.insert(elts, button);
+                                    end
+                                end
 
                                 local awarded = AceGUI:Create("ABGP_Header");
                                 awarded:SetFullWidth(true);
                                 local entryDate = date("%m/%d/%y", arg1[ABGP.ItemHistoryIndex.DATE]); -- https://strftime.org/
                                 awarded:SetText(entryDate);
                                 container:AddChild(awarded);
-
-                                local processItemUpdate;
 
                                 local cost, catSelector;
                                 local playerEdit = AceGUI:Create("ABGP_EditBox");
@@ -1444,7 +1484,7 @@ local function DrawItemHistory(container, options)
                                 playerEdit:SetAutoCompleteSource(GetAutoCompleteResults, AUTOCOMPLETE_FLAG_IN_GUILD, AUTOCOMPLETE_FLAG_NONE);
                                 playerEdit:SetValue(arg1[ABGP.ItemHistoryIndex.PLAYER]);
                                 playerEdit:SetCallback("OnValueChanged", function(widget, event, value)
-                                    local currentCost = { cost = cost:GetValue(), category = catSelector:GetValue() };
+                                    local currentCost = cost and { cost = cost:GetValue(), category = catSelector:GetValue() } or nil;
                                     local player, errorText = ABGP:DistribValidateRecipient(value, currentCost);
                                     if not player then
                                         ABGP:Error("Invalid input! %s.", errorText);
@@ -1456,35 +1496,37 @@ local function DrawItemHistory(container, options)
                                 container:AddChild(playerEdit);
                                 ABGP:AddWidgetTooltip(playerEdit, "Enter the player receiving the award.");
 
-                                local costContainer = AceGUI:Create("InlineGroup");
-                                costContainer:SetTitle("Cost");
-                                costContainer:SetFullWidth(true);
-                                costContainer:SetLayout("Table");
-                                costContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
-                                container:AddChild(costContainer);
+                                if arg1[ABGP.ItemHistoryIndex.CATEGORY] then
+                                    local costContainer = AceGUI:Create("InlineGroup");
+                                    costContainer:SetTitle("Cost");
+                                    costContainer:SetFullWidth(true);
+                                    costContainer:SetLayout("Table");
+                                    costContainer:SetUserData("table", { columns = { 1.0, 1.0 }});
+                                    container:AddChild(costContainer);
 
-                                cost = AceGUI:Create("ABGP_EditBox");
-                                cost:SetFullWidth(true);
-                                cost:SetValue(arg1[ABGP.ItemHistoryIndex.GP]);
-                                cost:SetCallback("OnValueChanged", function(widget, event, value)
-                                    local gp, errorText = ABGP:DistribValidateCost(value, playerEdit:GetValue());
-                                    if not gp then
-                                        ABGP:Error("Invalid input! %s.", errorText);
-                                        return true;
-                                    end
-                                    cost:SetValue(gp);
-                                    processItemUpdate();
-                                end);
-                                costContainer:AddChild(cost);
-                                ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this award.");
+                                    cost = AceGUI:Create("ABGP_EditBox");
+                                    cost:SetFullWidth(true);
+                                    cost:SetValue(arg1[ABGP.ItemHistoryIndex.GP]);
+                                    cost:SetCallback("OnValueChanged", function(widget, event, value)
+                                        local gp, errorText = ABGP:DistribValidateCost(value, playerEdit:GetValue());
+                                        if not gp then
+                                            ABGP:Error("Invalid input! %s.", errorText);
+                                            return true;
+                                        end
+                                        cost:SetValue(gp);
+                                        processItemUpdate();
+                                    end);
+                                    costContainer:AddChild(cost);
+                                    ABGP:AddWidgetTooltip(cost, "Edit the GP cost of this award.");
 
-                                catSelector = AceGUI:Create("Dropdown");
-                                catSelector:SetFullWidth(true);
-                                catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
-                                catSelector:SetValue(arg1[ABGP.ItemHistoryIndex.CATEGORY]);
-                                catSelector:SetCallback("OnValueChanged", function() processItemUpdate(); end);
-                                costContainer:AddChild(catSelector);
-                                ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this award.");
+                                    catSelector = AceGUI:Create("Dropdown");
+                                    catSelector:SetFullWidth(true);
+                                    catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
+                                    catSelector:SetValue(arg1[ABGP.ItemHistoryIndex.CATEGORY]);
+                                    catSelector:SetCallback("OnValueChanged", function() processItemUpdate(); end);
+                                    costContainer:AddChild(catSelector);
+                                    ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this award.");
+                                end
 
                                 local done = AceGUI:Create("Button");
                                 done:SetWidth(100);
@@ -1492,14 +1534,19 @@ local function DrawItemHistory(container, options)
                                 done:SetUserData("cell", { align = "CENTERRIGHT" });
                                 done:SetCallback("OnClick", function(widget, event)
                                     local player = playerEdit:GetValue();
-                                    local gp = cost:GetValue();
-                                    local cat = catSelector:GetValue();
+                                    local gp = cost and cost:GetValue() or arg1[ABGP.ItemHistoryIndex.GP];
+                                    local cat = catSelector and catSelector:GetValue() or arg1[ABGP.ItemHistoryIndex.CATEGORY];
 
                                     -- ITEMTODO: allow changing selected item
                                     if player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
                                        gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
-                                       cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY] then
-                                        ABGP:HistoryUpdateItemAward(arg1, player, { cost = gp, category = cat });
+                                       cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY] or
+                                       selectedItemLink ~= arg1[ABGP.ItemHistoryIndex.ITEMLINK] then
+
+                                        if not arg1[ABGP.ItemHistoryIndex.TOKENLINK] then
+                                            selectedItemLink = nil;
+                                        end
+                                        ABGP:HistoryUpdateItemAward(arg1, player, { cost = gp, category = cat }, selectedItemLink);
                                     end
 
                                     window:Hide();
@@ -1514,13 +1561,14 @@ local function DrawItemHistory(container, options)
 
                                 processItemUpdate = function()
                                     local player = playerEdit:GetValue();
-                                    local gp = cost:GetValue();
-                                    local cat = catSelector:GetValue();
+                                    local gp = cost and cost:GetValue() or arg1[ABGP.ItemHistoryIndex.GP];
+                                    local cat = catSelector and catSelector:GetValue() or arg1[ABGP.ItemHistoryIndex.CATEGORY];
 
                                     local hasChange =
                                         player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
                                         gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
-                                        cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY];
+                                        cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY] or
+                                        selectedItemLink ~= arg1[ABGP.ItemHistoryIndex.ITEMLINK];
                                     done:SetDisabled(not hasChange);
                                 end
                                 processItemUpdate();
