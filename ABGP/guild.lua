@@ -17,42 +17,34 @@ local math = math;
 ABGP.Priorities = {};
 
 ABGP.RaidGroups = {
-    RED = "RED",
-    BLUE = "BLUE",
+    WEEKDAY = "WEEKDAY",
 };
 ABGP.RaidGroupNames = {
-    [ABGP.RaidGroups.RED] = "Weekday",
-    [ABGP.RaidGroups.BLUE] = "Weekend",
+    [ABGP.RaidGroups.WEEKDAY] = "Weekday",
 };
 ABGP.RaidGroupNamesAll = {
-    [ABGP.RaidGroups.RED] = "Weekday",
-    [ABGP.RaidGroups.BLUE] = "Weekend",
+    [ABGP.RaidGroups.WEEKDAY] = "Weekday",
 };
 ABGP.RaidGroupNamesReversed = {
-    ["Weekday"] = ABGP.RaidGroups.RED,
-    ["Weekend"] = ABGP.RaidGroups.BLUE,
+    ["Weekday"] = ABGP.RaidGroups.WEEKDAY,
 };
 ABGP.RaidGroupsSorted = {
-    ABGP.RaidGroups.RED,
-    ABGP.RaidGroups.BLUE,
+    ABGP.RaidGroups.WEEKDAY,
 };
 ABGP.RaidGroupsSortedAll = {
-    ABGP.RaidGroups.RED,
-    ABGP.RaidGroups.BLUE,
+    ABGP.RaidGroups.WEEKDAY,
 };
 ABGP.RaidGroupsSortedReverse = {
-    [ABGP.RaidGroups.RED] = 1,
-    [ABGP.RaidGroups.BLUE] = 2,
+    [ABGP.RaidGroups.WEEKDAY] = 1,
 };
 local rankData = {
-    ["Guild Master"] =   { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Officer"] =        { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Closer"] =         { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Red Lobster"] =    { raidGroup = ABGP.RaidGroups.RED, priority = 1 },
-    ["Purple Lobster"] = { raidGroup = ABGP.RaidGroups.BLUE, priority = 1 },
-    ["Blue Lobster"] =   { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
-    ["Officer Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
-    ["Lobster Alt"] =    { raidGroup = ABGP.RaidGroups.BLUE, priority = 2 },
+    ["Top Doggo"] =         { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
+    ["Top Doggo Alt"] =     { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
+    ["Hot Dog"] =           { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
+    ["Hot Dog Alt"] =       { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
+    ["Bestest Friend"] =    { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
+    ["Pugression"] =        { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
+    ["Pugression Alt"] =    { raidGroup = ABGP.RaidGroups.WEEKDAY, priority = 1 },
 };
 local epThreshold = 0;
 
