@@ -1507,6 +1507,9 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
     end,
     Commit = function(player, data)
         data.player = player;
+        if not ABGP:GetActivePlayer(player) then
+            data.cost.category = nil;
+        end
         DistributeItem(data);
     end,
 });

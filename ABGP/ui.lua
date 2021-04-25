@@ -1429,8 +1429,8 @@ local function DrawItemHistory(container, options)
 
                                 local itemLink = arg1[ABGP.ItemHistoryIndex.ITEMLINK];
                                 local tokenLink = arg1[ABGP.ItemHistoryIndex.TOKENLINK];
-                                local tokenValue = ABGP:GetItemValue(ABGP:GetItemName(tokenLink));
-                                if not tokenValue.token then tokenValue = nil; end
+                                local tokenValue = tokenLink and ABGP:GetItemValue(ABGP:GetItemName(tokenLink));
+                                if tokenValue and not tokenValue.token then tokenValue = nil; end
                                 if tokenValue then
                                     itemLink = tokenLink;
                                 end
@@ -1496,7 +1496,7 @@ local function DrawItemHistory(container, options)
                                 container:AddChild(playerEdit);
                                 ABGP:AddWidgetTooltip(playerEdit, "Enter the player receiving the award.");
 
-                                if arg1[ABGP.ItemHistoryIndex.CATEGORY] then
+                                if arg1[ABGP.ItemHistoryIndex.CATEGORY] or ABGP:GetItemValue(ABGP:GetItemName(itemLink)) then
                                     local costContainer = AceGUI:Create("InlineGroup");
                                     costContainer:SetTitle("Cost");
                                     costContainer:SetFullWidth(true);
@@ -1522,7 +1522,7 @@ local function DrawItemHistory(container, options)
                                     catSelector = AceGUI:Create("Dropdown");
                                     catSelector:SetFullWidth(true);
                                     catSelector:SetList(ABGP.ItemCategoryNames, ABGP.ItemCategoriesSorted);
-                                    catSelector:SetValue(arg1[ABGP.ItemHistoryIndex.CATEGORY]);
+                                    catSelector:SetValue(arg1[ABGP.ItemHistoryIndex.CATEGORY] or ABGP.ItemCategory.GOLD);
                                     catSelector:SetCallback("OnValueChanged", function() processItemUpdate(); end);
                                     costContainer:AddChild(catSelector);
                                     ABGP:AddWidgetTooltip(catSelector, "Edit the GP category of this award.");
@@ -1536,6 +1536,9 @@ local function DrawItemHistory(container, options)
                                     local player = playerEdit:GetValue();
                                     local gp = cost and cost:GetValue() or arg1[ABGP.ItemHistoryIndex.GP];
                                     local cat = catSelector and catSelector:GetValue() or arg1[ABGP.ItemHistoryIndex.CATEGORY];
+                                    if not ABGP:GetActivePlayer(player) then
+                                        cat = nil;
+                                    end
 
                                     if player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
                                        gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
@@ -1562,6 +1565,9 @@ local function DrawItemHistory(container, options)
                                     local player = playerEdit:GetValue();
                                     local gp = cost and cost:GetValue() or arg1[ABGP.ItemHistoryIndex.GP];
                                     local cat = catSelector and catSelector:GetValue() or arg1[ABGP.ItemHistoryIndex.CATEGORY];
+                                    if not ABGP:GetActivePlayer(player) then
+                                        cat = nil;
+                                    end
 
                                     local hasChange =
                                         player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
