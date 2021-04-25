@@ -2080,32 +2080,32 @@ function ABGP:CreateMainWindow(command)
     local mainLine = AceGUI:Create("SimpleGroup");
     mainLine:SetFullWidth(true);
     mainLine:SetLayout("table");
-    mainLine:SetUserData("table", { columns = { 0, 1.0, 0 } });
+    mainLine:SetUserData("table", { columns = { --[[ 0, ]] 1.0, 0 } });
     window:AddChild(mainLine);
 
-    local raidGroups, raidGroupNames = {}, {};
-    for i, v in ipairs(ABGP.RaidGroupsSortedAll) do raidGroups[i] = v; end
-    for k, v in pairs(ABGP.RaidGroupNamesAll) do raidGroupNames[k] = v; end
-    table.insert(raidGroups, "ALL");
-    raidGroupNames.ALL = "All";
-    local groupSelector = AceGUI:Create("Dropdown");
-    groupSelector:SetWidth(150);
-    groupSelector:SetList(raidGroupNames, raidGroups);
-    groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
-        currentRaidGroup = (value ~= "ALL") and value or nil;
+    -- local raidGroups, raidGroupNames = {}, {};
+    -- for i, v in ipairs(ABGP.RaidGroupsSortedAll) do raidGroups[i] = v; end
+    -- for k, v in pairs(ABGP.RaidGroupNamesAll) do raidGroupNames[k] = v; end
+    -- table.insert(raidGroups, "ALL");
+    -- raidGroupNames.ALL = "All";
+    -- local groupSelector = AceGUI:Create("Dropdown");
+    -- groupSelector:SetWidth(150);
+    -- groupSelector:SetList(raidGroupNames, raidGroups);
+    -- groupSelector:SetCallback("OnValueChanged", function(widget, event, value)
+    --     currentRaidGroup = (value ~= "ALL") and value or nil;
 
-        if activeWindow then
-            local container = activeWindow:GetUserData("container");
-            local pagination = container:GetUserData("pagination");
-            if pagination then
-                pagination:SetPage(1);
-            end
-        end
-        PopulateUI({ rebuild = false });
-    end);
-    currentRaidGroup = ABGP:GetPreferredRaidGroup();
-    groupSelector:SetValue(currentRaidGroup);
-    mainLine:AddChild(groupSelector);
+    --     if activeWindow then
+    --         local container = activeWindow:GetUserData("container");
+    --         local pagination = container:GetUserData("pagination");
+    --         if pagination then
+    --             pagination:SetPage(1);
+    --         end
+    --     end
+    --     PopulateUI({ rebuild = false });
+    -- end);
+    -- currentRaidGroup = ABGP:GetPreferredRaidGroup();
+    -- groupSelector:SetValue(currentRaidGroup);
+    -- mainLine:AddChild(groupSelector);
 
     local spacer = AceGUI:Create("Label");
     mainLine:AddChild(spacer);

@@ -187,53 +187,53 @@ function ABGP:InitOptions()
                 },
             },
         },
-        raidGroups = {
-            name = "",
-            type = "group",
-            inline = true,
-            order = 2,
-            args = {
-                header2 = {
-                    order = 1,
-                    type = "header",
-                    name = "Raid Group",
-                },
-                desc2 = {
-                    order = 2,
-                    type = "description",
-                    name = "Your raid group is generally determined from your guild rank.",
-                },
-                settings = {
-                    name = " ",
-                    type = "group",
-                    inline = true,
-                    order = 3,
-                    args = {
-                        raidGroup = {
-                            name = "Raid Group",
-                            order = 1,
-                            desc = "Choose the raid group to prioritize in the UI.",
-                            type = "select",
-                            control = "Dropdown",
-                            values = raidGroupNames,
-                            get = function(info) return self:GetPreferredRaidGroup(); end,
-                            set = function(info, v) self.db.char.raidGroup = v; end,
-                        },
-                        outsider = {
-                            name = "Outsider",
-                            order = 2,
-                            desc = "Select this option if your EPGP is tracked outside your guild.",
-                            type = "toggle",
-                            get = function(info) return self.db.char.outsider; end,
-                            set = function(info, v)
-                                self.db.char.outsider = v;
-                                self:Fire(self.CommTypes.GUILD_NOTES_UPDATED);
-                            end,
-                        },
-                    },
-                },
-            },
-        },
+        -- raidGroups = {
+        --     name = "",
+        --     type = "group",
+        --     inline = true,
+        --     order = 2,
+        --     args = {
+        --         header2 = {
+        --             order = 1,
+        --             type = "header",
+        --             name = "Raid Group",
+        --         },
+        --         desc2 = {
+        --             order = 2,
+        --             type = "description",
+        --             name = "Your raid group is generally determined from your guild rank.",
+        --         },
+        --         settings = {
+        --             name = " ",
+        --             type = "group",
+        --             inline = true,
+        --             order = 3,
+        --             args = {
+        --                 raidGroup = {
+        --                     name = "Raid Group",
+        --                     order = 1,
+        --                     desc = "Choose the raid group to prioritize in the UI.",
+        --                     type = "select",
+        --                     control = "Dropdown",
+        --                     values = raidGroupNames,
+        --                     get = function(info) return self:GetPreferredRaidGroup(); end,
+        --                     set = function(info, v) self.db.char.raidGroup = v; end,
+        --                 },
+        --                 outsider = {
+        --                     name = "Outsider",
+        --                     order = 2,
+        --                     desc = "Select this option if your EPGP is tracked outside your guild.",
+        --                     type = "toggle",
+        --                     get = function(info) return self.db.char.outsider; end,
+        --                     set = function(info, v)
+        --                         self.db.char.outsider = v;
+        --                         self:Fire(self.CommTypes.GUILD_NOTES_UPDATED);
+        --                     end,
+        --                 },
+        --             },
+        --         },
+        --     },
+        -- },
         loot = {
             name = "",
             type = "group",
