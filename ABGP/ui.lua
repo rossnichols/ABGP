@@ -1537,7 +1537,6 @@ local function DrawItemHistory(container, options)
                                     local gp = cost and cost:GetValue() or arg1[ABGP.ItemHistoryIndex.GP];
                                     local cat = catSelector and catSelector:GetValue() or arg1[ABGP.ItemHistoryIndex.CATEGORY];
 
-                                    -- ITEMTODO: allow changing selected item
                                     if player ~= arg1[ABGP.ItemHistoryIndex.PLAYER] or
                                        gp ~= arg1[ABGP.ItemHistoryIndex.GP] or
                                        cat ~= arg1[ABGP.ItemHistoryIndex.CATEGORY] or
