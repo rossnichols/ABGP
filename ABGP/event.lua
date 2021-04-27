@@ -6,12 +6,10 @@ local GetServerTime = GetServerTime;
 local GetNumGroupMembers = GetNumGroupMembers;
 local IsInRaid = IsInRaid;
 local UnitName = UnitName;
-local GetAutoCompleteResults = GetAutoCompleteResults;
 local GetRealZoneText = GetRealZoneText;
 local GetRaidRosterInfo = GetRaidRosterInfo;
 local IsShiftKeyDown = IsShiftKeyDown;
 local tContains = tContains;
-local AUTOCOMPLETE_FLAG_IN_GROUP = AUTOCOMPLETE_FLAG_IN_GROUP;
 local pairs = pairs;
 local math = math;
 local ipairs = ipairs;
@@ -1102,19 +1100,19 @@ function ABGP:EventOnGroupUpdate()
     RefreshUI();
 end
 
-StaticPopupDialogs["ABGP_ADD_STANDBY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+_G.StaticPopupDialogs["ABGP_ADD_STANDBY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Add a player to the standby list:",
     button1 = "Done",
     button2 = "Cancel",
     maxLetters = 31,
-    autoCompleteSource = GetAutoCompleteResults,
-    autoCompleteArgs = { bit.bor(AUTOCOMPLETE_FLAG_ONLINE, AUTOCOMPLETE_FLAG_INTERACTED_WITH, AUTOCOMPLETE_FLAG_IN_GUILD), bit.bor(AUTOCOMPLETE_FLAG_BNET, AUTOCOMPLETE_FLAG_IN_GROUP) },
+    autoCompleteSource = _G.GetAutoCompleteResults,
+    autoCompleteArgs = { _G.bit.bor(_G.AUTOCOMPLETE_FLAG_ONLINE, _G.AUTOCOMPLETE_FLAG_INTERACTED_WITH, _G.AUTOCOMPLETE_FLAG_IN_GUILD), _G.bit.bor(_G.AUTOCOMPLETE_FLAG_BNET, _G.AUTOCOMPLETE_FLAG_IN_GROUP) },
     Commit = function(text, data)
         AddStandby(data, text);
         RefreshUI();
     end,
 });
-StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Delete this raid? This can't be undone!",
     button1 = "Delete",
     button2 = "Cancel",
@@ -1135,7 +1133,7 @@ StaticPopupDialogs["ABGP_DELETE_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDi
         end
     end,
 });
-StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Remove %s's data from the raid?",
     button1 = "Remove",
     button2 = "Cancel",
@@ -1145,7 +1143,7 @@ StaticPopupDialogs["ABGP_REMOVE_FROM_RAID"] = ABGP:StaticDialogTemplate(ABGP.Sta
         RefreshUI();
     end,
 });
-StaticPopupDialogs["ABGP_STOP_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_STOP_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "There are still items being distributed! Really stop the raid?",
     button1 = "Stop",
     button2 = "Cancel",
@@ -1155,7 +1153,7 @@ StaticPopupDialogs["ABGP_STOP_RAID"] = ABGP:StaticDialogTemplate(ABGP.StaticDial
     end,
 });
 
-StaticPopupDialogs["ABGP_CONFIRM_CLOSE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_CLOSE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Close this window? |cffaaaaaaBypass this confirmation by holding <shift>.|r",
     button1 = "Close",
     button2 = "Cancel",

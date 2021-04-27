@@ -10,7 +10,6 @@ local UnitName = UnitName;
 local GuildRoster = GuildRoster;
 local GetChatWindowInfo = GetChatWindowInfo;
 local UnitAffectingCombat = UnitAffectingCombat;
-local CreateFrame = CreateFrame;
 local GetItemInfo = GetItemInfo;
 local IsInGroup = IsInGroup;
 local GetInstanceInfo = GetInstanceInfo;
@@ -18,7 +17,6 @@ local IsInGuild = IsInGuild;
 local C_GuildInfo = C_GuildInfo;
 local GetAddOnMetadata = GetAddOnMetadata;
 local GetServerTime = GetServerTime;
-local UnitIsGroupLeader = UnitIsGroupLeader;
 local IsEquippableItem = IsEquippableItem;
 local IsAltKeyDown = IsAltKeyDown;
 local GetClassColor = GetClassColor;
@@ -34,7 +32,6 @@ local min = min;
 local max = max;
 local date = date;
 local type = type;
-local floor = floor;
 
 local version = "${ADDON_VERSION}";
 
@@ -606,8 +603,8 @@ function ABGP:ShortenLink(itemLink)
     return (itemLink:gsub("|H(item:%d+).-|h", "|H%1|h"));
 end
 
-local scanner = CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
-scanner:SetOwner(UIParent, "ANCHOR_NONE");
+local scanner = _G.CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
+scanner:SetOwner(_G.UIParent, "ANCHOR_NONE");
 function ABGP:IsItemUsable(itemLink)
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
@@ -845,7 +842,7 @@ end
 -- Context Menu support (https://wow.gamepedia.com/UI_Object_UIDropDownMenu)
 --
 
-local contextFrame = CreateFrame("Frame", "ABGPContextMenu", _G.UIParent, "UIDropDownMenuTemplate");
+local contextFrame = _G.CreateFrame("Frame", "ABGPContextMenu", _G.UIParent, "UIDropDownMenuTemplate");
 contextFrame.relativePoint = "BOTTOMRIGHT";
 function ABGP:ShowContextMenu(context, frame)
     if self:IsContextMenuOpen() then
@@ -1106,10 +1103,10 @@ function ABGP:StaticDialogTemplate(template, t)
     end
 end
 
-StaticPopupDialogs["ABGP_PROMPT_RELOAD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_PROMPT_RELOAD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "%s",
     button1 = "Reload",
     button2 = "Close",
     showAlert = true,
-    OnAccept = ReloadUI,
+    OnAccept = _G.ReloadUI,
 });

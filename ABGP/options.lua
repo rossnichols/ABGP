@@ -15,7 +15,6 @@ local ipairs = ipairs;
 local tonumber = tonumber;
 local type = type;
 local date = date;
-local math = math;
 
 function ABGP:InitOptions()
     local defaults = {
@@ -891,7 +890,7 @@ function ABGP:ShowAddPlayerWindow()
     });
 end
 
-StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+_G.StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Choose the date for the decay (M/D/Y):",
     button1 = "Done",
     button2 = "Cancel",

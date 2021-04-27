@@ -12,7 +12,6 @@ local table = table;
 local tonumber = tonumber;
 local time = time;
 local date = date;
-local select = select;
 
 local priMapping = {
     ["Player"] = "player",

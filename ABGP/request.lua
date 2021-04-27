@@ -426,7 +426,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
     self:Fire(self.InternalEvents.ITEM_PASSED, data);
 end
 
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+_G.StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Request %s for %s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
@@ -447,7 +447,7 @@ StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(AB
         ABGP:PassOnItem(data.itemLink, false);
     end,
 });
-StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+_G.StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Request %s for %s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",

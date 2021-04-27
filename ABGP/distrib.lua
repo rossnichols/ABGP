@@ -4,9 +4,6 @@ local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local UnitExists = UnitExists;
 local UnitName = UnitName;
-local IsShiftKeyDown = IsShiftKeyDown;
-local IsControlKeyDown = IsControlKeyDown;
-local GetServerTime = GetServerTime;
 local IsMasterLooter = IsMasterLooter;
 local GiveMasterLoot = GiveMasterLoot;
 local GetMasterLootCandidate = GetMasterLootCandidate;
@@ -1436,7 +1433,7 @@ function ABGP:DistribOnLootOpened()
     end
 end
 
-StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Award %s to %s?",
     button1 = "Award",
     button2 = "Cancel",
@@ -1444,7 +1441,7 @@ StaticPopupDialogs["ABGP_CONFIRM_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticD
         DistributeItem(data);
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Disenchant %s?",
     button1 = "Disenchant",
     button2 = "Cancel",
@@ -1471,7 +1468,7 @@ StaticPopupDialogs["ABGP_CONFIRM_TRASH"] = ABGP:StaticDialogTemplate(ABGP.Static
         end
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Stop distribution of all items?",
     button1 = "Stop",
     button2 = "Cancel",
@@ -1486,7 +1483,7 @@ StaticPopupDialogs["ABGP_CONFIRM_END_DIST"] = ABGP:StaticDialogTemplate(ABGP.Sta
         window:Hide();
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Done with %s? %s",
     button1 = "Done",
     button2 = "Cancel",
@@ -1495,13 +1492,13 @@ StaticPopupDialogs["ABGP_CONFIRM_DONE"] = ABGP:StaticDialogTemplate(ABGP.StaticD
         RemoveActiveItem(data.itemLink);
     end,
 });
-StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+_G.StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Choose the recipient of %s%s:",
     button1 = "Done",
     button2 = "Cancel",
     maxLetters = 31,
-    autoCompleteSource = GetAutoCompleteResults,
-    autoCompleteArgs = { AUTOCOMPLETE_FLAG_IN_GROUP, AUTOCOMPLETE_FLAG_NONE },
+    autoCompleteSource = _G.GetAutoCompleteResults,
+    autoCompleteArgs = { _G.AUTOCOMPLETE_FLAG_IN_GROUP, _G.AUTOCOMPLETE_FLAG_NONE },
     Validate = function(text, data)
         return ABGP:DistribValidateRecipient(text, data.cost);
     end,
@@ -1513,7 +1510,7 @@ StaticPopupDialogs["ABGP_CHOOSE_RECIPIENT"] = ABGP:StaticDialogTemplate(ABGP.Sta
         DistributeItem(data);
     end,
 });
-StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_REJECT"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
     text = "Reject %s's request for %s? You can optionally add a reason below.",
     button1 = "Reject (public)",
     button2 = "Reject (private)",

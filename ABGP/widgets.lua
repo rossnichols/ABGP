@@ -129,8 +129,8 @@ local function CreateFontString(frame, y)
     return fontstr;
 end
 
-local highlightFont = CreateFont("ABGPHighlight");
-highlightFont:CopyFontObject(GameFontHighlight);
+local highlightFont = _G.CreateFont("ABGPHighlight");
+highlightFont:CopyFontObject(_G.GameFontHighlight);
 highlightFont:SetTextColor(unpack(ABGP.ColorTable));
 
 do
@@ -294,12 +294,12 @@ end
 do
     local Type, Version = "ABGP_Player", 1;
 
-    local gold = CreateFont("ABGPGold");
-    gold:CopyFontObject(GameFontHighlight);
+    local gold = _G.CreateFont("ABGPGold");
+    gold:CopyFontObject(_G.GameFontHighlight);
     gold:SetTextColor(0xEB/0xFF, 0xB4/0xFF, 0x00/0xFF);
 
-    local silver = CreateFont("ABGPSilver");
-    silver:CopyFontObject(GameFontHighlight);
+    local silver = _G.CreateFont("ABGPSilver");
+    silver:CopyFontObject(_G.GameFontHighlight);
     silver:SetTextColor(0x9B/0xFF, 0xA4/0xFF, 0xA8/0xFF);
 
     --[[-----------------------------------------------------------------------------

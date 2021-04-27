@@ -2181,7 +2181,7 @@ function ABGP:ShowMainWindow(command)
     PopulateUI({ rebuild = true, command = command });
 end
 
-StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Remove award of %s to %s?",
     button1 = "Remove",
     button2 = "Cancel",
@@ -2190,7 +2190,7 @@ StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.Stat
     end,
 });
 
-StaticPopupDialogs["ABGP_CONFIRM_DELETEITEM"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_DELETEITEM"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Delete %s from EPGP?",
     button1 = "Delete",
     button2 = "Cancel",
@@ -2220,28 +2220,28 @@ StaticPopupDialogs["ABGP_CONFIRM_DELETEITEM"] = ABGP:StaticDialogTemplate(ABGP.S
     end,
 });
 
-StaticPopupDialogs["ABGP_CONFIRM_COMMITPRERELEASE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_CONFIRM_COMMITPRERELEASE"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "Replace current item values with prerelease?",
     button1 = "Commit",
     button2 = "Cancel",
     OnAccept = function(self, data)
-            -- Step 1: wipe current
-            ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMWIPE, {
-                [ABGP.ItemDataIndex.PRERELEASE] = false
-            }, true);
+        -- Step 1: wipe current
+        ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMWIPE, {
+            [ABGP.ItemDataIndex.PRERELEASE] = false
+        }, true);
 
-            -- Step 2: copy prerelease to current
-            local items = ABGP.tCopy(ABGP:GetItemData(true));
-            for _, item in pairs(items) do
-                item[ABGP.ItemDataIndex.PRERELEASE] = false;
-                ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMADD, item, true);
-            end
+        -- Step 2: copy prerelease to current
+        local items = ABGP.tCopy(ABGP:GetItemData(true));
+        for _, item in pairs(items) do
+            item[ABGP.ItemDataIndex.PRERELEASE] = false;
+            ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMADD, item, true);
+        end
 
-            -- Step 3: wipe prerelease
-            ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMWIPE, {
-                [ABGP.ItemDataIndex.PRERELEASE] = true
-            }, true);
+        -- Step 3: wipe prerelease
+        ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMWIPE, {
+            [ABGP.ItemDataIndex.PRERELEASE] = true
+        }, true);
 
-            ABGP:UpdateHistory();
+        ABGP:UpdateHistory();
     end,
 });

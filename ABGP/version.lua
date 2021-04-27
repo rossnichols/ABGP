@@ -246,7 +246,7 @@ function ABGP:VersionOnGuildRosterUpdate()
     end
 end
 
-StaticPopupDialogs["ABGP_OUTDATED_VERSION"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
+_G.StaticPopupDialogs["ABGP_OUTDATED_VERSION"] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.JUST_BUTTONS, {
     text = "%s",
     button1 = "Ok",
     showAlert = true,

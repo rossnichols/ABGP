@@ -174,12 +174,13 @@ while true do
 	end
 end
 
+fileGlobals["_G"] = nil
 for upVal in pairs(upVals) do
 	fileGlobals[upVal] = nil
 end
 
 if next(fileGlobals) then
-	print("Unused file-level upvals:")
+	print("Globals not referenced by upval:")
 	for glob in pairs(fileGlobals) do
 		print("\t" .. glob)
 	end
