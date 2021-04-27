@@ -662,7 +662,7 @@ local function DistributeItem(data)
     });
     data.count = #currentItem.distributions;
 
-    ABGP:HistoryAwardItem(data, currentItem.testItem);
+    ABGP:AwardItem(data, currentItem.testItem);
 
     if #currentItem.distributions < currentItem.totalCount then
         RebuildUI();

@@ -1548,7 +1548,7 @@ local function DrawItemHistory(container, options)
                                         if not arg1[ABGP.ItemHistoryIndex.TOKENLINK] then
                                             selectedItemLink = nil;
                                         end
-                                        ABGP:HistoryUpdateItemAward(arg1, player, { cost = gp, category = cat }, selectedItemLink);
+                                        ABGP:UpdateItemAward(arg1, player, { cost = gp, category = cat }, selectedItemLink);
                                     end
 
                                     window:Hide();
@@ -2186,7 +2186,7 @@ StaticPopupDialogs["ABGP_CONFIRM_UNAWARD"] = ABGP:StaticDialogTemplate(ABGP.Stat
     button1 = "Remove",
     button2 = "Cancel",
     OnAccept = function(self, data)
-        ABGP:HistoryDeleteItemAward(data);
+        ABGP:DeleteItemAward(data);
     end,
 });
 

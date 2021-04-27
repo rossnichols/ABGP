@@ -478,26 +478,8 @@ end
 -- Helpers for item queries
 --
 
-local historyVersion = 1;
-
-function ABGP:CheckHistoryVersion()
-    _G.ABGP_Data2.history = _G.ABGP_Data2.history or {
-        timestamp = 0,
-        data = {},
-        version = historyVersion
-    };
-
-    if _G.ABGP_Data2.history.version ~= historyVersion then
-        -- In theory, we'd want to try to convert the older history to the new format.
-        _G.ABGP_Data2.history.version = historyVersion;
-        _G.ABGP_Data2.history.timestamp = 0;
-        _G.ABGP_Data2.history.data = {};
-    end
-end
-
 local itemValues = {};
 local itemValuesPrerelease = {};
-local lastHistoryId = 0;
 
 ABGP.ItemDataIndex = {
     NAME = 4,
@@ -510,61 +492,6 @@ ABGP.ItemDataIndex = {
     NOTES = 11,
     RELATED = 12,
     PRERELEASE = 13,
-};
-ABGP.ItemHistoryType = {
-    DELETE = 1,
-
-    ITEMADD = 10,
-    ITEMREMOVE = 11,
-    ITEMUPDATE = 12,
-    ITEMWIPE = 13,
-
-    GPITEM = 20,
-    GPBONUS = 21,
-    GPDECAY = 22,
-    GPRESET = 23,
-};
-ABGP.ItemHistoryIndex = {
-    TYPE = 1,       -- from ABGP.ItemHistoryType
-    ID = 2,         -- from ABGP:GetHistoryId()
-    DATE = 3,       -- date applied (number)
-
-    -- ABGP.ItemHistoryType.DELETE
-    DELETEDID = 4,  -- from ABGP:GetHistoryId()
-
-    -- ABGP.ItemHistoryType.ITEMADD, ITEMUPDATE
-    -- ABGP.ItemDataIndex.*
-
-    -- ABGP.ItemHistoryType.ITEMREMOVE
-    -- ABGP.ItemDataIndex.NAME
-    -- ABGP.ItemDataIndex.ITEMLINK
-    -- ABGP.ItemDataIndex.PRERELEASE
-
-    -- ABGP.ItemHistoryType.ITEMWIPE
-    -- ABGP.ItemDataIndex.PRERELEASE
-
-    -- ABGP.ItemHistoryType.GPITEM
-    PLAYER = 4,     -- player name (string)
-    GP = 5,         -- gp cost (number)
-    CATEGORY = 6,   -- from ABGP.ItemCategory
-    ITEMLINK = 7,   -- item link (string)
-    TOKENLINK = 8,  -- token item link (string)
-
-    -- ABGP.ItemHistoryType.GPBONUS
-    -- PLAYER = 4,     -- player name (string)
-    -- GP = 5,         -- gp award (number)
-    -- CATEGORY = 6,   -- from ABGP.ItemCategory
-    NOTES = 7,      -- notes (string)
-
-    -- ABGP.ItemHistoryType.GPDECAY
-    VALUE = 4,      -- decay percentage (number)
-    FLOOR = 5,      -- gp floor (number)
-
-    -- ABGP.ItemHistoryType.GPRESET
-    -- PLAYER = 4,     -- player name (string)
-    -- GP = 5,         -- new gp (number)
-    -- CATEGORY = 6,   -- from ABGP.ItemCategory
-    -- NOTES = 7,      -- notes (string)
 };
 ABGP.ItemCategory = {
     SILVER = "SILVER",
@@ -593,19 +520,6 @@ function ABGP:FormatCost(cost, category, fmt)
     return (fmt or "%s%s GP"):format(cost, suffix);
 end
 
-function ABGP:GetHistoryId()
-    local nextId = max(lastHistoryId, (GetServerTime() - 1600000000) * 100);
-    if nextId == lastHistoryId then nextId = nextId + 1; end
-    lastHistoryId = nextId;
-    return ("%s:%d"):format(UnitName("player"), nextId);
-end
-
-function ABGP:ParseHistoryId(id)
-    local player, date = id:match("^(.-):(.-)$");
-    if player then date = floor(tonumber(date) / 100) + 1600000000; end
-    return player, date;
-end
-
 function ABGP:ValueFromItem(item)
     return {
         item = item[ABGP.ItemDataIndex.NAME],
@@ -621,76 +535,6 @@ function ABGP:ValueFromItem(item)
         category = item[ABGP.ItemDataIndex.CATEGORY],
         dataStore = item,
     };
-end
-
-function ABGP:GetItemData(prerelease)
-    local history = _G.ABGP_Data2.history.data;
-    local processed = {};
-    local deleted = {};
-
-    -- Find the most recent entry for each item name,
-    -- breaking early if an item wipe entry is encountered.
-    for _, data in ipairs(history) do
-        if not deleted[data[self.ItemHistoryIndex.ID]] then
-            local entryType = data[self.ItemHistoryIndex.TYPE];
-            if entryType == self.ItemHistoryType.ITEMADD or
-               entryType == self.ItemHistoryType.ITEMREMOVE or
-               entryType == self.ItemHistoryType.ITEMUPDATE then
-
-                local item = data[self.ItemDataIndex.NAME];
-                if not processed[item] and data[self.ItemDataIndex.PRERELEASE] == prerelease then
-                    processed[item] = data;
-                end
-            elseif entryType == self.ItemHistoryType.ITEMWIPE then
-                if data[self.ItemDataIndex.PRERELEASE] == prerelease then
-                    break;
-                end
-            elseif entryType == ABGP.ItemHistoryType.DELETE then
-                deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
-            end
-        end
-    end
-
-    -- If the most recent entry for any item is a remove, remove the item.
-    for item, data in pairs(processed) do
-        if data[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEMREMOVE then
-            processed[item] = nil
-        end
-    end
-
-    -- Convert the entries to an array.
-    local array = {};
-    for item, item in pairs(processed) do
-        table.insert(array, item);
-    end
-
-    -- Sort the array alphabetically, but ensuring a token's items directly follow it.
-    table.sort(array, function(a, b)
-        local aItem = a[self.ItemDataIndex.NAME];
-        local bItem = b[self.ItemDataIndex.NAME];
-        local aRelated = a[self.ItemDataIndex.RELATED];
-        local bRelated = b[self.ItemDataIndex.RELATED];
-
-        if aRelated == bRelated then
-            return aItem < bItem;
-        elseif aRelated and bRelated then
-            return aRelated < bRelated;
-        elseif aRelated then
-            if aRelated == bItem then
-                return false;
-            else
-                return aRelated < bItem;
-            end
-        else
-            if aItem == bRelated then
-                return true;
-            else
-                return aItem < bRelated;
-            end
-        end
-    end);
-
-    return array;
 end
 
 function ABGP:RefreshItemValues()

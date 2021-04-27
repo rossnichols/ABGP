@@ -11,6 +11,7 @@
 embeds.xml
 core.lua
 guild.lua
+history.lua
 event.lua
 announce.lua
 tooltips.lua
@@ -20,7 +21,7 @@ request.lua
 comm.lua
 widgets.lua
 version.lua
-data.lua
+priority.lua
 sync.lua
 ui.lua
 options.lua
