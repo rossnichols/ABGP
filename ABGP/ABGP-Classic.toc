@@ -1,0 +1,31 @@
+## Interface: 11307
+## Title: ABGP
+## Notes: EPGP AddOn for <Always Be Pugging>
+## Author: Xanido
+## Version: ${ADDON_VERSION}
+## OptionalDeps: ElvUI
+## SavedVariables: ABGP_DB, ABGP_WindowManagement, ABGP_Data2, ABGP_RaidInfo3, ABGP_MessageLog
+## X-Curse-Project-ID: 361413
+## X-WoWI-ID: 25801
+
+embeds.xml
+core.lua
+guild.lua
+history.lua
+event.lua
+announce.lua
+tooltips.lua
+spreadsheet.lua
+distrib.lua
+request.lua
+comm.lua
+widgets.lua
+version.lua
+priority.lua
+sync.lua
+ui.lua
+options.lua
+minimap.lua
+frames.xml
+bindings.xml
+debug.lua

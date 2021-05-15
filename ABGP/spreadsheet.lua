@@ -3,7 +3,7 @@ local ABGP = _G.ABGP;
 local AceGUI = _G.LibStub("AceGUI-3.0");
 
 local GetItemInfo = GetItemInfo;
-local GuildRoster = GuildRoster;
+local GuildRoster = GuildRoster or _G.C_GuildInfo.GuildRoster;
 local tContains = tContains;
 local pairs = pairs;
 local ipairs = ipairs;

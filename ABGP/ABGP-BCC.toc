@@ -1,4 +1,4 @@
-## Interface: 11306
+## Interface: 20501
 ## Title: ABGP
 ## Notes: EPGP AddOn for <Always Be Pugging>
 ## Author: Xanido

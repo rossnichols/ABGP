@@ -3,7 +3,7 @@ local ABGP = _G.ABGP;
 
 local GetNumGuildMembers = GetNumGuildMembers;
 local GetGuildRosterInfo = GetGuildRosterInfo;
-local GuildRoster = GuildRoster;
+local GuildRoster = GuildRoster or _G.C_GuildInfo.GuildRoster;
 local Ambiguate = Ambiguate;
 local UnitName = UnitName;
 local GetNumGroupMembers = GetNumGroupMembers;
