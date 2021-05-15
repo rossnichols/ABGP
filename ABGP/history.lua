@@ -76,6 +76,7 @@ ABGP.ItemHistoryIndex = {
 };
 
 function ABGP:CheckHistoryVersion()
+    _G.ABGP_Data2 = _G.ABGP_Data2 or {};
     _G.ABGP_Data2.history = _G.ABGP_Data2.history or {
         timestamp = 0,
         data = {},
@@ -147,7 +148,7 @@ function ABGP:AddHistoryEntry(entryType, entry, skipEvent)
 
     table.insert(_G.ABGP_Data2.history.data, 1, entry);
 
-    self:HistoryBroadcastEntries({ [entry[self.ItemHistoryIndex.ID]] = entry });
+    self:SyncNewEntries({ [entry[self.ItemHistoryIndex.ID]] = entry });
 
     if not skipEvent then
         self:UpdateHistory();
@@ -375,7 +376,7 @@ function ABGP:HistoryOnGuildRosterUpdate()
     checkedHistory = true;
     hasCompleteCached = false;
 
-    self:TriggerInitialSync();
+    self:SyncHistory(true);
 end
 
 function ABGP:HistoryDeleteEntry(entry)

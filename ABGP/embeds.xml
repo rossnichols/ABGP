@@ -19,4 +19,5 @@
   <Include file="Libs\LibDBIcon-1.0\lib.xml"/>
   <Include  file="Libs\LibDeflate\lib.xml"/>
   <Include file="Libs\LibSerialize\lib.xml"/>
+  <Include file="Libs\LibLedger\lib.xml"/>
 </Ui>

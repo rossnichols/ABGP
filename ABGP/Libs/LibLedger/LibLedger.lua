@@ -7,19 +7,26 @@
 
 --  SetLedger(ledger): nil
 --  SetBaseline(baseline): nil
+--  OnEntriesSynced(entries, source): nil
 
 --  PrepareEntries(entries, now): table
---  PrepareIds(ids, now, multiple): table
+--  PrepareIds(ids, now): table
 --  RebuildEntries(entries, now): table
 --  RebuildIds(ids, now): table
 
 --  GetSyncThresholds(): number (first), number (rest)
 --  CanWriteEntries(player?): boolean
---  SendComm(typ, data, target?): nil
+--  SendComm(data, target?): nil
 --  Log(fmt, ...): nil
 
-local LibLedger = {}
-LibLedger._invalidBaseline = -1;
+local MAJOR, MINOR = "LibLedger", 1
+local LibLedger
+if _G.LibStub then
+    LibLedger = _G.LibStub:NewLibrary(MAJOR, MINOR)
+    if not LibLedger then return end -- This version is already loaded.
+else
+    LibLedger = {}
+end
 
 local math = math;
 local ipairs = ipairs;
@@ -27,6 +34,8 @@ local pairs = pairs;
 local bit = bit;
 local next = next;
 local table = table;
+
+local _invalidBaseline = -1;
 
 local function Hash(value)
     -- An implementation of the djb2 hash algorithm.
@@ -39,19 +48,14 @@ local function Hash(value)
     return h;
 end
 
-function LibLedger:HasValidLedger(controller)
-    local ledger, baseline = controller:GetLedger();
-    return (baseline ~= self._invalidBaseline);
-end
-
 function LibLedger:Sync(controller)
     self:_SyncWorker(controller, math.random(), controller:GetTime())
 end
 
-function LibLedger:SendEntries(controller, entries)
+function LibLedger:SyncNewEntries(controller, entries)
     local privileged = controller:CanWriteEntries();
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     -- Fast path to trigger a sync of newly added entries.
@@ -59,7 +63,9 @@ function LibLedger:SendEntries(controller, entries)
     if not canSendEntries then return; end
     local now = controller:GetTime();
 
-    controller:SendComm("LEDGER_MERGE", {
+    controller:SendComm({
+        name = "_LEDGER_MERGE",
+
         token = math.random(),
         baseline = baseline,
         now = now,
@@ -70,19 +76,30 @@ function LibLedger:SendEntries(controller, entries)
     });
 end
 
-function LibLedger:HandleComm(controller, typ, data, sender)
+function LibLedger:HandleComm(controller, data, sender)
     if controller:GetVersion() == data.version and not controller:IsSelf(sender) then
-        self["_" .. typ](self, controller, data, sender)
+        self[data.name](self, controller, data, sender)
     end
+end
+
+function LibLedger:HasValidLedger(controller)
+    local ledger, baseline = controller:GetLedger();
+    return (baseline ~= _invalidBaseline);
+end
+
+function LibLedger:SetInvalidLedger(controller)
+    controller:SetBaseline(_invalidBaseline);
 end
 
 function LibLedger:_SyncWorker(controller, token, now)
     local privileged = controller:CanWriteEntries();
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     local commData = {
+        name = "_LEDGER_SYNC",
+
         token = token,
         baseline = baseline,
         now = now,
@@ -107,7 +124,7 @@ function LibLedger:_SyncWorker(controller, token, now)
     wt.broadcastToken = token;
     wt.broadcastEntries = {};
 
-    controller:SendComm("LEDGER_SYNC", commData);
+    controller:SendComm(commData);
 end
 
 function LibLedger:_BuildSyncHashData(controller, ledgerData, now, addAllIds)
@@ -150,7 +167,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
     local privileged = controller:CanWriteEntries();
     local senderIsPrivileged = controller:CanWriteEntries(sender);
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     if data.ids then
@@ -165,7 +182,9 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
     if canSendEntries and data.baseline < baseline then
         -- The sender has an older baseline. They need a history replacement.
         controller:Log("Sending replace init to %s (older baseline)", sender);
-        controller:SendComm("LEDGER_REPLACE_INIT", {
+        controller:SendComm({
+            name = "_LEDGER_REPLACE_INIT",
+
             token = data.token,
             baseline = baseline,
             now = data.now,
@@ -175,8 +194,10 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
     elseif senderIsPrivileged and data.baseline > baseline then
         -- The sender has a newer baseline. We need a history replacement.
         controller:Log("Sending replace request to %s (newer baseline)", sender);
-        controller:SetBaseline(self._invalidBaseline);
-        controller:SendComm("LEDGER_REPLACE_REQUEST", {
+        controller:SetBaseline(_invalidBaseline);
+        controller:SendComm({
+            name = "_LEDGER_REPLACE_REQUEST",
+
             token = data.token,
             baseline = baseline,
             now = data.now,
@@ -212,7 +233,9 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
                 ledgerData.ids[bucket] = controller:PrepareIds(ids, data.now);
             end
             controller:Log("Sending sync (with ids) for %d buckets to %s", bucketCount, sender);
-            controller:SendComm("LEDGER_SYNC", {
+            controller:SendComm({
+                name = "_LEDGER_SYNC",
+
                 token = data.token,
                 baseline = baseline,
                 now = data.now,
@@ -229,6 +252,8 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
         local needsSync = false;
         local bucketCount = 0;
         local commData = {
+            name = "_LEDGER_SYNC",
+
             token = data.token,
             baseline = baseline,
             now = data.now,
@@ -267,7 +292,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
             end
 
             controller:Log("Sending sync (%s ids) for %d buckets to %s", commData.ids and "with" or "no", bucketCount, sender);
-            controller:SendComm("LEDGER_SYNC", commData, sender);
+            controller:SendComm(commData, sender);
         end
 
         -- Now go through the ids looking for ones we need, or ones to send if allowed.
@@ -309,7 +334,9 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
 
         if next(merge) or next(requested) then
             controller:Log("Sending %d, requesting %d entries to/from %s", mergeCount, requestCount, sender);
-            controller:SendComm("LEDGER_MERGE", {
+            controller:SendComm({
+                name = "_LEDGER_MERGE",
+
                 token = data.token,
                 baseline = baseline,
                 now = data.now,
@@ -326,7 +353,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
     local privileged = controller:CanWriteEntries();
     local senderIsPrivileged = controller:CanWriteEntries(sender);
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     if data.baseline ~= baseline then return; end
@@ -368,7 +395,9 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
 
             if next(merge) then
                 controller:Log("Broadcasting %d entries", mergeCount);
-                controller:SendComm("LEDGER_MERGE", {
+                controller:SendComm({
+                    name = "_LEDGER_MERGE",
+
                     token = data.token,
                     baseline = baseline,
                     now = data.now,
@@ -381,7 +410,9 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
         else
             -- The sender is requesting entries we've told them about.
             controller:Log("Sending %d entries to %s", mergeCount, sender);
-            controller:SendComm("LEDGER_MERGE", {
+            controller:SendComm({
+                name = "_LEDGER_MERGE",
+
                 token = data.token,
                 baseline = baseline,
                 now = data.now,
@@ -416,6 +447,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
                 return aDate > bDate;
             end);
             controller:Log("Received %d entries from %s", mergeCount, sender);
+            controller:OnEntriesSynced(data.merge, sender);
         end
     end
 end
@@ -424,14 +456,14 @@ function LibLedger:_LEDGER_REPLACE_INIT(controller, data, sender)
     local privileged = controller:CanWriteEntries();
     local senderIsPrivileged = controller:CanWriteEntries(sender);
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     -- The sender is telling us they can give us an updated ledger.
     if not senderIsPrivileged or data.baseline <= baseline then return; end
 
     -- At this point, our ledger shouldn't be considered as valid.
-    controller:SetBaseline(self._invalidBaseline);
+    controller:SetBaseline(_invalidBaseline);
 
     -- We only want to request a new ledger once.
     local wt = self:_GetWorkingTable(controller);
@@ -439,7 +471,9 @@ function LibLedger:_LEDGER_REPLACE_INIT(controller, data, sender)
     wt.replaceInitToken = data.token;
 
     controller:Log("Requesting ledger from %s", sender);
-    controller:SendComm("LEDGER_REPLACE_REQUEST", {
+    controller:SendComm({
+        name = "_LEDGER_REPLACE_REQUEST",
+
         token = data.token,
         baseline = baseline,
         now = data.now,
@@ -451,7 +485,7 @@ function LibLedger:_LEDGER_REPLACE_REQUEST(controller, data, sender)
     local privileged = controller:CanWriteEntries();
     local senderIsPrivileged = controller:CanWriteEntries(sender);
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     -- The sender is asking for our entire ledger.
@@ -465,7 +499,9 @@ function LibLedger:_LEDGER_REPLACE_REQUEST(controller, data, sender)
         wt.replaceRequestToken = data.token;
 
         controller:Log("Broadcasting ledger (via %s)", sender);
-        controller:SendComm("LEDGER_REPLACE", {
+        controller:SendComm({
+            name = "_LEDGER_REPLACE",
+
             token = data.token,
             baseline = baseline,
             now = data.now,
@@ -479,7 +515,9 @@ function LibLedger:_LEDGER_REPLACE_REQUEST(controller, data, sender)
         -- triggered by their sync. Send to them directly.
 
         controller:Log("Sending ledger to %s", sender);
-        controller:SendComm("LEDGER_REPLACE", {
+        controller:SendComm({
+            name = "_LEDGER_REPLACE",
+
             token = data.token,
             baseline = baseline,
             now = data.now,
@@ -495,7 +533,7 @@ function LibLedger:_LEDGER_REPLACE(controller, data, sender)
     local privileged = controller:CanWriteEntries();
     local senderIsPrivileged = controller:CanWriteEntries(sender);
     local ledger, baseline = controller:GetLedger();
-    local invalidLedger = (baseline == self._invalidBaseline);
+    local invalidLedger = (baseline == _invalidBaseline);
     local canSendEntries = privileged and not invalidLedger;
 
     -- The sender has given us an updated ledger.
@@ -506,134 +544,3 @@ function LibLedger:_LEDGER_REPLACE(controller, data, sender)
     controller:SetLedger(data.ledger);
     controller:SetBaseline(data.baseline);
 end
-
-
--- TEST --
-
-local controllers = {};
-local comms = {};
-
-local testController = {
-    GetLedger = function(self)
-        return self.ledger, self.baseline;
-    end,
-
-    GetEntryInfo = function(self, entry)
-        return entry[1], entry[2];
-    end,
-
-    GetVersion = function(self)
-        return 1;
-    end,
-
-    IsSelf = function(self, name)
-        return self.name == name;
-    end,
-
-    GetTime = function(self)
-        return 100;
-    end,
-
-    SetLedger = function(self, ledger)
-        self.ledger = ledger;
-    end,
-
-    SetBaseline = function(self, baseline)
-        self.baseline = baseline;
-    end,
-
-    PrepareEntries = function(self, entries, now)
-        return entries;
-    end,
-
-    PrepareIds = function(self, ids, now)
-        return ids;
-    end,
-
-    RebuildEntries = function(self, entries, now)
-        return entries;
-    end,
-
-    RebuildIds = function(self, ids, now)
-        return ids;
-    end,
-
-    GetSyncThresholds = function(self)
-        return 3, 5;
-    end,
-
-    CanWriteEntries = function(self, name)
-        name = name or self.name;
-        return controllers[name].privileged;
-    end,
-
-    SendComm = function(self, typ, data, target)
-        table.insert(comms, { typ = typ, data = data, target = target, sender = self.name });
-    end,
-
-    Log = function(self, fmt, ...)
-        print(fmt:format(...));
-    end,
-}
-
-local function MakeTestController(name, privileged, ledger, baseline)
-    local controller = setmetatable({
-        name = name,
-        privileged = privileged,
-        ledger = ledger,
-        baseline = baseline
-    }, { __index = testController });
-    controllers[name] = controller;
-    return controller;
-end
-
-local a = MakeTestController("a", true, {
-    { "a", 100, "The " },
-    { "b", 95, "quick " },
-    -- { "c", 90, "brown " },
-    -- { "d", 85, "fox " },
-    { "e", 80, "jumps " },
-    { "f", 75, "over " },
-    -- { "g", 70, "the " },
-    { "h", 65, "lazy " },
-    { "i", 60, "dog." },
-}, 1);
-
-local b = MakeTestController("b", true, {
-    -- { "a", 100, "The " },
-    -- { "b", 95, "quick " },
-    { "c", 90, "brown " },
-    { "d", 85, "fox " },
-    { "e", 80, "jumps " },
-    { "f", 75, "over " },
-    { "g", 70, "the " },
-    { "h", 65, "lazy " },
-    -- { "i", 60, "dog." },
-}, 1);
-
-testController:Log("Starting...");
-LibLedger:Sync(a);
-while next(comms) do
-    local comm = table.remove(comms, 1);
-
-    if comm.target then
-        testController:Log("Comm:%s to:%s from:%s", comm.typ, comm.target, comm.sender);
-        LibLedger:HandleComm(controllers[comm.target], comm.typ, comm.data, comm.sender);
-    else
-        for _, controller in pairs(controllers) do
-            testController:Log("Comm:%s to:%s from:%s", comm.typ, controller.name, comm.sender);
-            LibLedger:HandleComm(controller, comm.typ, comm.data, comm.sender);
-        end
-    end
-end
-
-local out = "";
-for _, entry in ipairs(a.ledger) do
-    out = out .. entry[3];
-end
-testController:Log(out);
-local out = "";
-for _, entry in ipairs(b.ledger) do
-    out = out .. entry[3];
-end
-testController:Log(out);

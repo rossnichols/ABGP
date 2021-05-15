@@ -179,23 +179,7 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.CommTypes.HISTORY_SYNC.name, function(self, event, data, distribution, sender, version)
-        self:HistoryOnSync(data, distribution, sender, version);
-    end, self);
-
-    self:SetCallback(self.CommTypes.HISTORY_REPLACE_INITIATION.name, function(self, event, data, distribution, sender, version)
-        self:HistoryOnReplaceInit(data, distribution, sender, version);
-    end, self);
-
-    self:SetCallback(self.CommTypes.HISTORY_MERGE.name, function(self, event, data, distribution, sender, version)
-        self:HistoryOnMerge(data, distribution, sender, version);
-    end, self);
-
-    self:SetCallback(self.CommTypes.HISTORY_REPLACE.name, function(self, event, data, distribution, sender, version)
-        self:HistoryOnReplace(data, distribution, sender, version);
-    end, self);
-
-    self:SetCallback(self.CommTypes.HISTORY_REPLACE_REQUEST.name, function(self, event, data, distribution, sender, version)
-        self:HistoryOnReplaceRequest(data, distribution, sender, version);
+        self:SyncOnComm(data, distribution, sender, version);
     end, self);
 
     self:SetCallback(self.InternalEvents.ACTIVE_PLAYERS_REFRESHED, function(self)
