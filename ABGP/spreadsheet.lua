@@ -489,17 +489,22 @@ local lookup = {};
 function ABGP:BuildItemLookup(shouldPrint)
     local succeeded = true;
 
-    local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore;
+    -- local mc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MoltenCore;
     -- local ony = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Onyxia;
-    local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses;
-    local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair;
+    -- local wb = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.WorldBosses;
+    -- local bwl = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.BlackwingLair;
     -- local aq20 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheRuinsofAhnQiraj;
-    local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj;
-    local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
+    -- local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj;
+    -- local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
+
+    local kara = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Karazhan;
+    local gruul = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.GruulsLair;
+    local mag = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MagtheridonsLair;
+
     local token = _G.AtlasLoot.Data.Token;
-    for _, collection in ipairs({ mc, wb, bwl, aq40, naxx }) do
+    for _, collection in ipairs({ kara, gruul, mag }) do
         for _, sub in ipairs(collection.items) do
-            if sub[1] then
+            if sub[1] and not sub.IgnoreAsSource then
                 for _, item in ipairs(sub[1]) do
                     if type(item[2]) == "number" then
                         local name, link = GetItemInfo(item[2]);
@@ -580,21 +585,24 @@ function ABGP:GenerateItemList()
     if not self:BuildItemLookup(true) then return false; end
 
     local items = {};
-    local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
+    local kara = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Karazhan;
+    local gruul = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.GruulsLair;
+    local mag = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MagtheridonsLair;
+
     local token = _G.AtlasLoot.Data.Token;
-    for _, collection in ipairs({ naxx }) do
+    for _, collection in ipairs({ kara, gruul, mag }) do
         for _, sub in ipairs(collection.items) do
-            if sub[1] then
+            if sub[1] and not sub.IgnoreAsSource then
                 for _, item in ipairs(sub[1]) do
                     if type(item[2]) == "number" then
-                        local name, link = GetItemInfo(item[2]);
-                        if name then
+                        local name, link, rarity = GetItemInfo(item[2]);
+                        if name and rarity >= _G.LE_ITEM_QUALITY_EPIC then
                             if not items[name] then
                                 local itemData = {
                                     [ABGP.ItemDataIndex.NAME] = name,
                                     [ABGP.ItemDataIndex.GP] = 0,
                                     [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
-                                    [ABGP.ItemDataIndex.RAID] = collection.AtlasMapID,
+                                    [ABGP.ItemDataIndex.RAID] = _G.C_Map.GetAreaInfo(collection.MapID),
                                     [ABGP.ItemDataIndex.BOSS] = { sub.name },
                                     [ABGP.ItemDataIndex.PRIORITY] = {},
                                     [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
@@ -602,6 +610,8 @@ function ABGP:GenerateItemList()
                                     [ABGP.ItemDataIndex.RELATED] = nil,
                                 };
                                 items[name] = itemData;
+                            else
+                                table.insert(items[name][ABGP.ItemDataIndex.BOSS], sub.name);
                             end
 
                             local tokenData = token.GetTokenData(item[2]);
@@ -615,8 +625,8 @@ function ABGP:GenerateItemList()
                                                 [ABGP.ItemDataIndex.NAME] = tokenName,
                                                 [ABGP.ItemDataIndex.GP] = 0,
                                                 [ABGP.ItemDataIndex.ITEMLINK] = ABGP:ShortenLink(link),
-                                                [ABGP.ItemDataIndex.RAID] = collection.AtlasMapID,
-                                                [ABGP.ItemDataIndex.BOSS] = { sub.name },
+                                                [ABGP.ItemDataIndex.RAID] = _G.C_Map.GetAreaInfo(collection.MapID),
+                                                [ABGP.ItemDataIndex.BOSS] = {},
                                                 [ABGP.ItemDataIndex.PRIORITY] = {},
                                                 [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
                                                 [ABGP.ItemDataIndex.NOTES] = nil,

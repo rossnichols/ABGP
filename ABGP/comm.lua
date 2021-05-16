@@ -475,27 +475,3 @@ end
 function ABGP:CommOnEnteringWorld()
     startTime = GetTime();
 end
-
-function ABGP:TestSerialization(input)
-    input = input or self:PrepareHistory(_G.ABGP_Data2.history.data);
-    local LibDeflate = _G.LibStub("LibDeflate");
-
-    local serialized = LibSerialize:Serialize(input);
-    self:Notify("serialized len: %d", #serialized);
-    local compressed = LibDeflate:CompressDeflate(serialized);
-    local encoded = LibDeflate:EncodeForWoWAddonChannel(compressed);
-    self:Notify("compressed/encoded lens: %d, %d", #compressed, #encoded);
-    self:Notify("compared to legacy of %d", self:Serialize(input, true):len());
-
-    local decompressed = LibDeflate:DecompressDeflate(compressed);
-    local success, deserialized = LibSerialize:Deserialize(decompressed);
-    self:Notify("deserialization success: %s %s", success and "true" or "false", success and "" or deserialized);
-
-    if success then
-        if type(input) == "table" then
-            self:Notify("matching: %s", self.tCompare(input, deserialized) and "yes" or "no");
-        else
-            self:Notify("matching: %s", input == deserialized and "yes" or "no");
-        end
-    end
-end

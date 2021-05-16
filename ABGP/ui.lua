@@ -447,22 +447,27 @@ local function DrawItems(container, options)
         container:SetUserData("priSelector", priSelector);
 
         local sources, sourcesSorted = {}, {};
-        local lastRaid, lastBoss;
+        local sourcesByRaid, raidSources, bossSources = {}, {}, {};
         for _, item in ipairs(items) do
             local raid = item[ABGP.ItemDataIndex.RAID];
-            local boss = item[ABGP.ItemDataIndex.BOSS];
-            if raid ~= lastRaid then
-                local entry = raid;
-                sources[entry] = ABGP:ColorizeText(entry);
-                table.insert(sourcesSorted, entry);
-                lastRaid = raid;
-                lastBoss = nil;
+            local bosses = item[ABGP.ItemDataIndex.BOSS];
+            if not sourcesByRaid[raid] then
+                table.insert(raidSources, raid);
+                table.sort(raidSources);
+                sourcesByRaid[raid] = {};
             end
-            if #boss == 1 and boss[1] ~= lastBoss then
-                local entry = boss[1];
-                sources[entry] = entry;
-                table.insert(sourcesSorted, entry);
-                lastBoss = boss[1];
+            if #bosses == 1 and not bossSources[bosses[1]] then
+                table.insert(sourcesByRaid[raid], bosses[1]);
+                table.sort(sourcesByRaid[raid]);
+                bossSources[bosses[1]] = true;
+            end
+        end
+        for _, raid in ipairs(raidSources) do
+            sources[raid] = ABGP:ColorizeText(raid);
+            table.insert(sourcesSorted, raid);
+            for _, boss in ipairs(sourcesByRaid[raid]) do
+                sources[boss] = boss;
+                table.insert(sourcesSorted, boss);
             end
         end
         allowedSources = ABGP.tCopy(sources);

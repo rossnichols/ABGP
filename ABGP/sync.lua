@@ -4,6 +4,9 @@ local LibLedger = _G.LibStub("LibLedger");
 
 local UnitName = UnitName;
 local GetServerTime = GetServerTime;
+local pairs = pairs;
+local table = table;
+local type = type;
 
 local controller = {
     GetLedger = function(self)
@@ -53,7 +56,7 @@ local controller = {
         end
     end,
 
-    SendComm = function(self, typ, data, target)
+    SendComm = function(self, data, target)
         if target then
             ABGP:SendComm(ABGP.CommTypes.HISTORY_SYNC, data, "WHISPER", target);
         else
@@ -66,18 +69,55 @@ local controller = {
     end,
 
     PrepareEntries = function(self, entries, now)
-        return entries;
+        local copy = ABGP.tCopy(entries);
+        -- Break down the history ids into their two parts.
+        -- Store the player in that slot, and the difference
+        -- between the date and applied date in a new key.
+        -- Performing these changes helps out with serialization,
+        -- which favors smaller numbers and repeated strings.
+        for _, entry in pairs(copy) do
+            local player, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
+            entry[ABGP.ItemHistoryIndex.ID] = player;
+            entry[0] = entryDate - entry[ABGP.ItemHistoryIndex.DATE];
+        end
+
+        return copy;
     end,
 
     PrepareIds = function(self, ids, now)
-        return ids;
+        local decomposed = {};
+        -- Break down the history ids into their two parts.
+        -- Store them as an array instead of a map, and store
+        -- the date as its delta from `now`.
+        for id in pairs(ids) do
+            local player, entryDate = ABGP:ParseHistoryId(id);
+            table.insert(decomposed, player);
+            table.insert(decomposed, now - entryDate);
+        end
+
+        return decomposed;
     end,
 
     RebuildEntries = function(self, entries, now)
+        -- Undo the changes from PrepareEntries().
+        for _, entry in pairs(entries) do
+            local entryDate = entry[ABGP.ItemHistoryIndex.DATE] + entry[0];
+            entry[ABGP.ItemHistoryIndex.ID] = ("%s:%d"):format(entry[ABGP.ItemHistoryIndex.ID], entryDate);
+            entry[0] = nil;
+        end
+
         return entries;
     end,
 
     RebuildIds = function(self, ids, now)
+        -- Undo the changes from PrepareIds().
+        for i = 1, #ids - 1, 2 do
+            local id = ("%s:%d"):format(ids[i], now - ids[i + 1]);
+            ids[id] = true;
+            ids[i] = nil;
+            ids[i + 1] = nil;
+        end
+
         return ids;
     end,
 };
@@ -122,4 +162,38 @@ end
 
 function ABGP:HasValidHistory()
     return LibLedger:HasValidLedger(controller);
+end
+
+function ABGP:TestSerialization(input)
+    local LibSerialize = _G.LibStub("LibSerialize");
+    local AceSerializer = _G.LibStub("AceSerializer-3.0");
+    local LibDeflate = _G.LibStub("LibDeflate");
+    local LibCompress = _G.LibStub("LibCompress");
+    local AddonEncodeTable = LibCompress:GetAddonEncodeTable();
+
+    input = input or controller:PrepareEntries(_G.ABGP_Data2.history.data);
+    local LibDeflate = _G.LibStub("LibDeflate");
+
+    local serialized = LibSerialize:Serialize(input);
+    self:Notify("serialized len: %d", #serialized);
+    local compressed = LibDeflate:CompressDeflate(serialized);
+    local encoded = LibDeflate:EncodeForWoWAddonChannel(compressed);
+    self:Notify("compressed/encoded lens: %d, %d", #compressed, #encoded);
+
+    local serializedLegacy = AceSerializer:Serialize(input);
+    local compressedLegacy = LibCompress:Compress(serializedLegacy);
+    local encodedLegacy = AddonEncodeTable:Encode(compressedLegacy);
+    self:Notify("compared to legacy of %d", encodedLegacy:len());
+
+    local decompressed = LibDeflate:DecompressDeflate(compressed);
+    local success, deserialized = LibSerialize:Deserialize(decompressed);
+    self:Notify("deserialization success: %s %s", success and "true" or "false", success and "" or deserialized);
+
+    if success then
+        if type(input) == "table" then
+            self:Notify("matching: %s", self.tCompare(input, deserialized) and "yes" or "no");
+        else
+            self:Notify("matching: %s", input == deserialized and "yes" or "no");
+        end
+    end
 end
