@@ -123,7 +123,7 @@ local controller = {
 };
 
 local function ShouldSync()
-    return ABGP:Get("syncEnabled") and not ABGP:Get("outsider");
+    return not ABGP:Get("outsider");
 end
 
 function ABGP:SyncHistory(initial)

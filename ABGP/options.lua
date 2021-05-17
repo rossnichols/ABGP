@@ -36,7 +36,6 @@ function ABGP:InitOptions()
             autoDistribute = false,
             raidDisenchanters = "",
             raidMules = "",
-            syncEnabled = true,
             syncVerbose = false,
             strictOnTime = false,
             altShowsPrerelease = false,
@@ -385,20 +384,11 @@ function ABGP:InitOptions()
                     inline = true,
                     order = 5,
                     args = {
-                        enabled = {
-                            name = "Enabled",
-                            order = 1,
-                            desc = "If disabled, your history will only contain entries you personally witnessed. It may become inaccurate if those entries get edited.",
-                            type = "toggle",
-                            get = function(info) return self.db.char.syncEnabled; end,
-                            set = function(info, v) self.db.char.syncEnabled = v; end,
-                        },
                         syncNow = {
                             name = "Sync",
                             order = 2,
                             desc = "Trigger a sync.",
                             type = "execute",
-                            disabled = function() return not self.db.char.syncEnabled; end,
                             func = function() self:SyncHistory(); end,
                         },
                         rebuild = {
@@ -406,7 +396,6 @@ function ABGP:InitOptions()
                             order = 3,
                             desc = "Trigger a complete rebuild of your history.",
                             type = "execute",
-                            disabled = function() return not self.db.char.syncEnabled; end,
                             func = function() self:RebuildHistory(); end,
                         },
                         -- verbose = {
@@ -414,8 +403,7 @@ function ABGP:InitOptions()
                         --     order = 4,
                         --     desc = "When enabled, you'll see messages in your chat frame when you receive new synced entries.",
                         --     type = "toggle",
-                        --     disabled = function() return not self.db.char.syncEnabled; end,
-                        --     get = function(info) return self.db.char.syncEnabled and self.db.char.syncVerbose; end,
+                        --     get = function(info) return self.db.char.syncVerbose; end,
                         --     set = function(info, v) self.db.char.syncVerbose = v; end,
                         -- },
                     },
