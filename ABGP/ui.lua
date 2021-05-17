@@ -46,60 +46,60 @@ ABGP.UICommands = {
 local infoText = [[
 <html><body>
     <h1 align="center">|cFF94E4FFABGP|r: Always Be Pugging Loot System</h1>
-
-    <p><br/>Always Be Pugging uses a modified EPGP loot system. Unlike most EPGP systems, the GP values in ABGP are priced individually and are based on their real value and learned knowledge from 15 years of min-maxing by the community.
-    </p>
-
-    <h2><br/>How does the EPGP system work?</h2>
-    <p>EPGP is a simplistic system designed to take all effort put into raiding and all gear received to generate a single value that shows your priority for loot.
-    <br/>
-    <br/>• Every time a player is on time for a raid, participates in progression, or is present for a boss kill (or on standby), they will gain EP (effort points).
-    <br/>• Raiders gain GP (gear points) based on the piece of gear they receive. Off-spec items are valued at 0 GP.
-    <br/>• Only active raiders gain EP and GP. Trials and non-raiders are still tracked for attendance, but they do not gain GP for any items they receive.
-    <br/>• Every week, EP and GP values decay by a certain percentage, to value more recent gains higher than older gains.
-    <br/>
-    <br/>With perfect attendance, a player will earn 100 EP per week. For the weekday raid group, each raid night is worth the same amount of EP. For the weekend raid group, all 100 EP comes from the Saturday raid.
-    <br/>
-    <br/>Each item tracked by ABGP has the following info associated with it:
-    <br/>• Category: Gold or Silver. GP and priority are tracked separately for each category.
-    <br/>• GP Value: the amount of GP gained when the item is awarded for main-spec.
-    <br/>• Priority: a list of classes/specs that will be given main-spec priority for the item.
-    <br/>
-    <br/>EP/GP is read as a ratio, determining priority. The person with the highest priority ratio of those requesting a given item will receive it, after evaluating their eligibility for loot and the specific item. The final decision is at the discretion of the loot distributor (the guild leader or an officer), but deviations from this procedure are rare.
-    </p>
-
-    <h2><br/>When am I eligible for loot?</h2>
-    <p>Players are considered eligible for loot in the following priority order:
-    <br/>• Raiders above the minimum EP threshold
-    <br/>• Raiders below the minimum EP threshold
-    <br/>• Trial raiders
-    <br/>• Non-raiders
-    </p>
-
-    <h2><br/>What items am I eligible for?</h2>
-    <p>Players are considered eligible for a given item in the following priority order:
-    <br/>• Main-spec requests, when the player meets the item's class/spec priority
-    <br/>• Main-spec requests, when the player does not meet that priority
-    <br/>• Off-spec requests
-    </p>
-
-    <h2><br/>Is there a limit on loot I can receive?</h2>
-    <p>No, there is no limit.
-    </p>
-
-    <h2><br/>Can my EP or GP decrease?</h2>
-    <p>For a player, EP and GP is only awarded, never removed. However, each week, everyone's current EP and GP will decay by a flat percentage: 25% for EP, and 15% for GP. This means that a given EP or GP award has a higher impact to your current EP/GP the more recent it is. For EP, this means that more recent attendance is weighted higher, and the impact of missing a raid lessens over time. For GP, this encourages requesting items as they drop instead of waiting for a specific item, since the earlier you are awarded an item, the sooner the GP gained begins decaying.
-    </p>
-
-    <h2><br/>How is my initial priority determined?</h2>
-    <p>When a player becomes a new active raider (either with an alt, or by passing their trial), their initial EP and GP are calculated using the values of the other players in the raid group, to insert them into the middle-bottom of overall priority. This system ensures that newly-active players with no item awards are not placed at the top end of priority.
-    </p>
-
-    <h2><br/>When do EP and GP gains take effect?</h2>
-    <p>GP gains take effect immediately upon receiving an item. EP is updated once per week, at the end of the weekly raid reset (Monday). When EP is updated, EP and GP decay is also applied, with a one-week lag (i.e., when the current week's EP is applied, the EP and GP values from the previous week are decayed).
-    </p>
 </body></html>
 ]];
+
+-- <p><br/>Always Be Pugging uses a modified EPGP loot system. Unlike most EPGP systems, the GP values in ABGP are priced individually and are based on their real value and learned knowledge from 15 years of min-maxing by the community.
+-- </p>
+
+-- <h2><br/>How does the EPGP system work?</h2>
+-- <p>EPGP is a simplistic system designed to take all effort put into raiding and all gear received to generate a single value that shows your priority for loot.
+-- <br/>
+-- <br/>• Every time a player is on time for a raid, participates in progression, or is present for a boss kill (or on standby), they will gain EP (effort points).
+-- <br/>• Raiders gain GP (gear points) based on the piece of gear they receive. Off-spec items are valued at 0 GP.
+-- <br/>• Only active raiders gain EP and GP. Trials and non-raiders are still tracked for attendance, but they do not gain GP for any items they receive.
+-- <br/>• Every week, EP and GP values decay by a certain percentage, to value more recent gains higher than older gains.
+-- <br/>
+-- <br/>With perfect attendance, a player will earn 100 EP per week. For the weekday raid group, each raid night is worth the same amount of EP. For the weekend raid group, all 100 EP comes from the Saturday raid.
+-- <br/>
+-- <br/>Each item tracked by ABGP has the following info associated with it:
+-- <br/>• Category: Gold or Silver. GP and priority are tracked separately for each category.
+-- <br/>• GP Value: the amount of GP gained when the item is awarded for main-spec.
+-- <br/>• Priority: a list of classes/specs that will be given main-spec priority for the item.
+-- <br/>
+-- <br/>EP/GP is read as a ratio, determining priority. The person with the highest priority ratio of those requesting a given item will receive it, after evaluating their eligibility for loot and the specific item. The final decision is at the discretion of the loot distributor (the guild leader or an officer), but deviations from this procedure are rare.
+-- </p>
+
+-- <h2><br/>When am I eligible for loot?</h2>
+-- <p>Players are considered eligible for loot in the following priority order:
+-- <br/>• Raiders above the minimum EP threshold
+-- <br/>• Raiders below the minimum EP threshold
+-- <br/>• Trial raiders
+-- <br/>• Non-raiders
+-- </p>
+
+-- <h2><br/>What items am I eligible for?</h2>
+-- <p>Players are considered eligible for a given item in the following priority order:
+-- <br/>• Main-spec requests, when the player meets the item's class/spec priority
+-- <br/>• Main-spec requests, when the player does not meet that priority
+-- <br/>• Off-spec requests
+-- </p>
+
+-- <h2><br/>Is there a limit on loot I can receive?</h2>
+-- <p>No, there is no limit.
+-- </p>
+
+-- <h2><br/>Can my EP or GP decrease?</h2>
+-- <p>For a player, EP and GP is only awarded, never removed. However, each week, everyone's current EP and GP will decay by a flat percentage: 25% for EP, and 15% for GP. This means that a given EP or GP award has a higher impact to your current EP/GP the more recent it is. For EP, this means that more recent attendance is weighted higher, and the impact of missing a raid lessens over time. For GP, this encourages requesting items as they drop instead of waiting for a specific item, since the earlier you are awarded an item, the sooner the GP gained begins decaying.
+-- </p>
+
+-- <h2><br/>How is my initial priority determined?</h2>
+-- <p>When a player becomes a new active raider (either with an alt, or by passing their trial), their initial EP and GP are calculated using the values of the other players in the raid group, to insert them into the middle-bottom of overall priority. This system ensures that newly-active players with no item awards are not placed at the top end of priority.
+-- </p>
+
+-- <h2><br/>When do EP and GP gains take effect?</h2>
+-- <p>GP gains take effect immediately upon receiving an item. EP is updated once per week, at the end of the weekly raid reset (Monday). When EP is updated, EP and GP decay is also applied, with a one-week lag (i.e., when the current week's EP is applied, the EP and GP values from the previous week are decayed).
+-- </p>
 
 local function PopulateUI(options)
     if not activeWindow then return; end
