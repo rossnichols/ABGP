@@ -15,16 +15,16 @@ jobs:
       run: |
         echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
         echo ::set-output name=ADDON_VERSION::${GITHUB_REF/refs\/tags\/v/}
-      
+
     - name: Update TOC version
       uses: cschleiden/replace-tokens@v1.0
       with:
         tokenPrefix: '${'
         tokenSuffix: '}'
-        files: '["ABGP/ABGP.toc", "ABGP/core.lua"]'
+        files: '["ABGP/ABGP.toc", "ABGP/ABGP-Classic.toc", "ABGP/ABGP-BCC.toc", "ABGP/core.lua"]'
       env:
         ADDON_VERSION: ${{ steps.get_version.outputs.ADDON_VERSION }}
-      
+
     - name: Create a zip for the release
       uses: TheDoctor0/zip-release@v0.2.1
       with:
