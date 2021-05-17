@@ -154,39 +154,32 @@ function ABGP:GetGuildInfo(player)
 end
 
 function ABGP:GetItemPriorities()
-    return {
-        ["Druid (Heal)"] = "Druid (Heal)",
-        ["KAT4FITE"] = "KAT4FITE",
-        ["Hunter"] = "Hunter",
-        ["Mage"] = "Mage",
-        ["Paladin (Holy)"] = "Paladin (Holy)",
-        ["Paladin (Ret)"] = "Paladin (Ret)",
-        ["Priest (Heal)"] = "Priest (Heal)",
-        ["Priest (Shadow)"] = "Priest (Shadow)",
-        ["Slicey Rogue"] = "Slicey Rogue",
-        ["Stabby Rogue"] = "Stabby Rogue",
-        ["Warlock"] = "Warlock",
-        ["Tank"] = "Tank",
-        ["Metal Rogue"] = "Metal Rogue",
-        ["Progression"] = "Progression",
-        ["Garbage"] = "Garbage",
-    }, {
-        "Druid (Heal)",
+    local prios = {
+        "Resto Druid",
+        "Chicken",
         "KAT4FITE",
-        "Hunter",
         "Mage",
-        "Paladin (Holy)",
-        "Paladin (Ret)",
-        "Priest (Heal)",
-        "Priest (Shadow)",
+        "Holy Paladin",
+        "Ret Paladin",
+        "Prot Paladin",
+        "Holy Priest",
+        "Shadow Priest",
         "Slicey Rogue",
-        "Stabby Rogue",
         "Warlock",
-        "Tank",
-        "Metal Rogue",
-        "Progression",
-        "Garbage",
+        "Prot Warrior",
+        "DPS Warrior",
+        "Hunter",
+        "Resto Shaman",
+        "Elemental Shaman",
+        "Enhancement Shaman",
     };
+
+    local priosMap = {};
+    for _, prio in pairs(prios) do
+        priosMap[prio] = prio;
+    end
+
+    return priosMap, prios;
 end
 
 local lastSyncTarget;
