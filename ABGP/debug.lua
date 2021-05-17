@@ -38,5 +38,5 @@ function ABGP:SetDebug(enable)
     self:Set("debug", enable);
 end
 
-ABGP.VersionOverride = "7.4.4";
-ABGP.VersionCmpOverride = "7.4.4";
+ABGP.VersionOverride = "8.0.0";
+ABGP.VersionCmpOverride = "8.0.0";
