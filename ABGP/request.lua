@@ -61,7 +61,7 @@ local function ShowStaticPopup(itemLink, value, selected)
             gp = selectedValue.gp;
             category = selectedValue.category;
         end
-        local dialog = _G.StaticPopup_Show(which, requestedItemLink, ABGP:FormatCost(gp, category), { itemLink = itemLink, selectedItem = selectedItemLink });
+        local dialog = _G.StaticPopup_Show(which, requestedItemLink, ABGP:FormatCost(gp, category, " for %s%s GP"), { itemLink = itemLink, selectedItem = selectedItemLink });
         if not dialog then
             ABGP:Error("Unable to open request dialog for %s! Try closing other open ones.", itemLink);
         end
@@ -427,7 +427,7 @@ function ABGP:PassOnItem(itemLink, removeFromFaves)
 end
 
 _G.StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Request %s for %s? You may provide an optional note.",
+    text = "Request %s%s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",
@@ -448,7 +448,7 @@ _G.StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB] = ABGP:StaticDialogTemplate
     end,
 });
 _G.StaticPopupDialogs[staticPopups.ABGP_LOOTDISTRIB_FAVORITE] = ABGP:StaticDialogTemplate(ABGP.StaticDialogTemplates.EDIT_BOX, {
-    text = "Request %s for %s? You may provide an optional note.",
+    text = "Request %s%s? You may provide an optional note.",
     button1 = "Request (MS)",
     button2 = "Request (OS)",
     button3 = "Pass",
