@@ -1960,7 +1960,8 @@ do
             close = frame.closeButton;
         else
             local widgetNum = AceGUI:GetNextWidgetNum(Type);
-            frame = CreateFrame("Frame", "ABGP_LootFrame" .. widgetNum, _G.UIParent, "ABGPLootTemplate");
+            local mixinTemplate = _G.BackdropTemplateMixin and ", BackdropTemplate" or "";
+            frame = CreateFrame("Frame", "ABGP_LootFrame" .. widgetNum, _G.UIParent, "ABGPLootTemplate" .. mixinTemplate);
             button = frame.IconFrame;
             need = frame.NeedButton;
             close = frame.CloseButton;
