@@ -366,7 +366,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
         local merge = {};
         local mergeCount = 0;
         for _, entry in ipairs(ledger) do
-            local id, entryDate = controller:GetEntryInfo(entry);
+            local id = controller:GetEntryInfo(entry);
             if data.requested[id] then
                 -- Sender wants this entry.
                 merge[id] = entry;
@@ -427,7 +427,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
     if next(data.merge) and senderIsPrivileged then
         -- The sender is sharing entries. First remove the ones we already have.
         for _, entry in ipairs(ledger) do
-            local id, entryDate = controller:GetEntryInfo(entry);
+            local id = controller:GetEntryInfo(entry);
             data.merge[id] = nil;
         end
 
@@ -436,6 +436,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
         if next(data.merge) then
             local mergeCount = 0;
             for _, entry in pairs(data.merge) do
+                local id = controller:GetEntryInfo(entry);
                 table.insert(ledger, 1, entry);
                 mergeCount = mergeCount + 1;
             end

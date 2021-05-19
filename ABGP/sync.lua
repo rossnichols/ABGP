@@ -14,7 +14,7 @@ local controller = {
     end,
 
     GetEntryInfo = function(self, entry)
-        return entry[ABGP.ItemHistoryIndex.ID], entry[ABGP.ItemHistoryIndex.DATE];
+        return ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
     end,
 
     GetVersion = function(self)
@@ -70,48 +70,42 @@ local controller = {
     PrepareEntries = function(self, entries, now)
         local copy = ABGP.tCopy(entries);
         -- Break down the history ids into their two parts.
-        -- Store the player in that slot, and the difference
-        -- between the date and applied date in a new key.
-        -- Performing these changes helps out with serialization,
-        -- which favors smaller numbers and repeated strings.
         for _, entry in pairs(copy) do
-            local player, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
+            local player, _, entryDateOrig = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
             entry[ABGP.ItemHistoryIndex.ID] = player;
-            entry[0] = entryDate - entry[ABGP.ItemHistoryIndex.DATE];
+            entry[0] = entryDateOrig;
         end
 
         return copy;
     end,
 
-    PrepareIds = function(self, ids, now)
-        local decomposed = {};
-        -- Break down the history ids into their two parts.
-        -- Store them as an array instead of a map, and store
-        -- the date as its delta from `now`.
-        for id in pairs(ids) do
-            local player, entryDate = ABGP:ParseHistoryId(id);
-            table.insert(decomposed, player);
-            table.insert(decomposed, now - entryDate);
-        end
-
-        return decomposed;
-    end,
-
     RebuildEntries = function(self, entries, now)
         -- Undo the changes from PrepareEntries().
         for _, entry in pairs(entries) do
-            local entryDate = entry[ABGP.ItemHistoryIndex.DATE] + entry[0];
-            entry[ABGP.ItemHistoryIndex.ID] = ("%s:%d"):format(entry[ABGP.ItemHistoryIndex.ID], entryDate);
+            entry[ABGP.ItemHistoryIndex.ID] = ("%s:%d"):format(entry[ABGP.ItemHistoryIndex.ID], entry[0]);
             entry[0] = nil;
         end
 
         return entries;
     end,
 
+    PrepareIds = function(self, ids, now)
+        local decomposed = {};
+        -- Break down the history ids into their two parts.
+        -- Store them as an array instead of a map.
+        for id in pairs(ids) do
+            local player, _, entryDateOrig = ABGP:ParseHistoryId(id);
+            table.insert(decomposed, player);
+            table.insert(decomposed, entryDateOrig);
+        end
+
+        return decomposed;
+    end,
+
     RebuildIds = function(self, ids, now)
         -- Undo the changes from PrepareIds().
         for i = 1, #ids - 1, 2 do
-            local id = ("%s:%d"):format(ids[i], now - ids[i + 1]);
+            local id = ("%s:%d"):format(ids[i], ids[i + 1]);
             ids[id] = true;
             ids[i] = nil;
             ids[i + 1] = nil;

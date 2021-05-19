@@ -99,9 +99,10 @@ function ABGP:GetHistoryId()
 end
 
 function ABGP:ParseHistoryId(id)
-    local player, date = id:match("^(.-):(.-)$");
-    if player then date = floor(tonumber(date) / 100) + 1600000000; end
-    return player, date;
+    local player, entryDate = id:match("^(.-):(.-)$");
+    local entryDateOrig = entryDate;
+    entryDate = floor(tonumber(entryDate) / 100) + 1600000000;
+    return player, entryDate, entryDateOrig;
 end
 
 function ABGP:HistoryTriggerDecay(decayTime)

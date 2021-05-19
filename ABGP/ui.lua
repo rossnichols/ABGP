@@ -1042,6 +1042,7 @@ local function DrawItems(container, options)
                                 done:SetUserData("cell", { align = "CENTERRIGHT" });
                                 done:SetCallback("OnClick", function(widget)
                                     local newItem = ABGP.tCopy(value.dataStore);
+                                    newItem[ABGP.ItemHistoryIndex.DATE] = nil;
                                     if cost then
                                         newItem[ABGP.ItemDataIndex.GP] = cost:GetValue();
                                     end
@@ -1062,6 +1063,7 @@ local function DrawItems(container, options)
 
                                     for _, info in pairs(tokenPrices) do
                                         local newItem = ABGP.tCopy(info.value.dataStore);
+                                        newItem[ABGP.ItemHistoryIndex.DATE] = nil;
                                         newItem[ABGP.ItemDataIndex.GP] = info.cost:GetValue();
                                         newItem[ABGP.ItemDataIndex.CATEGORY] = info.category:GetValue();
                                         newItem[ABGP.ItemDataIndex.PRERELEASE] = showPrerelease;
