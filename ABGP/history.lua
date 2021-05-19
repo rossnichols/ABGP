@@ -137,7 +137,7 @@ function ABGP:HistoryAddPlayer(player, addTime, ep, gpS, gpG)
     });
 end
 
-function ABGP:AddHistoryEntry(entryType, entry, skipEvent)
+function ABGP:AddHistoryEntry(entryType, entry, skipEvent, skipSync)
     entry[self.ItemHistoryIndex.TYPE] = entryType;
     entry[self.ItemHistoryIndex.ID] = self:GetHistoryId();
 
@@ -148,7 +148,9 @@ function ABGP:AddHistoryEntry(entryType, entry, skipEvent)
 
     table.insert(_G.ABGP_Data2.history.data, 1, entry);
 
-    self:SyncNewEntries({ [entry[self.ItemHistoryIndex.ID]] = entry });
+    if not skipSync then
+        self:SyncNewEntries({ [entry[self.ItemHistoryIndex.ID]] = entry });
+    end
 
     if not skipEvent then
         self:UpdateHistory();

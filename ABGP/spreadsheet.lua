@@ -643,12 +643,15 @@ function ABGP:GenerateItemList()
         end
     end
 
+    local entriesToSync = {};
     for _, item in pairs(items) do
         if not self:GetItemValue(item[ABGP.ItemDataIndex.NAME], true) then
             item[ABGP.ItemDataIndex.PRERELEASE] = true;
-            self:AddHistoryEntry(self.ItemHistoryType.ITEMADD, item, true);
+            local entry = self:AddHistoryEntry(self.ItemHistoryType.ITEMADD, item, true, true);
+            entriesToSync[entry[self.ItemHistoryIndex.ID]] = entry;
         end
     end
 
+    self:SyncNewEntries(entriesToSync);
     self:UpdateHistory();
 end
