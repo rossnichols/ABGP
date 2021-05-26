@@ -548,7 +548,7 @@ local function DrawItems(container, options)
                 local from = ABGP.ItemStoreNames[itemStore];
                 local to = ABGP.ItemStoreNames[itemStore == ABGP.ItemStore.STAGING
                             and ABGP.ItemStore.PRERELEASE or ABGP.ItemStore.CURRENT];
-                _G.StaticPopup_Show("ABGP_CONFIRM_COMMITPRERELEASE", from, to, {});
+                _G.StaticPopup_Show("ABGP_CONFIRM_COMMITPRERELEASE", to, from, {});
             end);
             mainLine:AddChild(commit);
 
@@ -1081,7 +1081,8 @@ local function DrawItems(container, options)
                                     end
 
                                     if itemStore == ABGP.ItemStore.STAGING then
-                                        PopulateUI({ rebuild = true });
+                                        ABGP:RefreshItemValues();
+                                        PopulateUI({ rebuild = false });
                                     else
                                         ABGP:UpdateHistory();
                                     end
@@ -1468,7 +1469,7 @@ local function DrawItemHistory(container, options)
                                     local elts = {};
                                     for _, tokenItem in ipairs(tokenValue.token) do
                                         local button = AceGUI:Create("ABGP_ItemButton");
-                                        button.frame:SetScale(0.75);
+                                        -- button.frame:SetScale(0.75);
                                         button:SetItemLink(tokenItem);
                                         button:SetClickable(true);
                                         button:SetCallback("OnClick", function(widget, event, button)
@@ -2225,7 +2226,8 @@ _G.StaticPopupDialogs["ABGP_CONFIRM_DELETEITEM"] = ABGP:StaticDialogTemplate(ABG
                 end
             end
 
-            PopulateUI({ rebuild = true });
+            ABGP:RefreshItemValues();
+            PopulateUI({ rebuild = false });
         else
             ABGP:AddHistoryEntry(ABGP.ItemHistoryType.ITEMREMOVE, {
                 [ABGP.ItemDataIndex.NAME] = item[ABGP.ItemDataIndex.NAME],

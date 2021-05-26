@@ -198,6 +198,7 @@ do
     local methods = {
         ["OnAcquire"] = function(self)
             self.frame:Show();
+            self.frame:SetScale(1.0);
             self:SetItemLink();
             self.frame:ClearAllPoints();
             self.frame:SetParent(_G.UIParent);
@@ -2059,11 +2060,6 @@ do
         self.editbox:SetCursorPosition(strlen(self:GetText()));
     end
 
-    local function Edit_OnFocusLost(frame)
-        local self = frame.obj;
-        self:SetValue(self:GetValue());
-    end
-
     local function Edit_OnEnterPressed(widget, event, value)
         local oldValue = widget:GetValue();
         widget:SetValue(value);
@@ -2075,6 +2071,16 @@ do
             AceGUI:ClearFocus();
         end
         return cancel;
+    end
+
+    local function Edit_OnFocusLost(frame)
+        local self = frame.obj;
+        Edit_OnEnterPressed(self, nil, frame:GetText());
+    end
+
+    local function Edit_OnEscapePressed(frame)
+        local self = frame.obj;
+        Edit_OnEnterPressed(self, nil, self:GetValue());
     end
 
     --[[-----------------------------------------------------------------------------
@@ -2120,6 +2126,7 @@ do
     -------------------------------------------------------------------------------]]
     local function Constructor()
         local elt = AceGUI:Create("EditBox");
+        elt.editbox:SetScript("OnEscapePressed", Edit_OnEscapePressed);
 
         local scripts = {
             OnTabPressed = _G.AutoCompleteEditBox_OnTabPressed,

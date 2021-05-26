@@ -583,6 +583,7 @@ end
 
 function ABGP:GetItemValue(itemName, store)
     if not itemName then return; end
+    store = store or self.ItemStore.CURRENT;
     return itemValues[store][itemName];
 end
 

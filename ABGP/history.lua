@@ -95,7 +95,7 @@ function ABGP:GetHistoryId()
     local nextId = max(lastHistoryId, (GetServerTime() - 1600000000) * 100);
     if nextId == lastHistoryId then nextId = nextId + 1; end
     lastHistoryId = nextId;
-    return ("%s:%d"):format(UnitName("player"), nextId);
+    return ("%s:%s"):format(UnitName("player"), nextId);
 end
 
 function ABGP:ParseHistoryId(id)
