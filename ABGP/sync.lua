@@ -14,7 +14,9 @@ local controller = {
     end,
 
     GetEntryInfo = function(self, entry)
-        return ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
+        local id = entry[ABGP.ItemHistoryIndex.ID];
+        local _, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
+        return id, entryDate;
     end,
 
     GetVersion = function(self)
