@@ -100,7 +100,7 @@ function ABGP:OnVersionRequest(data, distribution, sender)
         self:SendComm(self.CommTypes.VERSION_RESPONSE, {
             version = self:GetVersion()
         }, "WHISPER", sender);
-    elseif self:VersionIsNewer(self:GetCompareVersion(), data.version) then
+    elseif not self:GetDebugOpt() and self:VersionIsNewer(self:GetCompareVersion(), data.version) then
         self:SendComm(self.CommTypes.VERSION_RESPONSE, {
             version = self:GetVersion()
         }, "WHISPER", sender);
