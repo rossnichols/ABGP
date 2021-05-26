@@ -187,45 +187,54 @@ function ABGP:ProcessItemHistory(gpHistory, includeNonItems)
     return processed;
 end
 
-function ABGP:GetItemData(prerelease)
-    local history = _G.ABGP_Data2.history.data;
-    local processed = {};
-    local deleted = {};
+function ABGP:GetItemData(itemStore)
+    local array = {};
 
-    -- Find the most recent entry for each item name,
-    -- breaking early if an item wipe entry is encountered.
-    for _, data in ipairs(history) do
-        if not deleted[data[self.ItemHistoryIndex.ID]] then
-            local entryType = data[self.ItemHistoryIndex.TYPE];
-            if entryType == self.ItemHistoryType.ITEMADD or
-               entryType == self.ItemHistoryType.ITEMREMOVE or
-               entryType == self.ItemHistoryType.ITEMUPDATE then
+    if itemStore == self.ItemStore.STAGING then
+        local staging = _G.ABGP_Data2.itemStaging or {};
+        for _, item in pairs(staging) do
+            table.insert(array, item);
+        end
+    else
+        local prerelease = (itemStore == self.ItemStore.PRERELEASE);
+        local history = _G.ABGP_Data2.history.data;
+        local processed = {};
+        local deleted = {};
 
-                local item = data[self.ItemDataIndex.NAME];
-                if not processed[item] and data[self.ItemDataIndex.PRERELEASE] == prerelease then
-                    processed[item] = data;
+        -- Find the most recent entry for each item name,
+        -- breaking early if an item wipe entry is encountered.
+        for _, data in ipairs(history) do
+            if not deleted[data[self.ItemHistoryIndex.ID]] then
+                local entryType = data[self.ItemHistoryIndex.TYPE];
+                if entryType == self.ItemHistoryType.ITEMADD or
+                entryType == self.ItemHistoryType.ITEMREMOVE or
+                entryType == self.ItemHistoryType.ITEMUPDATE then
+
+                    local item = data[self.ItemDataIndex.NAME];
+                    if not processed[item] and data[self.ItemDataIndex.PRERELEASE] == prerelease then
+                        processed[item] = data;
+                    end
+                elseif entryType == self.ItemHistoryType.ITEMWIPE then
+                    if data[self.ItemDataIndex.PRERELEASE] == prerelease then
+                        break;
+                    end
+                elseif entryType == ABGP.ItemHistoryType.DELETE then
+                    deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
                 end
-            elseif entryType == self.ItemHistoryType.ITEMWIPE then
-                if data[self.ItemDataIndex.PRERELEASE] == prerelease then
-                    break;
-                end
-            elseif entryType == ABGP.ItemHistoryType.DELETE then
-                deleted[data[ABGP.ItemHistoryIndex.DELETEDID]] = true;
             end
         end
-    end
 
-    -- If the most recent entry for any item is a remove, remove the item.
-    for item, data in pairs(processed) do
-        if data[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEMREMOVE then
-            processed[item] = nil
+        -- If the most recent entry for any item is a remove, remove the item.
+        for item, data in pairs(processed) do
+            if data[self.ItemHistoryIndex.TYPE] == self.ItemHistoryType.ITEMREMOVE then
+                processed[item] = nil
+            end
         end
-    end
 
-    -- Convert the entries to an array.
-    local array = {};
-    for item, item in pairs(processed) do
-        table.insert(array, item);
+        -- Convert the entries to an array.
+        for item, item in pairs(processed) do
+            table.insert(array, item);
+        end
     end
 
     -- Sort the array alphabetically, but ensuring a token's items directly follow it.

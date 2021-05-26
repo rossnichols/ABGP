@@ -608,6 +608,7 @@ function ABGP:GenerateItemList()
                                     [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
                                     [ABGP.ItemDataIndex.NOTES] = nil,
                                     [ABGP.ItemDataIndex.RELATED] = nil,
+                                    [ABGP.ItemDataIndex.PRERELEASE] = true,
                                 };
                                 items[name] = itemData;
                             else
@@ -631,6 +632,7 @@ function ABGP:GenerateItemList()
                                                 [ABGP.ItemDataIndex.CATEGORY] = ABGP.ItemCategory.GOLD,
                                                 [ABGP.ItemDataIndex.NOTES] = nil,
                                                 [ABGP.ItemDataIndex.RELATED] = name,
+                                                [ABGP.ItemDataIndex.PRERELEASE] = true,
                                             };
                                         end
                                     end
@@ -643,15 +645,5 @@ function ABGP:GenerateItemList()
         end
     end
 
-    local entriesToSync = {};
-    for _, item in pairs(items) do
-        if not self:GetItemValue(item[ABGP.ItemDataIndex.NAME], true) then
-            item[ABGP.ItemDataIndex.PRERELEASE] = true;
-            local entry = self:AddHistoryEntry(self.ItemHistoryType.ITEMADD, item, true, true);
-            entriesToSync[entry[self.ItemHistoryIndex.ID]] = entry;
-        end
-    end
-
-    self:SyncNewEntries(entriesToSync);
-    self:UpdateHistory();
+    _G.ABGP_Data2.itemStaging = items;
 end

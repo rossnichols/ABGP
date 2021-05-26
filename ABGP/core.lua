@@ -459,9 +459,6 @@ end
 -- Helpers for item queries
 --
 
-local itemValues = {};
-local itemValuesPrerelease = {};
-
 ABGP.ItemDataIndex = {
     NAME = 4,
     ITEMLINK = 5,
@@ -518,24 +515,40 @@ function ABGP:ValueFromItem(item)
     };
 end
 
-function ABGP:RefreshItemValues()
-    local dataSets = {
-        { store = itemValues, prerelease = false },
-        { store = itemValuesPrerelease, prerelease = true },
-    };
+ABGP.ItemStore = {
+    CURRENT = "CURRENT",
+    PRERELEASE = "PRERELEASE",
+    STAGING = "STAGING"
+};
+ABGP.ItemStoreNames = {
+    [ABGP.ItemStore.CURRENT] = "Current",
+    [ABGP.ItemStore.PRERELEASE] = "Future",
+    [ABGP.ItemStore.STAGING] = "Staging",
+};
+ABGP.ItemStoresSorted = {
+    ABGP.ItemStore.CURRENT,
+    ABGP.ItemStore.PRERELEASE,
+    ABGP.ItemStore.STAGING
+};
 
-    for _, data in pairs(dataSets) do
-        table.wipe(data.store);
-        local items = self:GetItemData(data.prerelease);
+local itemValues = {};
+for store in pairs(ABGP.ItemStore) do
+    itemValues[store] = {};
+end
+
+function ABGP:RefreshItemValues()
+    for store, data in pairs(itemValues) do
+        table.wipe(data);
+        local items = self:GetItemData(store);
 
         for _, item in ipairs(items) do
             local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
             local value = self:ValueFromItem(item);
-            data.store[item[ABGP.ItemDataIndex.NAME]] = value;
-            data.store[ABGP:GetItemId(itemLink)] = value;
+            data[item[ABGP.ItemDataIndex.NAME]] = value;
+            data[ABGP:GetItemId(itemLink)] = value;
 
             if value.related then
-                local token = ABGP:GetItemValue(value.related, data.prerelease);
+                local token = ABGP:GetItemValue(value.related, store);
                 table.insert(token.token, itemLink);
             end
 
@@ -568,9 +581,9 @@ function ABGP:ItemValueIsUpdated(value, oldValue)
     return isUpdated;
 end
 
-function ABGP:GetItemValue(itemName, prerelease)
+function ABGP:GetItemValue(itemName, store)
     if not itemName then return; end
-    return (prerelease and itemValuesPrerelease or itemValues)[itemName];
+    return itemValues[store][itemName];
 end
 
 function ABGP:GetItemName(itemLink)
@@ -589,7 +602,7 @@ end
 
 local scanner = _G.CreateFrame("GameTooltip", "ABGPScanningTooltip", nil, "GameTooltipTemplate");
 scanner:SetOwner(_G.UIParent, "ANCHOR_NONE");
-function ABGP:IsItemUsable(itemLink)
+function ABGP:IsItemUsable(itemLink, store)
     scanner:ClearLines();
     scanner:SetHyperlink(itemLink);
     -- self:LogVerbose("%s:%d", itemLink, select("#", scanner:GetRegions()));
@@ -612,10 +625,10 @@ function ABGP:IsItemUsable(itemLink)
     end
 
     local itemId = self:GetItemId(itemLink);
-    local value = self:GetItemValue(itemId) or self:GetItemValue(itemId, true);
+    local value = self:GetItemValue(itemId, store);
     if value and value.token then
         for _, item in ipairs(value.token) do
-            if self:IsItemUsable(item) then return true; end
+            if self:IsItemUsable(item, store) then return true; end
         end
         return false;
     end
@@ -975,9 +988,9 @@ local itemOverrides = {
     [22637] = { slots = { "INVTYPE_HEAD", "INVTYPE_LEGS" } },
 };
 
-function ABGP:GetTokenItems(itemLink, prerelease)
+function ABGP:GetTokenItems(itemLink, store)
     local itemId = self:GetItemId(itemLink);
-    local value = self:GetItemValue(itemId, prerelease);
+    local value = self:GetItemValue(itemId, store);
     return value and value.token;
 end
 

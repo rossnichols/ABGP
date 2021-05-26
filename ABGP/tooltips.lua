@@ -7,20 +7,24 @@ local table = table;
 local pairs = pairs;
 local ipairs = ipairs;
 local date = date;
+local next = next;
 
 function ABGP:HookTooltips()
     for _, tt in pairs({ _G.GameTooltip, _G.ItemRefTooltip, _G.ShoppingTooltip1, _G.ShoppingTooltip2 }) do
         tt:HookScript("OnTooltipSetItem", function(self)
             local itemName = self:GetItem();
             local altShowsPrerelease = ABGP:Get("altShowsPrerelease");
-            local value = ABGP:GetItemValue(itemName, altShowsPrerelease and IsAltKeyDown());
+            local store = (altShowsPrerelease and IsAltKeyDown()) and ABGP.ItemStore.CURRENT or ABGP.ItemStore.PRERELEASE;
+            local value = ABGP:GetItemValue(itemName, store);
             if value then
                 if not value.token then
                     self:AddDoubleLine(("%s Cost:"):format(ABGP:ColorizeText("ABGP")), ABGP:FormatCost(value.gp, value.category, "%s%s"), 1, 1, 1, 1, 1, 1);
                 end
 
                 if not value.related then
-                    self:AddDoubleLine(("%s Priorities:"):format(ABGP:ColorizeText("ABGP")), table.concat(value.priority, ", "), 1, 1, 1, 1, 1, 1);
+                    if next(value.priority) then
+                        self:AddDoubleLine(("%s Priorities:"):format(ABGP:ColorizeText("ABGP")), table.concat(value.priority, ", "), 1, 1, 1, 1, 1, 1);
+                    end
                     if value.notes then
                         self:AddDoubleLine(("%s Notes:"):format(ABGP:ColorizeText("ABGP")), value.notes, 1, 1, 1, 1, 1, 1);
                     end
