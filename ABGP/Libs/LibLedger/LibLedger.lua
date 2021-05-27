@@ -63,7 +63,7 @@ function LibLedger:SyncNewEntries(controller, entries)
     if not canSendEntries then return; end
     local now = controller:GetTime();
 
-    controller:SendComm({
+    self:_SendComm(controller, {
         name = "_LEDGER_MERGE",
 
         token = math.random(),
@@ -78,8 +78,14 @@ end
 
 function LibLedger:HandleComm(controller, data, sender)
     if controller:GetVersion() == data.version and not controller:IsSelf(sender) then
-        self[data.name](self, controller, data, sender)
+        controller:Log("Comm: %s from %s", data.name, sender);
+        self[data.name](self, controller, data, sender);
     end
+end
+
+function LibLedger:_SendComm(controller, data, target)
+    controller:Log("Comm: %s to %s", data.name, target or "everyone");
+    controller:SendComm(data, target);
 end
 
 function LibLedger:HasValidLedger(controller)
@@ -124,7 +130,7 @@ function LibLedger:_SyncWorker(controller, token, now)
     wt.broadcastToken = token;
     wt.broadcastEntries = {};
 
-    controller:SendComm(commData);
+    self:_SendComm(controller, commData);
 end
 
 function LibLedger:_BuildSyncHashData(controller, ledgerData, now, addAllIds)
@@ -182,7 +188,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
     if canSendEntries and data.baseline < baseline then
         -- The sender has an older baseline. They need a history replacement.
         controller:Log("Sending replace init to %s (older baseline)", sender);
-        controller:SendComm({
+        self:_SendComm(controller, {
             name = "_LEDGER_REPLACE_INIT",
 
             token = data.token,
@@ -195,7 +201,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
         -- The sender has a newer baseline. We need a history replacement.
         controller:Log("Sending replace request to %s (newer baseline)", sender);
         controller:SetBaseline(_invalidBaseline);
-        controller:SendComm({
+        self:_SendComm(controller, {
             name = "_LEDGER_REPLACE_REQUEST",
 
             token = data.token,
@@ -233,7 +239,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
                 ledgerData.ids[bucket] = controller:PrepareIds(ids, data.now);
             end
             controller:Log("Sending sync (with ids) for %d buckets to %s", bucketCount, sender);
-            controller:SendComm({
+            self:_SendComm(controller, {
                 name = "_LEDGER_SYNC",
 
                 token = data.token,
@@ -292,7 +298,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
             end
 
             controller:Log("Sending sync (%s ids) for %d buckets to %s", commData.ids and "with" or "no", bucketCount, sender);
-            controller:SendComm(commData, sender);
+            self:_SendComm(controller, commData, sender);
         end
 
         -- Now go through the ids looking for ones we need, or ones to send if allowed.
@@ -334,7 +340,7 @@ function LibLedger:_LEDGER_SYNC(controller, data, sender)
 
         if next(merge) or next(requested) then
             controller:Log("Sending %d, requesting %d entries to/from %s", mergeCount, requestCount, sender);
-            controller:SendComm({
+            self:_SendComm(controller, {
                 name = "_LEDGER_MERGE",
 
                 token = data.token,
@@ -395,7 +401,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
 
             if next(merge) then
                 controller:Log("Broadcasting %d entries", mergeCount);
-                controller:SendComm({
+                self:_SendComm(controller, {
                     name = "_LEDGER_MERGE",
 
                     token = data.token,
@@ -410,7 +416,7 @@ function LibLedger:_LEDGER_MERGE(controller, data, sender)
         else
             -- The sender is requesting entries we've told them about.
             controller:Log("Sending %d entries to %s", mergeCount, sender);
-            controller:SendComm({
+            self:_SendComm(controller, {
                 name = "_LEDGER_MERGE",
 
                 token = data.token,
@@ -472,7 +478,7 @@ function LibLedger:_LEDGER_REPLACE_INIT(controller, data, sender)
     wt.replaceInitToken = data.token;
 
     controller:Log("Requesting ledger from %s", sender);
-    controller:SendComm({
+    self:_SendComm(controller, {
         name = "_LEDGER_REPLACE_REQUEST",
 
         token = data.token,
@@ -500,7 +506,7 @@ function LibLedger:_LEDGER_REPLACE_REQUEST(controller, data, sender)
         wt.replaceRequestToken = data.token;
 
         controller:Log("Broadcasting ledger (via %s)", sender);
-        controller:SendComm({
+        self:_SendComm(controller, {
             name = "_LEDGER_REPLACE",
 
             token = data.token,
@@ -516,7 +522,7 @@ function LibLedger:_LEDGER_REPLACE_REQUEST(controller, data, sender)
         -- triggered by their sync. Send to them directly.
 
         controller:Log("Sending ledger to %s", sender);
-        controller:SendComm({
+        self:_SendComm(controller, {
             name = "_LEDGER_REPLACE",
 
             token = data.token,

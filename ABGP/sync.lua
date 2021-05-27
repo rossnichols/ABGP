@@ -84,7 +84,7 @@ local controller = {
     RebuildEntries = function(self, entries, now)
         -- Undo the changes from PrepareEntries().
         for _, entry in pairs(entries) do
-            entry[ABGP.ItemHistoryIndex.ID] = ("%s:%d"):format(entry[ABGP.ItemHistoryIndex.ID], entry[0]);
+            entry[ABGP.ItemHistoryIndex.ID] = ("%s:%s"):format(entry[ABGP.ItemHistoryIndex.ID], entry[0]);
             entry[0] = nil;
         end
 
@@ -107,7 +107,7 @@ local controller = {
     RebuildIds = function(self, ids, now)
         -- Undo the changes from PrepareIds().
         for i = 1, #ids - 1, 2 do
-            local id = ("%s:%d"):format(ids[i], ids[i + 1]);
+            local id = ("%s:%s"):format(ids[i], ids[i + 1]);
             ids[id] = true;
             ids[i] = nil;
             ids[i + 1] = nil;
