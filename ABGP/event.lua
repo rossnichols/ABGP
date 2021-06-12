@@ -30,6 +30,9 @@ local instanceIds = {
     AQ20            = 509,
     AQ40            = 531,
     Naxxramas       = 533,
+    Karazhan        = 532,
+    MagsLair        = 544,
+    GruulsLair      = 565,
 };
 
 -- https://wow.tools/dbc/?dbc=dungeonencounter
@@ -99,6 +102,23 @@ ABGP.BossIds = {
     Sapphiron   = 1119,
     Thaddius    = 1120,
     FourHorse   = 1121,
+
+    Attumen     = 652,
+    Moroes      = 653,
+    Maiden      = 654,
+    Opera       = 655,
+    Curator     = 656,
+    Illhoof     = 657,
+    Aran        = 658,
+    Netherspite = 659,
+    Chess       = 660,
+    Nightbane   = 662,
+    Malchezaar  = 661,
+
+    Magtheridon = 651,
+
+    Maulgar     = 649,
+    Gruul       = 650,
 };
 local bossIds = ABGP.BossIds;
 
@@ -153,6 +173,29 @@ local instanceInfo = {
             bossIds.AnubRekhan, bossIds.Gluth, bossIds.Gothik, bossIds.Faerlina, bossIds.Grobbulus,
             bossIds.Heigan, bossIds.Razuvious, bossIds.Loatheb, bossIds.Maexxna, bossIds.Noth,
             bossIds.Patchwerk, bossIds.Thaddius, bossIds.FourHorse, bossIds.Sapphiron, bossIds.KulThuzad,
+        },
+    },
+    [instanceIds.Karazhan] = {
+        name = "Karazhan",
+        promptRaidStart = true,
+        bosses = {
+            bossIds.Attumen, bossIds.Moroes, bossIds.Maiden, bossIds.Opera, bossIds.Curator,
+            bossIds.Illhoof, bossIds.Aran, bossIds.Netherspite, bossIds.Chess, bossIds.Nightbane,
+            bossIds.Malchezaar,
+        },
+    },
+    [instanceIds.MagsLair] = {
+        name = "Karazhan",
+        promptRaidStart = true,
+        bosses = {
+            bossIds.Magtheridon,
+        },
+    },
+    [instanceIds.GruulsLair] = {
+        name = "Karazhan",
+        promptRaidStart = true,
+        bosses = {
+            bossIds.Maulgar, bossIds.Gruul,
         },
     },
 };
@@ -223,6 +266,23 @@ local bossInfo = {
     [bossIds.Sapphiron]  = { instance = instanceIds.Naxxramas, name = "Sapphiron" },
     [bossIds.Thaddius]   = { instance = instanceIds.Naxxramas, name = "Thaddius" },
     [bossIds.FourHorse]  = { instance = instanceIds.Naxxramas, name = "The Four Horsemen" },
+
+    [bossIds.Attumen]     = { instance = instanceIds.Karazhan, name = "Attumen the Huntsman" },
+    [bossIds.Moroes]      = { instance = instanceIds.Karazhan, name = "Moroes" },
+    [bossIds.Maiden]      = { instance = instanceIds.Karazhan, name = "Maiden of Virtue" },
+    [bossIds.Opera]       = { instance = instanceIds.Karazhan, name = "Opera Hall" },
+    [bossIds.Curator]     = { instance = instanceIds.Karazhan, name = "The Curator" },
+    [bossIds.Illhoof]     = { instance = instanceIds.Karazhan, name = "Terestian Illhoof" },
+    [bossIds.Aran]        = { instance = instanceIds.Karazhan, name = "Shade of Aran" },
+    [bossIds.Netherspite] = { instance = instanceIds.Karazhan, name = "Netherspite" },
+    [bossIds.Chess]       = { instance = instanceIds.Karazhan, name = "Chess Event" },
+    [bossIds.Nightbane]   = { instance = instanceIds.Karazhan, name = "Nightbane" },
+    [bossIds.Malchezaar]  = { instance = instanceIds.Karazhan, name = "Prince Malchezaar" },
+
+    [bossIds.Magtheridon] = { instance = instanceIds.MagsLair, name = "Magtheridon" },
+
+    [bossIds.Maulgar] = { instance = instanceIds.GruulsLair, name = "High King Maulgar" },
+    [bossIds.Gruul]   = { instance = instanceIds.GruulsLair, name = "Gruul the Dragonkiller" },
 };
 
 local tickCategories = {
@@ -623,26 +683,18 @@ function ABGP:StartRaid()
 
     local custom = -1;
     local instances = {
-        [instanceIds.Naxxramas] = instanceInfo[instanceIds.Naxxramas].name,
-        [instanceIds.AQ40] = instanceInfo[instanceIds.AQ40].name,
-        [instanceIds.BlackwingLair] = instanceInfo[instanceIds.BlackwingLair].name,
-        [instanceIds.MoltenCore] = instanceInfo[instanceIds.MoltenCore].name,
-        [instanceIds.Onyxia] = instanceInfo[instanceIds.Onyxia].name,
-        [instanceIds.ZulGurub] = instanceInfo[instanceIds.ZulGurub].name,
-        [instanceIds.AQ20] = instanceInfo[instanceIds.AQ20].name,
+        [instanceIds.Karazhan] = instanceInfo[instanceIds.Karazhan].name,
+        [instanceIds.MagsLair] = instanceInfo[instanceIds.MagsLair].name,
+        [instanceIds.GruulsLair] = instanceInfo[instanceIds.GruulsLair].name,
         [custom] = "Custom",
     };
     local instanceSelector = AceGUI:Create("Dropdown");
     instanceSelector:SetFullWidth(true);
     instanceSelector:SetLabel("Instance");
     instanceSelector:SetList(instances, {
-        instanceIds.Naxxramas,
-        instanceIds.AQ40,
-        instanceIds.BlackwingLair,
-        instanceIds.MoltenCore,
-        instanceIds.Onyxia,
-        instanceIds.ZulGurub,
-        instanceIds.AQ20,
+        instanceIds.Karazhan,
+        instanceIds.MagsLair,
+        instanceIds.GruulsLair,
         custom });
     instanceSelector:SetCallback("OnValueChanged", function(widget, event, value)
         raidInstance = value;

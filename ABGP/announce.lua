@@ -36,12 +36,18 @@ local function ItemShouldBeAutoAnnounced(item)
     return item.quality >= 3 and select(14, GetItemInfo(item.link)) == 1;
 end
 
+local function ItemShouldTriggerAnnounce(item)
+    -- Trigger on epic+ BoP items.
+    return item.quality >= 4 and select(14, GetItemInfo(item.link)) == 1;
+end
+
 function ABGP:AnnounceOnLootOpened()
     local loot = GetLootInfo();
 
     -- Determine the items that meet announcement criteria, and what object is being looted.
     local announceItems = {};
     local lootSource;
+    local hasItemToTriggerAnnounce = false;
     for i = 1, GetNumLootItems() do
         local item = loot[i];
         if item then
@@ -52,6 +58,7 @@ function ABGP:AnnounceOnLootOpened()
             if ItemShouldBeAutoAnnounced(item) then
                 table.insert(announceItems, item.link);
             end
+            hasItemToTriggerAnnounce = hasItemToTriggerAnnounce or ItemShouldTriggerAnnounce(item);
         end
     end
     if #announceItems == 0 then return; end
@@ -71,7 +78,7 @@ function ABGP:AnnounceOnLootOpened()
 
     -- Loot from boss kills should always be announced.
     -- If not from a boss, check if any of the items have an item value.
-    local shouldAnnounce = bossKills[name];
+    local shouldAnnounce = hasItemToTriggerAnnounce or bossKills[name];
     if not shouldAnnounce then
         for _, itemLink in ipairs(announceItems) do
             if self:GetItemValue(self:GetItemName(itemLink)) then
@@ -122,6 +129,7 @@ end
 local allowedBosses = {
     [ABGP.BossIds.Majordomo] = true,
     [ABGP.BossIds.FourHorse] = true,
+    [ABGP.BossIds.Chess] = true,
 }
 
 function ABGP:AnnounceOnBossKilled(id, name)
