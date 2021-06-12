@@ -14,7 +14,7 @@ function ABGP:HookTooltips()
         tt:HookScript("OnTooltipSetItem", function(self)
             local itemName = self:GetItem();
             local altShowsPrerelease = ABGP:Get("altShowsPrerelease");
-            local store = (altShowsPrerelease and IsAltKeyDown()) and ABGP.ItemStore.CURRENT or ABGP.ItemStore.PRERELEASE;
+            local store = (altShowsPrerelease and IsAltKeyDown()) and ABGP.ItemStore.PRERELEASE or ABGP.ItemStore.CURRENT;
             local value = ABGP:GetItemValue(itemName, store);
             if value then
                 if not value.token then
