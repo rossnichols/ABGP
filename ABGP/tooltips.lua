@@ -33,7 +33,7 @@ function ABGP:HookTooltips()
                     if limit > 0  and not altShowsPrerelease then
                         if IsAltKeyDown() then
                             local player = UnitName("player");
-                            local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data);
+                            local gpHistory = ABGP:GetItemHistory();
 
                             local raidGroup = ABGP:GetPreferredRaidGroup();
                             local function shouldShowEntry(entry)

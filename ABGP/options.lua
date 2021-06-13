@@ -892,7 +892,7 @@ _G.StaticPopupDialogs["ABGP_TRIGGER_DECAY"] = ABGP:StaticDialogTemplate(ABGP.Sta
         local decayTime = time({ year = 2000 + tonumber(y), month = tonumber(m), day = tonumber(d), hour = 23, min = 59, sec = 59 });
         if decayTime > now then return false, "Date must be before today"; end
 
-        local history = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data, true);
+        local history = ABGP:GetItemHistory(true);
         for _, entry in ipairs(history) do
             local entryDate = entry[ABGP.ItemHistoryIndex.DATE];
             if entryDate < decayTime then break; end

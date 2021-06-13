@@ -446,14 +446,14 @@ function ABGP:ImportItemHistory()
 
             widget:GetUserData("window"):Hide();
 
-            if self:FixupHistory(newGPHistory) then
-                self.reverse(newGPHistory);
-                table.wipe(_G.ABGP_Data2.history.data);
-                for k, v in pairs(newGPHistory) do _G.ABGP_Data2.history.data[k] = v; end
-                self:CommitHistory();
-            else
-                self:Error("Couldn't find item links for some items! Unable to commit this data.");
-            end
+            -- if self:FixupHistory(newGPHistory) then
+            --     self.reverse(newGPHistory);
+            --     table.wipe(_G.ABGP_Data2.history.data);
+            --     for k, v in pairs(newGPHistory) do _G.ABGP_Data2.history.data[k] = v; end
+            --     self:CommitHistory();
+            -- else
+            --     self:Error("Couldn't find item links for some items! Unable to commit this data.");
+            -- end
         end
     end
 

@@ -1097,7 +1097,7 @@ function ABGP:ExportRaid(windowRaid)
 
         -- Include any items that were awarded while the raid was active.
         text = text .. "\n";
-        local gpHistory = self:ProcessItemHistory(_G.ABGP_Data2.history.data);
+        local gpHistory = self:GetItemHistory();
         local filtered = {};
         for _, item in ipairs(gpHistory) do
             local awardDate = item[ABGP.ItemHistoryIndex.DATE];

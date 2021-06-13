@@ -13,10 +13,9 @@ local controller = {
         return _G.ABGP_Data2.history.data, _G.ABGP_Data2.history.timestamp;
     end,
 
-    GetEntryInfo = function(self, entry)
-        local id = entry[ABGP.ItemHistoryIndex.ID];
-        local _, entryDate = ABGP:ParseHistoryId(entry[ABGP.ItemHistoryIndex.ID]);
-        return id, entryDate;
+    GetEntryDate = function(self, id)
+        local _, _, entryDateOrig = ABGP:ParseHistoryId(id);
+        return entryDateOrig;
     end,
 
     GetVersion = function(self)
@@ -28,7 +27,7 @@ local controller = {
     end,
 
     GetTime = function(self)
-        return GetServerTime();
+        return (GetServerTime() - 1600000000) * 100;
     end,
 
     SetLedger = function(self, ledger)
@@ -46,7 +45,7 @@ local controller = {
     end,
 
     GetSyncThresholds = function(self)
-        return 10 * 24 * 60 * 60, 30 * 24 * 60 * 60;
+        return 10 * 24 * 60 * 60 * 100, 30 * 24 * 60 * 60 * 100;
     end,
 
     CanWriteEntries = function(self, name)
@@ -166,7 +165,7 @@ function ABGP:TestSerialization(input)
     local LibCompress = _G.LibStub("LibCompress");
     local AddonEncodeTable = LibCompress:GetAddonEncodeTable();
 
-    input = input or controller:PrepareEntries(_G.ABGP_Data2.history.data);
+    input = input or controller:PrepareEntries(_G.ABGP_Data2.history.data.entries);
     local LibDeflate = _G.LibStub("LibDeflate");
 
     local serialized = LibSerialize:Serialize(input);

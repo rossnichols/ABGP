@@ -1,6 +1,4 @@
-
-
--- TEST --
+local LibLedger = LibStub and LibStub:GetLibrary("LibLedger") or require("LibLedger")
 
 local controllers = {};
 local comms = {};
@@ -10,8 +8,8 @@ local testController = {
         return self.ledger, self.baseline;
     end,
 
-    GetEntryInfo = function(self, entry)
-        return entry[1], entry[2];
+    GetEntryDate = function(self, id)
+        return self.ledger.entries[id][2];
     end,
 
     GetVersion = function(self)
@@ -73,10 +71,19 @@ local testController = {
 }
 
 local function MakeTestController(name, privileged, ledger, baseline)
+    local parsedLedger = {
+        entries = {},
+        ids = {},
+    };
+    for _, entry in ipairs(ledger) do
+        parsedLedger.entries[entry[1]] = entry;
+        table.insert(parsedLedger.ids, entry[1]);
+    end
+
     local controller = setmetatable({
         name = name,
         privileged = privileged,
-        ledger = ledger,
+        ledger = parsedLedger,
         baseline = baseline
     }, { __index = testController });
     controllers[name] = controller;
@@ -84,27 +91,27 @@ local function MakeTestController(name, privileged, ledger, baseline)
 end
 
 local a = MakeTestController("a", true, {
-    { "a", 100, "The " },
-    { "b", 95, "quick " },
-    -- { "c", 90, "brown " },
-    -- { "d", 85, "fox " },
+    { "a", 60, "The " },
+    { "b", 65, "quick " },
+    -- { "c", 70, "brown " },
+    { "d", 75, "fox " },
     { "e", 80, "jumps " },
-    { "f", 75, "over " },
-    -- { "g", 70, "the " },
-    { "h", 65, "lazy " },
-    { "i", 60, "dog." },
+    -- { "f", 85, "over " },
+    -- { "g", 90, "the " },
+    { "h", 95, "lazy " },
+    { "i", 100, "dog." },
 }, 1);
 
 local b = MakeTestController("b", true, {
-    -- { "a", 100, "The " },
-    -- { "b", 95, "quick " },
-    { "c", 90, "brown " },
-    { "d", 85, "fox " },
+    -- { "a", 60, "The " },
+    { "b", 65, "quick " },
+    { "c", 70, "brown " },
+    { "d", 75, "fox " },
     { "e", 80, "jumps " },
-    { "f", 75, "over " },
-    { "g", 70, "the " },
-    { "h", 65, "lazy " },
-    -- { "i", 60, "dog." },
+    { "f", 85, "over " },
+    { "g", 90, "the " },
+    -- { "h", 95, "lazy " },
+    -- { "i", 100, "dog." },
 }, 1);
 
 testController:Log("Starting...");
@@ -124,12 +131,12 @@ while next(comms) do
 end
 
 local out = "";
-for _, entry in ipairs(a.ledger) do
-    out = out .. entry[3];
+for _, id in ipairs(a.ledger.ids) do
+    out = out .. a.ledger.entries[id][3];
 end
 testController:Log(out);
 local out = "";
-for _, entry in ipairs(b.ledger) do
-    out = out .. entry[3];
+for _, id in ipairs(b.ledger.ids) do
+    out = out .. b.ledger.entries[id][3];
 end
 testController:Log(out);

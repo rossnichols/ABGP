@@ -1291,7 +1291,7 @@ local function DrawItemHistory(container, options)
     local pagination = container:GetUserData("pagination");
     local search = container:GetUserData("search");
     local searchText = search:GetText():lower();
-    local gpHistory = ABGP:ProcessItemHistory(_G.ABGP_Data2.history.data);
+    local gpHistory = ABGP:GetItemHistory();
     local filtered = {};
     local exact = searchText:match("^\"(.+)\"$");
     exact = exact and exact:lower() or exact;
@@ -1889,10 +1889,13 @@ local function DrawAuditLog(container, options)
     local scrollValue = preserveScroll and auditLog:GetUserData("statusTable").scrollvalue or 0;
     auditLog:ReleaseChildren();
 
-    local entries = _G.ABGP_Data2.history.data;
+    local ledger = _G.ABGP_Data2.history.data;
     local deletedEntries = {};
     local deleteReferences = {};
-    for _, entry in ipairs(entries) do
+    for i = #ledger.ids, 1, -1 do
+        local id = ledger.ids[i];
+        local entry = ledger.entries[id];
+
         local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
         local id = entry[ABGP.ItemHistoryIndex.ID];
 
@@ -1965,12 +1968,12 @@ local function DrawAuditLog(container, options)
     end
 
     local pagination = container:GetUserData("pagination");
-    pagination:SetValues(#entries, 50);
-    if #entries > 0 then
+    pagination:SetValues(#ledger.ids, 50);
+    if #ledger.ids > 0 then
         local first, last = pagination:GetRange();
         for i = first, last do
-            local entry = entries[i];
-            local id = entry[ABGP.ItemHistoryIndex.ID];
+            local id = ledger.ids[#ledger.ids - i + 1];
+            local entry = ledger.entries[id];
             local entryPlayer, entryDate = ABGP:ParseHistoryId(id);
             local entryType = entry[ABGP.ItemHistoryIndex.TYPE];
 

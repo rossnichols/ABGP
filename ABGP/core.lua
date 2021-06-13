@@ -71,7 +71,6 @@ function ABGP:OnEnable()
     self:HookTooltips();
     self:AddItemHooks();
     self:AddDataHooks();
-    self:RefreshItemValues();
     self:SetupCommMonitor();
     self:InitMinimapIcon();
     self:InitEvents();
@@ -216,7 +215,6 @@ function ABGP:OnEnable()
     end, self);
 
     self:SetCallback(self.InternalEvents.HISTORY_UPDATED, function(self, event, data)
-        self:HistoryOnUpdate();
         self:RefreshUI(self.RefreshReasons.HISTORY_UPDATED);
         self:OptionsOnHistoryUpdate();
     end, self);
@@ -324,6 +322,8 @@ function ABGP:OnEnable()
     if IsInGroup() then
         OnGroupJoined();
     end
+
+    self:SafeParseHistory();
 end
 
 
@@ -459,31 +459,6 @@ end
 -- Helpers for item queries
 --
 
-ABGP.ItemDataIndex = {
-    NAME = 4,
-    ITEMLINK = 5,
-    GP = 6,
-    CATEGORY = 7,
-    RAID = 8,
-    BOSS = 9,
-    PRIORITY = 10,
-    NOTES = 11,
-    RELATED = 12,
-    PRERELEASE = 13,
-};
-ABGP.ItemCategory = {
-    SILVER = "SILVER",
-    GOLD = "GOLD",
-};
-ABGP.ItemCategoryNames = {
-    [ABGP.ItemCategory.SILVER] = "Silver",
-    [ABGP.ItemCategory.GOLD] = "Gold",
-};
-ABGP.ItemCategoriesSorted = {
-    ABGP.ItemCategory.SILVER,
-    ABGP.ItemCategory.GOLD
-};
-
 function ABGP:FormatCost(cost, category, fmt)
     if type(cost) == "table" then
         category = cost.category;
@@ -496,95 +471,6 @@ function ABGP:FormatCost(cost, category, fmt)
 
     if category == nil then return ""; end
     return (fmt or "%s%s GP"):format(cost, suffix);
-end
-
-function ABGP:ValueFromItem(item)
-    return {
-        item = item[ABGP.ItemDataIndex.NAME],
-        itemLink = item[ABGP.ItemDataIndex.ITEMLINK],
-        itemId = ABGP:GetItemId(item[ABGP.ItemDataIndex.ITEMLINK]),
-        gp = item[ABGP.ItemDataIndex.GP],
-        boss = ABGP.tCopy(item[ABGP.ItemDataIndex.BOSS]),
-        raid = item[ABGP.ItemDataIndex.RAID],
-        priority = ABGP.tCopy(item[ABGP.ItemDataIndex.PRIORITY]),
-        notes = item[ABGP.ItemDataIndex.NOTES],
-        token = (item[ABGP.ItemDataIndex.GP] == "T") and {},
-        related = item[ABGP.ItemDataIndex.RELATED],
-        category = item[ABGP.ItemDataIndex.CATEGORY],
-        dataStore = item,
-    };
-end
-
-ABGP.ItemStore = {
-    CURRENT = "CURRENT",
-    PRERELEASE = "PRERELEASE",
-    STAGING = "STAGING"
-};
-ABGP.ItemStoreNames = {
-    [ABGP.ItemStore.CURRENT] = "Current",
-    [ABGP.ItemStore.PRERELEASE] = "Future",
-    [ABGP.ItemStore.STAGING] = "Staging",
-};
-ABGP.ItemStoresSorted = {
-    ABGP.ItemStore.CURRENT,
-    ABGP.ItemStore.PRERELEASE,
-    ABGP.ItemStore.STAGING
-};
-
-local itemValues = {};
-for store in pairs(ABGP.ItemStore) do
-    itemValues[store] = {};
-end
-
-function ABGP:RefreshItemValues()
-    for store, data in pairs(itemValues) do
-        table.wipe(data);
-        local items = self:GetItemData(store);
-
-        for _, item in ipairs(items) do
-            local itemLink = item[ABGP.ItemDataIndex.ITEMLINK];
-            local value = self:ValueFromItem(item);
-            data[item[ABGP.ItemDataIndex.NAME]] = value;
-            data[ABGP:GetItemId(itemLink)] = value;
-
-            if value.related then
-                local token = ABGP:GetItemValue(value.related, store);
-                table.insert(token.token, itemLink);
-            end
-
-            -- Try to ensure info about the item is cached locally.
-            if itemLink then GetItemInfo(itemLink); end
-        end
-    end
-end
-
-function ABGP:ItemValueIsUpdated(value, oldValue)
-    local isUpdated = true;
-    local oldValue = oldValue or ABGP:GetItemValue(value.item);
-    if oldValue then
-        isUpdated =
-            oldValue.gp ~= value.gp or
-            oldValue.category ~= value.category or
-            oldValue.notes ~= value.notes or
-            #oldValue.priority ~= #value.priority;
-
-        if not isUpdated then
-            for i, oldPri in ipairs(oldValue.priority) do
-                if value.priority[i] ~= oldPri then
-                    isUpdated = true;
-                    break;
-                end
-            end
-        end
-    end
-
-    return isUpdated;
-end
-
-function ABGP:GetItemValue(itemName, store)
-    if not itemName then return; end
-    store = store or self.ItemStore.CURRENT;
-    return itemValues[store][itemName];
 end
 
 function ABGP:GetItemName(itemLink)
