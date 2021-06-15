@@ -613,7 +613,14 @@ function ABGP:GenerateItemList()
                                 };
                                 items[name] = itemData;
                             else
-                                table.insert(items[name][ABGP.ItemDataIndex.BOSS], sub.name);
+                                if items[name][ABGP.ItemDataIndex.RAID] == _G.C_Map.GetAreaInfo(collection.MapID) then
+                                    table.insert(items[name][ABGP.ItemDataIndex.BOSS], sub.name);
+                                else
+                                    self:Notify("WARNING: %s is in both %s and %s (skipped latter)",
+                                        items[name][ABGP.ItemDataIndex.ITEMLINK],
+                                        items[name][ABGP.ItemDataIndex.RAID],
+                                        _G.C_Map.GetAreaInfo(collection.MapID));
+                                end
                             end
 
                             local tokenData = token.GetTokenData(item[2]);
@@ -647,4 +654,5 @@ function ABGP:GenerateItemList()
     end
 
     _G.ABGP_Data2.itemStaging = items;
+    self:Notify("Created staging items!");
 end
