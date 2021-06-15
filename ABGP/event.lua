@@ -9,6 +9,7 @@ local UnitName = UnitName;
 local GetRealZoneText = GetRealZoneText;
 local GetRaidRosterInfo = GetRaidRosterInfo;
 local IsShiftKeyDown = IsShiftKeyDown;
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost;
 local tContains = tContains;
 local pairs = pairs;
 local math = math;
@@ -639,7 +640,7 @@ function ABGP:EventOnZoneChanged(name, instanceId)
         end
     end
 
-    if self:IsRaidInProgress() then
+    if self:IsRaidInProgress() and not UnitIsDeadOrGhost("player") and _G.ABGP_RaidInfo3.currentRaid.instanceId ~= currentInstance then
         self:UpdateRaid();
     end
 end
@@ -748,7 +749,6 @@ function ABGP:StartRaid()
         AwardEP(windowRaid, tickCategories.ONTIME, nil, self:Get("strictOnTime"));
         window:SetUserData("closeConfirmed", true);
         window:Hide();
-        self:UpdateRaid();
     end);
     container:AddChild(start);
     self:AddWidgetTooltip(start, "Start the raid.");
