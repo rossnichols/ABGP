@@ -451,18 +451,22 @@ local function DrawItems(container, options)
                 table.sort(raidSources);
                 sourcesByRaid[raid] = {};
             end
-            if #bosses == 1 and not bossSources[bosses[1]] then
-                table.insert(sourcesByRaid[raid], bosses[1]);
-                table.sort(sourcesByRaid[raid]);
-                bossSources[bosses[1]] = true;
+            if #bosses == 1 then
+                local bossID = ("%s:%s"):format(raid, bosses[1]);
+                if not bossSources[bossID] then
+                    table.insert(sourcesByRaid[raid], bosses[1]);
+                    table.sort(sourcesByRaid[raid]);
+                    bossSources[bossID] = true;
+                end
             end
         end
         for _, raid in ipairs(raidSources) do
             sources[raid] = ABGP:ColorizeText(raid);
             table.insert(sourcesSorted, raid);
             for _, boss in ipairs(sourcesByRaid[raid]) do
-                sources[boss] = boss;
-                table.insert(sourcesSorted, boss);
+                local bossID = ("%s:%s"):format(raid, boss);
+                sources[bossID] = boss;
+                table.insert(sourcesSorted, bossID);
             end
         end
         allowedSources = ABGP.tCopy(sources);
@@ -663,7 +667,8 @@ local function DrawItems(container, options)
                 local allowedBySource = allowedSources[item[ABGP.ItemDataIndex.RAID]];
                 if not allowedBySource then
                     for _, boss in ipairs(item[ABGP.ItemDataIndex.BOSS]) do
-                        if allowedSources[boss] then
+                        local bossID = ("%s:%s"):format(item[ABGP.ItemDataIndex.RAID], boss);
+                        if allowedSources[bossID] then
                             allowedBySource = true;
                             break;
                         end
