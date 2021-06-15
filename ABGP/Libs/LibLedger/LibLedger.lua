@@ -151,7 +151,7 @@ function LibLedger:_BuildSyncBuckets(controller, now)
         local id = ledger.ids[i];
         local entryDate = controller:GetEntryDate(id);
         while now - entryDate > threshold do
-            controller:Log("%d ids in bucket %d", bucketCount, bucket);
+            -- controller:Log("%d ids in bucket %d", bucketCount, bucket);
             bucketCount = 0;
             bucket = bucket + 1;
             hashBuckets[bucket] = 0;
@@ -165,9 +165,9 @@ function LibLedger:_BuildSyncBuckets(controller, now)
         idBuckets[bucket][id] = true;
     end
 
-    if hashBuckets[bucket] ~= 0 then
-        controller:Log("%d ids in bucket %d", bucketCount, bucket);
-    end
+    -- if hashBuckets[bucket] ~= 0 then
+    --     controller:Log("%d ids in bucket %d", bucketCount, bucket);
+    -- end
 
     return hashBuckets, idBuckets;
 end
