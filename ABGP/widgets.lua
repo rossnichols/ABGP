@@ -784,15 +784,15 @@ do
         ["SetData"] = function(self, data)
             self.data = data;
 
-            self.item.text:SetText(data[ABGP.ItemDataIndex.ITEMLINK] or data[ABGP.ItemDataIndex.NAME]);
+            self.item.text:SetText(data[ABGP.ItemDataIndex.ITEMLINK]);
             local gp = data[ABGP.ItemDataIndex.GP];
             self.gp.text:SetText(gp);
             self.notes.text:SetText(data[ABGP.ItemDataIndex.NOTES] and "[Note]" or "");
             self.priority.text:SetText(table.concat(data[ABGP.ItemDataIndex.PRIORITY], ", "));
 
-            local font = ABGP:IsItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK]) and "ABGPHighlight" or "GameFontNormal";
-            self.notes.text:SetFontObject(font);
-            self.priority.text:SetFontObject(font);
+            if ABGP:IsItemFavorited(data[ABGP.ItemDataIndex.ITEMLINK]) then
+                self.item.text:SetText(("%s%s"):format(ABGP.Color, data[ABGP.ItemDataIndex.ITEMLINK]:sub(11)));
+            end
 
             local font = "GameFontNormal";
             if data[ABGP.ItemDataIndex.CATEGORY] == ABGP.ItemCategory.GOLD then font = "ABGPGold"; end
