@@ -497,12 +497,14 @@ function ABGP:BuildItemLookup(shouldPrint)
     -- local aq40 = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TheTempleofAhnQiraj;
     -- local naxx = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Naxxramas;
 
-    local kara = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Karazhan;
-    local gruul = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.GruulsLair;
-    local mag = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MagtheridonsLair;
+    -- local kara = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Karazhan;
+    -- local gruul = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.GruulsLair;
+    -- local mag = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MagtheridonsLair;
+    local tk = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TempestKeep;
+    local ssc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.SerpentshrineCavern;
 
     local token = _G.AtlasLoot.Data.Token;
-    for _, collection in ipairs({ kara, gruul, mag }) do
+    for _, collection in ipairs({ tk, ssc }) do
         for _, sub in ipairs(collection.items) do
             if sub[1] and not sub.IgnoreAsSource then
                 for _, item in ipairs(sub[1]) do
@@ -585,12 +587,11 @@ function ABGP:GenerateItemList()
     if not self:BuildItemLookup(true) then return false; end
 
     local items = {};
-    local kara = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.Karazhan;
-    local gruul = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.GruulsLair;
-    local mag = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.MagtheridonsLair;
+    local tk = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.TempestKeep;
+    local ssc = _G.AtlasLoot.ItemDB.Storage.AtlasLootClassic_DungeonsAndRaids.SerpentshrineCavern;
 
     local token = _G.AtlasLoot.Data.Token;
-    for _, collection in ipairs({ kara, gruul, mag }) do
+    for _, collection in ipairs({ tk, ssc }) do
         for _, sub in ipairs(collection.items) do
             if sub[1] and not sub.IgnoreAsSource then
                 for _, item in ipairs(sub[1]) do
